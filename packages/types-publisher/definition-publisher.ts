@@ -6,7 +6,7 @@ export interface PublishSettings {
 }
 
 export function publish() {
-		const args: string[] = [
+	const args: string[] = [
 		'publish',
 		// packagePath,
 		'--access public'
@@ -23,7 +23,7 @@ function createPackageJSON(typing: TypingsData, settings: PublishSettings, fileV
 		version: `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`,
 		description: `Type definitions for ${typing.libraryName} from ${typing.sourceRepoURL}`,
 		main: 'index.js',
-		scripts: { },
+		scripts: {},
 		author: typing.authors,
 		license: 'MIT',
 		typings: typing.definitionFilename,
@@ -35,18 +35,23 @@ function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
 
 	lines.push(`This package contains type definitions for ${typing.libraryName}.`)
-	if(typing.hasNpmPackage) {
+	if (typing.projectName) {
+		lines.push('');
+		lines.push(`The project URL is ${typing.projectName}`);
+	}
+
+	if (typing.hasNpmPackage) {
 		lines.push('');
 		lines.push(`The corresponding NPM package is https://www.npmjs.com/package/${typing.packageName}`);
 	}
-	
-	lines.push('');
-	lines.push(`Typings are loaded from ${typing.sourceRepoURL} in the ${typing.folder} directory.`);
 
-	if(typing.authors) {
+	if (typing.authors) {
 		lines.push('');
 		lines.push(`These definitions were written by ${typing.authors}.`);
 	}
+
+	lines.push('');
+	lines.push(`Typings were exported from ${typing.sourceRepoURL} in the ${typing.folder} directory.`);
 
 	lines.push('');
 	lines.push(`Additional Details`)
@@ -54,6 +59,8 @@ function createReadme(typing: TypingsData) {
 	lines.push(` * Typings kind: ${DefinitionFileKind[typing.type]}`);
 	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(', ') : 'none'}`);
 	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(', ') : 'none'}`);
+	lines.push(` * Globals: ${typing.globals.length ? typing.globals.join(', ') : 'none'}`);
 
 	return lines.join('\r\n');
 }
+

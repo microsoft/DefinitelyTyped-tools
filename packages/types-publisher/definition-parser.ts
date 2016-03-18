@@ -21,9 +21,28 @@ export enum DefinitionFileKind {
 	ModuleAugmentation
 }
 
-export interface TypingParseResult {
-	data?: TypingsData;
+export enum RejectionReason {
+	TooManyFiles,
+	BadFileFormat,
+	ReferencePaths
+}
+
+export interface TypingParseFailResult {
+	rejectionReason: RejectionReason;
 	log: string[];
+}
+
+export interface TypingParseSucceedResult {
+	data: TypingsData;
+	log: string[];
+}
+
+export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseSucceedResult {
+	return (t as TypingParseSucceedResult).data !== undefined;
+}
+
+export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseFailResult {
+	return (t as TypingParseFailResult).rejectionReason !== undefined;
 }
 
 export interface TypingsData {
@@ -51,6 +70,12 @@ export interface TypingsData {
 	// Parent folder name in the source repo
 	folder: string;
 
+	// Optionally-presesnt name or URL of the project
+	projectName: string;
+
+	// Names introduced into the global scope
+	globals: string[];
+
 	// The major version of the library (e.g. '1' for 1.0, '2' for 2.0)
 	libraryMajorVersion: string;
 	// The minor version of the library
@@ -74,7 +99,50 @@ function isSupportedFileKind(kind: DefinitionFileKind) {
 	}
 }
 
-export function getTypingInfo(directory: string): TypingParseResult {
+function stripQuotes(s: string) {
+	return s.substr(1, s.length - 2);
+}
+
+enum DeclarationFlags {
+	None = 0,
+	Value = 1 << 0,
+	Type = 1 << 1,
+	Namespace = 1 << 2,
+}
+
+function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
+	let result = DeclarationFlags.None;
+	const body = ns.body;
+	if (ns.body.kind === ts.SyntaxKind.ModuleDeclaration) {
+		return getNamespaceFlags(ns.body as ts.ModuleDeclaration);
+	}
+	(ns.body as ts.ModuleBlock).statements.forEach(child => {
+		switch(child.kind) {
+			case ts.SyntaxKind.VariableStatement:
+			case ts.SyntaxKind.ClassDeclaration:
+			case ts.SyntaxKind.FunctionDeclaration:
+			case ts.SyntaxKind.EnumDeclaration:
+				result |= DeclarationFlags.Value;
+				break;
+
+			case ts.SyntaxKind.InterfaceDeclaration:
+			case ts.SyntaxKind.TypeAliasDeclaration:
+			case ts.SyntaxKind.ImportEqualsDeclaration:
+				result |= DeclarationFlags.Type;
+				break;
+
+			case ts.SyntaxKind.ModuleDeclaration:
+				result |= getNamespaceFlags(child as ts.ModuleDeclaration);
+				break;
+
+			default:
+				console.log(`Forgot to implement ambient namespace statement ${ts.SyntaxKind[child.kind]}`);
+		}
+	});
+	return result;
+}
+
+export function getTypingInfo(directory: string): TypingParseFailResult | TypingParseSucceedResult {
 	const log: string[] = [];
 
 	log.push(`Reading contents of ${directory}`);
@@ -94,14 +162,15 @@ export function getTypingInfo(directory: string): TypingParseResult {
 
 	if (declFiles.length !== 1) {
 		log.push('Exiting, can only process directories with exactly 1 .d.ts file');
-		return { log };
+		return { log, rejectionReason: RejectionReason.TooManyFiles };
 	}
 
 	const declFilename = declFiles[0];
 	log.push(`Parse ${declFilename}`);
 	const fullPath = path.join(directory, declFilename);
 
-	const content = fs.readFileSync(fullPath, 'utf-8');
+	let content = fs.readFileSync(fullPath, 'utf-8');
+	if (content.charCodeAt(0) === 0xFEFF) content = content.substr(1);
 	const src = ts.createSourceFile('test.d.ts', content, ts.ScriptTarget.Latest, true);
 
 	let hasUmdDecl = false;
@@ -111,10 +180,19 @@ export function getTypingInfo(directory: string): TypingParseResult {
 
 	const moduleDependencies: string[] = [];
 
+	let globalSymbols: { [name: string]: ts.SymbolFlags } = {};
+	function recordSymbol(name: string, flags: DeclarationFlags) {
+		globalSymbols[name] = (globalSymbols[name] || DeclarationFlags.None) | flags;
+	}
+
 	src.getChildren()[0].getChildren().forEach(node => {
 		switch(node.kind) {
 			case ts.SyntaxKind.GlobalModuleExportDeclaration:
-				log.push(`Found UMD module declaration for global ${(node as ts.GlobalModuleExportDeclaration).name.getText()}`);
+				const globalName = (node as ts.GlobalModuleExportDeclaration).name.getText();
+				log.push(`Found UMD module declaration for global ${globalName}`);
+				// Don't set hasGlobalDeclarations = true even though we add a symbol here
+				// since this is still a legal module-only declaration
+				globalSymbols[globalName] = ts.SymbolFlags.Value;
 				isProperModule = true;
 				hasUmdDecl = true;
 				break;
@@ -129,17 +207,32 @@ export function getTypingInfo(directory: string): TypingParseResult {
 						log.push(`Found ambient external module ${(node as ts.ModuleDeclaration).name.getText()}`);
 						ambientModuleCount++;
 					} else {
-						log.push(`Found global namespace declaration "${(node as ts.ModuleDeclaration).name.getText()}"`);
+						const moduleName = (node as ts.ModuleDeclaration).name.getText();
+						log.push(`Found global namespace declaration "${moduleName}"`);
 						hasGlobalDeclarations = true;
+						//console.log(node.getText());
+						recordSymbol(moduleName, getNamespaceFlags(node as ts.ModuleDeclaration));
 					}
 				}
 				break;
 
-			case ts.SyntaxKind.InterfaceDeclaration:
-			case ts.SyntaxKind.VariableDeclaration:
 			case ts.SyntaxKind.VariableStatement:
-			case ts.SyntaxKind.EnumDeclaration:
+				if (node.flags & ts.NodeFlags.Export) {
+					log.push('Found exported variables');
+					isProperModule = true;
+				} else {
+					(node as ts.VariableStatement).declarationList.declarations.forEach(decl => {
+						const declName = decl.name.getText();
+						log.push(`Found global variable ${declName}`);
+						recordSymbol(declName, DeclarationFlags.Value);
+					});
+					hasGlobalDeclarations = true;
+				}
+				break;
+
+			case ts.SyntaxKind.InterfaceDeclaration:
 			case ts.SyntaxKind.TypeAliasDeclaration:
+			case ts.SyntaxKind.EnumDeclaration:
 			case ts.SyntaxKind.ClassDeclaration:
 			case ts.SyntaxKind.FunctionDeclaration:
 				// If these nodes have an 'export' modifier, the file is an external module
@@ -147,13 +240,10 @@ export function getTypingInfo(directory: string): TypingParseResult {
 					log.push(`Found exported declaration "${(node as ts.Declaration).name.getText()}"`);
 					isProperModule = true;
 				} else {
-					const declName = (node as ts.Declaration).name;
-					if(declName) {
-						log.push(`Found global declaration "${(node as ts.Declaration).name.getText()}"`);
-					} else {
-						log.push(`Found global declaration`);
-					}
-					
+					const declName = (node as ts.Declaration).name.getText();
+					const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
+					log.push(`Found global ${isType ? 'type' : 'value'} declaration "${declName}"`);
+					recordSymbol(declName, isType ? DeclarationFlags.Type : DeclarationFlags.Value);
 					hasGlobalDeclarations = true;
 				}
 				break;
@@ -161,7 +251,7 @@ export function getTypingInfo(directory: string): TypingParseResult {
 			case ts.SyntaxKind.ImportEqualsDeclaration:
 				if((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
 					const ref = (node as ts.ImportEqualsDeclaration).moduleReference.getText();
-					moduleDependencies.push(ref);
+					moduleDependencies.push(stripQuotes(ref));
 					log.push(`Found import = declaration from ${ref}`);
 					isProperModule = true;
 				}
@@ -170,7 +260,7 @@ export function getTypingInfo(directory: string): TypingParseResult {
 			case ts.SyntaxKind.ImportDeclaration:
 				if((node as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
 					const ref = (node as ts.ImportDeclaration).moduleSpecifier.getText();
-					moduleDependencies.push(ref);
+					moduleDependencies.push(stripQuotes(ref));
 					log.push(`Found import declaration from ${ref}`);
 					isProperModule = true;
 				}
@@ -223,13 +313,13 @@ export function getTypingInfo(directory: string): TypingParseResult {
 	}
 
 	if(!isSupportedFileKind(fileKind)) {
-		log.push(`${DefinitionFileKind[fileKind]} is not a supported file kind`);
-		return { log };
+		log.push(`Exiting, ${DefinitionFileKind[fileKind]} is not a supported file kind`);
+		return { log, rejectionReason: RejectionReason.BadFileFormat };
 	}
 
 	if (src.referencedFiles.length > 0) {
-		log.push(`Typings files cannot have "/// <reference path=...>"" directives`);
-		return { log };
+		log.push(`Exiting, typings files cannot have "/// <reference path=...>"" directives`);
+		return { log, rejectionReason: RejectionReason.ReferencePaths };
 	}
 
 	function regexMatch(rx: RegExp, defaultValue: string): string {
@@ -237,10 +327,11 @@ export function getTypingInfo(directory: string): TypingParseResult {
 		return match ? match[1] : defaultValue;
 	}
 
-	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/, 'Unknown');
-	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ (\d+)/, '0');
-	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ \d+\.(\d+)/, '0');
-	const libraryName = regexMatch(/^\/\/ Type definitions for (\D+)/, 'Unknown').trim();
+	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, 'Unknown');
+	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?(\d+)/m, '0');
+	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?\d+\.(\d+)/m, '0');
+	const libraryName = regexMatch(/^\/\/ Type definitions for ([A-Za-z]+)/m, 'Unknown').trim();
+	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, '');
 	const packageName = isProperModule ? path.basename(directory) : undefined;
 	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
 	
@@ -257,8 +348,10 @@ export function getTypingInfo(directory: string): TypingParseResult {
 			libraryMinorVersion,
 			libraryName,
 			packageName,
+			projectName,
 			sourceRepoURL,
-			type: fileKind
+			type: fileKind,
+			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value))
 		}
 	}	
 }
