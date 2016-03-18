@@ -318,7 +318,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	}
 
 	if (src.referencedFiles.length > 0) {
-		log.push(`Exiting, typings files cannot have "/// <reference path=...>"" directives`);
+		log.push(`Exiting, typings files cannot have "/// <reference path=...>" directives`);
 		return { log, rejectionReason: RejectionReason.ReferencePaths };
 	}
 
@@ -340,7 +340,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		data: {
 			authors,
 			definitionFilename: declFilename,
-			libraryDependencies: src['referencedLibraries'],
+			libraryDependencies: src['referencedLibraries'], // TODO update
 			moduleDependencies,
 			folder: path.basename(directory),
 			hasNpmPackage: false,

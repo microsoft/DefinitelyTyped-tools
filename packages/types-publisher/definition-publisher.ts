@@ -22,7 +22,7 @@ function createPackageJSON(typing: TypingsData, settings: PublishSettings, fileV
 		name: `@${settings.scopeName}/${typing.packageName}`,
 		version: `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`,
 		description: `Type definitions for ${typing.libraryName} from ${typing.sourceRepoURL}`,
-		main: 'index.js',
+		main: '', //? index.js',
 		scripts: {},
 		author: typing.authors,
 		license: 'MIT',
