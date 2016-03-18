@@ -1,0 +1,11 @@
+{
+	"files": [
+		"run.ts",
+		"definition-publisher.ts",
+		"definition-parser.ts",
+		"typings/tsd.d.ts"
+	],
+	"compilerOptions": {
+		"module": "commonjs"
+	}
+}
