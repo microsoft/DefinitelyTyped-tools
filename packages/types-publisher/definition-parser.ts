@@ -46,7 +46,7 @@ export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t i
 }
 
 export interface TypingsData {
-	type: DefinitionFileKind;
+	type: string;
 
 	moduleDependencies: string[];
 	libraryDependencies: string[];
@@ -80,6 +80,9 @@ export interface TypingsData {
 	libraryMajorVersion: string;
 	// The minor version of the library
 	libraryMinorVersion: string;
+
+	// Files that should be published with this definition
+	files: string[];
 }
 
 function isSupportedFileKind(kind: DefinitionFileKind) {
@@ -334,7 +337,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, '');
 	const packageName = isProperModule ? path.basename(directory) : undefined;
 	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
-	
+
 	return {
 		log,
 		data: {
@@ -350,8 +353,9 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			packageName,
 			projectName,
 			sourceRepoURL,
-			type: fileKind,
-			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value))
+			type: DefinitionFileKind[fileKind],
+			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)),
+			files: [declFiles[0]]
 		}
 	}	
 }
