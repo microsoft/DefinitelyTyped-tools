@@ -6,6 +6,7 @@
 		"typings/tsd.d.ts"
 	],
 	"compilerOptions": {
-		"module": "commonjs"
+		"module": "commonjs",
+		"noImplicitAny": true
 	}
 }
