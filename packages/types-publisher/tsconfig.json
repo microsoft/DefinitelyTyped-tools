@@ -1,12 +1,13 @@
 {
 	"files": [
-		"run.ts",
-		"definition-publisher.ts",
-		"definition-parser.ts",
+		"src/run.ts",
+		"src/definition-publisher.ts",
+		"src/definition-parser.ts",
 		"typings/tsd.d.ts"
 	],
 	"compilerOptions": {
 		"module": "commonjs",
-		"noImplicitAny": true
+		"noImplicitAny": true,
+		"outDir": "bin"
 	}
 }
