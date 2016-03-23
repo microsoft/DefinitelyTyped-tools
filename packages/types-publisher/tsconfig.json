@@ -3,6 +3,7 @@
 		"src/run.ts",
 		"src/definition-publisher.ts",
 		"src/definition-parser.ts",
+		"src/settings.d.ts",
 		"typings/tsd.d.ts"
 	],
 	"compilerOptions": {

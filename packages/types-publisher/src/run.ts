@@ -4,18 +4,15 @@ import * as publisher from './definition-publisher';
 import fs = require('fs');
 import path = require('path');
 
-const scopeName = '@ryancavanaugh';
+const settings: PublishSettings = JSON.parse(fs.readFileSync('./settings.json', 'utf-8'));
+
 const versionFile = 'versions.json';
 
-const DefinitelyTypedPath = '../DefinitelyTyped';
-const OutputPath = './output/';
 
 const summaryLog: string[] = [];
 const detailedLog: string[] = [];
 const outcomes: { [s: string]: number } = {};
 const kinds: { [s: string]: number } = {};
-
-const publishSettings: publisher.PublishSettings = { outputPath: './output', scopeName: 'ryancavanaugh' };
 
 function recordKind(s: string) {
 	kinds[s] = (kinds[s] || 0) + 1;
@@ -40,7 +37,7 @@ function processDir(folderPath: string, name: string) {
 		recordKind(info.data.kind);
 
 		detailedLog.push('### Publish');
-		const publishLog = publisher.publish(info.data, publishSettings);
+		const publishLog = publisher.publish(info.data);
 		for(const line of publishLog.log) {
 			detailedLog.push(` > ${line}\r\n\r\n`);
 		}
@@ -74,15 +71,15 @@ function main() {
 	summaryLog.push(`Started at ${(new Date()).toUTCString()}`);
 
 	try {
-		fs.mkdirSync(OutputPath);
+		fs.mkdirSync(settings.outputPath);
 	} catch(e) { }
 
-	fs.readdir(DefinitelyTypedPath, (err, paths) => {
+	fs.readdir(settings.definitelyTypedPath, (err, paths) => {
 		const folders = paths
 			// Remove hidden paths
 			.filter(s => s.substr(0, 1) !== '_' && s.substr(0, 1) !== '.')
 			// Combine paths
-			.map(s => ({ name: s, path: path.join(DefinitelyTypedPath, s) }))
+			.map(s => ({ name: s, path: path.join(settings.definitelyTypedPath, s) }))
 			// Remove non-folders
 			.filter(s => fs.statSync(s.path).isDirectory());
 

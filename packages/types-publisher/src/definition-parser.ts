@@ -86,10 +86,12 @@ export interface TypingsData {
 	files: string[];
 }
 
-const augmentedGlobals = ['Array',' Function', 'String', 'Number', 'Window', 'Date', 'StringConstructor', 'NumberConstructor', 'Math', 'HTMLElement'];
+const augmentedGlobals = ['Array', ' Function', 'String', 'Number', 'Window', 'Date', 'StringConstructor', 'NumberConstructor', 'Math', 'HTMLElement'];
+
+const pathToLibrary = /\.\.\/(\w+)\//;
 
 function isSupportedFileKind(kind: DefinitionFileKind) {
-	switch(kind) {
+	switch (kind) {
 		case DefinitionFileKind.Unknown:
 		case DefinitionFileKind.MultipleModules:
 		case DefinitionFileKind.Mixed:
@@ -124,7 +126,7 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 		return getNamespaceFlags(ns.body as ts.ModuleDeclaration);
 	}
 	(ns.body as ts.ModuleBlock).statements.forEach(child => {
-		switch(child.kind) {
+		switch (child.kind) {
 			case ts.SyntaxKind.VariableStatement:
 			case ts.SyntaxKind.ClassDeclaration:
 			case ts.SyntaxKind.FunctionDeclaration:
@@ -170,12 +172,12 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 	let entryPointFilename: string;
 	if (declFiles.length === 1) {
-		 entryPointFilename = declFiles[0];
+		entryPointFilename = declFiles[0];
 	}
-	else if(declFiles.length > 1) {
+	else if (declFiles.length > 1) {
 		// You can have [foldername].d.ts, or index.d.ts to rescue yourself from this situation
-		for(const candidate of candidates) {
-			if(declFiles.indexOf(candidate) >= 0) {
+		for (const candidate of candidates) {
+			if (declFiles.indexOf(candidate) >= 0) {
 				log.push(`Used ${candidate} as entry point`);
 				entryPointFilename = candidate;
 				break;
@@ -205,7 +207,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	const processQueue = [entryPointFilename];
 	const completeList: string[] = [];
 
-	while(processQueue.length > 0) {
+	while (processQueue.length > 0) {
 		const filename = processQueue.pop();
 		if (completeList.indexOf(filename) >= 0) {
 			continue;
@@ -218,20 +220,26 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		const src = ts.createSourceFile('test.d.ts', content, ts.ScriptTarget.Latest, true);
 		src.referencedFiles.forEach(ref => {
 			// Add referenced files to processing queue
-			if(ref.fileName.charAt(0) !== '.') {
+			if (ref.fileName.charAt(0) !== '.') {
 				processQueue.push(path.join(path.dirname(filename), ref.fileName));
+			}
+
+			// If this is a ../reference, treat it as a library
+			const pathMatch = pathToLibrary.exec(ref.fileName);
+			if(pathMatch) {
+				referencedLibraries.push(pathMatch[1]);
 			}
 		});
 
 		// TODO: Remove type assertion
-		((<any>src).referencedLibraries || []).forEach((ref: {fileName: string}) => {
-			if(referencedLibraries.indexOf(ref.fileName) < 0) {
+		((<any>src).referencedLibraries || []).forEach((ref: { fileName: string }) => {
+			if (referencedLibraries.indexOf(ref.fileName) < 0) {
 				referencedLibraries.push(ref.fileName);
 			}
 		});
 
 		src.getChildren()[0].getChildren().forEach(node => {
-			switch(node.kind) {
+			switch (node.kind) {
 				case ts.SyntaxKind.GlobalModuleExportDeclaration:
 					const globalName = (node as ts.GlobalModuleExportDeclaration).name.getText();
 					log.push(`Found UMD module declaration for global ${globalName}`);
@@ -293,7 +301,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					break;
 
 				case ts.SyntaxKind.ImportEqualsDeclaration:
-					if((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
+					if ((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
 						const ref = (node as ts.ImportEqualsDeclaration).moduleReference.getText();
 						moduleDependencies.push(stripQuotes(ref));
 						log.push(`Found import = declaration from ${ref}`);
@@ -302,7 +310,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					break;
 
 				case ts.SyntaxKind.ImportDeclaration:
-					if((node as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
+					if ((node as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
 						const ref = (node as ts.ImportDeclaration).moduleSpecifier.getText();
 						moduleDependencies.push(stripQuotes(ref));
 						log.push(`Found import declaration from ${ref}`);
@@ -330,7 +338,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			log.push(`UMD module declaration detected`);
 			fileKind = DefinitionFileKind.UMD;
 		} else {
-			if(ambientModuleCount > 0) {
+			if (ambientModuleCount > 0) {
 				log.push(`At least one import declaration and an ambient module declaration, this is a ModuleAugmentation file`);
 				fileKind = DefinitionFileKind.ModuleAugmentation;
 			} else {
@@ -348,7 +356,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					log.push(`${globals.length} global declarations and one ambient module declaration, this is a Mixed file`);
 					fileKind = DefinitionFileKind.Mixed;
 				}
-			} else if(ambientModuleCount > 1) {
+			} else if (ambientModuleCount > 1) {
 				log.push(`Global declarations and multiple ambient module declaration, this is a MultipleModules file`);
 				fileKind = DefinitionFileKind.MultipleModules;
 			} else {
@@ -366,7 +374,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		}
 	}
 
-	if(!isSupportedFileKind(fileKind)) {
+	if (!isSupportedFileKind(fileKind)) {
 		log.push(`Exiting, ${DefinitionFileKind[fileKind]} is not a supported file kind`);
 		return { log, rejectionReason: RejectionReason.BadFileFormat };
 	}
@@ -384,7 +392,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	const packageName = path.basename(directory);
 	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
 
-	if(packageName !== packageName.toLowerCase()) {
+	if (packageName !== packageName.toLowerCase()) {
 		log.push(`!!! WARNING: ${packageName} !== ${packageName.toLowerCase()}`);
 	}
 

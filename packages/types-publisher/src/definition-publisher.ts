@@ -4,12 +4,7 @@ import * as crypto from 'crypto';
 import * as path from 'path';
 import * as child_process from 'child_process';
 
-export interface PublishSettings {
-	// e.g. 'typings', not '@typings'
-	scopeName: string;
-	// e.g. ./output/
-	outputPath: string;
-}
+const settings: PublishSettings = JSON.parse(fs.readFileSync('./settings.json', 'utf-8'));
 
 namespace Versions {
 	const versionFilename = 'versions.json';
@@ -68,7 +63,7 @@ function patchDefinitionFile(input: string): string {
 	return output;
 }
 
-export function publish(typing: TypingsData, settings: PublishSettings): { log: string[] } {
+export function publish(typing: TypingsData): { log: string[] } {
 	const log: string[] = [];
 
 	log.push(`Possibly publishing ${typing.libraryName}`);
@@ -84,7 +79,7 @@ export function publish(typing: TypingsData, settings: PublishSettings): { log: 
 
 	const didUpdate = Versions.performUpdate(actualPackageName, allContent, version => {
 		log.push('Generate package.json and README.md; ensure output path exists');
-		const packageJson = JSON.stringify(createPackageJSON(typing, settings, version), undefined, 4);
+		const packageJson = JSON.stringify(createPackageJSON(typing, version), undefined, 4);
 		const readme = createReadme(typing);
 
 		const outputPath = path.join(settings.outputPath, actualPackageName);
@@ -101,6 +96,10 @@ export function publish(typing: TypingsData, settings: PublishSettings): { log: 
 		});
 
 		const args: string[] = ['npm', 'publish', path.resolve(outputPath), '--access public'];
+		if (settings.tag) {
+			args.push(`--tag ${settings.tag}`);
+		}
+
 		const cmd = args.join(' ');
 		log.push(`Run ${cmd}`);
 		try {
@@ -126,21 +125,26 @@ export function publish(typing: TypingsData, settings: PublishSettings): { log: 
 }
 
 
-function createPackageJSON(typing: TypingsData, settings: PublishSettings, fileVersion: number) {
+function createPackageJSON(typing: TypingsData, fileVersion: number) {
 	const dependencies: any = {};
 	typing.moduleDependencies.forEach(d => dependencies[d] = '*');
 	typing.libraryDependencies.forEach(d => dependencies[`@${settings.scopeName}/${d}`] = '*');
 
+	let version = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`;
+	if (settings.prereleaseTag) {
+		version = `${version}-${settings.prereleaseTag}`;
+	}
+
 	return ({
 		name: `@${settings.scopeName}/${typing.packageName.toLowerCase()}`,
-		version: `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`,
+		version,
 		description: `Type definitions for ${typing.libraryName} from ${typing.sourceRepoURL}`,
-		main: '', //? index.js',
+		main: '',
 		scripts: {},
 		author: typing.authors,
 		license: 'MIT',
 		typings: typing.definitionFilename,
-		dependencies: dependencies
+		dependencies
 	});
 }
 
