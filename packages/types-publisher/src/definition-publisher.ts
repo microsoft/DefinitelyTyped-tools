@@ -24,6 +24,8 @@ namespace Versions {
 	export function performUpdate(key: string, content: string, update: (version: number) => boolean) {
 		let data: VersionMap = fs.existsSync(versionFilename) ? JSON.parse(fs.readFileSync(versionFilename, 'utf-8')) : {};
 
+		const forceUpdate = process.argv.some(arg => arg === '--forceUpdate');
+
 		const hashValue = computeHash(key);
 		let entry = data[key];
 
@@ -31,8 +33,8 @@ namespace Versions {
 			data[key] = entry = { lastVersion: 0, lastContentHash: '' };
 		}
 
-		if (entry.lastContentHash !== hashValue || process.argv.some(arg => arg === '--forceUpdate')) {
-			const vNext = entry.lastVersion + 1;
+		if (entry.lastContentHash !== hashValue || forceUpdate) {
+			const vNext = entry.lastVersion + (forceUpdate ? 2 : 1);
 			
 			if(update(vNext)) {
 				data[key] = { lastVersion: vNext, lastContentHash: hashValue };
@@ -61,8 +63,8 @@ function mkdir(p: string) {
 }
 
 function patchDefinitionFile(input: string): string {
-	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+ \/>/gm;
-	let output = input.replace(pathToLibrary, '/// <reference library="$1" />');
+	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+"/gm;
+	let output = input.replace(pathToLibrary, '/// <reference library="$1"');
 	return output;
 }
 
@@ -94,14 +96,17 @@ export function publish(typing: TypingsData, settings: PublishSettings): { log: 
 		typing.files.forEach(file => {
 			log.push(`Copy and patch ${file}`);
 			let content = fs.readFileSync(path.join(typing.root, file), 'utf-8');
-			content = patchDefinitionFile(file);
-			fs.writeFileSync(path.join(outputPath, file), file);
+			content = patchDefinitionFile(content);
+			fs.writeFileSync(path.join(outputPath, file), content);
 		});
 
 		const args: string[] = ['npm', 'publish', path.resolve(outputPath), '--access public'];
 		const cmd = args.join(' ');
 		log.push(`Run ${cmd}`);
 		try {
+			const skipPublish = process.argv.some(arg => arg === '--skipPublish');
+			if (skipPublish) return false;
+
 			const result = <string>child_process.execSync(cmd, { encoding: 'utf-8' });
 			log.push(`Ran successfully`);
 			log.push(result);

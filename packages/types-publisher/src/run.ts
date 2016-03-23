@@ -1,5 +1,3 @@
-/// <reference path="typings/node/node.d.ts" />
-
 import * as parser from './definition-parser';
 import * as publisher from './definition-publisher';
 
@@ -75,6 +73,10 @@ function main() {
 	summaryLog.push('# Typing Publish Report Summary');
 	summaryLog.push(`Started at ${(new Date()).toUTCString()}`);
 
+	try {
+		fs.mkdirSync(OutputPath);
+	} catch(e) { }
+
 	fs.readdir(DefinitelyTypedPath, (err, paths) => {
 		const folders = paths
 			// Remove hidden paths
@@ -82,7 +84,9 @@ function main() {
 			// Combine paths
 			.map(s => ({ name: s, path: path.join(DefinitelyTypedPath, s) }))
 			// Remove non-folders
-			.filter(s => fs.statSync(s.path).isDirectory())
+			.filter(s => fs.statSync(s.path).isDirectory());
+
+		folders.sort();
 		console.log(`Found ${folders.length} typings folders.`);
 
 		folders.forEach(s => processDir(s.path, s.name));
