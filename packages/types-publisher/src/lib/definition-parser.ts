@@ -2,88 +2,10 @@ import * as ts from 'typescript';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export enum DefinitionFileKind {
-	// Dunno
-	Unknown,
-	// UMD module file
-	UMD,
-	// File has global variables or interfaces, but not any external modules
-	Global,
-	// File has top-level export declarations
-	ProperModule,
-	// File has a single declare module "foo" but no global interfaces or variables
-	DeclareModule,
-	// Some combination of Global and DeclareModule
-	Mixed,
-	// More than one 'declare module "foo"''
-	MultipleModules,
-	// Augments an external module
-	ModuleAugmentation,
-	// Old-style UMD
-	OldUMD
-}
+import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash } from './common';
 
-export enum RejectionReason {
-	TooManyFiles,
-	BadFileFormat,
-	ReferencePaths
-}
-
-export interface TypingParseFailResult {
-	rejectionReason: RejectionReason;
-	log: string[];
-}
-
-export interface TypingParseSucceedResult {
-	data: TypingsData;
-	log: string[];
-}
-
-export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseSucceedResult {
-	return (t as TypingParseSucceedResult).data !== undefined;
-}
-
-export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseFailResult {
-	return (t as TypingParseFailResult).rejectionReason !== undefined;
-}
-
-export interface TypingsData {
-	kind: string;
-
-	moduleDependencies: string[];
-	libraryDependencies: string[];
-
-	// e.g. https://github.com/DefinitelyTyped
-	sourceRepoURL: string;
-
-	// The name of the primary definition file, e.g. 'jquery.d.ts'
-	definitionFilename: string;
-
-	// The name of the library (human readable, e.g. might be 'Moment.js' even though packageName is 'moment')
-	libraryName: string;
-
-	// The NPM name to publish this under, e.g. 'jquery'. May not be lower-cased yet.
-	packageName: string;
-
-	// Parsed from 'Definitions by:'
-	authors: string;
-
-	// Optionally-present name or URL of the project, e.g. 'http://cordova.apache.org'
-	projectName: string;
-
-	// Names introduced into the global scope by this definition set
-	globals: string[];
-
-	// The major version of the library (e.g. '1' for 1.0, '2' for 2.0)
-	libraryMajorVersion: string;
-	// The minor version of the library
-	libraryMinorVersion: string;
-
-	// The full path to the containing folder of all files, e.g. 'C:/github/DefinitelyTyped'
-	root: string;
-
-	// Files that should be published with this definition, e.g. ['jquery.d.ts', 'jquery-extras.d.ts']
-	files: string[];
+function stripQuotes(s: string) {
+	return s.substr(1, s.length - 2);
 }
 
 const augmentedGlobals = ['Array', ' Function', 'String', 'Number', 'Window', 'Date', 'StringConstructor', 'NumberConstructor', 'Math', 'HTMLElement'];
@@ -105,10 +27,6 @@ function isSupportedFileKind(kind: DefinitionFileKind) {
 		default:
 			throw new Error('Should not be here');
 	}
-}
-
-function stripQuotes(s: string) {
-	return s.substr(1, s.length - 2);
 }
 
 enum DeclarationFlags {
@@ -153,6 +71,8 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 
 export function getTypingInfo(directory: string): TypingParseFailResult | TypingParseSucceedResult {
 	const log: string[] = [];
+	const warnings: string[] = [];
+	const folderName = path.basename(directory);
 
 	log.push(`Reading contents of ${directory}`);
 	const files = fs.readdirSync(directory);
@@ -162,12 +82,10 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	//  * -tests.ts (tests)
 	//  * .d.ts.tscparams (for testing)
 
-	// "// Type definitions for JSFL v3.2"
-
 	log.push(`Found ${files.length} files`);
 
 	const declFiles = files.filter(f => /\.d\.ts$/.test(f));
-	const candidates = [path.basename(directory) + ".d.ts", "index.d.ts"];
+	const candidates = [folderName + ".d.ts", "index.d.ts"];
 	log.push(`Found ${declFiles.length} .d.ts files (${declFiles.join(', ')})`);
 
 	let entryPointFilename: string;
@@ -184,10 +102,12 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			}
 		}
 	}
+	declFiles.sort();
 
 	if (entryPointFilename === undefined) {
 		log.push('Exiting, found either zero or more than one .d.ts file and none of ' + candidates.join(' or '));
-		return { log, rejectionReason: RejectionReason.TooManyFiles };
+		warnings.push('Found either zero or more than one .d.ts file and none of ' + candidates.join(' or '));
+		return { log, warnings, rejectionReason: RejectionReason.TooManyFiles };
 	}
 	const entryPointContent = readFile(entryPointFilename);
 
@@ -198,6 +118,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 	const moduleDependencies: string[] = [];
 	const referencedLibraries: string[] = [];
+	const declaredModules: string[] = [];
 
 	let globalSymbols: { [name: string]: ts.SymbolFlags } = {};
 	function recordSymbol(name: string, flags: DeclarationFlags) {
@@ -257,7 +178,9 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					} else {
 						const nameKind = (node as ts.ModuleDeclaration).name.kind;
 						if (nameKind === ts.SyntaxKind.StringLiteral) {
-							log.push(`Found ambient external module ${(node as ts.ModuleDeclaration).name.getText()}`);
+							const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
+							declaredModules.push(name);
+							log.push(`Found ambient external module ${name}`);
 							ambientModuleCount++;
 						} else {
 							const moduleName = (node as ts.ModuleDeclaration).name.getText();
@@ -374,9 +297,18 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		}
 	}
 
+	if (declaredModules.length === 1 && fileKind !== DefinitionFileKind.ModuleAugmentation && declaredModules[0].toLowerCase() !== folderName.toLowerCase()) {
+		warnings.push(`Declared module \`${declaredModules[0]}\` is in folder with incorrect name \`${folderName}\``);
+	}
+
+	if (declaredModules.length === 0 && fileKind === DefinitionFileKind.ProperModule) {
+		declaredModules.push(folderName);
+	}
+
 	if (!isSupportedFileKind(fileKind)) {
 		log.push(`Exiting, ${DefinitionFileKind[fileKind]} is not a supported file kind`);
-		return { log, rejectionReason: RejectionReason.BadFileFormat };
+		warnings.push(`${DefinitionFileKind[fileKind]} is not a supported file kind`);
+		return { log, warnings, rejectionReason: RejectionReason.BadFileFormat };
 	}
 
 	function regexMatch(rx: RegExp, defaultValue: string): string {
@@ -393,11 +325,14 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
 
 	if (packageName !== packageName.toLowerCase()) {
-		log.push(`!!! WARNING: ${packageName} !== ${packageName.toLowerCase()}`);
+		warnings.push(`Package name ${packageName} should be strictly lowercase`);
 	}
+
+	const allContent = declFiles.map(d => d + '**' + readFile(d)).join('||');
 
 	return {
 		log,
+		warnings,
 		data: {
 			authors,
 			definitionFilename: entryPointFilename,
@@ -406,13 +341,15 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			libraryMajorVersion,
 			libraryMinorVersion,
 			libraryName,
-			packageName,
+			typingsPackageName: folderName.toLowerCase(),
 			projectName,
 			sourceRepoURL,
 			kind: DefinitionFileKind[fileKind],
 			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)),
+			declaredModules,
 			root: path.resolve(directory),
-			files: declFiles
+			files: declFiles,
+			contentHash: computeHash(allContent)
 		}
 	};
 

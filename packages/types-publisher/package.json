@@ -1,0 +1,29 @@
+{
+  "name": "publish-typings",
+  "version": "0.6.0",
+  "description": "Publish DefinitelyTyped definitions to NPM",
+  "main": "index.js",
+  "bin": {
+    "publish-typings": "createSearchIndex.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^1.9.0-dev.20160331"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node node_modules/typescript/lib/tsc.js",
+    "generate-search": "npm run build && npm run _generate-search",
+    "_generate-search": "node bin/createSearchIndex.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanCavanaugh/publish-typings.git"
+  },
+  "author": "Microsoft",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/RyanCavanaugh/publish-typings/issues"
+  },
+  "homepage": "https://github.com/RyanCavanaugh/publish-typings#readme"
+}

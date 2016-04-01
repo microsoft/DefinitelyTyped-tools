@@ -1,11 +1,26 @@
+## Workflow
+
+There are four steps in the typings publish process
+
+### Parse
+
+The *parse* step parses each folder in the source repo.
+This generates a `types-data.json` file.
+
+### Search
+
+The *search* step generates search metadata from the `types-data.json` file.
+
+### Generate
+
+The *generate* step generates NPM packages on disk.
+This step increments version numbers in `versions.json` if the content in the originating folder has changed.
+
+### Publish
+
+The *publish* step publishes all generated packages to NPM.
+
 ## Commandline arguments
-
-### `--skipPublish`
-
-Passing `--skipPublish` causes the `npm publish` step to be skipped.
-Version numbers in `version.json` are subsequently not changed.
-
-This is useful for debugging purposes.
 
 ### `--forceUpdate`
 
