@@ -105,8 +105,9 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	declFiles.sort();
 
 	if (entryPointFilename === undefined) {
-		log.push('Exiting, found either zero or more than one .d.ts file and none of ' + candidates.join(' or '));
-		warnings.push('Found either zero or more than one .d.ts file and none of ' + candidates.join(' or '));
+		const msg = 'Exiting, found either zero or more than one .d.ts file and none of ' + candidates.map(c => '`' + c + '`').join(' or ');
+		log.push(msg);
+		warnings.push(msg);
 		return { log, warnings, rejectionReason: RejectionReason.TooManyFiles };
 	}
 	const entryPointContent = readFile(entryPointFilename);
@@ -163,7 +164,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			switch (node.kind) {
 				case ts.SyntaxKind.GlobalModuleExportDeclaration:
 					const globalName = (node as ts.GlobalModuleExportDeclaration).name.getText();
-					log.push(`Found UMD module declaration for global ${globalName}`);
+					log.push(`Found UMD module declaration for global \`${globalName}\``);
 					// Don't set hasGlobalDeclarations = true even though we add a symbol here
 					// since this is still a legal module-only declaration
 					globalSymbols[globalName] = ts.SymbolFlags.Value;
@@ -173,18 +174,18 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 				case ts.SyntaxKind.ModuleDeclaration:
 					if (node.flags & ts.NodeFlags.Export) {
-						log.push(`Found exported namespace "${(node as ts.ModuleDeclaration).name.getText()}"`);
+						log.push(`Found exported namespace \`${(node as ts.ModuleDeclaration).name.getText()}\``);
 						isProperModule = true;
 					} else {
 						const nameKind = (node as ts.ModuleDeclaration).name.kind;
 						if (nameKind === ts.SyntaxKind.StringLiteral) {
 							const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
 							declaredModules.push(name);
-							log.push(`Found ambient external module ${name}`);
+							log.push(`Found ambient external module \`"${name}"\``);
 							ambientModuleCount++;
 						} else {
 							const moduleName = (node as ts.ModuleDeclaration).name.getText();
-							log.push(`Found global namespace declaration "${moduleName}"`);
+							log.push(`Found global namespace declaration \`${moduleName}\``);
 							hasGlobalDeclarations = true;
 							recordSymbol(moduleName, getNamespaceFlags(node as ts.ModuleDeclaration));
 						}
@@ -198,7 +199,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					} else {
 						(node as ts.VariableStatement).declarationList.declarations.forEach(decl => {
 							const declName = decl.name.getText();
-							log.push(`Found global variable ${declName}`);
+							log.push(`Found global variable \`${declName}\``);
 							recordSymbol(declName, DeclarationFlags.Value);
 						});
 						hasGlobalDeclarations = true;
@@ -227,7 +228,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					if ((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
 						const ref = (node as ts.ImportEqualsDeclaration).moduleReference.getText();
 						moduleDependencies.push(stripQuotes(ref));
-						log.push(`Found import = declaration from ${ref}`);
+						log.push(`Found import = declaration from \`"${ref}"\``);
 						isProperModule = true;
 					}
 					break;
@@ -236,7 +237,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					if ((node as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
 						const ref = (node as ts.ImportDeclaration).moduleSpecifier.getText();
 						moduleDependencies.push(stripQuotes(ref));
-						log.push(`Found import declaration from ${ref}`);
+						log.push(`Found import declaration from \`"${ref}"\``);
 						isProperModule = true;
 					}
 					break;
@@ -306,8 +307,8 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	}
 
 	if (!isSupportedFileKind(fileKind)) {
-		log.push(`Exiting, ${DefinitionFileKind[fileKind]} is not a supported file kind`);
-		warnings.push(`${DefinitionFileKind[fileKind]} is not a supported file kind`);
+		log.push(`Exiting, \`${DefinitionFileKind[fileKind]}\` is not a supported file kind`);
+		warnings.push(`\`${DefinitionFileKind[fileKind]}\` is not a supported file kind`);
 		return { log, warnings, rejectionReason: RejectionReason.BadFileFormat };
 	}
 
@@ -326,7 +327,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
 
 	if (packageName !== packageName.toLowerCase()) {
-		warnings.push(`Package name ${packageName} should be strictly lowercase`);
+		warnings.push(`Package name \`${packageName}\` should be strictly lowercase`);
 	}
 
 	const allContent = declFiles.map(d => d + '**' + readFile(d)).join('||');

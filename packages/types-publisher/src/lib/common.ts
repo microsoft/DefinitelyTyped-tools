@@ -4,7 +4,7 @@ import crypto = require('crypto');
 
 export const home = path.join(__dirname, '..', '..');
 export const settings: PublishSettings = JSON.parse(fs.readFileSync(path.join(home, 'settings.json'), 'utf-8'));
-export const typesDataFilename = 'types-data.json';
+export const typesDataFilename = 'definitions.json';
 export const versionsFilename = 'versions.json';
 
 

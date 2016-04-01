@@ -47,7 +47,7 @@ export function generatePackage(typing: TypingsData): { log: string[] } {
 
 function patchDefinitionFile(input: string): string {
 	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+"/gm;
-	let output = input.replace(pathToLibrary, '/// <reference library="$1"');
+	let output = input.replace(pathToLibrary, '/// <reference types="$1"');
 	return output;
 }
 
