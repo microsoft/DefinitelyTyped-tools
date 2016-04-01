@@ -118,11 +118,11 @@ export function writeLogSync(logName: string, contents: string[]) {
 	fs.writeFileSync(path.join(logDir, logName), contents.join('\r\n'), 'utf-8');
 }
 
-export function writeDataFile(filename: string, content: {}) {
+export function writeDataFile(filename: string, content: {}, formatted = true) {
 	const dataDir = path.join(home, 'data');
 	mkdir(dataDir);
 	if (typeof content !== 'string') {
-		content = JSON.stringify(content, undefined, 4);
+		content = JSON.stringify(content, undefined, formatted ? 4 : undefined);
 	}
 	fs.writeFileSync(path.join(dataDir, filename), content, 'utf-8');
 }

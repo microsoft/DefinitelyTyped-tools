@@ -1,18 +1,21 @@
 {
 	"files": [
 		"src/settings.d.ts",
-		"src/searchRecord.d.ts",
 		"typings/tsd.d.ts",
 
 		"src/lib/definition-parser.ts",
 		"src/lib/package-generator.ts",
 		"src/lib/package-publisher.ts",
+		"src/lib/search-index-generator.ts",
 		"src/lib/common.ts",
 
 		"src/parse-definitions.ts",
 		"src/generate-packages.ts",
-		"src/publish-packages.ts"
+		"src/publish-packages.ts",
+		"src/create-search-index.ts",
+		"src/check-parse-results.ts"
 	],
+
 	"compilerOptions": {
 		"module": "commonjs",
 		"noImplicitAny": true,
