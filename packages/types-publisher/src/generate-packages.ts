@@ -13,5 +13,9 @@ if (typeData === undefined) {
 		log.push(` * ${packageName}`);
 		result.log.forEach(line => log.push(`   * ${line}`));
 	});
+	Object.keys(typeData).forEach(packageName => {
+		const typing = typeData[packageName];
+		generator.shrinkwrap(typing);
+	});
 	common.writeLogSync('package-generator.md', log);
 }

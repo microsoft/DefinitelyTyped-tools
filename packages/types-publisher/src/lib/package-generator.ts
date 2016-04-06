@@ -1,10 +1,38 @@
-import { TypingsData, DefinitionFileKind, mkdir, settings, getOutputPath } from './common';
+import { TypingsData, DefinitionFileKind, mkdir, settings, getOutputPath, getOutputPathByPackageName } from './common';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 import * as path from 'path';
 import * as child_process from 'child_process';
 import * as request from 'request';
 
+/** Make concrete version references */
+export function shrinkwrap(typing: TypingsData) {
+	const outputPath = getOutputPath(typing);
+
+	const packageJSON = JSON.parse(fs.readFileSync(path.join(outputPath, 'package.json'), 'utf-8'));
+	Object.keys(packageJSON.dependencies).forEach(depName => {
+		const depPackageJSON = readPackageJSON(depName);
+		if (depPackageJSON) {
+			// apply concrete version
+			packageJSON.dependencies[depName] = depPackageJSON['version'];
+		} else {
+			// delete unresolved dependency
+			delete packageJSON.dependencies[depName];
+		}
+	});
+	fs.writeFileSync(path.join(outputPath, 'package.json'), JSON.stringify(packageJSON, undefined, 4), 'utf-8');
+
+	function readPackageJSON(typingName: string) {
+		const filename = path.join(getOutputPathByPackageName(typingName), 'package.json');
+		if(fs.existsSync(filename)) {
+			return JSON.parse(fs.readFileSync(filename, 'utf-8'));
+		} else {
+			return undefined;
+		}
+	}
+}
+
+/** Generates the package to disk */
 export function generatePackage(typing: TypingsData): { log: string[] } {
 	const log: string[] = [];
 
@@ -82,19 +110,26 @@ function createPackageJSON(typing: TypingsData, fileVersion: number): string {
 
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
+	lines.push('# Installation');
+	lines.push('> `npm install --save-dev ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}`);
+	lines.push('');
 
+	lines.push('# Summary');
 	lines.push(`This package contains type definitions for ${typing.libraryName}.`)
 	if (typing.projectName) {
 		lines.push('');
 		lines.push(`The project URL or description is ${typing.projectName}`);
 	}
+	lines.push('');
 
+	lines.push('# Credits');
 	if (typing.authors) {
 		lines.push('');
 		lines.push(`These definitions were written by ${typing.authors}.`);
 	}
-
 	lines.push('');
+
+	lines.push('# Details');
 	lines.push(`Typings were exported from ${typing.sourceRepoURL} in the ${typing.typingsPackageName} directory.`);
 
 	lines.push('');

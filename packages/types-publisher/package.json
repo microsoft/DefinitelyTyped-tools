@@ -12,9 +12,12 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "node scripts/clean-output.js",
     "build": "node node_modules/typescript/lib/tsc.js",
-    "generate-search": "npm run build && npm run _generate-search",
-    "_generate-search": "node bin/createSearchIndex.js"
+    "parse": "node bin/parse-definitions.js",
+    "generate": "node bin/generate-packages.js",
+    "index": "node bin/create-search-index.js",
+
   },
   "repository": {
     "type": "git",

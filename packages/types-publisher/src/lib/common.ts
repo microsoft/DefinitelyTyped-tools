@@ -147,3 +147,11 @@ export function getOutputPath(typing: TypingsData) {
 	const outputPath = path.join(settings.outputPath, typing.typingsPackageName);
 	return outputPath;
 }
+
+export function getOutputPathByPackageName(scopedPackageTypingName: string) {
+	// turns '@types/foo' into 'foo'
+	const index = scopedPackageTypingName.indexOf('/');
+	if(index < 0) throw new Error('Expected to find / in ' + scopedPackageTypingName);
+	const unqualified = scopedPackageTypingName.substr(index + 1);
+	return path.join(settings.outputPath, unqualified);	
+}

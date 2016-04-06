@@ -55,9 +55,7 @@ function createMinifiedSearchRecord(data: SearchRecord): MinifiedSearchRecord {
 }
 
 interface NpmResult {
-	[packageName: string]: {
-		downloads: number;
-	}
+	downloads: number;
 }
 
 export function createSearchRecords(info: TypingsData, done: (full: SearchRecord, min: MinifiedSearchRecord) => void) {
@@ -75,8 +73,7 @@ export function createSearchRecords(info: TypingsData, done: (full: SearchRecord
 		request.get(url, (err: any, resp: any, data: string) => {
 			const json: NpmResult = JSON.parse(data);
 			if (err) throw err;
-			const result = json[pkg];
-			const record = createSearchRecord(info, result ? result.downloads : 0);
+			const record = createSearchRecord(info, json.downloads || 0);
 			done(record, createMinifiedSearchRecord(record));
 		});
 	}
