@@ -111,7 +111,7 @@ function createPackageJSON(typing: TypingsData, fileVersion: number): string {
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
 	lines.push('# Installation');
-	lines.push('> `npm install --save-dev ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}`);
+	lines.push('> `npm install --save-dev ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}` + '`');
 	lines.push('');
 
 	lines.push('# Summary');

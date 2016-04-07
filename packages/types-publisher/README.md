@@ -1,6 +1,34 @@
+TODO: Finish readme!
+
 # Quick Recap
 
+```
+cat settings.json
+npm whoami
+```
+Make sure your settings are correct and you're logged in as the right person.
 
+```
+npm run full
+```
+
+*or*
+```
+npm run clean
+npm run build
+npm run parse
+npm run check
+npm run generate
+npm run index
+npm run publish
+```
+
+*then*
+```
+git add versions.json
+git commit -m "Versions update"
+git push
+```
 
 # Overview
 

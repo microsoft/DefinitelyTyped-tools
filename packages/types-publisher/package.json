@@ -11,13 +11,14 @@
     "typescript": "^1.9.0-dev.20160331"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "node scripts/clean-output.js",
     "build": "node node_modules/typescript/lib/tsc.js",
     "parse": "node bin/parse-definitions.js",
+    "check": "node bin/check-parse-results.js",
     "generate": "node bin/generate-packages.js",
     "index": "node bin/create-search-index.js",
-
+    "publish": "node bin/publish-packages.js",
+    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish"
   },
   "repository": {
     "type": "git",

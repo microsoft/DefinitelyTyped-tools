@@ -22,7 +22,7 @@ function main() {
 	function next() {
 		if (packages.length === 0) {
 			fullRecords.sort((a, b) => a.downloads - b.downloads);
-			minRecords.sort((a, b) => a.d - b.d);
+			minRecords.sort((a, b) => b.d - a.d);
 
 			writeDataFile('search-index-full.json', fullRecords);
 			writeDataFile('search-index-min.json', minRecords, false);
