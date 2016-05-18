@@ -40,6 +40,7 @@ export function generatePackage(typing: TypingsData): { log: string[] } {
 
 	const outputPath = getOutputPath(typing);
 	log.push(`Create output path ${outputPath}`);
+	mkdir(path.dirname(outputPath));
 	mkdir(outputPath);
 
 	log.push(`Clear out old files`);
@@ -130,7 +131,7 @@ function createReadme(typing: TypingsData) {
 	lines.push('');
 
 	lines.push('# Details');
-	lines.push(`Typings were exported from ${typing.sourceRepoURL} in the ${typing.typingsPackageName} directory.`);
+	lines.push(`Typings were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
 
 	lines.push('');
 	lines.push(`Additional Details`)

@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash } from './common';
+import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from './common';
 
 function stripQuotes(s: string) {
 	return s.substr(1, s.length - 2);
@@ -349,6 +349,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			typingsPackageName: folderName.toLowerCase(),
 			projectName,
 			sourceRepoURL,
+			sourceBranch: settings.sourceBranch,
 			kind: DefinitionFileKind[fileKind],
 			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)),
 			declaredModules,

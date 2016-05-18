@@ -2,6 +2,7 @@
 	"scopeName": "types",
 	"outputPath": "./output",
 	"definitelyTypedPath": "../DefinitelyTyped",
+	"sourceBranch": "types-2.0",
 	"prereleaseTag": "alpha",
 	"tag": "latest"
 }

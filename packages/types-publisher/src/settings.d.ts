@@ -7,6 +7,9 @@ interface PublishSettings {
 	// e.g. '../DefinitelyTyped'
 	definitelyTypedPath: string;
 
+	// The branch that DefinitelyTyped is sourced from
+	sourceBranch: string;
+
 	// e.g. 'alpha'
 	prereleaseTag?: string;
 

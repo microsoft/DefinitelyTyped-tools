@@ -5,8 +5,10 @@ var rmdir = require('rmdir');
 var outputPath = path.join(__dirname, '..', 'output');
 console.log('Clean ' + outputPath);
 fs.readdir(outputPath, function(err, dirs) {
-	dirs.forEach(function (dir) {
-		var p = path.join(outputPath, dir);
-		rmdir(p);
-	});
+	if(dirs) {
+		dirs.forEach(function (dir) {
+			var p = path.join(outputPath, dir);
+			rmdir(p);
+		});
+	}
 });

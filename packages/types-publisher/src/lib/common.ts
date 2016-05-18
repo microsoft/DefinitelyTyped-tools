@@ -20,6 +20,8 @@ export interface TypingsData {
 
 	// e.g. https://github.com/DefinitelyTyped
 	sourceRepoURL: string;
+	// e.g. 'master'
+	sourceBranch: string;
 
 	// The name of the primary definition file, e.g. 'jquery.d.ts'
 	definitionFilename: string;
