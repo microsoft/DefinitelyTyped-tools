@@ -13,6 +13,8 @@ if (typeData === undefined) {
 
 function main() {
 	const packages = Object.keys(typeData);
+	const totalCount = packages.length;
+	console.log(`Loaded ${totalCount} entries`);
 
 	const fullRecords: generator.SearchRecord[] = [];
 	const minRecords: generator.MinifiedSearchRecord[] = [];
@@ -21,14 +23,20 @@ function main() {
 
 	function next() {
 		if (packages.length === 0) {
+			console.log(`Done generating search index`);
 			fullRecords.sort((a, b) => a.downloads - b.downloads);
 			minRecords.sort((a, b) => b.d - a.d);
 
+			console.log(`Writing out data files`);
 			writeDataFile('search-index-full.json', fullRecords);
 			writeDataFile('search-index-min.json', minRecords, false);
 			writeDataFile('search-index-head.json', minRecords.slice(0, 100), false);
 
 			return;
+		}
+		
+		if (packages.length % 100 === 0) {
+			console.log(`${totalCount - packages.length} / ${totalCount}...`);
 		}
 
 		const packageName = packages.shift();

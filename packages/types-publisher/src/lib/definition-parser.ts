@@ -154,7 +154,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		});
 
 		// TODO: Remove type assertion
-		((<any>src).referencedLibraries || []).forEach((ref: { fileName: string }) => {
+		src.typeReferenceDirectives.forEach((ref: { fileName: string }) => {
 			if (referencedLibraries.indexOf(ref.fileName) < 0) {
 				referencedLibraries.push(ref.fileName);
 			}
@@ -213,7 +213,10 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 				case ts.SyntaxKind.FunctionDeclaration:
 					// If these nodes have an 'export' modifier, the file is an external module
 					if (node.flags & ts.NodeFlags.Export) {
-						log.push(`Found exported declaration "${(node as ts.Declaration).name.getText()}"`);
+						const declName = (node as ts.Declaration).name;
+						if (declName) {
+							log.push(`Found exported declaration "${(node as ts.Declaration).name.getText()}"`);
+						}
 						isProperModule = true;
 					} else {
 						const declName = (node as ts.Declaration).name.getText();

@@ -1,5 +1,5 @@
 {
-	"scopeName": "ryancavanaugh",
+	"scopeName": "types",
 	"outputPath": "./output",
 	"definitelyTypedPath": "../DefinitelyTyped",
 	"prereleaseTag": "alpha",
