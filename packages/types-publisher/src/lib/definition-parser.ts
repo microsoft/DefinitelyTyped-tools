@@ -153,7 +153,6 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 			}
 		});
 
-		// TODO: Remove type assertion
 		src.typeReferenceDirectives.forEach((ref: { fileName: string }) => {
 			if (referencedLibraries.indexOf(ref.fileName) < 0) {
 				referencedLibraries.push(ref.fileName);
@@ -162,6 +161,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 		src.getChildren()[0].getChildren().forEach(node => {
 			switch (node.kind) {
+				// TODO: Rename to NamespaceExportDeclaration when upstream compiler updates
 				case ts.SyntaxKind.GlobalModuleExportDeclaration:
 					const globalName = (node as ts.GlobalModuleExportDeclaration).name.getText();
 					log.push(`Found UMD module declaration for global \`${globalName}\``);
