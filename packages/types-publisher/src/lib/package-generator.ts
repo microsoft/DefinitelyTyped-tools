@@ -33,7 +33,7 @@ export function shrinkwrap(typing: TypingsData) {
 }
 
 /** Generates the package to disk */
-export function generatePackage(typing: TypingsData): { log: string[] } {
+export function generatePackage(typing: TypingsData, availableTypes: { [name: string]: TypingsData }): { log: string[] } {
 	const log: string[] = [];
 
 	const fileVersion = Versions.computeVersion(typing);
@@ -49,7 +49,7 @@ export function generatePackage(typing: TypingsData): { log: string[] } {
 	});
 
 	log.push('Generate package.json, metadata.json, and README.md');
-	const packageJson = createPackageJSON(typing, fileVersion);
+	const packageJson = createPackageJSON(typing, fileVersion, availableTypes);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -86,10 +86,15 @@ function createMetadataJSON(typing: TypingsData): string {
 	return JSON.stringify(clone, undefined, 4);
 }
 
-function createPackageJSON(typing: TypingsData, fileVersion: number): string {
+function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): string {
 	const dependencies: any = {};
-	typing.moduleDependencies.forEach(d => dependencies[d] = '*');
-	typing.libraryDependencies.forEach(d => dependencies[`@${settings.scopeName}/${d}`] = '*');
+	function addDependency(d: string) {
+		if (availableTypes.hasOwnProperty(d)) {
+			dependencies[`@${settings.scopeName}/${d}`] = '*';
+		}
+	}
+	typing.moduleDependencies.forEach(addDependency);
+	typing.libraryDependencies.forEach(addDependency);
 
 	let version = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`;
 	if (settings.prereleaseTag) {
@@ -99,7 +104,7 @@ function createPackageJSON(typing: TypingsData, fileVersion: number): string {
 	return JSON.stringify({
 		name: `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}`,
 		version,
-		description: `Type definitions for ${typing.libraryName} from ${typing.sourceRepoURL}`,
+		description: `TypeScript definitions for ${typing.libraryName}`,
 		main: '',
 		scripts: {},
 		author: typing.authors,
@@ -112,26 +117,19 @@ function createPackageJSON(typing: TypingsData, fileVersion: number): string {
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
 	lines.push('# Installation');
-	lines.push('> `npm install --save-dev ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}` + '`');
+	lines.push('> `npm install --save ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}` + '`');
 	lines.push('');
 
 	lines.push('# Summary');
-	lines.push(`This package contains type definitions for ${typing.libraryName}.`)
 	if (typing.projectName) {
-		lines.push('');
-		lines.push(`The project URL or description is ${typing.projectName}`);
-	}
-	lines.push('');
-
-	lines.push('# Credits');
-	if (typing.authors) {
-		lines.push('');
-		lines.push(`These definitions were written by ${typing.authors}.`);
+		lines.push(`This package contains type definitions for ${typing.libraryName} (${typing.projectName}).`)
+	} else {
+		lines.push(`This package contains type definitions for ${typing.libraryName}.`)
 	}
 	lines.push('');
 
 	lines.push('# Details');
-	lines.push(`Typings were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
+	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
 
 	lines.push('');
 	lines.push(`Additional Details`)
@@ -141,6 +139,12 @@ function createReadme(typing: TypingsData) {
 	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(', ') : 'none'}`);
 	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(', ') : 'none'}`);
 	lines.push('');
+
+	if (typing.authors) {
+		lines.push('# Credits');
+		lines.push(`These definitions were written by ${typing.authors}.`);
+		lines.push('');
+	}
 
 	return lines.join('\r\n');
 }

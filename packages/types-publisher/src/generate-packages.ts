@@ -9,7 +9,7 @@ if (typeData === undefined) {
 	const log: string[] = [];
 	Object.keys(typeData).forEach(packageName => {
 		const typing = typeData[packageName];
-		const result = generator.generatePackage(typing);
+		const result = generator.generatePackage(typing, typeData);
 		log.push(` * ${packageName}`);
 		result.log.forEach(line => log.push(`   * ${line}`));
 	});

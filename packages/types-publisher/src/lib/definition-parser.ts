@@ -5,12 +5,16 @@ import * as path from 'path';
 import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from './common';
 
 function stripQuotes(s: string) {
-	return s.substr(1, s.length - 2);
+	if (s[0] === '"' || s[0] === "'") {
+		return s.substr(1, s.length - 2);
+	} else {
+		throw new Error(`${s} is not quoted`);
+	}
 }
 
 const augmentedGlobals = ['Array', ' Function', 'String', 'Number', 'Window', 'Date', 'StringConstructor', 'NumberConstructor', 'Math', 'HTMLElement'];
 
-const pathToLibrary = /\.\.\/(\w+)\//;
+const pathToLibrary = /\.\.\/([^\/]+)\//;
 
 function isSupportedFileKind(kind: DefinitionFileKind) {
 	switch (kind) {
@@ -148,7 +152,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 			// If this is a ../reference, treat it as a library
 			const pathMatch = pathToLibrary.exec(ref.fileName);
-			if(pathMatch) {
+			if (pathMatch) {
 				referencedLibraries.push(pathMatch[1]);
 			}
 		});
@@ -230,9 +234,14 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 				case ts.SyntaxKind.ImportEqualsDeclaration:
 					if ((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
 						const ref = (node as ts.ImportEqualsDeclaration).moduleReference.getText();
-						moduleDependencies.push(stripQuotes(ref));
-						log.push(`Found import = declaration from \`"${ref}"\``);
-						isProperModule = true;
+						const match = /require\(["'](.*)["']\)/.exec(ref);
+						if (match !== null) {
+							moduleDependencies.push(match[1]);
+							log.push(`Found import = declaration from \`"${ref}"\``);
+							isProperModule = true;
+						} else {
+							warnings.push(`Failed to parse import = declaration "${ref}"`);
+						}
 					}
 					break;
 
