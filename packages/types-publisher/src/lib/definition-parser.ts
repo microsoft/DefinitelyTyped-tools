@@ -165,9 +165,8 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 		src.getChildren()[0].getChildren().forEach(node => {
 			switch (node.kind) {
-				// TODO: Rename to NamespaceExportDeclaration when upstream compiler updates
-				case ts.SyntaxKind.GlobalModuleExportDeclaration:
-					const globalName = (node as ts.GlobalModuleExportDeclaration).name.getText();
+				case ts.SyntaxKind.NamespaceExportDeclaration:
+					const globalName = (node as ts.NamespaceExportDeclaration).name.getText();
 					log.push(`Found UMD module declaration for global \`${globalName}\``);
 					// Don't set hasGlobalDeclarations = true even though we add a symbol here
 					// since this is still a legal module-only declaration
