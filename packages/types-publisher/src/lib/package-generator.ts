@@ -87,10 +87,12 @@ function createMetadataJSON(typing: TypingsData): string {
 }
 
 function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): string {
-	const dependencies: any = {};
+	const dependencies: { [name: string]: string } = {};
 	function addDependency(d: string) {
 		if (availableTypes.hasOwnProperty(d)) {
-			dependencies[`@${settings.scopeName}/${d}`] = '*';
+			const type = availableTypes[d];
+			const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.*`;
+			dependencies[`@${settings.scopeName}/${d}`] = semver;
 		}
 	}
 	typing.moduleDependencies.forEach(addDependency);
