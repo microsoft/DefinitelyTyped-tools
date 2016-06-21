@@ -108,6 +108,10 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 		main: '',
 		scripts: {},
 		author: typing.authors,
+		repository: {
+			type: "git",
+			url: `${typing.sourceRepoURL}.git`
+		},
 		license: 'MIT',
 		typings: typing.definitionFilename,
 		dependencies
@@ -132,7 +136,7 @@ function createReadme(typing: TypingsData) {
 	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
 
 	lines.push('');
-	lines.push(`Additional Details`)
+	lines.push(`Additional Details`);
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
 	lines.push(` * File structure: ${typing.kind}`);
 	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(', ') : 'none'}`);
