@@ -1,3 +1,4 @@
+import assert = require('assert');
 import path = require('path');
 import fs = require('fs');
 import crypto = require('crypto');
@@ -7,30 +8,38 @@ export const settings: PublishSettings = JSON.parse(fs.readFileSync(path.join(ho
 export const typesDataFilename = 'definitions.json';
 export const versionsFilename = 'versions.json';
 
-
-export interface TypesDataFile {
-	[folderName: string]: TypingsData;
-}
-
-export interface TypingsData {
-	kind: string;
-
-	moduleDependencies: string[];
-	libraryDependencies: string[];
-
-	// e.g. https://github.com/DefinitelyTyped
-	sourceRepoURL: string;
-	// e.g. 'master'
-	sourceBranch: string;
-
-	// The name of the primary definition file, e.g. 'jquery.d.ts'
-	definitionFilename: string;
+export interface AnyPackage {
+	packageKind?: "not-needed" | undefined;
 
 	// The name of the library (human readable, e.g. might be 'Moment.js' even though packageName is 'moment')
 	libraryName: string;
 
 	// The NPM name to publish this under, e.g. 'jquery'. May not be lower-cased yet.
 	typingsPackageName: string;
+
+	// e.g. https://github.com/DefinitelyTyped
+	sourceRepoURL: string;
+}
+
+export interface NotNeededPackage extends AnyPackage {
+	packageKind: 'not-needed';
+}
+
+export interface TypesDataFile {
+	[folderName: string]: TypingsData;
+}
+
+export interface TypingsData extends AnyPackage {
+	kind: string; // Name of a member in DefinitionFileKind
+
+	moduleDependencies: string[];
+	libraryDependencies: string[];
+
+	// e.g. 'master'
+	sourceBranch: string;
+
+	// The name of the primary definition file, e.g. 'jquery.d.ts'
+	definitionFilename: string;
 
 	// Parsed from 'Definitions by:'
 	authors: string;
@@ -98,6 +107,28 @@ export interface TypingParseSucceedResult {
 	warnings: string[];
 }
 
+export class Log {
+	infos: string[];
+	errors: string[];
+
+	constructor() {
+		this.infos = [];
+		this.errors = [];
+	}
+
+	info(message: string): void {
+		this.infos.push(message);
+	}
+
+	error(message: string): void {
+		this.errors.push(message);
+	}
+}
+
+export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
+	return pkg.packageKind === 'not-needed';
+}
+
 export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseSucceedResult {
 	return (t as TypingParseSucceedResult).data !== undefined;
 }
@@ -139,15 +170,23 @@ export function readDataFile(filename: string): {} {
 	}
 }
 
+export function readNotNeededPackages(): NotNeededPackage[] {
+	const raw: NotNeededPackage[] = JSON.parse(fs.readFileSync('./notNeededPackages.json', 'utf-8')).packages;
+	for (const pkg of raw) {
+		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
+		pkg.packageKind = "not-needed";
+	}
+	return raw;
+}
+
 export function computeHash(content: string) {
 	const h = crypto.createHash('sha256');
 	h.update(content, 'utf-8');
 	return <string>h.digest('hex');
 }
 
-export function getOutputPath(typing: TypingsData) {
-	const outputPath = path.join(settings.outputPath, typing.typingsPackageName);
-	return outputPath;
+export function getOutputPath({typingsPackageName}: AnyPackage) {
+	return path.join(settings.outputPath, typingsPackageName)
 }
 
 export function getOutputPathByPackageName(scopedPackageTypingName: string) {
@@ -155,5 +194,14 @@ export function getOutputPathByPackageName(scopedPackageTypingName: string) {
 	const index = scopedPackageTypingName.indexOf('/');
 	if(index < 0) throw new Error('Expected to find / in ' + scopedPackageTypingName);
 	const unqualified = scopedPackageTypingName.substr(index + 1);
-	return path.join(settings.outputPath, unqualified);	
+	return path.join(settings.outputPath, unqualified);
+}
+
+export function fullPackageName(typingsPackageName: string): string {
+	return `@${settings.scopeName}/${typingsPackageName.toLowerCase()}`;
+}
+
+export function notNeededReadme({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage): string {
+	return `This is a stub types definition for ${libraryName} (${sourceRepoURL}).
+${libraryName} provides its own type definitions, so you don't need ${fullPackageName(typingsPackageName)} installed!`;
 }

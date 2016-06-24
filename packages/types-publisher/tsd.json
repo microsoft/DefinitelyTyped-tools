@@ -10,6 +10,9 @@
     },
     "typescript/typescript.d.ts": {
       "commit": "85af69c91599a6c904618545f0613970e1ff3f64"
+    },
+    "yargs/yargs.d.ts": {
+      "commit": "15b109941fd58d69943158f048211f2411173468"
     }
   }
 }

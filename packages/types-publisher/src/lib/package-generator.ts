@@ -1,4 +1,4 @@
-import { TypingsData, DefinitionFileKind, mkdir, settings, getOutputPath, getOutputPathByPackageName } from './common';
+import { TypingsData, DefinitionFileKind, AnyPackage, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath, getOutputPathByPackageName } from './common';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 import * as path from 'path';
@@ -39,14 +39,7 @@ export function generatePackage(typing: TypingsData, availableTypes: { [name: st
 	const fileVersion = Versions.computeVersion(typing);
 
 	const outputPath = getOutputPath(typing);
-	log.push(`Create output path ${outputPath}`);
-	mkdir(path.dirname(outputPath));
-	mkdir(outputPath);
-
-	log.push(`Clear out old files`);
-	fs.readdirSync(outputPath).forEach(file => {
-		fs.unlinkSync(path.join(outputPath, file));
-	});
+	clearOutputPath(outputPath, log);
 
 	log.push('Generate package.json, metadata.json, and README.md');
 	const packageJson = createPackageJSON(typing, fileVersion, availableTypes);
@@ -74,6 +67,43 @@ export function generatePackage(typing: TypingsData, availableTypes: { [name: st
 	}
 }
 
+export function generateNotNeededPackage(pkg: NotNeededPackage): { log: string[] } {
+	const log: string[] = [];
+	const outputPath = getOutputPath(pkg);
+	clearOutputPath(outputPath, log);
+
+	log.push("Generate package.json and README.md");
+	const packageJson = createNotNeededPackageJSON(pkg);
+	const readme = notNeededReadme(pkg);
+
+	log.push("Write metadata files to disk");
+	writeOutputFile("package.json", packageJson);
+	writeOutputFile("README.md", readme);
+
+	// Not-needed packages never change version
+
+	return { log };
+
+	function writeOutputFile(filename: string, content: string) {
+		fs.writeFileSync(path.join(outputPath, filename), content, 'utf-8');
+	}
+}
+
+function clearOutputPath(outputPath: string, log: string[]): void {
+	log.push(`Create output path ${outputPath}`);
+	mkdir(path.dirname(outputPath));
+	mkdir(outputPath);
+
+	log.push(`Clear out old files`);
+	removeAllFiles(outputPath);
+}
+
+function removeAllFiles(dirPath: string): void {
+	fs.readdirSync(dirPath).forEach(file => {
+		fs.unlinkSync(path.join(dirPath, file));
+	});
+}
+
 function patchDefinitionFile(input: string): string {
 	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+"/gm;
 	let output = input.replace(pathToLibrary, '/// <reference types="$1"');
@@ -81,9 +111,8 @@ function patchDefinitionFile(input: string): string {
 }
 
 function createMetadataJSON(typing: TypingsData): string {
-	const clone: typeof typing = JSON.parse(JSON.stringify(typing));
-	delete clone.root;
-	return JSON.stringify(clone, undefined, 4);
+	const replacer = (key: string, value: any) => key === "root" ? undefined : value;
+	return JSON.stringify(typing, replacer, 4);
 }
 
 function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): string {
@@ -92,7 +121,7 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 		if (availableTypes.hasOwnProperty(d)) {
 			const type = availableTypes[d];
 			const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.*`;
-			dependencies[`@${settings.scopeName}/${d}`] = semver;
+			dependencies[fullPackageName(d)] = semver;
 		}
 	}
 	typing.moduleDependencies.forEach(addDependency);
@@ -104,7 +133,7 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 	}
 
 	return JSON.stringify({
-		name: `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}`,
+		name: fullPackageName(typing.typingsPackageName),
 		version,
 		description: `TypeScript definitions for ${typing.libraryName}`,
 		main: '',
@@ -120,10 +149,27 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 	}, undefined, 4);
 }
 
+function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage): string {
+	return JSON.stringify({
+		name: fullPackageName(typingsPackageName),
+		version: "0.0.0",
+		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
+		main: "",
+		scripts: {},
+		author: "",
+		repository: sourceRepoURL,
+		license: "MIT",
+		//No `typings`, that's provided by the dependency.
+		dependencies: {
+			[typingsPackageName]: "*"
+		}
+	}, undefined, 4);
+}
+
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
 	lines.push('# Installation');
-	lines.push('> `npm install --save ' + `@${settings.scopeName}/${typing.typingsPackageName.toLowerCase()}` + '`');
+	lines.push('> `npm install --save ' + fullPackageName(typing.typingsPackageName) + '`');
 	lines.push('');
 
 	lines.push('# Summary');
