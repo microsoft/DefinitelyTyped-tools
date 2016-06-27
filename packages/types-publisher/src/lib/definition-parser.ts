@@ -12,7 +12,7 @@ function stripQuotes(s: string) {
 	}
 }
 
-const augmentedGlobals = ["Array", " Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
+const augmentedGlobals = ["Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
 
 const pathToLibrary = /\.\.\/([^\/]+)\//;
 
