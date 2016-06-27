@@ -1,12 +1,10 @@
-import { TypingsData, TypesDataFile, typesDataFilename, readDataFile, writeDataFile } from './lib/common';
-import * as fs from 'fs';
-import * as request from 'request';
-import * as generator from './lib/search-index-generator';
+import { TypesDataFile, typesDataFilename, readDataFile, writeDataFile } from "./lib/common";
+import * as generator from "./lib/search-index-generator";
 
-const typeData = <TypesDataFile>readDataFile(typesDataFilename);
+const typeData = <TypesDataFile> readDataFile(typesDataFilename);
 
 if (typeData === undefined) {
-	console.log('Run parse-definitions first!');
+	console.log("Run parse-definitions first!");
 } else {
 	main();
 }
@@ -28,13 +26,13 @@ function main() {
 			minRecords.sort((a, b) => b.d - a.d);
 
 			console.log(`Writing out data files`);
-			writeDataFile('search-index-full.json', fullRecords);
-			writeDataFile('search-index-min.json', minRecords, false);
-			writeDataFile('search-index-head.json', minRecords.slice(0, 100), false);
+			writeDataFile("search-index-full.json", fullRecords);
+			writeDataFile("search-index-min.json", minRecords, false);
+			writeDataFile("search-index-head.json", minRecords.slice(0, 100), false);
 
 			return;
 		}
-		
+
 		if (packages.length % 100 === 0) {
 			console.log(`${totalCount - packages.length} / ${totalCount}...`);
 		}

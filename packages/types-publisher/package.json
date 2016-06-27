@@ -12,6 +12,7 @@
     "yargs": "^4.7.1"
   },
   "devDependencies": {
+    "tslint": "^3.11.0",
     "typescript": "^1.9.0-dev.20160331"
   },
   "scripts": {
@@ -23,7 +24,8 @@
     "index": "node bin/create-search-index.js",
     "publish": "node bin/publish-packages.js",
     "publish-dry": "node bin/publish-packages.js --dry",
-    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish"
+    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish",
+    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
   },
   "repository": {
     "type": "git",

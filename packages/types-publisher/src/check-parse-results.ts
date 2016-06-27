@@ -1,18 +1,18 @@
-import { TypingsData, TypesDataFile, typesDataFilename, readDataFile, writeDataFile, writeLogSync } from './lib/common';
+import { TypingsData, TypesDataFile, typesDataFilename, readDataFile, writeLogSync } from "./lib/common";
 
-const typeData = <TypesDataFile>readDataFile(typesDataFilename);
+const typeData = <TypesDataFile> readDataFile(typesDataFilename);
 
 if (typeData === undefined) {
-	console.log('Run parse-definitions first!');
+	console.log("Run parse-definitions first!");
 } else {
 	main();
 }
 
 function main() {
-	const libConflicts = check(info => info.libraryName, 'Library Name');
-	const projConflicts = check(info => info.projectName, 'Project Name');
+	const libConflicts = check(info => info.libraryName, "Library Name");
+	const projConflicts = check(info => info.projectName, "Project Name");
 
-	writeLogSync('conflicts.md', libConflicts.concat(projConflicts));
+	writeLogSync("conflicts.md", libConflicts.concat(projConflicts));
 }
 
 function check(func: (info: TypingsData) => string, key: string) {

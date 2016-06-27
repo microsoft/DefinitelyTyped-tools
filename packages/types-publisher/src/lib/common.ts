@@ -1,20 +1,20 @@
-import assert = require('assert');
-import path = require('path');
-import fs = require('fs');
-import crypto = require('crypto');
+import assert = require("assert");
+import path = require("path");
+import fs = require("fs");
+import crypto = require("crypto");
 
-export const home = path.join(__dirname, '..', '..');
-export const settings: PublishSettings = JSON.parse(fs.readFileSync(path.join(home, 'settings.json'), 'utf-8'));
-export const typesDataFilename = 'definitions.json';
-export const versionsFilename = 'versions.json';
+export const home = path.join(__dirname, "..", "..");
+export const settings: PublishSettings = JSON.parse(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
+export const typesDataFilename = "definitions.json";
+export const versionsFilename = "versions.json";
 
 export interface AnyPackage {
 	packageKind?: "not-needed" | undefined;
 
-	// The name of the library (human readable, e.g. might be 'Moment.js' even though packageName is 'moment')
+	// The name of the library (human readable, e.g. might be "Moment.js" even though packageName is "moment")
 	libraryName: string;
 
-	// The NPM name to publish this under, e.g. 'jquery'. May not be lower-cased yet.
+	// The NPM name to publish this under, e.g. "jquery". May not be lower-cased yet.
 	typingsPackageName: string;
 
 	// e.g. https://github.com/DefinitelyTyped
@@ -22,7 +22,7 @@ export interface AnyPackage {
 }
 
 export interface NotNeededPackage extends AnyPackage {
-	packageKind: 'not-needed';
+	packageKind: "not-needed";
 }
 
 export interface TypesDataFile {
@@ -35,16 +35,16 @@ export interface TypingsData extends AnyPackage {
 	moduleDependencies: string[];
 	libraryDependencies: string[];
 
-	// e.g. 'master'
+	// e.g. "master"
 	sourceBranch: string;
 
-	// The name of the primary definition file, e.g. 'jquery.d.ts'
+	// The name of the primary definition file, e.g. "jquery.d.ts"
 	definitionFilename: string;
 
-	// Parsed from 'Definitions by:'
+	// Parsed from "Definitions by:""
 	authors: string;
 
-	// Optionally-present name or URL of the project, e.g. 'http://cordova.apache.org'
+	// Optionally-present name or URL of the project, e.g. "http://cordova.apache.org"
 	projectName: string;
 
 	// Names introduced into the global scope by this definition set
@@ -53,15 +53,15 @@ export interface TypingsData extends AnyPackage {
 	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
 	declaredModules: string[];
 
-	// The major version of the library (e.g. '1' for 1.0, '2' for 2.0)
+	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
 	libraryMajorVersion: string;
 	// The minor version of the library
 	libraryMinorVersion: string;
 
-	// The full path to the containing folder of all files, e.g. 'C:/github/DefinitelyTyped'
+	// The full path to the containing folder of all files, e.g. "C:/github/DefinitelyTyped"
 	root: string;
 
-	// Files that should be published with this definition, e.g. ['jquery.d.ts', 'jquery-extras.d.ts']
+	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
 	files: string[];
 
 	// A hash computed from all files from this definition
@@ -81,7 +81,7 @@ export enum DefinitionFileKind {
 	DeclareModule,
 	// Some combination of Global and DeclareModule
 	Mixed,
-	// More than one 'declare module "foo"''
+	// More than one 'declare module "foo"'
 	MultipleModules,
 	// Augments an external module
 	ModuleAugmentation,
@@ -126,7 +126,7 @@ export class Log {
 }
 
 export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
-	return pkg.packageKind === 'not-needed';
+	return pkg.packageKind === "not-needed";
 }
 
 export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseSucceedResult {
@@ -146,32 +146,32 @@ export function mkdir(p: string) {
 }
 
 export function writeLogSync(logName: string, contents: string[]) {
-	const logDir = path.join(home, 'logs');
+	const logDir = path.join(home, "logs");
 	mkdir(logDir);
-	fs.writeFileSync(path.join(logDir, logName), contents.join('\r\n'), 'utf-8');
+	fs.writeFileSync(path.join(logDir, logName), contents.join("\r\n"), "utf-8");
 }
 
 export function writeDataFile(filename: string, content: {}, formatted = true) {
-	const dataDir = path.join(home, 'data');
+	const dataDir = path.join(home, "data");
 	mkdir(dataDir);
-	if (typeof content !== 'string') {
+	if (typeof content !== "string") {
 		content = JSON.stringify(content, undefined, formatted ? 4 : undefined);
 	}
-	fs.writeFileSync(path.join(dataDir, filename), content, 'utf-8');
+	fs.writeFileSync(path.join(dataDir, filename), content, "utf-8");
 }
 
 export function readDataFile(filename: string): {} {
-	const dataDir = path.join(home, 'data');
+	const dataDir = path.join(home, "data");
 	const fullPath = path.join(dataDir, filename);
 	if (fs.existsSync(fullPath)) {
-		return JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+		return JSON.parse(fs.readFileSync(fullPath, "utf-8"));
 	} else {
 		return undefined;
 	}
 }
 
 export function readNotNeededPackages(): NotNeededPackage[] {
-	const raw: NotNeededPackage[] = JSON.parse(fs.readFileSync('./notNeededPackages.json', 'utf-8')).packages;
+	const raw: NotNeededPackage[] = JSON.parse(fs.readFileSync("./notNeededPackages.json", "utf-8")).packages;
 	for (const pkg of raw) {
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
 		pkg.packageKind = "not-needed";
@@ -180,19 +180,21 @@ export function readNotNeededPackages(): NotNeededPackage[] {
 }
 
 export function computeHash(content: string) {
-	const h = crypto.createHash('sha256');
-	h.update(content, 'utf-8');
-	return <string>h.digest('hex');
+	const h = crypto.createHash("sha256");
+	h.update(content, "utf-8");
+	return <string> h.digest("hex");
 }
 
 export function getOutputPath({typingsPackageName}: AnyPackage) {
-	return path.join(settings.outputPath, typingsPackageName)
+	return path.join(settings.outputPath, typingsPackageName);
 }
 
 export function getOutputPathByPackageName(scopedPackageTypingName: string) {
-	// turns '@types/foo' into 'foo'
-	const index = scopedPackageTypingName.indexOf('/');
-	if(index < 0) throw new Error('Expected to find / in ' + scopedPackageTypingName);
+	// turns "@types/foo" into "foo"
+	const index = scopedPackageTypingName.indexOf("/");
+	if (index < 0) {
+		throw new Error("Expected to find / in " + scopedPackageTypingName);
+	}
 	const unqualified = scopedPackageTypingName.substr(index + 1);
 	return path.join(settings.outputPath, unqualified);
 }

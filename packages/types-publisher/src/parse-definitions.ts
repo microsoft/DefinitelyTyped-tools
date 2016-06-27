@@ -1,9 +1,8 @@
-import * as parser from './lib/definition-parser';
-import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult,
-		 settings, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from './lib/common';
+import * as parser from "./lib/definition-parser";
+import { TypingsData, RejectionReason, settings, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
 
-import fs = require('fs');
-import path = require('path');
+import fs = require("fs");
+import path = require("path");
 
 function processDir(folderPath: string, name: string): { data: TypingsData, log: string[], warnings: string[], outcome: string } {
 	let data: TypingsData;
@@ -26,7 +25,7 @@ function processDir(folderPath: string, name: string): { data: TypingsData, log:
 function filterPaths(paths: string[]): { name: string; path: string; }[] {
 	return paths
 		// Remove hidden paths
-		.filter(s => s.substr(0, 1) !== '_' && s.substr(0, 1) !== '.')
+		.filter(s => s.substr(0, 1) !== "_" && s.substr(0, 1) !== ".")
 		// Sort by name
 		.sort()
 		// Combine paths
@@ -39,7 +38,7 @@ function main() {
 	const summaryLog: string[] = [];
 	const detailedLog: string[] = [];
 
-	summaryLog.push('# Typing Publish Report Summary');
+	summaryLog.push("# Typing Publish Report Summary");
 	summaryLog.push(`Started at ${(new Date()).toUTCString()}`);
 
 	// TypesData
@@ -77,9 +76,9 @@ function main() {
 			result.log.forEach(e => detailedLog.push(e));
 		});
 
-		summaryLog.push('\r\n### Overall Results\r\n');
+		summaryLog.push("\r\n### Overall Results\r\n");
 
-		summaryLog.push(' * Pass / fail');
+		summaryLog.push(" * Pass / fail");
 
 		const outcomeKeys = Object.keys(outcomes);
 		outcomeKeys.sort();
@@ -87,11 +86,11 @@ function main() {
 			summaryLog.push(`   * ${k}: ${outcomes[k]}`);
 		});
 
-		summaryLog.push('\r\n### Warnings\r\n');
+		summaryLog.push("\r\n### Warnings\r\n");
 		warningLog.forEach(w => summaryLog.push(w));
 
-		writeLogSync('parser-log-summary.md', summaryLog);
-		writeLogSync('parser-log-details.md', detailedLog);
+		writeLogSync("parser-log-summary.md", summaryLog);
+		writeLogSync("parser-log-details.md", detailedLog);
 		writeDataFile(typesDataFilename, typings);
 	});
 }

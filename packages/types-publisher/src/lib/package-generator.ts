@@ -1,31 +1,28 @@
-import { TypingsData, DefinitionFileKind, AnyPackage, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath, getOutputPathByPackageName } from './common';
-import * as fs from 'fs';
-import * as crypto from 'crypto';
-import * as path from 'path';
-import * as child_process from 'child_process';
-import * as request from 'request';
+import { TypingsData, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath, getOutputPathByPackageName } from "./common";
+import * as fs from "fs";
+import * as path from "path";
 
 /** Make concrete version references */
 export function shrinkwrap(typing: TypingsData) {
 	const outputPath = getOutputPath(typing);
 
-	const packageJSON = JSON.parse(fs.readFileSync(path.join(outputPath, 'package.json'), 'utf-8'));
+	const packageJSON = JSON.parse(fs.readFileSync(path.join(outputPath, "package.json"), "utf-8"));
 	Object.keys(packageJSON.dependencies).forEach(depName => {
 		const depPackageJSON = readPackageJSON(depName);
 		if (depPackageJSON) {
 			// apply concrete version
-			packageJSON.dependencies[depName] = depPackageJSON['version'];
+			packageJSON.dependencies[depName] = depPackageJSON["version"];
 		} else {
 			// delete unresolved dependency
 			delete packageJSON.dependencies[depName];
 		}
 	});
-	fs.writeFileSync(path.join(outputPath, 'package.json'), JSON.stringify(packageJSON, undefined, 4), 'utf-8');
+	fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(packageJSON, undefined, 4), "utf-8");
 
 	function readPackageJSON(typingName: string) {
-		const filename = path.join(getOutputPathByPackageName(typingName), 'package.json');
-		if(fs.existsSync(filename)) {
-			return JSON.parse(fs.readFileSync(filename, 'utf-8'));
+		const filename = path.join(getOutputPathByPackageName(typingName), "package.json");
+		if (fs.existsSync(filename)) {
+			return JSON.parse(fs.readFileSync(filename, "utf-8"));
 		} else {
 			return undefined;
 		}
@@ -41,19 +38,19 @@ export function generatePackage(typing: TypingsData, availableTypes: { [name: st
 	const outputPath = getOutputPath(typing);
 	clearOutputPath(outputPath, log);
 
-	log.push('Generate package.json, metadata.json, and README.md');
+	log.push("Generate package.json, metadata.json, and README.md");
 	const packageJson = createPackageJSON(typing, fileVersion, availableTypes);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
-	log.push('Write metadata files to disk');
-	writeOutputFile('package.json', packageJson);
-	writeOutputFile('types-metadata.json', metadataJson);
-	writeOutputFile('README.md', readme);
+	log.push("Write metadata files to disk");
+	writeOutputFile("package.json", packageJson);
+	writeOutputFile("types-metadata.json", metadataJson);
+	writeOutputFile("README.md", readme);
 
 	typing.files.forEach(file => {
 		log.push(`Copy and patch ${file}`);
-		let content = fs.readFileSync(path.join(typing.root, file), 'utf-8');
+		let content = fs.readFileSync(path.join(typing.root, file), "utf-8");
 		content = patchDefinitionFile(content);
 		writeOutputFile(file, content);
 	});
@@ -63,7 +60,7 @@ export function generatePackage(typing: TypingsData, availableTypes: { [name: st
 	return { log };
 
 	function writeOutputFile(filename: string, content: string) {
-		fs.writeFileSync(path.join(outputPath, filename), content, 'utf-8');
+		fs.writeFileSync(path.join(outputPath, filename), content, "utf-8");
 	}
 }
 
@@ -85,7 +82,7 @@ export function generateNotNeededPackage(pkg: NotNeededPackage): { log: string[]
 	return { log };
 
 	function writeOutputFile(filename: string, content: string) {
-		fs.writeFileSync(path.join(outputPath, filename), content, 'utf-8');
+		fs.writeFileSync(path.join(outputPath, filename), content, "utf-8");
 	}
 }
 
@@ -136,14 +133,14 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 		name: fullPackageName(typing.typingsPackageName),
 		version,
 		description: `TypeScript definitions for ${typing.libraryName}`,
-		main: '',
+		main: "",
 		scripts: {},
 		author: typing.authors,
 		repository: {
 			type: "git",
 			url: `${typing.sourceRepoURL}.git`
 		},
-		license: 'MIT',
+		license: "MIT",
 		typings: typing.definitionFilename,
 		dependencies
 	}, undefined, 4);
@@ -159,7 +156,7 @@ function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepo
 		author: "",
 		repository: sourceRepoURL,
 		license: "MIT",
-		//No `typings`, that's provided by the dependency.
+		// No `typings`, that's provided by the dependency.
 		dependencies: {
 			[typingsPackageName]: "*"
 		}
@@ -168,41 +165,41 @@ function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepo
 
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
-	lines.push('# Installation');
-	lines.push('> `npm install --save ' + fullPackageName(typing.typingsPackageName) + '`');
-	lines.push('');
+	lines.push("# Installation");
+	lines.push("> `npm install --save " + fullPackageName(typing.typingsPackageName) + "`");
+	lines.push("");
 
-	lines.push('# Summary');
+	lines.push("# Summary");
 	if (typing.projectName) {
-		lines.push(`This package contains type definitions for ${typing.libraryName} (${typing.projectName}).`)
+		lines.push(`This package contains type definitions for ${typing.libraryName} (${typing.projectName}).`);
 	} else {
-		lines.push(`This package contains type definitions for ${typing.libraryName}.`)
+		lines.push(`This package contains type definitions for ${typing.libraryName}.`);
 	}
-	lines.push('');
+	lines.push("");
 
-	lines.push('# Details');
+	lines.push("# Details");
 	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
 
-	lines.push('');
+	lines.push("");
 	lines.push(`Additional Details`);
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
 	lines.push(` * File structure: ${typing.kind}`);
-	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(', ') : 'none'}`);
-	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(', ') : 'none'}`);
-	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(', ') : 'none'}`);
-	lines.push('');
+	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(", ") : "none"}`);
+	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(", ") : "none"}`);
+	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
+	lines.push("");
 
 	if (typing.authors) {
-		lines.push('# Credits');
+		lines.push("# Credits");
 		lines.push(`These definitions were written by ${typing.authors}.`);
-		lines.push('');
+		lines.push("");
 	}
 
-	return lines.join('\r\n');
+	return lines.join("\r\n");
 }
 
 namespace Versions {
-	const versionFilename = 'versions.json';
+	const versionFilename = "versions.json";
 
 	interface VersionMap {
 		[typingsPackageName: string]: {
@@ -213,8 +210,8 @@ namespace Versions {
 
 	let _versionData: VersionMap = undefined;
 	function loadVersions() {
-		if(_versionData === undefined) {
-			_versionData = fs.existsSync(versionFilename) ? JSON.parse(fs.readFileSync(versionFilename, 'utf-8')) : {};
+		if (_versionData === undefined) {
+			_versionData = fs.existsSync(versionFilename) ? JSON.parse(fs.readFileSync(versionFilename, "utf-8")) : {};
 		}
 		return _versionData;
 	}
@@ -233,11 +230,11 @@ namespace Versions {
 		const key = typing.typingsPackageName;
 		const data = loadVersions();
 		const entry = data[key];
-		return entry || { lastVersion: 0, lastContentHash: '' };
+		return entry || { lastVersion: 0, lastContentHash: "" };
 	}
 
 	export function computeVersion(typing: TypingsData): number {
-		const forceUpdate = process.argv.some(arg => arg === '--forceUpdate');
+		const forceUpdate = process.argv.some(arg => arg === "--forceUpdate");
 		const lastVersion = getLastVersion(typing);
 		const increment = (forceUpdate || (lastVersion.lastContentHash !== typing.contentHash)) ? 1 : 0;
 		return lastVersion.lastVersion + increment;

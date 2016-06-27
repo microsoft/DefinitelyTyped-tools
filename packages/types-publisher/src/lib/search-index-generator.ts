@@ -1,6 +1,5 @@
-import { TypingsData } from './common';
-import * as fs from 'fs';
-import * as request from 'request';
+import { TypingsData } from "./common";
+import * as request from "request";
 
 export interface SearchRecord {
 	// types package name
@@ -60,9 +59,9 @@ interface NpmResult {
 
 export function createSearchRecords(info: TypingsData, done: (full: SearchRecord, min: MinifiedSearchRecord) => void) {
 	const pkg = info.typingsPackageName;
-	const url = 'https://api.npmjs.org/downloads/point/last-month/' + pkg;
+	const url = "https://api.npmjs.org/downloads/point/last-month/" + pkg;
 
-	const skipDownloads = process.argv.some(arg => arg === '--skipDownloads');
+	const skipDownloads = process.argv.some(arg => arg === "--skipDownloads");
 
 	if (skipDownloads) {
 		setImmediate(() => {
@@ -72,7 +71,7 @@ export function createSearchRecords(info: TypingsData, done: (full: SearchRecord
 	} else {
 		request.get(url, (err: any, resp: any, data: string) => {
 			const json: NpmResult = JSON.parse(data);
-			if (err) throw err;
+			if (err)  { throw err; }
 			const record = createSearchRecord(info, json.downloads || 0);
 			done(record, createMinifiedSearchRecord(record));
 		});

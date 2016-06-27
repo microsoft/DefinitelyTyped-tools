@@ -1,11 +1,10 @@
-import * as fs from 'fs'
-import * as common from './lib/common';
-import * as generator from './lib/package-generator';
+import * as common from "./lib/common";
+import * as generator from "./lib/package-generator";
 
-const typeData = <common.TypesDataFile>common.readDataFile(common.typesDataFilename);
+const typeData = <common.TypesDataFile> common.readDataFile(common.typesDataFilename);
 
 if (typeData === undefined) {
-	throw new Error('Run parse-definitions first!');
+	throw new Error("Run parse-definitions first!");
 }
 
 const log: string[] = [];
@@ -18,7 +17,7 @@ for (const pkg of common.readNotNeededPackages()) {
 	logGeneration(pkg, generator.generateNotNeededPackage(pkg));
 }
 
-common.writeLogSync('package-generator.md', log);
+common.writeLogSync("package-generator.md", log);
 
 function logGeneration(pkg: common.AnyPackage, generateResult: { log: string[] }): void {
 	log.push(` * ${pkg.libraryName}`);

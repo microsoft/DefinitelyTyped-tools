@@ -1,8 +1,8 @@
-import * as ts from 'typescript';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as ts from "typescript";
+import * as fs from "fs";
+import * as path from "path";
 
-import { TypingsData, DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from './common';
+import { DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from "./common";
 
 function stripQuotes(s: string) {
 	if (s[0] === '"' || s[0] === "'") {
@@ -12,7 +12,7 @@ function stripQuotes(s: string) {
 	}
 }
 
-const augmentedGlobals = ['Array', ' Function', 'String', 'Number', 'Window', 'Date', 'StringConstructor', 'NumberConstructor', 'Math', 'HTMLElement'];
+const augmentedGlobals = ["Array", " Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
 
 const pathToLibrary = /\.\.\/([^\/]+)\//;
 
@@ -29,7 +29,7 @@ function isSupportedFileKind(kind: DefinitionFileKind) {
 		case DefinitionFileKind.OldUMD:
 			return true;
 		default:
-			throw new Error('Should not be here');
+			throw new Error("Should not be here");
 	}
 }
 
@@ -43,7 +43,6 @@ enum DeclarationFlags {
 
 function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	let result = DeclarationFlags.None;
-	const body = ns.body;
 	if (ns.body.kind === ts.SyntaxKind.ModuleDeclaration) {
 		return getNamespaceFlags(ns.body as ts.ModuleDeclaration);
 	}
@@ -90,7 +89,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 	const declFiles = files.filter(f => /\.d\.ts$/.test(f));
 	const candidates = [folderName + ".d.ts", "index.d.ts"];
-	log.push(`Found ${declFiles.length} .d.ts files (${declFiles.join(', ')})`);
+	log.push(`Found ${declFiles.length} .d.ts files (${declFiles.join(", ")})`);
 
 	let entryPointFilename: string;
 	if (declFiles.length === 1) {
@@ -109,7 +108,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	declFiles.sort();
 
 	if (entryPointFilename === undefined) {
-		const msg = 'Exiting, found either zero or more than one .d.ts file and none of ' + candidates.map(c => '`' + c + '`').join(' or ');
+		const msg = "Exiting, found either zero or more than one .d.ts file and none of " + candidates.map(c => "`" + c + "`").join(" or ");
 		log.push(msg);
 		warnings.push(msg);
 		return { log, warnings, rejectionReason: RejectionReason.TooManyFiles };
@@ -143,10 +142,10 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		log.push(`Parse ${filename}`);
 		let content = readFile(filename);
 
-		const src = ts.createSourceFile('test.d.ts', content, ts.ScriptTarget.Latest, true);
+		const src = ts.createSourceFile("test.d.ts", content, ts.ScriptTarget.Latest, true);
 		src.referencedFiles.forEach(ref => {
 			// Add referenced files to processing queue
-			if (ref.fileName.charAt(0) !== '.') {
+			if (ref.fileName.charAt(0) !== ".") {
 				processQueue.push(path.join(path.dirname(filename), ref.fileName));
 			}
 
@@ -197,7 +196,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 
 				case ts.SyntaxKind.VariableStatement:
 					if (node.flags & ts.NodeFlags.Export) {
-						log.push('Found exported variables');
+						log.push("Found exported variables");
 						isProperModule = true;
 					} else {
 						(node as ts.VariableStatement).declarationList.declarations.forEach(decl => {
@@ -224,7 +223,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					} else {
 						const declName = (node as ts.Declaration).name.getText();
 						const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
-						log.push(`Found global ${isType ? 'type' : 'value'} declaration "${declName}"`);
+						log.push(`Found global ${isType ? "type" : "value"} declaration "${declName}"`);
 						recordSymbol(declName, isType ? DeclarationFlags.Type : DeclarationFlags.Value);
 						hasGlobalDeclarations = true;
 					}
@@ -259,13 +258,14 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 					log.push(`Found export assignment or export declaration`);
 					isProperModule = true;
 					break;
+
+				default:
+					throw new Error();
 			}
 		});
 	}
 
-	let hasGlobalAugmentations = false;
 	const globals = Object.keys(globalSymbols).filter(s => augmentedGlobals.indexOf(s) < 0);
-	const globalAugments = Object.keys(globalSymbols).filter(s => augmentedGlobals.indexOf(s) >= 0);
 
 	let fileKind = DefinitionFileKind.Unknown;
 	if (isProperModule) {
@@ -283,7 +283,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		}
 	} else {
 		if (hasGlobalDeclarations) {
-			if (ambientModuleCount == 1) {
+			if (ambientModuleCount === 1) {
 				if (globals.length === 1) {
 					log.push(`One global declaration and one ambient module declaration, this is an OldUMD file`);
 					fileKind = DefinitionFileKind.OldUMD;
@@ -328,20 +328,20 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		return match ? match[1] : defaultValue;
 	}
 
-	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, 'Unknown');
-	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?(\d+)/m, '0');
-	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?\d+\.(\d+)/m, '0');
-	// const libraryName = regexMatch(/^\/\/ Type definitions for ([^\s]+)/m, 'Unknown').trim();
-	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, 'Unknown').trim();
-	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, '');
+	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, "Unknown");
+	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?(\d+)/m, "0");
+	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?\d+\.(\d+)/m, "0");
+	// const libraryName = regexMatch(/^\/\/ Type definitions for ([^\s]+)/m, "Unknown").trim();
+	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
+	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
 	const packageName = path.basename(directory);
-	const sourceRepoURL = 'https://www.github.com/DefinitelyTyped/DefinitelyTyped';
+	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 
 	if (packageName !== packageName.toLowerCase()) {
 		warnings.push(`Package name \`${packageName}\` should be strictly lowercase`);
 	}
 
-	const allContent = declFiles.map(d => d + '**' + readFile(d)).join('||');
+	const allContent = declFiles.map(d => d + "**" + readFile(d)).join("||");
 
 	return {
 		log,
@@ -368,7 +368,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 	};
 
 	function readFile(fileName: string) {
-		const result = fs.readFileSync(path.join(directory, fileName), 'utf-8');
+		const result = fs.readFileSync(path.join(directory, fileName), "utf-8");
 		// Skip BOM
 		return (result.charCodeAt(0) === 0xFEFF) ? result.substr(1) : result;
 	}
