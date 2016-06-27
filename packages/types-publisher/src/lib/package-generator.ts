@@ -1,33 +1,6 @@
-import { TypingsData, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath, getOutputPathByPackageName } from "./common";
+import { TypingsData, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath } from "./common";
 import * as fs from "fs";
 import * as path from "path";
-
-/** Make concrete version references */
-export function shrinkwrap(typing: TypingsData) {
-	const outputPath = getOutputPath(typing);
-
-	const packageJSON = JSON.parse(fs.readFileSync(path.join(outputPath, "package.json"), "utf-8"));
-	Object.keys(packageJSON.dependencies).forEach(depName => {
-		const depPackageJSON = readPackageJSON(depName);
-		if (depPackageJSON) {
-			// apply concrete version
-			packageJSON.dependencies[depName] = depPackageJSON["version"];
-		} else {
-			// delete unresolved dependency
-			delete packageJSON.dependencies[depName];
-		}
-	});
-	fs.writeFileSync(path.join(outputPath, "package.json"), JSON.stringify(packageJSON, undefined, 4), "utf-8");
-
-	function readPackageJSON(typingName: string) {
-		const filename = path.join(getOutputPathByPackageName(typingName), "package.json");
-		if (fs.existsSync(filename)) {
-			return JSON.parse(fs.readFileSync(filename, "utf-8"));
-		} else {
-			return undefined;
-		}
-	}
-}
 
 /** Generates the package to disk */
 export function generatePackage(typing: TypingsData, availableTypes: { [name: string]: TypingsData }): { log: string[] } {

@@ -189,16 +189,6 @@ export function getOutputPath({typingsPackageName}: AnyPackage) {
 	return path.join(settings.outputPath, typingsPackageName);
 }
 
-export function getOutputPathByPackageName(scopedPackageTypingName: string) {
-	// turns "@types/foo" into "foo"
-	const index = scopedPackageTypingName.indexOf("/");
-	if (index < 0) {
-		throw new Error("Expected to find / in " + scopedPackageTypingName);
-	}
-	const unqualified = scopedPackageTypingName.substr(index + 1);
-	return path.join(settings.outputPath, unqualified);
-}
-
 export function fullPackageName(typingsPackageName: string): string {
 	return `@${settings.scopeName}/${typingsPackageName.toLowerCase()}`;
 }
