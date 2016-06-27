@@ -1,6 +1,6 @@
-import { TypingsData, TypesDataFile, typesDataFilename, readDataFile, writeLogSync } from "./lib/common";
+import { TypingsData, readTypesDataFile, typings, writeLogSync } from "./lib/common";
 
-const typeData = <TypesDataFile> readDataFile(typesDataFilename);
+const typeData = readTypesDataFile();
 
 if (typeData === undefined) {
 	console.log("Run parse-definitions first!");
@@ -17,7 +17,7 @@ function main() {
 
 function check(func: (info: TypingsData) => string, key: string) {
 	const lookup: { [libName: string]: string[] } = {};
-	const infos = Object.keys(typeData).map(k => typeData[k]);
+	const infos = typings(typeData);
 	const result: string[] = [];
 	infos.forEach(info => {
 		const name = func(info);

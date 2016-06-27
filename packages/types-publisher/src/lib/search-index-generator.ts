@@ -1,5 +1,7 @@
-import { TypingsData } from "./common";
-import * as request from "request";
+import { AnyPackage } from "./common";
+import { parseJson } from "./util";
+import fetch = require("node-fetch");
+import * as yargs from "yargs";
 
 export interface SearchRecord {
 	// types package name
@@ -31,49 +33,37 @@ export interface MinifiedSearchRecord {
 	d: number;
 }
 
-function createSearchRecord(info: TypingsData, downloads: number): SearchRecord {
-	return ({
-		projectName: info.projectName,
-		libraryName: info.libraryName,
-		globals: info.globals,
-		typePackageName: info.typingsPackageName,
-		declaredExternalModules: info.declaredModules,
-		downloads
-	});
-}
-
-function createMinifiedSearchRecord(data: SearchRecord): MinifiedSearchRecord {
-	return ({
+export function minifySearchRecord(data: SearchRecord): MinifiedSearchRecord {
+	return {
 		t: data.typePackageName,
 		g: data.globals,
 		m: data.declaredExternalModules,
 		p: data.projectName,
 		l: data.libraryName,
 		d: data.downloads
-	});
+	};
 }
 
-interface NpmResult {
-	downloads: number;
-}
+export async function createSearchRecord(info: AnyPackage): Promise<SearchRecord> {
+	const skipDownloads = yargs.argv.skipDownloads;
 
-export function createSearchRecords(info: TypingsData, done: (full: SearchRecord, min: MinifiedSearchRecord) => void) {
-	const pkg = info.typingsPackageName;
-	const url = "https://api.npmjs.org/downloads/point/last-month/" + pkg;
-
-	const skipDownloads = process.argv.some(arg => arg === "--skipDownloads");
-
+	let downloads: number;
 	if (skipDownloads) {
-		setImmediate(() => {
-			const record = createSearchRecord(info, -1);
-			done(record, createMinifiedSearchRecord(record));
-		});
+		downloads = -1;
 	} else {
-		request.get(url, (err: any, resp: any, data: string) => {
-			const json: NpmResult = JSON.parse(data);
-			if (err)  { throw err; }
-			const record = createSearchRecord(info, json.downloads || 0);
-			done(record, createMinifiedSearchRecord(record));
-		});
+		const url = `https://api.npmjs.org/downloads/point/last-month/${info.typingsPackageName}`;
+		interface NpmResult { downloads: number; }
+		const text = await (await fetch(url)).text();
+		const json = <NpmResult> parseJson(text);
+		downloads = json.downloads || 0;
 	}
+
+	return {
+		projectName: info.projectName,
+		libraryName: info.libraryName,
+		globals: info.globals,
+		typePackageName: info.typingsPackageName,
+		declaredExternalModules: info.declaredModules,
+		downloads
+	};
 }

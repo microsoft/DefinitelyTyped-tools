@@ -3,11 +3,14 @@
 		"src/settings.d.ts",
 		"typings/tsd.d.ts",
 
+		"src/lib/declarations.d.ts",
+
 		"src/lib/definition-parser.ts",
 		"src/lib/package-generator.ts",
 		"src/lib/package-publisher.ts",
 		"src/lib/search-index-generator.ts",
 		"src/lib/common.ts",
+		"src/lib/util.ts",
 
 		"src/parse-definitions.ts",
 		"src/generate-packages.ts",
@@ -19,6 +22,8 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"noImplicitAny": true,
-		"outDir": "bin"
+		"outDir": "bin",
+		"sourceMap": true,
+		"target": "ES6"
 	}
 }

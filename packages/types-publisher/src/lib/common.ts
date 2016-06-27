@@ -2,9 +2,12 @@ import assert = require("assert");
 import path = require("path");
 import fs = require("fs");
 import crypto = require("crypto");
+import { install } from "source-map-support";
+import { parseJson } from "./util";
+install();
 
 export const home = path.join(__dirname, "..", "..");
-export const settings: PublishSettings = JSON.parse(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
+export const settings: PublishSettings = parseJson(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
 export const versionsFilename = "versions.json";
 
@@ -19,6 +22,15 @@ export interface AnyPackage {
 
 	// e.g. https://github.com/DefinitelyTyped
 	sourceRepoURL: string;
+
+	// Optionally-present name or URL of the project, e.g. "http://cordova.apache.org"
+	projectName: string | undefined;
+
+	// Names introduced into the global scope by this definition set
+	globals: string[] | undefined;
+
+	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
+	declaredModules: string[] | undefined;
 }
 
 export interface NotNeededPackage extends AnyPackage {
@@ -43,15 +55,6 @@ export interface TypingsData extends AnyPackage {
 
 	// Parsed from "Definitions by:""
 	authors: string;
-
-	// Optionally-present name or URL of the project, e.g. "http://cordova.apache.org"
-	projectName: string;
-
-	// Names introduced into the global scope by this definition set
-	globals: string[];
-
-	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
-	declaredModules: string[];
 
 	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
 	libraryMajorVersion: string;
@@ -137,7 +140,7 @@ export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t i
 	return (t as TypingParseFailResult).rejectionReason !== undefined;
 }
 
-export function mkdir(p: string) {
+function mkdir(p: string) {
 	try {
 		fs.statSync(p);
 	} catch (e) {
@@ -160,21 +163,32 @@ export function writeDataFile(filename: string, content: {}, formatted = true) {
 	fs.writeFileSync(path.join(dataDir, filename), content, "utf-8");
 }
 
-export function readDataFile(filename: string): {} {
+export function readDataFile(filename: string): {} | undefined {
 	const dataDir = path.join(home, "data");
 	const fullPath = path.join(dataDir, filename);
 	if (fs.existsSync(fullPath)) {
-		return JSON.parse(fs.readFileSync(fullPath, "utf-8"));
+		return parseJson(fs.readFileSync(fullPath, "utf-8"));
 	} else {
 		return undefined;
 	}
 }
 
+export function readTypesDataFile(): TypesDataFile | undefined {
+	return <TypesDataFile> readDataFile(typesDataFilename);
+}
+export function typings(typeData: TypesDataFile): TypingsData[] {
+	return Object.keys(typeData).map(packageName => typeData[packageName]);
+}
+
 export function readNotNeededPackages(): NotNeededPackage[] {
-	const raw: NotNeededPackage[] = JSON.parse(fs.readFileSync("./notNeededPackages.json", "utf-8")).packages;
+	const raw: any[] = parseJson(fs.readFileSync("./notNeededPackages.json", "utf-8")).packages;
 	for (const pkg of raw) {
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
+		assert(!pkg.projectName && !pkg.packageKind && !pkg.globals && !pkg.declaredModules);
+		pkg.projectName = pkg.sourceRepoURL;
 		pkg.packageKind = "not-needed";
+		pkg.globals = [];
+		pkg.declaredModules = [];
 	}
 	return raw;
 }

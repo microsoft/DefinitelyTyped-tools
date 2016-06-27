@@ -13,6 +13,12 @@
     },
     "yargs/yargs.d.ts": {
       "commit": "15b109941fd58d69943158f048211f2411173468"
+    },
+    "source-map-support/source-map-support.d.ts": {
+      "commit": "ffd313adf9e5b86d9f04270e4e39b64720317352"
+    },
+    "node-fetch/node-fetch.d.ts": {
+      "commit": "2743ece76d3b31df635afdc39c63ed13acf393ad"
     }
   }
 }

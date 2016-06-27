@@ -1,15 +1,18 @@
-import { TypingsData, NotNeededPackage, mkdir, settings, notNeededReadme, fullPackageName, getOutputPath } from "./common";
+import { TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath, versionsFilename } from "./common";
+import { parseJson } from "./util";
 import * as fs from "fs";
+import * as fsp from "fs-promise";
 import * as path from "path";
+import * as yargs from "yargs";
 
 /** Generates the package to disk */
-export function generatePackage(typing: TypingsData, availableTypes: { [name: string]: TypingsData }): { log: string[] } {
+export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile): Promise<{ log: string[] }> {
 	const log: string[] = [];
 
 	const fileVersion = Versions.computeVersion(typing);
 
 	const outputPath = getOutputPath(typing);
-	clearOutputPath(outputPath, log);
+	await clearOutputPath(outputPath, log);
 
 	log.push("Generate package.json, metadata.json, and README.md");
 	const packageJson = createPackageJSON(typing, fileVersion, availableTypes);
@@ -17,61 +20,60 @@ export function generatePackage(typing: TypingsData, availableTypes: { [name: st
 	const readme = createReadme(typing);
 
 	log.push("Write metadata files to disk");
-	writeOutputFile("package.json", packageJson);
-	writeOutputFile("types-metadata.json", metadataJson);
-	writeOutputFile("README.md", readme);
-
-	typing.files.forEach(file => {
+	const outputs = [
+		writeOutputFile("package.json", packageJson),
+		writeOutputFile("types-metadata.json", metadataJson),
+		writeOutputFile("README.md", readme)
+	];
+	outputs.push(...typing.files.map(async file => {
 		log.push(`Copy and patch ${file}`);
-		let content = fs.readFileSync(path.join(typing.root, file), "utf-8");
+		let content = await fsp.readFile(path.join(typing.root, file), { encoding: "utf8" });
 		content = patchDefinitionFile(content);
-		writeOutputFile(file, content);
-	});
+		return writeOutputFile(file, content);
+	}));
+	outputs.push(Versions.recordVersionUpdate(typing));
 
-	Versions.recordVersionUpdate(typing);
-
+	await Promise.all(outputs);
 	return { log };
 
-	function writeOutputFile(filename: string, content: string) {
-		fs.writeFileSync(path.join(outputPath, filename), content, "utf-8");
+	function writeOutputFile(filename: string, content: string): Promise<void> {
+		return fsp.writeFile(path.join(outputPath, filename), content, { encoding: "utf8" });
 	}
 }
 
-export function generateNotNeededPackage(pkg: NotNeededPackage): { log: string[] } {
+export async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<{ log: string[] }> {
 	const log: string[] = [];
 	const outputPath = getOutputPath(pkg);
-	clearOutputPath(outputPath, log);
+	await clearOutputPath(outputPath, log);
 
 	log.push("Generate package.json and README.md");
 	const packageJson = createNotNeededPackageJSON(pkg);
 	const readme = notNeededReadme(pkg);
 
 	log.push("Write metadata files to disk");
-	writeOutputFile("package.json", packageJson);
-	writeOutputFile("README.md", readme);
+	await writeOutputFile("package.json", packageJson);
+	await writeOutputFile("README.md", readme);
 
 	// Not-needed packages never change version
 
 	return { log };
 
-	function writeOutputFile(filename: string, content: string) {
-		fs.writeFileSync(path.join(outputPath, filename), content, "utf-8");
+	function writeOutputFile(filename: string, content: string): Promise<void> {
+		return fsp.writeFile(path.join(outputPath, filename), content, { encoding: "utf8" });
 	}
 }
 
-function clearOutputPath(outputPath: string, log: string[]): void {
+async function clearOutputPath(outputPath: string, log: string[]): Promise<void> {
 	log.push(`Create output path ${outputPath}`);
-	mkdir(path.dirname(outputPath));
-	mkdir(outputPath);
+	await fsp.mkdirp(outputPath);
 
 	log.push(`Clear out old files`);
-	removeAllFiles(outputPath);
+	await removeAllFiles(outputPath);
 }
 
-function removeAllFiles(dirPath: string): void {
-	fs.readdirSync(dirPath).forEach(file => {
-		fs.unlinkSync(path.join(dirPath, file));
-	});
+async function removeAllFiles(dirPath: string): Promise<void> {
+	const files = await fsp.readdir(dirPath);
+	await Promise.all(files.map(file => fsp.unlink(path.join(dirPath, file))));
 }
 
 function patchDefinitionFile(input: string): string {
@@ -184,19 +186,19 @@ namespace Versions {
 	let _versionData: VersionMap = undefined;
 	function loadVersions() {
 		if (_versionData === undefined) {
-			_versionData = fs.existsSync(versionFilename) ? JSON.parse(fs.readFileSync(versionFilename, "utf-8")) : {};
+			_versionData = fs.existsSync(versionFilename) ? parseJson(fs.readFileSync(versionFilename, "utf-8")) : {};
 		}
 		return _versionData;
 	}
-	function saveVersions(data: VersionMap) {
-		fs.writeFileSync(versionFilename, JSON.stringify(data, undefined, 4));
+	function saveVersions(data: VersionMap): Promise<void> {
+		return fsp.writeFile(versionsFilename, JSON.stringify(data, undefined, 4), { encoding: "utf8" });
 	}
 
-	export function recordVersionUpdate(typing: TypingsData) {
+	export async function recordVersionUpdate(typing: TypingsData): Promise<void> {
 		const key = typing.typingsPackageName;
 		const data = loadVersions();
 		data[key] = { lastVersion: computeVersion(typing), lastContentHash: typing.contentHash };
-		saveVersions(data);
+		await saveVersions(data);
 	}
 
 	function getLastVersion(typing: TypingsData) {
@@ -207,7 +209,7 @@ namespace Versions {
 	}
 
 	export function computeVersion(typing: TypingsData): number {
-		const forceUpdate = process.argv.some(arg => arg === "--forceUpdate");
+		const forceUpdate = yargs.argv.forceUpdate;
 		const lastVersion = getLastVersion(typing);
 		const increment = (forceUpdate || (lastVersion.lastContentHash !== typing.contentHash)) ? 1 : 0;
 		return lastVersion.lastVersion + increment;

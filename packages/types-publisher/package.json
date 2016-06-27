@@ -7,8 +7,11 @@
     "publish-typings": "createSearchIndex.js"
   },
   "dependencies": {
+    "fs-promise": "^0.5.0",
+    "node-fetch": "^1.5.3",
     "request": "^2.72.0",
     "rmdir": "^1.2.0",
+    "source-map-support": "^0.4.0",
     "yargs": "^4.7.1"
   },
   "devDependencies": {

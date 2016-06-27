@@ -1,25 +1,26 @@
 import * as common from "./lib/common";
+import { nAtATime } from "./lib/util";
 import * as generator from "./lib/package-generator";
 
-const typeData = <common.TypesDataFile> common.readDataFile(common.typesDataFilename);
+const typeData = common.readTypesDataFile();
 
 if (typeData === undefined) {
-	throw new Error("Run parse-definitions first!");
+	console.log("Run parse-definitions first!");
+} else {
+	main().catch(console.error);
 }
 
-const log: string[] = [];
-Object.keys(typeData).forEach(packageName => {
-	const typing = typeData[packageName];
-	logGeneration(typing, generator.generatePackage(typing, typeData));
-});
+async function main(): Promise<void> {
+	const log: string[] = [];
+	await nAtATime(10, common.typings(typeData), async typing =>
+		logGeneration(typing, await generator.generatePackage(typing, typeData)));
+	await nAtATime(10, common.readNotNeededPackages(), async pkg =>
+		logGeneration(pkg, await generator.generateNotNeededPackage(pkg)));
 
-for (const pkg of common.readNotNeededPackages()) {
-	logGeneration(pkg, generator.generateNotNeededPackage(pkg));
-}
+	common.writeLogSync("package-generator.md", log);
 
-common.writeLogSync("package-generator.md", log);
-
-function logGeneration(pkg: common.AnyPackage, generateResult: { log: string[] }): void {
-	log.push(` * ${pkg.libraryName}`);
-	generateResult.log.forEach(line => log.push(`   * ${line}`));
+	async function logGeneration(pkg: common.AnyPackage, generateResult: { log: string[] }) {
+		log.push(` * ${pkg.libraryName}`);
+		generateResult.log.forEach(line => log.push(`   * ${line}`));
+	}
 }

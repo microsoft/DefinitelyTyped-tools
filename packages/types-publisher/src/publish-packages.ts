@@ -3,7 +3,7 @@ import * as yargs from "yargs";
 import * as common from "./lib/common";
 import * as publisher from "./lib/package-publisher";
 
-const typeData = <common.TypesDataFile> common.readDataFile(common.typesDataFilename);
+const typeData = common.readTypesDataFile();
 
 if (typeData === undefined || fs.readdirSync("./output").length === 0) {
 	throw new Error("Run parse-definitions and generate-packages first!");

@@ -1,4 +1,5 @@
 import { AnyPackage, Log, fullPackageName, isNotNeededPackage, getOutputPath, notNeededReadme, settings } from "./common";
+import { parseJson } from "./util";
 import * as fs from "fs";
 import * as path from "path";
 import * as child_process from "child_process";
@@ -13,7 +14,7 @@ export function publishPackage(pkg: AnyPackage, dry: boolean, done: (log: Log) =
 	log.info(`Possibly publishing ${libraryName}`);
 
 	// Read package.json for version number we would be publishing
-	const localVersion: string = JSON.parse(fs.readFileSync(path.join(outputPath, "package.json"), "utf-8")).version;
+	const localVersion: string = parseJson(fs.readFileSync(path.join(outputPath, "package.json"), "utf-8")).version;
 	log.info(`Local version from package.json is ${localVersion}`);
 
 	shouldUpdateNpmPackage(log, pkg, localVersion, shouldUpdate => {
@@ -70,7 +71,7 @@ function shouldUpdateNpmPackage(log: Log, {typingsPackageName}: AnyPackage, loca
 			return;
 		}
 
-		const body: NpmRegistryResult = JSON.parse(bodyString);
+		const body: NpmRegistryResult = parseJson(bodyString);
 		callback(shouldUpdate(body));
 	});
 
