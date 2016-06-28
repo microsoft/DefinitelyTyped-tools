@@ -1,3 +1,4 @@
+import * as yargs from "yargs";
 import { AnyPackage, readTypesDataFile, readNotNeededPackages, typings, writeDataFile } from "./lib/common";
 import { nAtATime } from "./lib/util";
 import { createSearchRecord, minifySearchRecord } from "./lib/search-index-generator";
@@ -7,14 +8,15 @@ const typeData = readTypesDataFile();
 if (typeData === undefined) {
 	console.log("Run parse-definitions first!");
 } else {
-	main().catch(console.error);
+	const skipDownloads = yargs.argv.skipDownloads;
+	main(skipDownloads).catch(console.error);
 }
 
-async function main(): Promise<void> {
+async function main(skipDownloads: boolean): Promise<void> {
 	let packages = (typings(typeData) as AnyPackage[]).concat(readNotNeededPackages());
 	console.log(`Loaded ${packages.length} entries`);
 
-	const records = await nAtATime(100, packages, createSearchRecord);
+	const records = await nAtATime(100, packages, pkg => createSearchRecord(pkg, skipDownloads));
 	// Most downloads first
 	records.sort((a, b) => b.downloads - a.downloads);
 

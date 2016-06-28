@@ -1,7 +1,6 @@
 import { AnyPackage } from "./common";
 import { parseJson } from "./util";
 import fetch = require("node-fetch");
-import * as yargs from "yargs";
 
 export interface SearchRecord {
 	// types package name
@@ -44,9 +43,7 @@ export function minifySearchRecord(data: SearchRecord): MinifiedSearchRecord {
 	};
 }
 
-export async function createSearchRecord(info: AnyPackage): Promise<SearchRecord> {
-	const skipDownloads = yargs.argv.skipDownloads;
-
+export async function createSearchRecord(info: AnyPackage, skipDownloads: boolean): Promise<SearchRecord> {
 	let downloads: number;
 	if (skipDownloads) {
 		downloads = -1;

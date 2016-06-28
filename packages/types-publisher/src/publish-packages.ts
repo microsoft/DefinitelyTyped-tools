@@ -10,14 +10,13 @@ if (typeData === undefined || fs.readdirSync("./output").length === 0) {
 	console.log("Run parse-definitions and generate-packages first!");
 }
 else {
-	main().catch(console.error);
-}
-
-async function main(): Promise<void> {
 	const dry = !!yargs.argv.dry;
 	// For testing only. Do not use on real @types repo.
 	const unpublish = !!yargs.argv.unpublish;
+	main(dry, unpublish).catch(console.error);
+}
 
+async function main(dry: boolean, unpublish: boolean): Promise<void> {
 	const log: string[] = [];
 	if (dry) {
 		console.log("=== DRY RUN ===");

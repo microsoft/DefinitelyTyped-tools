@@ -8,12 +8,11 @@ const typeData = common.readTypesDataFile();
 if (typeData === undefined) {
 	console.log("Run parse-definitions first!");
 } else {
-	main().catch(console.error);
+	const forceUpdate = yargs.argv.forceUpdate;
+	main(forceUpdate).catch(console.error);
 }
 
-async function main(): Promise<void> {
-	const forceUpdate = yargs.argv.forceUpdate;
-
+async function main(forceUpdate: boolean): Promise<void> {
 	const log: string[] = [];
 	await nAtATime(10, common.typings(typeData), async typing =>
 		logGeneration(typing, await generator.generatePackage(typing, typeData, forceUpdate)));
