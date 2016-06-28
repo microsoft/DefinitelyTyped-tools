@@ -149,12 +149,6 @@ export async function getTypingInfo(directory: string): Promise<TypingParseFailR
 			if (ref.fileName.charAt(0) !== ".") {
 				processQueue.push(path.join(path.dirname(filename), ref.fileName));
 			}
-
-			// If this is a ../reference, treat it as a library
-			const pathMatch = pathToLibrary.exec(ref.fileName);
-			if (pathMatch) {
-				referencedLibraries.push(pathMatch[1]);
-			}
 		});
 
 		src.typeReferenceDirectives.forEach((ref: { fileName: string }) => {
