@@ -3,13 +3,12 @@ import { parseJson } from "./util";
 import * as fs from "fs";
 import * as fsp from "fs-promise";
 import * as path from "path";
-import * as yargs from "yargs";
 
 /** Generates the package to disk */
-export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile): Promise<{ log: string[] }> {
+export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, forceUpdate: boolean): Promise<{ log: string[] }> {
 	const log: string[] = [];
 
-	const fileVersion = Versions.computeVersion(typing);
+	const fileVersion = Versions.computeVersion(typing, forceUpdate);
 
 	const outputPath = getOutputPath(typing);
 	await clearOutputPath(outputPath, log);
@@ -31,7 +30,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
-	outputs.push(Versions.recordVersionUpdate(typing));
+	outputs.push(Versions.recordVersionUpdate(typing, forceUpdate));
 
 	await Promise.all(outputs);
 	return { log };
@@ -194,10 +193,10 @@ namespace Versions {
 		return fsp.writeFile(versionsFilename, JSON.stringify(data, undefined, 4), { encoding: "utf8" });
 	}
 
-	export async function recordVersionUpdate(typing: TypingsData): Promise<void> {
+	export async function recordVersionUpdate(typing: TypingsData, forceUpdate: boolean): Promise<void> {
 		const key = typing.typingsPackageName;
 		const data = loadVersions();
-		data[key] = { lastVersion: computeVersion(typing), lastContentHash: typing.contentHash };
+		data[key] = { lastVersion: computeVersion(typing, forceUpdate), lastContentHash: typing.contentHash };
 		await saveVersions(data);
 	}
 
@@ -208,8 +207,7 @@ namespace Versions {
 		return entry || { lastVersion: 0, lastContentHash: "" };
 	}
 
-	export function computeVersion(typing: TypingsData): number {
-		const forceUpdate = yargs.argv.forceUpdate;
+	export function computeVersion(typing: TypingsData, forceUpdate: boolean): number {
 		const lastVersion = getLastVersion(typing);
 		const increment = (forceUpdate || (lastVersion.lastContentHash !== typing.contentHash)) ? 1 : 0;
 		return lastVersion.lastVersion + increment;

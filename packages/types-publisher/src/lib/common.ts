@@ -110,9 +110,19 @@ export interface TypingParseSucceedResult {
 	warnings: string[];
 }
 
-export class Log {
+export interface Logger {
+	info(message: string): void;
+	error(message: string): void;
+}
+
+export interface LogResult {
 	infos: string[];
 	errors: string[];
+}
+
+export class ArrayLog implements Logger {
+	private infos: string[];
+	private errors: string[];
 
 	constructor() {
 		this.infos = [];
@@ -125,6 +135,10 @@ export class Log {
 
 	error(message: string): void {
 		this.errors.push(message);
+	}
+
+	result(): LogResult {
+		return { infos: this.infos, errors: this.errors };
 	}
 }
 
