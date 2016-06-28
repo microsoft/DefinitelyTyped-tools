@@ -1,14 +1,15 @@
 import * as parser from "./lib/definition-parser";
 import { TypingsData, RejectionReason, settings, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
+import { filterAsyncOrdered } from "./lib/util";
 
-import fs = require("fs");
+import fsp = require("fs-promise");
 import path = require("path");
 
-function processDir(folderPath: string, name: string): { data: TypingsData, log: string[], warnings: string[], outcome: string } {
+async function processDir(folderPath: string, name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
 	let data: TypingsData;
 	let outcome: string;
 
-	const info = parser.getTypingInfo(folderPath);
+	const info = await parser.getTypingInfo(folderPath);
 	const log = info.log;
 	if (isSuccess(info)) {
 		data = info.data;
@@ -22,19 +23,19 @@ function processDir(folderPath: string, name: string): { data: TypingsData, log:
 	return { data, log, warnings: info.warnings, outcome: outcome };
 }
 
-function filterPaths(paths: string[]): { name: string; path: string; }[] {
-	return paths
+async function filterPaths(paths: string[]): Promise<{ name: string; path: string; }[]> {
+	const fullPaths = paths
 		// Remove hidden paths
 		.filter(s => s.substr(0, 1) !== "_" && s.substr(0, 1) !== ".")
 		// Sort by name
 		.sort()
 		// Combine paths
-		.map(s => ({ name: s, path: path.join(settings.definitelyTypedPath, s) }))
-		// Remove non-folders
-		.filter(s => fs.statSync(s.path).isDirectory());
+		.map(s => ({ name: s, path: path.join(settings.definitelyTypedPath, s) }));
+	// Remove non-folders
+	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(s.path)).isDirectory());
 }
 
-function main() {
+async function main(): Promise<void> {
 	const summaryLog: string[] = [];
 	const detailedLog: string[] = [];
 
@@ -42,57 +43,57 @@ function main() {
 	summaryLog.push(`Started at ${(new Date()).toUTCString()}`);
 
 	// TypesData
-	fs.readdir(settings.definitelyTypedPath, (err, paths) => {
-		const folders = filterPaths(paths);
+	const paths = await fsp.readdir(settings.definitelyTypedPath);
 
-		summaryLog.push(`Found ${folders.length} typings folders in ${settings.definitelyTypedPath}`);
+	const folders = await filterPaths(paths);
 
-		const outcomes: { [name: string]: number} = {};
-		const warningLog: string[] = [];
-		const typings: { [name: string]: TypingsData } = {};
+	summaryLog.push(`Found ${folders.length} typings folders in ${settings.definitelyTypedPath}`);
 
-		folders.forEach(s => {
-			const result = processDir(s.path, s.name);
+	const outcomes: { [name: string]: number} = {};
+	const warningLog: string[] = [];
+	const typings: { [name: string]: TypingsData } = {};
 
-			// Record outcome
-			outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
+	for (const s of folders) {
+		const result = await processDir(s.path, s.name);
 
-			detailedLog.push(`# ${s.name}`);
+		// Record outcome
+		outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
 
-			// Push warnings
-			if (result.warnings.length > 0) {
-				warningLog.push(` * ${s.name}`);
-				result.warnings.forEach(w => {
-					warningLog.push(`   * ${w}`);
-					detailedLog.push(`**Warning**: ${w}`);
-				});
-			}
+		detailedLog.push(`# ${s.name}`);
 
-			if (result.data !== undefined) {
-				typings[s.name] = result.data;
-			}
+		// Push warnings
+		if (result.warnings.length > 0) {
+			warningLog.push(` * ${s.name}`);
+			result.warnings.forEach(w => {
+				warningLog.push(`   * ${w}`);
+				detailedLog.push(`**Warning**: ${w}`);
+			});
+		}
 
-			// Flush detailed log
-			result.log.forEach(e => detailedLog.push(e));
-		});
+		if (result.data !== undefined) {
+			typings[s.name] = result.data;
+		}
 
-		summaryLog.push("\r\n### Overall Results\r\n");
+		// Flush detailed log
+		result.log.forEach(e => detailedLog.push(e));
+	}
 
-		summaryLog.push(" * Pass / fail");
+	summaryLog.push("\r\n### Overall Results\r\n");
 
-		const outcomeKeys = Object.keys(outcomes);
-		outcomeKeys.sort();
-		outcomeKeys.forEach(k => {
-			summaryLog.push(`   * ${k}: ${outcomes[k]}`);
-		});
+	summaryLog.push(" * Pass / fail");
 
-		summaryLog.push("\r\n### Warnings\r\n");
-		warningLog.forEach(w => summaryLog.push(w));
-
-		writeLogSync("parser-log-summary.md", summaryLog);
-		writeLogSync("parser-log-details.md", detailedLog);
-		writeDataFile(typesDataFilename, typings);
+	const outcomeKeys = Object.keys(outcomes);
+	outcomeKeys.sort();
+	outcomeKeys.forEach(k => {
+		summaryLog.push(`   * ${k}: ${outcomes[k]}`);
 	});
+
+	summaryLog.push("\r\n### Warnings\r\n");
+	warningLog.forEach(w => summaryLog.push(w));
+
+	writeLogSync("parser-log-summary.md", summaryLog);
+	writeLogSync("parser-log-details.md", detailedLog);
+	writeDataFile(typesDataFilename, typings);
 }
 
-main();
+main().catch(console.error);

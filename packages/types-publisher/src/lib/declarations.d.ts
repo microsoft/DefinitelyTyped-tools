@@ -4,4 +4,5 @@ declare module "fs-promise" {
 	export function mkdirp(path: string): Promise<void>
 	export function readdir(dirPath: string): Promise<string[]>
 	export function unlink(path: string): Promise<void>
+	export function stat(path: string): Promise<{ isDirectory(): boolean }>
 }

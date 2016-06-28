@@ -1,8 +1,9 @@
 import * as ts from "typescript";
-import * as fs from "fs";
+import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from "./common";
+import { mapAsyncOrdered } from "./util";
 
 function stripQuotes(s: string) {
 	if (s[0] === '"' || s[0] === "'") {
@@ -72,13 +73,13 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	return result;
 }
 
-export function getTypingInfo(directory: string): TypingParseFailResult | TypingParseSucceedResult {
+export async function getTypingInfo(directory: string): Promise<TypingParseFailResult | TypingParseSucceedResult> {
 	const log: string[] = [];
 	const warnings: string[] = [];
 	const folderName = path.basename(directory);
 
 	log.push(`Reading contents of ${directory}`);
-	const files = fs.readdirSync(directory);
+	const files = await fsp.readdir(directory);
 
 	// Kinds of files we can have here:
 	//  * .d.ts (definition)
@@ -113,7 +114,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		warnings.push(msg);
 		return { log, warnings, rejectionReason: RejectionReason.TooManyFiles };
 	}
-	const entryPointContent = readFile(entryPointFilename);
+	const entryPointContent = await readFile(entryPointFilename);
 
 	let hasUmdDecl = false;
 	let isProperModule = false;
@@ -140,7 +141,7 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		completeList.push(filename);
 
 		log.push(`Parse ${filename}`);
-		let content = readFile(filename);
+		let content = await readFile(filename);
 
 		const src = ts.createSourceFile("test.d.ts", content, ts.ScriptTarget.Latest, true);
 		src.referencedFiles.forEach(ref => {
@@ -341,7 +342,8 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		warnings.push(`Package name \`${packageName}\` should be strictly lowercase`);
 	}
 
-	const allContent = declFiles.map(d => d + "**" + readFile(d)).join("||");
+	const fileContents = await mapAsyncOrdered(declFiles, async d => d + "**" + await readFile(d));
+	const allContent = fileContents.join("||");
 
 	return {
 		log,
@@ -367,8 +369,8 @@ export function getTypingInfo(directory: string): TypingParseFailResult | Typing
 		}
 	};
 
-	function readFile(fileName: string) {
-		const result = fs.readFileSync(path.join(directory, fileName), "utf-8");
+	async function readFile(fileName: string): Promise<string> {
+		const result = await fsp.readFile(path.join(directory, fileName), { encoding: "utf8" });
 		// Skip BOM
 		return (result.charCodeAt(0) === 0xFEFF) ? result.substr(1) : result;
 	}

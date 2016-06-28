@@ -16,3 +16,16 @@ export async function nAtATime<T, U>(n: number, input: T[], use: (t: T) => Promi
 	}
 	return res;
 }
+
+export async function filterAsyncOrdered<T>(arr: T[], shouldKeep: (t: T) => Promise<boolean>): Promise<T[]> {
+	const shouldKeeps: boolean[] = await Promise.all(arr.map(shouldKeep));
+	return arr.filter((_, idx) => shouldKeeps[idx]);
+}
+
+export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<U>): Promise<U[]> {
+	const out = new Array(arr.length);
+	await Promise.all(arr.map(async (em, idx) => {
+		out[idx] = await mapper(em);
+	}));
+	return out;
+}
