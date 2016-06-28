@@ -10,6 +10,7 @@ export const home = path.join(__dirname, "..", "..");
 export const settings: PublishSettings = parseJson(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
 export const versionsFilename = "versions.json";
+export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json")
 
 export interface AnyPackage {
 	packageKind?: "not-needed" | undefined;
@@ -195,7 +196,7 @@ export function typings(typeData: TypesDataFile): TypingsData[] {
 }
 
 export function readNotNeededPackages(): NotNeededPackage[] {
-	const raw: any[] = parseJson(fs.readFileSync("./notNeededPackages.json", "utf-8")).packages;
+	const raw: any[] = parseJson(fs.readFileSync(notNeededPackagesPath, "utf-8")).packages;
 	for (const pkg of raw) {
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
 		assert(!pkg.projectName && !pkg.packageKind && !pkg.globals && !pkg.declaredModules);
