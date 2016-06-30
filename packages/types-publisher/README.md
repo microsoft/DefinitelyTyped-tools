@@ -21,6 +21,7 @@ npm run check
 npm run generate
 npm run index
 npm run publish
+npm run upload-blobs
 ```
 
 *then*
@@ -40,11 +41,12 @@ To update the types packages, the following steps must be performed:
  * Create a search index
  * Generate packages on disk
  * Publish packages on disk
+ * Upload blobs to Azure
 
 Importantly, each of these steps is *idempotent*.
 Running the entire sequence twice should not have any different results
   unless one of the inputs has changed.
- 
+
 # Update the local DefinitelyTyped repo
 
 This is not handled automatically.
@@ -293,6 +295,11 @@ It also indicates any errors that may have occurred during publishing.
 Note that unlike other steps, this log file output is *not* idempotent.
 Scripts should save this log under a unique filename so any errors may be reviewed.
 
+# Upload blobs
+
+This uploads the `data` and `logs` directories to Azure.
+`data` always overwrites any old data, while `logs` has a timestamp prepended so old logs can still be viewed.
+
 # Settings
 
 This file contains settings used by the publisher.
@@ -330,3 +337,14 @@ Optional. Example value `latest`
 
 If present, packages are published with the provided version tag.
 
+## Environment variables
+
+Azure requires the following environment variables to be set:
+
+#### AZURE_STORAGE_ACCOUNT
+
+This should always be "typespublisher" (without the quotes).
+
+#### AZURE_STORAGE_ACCESS
+
+ To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys

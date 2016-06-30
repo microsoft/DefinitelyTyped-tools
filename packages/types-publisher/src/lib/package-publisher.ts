@@ -1,4 +1,4 @@
-import { AnyPackage, Logger, LogResult, ArrayLog, fullPackageName, isNotNeededPackage, getOutputPath, notNeededReadme, settings } from "./common";
+import { AnyPackage, Logger, LogResult, ArrayLog, consoleLogger, fullPackageName, isNotNeededPackage, getOutputPath, notNeededReadme, settings } from "./common";
 import * as common from "./common";
 import { parseJson } from "./util";
 import fetch = require("node-fetch");
@@ -34,8 +34,7 @@ export async function publishPackage(pkg: AnyPackage, dry: boolean): Promise<Log
 export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<void> {
 	const name = common.fullPackageName(pkg.typingsPackageName);
 	const args: string[] = ["npm", "unpublish", name, "--force"];
-	const log: Logger = { info: console.log, error: console.error };
-	await runCommand("Unpublish", log, dry, args);
+	await runCommand("Unpublish", consoleLogger, dry, args);
 }
 
 export async function shouldPublish(pkg: AnyPackage): Promise<[boolean, LogResult]> {

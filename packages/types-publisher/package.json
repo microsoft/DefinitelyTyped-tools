@@ -7,6 +7,7 @@
     "publish-typings": "createSearchIndex.js"
   },
   "dependencies": {
+    "azure-storage": "^1.1.0",
     "fs-promise": "^0.5.0",
     "node-fetch": "^1.5.3",
     "request": "^2.72.0",
@@ -27,7 +28,8 @@
     "index": "node bin/create-search-index.js",
     "publish": "node bin/publish-packages.js",
     "publish-dry": "node bin/publish-packages.js --dry",
-    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish",
+    "upload-blobs": "node bin/upload-blobs.js",
+    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish && npm run upload-blobs",
     "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
   },
   "repository": {

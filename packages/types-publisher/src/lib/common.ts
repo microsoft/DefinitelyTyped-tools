@@ -10,7 +10,7 @@ export const home = path.join(__dirname, "..", "..");
 export const settings: PublishSettings = parseJson(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
 export const versionsFilename = "versions.json";
-export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json")
+export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json");
 
 export interface AnyPackage {
 	packageKind?: "not-needed" | undefined;
@@ -115,6 +115,8 @@ export interface Logger {
 	info(message: string): void;
 	error(message: string): void;
 }
+
+export const consoleLogger: Logger = { info: console.log, error: console.error };
 
 export interface LogResult {
 	infos: string[];

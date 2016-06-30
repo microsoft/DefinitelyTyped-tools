@@ -9,14 +9,17 @@
 		"src/lib/package-generator.ts",
 		"src/lib/package-publisher.ts",
 		"src/lib/search-index-generator.ts",
+		"src/lib/blob-uploader.ts",
 		"src/lib/common.ts",
 		"src/lib/util.ts",
+		"src/lib/azure-container.ts",
 
 		"src/parse-definitions.ts",
 		"src/generate-packages.ts",
 		"src/publish-packages.ts",
 		"src/create-search-index.ts",
-		"src/check-parse-results.ts"
+		"src/check-parse-results.ts",
+		"src/upload-blobs.ts"
 	],
 
 	"compilerOptions": {
