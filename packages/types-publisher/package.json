@@ -11,7 +11,7 @@
     "fs-promise": "^0.5.0",
     "node-fetch": "^1.5.3",
     "request": "^2.72.0",
-    "rmdir": "^1.2.0",
+    "rimraf": "^2.5.2",
     "source-map-support": "^0.4.0",
     "yargs": "^4.7.1"
   },
@@ -20,8 +20,8 @@
     "typescript": "^1.9.0-dev.20160331"
   },
   "scripts": {
-    "clean": "node scripts/clean-output.js",
     "build": "node node_modules/typescript/lib/tsc.js",
+    "clean": "node bin/clean.js",
     "parse": "node bin/parse-definitions.js",
     "check": "node bin/check-parse-results.js",
     "generate": "node bin/generate-packages.js",

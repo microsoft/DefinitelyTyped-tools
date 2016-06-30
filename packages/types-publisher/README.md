@@ -14,8 +14,8 @@ npm run full
 
 *or*
 ```
-npm run clean
 npm run build
+npm run clean
 npm run parse
 npm run check
 npm run generate

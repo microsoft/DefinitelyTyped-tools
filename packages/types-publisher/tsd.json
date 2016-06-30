@@ -19,6 +19,9 @@
     },
     "node-fetch/node-fetch.d.ts": {
       "commit": "2743ece76d3b31df635afdc39c63ed13acf393ad"
+    },
+    "rimraf/rimraf.d.ts": {
+      "commit": "4c15f524ed87a03b5465e9f5717a89baea041b6c"
     }
   }
 }
