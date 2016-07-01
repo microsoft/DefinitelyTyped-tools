@@ -4,5 +4,6 @@
 	"definitelyTypedPath": "../DefinitelyTyped",
 	"sourceBranch": "types-2.0",
 	"prereleaseTag": "alpha",
-	"tag": "latest"
+	"tag": "latest",
+	"logsIssue": "Microsoft/types-publisher/issues/40"
 }

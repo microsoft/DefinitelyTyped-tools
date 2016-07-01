@@ -1,21 +1,33 @@
 import assert = require("assert");
 import * as fsp from "fs-promise";
+import moment = require("moment");
 import * as path from "path";
 import Container from "./azure-container";
 import { Logger, ArrayLog } from "./common";
+import updateIssue from "./issue-updater";
 
 const container = new Container("typespublisher");
 const maxNumberOfOldLogsDirectories = 5;
+const githubAccessToken = process.env.GITHUB_ACCESS_TOKEN;
+
+export default async function uploadBlobsAndUpdateIssue() {
+	const timeStamp = currentISOTimeWithTimeZone();
+	const [dataUrls, logUrls] = await uploadBlobs(timeStamp);
+	await updateIssue(githubAccessToken, timeStamp, dataUrls, logUrls);
+};
+
+function currentISOTimeWithTimeZone(): string {
+	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+}
 
 // View uploaded files at:
 // https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher
-export default async function uploadBlobs() {
+async function uploadBlobs(timeStamp: string): Promise<[string[], string[]]> {
 	await container.ensureCreated({ publicAccessLevel: "blob" });
 	const logger = new ArrayLog();
-	const timeStamp = new Date().toISOString();
-	await Promise.all([
-		uploadDirectory("data", "data", logger),
-		uploadLogs(timeStamp, logger)
+	const [dataUrls, logUrls] = await Promise.all([
+		await uploadDirectory("data", "data", logger),
+		await uploadLogs(timeStamp, logger)
 	]);
 
 	// Finally, output blob logs and upload them.
@@ -23,7 +35,11 @@ export default async function uploadBlobs() {
 	const {infos, errors} = logger.result();
 	assert(!errors.length);
 	await fsp.writeFile(blobLogs, infos.join("\r\n") + "\r\n", { encoding: "utf8" });
-	await container.createBlobFromFile(logsUploadedLocation(timeStamp) + "/upload-blobs.md", blobLogs);
+	const uploadBlobsLogName = logsUploadedLocation(timeStamp) + "/upload-blobs.md";
+	await container.createBlobFromFile(uploadBlobsLogName, blobLogs);
+
+	logUrls.push(container.urlOfBlob(uploadBlobsLogName));
+	return [dataUrls, logUrls];
 };
 
 const logsDirectoryName = "logs";
@@ -33,17 +49,21 @@ function logsUploadedLocation(timeStamp: string) {
 	return logsPrefix + timeStamp;
 }
 
-async function uploadLogs(timeStamp: string, log: Logger): Promise<void> {
+async function uploadLogs(timeStamp: string, log: Logger): Promise<string[]> {
 	await removeOldDirectories(logsPrefix, maxNumberOfOldLogsDirectories - 1, log);
-	await uploadDirectory(logsUploadedLocation(timeStamp), logsDirectoryName, log);
+	return await uploadDirectory(logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
 }
 
-async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Logger): Promise<void> {
-	const files = await fsp.readdir(dirPath);
-	await Promise.all(files.map(fileName => {
+async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Logger, filter?: (fileName: string) => boolean): Promise<string[]> {
+	let files = await fsp.readdir(dirPath);
+	if (filter) {
+		files = files.filter(filter);
+	}
+	return await Promise.all(files.map(async fileName => {
 		const fullPath = path.join(dirPath, fileName);
 		const blobName = `${uploadedDirPath}/${fileName}`;
-		return logAndUpload(blobName, fullPath, log);
+		await logAndUpload(blobName, fullPath, log);
+		return container.urlOfBlob(blobName);
 	}));
 }
 
@@ -65,9 +85,7 @@ async function removeOldDirectories(prefix: string, maxDirectories: number, log:
 
 	const dirNames = unique(list.map(({name}) => {
 		assert(name.startsWith(prefix));
-		const lastSlash = name.lastIndexOf("/");
-		assert(lastSlash !== -1);
-		return name.slice(prefix.length, lastSlash);
+		return path.dirname(name.slice(prefix.length));
 	}));
 
 	if (dirNames.length <= maxDirectories) {

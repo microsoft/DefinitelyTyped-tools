@@ -15,4 +15,7 @@ interface PublishSettings {
 
 	// e.g. 'latest'
 	tag?: string;
+
+	// Issue in types-publisher that we will use to track links to logs
+	logsIssue: string;
 }

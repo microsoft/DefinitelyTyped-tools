@@ -10,6 +10,7 @@
 		"src/lib/package-publisher.ts",
 		"src/lib/search-index-generator.ts",
 		"src/lib/blob-uploader.ts",
+		"src/lib/issue-updater.ts",
 		"src/lib/common.ts",
 		"src/lib/util.ts",
 		"src/lib/azure-container.ts",
