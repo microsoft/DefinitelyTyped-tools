@@ -1399,8 +1399,8 @@
         "lastContentHash": "4e2a882ad5aae5d8a1c16c95a7ac3eea8c3d3ff8a76d1dfc2be129ec28e18377"
     },
     "easy-api-request": {
-        "lastVersion": 24,
-        "lastContentHash": "df6e22fda3e6de28e31da5cf4ca0429023b3feff398074fc076320d0aea495cd"
+        "lastVersion": 25,
+        "lastContentHash": "1931306dece259be540598495ab49f1ff8283e701091bebb2da42fa262bf1e79"
     },
     "easy-jsend": {
         "lastVersion": 23,
@@ -2439,8 +2439,8 @@
         "lastContentHash": "bf845d385f77c488d477fa31e09fa0fee40935e6a1088815633a13fd883858a8"
     },
     "hystrixjs": {
-        "lastVersion": 22,
-        "lastContentHash": "a4aaf97ebf7aa7ba5feeb77206f7de4a1d13faeef6e99f01c2dfaf4332263e02"
+        "lastVersion": 23,
+        "lastContentHash": "67d4775cb867df44a9329c509e63479e34833c9abb1b4091c02b33450b2161bc"
     },
     "i18n-node": {
         "lastVersion": 11,
@@ -3869,8 +3869,8 @@
         "lastContentHash": "ccdda7ec8c29de90fca4fae8c18986df96e74277c1c21bae0c0f0aefa2e32f06"
     },
     "msportalfx-test": {
-        "lastVersion": 22,
-        "lastContentHash": "1b47e70668e7efb3ef7048464a23d766cace463d9c9ded177d44b8b0a0a7ebe3"
+        "lastVersion": 23,
+        "lastContentHash": "4da4c915924361d6834f1fd30842b1db097946d45171221c26c48ff879f63a71"
     },
     "mssql": {
         "lastVersion": 23,
@@ -4279,8 +4279,8 @@
         "lastContentHash": "e7e7f96209761aed21e7e0468629c615b6076605b73a75c46ecf1ddc7923b18f"
     },
     "orchestrator": {
-        "lastVersion": 22,
-        "lastContentHash": "ec3d23d2213075923e9aedce4d0177652502f4e17f259312b877de5bb4b7d08c"
+        "lastVersion": 23,
+        "lastContentHash": "8b890964d10a1243d84ba1bf65f1cf140d589042ca9f24e37a1635346cac6129"
     },
     "os-locale": {
         "lastVersion": 23,
@@ -4665,8 +4665,8 @@
         "lastContentHash": "1a6483d31e2fa35b4498664174c09712df83fe722103e08d6568aa7136865160"
     },
     "q-retry": {
-        "lastVersion": 21,
-        "lastContentHash": "8934129d7e9c8ea215b2edaedc8aeee3e4084485532dd4bc23ba7e6ce5e6a82f"
+        "lastVersion": 22,
+        "lastContentHash": "47183e7043613a4585f5e5fec1b6dae4693b0bf40a0de3dc6d69ab3513c9c16a"
     },
     "qajax": {
         "lastVersion": 21,
@@ -5985,8 +5985,8 @@
         "lastContentHash": "20a246afaa454eda73dd837b2f2c29cefe1aebb9afd7dca65a713672cce9b309"
     },
     "vso-node-api": {
-        "lastVersion": 21,
-        "lastContentHash": "78ff62b04ca260171cc437b0efa34da3e6757c0e99fff246e2bebfad37c66625"
+        "lastVersion": 22,
+        "lastContentHash": "9db5774afa0819d554c9316234f8d3895e046a9e4fa38947f3f5906fbbb28550"
     },
     "vue": {
         "lastVersion": 21,
