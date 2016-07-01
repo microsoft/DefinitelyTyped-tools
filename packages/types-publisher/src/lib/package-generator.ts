@@ -91,7 +91,13 @@ function createPackageJSON(typing: TypingsData, fileVersion: number, availableTy
 	function addDependency(d: string) {
 		if (availableTypes.hasOwnProperty(d)) {
 			const type = availableTypes[d];
-			const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.*`;
+			// In normal releases, we want to allow patch updates, so we use `foo.bar.*`.
+			// In a prerelease, we can only reference *exact* packages.
+			// See https://github.com/npm/node-semver#prerelease-tags
+			const patch = settings.prereleaseTag ?
+				`${Versions.getLastVersion(type).lastVersion}-${settings.prereleaseTag}` :
+				"*";
+			const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.${patch}`;
 			dependencies[fullPackageName(d)] = semver;
 		}
 	}
@@ -200,7 +206,7 @@ namespace Versions {
 		await saveVersions(data);
 	}
 
-	function getLastVersion(typing: TypingsData) {
+	export function getLastVersion(typing: TypingsData) {
 		const key = typing.typingsPackageName;
 		const data = loadVersions();
 		const entry = data[key];
