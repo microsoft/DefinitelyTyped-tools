@@ -5,6 +5,10 @@ import { filterAsyncOrdered } from "./lib/util";
 import fsp = require("fs-promise");
 import path = require("path");
 
+if (!module.parent) {
+	main().catch(console.error);
+}
+
 async function processDir(folderPath: string, name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
 	let data: TypingsData;
 	let outcome: string;
@@ -35,7 +39,7 @@ async function filterPaths(paths: string[]): Promise<{ name: string; path: strin
 	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(s.path)).isDirectory());
 }
 
-async function main(): Promise<void> {
+export default async function main(): Promise<void> {
 	const summaryLog: string[] = [];
 	const detailedLog: string[] = [];
 

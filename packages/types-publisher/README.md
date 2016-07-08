@@ -9,6 +9,7 @@ npm whoami
 Make sure your settings are correct and you're logged in as the right person.
 
 ```
+npm run build
 npm run full
 ```
 

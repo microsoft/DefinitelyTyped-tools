@@ -1,6 +1,8 @@
 import * as rimraf from "rimraf";
 
-main();
+if (!module.parent) {
+	main();
+}
 
 export default function main() {
 	for (const dir of ["data", "logs", "output"]) {

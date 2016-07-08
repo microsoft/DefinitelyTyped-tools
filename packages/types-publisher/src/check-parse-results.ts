@@ -1,14 +1,14 @@
-import { TypingsData, readTypesDataFile, typings, writeLogSync } from "./lib/common";
+import { TypingsData, existsTypesDataFile, readTypings, writeLogSync } from "./lib/common";
 
-const typeData = readTypesDataFile();
-
-if (typeData === undefined) {
-	console.log("Run parse-definitions first!");
-} else {
-	main();
+if (!module.parent) {
+	if (!existsTypesDataFile()) {
+		console.log("Run parse-definitions first!");
+	} else {
+		main();
+	}
 }
 
-function main() {
+export default function main() {
 	const libConflicts = check(info => info.libraryName, "Library Name");
 	const projConflicts = check(info => info.projectName, "Project Name");
 
@@ -17,7 +17,7 @@ function main() {
 
 function check(func: (info: TypingsData) => string, key: string) {
 	const lookup: { [libName: string]: string[] } = {};
-	const infos = typings(typeData);
+	const infos = readTypings();
 	const result: string[] = [];
 	infos.forEach(info => {
 		const name = func(info);

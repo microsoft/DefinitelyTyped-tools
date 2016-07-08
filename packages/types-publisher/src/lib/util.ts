@@ -1,3 +1,5 @@
+import moment = require("moment");
+
 export function parseJson(text: string): any {
 	try {
 		return JSON.parse(text);
@@ -5,6 +7,10 @@ export function parseJson(text: string): any {
 	catch (err) {
 		throw new Error(`${err.message} due to JSON: ${text}`);
 	}
+}
+
+export function currentTimeStamp(): string {
+	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 }
 
 export async function nAtATime<T, U>(n: number, input: T[], use: (t: T) => Promise<U>): Promise<U[]> {

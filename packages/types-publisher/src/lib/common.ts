@@ -180,9 +180,17 @@ export function writeDataFile(filename: string, content: {}, formatted = true) {
 	fs.writeFileSync(path.join(dataDir, filename), content, "utf-8");
 }
 
+const dataDir = path.join(home, "data");
+function dataFilePath(filename: string) {
+	return path.join(dataDir, filename);
+}
+
+function existsDataFile(filename: string): boolean {
+	return fs.existsSync(dataFilePath(filename));
+}
+
 export function readDataFile(filename: string): {} | undefined {
-	const dataDir = path.join(home, "data");
-	const fullPath = path.join(dataDir, filename);
+	const fullPath = dataFilePath(filename);
 	if (fs.existsSync(fullPath)) {
 		return parseJson(fs.readFileSync(fullPath, "utf-8"));
 	} else {
@@ -190,11 +198,18 @@ export function readDataFile(filename: string): {} | undefined {
 	}
 }
 
+export function existsTypesDataFile(): boolean {
+	return existsDataFile(typesDataFilename);
+}
+
 export function readTypesDataFile(): TypesDataFile | undefined {
 	return <TypesDataFile> readDataFile(typesDataFilename);
 }
 export function typings(typeData: TypesDataFile): TypingsData[] {
 	return Object.keys(typeData).map(packageName => typeData[packageName]);
+}
+export function readTypings() {
+	return typings(readTypesDataFile());
 }
 
 export function readNotNeededPackages(): NotNeededPackage[] {

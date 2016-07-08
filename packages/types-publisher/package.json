@@ -11,18 +11,18 @@
     "fs-promise": "^0.5.0",
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
-    "request": "^2.72.0",
     "rimraf": "^2.5.2",
     "source-map-support": "^0.4.0",
     "yargs": "^4.7.1"
   },
   "devDependencies": {
-    "tslint": "^3.11.0",
-    "typescript": "^1.9.0-dev.20160331"
+    "tslint": "^3.13.0",
+    "typescript": "^1.9.0-dev.20160707"
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",
     "clean": "node bin/clean.js",
+    "get-definitely-typed": "node bin/get-definitely-typed.js",
     "parse": "node bin/parse-definitions.js",
     "check": "node bin/check-parse-results.js",
     "generate": "node bin/generate-packages.js",
@@ -30,17 +30,18 @@
     "publish": "node bin/publish-packages.js",
     "publish-dry": "node bin/publish-packages.js --dry",
     "upload-blobs": "node bin/upload-blobs.js",
-    "full": "npm run clean && npm run build && npm run parse && npm run check && npm run generate && npm run index && npm run publish && npm run upload-blobs",
+    "full": "node bin/full.js",
+    "full-dry": "node bin/full.js --dry",
     "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RyanCavanaugh/publish-typings.git"
+    "url": "git+https://github.com/Microsoft/types-publisher.git"
   },
   "author": "Microsoft",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/RyanCavanaugh/publish-typings/issues"
+    "url": "https://github.com/Microsoft/types-publisher/issues"
   },
-  "homepage": "https://github.com/RyanCavanaugh/publish-typings#readme"
+  "homepage": "https://github.com/Microsoft/types-publisher#readme"
 }

@@ -16,12 +16,14 @@
 		"src/lib/azure-container.ts",
 
 		"src/clean.ts",
+		"src/get-definitely-typed.ts",
 		"src/parse-definitions.ts",
 		"src/generate-packages.ts",
 		"src/publish-packages.ts",
 		"src/create-search-index.ts",
 		"src/check-parse-results.ts",
-		"src/upload-blobs.ts"
+		"src/upload-blobs.ts",
+		"src/full.ts"
 	],
 
 	"compilerOptions": {

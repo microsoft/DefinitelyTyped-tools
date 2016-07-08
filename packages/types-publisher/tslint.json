@@ -11,6 +11,7 @@
 		"no-string-literal": false,
 		"object-literal-sort-keys": false,
 		"one-line": false,
+		"ordered-imports": false,
 		"trailing-comma": false,
 		"variable-name": false
 	}

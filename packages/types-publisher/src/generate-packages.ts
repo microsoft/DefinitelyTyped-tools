@@ -3,17 +3,18 @@ import * as common from "./lib/common";
 import { nAtATime } from "./lib/util";
 import * as generator from "./lib/package-generator";
 
-const typeData = common.readTypesDataFile();
-
-if (typeData === undefined) {
-	console.log("Run parse-definitions first!");
-} else {
-	const forceUpdate = yargs.argv.forceUpdate;
-	main(forceUpdate).catch(console.error);
+if (!module.parent) {
+	if (!common.existsTypesDataFile()) {
+		console.log("Run parse-definitions first!");
+	} else {
+		const forceUpdate = yargs.argv.forceUpdate;
+		main(forceUpdate).catch(console.error);
+	}
 }
 
-async function main(forceUpdate: boolean): Promise<void> {
+export default async function main(forceUpdate: boolean): Promise<void> {
 	const log: string[] = [];
+	const typeData = common.readTypesDataFile();
 	await nAtATime(10, common.typings(typeData), async typing =>
 		logGeneration(typing, await generator.generatePackage(typing, typeData, forceUpdate)));
 	await nAtATime(10, common.readNotNeededPackages(), async pkg =>

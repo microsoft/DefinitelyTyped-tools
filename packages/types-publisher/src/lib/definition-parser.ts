@@ -322,8 +322,8 @@ export async function getTypingInfo(directory: string): Promise<TypingParseFailR
 	}
 
 	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, "Unknown");
-	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?(\d+)/m, "0");
-	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?\d+\.(\d+)/m, "0");
+	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?(\d+)$/m, "0");
+	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for \D+ v?\d+\.(\d+)$/m, "0");
 	// const libraryName = regexMatch(/^\/\/ Type definitions for ([^\s]+)/m, "Unknown").trim();
 	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
 	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
