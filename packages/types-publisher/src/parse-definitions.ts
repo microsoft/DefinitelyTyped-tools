@@ -99,5 +99,3 @@ export default async function main(): Promise<void> {
 	writeLogSync("parser-log-details.md", detailedLog);
 	writeDataFile(typesDataFilename, typings);
 }
-
-main().catch(console.error);
