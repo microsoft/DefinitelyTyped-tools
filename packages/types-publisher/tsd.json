@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "1a5b2a729d35b1d41e2d15818db013a3644c6ba4"
+      "commit": "b20eb12c4c1f024689c4dbcb48ed8671695926c0"
     },
     "typescript/typescript.d.ts": {
       "commit": "85af69c91599a6c904618545f0613970e1ff3f64"
@@ -22,6 +22,9 @@
     },
     "rimraf/rimraf.d.ts": {
       "commit": "4c15f524ed87a03b5465e9f5717a89baea041b6c"
+    },
+    "recursive-readdir/recursive-readdir.d.ts": {
+      "commit": "b20eb12c4c1f024689c4dbcb48ed8671695926c0"
     }
   }
 }

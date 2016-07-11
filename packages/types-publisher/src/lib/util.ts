@@ -1,4 +1,7 @@
+import assert = require("assert");
 import moment = require("moment");
+import recursiveReaddir = require("recursive-readdir");
+import { Stats } from "fs";
 
 export function parseJson(text: string): any {
 	try {
@@ -34,4 +37,26 @@ export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<
 		out[idx] = await mapper(em);
 	}));
 	return out;
+}
+
+export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: Stats) => boolean): Promise<string[]> {
+	function relativePath(file: string): string {
+		const prefix = `${dirPath}\\`;
+		assert(file.startsWith(prefix));
+		return file.slice(prefix.length);
+	}
+	function ignoreRelative(file: string, stats: Stats): boolean {
+		return !keepIf(relativePath(file), stats);
+	}
+
+	return new Promise((resolve, reject) => {
+		recursiveReaddir(dirPath, [ignoreRelative], (err, files) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				resolve(files.map(relativePath));
+			}
+		});
+	});
 }

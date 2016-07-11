@@ -3,7 +3,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, settings } from "./common";
-import { mapAsyncOrdered } from "./util";
+import { mapAsyncOrdered, readdirRecursive } from "./util";
 
 function stripQuotes(s: string) {
 	if (s[0] === '"' || s[0] === "'") {
@@ -77,16 +77,14 @@ export async function getTypingInfo(directory: string): Promise<TypingParseFailR
 	const folderName = path.basename(directory);
 
 	log.push(`Reading contents of ${directory}`);
-	const files = await fsp.readdir(directory);
 
-	// Kinds of files we can have here:
-	//  * .d.ts (definition)
-	//  * -tests.ts (tests)
-	//  * .d.ts.tscparams (for testing)
+	const declFiles = await readdirRecursive(directory, (file, stats) =>
+		// Only include type declaration files.
+		stats.isDirectory() || file.endsWith(".d.ts"));
+	declFiles.sort();
 
-	log.push(`Found ${files.length} files`);
+	log.push(`Found ${declFiles.length} '.d.ts' files`);
 
-	const declFiles = files.filter(f => /\.d\.ts$/.test(f));
 	const candidates = [folderName + ".d.ts", "index.d.ts"];
 	log.push(`Found ${declFiles.length} .d.ts files (${declFiles.join(", ")})`);
 
@@ -104,7 +102,6 @@ export async function getTypingInfo(directory: string): Promise<TypingParseFailR
 			}
 		}
 	}
-	declFiles.sort();
 
 	if (entryPointFilename === undefined) {
 		const msg = "Exiting, found either zero or more than one .d.ts file and none of " + candidates.map(c => "`" + c + "`").join(" or ");

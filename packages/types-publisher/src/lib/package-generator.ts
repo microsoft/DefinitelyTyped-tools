@@ -35,8 +35,13 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 	await Promise.all(outputs);
 	return { log };
 
-	function writeOutputFile(filename: string, content: string): Promise<void> {
-		return fsp.writeFile(path.join(outputPath, filename), content, { encoding: "utf8" });
+	async function writeOutputFile(filename: string, content: string): Promise<void> {
+		const full = path.join(outputPath, filename);
+		const dir = path.dirname(full);
+		if (dir !== outputPath) {
+			await fsp.mkdirp(dir);
+		}
+		return await fsp.writeFile(full, content, { encoding: "utf8" });
 	}
 }
 

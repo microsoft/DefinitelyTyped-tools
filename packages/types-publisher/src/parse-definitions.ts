@@ -29,8 +29,8 @@ async function processDir(folderPath: string, name: string): Promise<{ data: Typ
 
 async function filterPaths(paths: string[]): Promise<{ name: string; path: string; }[]> {
 	const fullPaths = paths
-		// Remove hidden paths
-		.filter(s => s.substr(0, 1) !== "_" && s.substr(0, 1) !== ".")
+		// Remove hidden paths and node_modules
+		.filter(s => s[0] !== "_" && s[0] !== "." && s !== "node_modules")
 		// Sort by name
 		.sort()
 		// Combine paths
