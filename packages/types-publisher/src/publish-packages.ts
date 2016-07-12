@@ -38,6 +38,8 @@ export default async function main(dry: boolean): Promise<void> {
 		writeLogs(checkLog);
 	});
 
+	packagesShouldPublish.sort((pkgA, pkgB) => pkgA.libraryName.localeCompare(pkgB.libraryName));
+
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.libraryName}...`);
 		const publishLog = await publisher.publishPackage(pkg, dry);
