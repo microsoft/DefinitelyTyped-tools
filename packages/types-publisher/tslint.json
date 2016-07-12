@@ -7,6 +7,7 @@
 		"member-access": false,
 		"no-bitwise": false,
 		"no-console": false,
+		"no-empty": false,
 		"no-namespace": false,
 		"no-string-literal": false,
 		"object-literal-sort-keys": false,

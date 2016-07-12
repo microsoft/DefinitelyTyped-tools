@@ -64,7 +64,7 @@ async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Lo
 function logAndUpload(blobName: string, filePath: string, log: Logger): Promise<void> {
 	const url = container.urlOfBlob(blobName);
 	log.info(`Uploading ${filePath} to ${url}`);
-	return container.createBlobFromFile(blobName, filePath);
+	return container.createBlobFromFile(blobName, filePath).then(() => {});
 }
 
 async function deleteDirectory(uploadedDirPath: string, log: Logger): Promise<void> {

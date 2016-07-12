@@ -49,7 +49,7 @@ export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: 
 		return !keepIf(relativePath(file), stats);
 	}
 
-	return new Promise((resolve, reject) => {
+	return new Promise<string[]>((resolve, reject) => {
 		recursiveReaddir(dirPath, [ignoreRelative], (err, files) => {
 			if (err) {
 				reject(err);

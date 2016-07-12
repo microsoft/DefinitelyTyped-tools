@@ -1,4 +1,4 @@
-import { BlobResult, BlobService, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, createBlobService } from "azure-storage";
+import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, createBlobService } from "azure-storage";
 
 export default class Container {
 	private service: BlobService;
@@ -8,17 +8,17 @@ export default class Container {
 	}
 
 	ensureCreated(options: CreateContainerOptions): Promise<void> {
-		return promisifyErrorOrResult(cb => this.service.createContainerIfNotExists(this.name, options, cb));
+		return promisifyErrorOrResult<ContainerResult>(cb => this.service.createContainerIfNotExists(this.name, options, cb)).then(() => {});
 	}
 
 	createBlobFromFile(blobName: string, fileName: string): Promise<BlobResult> {
 		const options: CreateBlobRequestOptions = {};
-		return promisifyErrorOrResult(cb => this.service.createBlockBlobFromLocalFile(this.name, blobName, fileName, options, cb));
+		return promisifyErrorOrResult<BlobResult>(cb => this.service.createBlockBlobFromLocalFile(this.name, blobName, fileName, options, cb));
 	}
 
 	createBlobFromText(blobName: string, text: string): Promise<BlobResult> {
 		const options: CreateBlobRequestOptions = {};
-		return promisifyErrorOrResult(cb => this.service.createBlockBlobFromText(this.name, blobName, text, options, cb));
+		return promisifyErrorOrResult<BlobResult>(cb => this.service.createBlockBlobFromText(this.name, blobName, text, options, cb));
 	}
 
 	async listBlobs(prefix: string): Promise<BlobResult[]> {
@@ -46,7 +46,7 @@ export default class Container {
 }
 
 function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Promise<A> {
-	return new Promise((resolve, reject) => {
+	return new Promise<A>((resolve, reject) => {
 		callsBack((err, result, response) => {
 			if (err) {
 				reject(err);
@@ -59,7 +59,7 @@ function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Pr
 }
 
 function promisifyErrorOrResponse(callsBack: (x: ErrorOrResponse) => void): Promise<void> {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		callsBack((err, response) => {
 			if (err) {
 				reject(err);
