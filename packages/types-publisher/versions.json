@@ -4216,8 +4216,8 @@
         "lastContentHash": "3f8cec1344baaa24a8d31cb486292947d5b3adb75d0fb0879c12e0789bf76a5e"
     },
     "oclazyload": {
-        "lastVersion": 28,
-        "lastContentHash": "4626e2fbead97aa7d138fbc5f0016416515744cc5467b1215c9546033133a6e5"
+        "lastVersion": 29,
+        "lastContentHash": "0b272cf97e8607a89c6098aa9bbeb02d803cff863ceaaab5f253f2b68cfbcf18"
     },
     "office-js": {
         "lastVersion": 27,
@@ -6819,8 +6819,8 @@
         "lastContentHash": "23c8c284976a18e317120c54291958548773b10b1d29c31b87c8cd55764ba8c2"
     },
     "freeport": {
-        "lastVersion": 17,
-        "lastContentHash": "08acf433e48249511bbe98aef60975be9790020233d388f916102cce5d9c9e1c"
+        "lastVersion": 18,
+        "lastContentHash": "2e3ef8498ccbcd147e9235934947abb4279fe0725a8ef2e152268efbc1290760"
     },
     "git": {
         "lastVersion": 16,
@@ -7275,7 +7275,7 @@
         "lastContentHash": "ccefdd0b7fa34868f72c1bc37d6734dc9784fe6bfe0eee0eb952457440fffa63"
     },
     "angular": {
-        "lastVersion": 5,
-        "lastContentHash": "e53a0f84e347c049ab35ebab1ecc8ce0316cbfe03c96fd6a14cb4308a3d7354b"
+        "lastVersion": 6,
+        "lastContentHash": "e8351b47568191e2a6d406c6b9f1861442ae4deedd574bff1924c649fdbba343"
     }
 }
