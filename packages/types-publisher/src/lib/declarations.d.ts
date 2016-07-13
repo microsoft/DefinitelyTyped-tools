@@ -1,3 +1,8 @@
+declare module "buffer-equals-constant" {
+	function f(a: Buffer, b: Buffer): boolean;
+	export = f;
+}
+
 declare module "fs-promise" {
 	export function writeFile(path: string, content: string, options: { encoding: "utf8" }): Promise<void>;
 	export function readFile(path: string, options: { encoding: "utf8" }): Promise<string>
@@ -19,6 +24,9 @@ declare module "azure-storage" {
 		createBlockBlobFromText(container: string, blob: string, text: string | Buffer, options: CreateBlobRequestOptions, callback: ErrorOrResult<BlobResult>): void;
 		listBlobsSegmentedWithPrefix(container: string, prefix: string, currentToken: ContinuationToken, callback: ErrorOrResult<ListBlobsResult>): void;
 		deleteBlob(container: string, blob: string, callback: ErrorOrResponse): void;
+
+		createOrReplaceAppendBlob(container: string, blob: string, options: CreateBlobRequestOptions, callback: ErrorOrResponse): void;
+		appendFromText(container: string, blob: string, text: string, options: CreateBlobRequestOptions, callback: ErrorOrResult<BlobResult>): void;
 	}
 
 	export interface ContinuationToken {

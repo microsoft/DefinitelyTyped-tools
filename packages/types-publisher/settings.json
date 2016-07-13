@@ -3,8 +3,12 @@
 	"scopeName": "types",
 	"outputPath": "./output",
 	"definitelyTypedPath": "../DefinitelyTyped",
+	"sourceRepository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
 	"sourceBranch": "types-2.0",
 	"prereleaseTag": "alpha",
 	"tag": "latest",
+
+	"azureContainer": "typespublisher",
+	"webhookPort": 80,
 	"logsIssue": "Microsoft/types-publisher/issues/40"
 }

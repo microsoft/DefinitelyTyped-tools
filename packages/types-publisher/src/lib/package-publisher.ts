@@ -1,5 +1,4 @@
 import { AnyPackage, Logger, LogResult, ArrayLog, consoleLogger, fullPackageName, isNotNeededPackage, getOutputPath, notNeededReadme, settings } from "./common";
-import * as common from "./common";
 import { parseJson } from "./util";
 import fetch = require("node-fetch");
 import fsp = require("fs-promise");
@@ -32,7 +31,7 @@ export async function publishPackage(pkg: AnyPackage, dry: boolean): Promise<Log
 
 // Used for testing only.
 export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<void> {
-	const name = common.fullPackageName(pkg.typingsPackageName);
+	const name = fullPackageName(pkg.typingsPackageName);
 	const args: string[] = ["npm", "unpublish", name, "--force"];
 	await runCommand("Unpublish", consoleLogger, dry, args);
 }
@@ -47,7 +46,7 @@ export async function shouldPublish(pkg: AnyPackage): Promise<[boolean, LogResul
 	log.info(`Local version from package.json is ${localVersion}`);
 
 	// Hit e.g. http://registry.npmjs.org/@ryancavanaugh%2fjquery for version data
-	const fullName = common.fullPackageName(pkg.typingsPackageName);
+	const fullName = fullPackageName(pkg.typingsPackageName);
 	const registryUrl = `https://registry.npmjs.org/${fullName.replace("/", "%2F")}`;
 	log.info(`Fetch registry data from ${registryUrl}`);
 

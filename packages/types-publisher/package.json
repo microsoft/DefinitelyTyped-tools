@@ -3,11 +3,9 @@
   "version": "0.6.0",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "main": "index.js",
-  "bin": {
-    "publish-typings": "createSearchIndex.js"
-  },
   "dependencies": {
     "azure-storage": "^1.1.0",
+    "buffer-equals-constant": "^1.0.0",
     "fs-promise": "^0.5.0",
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
@@ -38,7 +36,8 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
+    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts",
+    "start": "node bin/webhook.js --dry"
   },
   "repository": {
     "type": "git",
@@ -48,6 +47,9 @@
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Microsoft/types-publisher/issues"
+  },
+  "engines": {
+    "node": "^6.2.2"
   },
   "homepage": "https://github.com/Microsoft/types-publisher#readme"
 }

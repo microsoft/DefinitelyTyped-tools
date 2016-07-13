@@ -127,16 +127,22 @@ export class ArrayLog implements Logger {
 	private infos: string[];
 	private errors: string[];
 
-	constructor() {
+	constructor(public alsoOutput = false) {
 		this.infos = [];
 		this.errors = [];
 	}
 
 	info(message: string): void {
+		if (this.alsoOutput) {
+			console.log(message);
+		}
 		this.infos.push(message);
 	}
 
 	error(message: string): void {
+		if (this.alsoOutput) {
+			console.error(message);
+		}
 		this.errors.push(message);
 	}
 
@@ -165,10 +171,15 @@ function mkdir(p: string) {
 	}
 }
 
+const logDir = path.join(home, "logs");
+
+function logPath(logName: string) {
+	return path.join(logDir, logName);
+}
+
 export function writeLogSync(logName: string, contents: string[]) {
-	const logDir = path.join(home, "logs");
 	mkdir(logDir);
-	fs.writeFileSync(path.join(logDir, logName), contents.join("\r\n"), "utf-8");
+	fs.writeFileSync(logPath(logName), contents.join("\r\n"), "utf-8");
 }
 
 export function writeDataFile(filename: string, content: {}, formatted = true) {

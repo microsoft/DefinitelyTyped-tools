@@ -16,6 +16,7 @@ npm run full
 ```
 npm run build
 npm run clean
+npm run get-definitely-typed
 npm run parse
 npm run check
 npm run generate
@@ -300,6 +301,61 @@ Scripts should save this log under a unique filename so any errors may be review
 This uploads the `data` and `logs` directories to Azure.
 `data` always overwrites any old data, while `logs` has a timestamp prepended so old logs can still be viewed.
 
+# Testing the webhook
+
+(Since this is a test, make sure you are not logged in to npm (`npm logout`), and use the `--dry` flag.)
+
+* Create a dummy repository (e.g. `https://github.com/your/dummy-repo`)
+
+* Set up forwarding:
+	* Install [ngrok](https://ngrok.com)
+	* `ngrok http 80` (or whatever `webhookPort` you have in your `settings.json`)
+	* Copy the forwarding URL (Looks like: http://deadbeef.ngrok.io)
+
+* Add a hook:
+	* Go to https://github.com/your/dummy-repo/settings/hooks
+	* Payload URL = url copied from ngrok
+	* Secret = swordfish
+
+* Start the server:
+	* Change `settings.json`:
+		"sourceRepository": "https://github.com/your/dummy-repo"
+	* Set the `GITHUB_SECRET` environment variable to `swordfish`
+	* `npm install; npm run build`
+	* `node bin/webhook.js --dry`
+
+* Make a test change:
+	* git clone https://github.com/your/dummy-repo.git
+	* Copy the name of the `sourceBranch` from `types-publisher/settings.json`
+	* `git checkout -b branch_name`
+	* `git push -u origin branch_name`
+	* To test again in future, just:
+		* `echo "different text" > README.md`
+		* `git add --all`
+		* `git commit --amend -m "first commit"`
+		* `git push -f`
+
+# Using the webhook
+
+  npm run webhook
+
+This requires the `GITHUB_SECRET` environment variable to be set.
+This should match the secret value set in github.
+
+The webhook ignores the `sourceRepository` setting and can be triggered by *anything* with the secret, so make sure only DefinitelyTyped uses the secret.
+
+To set it on GitHub:
+* Go to [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped),
+* Hit the `Settings` tab at the top (you must be an admin to see this),
+* Hit `Webhooks & services`
+* The Payload URL should be the URL of the azure service.
+
+To set it in Azure:
+* Go to types-publisher
+* Go to All settings -> Application settings -> App Settings.
+* Set `GITHUB_SECRET` to the same value you set it to on GitHub.
+
+
 # Settings
 
 This file contains settings used by the publisher.
@@ -325,11 +381,23 @@ Required. Example value: `../DefinitelyTyped`
 
 This is the path to the DefinitelyTyped (or other similarly-structured) repo.
 
+### sourceRepository
+
+This is the URL of the DefinitelyTyped repo.
+
 ### prereleaseTag
 
 Optional. Example value `alpha`
 
 If present, packages are published with an e.g. `-alpha` prerelease tag as part of the version.
+
+### azureContainer
+
+Name of the Azure container.
+
+### webhookPort
+
+Port number used by the webhook.
 
 ### tag
 
@@ -341,10 +409,10 @@ If present, packages are published with the provided version tag.
 
 Azure requires the following environment variables to be set:
 
-#### AZURE_STORAGE_ACCOUNT
-
-This should always be "typespublisher" (without the quotes).
-
 #### AZURE_STORAGE_ACCESS
 
  To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys
+
+#### GITHUB_SECRET
+
+See the "Using the webhook" section

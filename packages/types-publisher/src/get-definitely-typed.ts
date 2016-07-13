@@ -23,7 +23,7 @@ function cloneIfNeeded(log: Logger): void {
 	if (!fs.existsSync(settings.definitelyTypedPath)) {
 		log.info("Cloning");
 		runCmd(
-			`git clone https://github.com/DefinitelyTyped/DefinitelyTyped.git`,
+			`git clone ${settings.sourceRepository}`,
 			path.dirname(settings.definitelyTypedPath));
 		assert(fs.existsSync(settings.definitelyTypedPath));
 		runCmd(`git checkout ${settings.sourceBranch}`, settings.definitelyTypedPath);

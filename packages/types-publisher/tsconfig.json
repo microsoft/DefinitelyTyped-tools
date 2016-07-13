@@ -11,9 +11,11 @@
 		"src/lib/search-index-generator.ts",
 		"src/lib/blob-uploader.ts",
 		"src/lib/issue-updater.ts",
+		"src/lib/webhook-server.ts",
 		"src/lib/common.ts",
 		"src/lib/util.ts",
 		"src/lib/azure-container.ts",
+		"src/lib/rolling-logs.ts",
 
 		"src/clean.ts",
 		"src/get-definitely-typed.ts",
@@ -23,7 +25,8 @@
 		"src/create-search-index.ts",
 		"src/check-parse-results.ts",
 		"src/upload-blobs.ts",
-		"src/full.ts"
+		"src/full.ts",
+		"src/webhook.ts"
 	],
 
 	"compilerOptions": {

@@ -1,11 +1,10 @@
 import assert = require("assert");
 import * as fsp from "fs-promise";
 import * as path from "path";
-import Container from "./azure-container";
+import * as container from "./azure-container";
 import { Logger, ArrayLog, writeLogSync } from "./common";
 import updateIssue from "./issue-updater";
 
-const container = new Container("typespublisher");
 const maxNumberOfOldLogsDirectories = 5;
 const githubAccessToken = process.env.GITHUB_ACCESS_TOKEN;
 
