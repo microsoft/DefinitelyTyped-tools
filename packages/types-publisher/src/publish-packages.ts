@@ -1,3 +1,4 @@
+import * as child_process from "child_process";
 import * as fs from "fs";
 import * as yargs from "yargs";
 import * as common from "./lib/common";
@@ -18,6 +19,27 @@ if (!module.parent) {
 }
 
 export default async function main(dry: boolean): Promise<void> {
+	if (!dry) {
+		checkLoggedIn();
+	}
+	doPublish(dry);
+}
+
+function checkLoggedIn(): void {
+	let whoami: string;
+	try {
+		whoami = child_process.execSync("npm whoami", { encoding: "utf8" }).trim();
+	}
+	catch (err) {
+		whoami = "";
+	}
+
+	if (whoami !== common.settings.npmUsername) {
+		throw new Error(`Must be logged in to npm as ${common.settings.npmUsername}`)
+	}
+}
+
+async function doPublish(dry: boolean) {
 	const log: string[] = [];
 	if (dry) {
 		console.log("=== DRY RUN ===");

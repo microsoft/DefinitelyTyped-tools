@@ -4,9 +4,8 @@ TODO: Finish readme!
 
 ```
 cat settings.json
-npm whoami
 ```
-Make sure your settings are correct and you're logged in as the right person.
+Make sure your settings are correct.
 
 ```
 npm run build

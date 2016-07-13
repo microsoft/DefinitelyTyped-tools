@@ -1,4 +1,5 @@
 {
+	"npmUsername": "types",
 	"scopeName": "types",
 	"outputPath": "./output",
 	"definitelyTypedPath": "../DefinitelyTyped",

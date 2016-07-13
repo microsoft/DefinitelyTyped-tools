@@ -1,4 +1,5 @@
 interface PublishSettings {
+	npmUsername: string;
 	// e.g. 'typings', not '@typings'
 	scopeName: string;
 	// e.g. './output/''
