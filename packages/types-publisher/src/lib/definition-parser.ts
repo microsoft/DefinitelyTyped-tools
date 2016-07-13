@@ -334,6 +334,10 @@ export async function getTypingInfo(directory: string): Promise<TypingParseFailR
 	const fileContents = await mapAsyncOrdered(declFiles, async d => d + "**" + await readFile(d));
 	const allContent = fileContents.join("||");
 
+	if (referencedLibraries.concat(moduleDependencies).some(s => s === libraryName)) {
+		throw new Error(`Package references itself: ${libraryName}`);
+	}
+
 	return {
 		log,
 		warnings,
