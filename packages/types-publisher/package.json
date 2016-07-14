@@ -20,7 +20,7 @@
     "@types/rimraf": "0.0.26-alpha",
     "@types/source-map-support": "^0.2.26-alpha",
     "@types/yargs": "0.0.26-alpha",
-    "tslint": "^3.13.0",
+    "tslint": "^3.14.0-dev.0",
     "typescript": "^2.0.0"
   },
   "scripts": {
