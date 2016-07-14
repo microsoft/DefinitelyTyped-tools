@@ -1,6 +1,7 @@
 import * as yargs from "yargs";
 import { settings } from "./lib/common";
 import server from "./lib/webhook-server";
+import { checkLoggedIn } from "./publish-packages";
 
 if (!module.parent) {
 	const key = process.env["GITHUB_SECRET"];
@@ -11,6 +12,7 @@ if (!module.parent) {
 		console.log("The environment variable GITHUB_SECRET must be set.");
 	}
 	else {
+		checkLoggedIn();
 		console.log(`Listening on port ${port}`);
 		server(key, dry).listen(port);
 	}

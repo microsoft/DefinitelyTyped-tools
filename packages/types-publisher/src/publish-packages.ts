@@ -25,7 +25,7 @@ export default async function main(dry: boolean): Promise<void> {
 	doPublish(dry);
 }
 
-function checkLoggedIn(): void {
+export function checkLoggedIn(): void {
 	let whoami: string;
 	try {
 		whoami = child_process.execSync("npm whoami", { encoding: "utf8" }).trim();
@@ -35,7 +35,7 @@ function checkLoggedIn(): void {
 	}
 
 	if (whoami !== common.settings.npmUsername) {
-		throw new Error(`Must be logged in to npm as ${common.settings.npmUsername}`)
+		throw new Error(`Must be logged in to npm as ${common.settings.npmUsername}`);
 	}
 }
 
