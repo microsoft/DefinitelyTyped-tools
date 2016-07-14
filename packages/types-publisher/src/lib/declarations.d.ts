@@ -1,3 +1,7 @@
+interface Array<T> {
+	includes(value: T): boolean;
+}
+
 declare module "buffer-equals-constant" {
 	function f(a: Buffer, b: Buffer): boolean;
 	export = f;

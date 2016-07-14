@@ -62,7 +62,7 @@ export interface TypingsData extends AnyPackage {
 	// The minor version of the library
 	libraryMinorVersion: string;
 
-	// The full path to the containing folder of all files, e.g. "C:/github/DefinitelyTyped"
+	// The full path to the containing folder of all files, e.g. "C:/github/DefinitelyTyped/some-package"
 	root: string;
 
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
@@ -243,6 +243,10 @@ export function computeHash(content: string) {
 	const h = crypto.createHash("sha256");
 	h.update(content, "utf-8");
 	return <string> h.digest("hex");
+}
+
+export function definitelyTypedPath(dirName: string): string {
+	return path.join(settings.definitelyTypedPath, dirName);
 }
 
 export function getOutputPath({typingsPackageName}: AnyPackage) {

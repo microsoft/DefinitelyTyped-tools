@@ -1,19 +1,18 @@
 import * as parser from "./lib/definition-parser";
-import { TypingsData, RejectionReason, settings, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
+import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
 import { filterAsyncOrdered } from "./lib/util";
 
 import fsp = require("fs-promise");
-import path = require("path");
 
 if (!module.parent) {
 	main().catch(console.error);
 }
 
-async function processDir(folderPath: string, name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
+async function processDir(name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
 	let data: TypingsData;
 	let outcome: string;
 
-	const info = await parser.getTypingInfo(folderPath);
+	const info = await parser.getTypingInfo(name);
 	const log = info.log;
 	if (isSuccess(info)) {
 		data = info.data;
@@ -27,16 +26,14 @@ async function processDir(folderPath: string, name: string): Promise<{ data: Typ
 	return { data, log, warnings: info.warnings, outcome: outcome };
 }
 
-async function filterPaths(paths: string[]): Promise<{ name: string; path: string; }[]> {
+async function filterPaths(paths: string[]): Promise<string[]> {
 	const fullPaths = paths
 		// Remove hidden paths and node_modules
 		.filter(s => s[0] !== "_" && s[0] !== "." && s !== "node_modules")
 		// Sort by name
-		.sort()
-		// Combine paths
-		.map(s => ({ name: s, path: path.join(settings.definitelyTypedPath, s) }));
+		.sort();
 	// Remove non-folders
-	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(s.path)).isDirectory());
+	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(definitelyTypedPath(s))).isDirectory());
 }
 
 export default async function main(): Promise<void> {
@@ -58,16 +55,16 @@ export default async function main(): Promise<void> {
 	const typings: { [name: string]: TypingsData } = {};
 
 	for (const s of folders) {
-		const result = await processDir(s.path, s.name);
+		const result = await processDir(s);
 
 		// Record outcome
 		outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
 
-		detailedLog.push(`# ${s.name}`);
+		detailedLog.push(`# ${s}`);
 
 		// Push warnings
 		if (result.warnings.length > 0) {
-			warningLog.push(` * ${s.name}`);
+			warningLog.push(` * ${s}`);
 			result.warnings.forEach(w => {
 				warningLog.push(`   * ${w}`);
 				detailedLog.push(`**Warning**: ${w}`);
@@ -75,7 +72,7 @@ export default async function main(): Promise<void> {
 		}
 
 		if (result.data !== undefined) {
-			typings[s.name] = result.data;
+			typings[s] = result.data;
 		}
 
 		// Flush detailed log
