@@ -5,7 +5,7 @@
 	"definitelyTypedPath": "../DefinitelyTyped",
 	"sourceRepository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
 	"sourceBranch": "types-2.0",
-	"prereleaseTag": "alpha",
+	"prereleaseTag": null,
 	"tag": "latest",
 
 	"azureContainer": "typespublisher",
