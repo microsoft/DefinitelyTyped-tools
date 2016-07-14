@@ -54,7 +54,7 @@ export interface TypingsData extends AnyPackage {
 	// The name of the primary definition file, e.g. "jquery.d.ts"
 	definitionFilename: string;
 
-	// Parsed from "Definitions by:""
+	// Parsed from "Definitions by:"
 	authors: string;
 
 	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
@@ -66,7 +66,11 @@ export interface TypingsData extends AnyPackage {
 	root: string;
 
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
+	// Does *not* include a partial `package.json` because that will not be copied directly.
 	files: string[];
+
+	// Whether a "package.json" exists
+	hasPackageJson: boolean;
 
 	// A hash computed from all files from this definition
 	contentHash: string;

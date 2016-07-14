@@ -14,7 +14,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 	await clearOutputPath(outputPath, log);
 
 	log.push("Generate package.json, metadata.json, and README.md");
-	const packageJson = createPackageJSON(typing, fileVersion, availableTypes);
+	const packageJson = await createPackageJSON(typing, fileVersion, availableTypes);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -26,7 +26,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 	];
 	outputs.push(...typing.files.map(async file => {
 		log.push(`Copy and patch ${file}`);
-		let content = await fsp.readFile(path.join(typing.root, file), { encoding: "utf8" });
+		let content = await fsp.readFile(filePath(typing, file), { encoding: "utf8" });
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
@@ -91,44 +91,78 @@ function createMetadataJSON(typing: TypingsData): string {
 	return JSON.stringify(typing, replacer, 4);
 }
 
-function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): string {
-	const dependencies: { [name: string]: string } = {};
-	function addDependency(d: string) {
-		if (availableTypes.hasOwnProperty(d)) {
-			const type = availableTypes[d];
-			// In normal releases, we want to allow patch updates, so we use `foo.bar.*`.
-			// In a prerelease, we can only reference *exact* packages.
-			// See https://github.com/npm/node-semver#prerelease-tags
-			const patch = settings.prereleaseTag ?
-				`${Versions.getLastVersion(type).lastVersion}-${settings.prereleaseTag}` :
-				"*";
-			const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.${patch}`;
-			dependencies[fullPackageName(d)] = semver;
+function filePath(typing: TypingsData, fileName: string): string {
+	return path.join(typing.root, fileName);
+}
+
+async function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): Promise<string> {
+	// typing may provide a partial `package.json` for us to complete
+	const pkgPath = filePath(typing, "package.json");
+	interface PartialPackageJson {
+		dependencies?: { [name: string]: string };
+		description: string;
+	}
+	let pkg: PartialPackageJson = typing.hasPackageJson ?
+		parseJson(await fsp.readFile(pkgPath, { encoding: "utf8" })) :
+		{};
+
+	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "description"].includes(field));
+	if (ignoredField) {
+		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
+	}
+
+	let dependencies = pkg.dependencies;
+	if (!dependencies) {
+		dependencies = {};
+		function addDependency(d: string): void {
+			if (availableTypes.hasOwnProperty(d)) {
+				const type = availableTypes[d];
+				// In normal releases, we want to allow patch updates, so we use `foo.bar.*`.
+				// In a prerelease, we can only reference *exact* packages.
+				// See https://github.com/npm/node-semver#prerelease-tags
+				const patch = settings.prereleaseTag ?
+					`${Versions.getLastVersion(type).lastVersion}-${settings.prereleaseTag}` :
+					"*";
+				const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.${patch}`;
+				dependencies[fullPackageName(d)] = semver;
+			}
 		}
-	}
-	typing.moduleDependencies.forEach(addDependency);
-	typing.libraryDependencies.forEach(addDependency);
-
-	let version = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`;
-	if (settings.prereleaseTag) {
-		version = `${version}-${settings.prereleaseTag}`;
+		typing.moduleDependencies.forEach(addDependency);
+		typing.libraryDependencies.forEach(addDependency);
 	}
 
-	return JSON.stringify({
+	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
+
+	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
+	const out = {
 		name: fullPackageName(typing.typingsPackageName),
-		version,
-		description: `TypeScript definitions for ${typing.libraryName}`,
-		main: "",
-		scripts: {},
+		version: versionString(typing, fileVersion),
+		description,
+		// keywords,
+		// homepage,
+		// bugs,
+		license: "MIT",
 		author: typing.authors,
+		// contributors
+		main: "",
 		repository: {
 			type: "git",
 			url: `${typing.sourceRepoURL}.git`
 		},
-		license: "MIT",
-		typings: typing.definitionFilename,
-		dependencies
-	}, undefined, 4);
+		scripts: {},
+		dependencies,
+		typings: typing.definitionFilename
+	};
+
+	return JSON.stringify(out, undefined, 4);
+}
+
+function versionString(typing: TypingsData, fileVersion: number): string {
+	let version = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`;
+	if (settings.prereleaseTag) {
+		version = `${version}-${settings.prereleaseTag}`;
+	}
+	return version;
 }
 
 function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage): string {

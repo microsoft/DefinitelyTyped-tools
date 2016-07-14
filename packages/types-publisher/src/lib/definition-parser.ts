@@ -132,6 +132,9 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 		throw new Error(`Package references itself: ${libraryName}`);
 	}
 
+	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
+	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
+
 	return {
 		log,
 		warnings,
@@ -152,7 +155,8 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 			declaredModules: mi.declaredModules,
 			root: path.resolve(directory),
 			files: declFiles,
-			contentHash: await hash(directory, declFiles)
+			hasPackageJson,
+			contentHash: await hash(directory, allFiles)
 		}
 	};
 }
@@ -398,8 +402,8 @@ function getFileKind(mi: ModuleInfo, log: string[]): DefinitionFileKind {
 	}
 }
 
-async function hash(directory: string, declFiles: string[]): Promise<string> {
-	const fileContents = await mapAsyncOrdered(declFiles, async d => d + "**" + await readFile(directory, d));
+async function hash(directory: string, files: string[]): Promise<string> {
+	const fileContents = await mapAsyncOrdered(files, async f => f + "**" + await readFile(directory, f));
 	const allContent = fileContents.join("||");
 	return computeHash(allContent);
 }
