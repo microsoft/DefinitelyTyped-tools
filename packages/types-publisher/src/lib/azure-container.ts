@@ -1,8 +1,25 @@
-import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, createBlobService } from "azure-storage";
+import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
 import { settings } from "./common";
 
 const name = settings.azureContainer;
 const service = createBlobService();
+
+export function setCorsProperties(): Promise<void> {
+	const properties: ServicePropertiesResult.ServiceProperties = {
+		Cors: {
+			CorsRule: [
+				{
+					AllowedOrigins: ["*"],
+					AllowedMethods: ["GET"],
+					AllowedHeaders: [],
+					ExposedHeaders: [],
+					MaxAgeInSeconds: 60 * 60 * 24 // 1 day
+				}
+			]
+		}
+	};
+	return promisifyErrorOrResponse(cb => service.setServiceProperties(properties, cb));
+}
 
 export function ensureCreated(options: CreateContainerOptions): Promise<void> {
 	return promisifyErrorOrResult<ContainerResult>(cb => service.createContainerIfNotExists(name, options, cb)).then(() => {});

@@ -32,6 +32,46 @@ declare module "azure-storage" {
 
 		createOrReplaceAppendBlob(container: string, blob: string, options: CreateBlobRequestOptions, callback: ErrorOrResponse): void;
 		appendFromText(container: string, blob: string, text: string, options: CreateBlobRequestOptions, callback: ErrorOrResult<BlobResult>): void;
+
+		setServiceProperties(serviceProperties: ServicePropertiesResult.ServiceProperties, callback: ErrorOrResponse): void;
+	}
+
+	namespace ServicePropertiesResult {
+		export interface RetentionPolicy {
+			Enabled: boolean;
+			Days: number;
+		}
+		export interface MetricsProperties {
+			Version: string;
+			Enabled: boolean;
+			IncludeAPIs: boolean;
+			RetentionPolicy: RetentionPolicy;
+		}
+		export interface CorsRule {
+			AllowedMethods: string[];
+			AllowedOrigins: string[];
+			AllowedHeaders: string[];
+			ExposedHeaders: string[];
+			MaxAgeInSeconds: number;
+		}
+		export interface LoggingProperties {
+			Version: string;
+			Delete: boolean;
+			Read: boolean;
+			Write: boolean;
+			RetentionPolicy: RetentionPolicy;
+		}
+		export interface ServiceProperties {
+			DefaultServiceVersion?: string;
+			Logging?: LoggingProperties;
+			HourMetrics?: MetricsProperties;
+			MinuteMetrics?: MetricsProperties;
+			Cors?: {
+				CorsRule: CorsRule[];
+			};
+		}
+		export function serialize(servicePropertiesJs: ServiceProperties): string;
+		export function parse(servicePropertiesXml: any): ServiceProperties;
 	}
 
 	export interface ContinuationToken {
