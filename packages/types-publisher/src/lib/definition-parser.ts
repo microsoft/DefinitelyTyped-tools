@@ -3,17 +3,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, definitelyTypedPath, settings } from "./common";
-import { mapAsyncOrdered, readdirRecursive } from "./util";
-
-function stripQuotes(s: string) {
-	if (s[0] === '"' || s[0] === "'") {
-		return s.substr(1, s.length - 2);
-	} else {
-		throw new Error(`${s} is not quoted`);
-	}
-}
-
-const augmentedGlobals = ["Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
+import { mapAsyncOrdered, readdirRecursive, stripQuotes } from "./util";
 
 function isSupportedFileKind(kind: DefinitionFileKind) {
 	switch (kind) {
@@ -78,14 +68,7 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 
 	log.push(`Reading contents of ${directory}`);
 
-	const declFiles = await readdirRecursive(directory, (file, stats) =>
-		// Only include type declaration files.
-		stats.isDirectory() || file.endsWith(".d.ts"));
-	declFiles.sort();
-
-	log.push(`Found ${declFiles.length} '.d.ts' files`);
-
-	const entryPointResult = entryPoint(folderName, declFiles, log);
+	const entryPointResult = await entryPoint(directory, folderName, log);
 	if (entryPointResult.kind === "failure") {
 		log.push(entryPointResult.message);
 		warnings.push(entryPointResult.message);
@@ -133,7 +116,7 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	}
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
-	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
+	const allFiles = hasPackageJson ? mi.declFiles.concat(["package.json"]) : mi.declFiles;
 
 	return {
 		log,
@@ -151,10 +134,10 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 			sourceRepoURL,
 			sourceBranch: settings.sourceBranch,
 			kind: DefinitionFileKind[fileKind],
-			globals: Object.keys(mi.globalSymbols).filter(k => !!(mi.globalSymbols[k] & DeclarationFlags.Value)),
+			globals: Object.keys(mi.globalSymbols).filter(k => !!(mi.globalSymbols[k] & DeclarationFlags.Value)).sort(),
 			declaredModules: mi.declaredModules,
 			root: path.resolve(directory),
-			files: declFiles,
+			files: mi.declFiles,
 			hasPackageJson,
 			contentHash: await hash(directory, allFiles)
 		}
@@ -169,8 +152,13 @@ interface EntryPointFailure {
 	kind: "failure";
 	message: string;
 }
-function entryPoint(folderName: string, declFiles: string[], log: string[]): EntryPointSuccess | EntryPointFailure {
-	log.push(`Found ${declFiles.length} .d.ts files (${declFiles.join(", ")})`);
+async function entryPoint(directory: string, folderName: string, log: string[]): Promise<EntryPointSuccess | EntryPointFailure> {
+	const declFiles = await readdirRecursive(directory, (file, stats) =>
+		// Only include type declaration files.
+		stats.isDirectory() || file.endsWith(".d.ts"));
+	declFiles.sort();
+
+	log.push(`Found ${declFiles.length} '.d.ts' files (${declFiles.join(", ")})`);
 
 	if (declFiles.length === 1) {
 		return { kind: "success", filename: declFiles[0] };
@@ -190,14 +178,107 @@ function entryPoint(folderName: string, declFiles: string[], log: string[]): Ent
 	}
 }
 
+// See GH#68 for why we don't just include every file
+/** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
+async function allReferencedFiles(directory: string, entryPointFilename: string, log: string[]): Promise<Map<string, ts.SourceFile>> {
+	const all = new Map<string, ts.SourceFile>();
+
+	async function recur(filename: string): Promise<void> {
+		if (all.has(filename)) {
+			return;
+		}
+
+		log.push(`Parse ${filename}`);
+		let content = await readFile(directory, filename);
+		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
+		all.set(filename, src);
+
+		const refs = referencedFiles(src, directory, path.dirname(filename));
+		await Promise.all(refs.map(recur));
+	}
+
+	await recur(entryPointFilename);
+	return all;
+}
+
+/**
+ * @param subDirectory The specific directory within the DefinitelyTyped directory we are in.
+ * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
+ */
+function referencedFiles(src: ts.SourceFile, directory: string, subDirectory: string): string[] {
+	const out: string[] = [];
+
+	for (const ref of src.referencedFiles) {
+		// Any <reference path="foo"> is assumed to be local
+		maybeAdd(ref.fileName);
+	}
+
+	for (const ref of imports(src)) {
+		if (ref.startsWith(".")) {
+			maybeAdd(`${ref}.d.ts`);
+		}
+	}
+
+	return out;
+
+	// GH#69: We should just forbid all non-global references to the outside.
+	function maybeAdd(ref: string): void {
+		const full = path.normalize(path.join(subDirectory, ref));
+		// If the *normalized* path starts with "..", then it reaches outside of srcDirectory.
+		if (!full.startsWith("..")) {
+			out.push(full);
+		}
+	}
+}
+
+/**
+ * All strings referenced in `import` statements.
+ * Does *not* include <reference> directives.
+ */
+function imports(src: ts.SourceFile): string[] {
+	const out: string[] = [];
+
+	for (const node of src.statements) {
+		switch (node.kind) {
+			case ts.SyntaxKind.ImportDeclaration: {
+				const decl = node as ts.ImportDeclaration;
+				if (decl.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
+					out.push(stripQuotes(decl.moduleSpecifier.getText()));
+				}
+				break;
+			}
+
+			case ts.SyntaxKind.ImportEqualsDeclaration: {
+				const decl = node as ts.ImportEqualsDeclaration;
+				if (decl.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
+					out.push(parseRequire(decl.moduleReference.getText()));
+				}
+				break;
+			}
+
+			default:
+		}
+	}
+
+	return out;
+
+	function parseRequire(text: string): string {
+		const match = /require\(["'](.*)["']\)/.exec(text);
+		if (match === null) {
+			throw new Error(`Failed to parse import = declaration "${text}"`);
+		}
+		return match[1];
+	}
+}
+
 async function getModuleInfo(directory: string, entryPointFilename: string, log: string[], warnings: string[]): Promise<ModuleInfo> {
 	let hasUmdDecl = false;
 	let isProperModule = false;
 	let hasGlobalDeclarations = false;
 	let ambientModuleCount = 0;
 
-	const moduleDependencies: string[] = [];
-	const referencedLibraries: string[] = [];
+	const moduleDependencies = new Set<string>();
+	const referencedLibraries = new Set<string>();
 	const declaredModules: string[] = [];
 
 	let globalSymbols: GlobalSymbols = {};
@@ -205,34 +286,20 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 		globalSymbols[name] = (globalSymbols[name] || DeclarationFlags.None) | flags;
 	}
 
-	const processQueue = [entryPointFilename];
-	const completeList: string[] = [];
+	const all = await allReferencedFiles(directory, entryPointFilename, log);
 
-	while (processQueue.length > 0) {
-		const filename = processQueue.pop();
-		if (completeList.includes(filename)) {
-			continue;
+	for (const src of all.values()) {
+		for (const ref of imports(src)) {
+			if (!ref.startsWith(".")) {
+				moduleDependencies.add(ref);
+				log.push(`Found import declaration from \`"${ref}"\``);
+				isProperModule = true;
+			}
 		}
-		completeList.push(filename);
 
-		log.push(`Parse ${filename}`);
-		let content = await readFile(directory, filename);
+		src.typeReferenceDirectives.forEach(ref => referencedLibraries.add(ref.fileName));
 
-		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
-		src.referencedFiles.forEach(ref => {
-			// Add referenced files to processing queue
-			if (!isRelative(ref)) {
-				processQueue.push(path.join(path.dirname(filename), ref.fileName));
-			}
-		});
-
-		src.typeReferenceDirectives.forEach((ref: { fileName: string }) => {
-			if (!referencedLibraries.includes(ref.fileName)) {
-				referencedLibraries.push(ref.fileName);
-			}
-		});
-
-		src.getChildren()[0].getChildren().forEach(node => {
+		for (const node of src.statements) {
 			switch (node.kind) {
 				case ts.SyntaxKind.NamespaceExportDeclaration:
 					const globalName = (node as ts.NamespaceExportDeclaration).name.getText();
@@ -285,40 +352,17 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 				case ts.SyntaxKind.FunctionDeclaration:
 					// If these nodes have an 'export' modifier, the file is an external module
 					if (node.flags & ts.NodeFlags.Export) {
-						const declName = (node as ts.Declaration).name;
+						const declName = (node as ts.DeclarationStatement).name;
 						if (declName) {
-							log.push(`Found exported declaration "${(node as ts.Declaration).name.getText()}"`);
+							log.push(`Found exported declaration "${declName.getText()}"`);
 						}
 						isProperModule = true;
 					} else {
-						const declName = (node as ts.Declaration).name.getText();
+						const declName = (node as ts.DeclarationStatement).name.getText();
 						const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
 						log.push(`Found global ${isType ? "type" : "value"} declaration "${declName}"`);
 						recordSymbol(declName, isType ? DeclarationFlags.Type : DeclarationFlags.Value);
 						hasGlobalDeclarations = true;
-					}
-					break;
-
-				case ts.SyntaxKind.ImportEqualsDeclaration:
-					if ((node as ts.ImportEqualsDeclaration).moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
-						const ref = (node as ts.ImportEqualsDeclaration).moduleReference.getText();
-						const match = /require\(["'](.*)["']\)/.exec(ref);
-						if (match !== null) {
-							moduleDependencies.push(match[1]);
-							log.push(`Found import = declaration from \`"${ref}"\``);
-							isProperModule = true;
-						} else {
-							warnings.push(`Failed to parse import = declaration "${ref}"`);
-						}
-					}
-					break;
-
-				case ts.SyntaxKind.ImportDeclaration:
-					if ((node as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
-						const ref = (node as ts.ImportDeclaration).moduleSpecifier.getText();
-						moduleDependencies.push(stripQuotes(ref));
-						log.push(`Found import declaration from \`"${ref}"\``);
-						isProperModule = true;
 					}
 					break;
 
@@ -329,16 +373,27 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 					isProperModule = true;
 					break;
 
+				case ts.SyntaxKind.ImportEqualsDeclaration:
+				case ts.SyntaxKind.ImportDeclaration:
+					// Already handled these in `imports`
+					break;
+
 				default:
 					throw new Error();
 			}
-		});
+		}
 	}
-	return { hasUmdDecl, isProperModule, hasGlobalDeclarations, ambientModuleCount, moduleDependencies, referencedLibraries, declaredModules, globalSymbols };
-}
 
-function isRelative(ref: ts.FileReference): boolean {
-	return ref.fileName.charAt(0) === ".";
+	return {
+		declFiles: arrayOf(all.keys()),
+		referencedLibraries: arrayOf(referencedLibraries),
+		moduleDependencies: arrayOf(moduleDependencies),
+		hasUmdDecl, isProperModule, hasGlobalDeclarations, ambientModuleCount, declaredModules, globalSymbols
+	};
+
+	function arrayOf(strings: Iterable<string>): string[] {
+		return Array.from(strings).sort();
+	}
 }
 
 interface GlobalSymbols {
@@ -350,14 +405,27 @@ interface ModuleInfo {
 	hasGlobalDeclarations: boolean;
 	ambientModuleCount: number;
 
+	// Every declaration file used (starting from the entry point)
+	declFiles: string[];
+
+	// Anything from an `import ... from "foo"`
 	moduleDependencies: string[];
+	// Anything from a `<reference types="foo">
 	referencedLibraries: string[];
+	// Anything from a `declare module "foo"`
 	declaredModules: string[];
+	// Every global symbol
 	globalSymbols: GlobalSymbols;
 }
 
+function isNewGlobal(name: string): boolean {
+	// This is not a new global if it simply augments an existing one.
+	const augmentedGlobals = ["Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
+	return !augmentedGlobals.includes(name);
+}
+
 function getFileKind(mi: ModuleInfo, log: string[]): DefinitionFileKind {
-	const globals = Object.keys(mi.globalSymbols).filter(s => !augmentedGlobals.includes(s));
+	const globals = Object.keys(mi.globalSymbols).filter(isNewGlobal);
 	if (mi.isProperModule) {
 		if (mi.hasUmdDecl) {
 			log.push(`UMD module declaration detected`);
