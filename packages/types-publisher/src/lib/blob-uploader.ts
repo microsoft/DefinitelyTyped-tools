@@ -2,15 +2,14 @@ import assert = require("assert");
 import * as fsp from "fs-promise";
 import * as path from "path";
 import * as container from "./azure-container";
-import { Logger, ArrayLog, writeLogSync } from "./common";
-import updateIssue from "./issue-updater";
+import { Logger, ArrayLog, logPath, writeLogSync } from "./common";
+import { unique } from "./util";
 
 const maxNumberOfOldLogsDirectories = 5;
-const githubAccessToken = process.env.GITHUB_ACCESS_TOKEN;
 
 export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Promise<void> {
 	const [dataUrls, logUrls] = await uploadBlobs(timeStamp);
-	await updateIssue(githubAccessToken, timeStamp, dataUrls, logUrls);
+	await uploadIndex(timeStamp, dataUrls, logUrls);
 };
 
 // View uploaded files at:
@@ -24,14 +23,12 @@ async function uploadBlobs(timeStamp: string): Promise<[string[], string[]]> {
 	]);
 
 	// Finally, output blob logs and upload them.
-	const blobLogs = "logs/upload-blobs.md";
+	const blobLogs = "upload-blobs.md";
 	const {infos, errors} = logger.result();
 	assert(!errors.length);
 	writeLogSync(blobLogs, infos);
-	const uploadBlobsLogName = logsUploadedLocation(timeStamp) + "/upload-blobs.md";
-	await container.createBlobFromFile(uploadBlobsLogName, blobLogs);
+	logUrls.push(await uploadFile(logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
 
-	logUrls.push(container.urlOfBlob(uploadBlobsLogName));
 	return [dataUrls, logUrls];
 };
 
@@ -52,18 +49,23 @@ async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Lo
 	if (filter) {
 		files = files.filter(filter);
 	}
-	return await Promise.all(files.map(async fileName => {
+	return await Promise.all(files.map(fileName => {
 		const fullPath = path.join(dirPath, fileName);
 		const blobName = `${uploadedDirPath}/${fileName}`;
-		await logAndUpload(blobName, fullPath, log);
-		return container.urlOfBlob(blobName);
+		return logAndUploadFile(blobName, fullPath, log);
 	}));
 }
 
-function logAndUpload(blobName: string, filePath: string, log: Logger): Promise<void> {
+async function logAndUploadFile(blobName: string, filePath: string, log: Logger): Promise<string> {
 	const url = container.urlOfBlob(blobName);
 	log.info(`Uploading ${filePath} to ${url}`);
-	return container.createBlobFromFile(blobName, filePath).then(() => {});
+	await container.createBlobFromFile(blobName, filePath);
+	return url;
+}
+async function uploadFile(blobName: string, filePath: string): Promise<string> {
+	const url = container.urlOfBlob(blobName);
+	await container.createBlobFromFile(blobName, filePath);
+	return url;
 }
 
 async function deleteDirectory(uploadedDirPath: string, log: Logger): Promise<void> {
@@ -94,6 +96,25 @@ async function removeOldDirectories(prefix: string, maxDirectories: number, log:
 	await Promise.all(toDelete.map(d => deleteDirectory(prefix + d, log)));
 }
 
-function unique<T>(arr: T[]) {
-	return [...new Set(arr)];
+// Provides links to the latest blobs.
+// These are at: https://typespublisher.blob.core.windows.net/typespublisher/index.html
+function uploadIndex(timeStamp: string, dataUrls: string[], logUrls: string[]): Promise<void> {
+	return container.createBlobFromText("index.html", createIndex());
+
+	function createIndex(): string {
+		const lines: string[] = [];
+		lines.push("<html><head></head><body>");
+		lines.push(`<h3>Here is the latest data as of **${timeStamp}**:</h3>`);
+		lines.push("<h4>Data</h4>");
+		lines.push(...dataUrls.map(link));
+		lines.push("<h4>Logs</h4>");
+		lines.push(...logUrls.map(link));
+		lines.push("</body></html>");
+		return lines.join("\n");
+
+		function link(url: string): string {
+			const short = url.slice(url.lastIndexOf("/") + 1);
+			return `<li><a href='${url}'>${short}</a></li>`;
+		}
+	}
 }

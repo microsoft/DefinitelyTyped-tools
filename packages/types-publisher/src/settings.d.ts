@@ -26,6 +26,6 @@ interface PublishSettings {
 	// Port the webhook will listen on.
 	webhookPort: number;
 
-	// Issue in types-publisher that we will use to track links to logs.
-	logsIssue: string;
+	// Issue in types-publisher that we will use to report webhook errors.
+	errorsIssue: string;
 }

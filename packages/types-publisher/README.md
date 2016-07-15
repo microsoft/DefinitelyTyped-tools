@@ -300,6 +300,8 @@ Scripts should save this log under a unique filename so any errors may be review
 
 This uploads the `data` and `logs` directories to Azure.
 `data` always overwrites any old data, while `logs` has a timestamp prepended so old logs can still be viewed.
+Blobs can be viewed [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html)
+or on [Azure](https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher).
 
 # Testing the webhook
 
@@ -339,22 +341,7 @@ This uploads the `data` and `logs` directories to Azure.
 
   npm run webhook
 
-This requires the `GITHUB_SECRET` environment variable to be set.
-This should match the secret value set in github.
-
-The webhook ignores the `sourceRepository` setting and can be triggered by *anything* with the secret, so make sure only DefinitelyTyped uses the secret.
-
-To set it on GitHub:
-* Go to [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped),
-* Hit the `Settings` tab at the top (you must be an admin to see this),
-* Hit `Webhooks & services`
-* The Payload URL should be the URL of the azure service.
-
-To set it in Azure:
-* Go to types-publisher
-* Go to All settings -> Application settings -> App Settings.
-* Set `GITHUB_SECRET` to the same value you set it to on GitHub.
-
+This requires the `GITHUB_SECRET` and `GITHUB_ACCESS_TOKEN` environment variables to be set; see the "Environment variables" section.
 
 # Settings
 
@@ -391,6 +378,12 @@ Optional. Example value `alpha`
 
 If present, packages are published with an e.g. `-alpha` prerelease tag as part of the version.
 
+### tag
+
+Optional. Example value `latest`
+
+If present, packages are published with the provided version tag.
+
 ### azureContainer
 
 Name of the Azure container.
@@ -399,20 +392,36 @@ Name of the Azure container.
 
 Port number used by the webhook.
 
-### tag
+### errorsIssue
 
-Optional. Example value `latest`
-
-If present, packages are published with the provided version tag.
+GitHub issue to use to report errors from the webhook.
 
 ## Environment variables
 
-Azure requires the following environment variables to be set:
-
 #### AZURE_STORAGE_ACCESS
 
- To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys
+To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys
 
 #### GITHUB_SECRET
 
-See the "Using the webhook" section
+This is used to ensure that only GitHub cand send messages to our server.
+This should match the secret value set on [GitHub](https://github.com/DefinitelyTyped/DefinitelyTyped/settings/hooks).
+The Payload URL should be the URL of the Azure service.
+
+The webhook ignores the `sourceRepository` setting and can be triggered by *anything* with the secret, so make sure only DefinitelyTyped has the secret.
+
+#### GITHUB_ACCESS_TOKEN
+
+This also requires `GITHUB_ACCESS_TOKEN` to be set.
+This is a *different* value used to allow the server to update an [issue](https://github.com/Microsoft/types-publisher/issues/40) on GitHub in case of an error.
+Create a token [here](https://github.com/settings/tokens).
+
+#### WEBHOOK_FORCE_DRY
+
+This lets you run the webhook in dry mode in Azure, without needing command line flags.
+
+### Set environment variables in Azure
+
+* Go to https://ms.portal.azure.com
+* Go to `types-publisher` (*not* the `typespublisher` storage account)
+* Go to Settings -> General -> Application settings -> App Settings

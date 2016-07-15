@@ -34,7 +34,7 @@ export async function listBlobs(prefix: string): Promise<BlobResult[]> {
 }
 
 export function deleteBlob(blobName: string): Promise<void> {
-	return promisifyErrorOrResponse(cb => this.service.deleteBlob(this.name, blobName, cb));
+	return promisifyErrorOrResponse(cb => service.deleteBlob(name, blobName, cb));
 }
 
 export function urlOfBlob(blobName: string): string {

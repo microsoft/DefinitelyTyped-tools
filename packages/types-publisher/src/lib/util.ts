@@ -64,3 +64,7 @@ export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: 
 export function indent(str: string): string {
 	return "\t" + str.replace(/\n/g, "\n\t");
 }
+
+export function unique<T>(arr: T[]) {
+	return [...new Set(arr)];
+}

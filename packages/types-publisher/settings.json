@@ -10,5 +10,5 @@
 
 	"azureContainer": "typespublisher",
 	"webhookPort": 80,
-	"logsIssue": "Microsoft/types-publisher/issues/40"
+	"errorsIssue": "Microsoft/types-publisher/issues/40"
 }

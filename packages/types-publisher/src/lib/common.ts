@@ -177,7 +177,7 @@ function mkdir(p: string) {
 
 const logDir = path.join(home, "logs");
 
-function logPath(logName: string) {
+export function logPath(logName: string) {
 	return path.join(logDir, logName);
 }
 
