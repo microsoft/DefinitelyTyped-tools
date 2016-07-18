@@ -218,8 +218,6 @@ function createReadme(typing: TypingsData) {
 }
 
 namespace Versions {
-	const versionFilename = "versions.json";
-
 	interface VersionMap {
 		[typingsPackageName: string]: {
 			lastVersion: number;
@@ -230,7 +228,7 @@ namespace Versions {
 	let _versionData: VersionMap = undefined;
 	function loadVersions() {
 		if (_versionData === undefined) {
-			_versionData = fs.existsSync(versionFilename) ? parseJson(fs.readFileSync(versionFilename, "utf-8")) : {};
+			_versionData = fs.existsSync(versionsFilename) ? parseJson(fs.readFileSync(versionsFilename, "utf-8")) : {};
 		}
 		return _versionData;
 	}
