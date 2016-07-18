@@ -2,24 +2,28 @@ import * as ts from "typescript";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
-import { DefinitionFileKind, RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, definitelyTypedPath, settings } from "./common";
+import { RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, definitelyTypedPath, settings } from "./common";
 import { mapAsyncOrdered, readdirRecursive, stripQuotes } from "./util";
 
-function isSupportedFileKind(kind: DefinitionFileKind) {
-	switch (kind) {
-		case DefinitionFileKind.Unknown:
-		case DefinitionFileKind.MultipleModules:
-		case DefinitionFileKind.Mixed:
-		case DefinitionFileKind.DeclareModule:
-		case DefinitionFileKind.Global:
-		case DefinitionFileKind.ProperModule:
-		case DefinitionFileKind.ModuleAugmentation:
-		case DefinitionFileKind.UMD:
-		case DefinitionFileKind.OldUMD:
-			return true;
-		default:
-			throw new Error("Should not be here");
-	}
+enum DefinitionFileKind {
+	// Dunno
+	Unknown,
+	// UMD module file
+	UMD,
+	// File has global variables or interfaces, but not any external modules
+	Global,
+	// File has top-level export declarations
+	ProperModule,
+	// File has a single declare module "foo" but no global interfaces or variables
+	DeclareModule,
+	// Some combination of Global and DeclareModule
+	Mixed,
+	// More than one 'declare module "foo"'
+	MultipleModules,
+	// Augments an external module
+	ModuleAugmentation,
+	// Old-style UMD
+	OldUMD
 }
 
 enum DeclarationFlags {
@@ -86,12 +90,6 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 
 	if (mi.declaredModules.length === 0 && fileKind === DefinitionFileKind.ProperModule) {
 		mi.declaredModules.push(folderName);
-	}
-
-	if (!isSupportedFileKind(fileKind)) {
-		log.push(`Exiting, \`${DefinitionFileKind[fileKind]}\` is not a supported file kind`);
-		warnings.push(`\`${DefinitionFileKind[fileKind]}\` is not a supported file kind`);
-		return { log, warnings, rejectionReason: RejectionReason.BadFileFormat };
 	}
 
 	function regexMatch(rx: RegExp, defaultValue: string): string {

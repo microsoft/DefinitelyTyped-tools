@@ -76,27 +76,6 @@ export interface TypingsData extends AnyPackage {
 	contentHash: string;
 }
 
-export enum DefinitionFileKind {
-	// Dunno
-	Unknown,
-	// UMD module file
-	UMD,
-	// File has global variables or interfaces, but not any external modules
-	Global,
-	// File has top-level export declarations
-	ProperModule,
-	// File has a single declare module "foo" but no global interfaces or variables
-	DeclareModule,
-	// Some combination of Global and DeclareModule
-	Mixed,
-	// More than one 'declare module "foo"'
-	MultipleModules,
-	// Augments an external module
-	ModuleAugmentation,
-	// Old-style UMD
-	OldUMD
-}
-
 export enum RejectionReason {
 	TooManyFiles,
 	BadFileFormat,
