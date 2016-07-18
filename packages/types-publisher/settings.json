@@ -8,6 +8,7 @@
 	"prereleaseTag": null,
 	"tag": "latest",
 
+	"azureStorageAccount": "typespublisher",
 	"azureContainer": "typespublisher",
 	"webhookPort": 80,
 	"errorsIssue": "Microsoft/types-publisher/issues/40"

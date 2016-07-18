@@ -2,7 +2,7 @@ import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOption
 import { settings } from "./common";
 
 const name = settings.azureContainer;
-const service = createBlobService();
+const service = createBlobService(settings.azureStorageAccount, process.env["AZURE_STORAGE_ACCESS_KEY"]);
 
 export function setCorsProperties(): Promise<void> {
 	const properties: ServicePropertiesResult.ServiceProperties = {

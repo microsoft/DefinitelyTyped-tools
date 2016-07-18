@@ -20,7 +20,10 @@ interface PublishSettings {
 	// e.g. 'latest'
 	tag?: string;
 
-	// Name of the azure container. Used for uploading data and logs.
+	// Name of the azure storage account. Used for uploading data and logs.
+	azureStorageAccount: string;
+
+	// Name of the azure container.
 	azureContainer: string;
 
 	// Port the webhook will listen on.

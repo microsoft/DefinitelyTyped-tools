@@ -384,6 +384,10 @@ Optional. Example value `latest`
 
 If present, packages are published with the provided version tag.
 
+### azureStorageAccount
+
+Name of the Azure storage account.
+
 ### azureContainer
 
 Name of the Azure container.
@@ -398,7 +402,7 @@ GitHub issue to use to report errors from the webhook.
 
 ## Environment variables
 
-#### AZURE_STORAGE_ACCESS
+#### AZURE_STORAGE_ACCESS_KEY
 
 To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys
 

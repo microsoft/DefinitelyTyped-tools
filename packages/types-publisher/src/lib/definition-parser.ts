@@ -379,7 +379,7 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 					break;
 
 				default:
-					throw new Error();
+					throw new Error(`Bad node in ${path.join(directory, src.fileName)}: ts.SyntaxKind[node.kind])`);
 			}
 		}
 	}

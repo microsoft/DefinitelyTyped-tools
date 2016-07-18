@@ -21,7 +21,7 @@ declare module "azure-storage" {
 	// Based on https://github.com/Azure/azure-storage-node/blob/master/typings/azure-storage/azure-storage.d.ts
 	// Subset that works for ts@next
 
-	export function createBlobService(): BlobService;
+	export function createBlobService(storageAccount: string, storageAccessKey: string): BlobService
 
 	export interface BlobService {
 		createContainerIfNotExists(container: string, options: CreateContainerOptions, callback: ErrorOrResult<ContainerResult>): void;
