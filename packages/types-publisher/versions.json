@@ -914,8 +914,8 @@
         "lastContentHash": "0a52a5c4eb58a271111be188469da4c6d482a72152b2651688663f183750e507"
     },
     "commander": {
-        "lastVersion": 28,
-        "lastContentHash": "47ceeb8a98c198c446863b3bdabdc0cccbe6b37e764f130b9a10a287a1237fc0"
+        "lastVersion": 29,
+        "lastContentHash": "46aac7bf985c0c1227c6f358b13af5bcff83d8a5d5def46cf7005653378958dd"
     },
     "commonmark": {
         "lastVersion": 28,
@@ -1170,8 +1170,8 @@
         "lastContentHash": "26926a4dd9bee6c0d5c0fb9038e649416f212b2a5b0de9757b162c20699c38f6"
     },
     "d3": {
-        "lastVersion": 29,
-        "lastContentHash": "69c22d71f246741b994225e5211678a8197a395c38aa70a107b23f545243a06a"
+        "lastVersion": 30,
+        "lastContentHash": "32f1cb9dec10548e45b86bccc3dd90dbe2f0e00f5f89d6cb8e03e6333ad42805"
     },
     "d3-dsv": {
         "lastVersion": 28,
@@ -2372,8 +2372,8 @@
         "lastContentHash": "1b73e9f63e1a52c4c15c1c0018e0400083822555639056fbe818b25bf95a4c64"
     },
     "history": {
-        "lastVersion": 28,
-        "lastContentHash": "79d98bc934340511397a3264c91a2e104763824f13050d1f9e55c24c985b2edb"
+        "lastVersion": 29,
+        "lastContentHash": "4b1b4c3166f6923c59c1332a7531418a0a49ac28cd074b513b39835cf29fc84b"
     },
     "hooker": {
         "lastVersion": 27,
@@ -2447,8 +2447,8 @@
         "lastContentHash": "86fd4f670c3faf6533e2ff1b7ef3b632b340c9574139c8f0687fd0689cb5f0ba"
     },
     "i18next": {
-        "lastVersion": 27,
-        "lastContentHash": "e52aca6c9c9973e9a1ab11efccd0eb0b1d3fe0634733fa23a4010d4f9afe7a7d"
+        "lastVersion": 28,
+        "lastContentHash": "aa2b593152e3b45e8ccce8e602c7550302ef3695f9fe62f2ae7df06675217eef"
     },
     "i18next-browser-languagedetector": {
         "lastVersion": 27,
@@ -2615,8 +2615,8 @@
         "lastContentHash": "f79730e239b2000271cd61fed535fed6b3f265fe68a4cc6e2220b27c43545802"
     },
     "jasmine": {
-        "lastVersion": 29,
-        "lastContentHash": "37729bde40828306f95c589a23db963a7fbb8659713039ed91061420fe617b12"
+        "lastVersion": 30,
+        "lastContentHash": "4cc53223c65b86405276eae163d274446669773cc370dfff71dc02089ace0fa9"
     },
     "jasmine-ajax": {
         "lastVersion": 27,
@@ -3069,8 +3069,8 @@
         "lastContentHash": "c38457292d51f4e4c200c41179cc1f70364620104c197a003b1aa42944bc9059"
     },
     "js-data": {
-        "lastVersion": 28,
-        "lastContentHash": "de98f68aaa0a91a72f54415281f3903cb5ce0c2234651694bf1c79013e93d82a"
+        "lastVersion": 29,
+        "lastContentHash": "52cf60be0426e942df3d17a03702ce6f9d8828f822d8784a97605d3532d94213"
     },
     "js-data-angular": {
         "lastVersion": 29,
@@ -3145,8 +3145,8 @@
         "lastContentHash": "a5655433a6a384be4dfd707204840b8662eebdf56a5e9253a69408fe6ea24894"
     },
     "jsnox": {
-        "lastVersion": 29,
-        "lastContentHash": "367fbf1eee8a7751343bce51bbfdefc7478bae6628feea47d6a6a1dccaf6fe89"
+        "lastVersion": 30,
+        "lastContentHash": "9eff86bf95029b95ea4d571b5fd57903e39143c034add2a5ec16112c11763bcd"
     },
     "json-patch": {
         "lastVersion": 27,
@@ -3240,8 +3240,8 @@
         "lastContentHash": "0b6303e7e94b30692191797c269f12750398e63e836ba1bb636a913d3b97d8f8"
     },
     "karma-coverage": {
-        "lastVersion": 28,
-        "lastContentHash": "6415dc13d789664cc5b4c942012d973aca59617b1ed6d789c2ff176235c7fbdd"
+        "lastVersion": 29,
+        "lastContentHash": "9a0798cb7d3c25d3e3aa8af524e78e3dd0a9037250757abbd4b951cc3b42146d"
     },
     "karma-jasmine": {
         "lastVersion": 27,
@@ -3292,8 +3292,8 @@
         "lastContentHash": "c26166af9d460f7510f5660a66ae04098ba5a939008b93b0f5eccba8784ca2bc"
     },
     "knockout": {
-        "lastVersion": 29,
-        "lastContentHash": "a473db6a1cca4c1d7bc6cd0ac1341ff17f036194a52bd3017debe99d4b70e1cb"
+        "lastVersion": 30,
+        "lastContentHash": "f7c88022f7965fa1ed883821ddb6d98e1b47cb3a1e19af26b66a5546f115b1ea"
     },
     "knockout-paging": {
         "lastVersion": 27,
@@ -3630,8 +3630,8 @@
         "lastContentHash": "7ab3cd1544402f8ef78a6017144d0b4c5982b935ed5850c5ea0ed63ebb580850"
     },
     "material-ui": {
-        "lastVersion": 29,
-        "lastContentHash": "73bfc4f94726479d95002086d6a920a726a20a10e72683f8fdefa766c6c5bc27"
+        "lastVersion": 30,
+        "lastContentHash": "7d8127bc6079ba145310bd434796a7ff16805c08a85bb3fb09da1941201b6382"
     },
     "materialize-css": {
         "lastVersion": 27,
@@ -3817,8 +3817,8 @@
         "lastContentHash": "71da8fd96f7b5692a3db973ffe5f92f1d782832c69fe76d6c554e325d6776914"
     },
     "moment-range": {
-        "lastVersion": 27,
-        "lastContentHash": "741984bbd02cf52e3c09ac5b2ee409644aaa522a8103312fdb0197eb2170b908"
+        "lastVersion": 28,
+        "lastContentHash": "66ccdccb8dadaec5feb4cf5d7af11df1826171abe9f3da1c0cb38658ef72a28d"
     },
     "moment-timezone": {
         "lastVersion": 28,
@@ -4757,20 +4757,20 @@
         "lastContentHash": "749426494e153dee6a769c66395553dced3d521124ae720ced6fbb06977c1d08"
     },
     "react-bootstrap": {
-        "lastVersion": 27,
-        "lastContentHash": "9c7f55df24e8ae03292877ccda5b02f6a16eb25e31c94272c4d845a40c643e74"
+        "lastVersion": 28,
+        "lastContentHash": "74aedd463fff88c750c9ac55cd180f5b0067f3c691122ccc7d6c5e7ea39a64bc"
     },
     "react-bootstrap-table": {
         "lastVersion": 26,
         "lastContentHash": "329fa5464de9de426defefd1c1688aeacc44445f7260afb98110b40cbe7579a0"
     },
     "react-datagrid": {
-        "lastVersion": 27,
-        "lastContentHash": "4c838e99dfe1048a5d590f4b83f90c2744632712a8413f5179b055f4d056a1cb"
+        "lastVersion": 28,
+        "lastContentHash": "cc26960919b3e260c990e41536cb2b5e3f22fb219cd9d3d1e069ef0c40aeb8ca"
     },
     "react-day-picker": {
-        "lastVersion": 26,
-        "lastContentHash": "42141bc7c0c9336f7b5ea559660c7f34423511223830e6c508c62515a4eb0e18"
+        "lastVersion": 27,
+        "lastContentHash": "b9d174a40b373d68d4379c4d0e7ea82d202e209570ad021a77f7e1b603c242fd"
     },
     "react-dnd": {
         "lastVersion": 26,
@@ -6241,112 +6241,112 @@
         "lastContentHash": "dd0bd7f3ad52414f43aa1792e32adc630d9267f66fb93439f41097f3a14ad8d1"
     },
     "angular-material": {
-        "lastVersion": 30,
-        "lastContentHash": "8577b17bc9bf9bd5941f1093b083799292890805da59e49a5c3cebc7dd30a715"
+        "lastVersion": 31,
+        "lastContentHash": "62ba48d99c199df3575ed314608a27be10f829117e95d3258264855f2650a1e4"
     },
     "atom": {
-        "lastVersion": 29,
-        "lastContentHash": "aa82fe7d0888bd29b5a7a97238e5318cddb12cd86963e74d089e1d9b71192dee"
+        "lastVersion": 30,
+        "lastContentHash": "75d15a960347bb7bed940fdbd15f4a00cf49222a48f886778be407ef74fcb738"
     },
     "backbone": {
         "lastVersion": 29,
         "lastContentHash": "415652cd02ac0344bc9f6dc13f0859595369c453eeeb6a122aa6eea4c654d8bb"
     },
     "bluebird": {
-        "lastVersion": 28,
-        "lastContentHash": "bd5e22fc6558aec849b9f25ac7bc497eb7174d37887badfcb220508c5d1f21d5"
+        "lastVersion": 29,
+        "lastContentHash": "3c4ffa092e9088bdb95b1822c0c49bf7e7964eb8b7367baa70d8862f1f8a38cd"
     },
     "bootstrap.v3.datetimepicker": {
-        "lastVersion": 29,
-        "lastContentHash": "3176a9db3d54de012eb44d1de43ecdeceda122b48f6f037285d6e94c59f3d25d"
+        "lastVersion": 30,
+        "lastContentHash": "e927fac0954c0a201942d6f1e22da2a45a9b1455970b6614dd661d8ce91a9a39"
     },
     "business-rules-engine": {
-        "lastVersion": 30,
-        "lastContentHash": "3e6ed5485b7cfb5443b0b758cc2f900100dd1dc3e046134b73e15302adca1520"
+        "lastVersion": 31,
+        "lastContentHash": "5eed4413cb2a4a72dbc03ca01dc7d500f10c8a652ce56634da8ddb734de05f2f"
     },
     "chai": {
-        "lastVersion": 28,
-        "lastContentHash": "4444f0cbf27ee722a9bdb6782273426efa42f9b33a74133f6b2f6aaa5a01d63b"
+        "lastVersion": 29,
+        "lastContentHash": "4c42e8008e926b5deb1c5e41584b573ee78d44a4a612980cdcdda01f11258176"
     },
     "chrome": {
-        "lastVersion": 28,
-        "lastContentHash": "543898d9eebce6aaee9a8ff21a8863697f5692613ca627c70f5624489b8a4fd0"
+        "lastVersion": 29,
+        "lastContentHash": "3e00ca8b54fd9c87e44f793a49afc198904eb0b507c0447f9d6dc4c84b94c286"
     },
     "cldr.js": {
         "lastVersion": 12,
         "lastContentHash": "c8a17f463218df77aad90411517ca03aecb0ebf1343b60a5c8556edd364644cc"
     },
     "codemirror": {
-        "lastVersion": 28,
-        "lastContentHash": "e563b1b4f0c4cbc6590def133d693a55c08096005f2789073ea2075b56e8d2f7"
+        "lastVersion": 29,
+        "lastContentHash": "adb1920179ab40496e84ef6c775aa9cbe38b72de52b4408161cce1dbf2f4c3ed"
     },
     "datejs": {
         "lastVersion": 28,
         "lastContentHash": "fcd2076876ce0039295c4f62e9c374f71101f5f22843b4c773e3b148c2b53251"
     },
     "devextreme": {
-        "lastVersion": 29,
-        "lastContentHash": "67086a33c4075fd616264a6714648e0d3fd37477c8b7e74bc1bea01bde1bc5a0"
+        "lastVersion": 30,
+        "lastContentHash": "30e255d5e529ca03f88859ab901473926880125f1d62c2ae5313dc6f4cdbc05d"
     },
     "dojo": {
-        "lastVersion": 29,
-        "lastContentHash": "1d520c02a4d34b0355f484ea8835addf7cc3d938bcaa1110f51612c6203eea5b"
+        "lastVersion": 30,
+        "lastContentHash": "d32e0742085c031751ee67c84752097b5ee26be59b8b739f5f20ee135cbdc3b2"
     },
     "durandal": {
-        "lastVersion": 29,
-        "lastContentHash": "55caef19f2a828191d34a15548641111245100a4d90ce7a01cb72301ccbad00c"
+        "lastVersion": 30,
+        "lastContentHash": "38bc8f88652db7d942db5fd935c20b3e10770b4427d1f18c21d312ab00d95e03"
     },
     "easy-table": {
-        "lastVersion": 29,
-        "lastContentHash": "631954bc96746f397d0e2e3d78ebd6be3806dda71188375793f104730f2a40e0"
+        "lastVersion": 30,
+        "lastContentHash": "2391937b5c1c3cefc38fa1dd349cf573a1c7871441ad2e50b2eb2ed713d67ab3"
     },
     "estree": {
-        "lastVersion": 28,
-        "lastContentHash": "efa18d6b0b132414de64f512c75000b415183640477c7df489975ee26bb4ffc8"
+        "lastVersion": 29,
+        "lastContentHash": "10178b68cd52f0fd236ef90e8d7ed66c44919e68e91c2f304d38d8555940de99"
     },
     "firebase": {
-        "lastVersion": 28,
-        "lastContentHash": "38b71e6a4f4ec3cdd63259cc0e8558dd0c530e5db4bbd9521ae19b788c6b1b8e"
+        "lastVersion": 29,
+        "lastContentHash": "7d693d2ac15885cbbd9560091c9fe3d6bfbc48725eec5131132d85e17b0c6654"
     },
     "fixed-data-table": {
-        "lastVersion": 28,
-        "lastContentHash": "4b4ba76459244ab2614351526691a5f55339044e80059bccb2739c4ac7a8fdbb"
+        "lastVersion": 29,
+        "lastContentHash": "0a8698dca09f742724655d15dd36aecd8d038c2e3f90f2e7bc6cdd33f8cf46f4"
     },
     "format-unicorn": {
-        "lastVersion": 27,
-        "lastContentHash": "bc7bd1ef168b5ff5101c32c839d508ca57c085dd2cae473595ce4013003ee7c8"
+        "lastVersion": 28,
+        "lastContentHash": "663d0cd44d3b5bff46c11525c9b3119b521621e29e0698445e6654c84eaa888a"
     },
     "freedom": {
-        "lastVersion": 27,
-        "lastContentHash": "c9a5a96f48ff3683a1c73603b4915bcf2f19af006b7eaeb916c54ae4b34b3b06"
+        "lastVersion": 28,
+        "lastContentHash": "05290d738f5025cfa2dd06a230f0d68acbd72a7c0018c39955f480b22cdaa7a7"
     },
     "github-electron": {
         "lastVersion": 11,
         "lastContentHash": "8889417dde579940f64073f6e2db29ce57ff5e130a17745f124cfd23c9dc3187"
     },
     "gulp-istanbul": {
-        "lastVersion": 28,
-        "lastContentHash": "bdd82805b1f9513a2aef40131014704154c853face9247c7216c3bfb8aac8252"
+        "lastVersion": 29,
+        "lastContentHash": "edeeee872f38bbb29eac775f85d1049d3a8bd0758c97c050be33ca6b5cd07caa"
     },
     "hammerjs": {
-        "lastVersion": 28,
-        "lastContentHash": "c74df3b8a452550321cce6a8dcb6df102fe8993d3a148491e78bd94224e49336"
+        "lastVersion": 29,
+        "lastContentHash": "936f1113e84cafff1bd5a1b5c3465ad9b513fe9519ed24500c62df6e3f15ae82"
     },
     "handlebars": {
-        "lastVersion": 27,
-        "lastContentHash": "38c1d98e5d88485f737409a8abb5fd543347d281f7e2caec4d375a496ed2f2ec"
+        "lastVersion": 28,
+        "lastContentHash": "8fc8ed8085ed602be9f03200223e29e8b589494b84ca7c9599c811fd157d4464"
     },
     "hapi": {
-        "lastVersion": 28,
-        "lastContentHash": "7e9a1c6c4a6b320883a98c478bde0d83229f75e4795bbdeff404caef5bf5f7cc"
+        "lastVersion": 29,
+        "lastContentHash": "d3939257a5c2d902e5e1b0ab3f6d4b621f8a72bdd7c694fbc009baf905a331b8"
     },
     "hashmap": {
-        "lastVersion": 27,
-        "lastContentHash": "2de8cdc614d0a134a24941125624b97794c9ccebd13235c907a797a01c15a54e"
+        "lastVersion": 28,
+        "lastContentHash": "d023357fedae1026e4a456e35f5a6356c31b7024fe40e8a5918026d0132e68cb"
     },
     "highcharts": {
-        "lastVersion": 27,
-        "lastContentHash": "c0608fdade5f3eb70262ec771b355e159197420be6c0ffbddcd2f903ca48feac"
+        "lastVersion": 28,
+        "lastContentHash": "f8b7060fa66021ca91207a551486ead5178f04be2300a28566173ba39093b724"
     },
     "highlightjs": {
         "lastVersion": 11,
@@ -6356,71 +6356,71 @@
         "lastVersion": 2
     },
     "iscroll": {
-        "lastVersion": 27,
-        "lastContentHash": "0231842d1057aa6546dff8821aeaac8786db2cf218d2f63eb3c46da2fac387aa"
+        "lastVersion": 28,
+        "lastContentHash": "87f575e95aa0431b2eb6ee964c5d085d7702f44f6fc53bb65df73eaa00ae1745"
     },
     "jquery.dataTables": {
         "lastVersion": 2
     },
     "js-combinatorics": {
-        "lastVersion": 27,
-        "lastContentHash": "ee6b9353b47c8d3520173a2b8dc8b57160290dac8080dd276b9813671ed735bb"
+        "lastVersion": 28,
+        "lastContentHash": "d6a841e40876ed98260c9d66ee59fd09fe5835ac025c5519b2d12ea3ae7da963"
     },
     "jsfl": {
-        "lastVersion": 27,
-        "lastContentHash": "3a0bb95643579d5d74e77a08b7716bd80760ff00b50f332de9f9345053876f16"
+        "lastVersion": 28,
+        "lastContentHash": "29b619b49ee357d8d97341b7f806c457f5d426cd70e6684099c736b7fe13bd0d"
     },
     "jssha": {
-        "lastVersion": 27,
-        "lastContentHash": "a3592875374d89164e42758b001570f912a220b30410cdb19da69b86110a27ef"
+        "lastVersion": 28,
+        "lastContentHash": "538639f2bb324b9f210c6bbe9cfbe94e4b462d1d2fed1a1813067311c11d9e2e"
     },
     "karma": {
-        "lastVersion": 28,
-        "lastContentHash": "39297f668a4c8b58ad7d1eb5a8c6b2a15db3115ac42f7064a2bba794ea2d8d7a"
+        "lastVersion": 29,
+        "lastContentHash": "9bedf5dd30396cae0222144e5977876ab85d46802205ab3d252cafda9789370f"
     },
     "koa": {
-        "lastVersion": 28,
-        "lastContentHash": "3a2c2d118fe5e496a8d64b0aa9cba31c95e91af5b1705364fb866b32c65b7a4e"
+        "lastVersion": 29,
+        "lastContentHash": "471f2aada92092a9721e5f9c5d937fe0a39be732a0232128de440e582036d81c"
     },
     "koa-compose": {
-        "lastVersion": 28,
-        "lastContentHash": "6df1c261e1fe711517f2c955edd37397e6224e08e0b268346b5da1e73e8ee8e8"
+        "lastVersion": 29,
+        "lastContentHash": "d4212b0338ec52baa03909eec5e2c5e6fbaaf0fedea13ae6279bf2c5a7e6a5d3"
     },
     "kolite": {
         "lastVersion": 27,
         "lastContentHash": "330d24454bc37cd33c296fda4946d10611c184623516d8ff936701e61ae63825"
     },
     "linq": {
-        "lastVersion": 27,
-        "lastContentHash": "5010c8a427bcdfcf845983aa879fa10e73021760f7e3ecbdf385fd63259641d4"
+        "lastVersion": 28,
+        "lastContentHash": "592e0fc6e4c00f3268f5779313cb2aa4c02139f3fa43cbc152eda57a18173c73"
     },
     "lodash": {
-        "lastVersion": 27,
-        "lastContentHash": "f72389506c9e7410a0d587cc7a4685d661f66a787d09a4eb2316ebbb93dd6d91"
+        "lastVersion": 28,
+        "lastContentHash": "d009391f586e4f3657aeea486b01ccc204d859f03ddb1cc5d016daaeb16ab33b"
     },
     "mocha": {
-        "lastVersion": 27,
-        "lastContentHash": "9e986f1db3185bb814f99c14b9999d2b7888ac92b625d33c8411d7913b4caa68"
+        "lastVersion": 28,
+        "lastContentHash": "e86a259a9bf954ff9afd892f0091399aee1f875d2838b17ea0f4e94e93b23b2a"
     },
     "moment": {
         "lastVersion": 28,
         "lastContentHash": "803e492f9236a03baf39007f18819482a86cee36462df16b6b5c95c0e50623a8"
     },
     "mongodb": {
-        "lastVersion": 28,
-        "lastContentHash": "59dc70cd6f62c4bac2d430c6bda8be7a5265cc3418d292c102a1e78808e13cb4"
+        "lastVersion": 29,
+        "lastContentHash": "da0fab3c1567c4d4a8b04e7637351c5a86689725ee3d91d0cdab5f5f36abc6f7"
     },
     "mousetrap": {
-        "lastVersion": 27,
-        "lastContentHash": "efc0406f1c173bd6065f9a801ccc1e2d82ea3711d2514578f637d332f3d89664"
+        "lastVersion": 28,
+        "lastContentHash": "bca8a52536f11d5159cb833d03a06664268824afaffed601f315e2c67b312119"
     },
     "mustache": {
-        "lastVersion": 27,
-        "lastContentHash": "10e919e8b2b0d416c1fadfa21534aa7097724765835caf6bfaa623682473c3cd"
+        "lastVersion": 28,
+        "lastContentHash": "47c97f7d46db91b2cb16977c9a8476e8f689c1ba632dcbad086d70f7af68f9bb"
     },
     "node": {
-        "lastVersion": 29,
-        "lastContentHash": "b503f0a327858b198f848ae02ae02d82172a3481f80ba8a12b8eadb14f8c0cdc"
+        "lastVersion": 30,
+        "lastContentHash": "2a2fef9f357518257819440ee7e75af43d62bfe1b5dc8ae8afc7906f0dd3c310"
     },
     "node-ffi": {
         "lastVersion": 11,
@@ -6439,124 +6439,124 @@
         "lastContentHash": "9fb28d98c13b0e8f8b83d1b20d78bb00f38ed014159adc7bf7ea0b78a8951a3a"
     },
     "nouislider": {
-        "lastVersion": 28,
-        "lastContentHash": "07d93cf5d8238987a18a444af0e00257e5703585e06c155dddd44e7d230c5fa6"
+        "lastVersion": 29,
+        "lastContentHash": "291f3d8cca59d4e2ef3a328a4e27c59a0120ffc1070f29d3f6edf03f8a811a81"
     },
     "openlayers": {
-        "lastVersion": 27,
-        "lastContentHash": "8e5b10c83c990618ed97a70522bac7e1ac8a6d4d033811170fe3dcfd12229a47"
+        "lastVersion": 28,
+        "lastContentHash": "e249c21b9b4f71f967f82623a7b82acaa488e4a6a2b7529d4d7fb4d38ea62bb6"
     },
     "phantom": {
-        "lastVersion": 27,
-        "lastContentHash": "e7c6b29078e8b74b3372ac7c6d3ae71737c9f2681ac3722d0403b6b48dca9c9a"
+        "lastVersion": 28,
+        "lastContentHash": "265e3b6c372e973aecef2fdd2628497732e9a6e8fb8e0162c0b147b32cafd287"
     },
     "postal": {
-        "lastVersion": 26,
-        "lastContentHash": "5c53bff6a0b36937161f7eccb27ee49f38bc43d0385a7f122675db4ad992e4c8"
+        "lastVersion": 27,
+        "lastContentHash": "7f1421a52b4a9e50620f9e1df9449a1fa4661de41a8878faaf7bfb2a4377528e"
     },
     "purl": {
-        "lastVersion": 26,
-        "lastContentHash": "f1cffbd2a7f958e5c85462c7d677e0a3213f9096a7b93d4bf15db8f290f28149"
+        "lastVersion": 27,
+        "lastContentHash": "6f21f7d4412346fa4985e8c2c551acf5b7fc0022a6e854f9290f7aefdfdc2660"
     },
     "react": {
         "lastVersion": 27,
         "lastContentHash": "d0eadd1cef8b19617aa3555d47d0da97bc2fbe1c29f405d657daa02ac4617845"
     },
     "react-intl": {
-        "lastVersion": 27,
-        "lastContentHash": "b97afffcee49518b7f098f5ac34fde77600f34c14a2afcf89dc70374cd5d4095"
+        "lastVersion": 28,
+        "lastContentHash": "dfd04ae820643c0fee9e300cf9bf62bbc9fbeea25d60aadb0ebdc56b2d799e42"
     },
     "react-redux": {
-        "lastVersion": 27,
-        "lastContentHash": "9952355dd23c016601bf1b4541e496a7fcbed009a37f4efa13661a7ee71e3402"
+        "lastVersion": 28,
+        "lastContentHash": "eefdaf8dac965ea29795db6a4311c9065ae4c7188c4f2f029d0a56a6addf8f0e"
     },
     "react-router": {
-        "lastVersion": 27,
-        "lastContentHash": "89d829ddde190068e4f19798d94ffb788de72c8375002b2dad20313556232533"
+        "lastVersion": 28,
+        "lastContentHash": "a9b5d1d1d26033e8f45a6a0ab46818b99f7f16eedf8d4780d0bc9d6063a36ac3"
     },
     "react-router-redux": {
-        "lastVersion": 27,
-        "lastContentHash": "da500a4f6f1d1fc1c07a1fc3169152a4718ebca77a0752b3fb7343ad9db4b937"
+        "lastVersion": 28,
+        "lastContentHash": "c6c0a45e993a75320db12dae3adeeb94479c24f4b9c95d778da2eb1ee0cf9c17"
     },
     "react-select": {
-        "lastVersion": 26,
-        "lastContentHash": "63cd560cb2148021f65c461f3990de3df0a22e294360d2dcfd141480d4da2f8c"
+        "lastVersion": 27,
+        "lastContentHash": "8715c9fc0f673720e3d520d5c5189beeda95b37639637b134834ff04d8d2694d"
     },
     "redux-devtools": {
-        "lastVersion": 28,
-        "lastContentHash": "fa987142e66a2c8ad417f2761a317a8eccc4ea71a56842b373a6fcfcc38c43d6"
+        "lastVersion": 29,
+        "lastContentHash": "bd3cb18cf77fccfdd5742671c25074905e8054796dfbb3cba0691a6a7e460227"
     },
     "riotjs": {
         "lastVersion": 26,
         "lastContentHash": "77e3c548830035a38e54377940fb671a22580bbe92f3f1d200b060be9bce27c6"
     },
     "rx": {
-        "lastVersion": 27,
-        "lastContentHash": "57bbe6429f2dd42a3cd7e7778dd5b712325b3fab9cec7f62e0c9815c85a72fc6"
+        "lastVersion": 28,
+        "lastContentHash": "62909b2c2a5832d64adbd7a09576df1b7622948f532cebf75a9f6afc9875ad69"
     },
     "safari-extension": {
         "lastVersion": 26,
         "lastContentHash": "d176019b467297d2d8782813dcc37f7fea539e7a9c5b2b94bce8b3a19801294b"
     },
     "scroller": {
-        "lastVersion": 26,
-        "lastContentHash": "99bb191d2d07f2f25794ece06d72218d4230a828ad9df1c032eb5ad542ef32bc"
+        "lastVersion": 27,
+        "lastContentHash": "89d454a8e1e9183c94c71823f0f79a8cb3cfaa5ece47718ffa20f3e31633ee3c"
     },
     "sequelize": {
-        "lastVersion": 27,
-        "lastContentHash": "abfcefd1a4cb5cf5a24818f5334c2ae6e4ab9c34b58f5d650af6d815e08574fa"
+        "lastVersion": 28,
+        "lastContentHash": "b03c3f0f44283f061b72b6fb2a63b3fc79e5bb98bf8b630844527dd19c619f83"
     },
     "signalr": {
-        "lastVersion": 27,
-        "lastContentHash": "0da2126305e17ab2043210b007864c1f927482a78ece46d4bd946f75831942d4"
+        "lastVersion": 28,
+        "lastContentHash": "f517cef34a8b1e95d620ec3cc7ac87fda19d57f917af8c6a8f29041be1061c01"
     },
     "stripe": {
         "lastVersion": 27,
         "lastContentHash": "9c659296d32191a76e0d3c343495735e430913340e33fedcdf65e330be7a8d31"
     },
     "through2": {
-        "lastVersion": 27,
-        "lastContentHash": "852d1550523e4bab7255bca1ab63012fc243520330d336a2c9f67e2ede0c347b"
+        "lastVersion": 28,
+        "lastContentHash": "46bd1875b6c4e90a5035daf2ebc58181411b046dfa0477582b21c554bec6fef9"
     },
     "tv4": {
-        "lastVersion": 26,
-        "lastContentHash": "60de7bc158c08e04a37da9bc45f499cf39fdaff2ad0e84d3857b00bb35d4af1d"
+        "lastVersion": 27,
+        "lastContentHash": "7d5f78d72709332ffd41cf491bcbe85243015827a5608dcb7a79f5482af08235"
     },
     "umbraco": {
         "lastVersion": 27,
         "lastContentHash": "ed40127dcb64e9280470f9d7c912f8bc81ede282ecb546edcef50aaf4898a87d"
     },
     "vinyl": {
-        "lastVersion": 27,
-        "lastContentHash": "63db7476d9aa9b3a5facfc9ae99dbff9396cd932224193ba172acf1dc9852837"
+        "lastVersion": 28,
+        "lastContentHash": "da8f5e5bd997a6d304488b8d11ad5dd9cf15fbec94a3c2a8687e9dda6facabbf"
     },
     "webix": {
-        "lastVersion": 26,
-        "lastContentHash": "7f39c6837d342e93a385ba8fede4c2d754027a83c5e7d0a13161c9ce845d1244"
+        "lastVersion": 27,
+        "lastContentHash": "f0e273e0ef8e0d7b2e50b37471466768a702a46c76856ae6b1a50fc03cdfb85a"
     },
     "webpack": {
-        "lastVersion": 29,
-        "lastContentHash": "5fd8d41609c7fdb66b6580fddfc29151ca619cfff7741cfff247f334720ced8c"
+        "lastVersion": 30,
+        "lastContentHash": "15f02b2ace03c38d20d92b2d763d91e48e8163d45c4098d783d673ae770db945"
     },
     "winjs": {
-        "lastVersion": 27,
-        "lastContentHash": "7e7cd2aaca96b199a808214bf8e0aa130ca0d4d9bcec158577c2adcb3115a87a"
+        "lastVersion": 28,
+        "lastContentHash": "7295b780aa3a464bf8d9375b49f9b266d32cc7c0779cfad749424beb8461f86e"
     },
     "winrt": {
         "lastVersion": 26,
         "lastContentHash": "8b27a04b01ff28962d5d4d6d01c3f994e57fd2e64fe2a29158b21f3d24b91b38"
     },
     "xrm": {
-        "lastVersion": 27,
-        "lastContentHash": "0d01a6ecb1b78dd207c2d83f66d5f4d51672457b949e8b340aabf1d8008190d8"
+        "lastVersion": 28,
+        "lastContentHash": "9a06304e02c834438bb0e928ba1ef2a6ef5c73145a2ca8a0c3a1d98c046319d2"
     },
     "yui": {
         "lastVersion": 26,
         "lastContentHash": "35a7fbd7cfd48bc701708696aa365e6b1af2b2fbe44effa3202457b4cef0ffd0"
     },
     "zeroclipboard": {
-        "lastVersion": 26,
-        "lastContentHash": "18c65bb5db248487d3eddc6b006f5f16feab6b4fa550d60ba31e21bc1cc33710"
+        "lastVersion": 27,
+        "lastContentHash": "a50e9060a8d271a7ffcc48b32dca03cdba9536728fb0f7edec536f7a6ae4f4ec"
     },
     "angular-localforage": {
         "lastVersion": 29,
@@ -6611,8 +6611,8 @@
         "lastContentHash": "697534a04bf338c2c67e1a63cd318c34648f1304abeb767b677c9d9acd15bfa3"
     },
     "ion.rangeslider": {
-        "lastVersion": 26,
-        "lastContentHash": "141c280179410ac9dbef1104cc9b03f85be874ed280b336551ec5fe7298ad319"
+        "lastVersion": 27,
+        "lastContentHash": "2ae38401b88b1c1a7f0ecff697d023ff6355b8bfbc68ea72d9d97b7a862db14d"
     },
     "jodata": {
         "lastVersion": 26,
@@ -6635,8 +6635,8 @@
         "lastContentHash": "9d30e2e930669022bc34a1ce3ea2f08bcaa98b2f58e06fdee66564524adf1f4d"
     },
     "jquery.datatables": {
-        "lastVersion": 26,
-        "lastContentHash": "a9663981393b7ef0a63723ef32a97ce2f2fd2dc886236c7faba4e14a3a2dda83"
+        "lastVersion": 27,
+        "lastContentHash": "f52c8c96da27b1663a43a086674e308b20a7eed32ff03a241330e7ac247fd4bb"
     },
     "jquery.leanmodal": {
         "lastVersion": 26,
@@ -6707,8 +6707,8 @@
         "lastContentHash": "1d821117344a162a4a3c6331e6f3996b2b824fc69b3bc50f90fbbcb21ecbac5c"
     },
     "adal": {
-        "lastVersion": 17,
-        "lastContentHash": "635ac6cd0835a86b5313ad90e0a730eb316d440986075cc411edd1277a5c8cd8"
+        "lastVersion": 18,
+        "lastContentHash": "af7d0b67b38bfec4e452ea29b46c33c244090ff8ec28bd9d7a749add6e350e58"
     },
     "amplify": {
         "lastVersion": 16,
@@ -6743,8 +6743,8 @@
         "lastContentHash": "dbedd832d4099aedcf7c910fcee38d07693342b8265a9d7c00b4f600db81feee"
     },
     "bingmaps": {
-        "lastVersion": 16,
-        "lastContentHash": "b3e15045fa905845941d2b4cf6b1cf67b7fb9a02acf045627d25caa9709c9483"
+        "lastVersion": 17,
+        "lastContentHash": "3afb9a530c3c9cf7bc1276cb5680c4e9992161054ad79c42eae19a39cad2cafd"
     },
     "bounce.js": {
         "lastVersion": 17,
@@ -6767,8 +6767,8 @@
         "lastContentHash": "93575c3fba3c9124fc2f8f75f2926c1a5c58ddcea4fe541e5d2ec40d7a10be30"
     },
     "dc": {
-        "lastVersion": 16,
-        "lastContentHash": "8dda8c3af2f012b2415b22a05e8a3f35894d30060f50858de4602a8b5ce00645"
+        "lastVersion": 17,
+        "lastContentHash": "cbe715c9497c6fbc18dc15bfb7d5afef7471d8eb776608f35e72289070854a7d"
     },
     "dom4": {
         "lastVersion": 18,
@@ -6815,8 +6815,8 @@
         "lastContentHash": "3603a0aa76440025feec10b481ce387dfe926849c948b4410cb8d16ebfe0e67c"
     },
     "ffi": {
-        "lastVersion": 16,
-        "lastContentHash": "f7d0f96a8ced74b201c303855214ecb526c03b423c574c711e5d5ef019e2e04d"
+        "lastVersion": 17,
+        "lastContentHash": "de3552438565758308603958cf187886406be106a289617fc45e339cc0fd59ef"
     },
     "freeport": {
         "lastVersion": 19,
@@ -6967,16 +6967,16 @@
         "lastContentHash": "f782e4f50c05988323c18bb141dc1c2177af86c012b19e04fcaecfd8373ec510"
     },
     "sencha_touch": {
-        "lastVersion": 16,
-        "lastContentHash": "7090ed12341a81c121349a0617bacd217f96b7050e6cefc4e6c4b43333290384"
+        "lastVersion": 17,
+        "lastContentHash": "b58c6b5250da9304a510ce0947668231f692ff5b7fc8a5877e4583b03fd9012b"
     },
     "signals": {
         "lastVersion": 16,
         "lastContentHash": "4627fbed999200550e069d9793ecf5c7951d5087f48affbdb267f98c717e5970"
     },
     "slickgrid": {
-        "lastVersion": 16,
-        "lastContentHash": "c7c635e6b5030cb87f8f95f0be835241824908620dcb556bb6a5114b6ebe93a9"
+        "lastVersion": 17,
+        "lastContentHash": "30b5a30959566d18af1cd0226fa38a09de08cf8ea036be26ff7f91cfc0fa8481"
     },
     "slideout": {
         "lastVersion": 17,
@@ -7015,8 +7015,8 @@
         "lastContentHash": "dd2a304df16b1c0caab0661a7a46d1ccf1e3420379e135726892ac2d7daa412d"
     },
     "angular-permission": {
-        "lastVersion": 16,
-        "lastContentHash": "3e7400b392c97fd3eb46b431bd32e35d83f0df4f2cabacfb5cecdff3d8d069ae"
+        "lastVersion": 17,
+        "lastContentHash": "201b482b11996544a078d1a7b954f6c2777d16e84d7f7cea446dae910f065b53"
     },
     "cordova-plugin-background-mode": {
         "lastVersion": 14,
@@ -7027,8 +7027,8 @@
         "lastContentHash": "bfcf990e6ef5f2372a9f155339dbcbc475ef3bdc382edb835f6224ea5cfa3a59"
     },
     "falcor": {
-        "lastVersion": 14,
-        "lastContentHash": "ad03278e1ba208f665fcde2f7220ff811b30b433a588e1652fcc2ec990bfd29f"
+        "lastVersion": 15,
+        "lastContentHash": "de3e51051f7bbe050a1e5b59685cf5256269d6d6cf55bf44235cf06b45006bff"
     },
     "falcor-express": {
         "lastVersion": 14,
@@ -7071,8 +7071,8 @@
         "lastContentHash": "dd3843566eb22186b3351bf5d22f00b249780746270028d2be29fcac3b287af0"
     },
     "ioredis": {
-        "lastVersion": 14,
-        "lastContentHash": "7799f60cc22ed8d8fe7e8e13b09b4e14d8e3c891976edfa5400f6204089fa0f8"
+        "lastVersion": 15,
+        "lastContentHash": "37c2e40402fd8fa799eca7e55d923acd8a93a03bfaeec6df69f08eabe761974b"
     },
     "json-socket": {
         "lastVersion": 14,
@@ -7163,12 +7163,12 @@
         "lastContentHash": "72314e23d7e3d41e683cf8df9f4e14dad34ddcaac66acb1dd434864b3fc359a6"
     },
     "cldrjs": {
-        "lastVersion": 13,
-        "lastContentHash": "e79ab4aacaa34e4225b657005b358ad3570e883104d49f7c89d059bd38d9a947"
+        "lastVersion": 14,
+        "lastContentHash": "82b414a99925e2e94deab72c4a5eae4778bc6d50b750d868f7b2d1d7d6d087cf"
     },
     "electron": {
-        "lastVersion": 13,
-        "lastContentHash": "b626f4d03a6c38670944715e259146a4b35d1917e3b0dbf6acd28d0f65ec544d"
+        "lastVersion": 14,
+        "lastContentHash": "9f846dec3d8020982e18c3066482a34a955a1b7903a0debccb9d31f07d226790"
     },
     "history.js": {
         "lastVersion": 13,
@@ -7199,8 +7199,8 @@
         "lastContentHash": "3ad4ca9724c8d4212cd3df77887894f905e9937fb07cf7fc48defeb36f458a65"
     },
     "react-addons-linked-state-mixin": {
-        "lastVersion": 13,
-        "lastContentHash": "5fde308fbd2460d40282dd64c5cf311bb2e287993b852fa02981594a89a89d2c"
+        "lastVersion": 14,
+        "lastContentHash": "10be12dec7590d879dca4fad548a8f16cb56baa8f978fbe1f22535f49d9c4743"
     },
     "react-addons-perf": {
         "lastVersion": 13,
@@ -7215,8 +7215,8 @@
         "lastContentHash": "cf8cf46ea20e04244a0b0c5387a10a35a9081506bc5697d8be8604109aaa98f1"
     },
     "react-addons-test-utils": {
-        "lastVersion": 13,
-        "lastContentHash": "88cbf57a3980adec04fa0e763cbda91f4b69a8345950f694f2c093d179f5a403"
+        "lastVersion": 14,
+        "lastContentHash": "420153be121bdb1f0b5c37a7dffa17928be2e49ce555402a5c533b9f7c723353"
     },
     "react-addons-transition-group": {
         "lastVersion": 13,
@@ -7227,8 +7227,8 @@
         "lastContentHash": "702c923e000df7c47e847daad0cee85b7b090418226376744b9566985fc01661"
     },
     "react-bootstrap-daterangepicker": {
-        "lastVersion": 13,
-        "lastContentHash": "ec9c25783880125773c54eeebb4524e04a4e9b3706edc120c14c5f85af4458ea"
+        "lastVersion": 14,
+        "lastContentHash": "8c757e1bb21c1e4600e9f058387201ac5003ef2793ee27ae7494472b6343e8c2"
     },
     "react-dom": {
         "lastVersion": 13,
@@ -7247,8 +7247,8 @@
         "lastContentHash": "b25b66c2dde3e4d28e26ab268e746993e221af179615b1bfaa1f8486270ccff8"
     },
     "webrtc": {
-        "lastVersion": 13,
-        "lastContentHash": "8cbf22fbae9d5a02cdc32b589feac25ba544d2a17831cff8b95dd4a3d92241f2"
+        "lastVersion": 14,
+        "lastContentHash": "c4bcd44658987273ca635ae70864137baa10a1da635b1e926884258091c749de"
     },
     "winrt-uwp": {
         "lastVersion": 13,
@@ -7263,19 +7263,43 @@
         "lastContentHash": "444ae43a1063594132f252ee06c2cdff8cdcdfbfc808ad41e412841d9459d04e"
     },
     "google-apps-script": {
-        "lastVersion": 6,
-        "lastContentHash": "07784c553c3b1f2e724a2f0190a94acfcaffe2ce4f95c8b5afb180f04268ff23"
+        "lastVersion": 7,
+        "lastContentHash": "10bf28be9c9d9cf633d1afa92dd8509aa4a5888b81d3dea85d301281bc7d2dc6"
     },
     "highlight.js": {
-        "lastVersion": 6,
-        "lastContentHash": "070ff10194b12111332cce28dabe0edc2da28a140fede246be24afb67582a256"
+        "lastVersion": 7,
+        "lastContentHash": "e0fb054db4974a6a4dcab2e2046ac0afdfb1a9ec281738d92435b24126f29329"
     },
     "ng-cordova": {
-        "lastVersion": 7,
-        "lastContentHash": "a76a42467c707102ca0dab11771741454a2134ab152527764940d38004ff65ea"
+        "lastVersion": 8,
+        "lastContentHash": "b253dce7e4b696e8852469db967063d7554eb663da6c942f3215052f4c31a7b4"
     },
     "angular": {
-        "lastVersion": 7,
-        "lastContentHash": "6dd2569b85d3c24f101bd2a6b91d3707bc10ad6f74f7fc952fd5d5b8c5b5e38e"
+        "lastVersion": 8,
+        "lastContentHash": "49bc2c331887e8cc99a02640f376be5d8bc7da25fde7d101ad88930b3d4ce45e"
+    },
+    "angular-animate": {
+        "lastVersion": 1,
+        "lastContentHash": "ce83c43c896ac62f3d17ce01ddf1d1f0e10f7ab0c46639141cdff88d31070f5d"
+    },
+    "angular-cookies": {
+        "lastVersion": 1,
+        "lastContentHash": "64f25e1e389744d34c0b202b3cb22869f42ca801423b2565aef4c380a7b5e8fc"
+    },
+    "angular-mocks": {
+        "lastVersion": 1,
+        "lastContentHash": "e3496fc587d59d47ebd6e0819b481bbc5b47716ea0014f8fabf3df1b890dbe9d"
+    },
+    "angular-route": {
+        "lastVersion": 1,
+        "lastContentHash": "24712de7d26e46a0bdb60b3e3497ebf0f0091f67ee670899d7485e05f14ff620"
+    },
+    "angular-sanitize": {
+        "lastVersion": 1,
+        "lastContentHash": "4d556253b74c2426490b3dc45509f9bf6b5d6e91c9b34faeb1fbc5e55f8e5631"
+    },
+    "angular-resource": {
+        "lastVersion": 1,
+        "lastContentHash": "78550afb3b6a702e6d58283aa0a1240d7f638c718792c1a94a3dffa0024e1607"
     }
 }
