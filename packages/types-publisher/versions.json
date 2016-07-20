@@ -6471,8 +6471,8 @@
         "lastContentHash": "eefdaf8dac965ea29795db6a4311c9065ae4c7188c4f2f029d0a56a6addf8f0e"
     },
     "react-router": {
-        "lastVersion": 28,
-        "lastContentHash": "a9b5d1d1d26033e8f45a6a0ab46818b99f7f16eedf8d4780d0bc9d6063a36ac3"
+        "lastVersion": 29,
+        "lastContentHash": "67b926e3d2f5c09be798eb8a883c0f0c9a8494079655342db22c53f8b7899a66"
     },
     "react-router-redux": {
         "lastVersion": 28,
