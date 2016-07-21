@@ -431,3 +431,23 @@ This lets you run the webhook in dry mode in Azure, without needing command line
 * Go to https://ms.portal.azure.com
 * Go to `types-publisher` (*not* the `typespublisher` storage account)
 * Go to Settings -> General -> Application settings -> App Settings
+
+
+# Validating published packages
+
+To validate published packages run:
+
+```cmd
+npm run build
+npm run validate [<package>]
+```
+
+for instance:
+
+```cmd
+npm run validate node exress jquery
+```
+
+will try to install the three packages, and run the tsc compiler on them.
+
+Specifing no options to the command will validate **all** known packages.

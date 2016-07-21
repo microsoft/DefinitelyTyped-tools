@@ -2,8 +2,11 @@ interface PublishSettings {
 	npmUsername: string;
 	// e.g. 'typings', not '@typings'
 	scopeName: string;
-	// e.g. './output/''
+	// e.g. './output/'
 	outputPath: string;
+
+	// e.g. './validateOutput/'
+	validateOutputPath: string;
 
 	// e.g. '../DefinitelyTyped'
 	definitelyTypedPath: string;

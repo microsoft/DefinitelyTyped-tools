@@ -28,7 +28,8 @@
 		"src/check-parse-results.ts",
 		"src/upload-blobs.ts",
 		"src/full.ts",
-		"src/webhook.ts"
+		"src/webhook.ts",
+		"src/validate.ts"
 	],
 
 	"compilerOptions": {
