@@ -59,6 +59,7 @@ This step needs to be handled as part of any automatic update script.
 
 This generates the data file `data/definitions.json`.
 All future steps depend on this file.
+One can also pass `--single=package_name` to test this on a single package.
 
 ## Contents of `data/definitions.json`
 

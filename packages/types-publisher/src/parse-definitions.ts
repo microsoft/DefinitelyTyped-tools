@@ -1,11 +1,13 @@
 import * as parser from "./lib/definition-parser";
+import * as yargs from "yargs";
 import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
 import { filterAsyncOrdered } from "./lib/util";
 
 import fsp = require("fs-promise");
 
 if (!module.parent) {
-	main().catch(console.error);
+	const singleName = yargs.argv.single;
+	(singleName ? single(singleName) : main()).catch(console.error);
 }
 
 async function processDir(name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
@@ -95,4 +97,11 @@ export default async function main(): Promise<void> {
 	writeLogSync("parser-log-summary.md", summaryLog);
 	writeLogSync("parser-log-details.md", detailedLog);
 	writeDataFile(typesDataFilename, typings);
+}
+
+async function single(singleName: string): Promise<void> {
+	const result = await processDir(singleName);
+	const typings = { [singleName]: result.data };
+	writeDataFile(typesDataFilename, typings);
+	console.log(result);
 }
