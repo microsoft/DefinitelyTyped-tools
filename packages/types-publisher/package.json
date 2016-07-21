@@ -29,6 +29,7 @@
     "get-definitely-typed": "node bin/get-definitely-typed.js",
     "parse": "node bin/parse-definitions.js",
     "check": "node bin/check-parse-results.js",
+    "calculate-versions": "node bin/calculate-versions.js",
     "generate": "node bin/generate-packages.js",
     "index": "node bin/create-search-index.js",
     "publish": "node bin/publish-packages.js",

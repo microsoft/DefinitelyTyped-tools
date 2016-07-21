@@ -1,5 +1,4 @@
-import fetch = require("node-fetch");
-import * as container from "./azure-container";
+import { createBlobFromText, readBlob } from "./azure-container";
 
 export default class RollingLogs {
 	private allLogs: string[] | undefined;
@@ -11,11 +10,11 @@ export default class RollingLogs {
 		const totalLines = logs.length + lines.length;
 		logs.splice(0, totalLines - this.maxLines);
 		logs.push(...lines);
-		await container.createBlobFromText(this.name, logs.join("\n"));
+		await createBlobFromText(this.name, logs.join("\n"));
 	}
 
 	private async readAllLogs(): Promise<string[]> {
-		const response = await fetch(container.urlOfBlob(this.name));
+		const response = await readBlob(this.name);
 		if (response.status === 404) {
 			return [];
 		}

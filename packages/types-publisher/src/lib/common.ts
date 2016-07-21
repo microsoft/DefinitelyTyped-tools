@@ -9,7 +9,6 @@ install();
 export const home = path.join(__dirname, "..", "..");
 export const settings: PublishSettings = parseJson(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
-export const versionsFilename = "versions.json";
 export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json");
 
 export interface AnyPackage {

@@ -3,6 +3,7 @@ import clean from "./clean";
 import getDefinitelyTyped from "./get-definitely-typed";
 import parseDefinitions from "./parse-definitions";
 import checkParseResults from "./check-parse-results";
+import calculateVersions from "./calculate-versions";
 import generatePackages from "./generate-packages";
 import createSearchIndex from "./create-search-index";
 import publishPackages from "./publish-packages";
@@ -19,7 +20,8 @@ export default async function full(dry: boolean, timeStamp: string): Promise<voi
 	await getDefinitelyTyped();
 	await parseDefinitions();
 	checkParseResults();
-	await generatePackages(/*forceUpdate*/ false);
+	await calculateVersions(/*forceUpdate*/ false);
+	await generatePackages();
 	await createSearchIndex(/*skipDownloads*/ false);
 	await publishPackages(dry);
 	if (!dry) {

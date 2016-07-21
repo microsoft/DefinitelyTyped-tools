@@ -16,10 +16,12 @@
 		"src/lib/util.ts",
 		"src/lib/azure-container.ts",
 		"src/lib/rolling-logs.ts",
+		"src/lib/versions.ts",
 
 		"src/clean.ts",
 		"src/get-definitely-typed.ts",
 		"src/parse-definitions.ts",
+		"src/calculate-versions.ts",
 		"src/generate-packages.ts",
 		"src/publish-packages.ts",
 		"src/create-search-index.ts",

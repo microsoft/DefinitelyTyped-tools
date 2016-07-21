@@ -1,3 +1,4 @@
+import fetch = require("node-fetch");
 import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
 import { settings } from "./common";
 
@@ -33,6 +34,10 @@ export function createBlobFromFile(blobName: string, fileName: string): Promise<
 export function createBlobFromText(blobName: string, text: string): Promise<BlobResult> {
 	const options: CreateBlobRequestOptions = {};
 	return promisifyErrorOrResult<BlobResult>(cb => service.createBlockBlobFromText(name, blobName, text, options, cb));
+}
+
+export function readBlob(blobName: string): Promise<_fetch.Response> {
+	return fetch(urlOfBlob(blobName));
 }
 
 export async function listBlobs(prefix: string): Promise<BlobResult[]> {

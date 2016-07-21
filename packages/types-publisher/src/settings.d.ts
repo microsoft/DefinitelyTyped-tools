@@ -26,6 +26,8 @@ interface PublishSettings {
 	// Name of the azure container.
 	azureContainer: string;
 
+	versionsBlobName: string;
+
 	// Port the webhook will listen on.
 	webhookPort: number;
 

@@ -19,17 +19,11 @@ npm run clean
 npm run get-definitely-typed
 npm run parse
 npm run check
+npm run calculate-versions
 npm run generate
 npm run index
 npm run publish
 npm run upload-blobs
-```
-
-*then*
-```
-git add versions.json
-git commit -m "Versions update"
-git push
 ```
 
 # Overview
@@ -39,8 +33,9 @@ To update the types packages, the following steps must be performed:
  * Update the local DefinitelyTyped repo
  * Parse the definitions
  * Check for conflicts
- * Create a search index
+ * Calculate versions
  * Generate packages on disk
+ * Create a search index
  * Publish packages on disk
  * Upload blobs to Azure
 
@@ -182,6 +177,17 @@ Examine these declarations and change them to have distinct library names, if po
 
 Examine these declarations and change them to have distinct package names, if possible.
 
+# Calculate versions
+
+This generates `versions.json` based on the last uploaded `versions.json` and by the content hashes computed during parsing.
+
+## Arguments to `calculate-versions`
+
+The `--forceUpdate` argument will cause a build version bump even if
+  the `contentHash` of the originating types folder has not changed.
+This argument may be needed during development,
+  but should not be used during routine usage.
+
 # Create a search index
 
 > `node bin/create-search-index.js`
@@ -242,13 +248,6 @@ Empty arrays may be elided in future versions of the minified files.
 This step writes all type packages to disk.
 The output folder is specified in `settings.json` (see section "Settings").
 
-## Arguments to `generate-packages`
-
-The `--forceUpdate` argument will cause a build version bump even if
-  the `contentHash` of the originating types folder has not changed.
-This argument may be needed during development,
-  but should not be used during routine usage.
-
 ## Outputs of `generate-packages`
 
 ### Package Folders
@@ -303,6 +302,8 @@ This uploads the `data` and `logs` directories to Azure.
 `data` always overwrites any old data, while `logs` has a timestamp prepended so old logs can still be viewed.
 Blobs can be viewed [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html)
 or on [Azure](https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher).
+
+This also uploads `versions.json` to [here](https://typespublisher.blob.core.windows.net/typespublisher/versions.json).
 
 # Testing the webhook
 

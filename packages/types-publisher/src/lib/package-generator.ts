@@ -1,20 +1,18 @@
-import { TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath, versionsFilename } from "./common";
+import { TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
 import { parseJson } from "./util";
-import * as fs from "fs";
+import Versions from "./versions";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
 /** Generates the package to disk */
-export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, forceUpdate: boolean): Promise<{ log: string[] }> {
+export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions): Promise<{ log: string[] }> {
 	const log: string[] = [];
-
-	const fileVersion = Versions.computeVersion(typing, forceUpdate);
 
 	const outputPath = getOutputPath(typing);
 	await clearOutputPath(outputPath, log);
 
 	log.push("Generate package.json, metadata.json, and README.md");
-	const packageJson = await createPackageJSON(typing, fileVersion, availableTypes);
+	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), availableTypes);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -30,7 +28,6 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
-	outputs.push(Versions.recordVersionUpdate(typing, forceUpdate));
 
 	await Promise.all(outputs);
 	return { log };
@@ -95,7 +92,7 @@ function filePath(typing: TypingsData, fileName: string): string {
 	return path.join(typing.root, fileName);
 }
 
-async function createPackageJSON(typing: TypingsData, fileVersion: number, availableTypes: { [name: string]: TypingsData }): Promise<string> {
+async function createPackageJSON(typing: TypingsData, version: number, availableTypes: { [name: string]: TypingsData }): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = filePath(typing, "package.json");
 	interface PartialPackageJson {
@@ -112,14 +109,14 @@ async function createPackageJSON(typing: TypingsData, fileVersion: number, avail
 	}
 
 	const dependencies = pkg.dependencies || {};
-	addInferredDependencies(dependencies, typing, availableTypes);
+	addInferredDependencies(dependencies, typing, availableTypes, version);
 
 	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
 		name: fullPackageName(typing.typingsPackageName),
-		version: versionString(typing, fileVersion),
+		version: versionString(typing, version),
 		description,
 		// keywords,
 		// homepage,
@@ -140,7 +137,7 @@ async function createPackageJSON(typing: TypingsData, fileVersion: number, avail
 	return JSON.stringify(out, undefined, 4);
 }
 
-function addInferredDependencies(dependencies: { [name: string]: string }, typing: TypingsData, availableTypes: { [name: string]: TypingsData }): void {
+function addInferredDependencies(dependencies: { [name: string]: string }, typing: TypingsData, availableTypes: { [name: string]: TypingsData }, version: number): void {
 	function addDependency(d: string): void {
 		if (dependencies.hasOwnProperty(d) || !availableTypes.hasOwnProperty(d)) {
 			// 1st case: don't add a dependency if it was specified in the package.json or if it has already been added.
@@ -154,23 +151,21 @@ function addInferredDependencies(dependencies: { [name: string]: string }, typin
 		// In a prerelease, we can only reference *exact* packages.
 		// See https://github.com/npm/node-semver#prerelease-tags
 		const patch = settings.prereleaseTag ?
-			`${Versions.getLastVersion(type).lastVersion}-${settings.prereleaseTag}` :
+			`${version}-${settings.prereleaseTag}` :
 			"*";
 		const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.${patch}`;
 		dependencies[fullPackageName(d)] = semver;
 	}
 	typing.moduleDependencies.forEach(addDependency);
 	typing.libraryDependencies.forEach(addDependency);
-
-	return dependencies;
 }
 
-function versionString(typing: TypingsData, fileVersion: number): string {
-	let version = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${fileVersion}`;
+function versionString(typing: TypingsData, version: number): string {
+	let versionString = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${version}`;
 	if (settings.prereleaseTag) {
-		version = `${version}-${settings.prereleaseTag}`;
+		versionString = `${version}-${settings.prereleaseTag}`;
 	}
-	return version;
+	return versionString;
 }
 
 function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage): string {
@@ -223,44 +218,4 @@ function createReadme(typing: TypingsData) {
 	}
 
 	return lines.join("\r\n");
-}
-
-namespace Versions {
-	interface VersionMap {
-		[typingsPackageName: string]: {
-			lastVersion: number;
-			lastContentHash: string;
-		};
-	}
-
-	let _versionData: VersionMap = undefined;
-	function loadVersions() {
-		if (_versionData === undefined) {
-			_versionData = fs.existsSync(versionsFilename) ? parseJson(fs.readFileSync(versionsFilename, "utf-8")) : {};
-		}
-		return _versionData;
-	}
-	function saveVersions(data: VersionMap): Promise<void> {
-		return fsp.writeFile(versionsFilename, JSON.stringify(data, undefined, 4), { encoding: "utf8" });
-	}
-
-	export async function recordVersionUpdate(typing: TypingsData, forceUpdate: boolean): Promise<void> {
-		const key = typing.typingsPackageName;
-		const data = loadVersions();
-		data[key] = { lastVersion: computeVersion(typing, forceUpdate), lastContentHash: typing.contentHash };
-		await saveVersions(data);
-	}
-
-	export function getLastVersion(typing: TypingsData) {
-		const key = typing.typingsPackageName;
-		const data = loadVersions();
-		const entry = data[key];
-		return entry || { lastVersion: 0, lastContentHash: "" };
-	}
-
-	export function computeVersion(typing: TypingsData, forceUpdate: boolean): number {
-		const lastVersion = getLastVersion(typing);
-		const increment = (forceUpdate || (lastVersion.lastContentHash !== typing.contentHash)) ? 1 : 0;
-		return lastVersion.lastVersion + increment;
-	}
 }
