@@ -1,5 +1,8 @@
-import fetch = require("node-fetch");
 import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
+import * as fs from "fs";
+import fetch = require("node-fetch");
+import * as stream from "stream";
+import * as zlib from "zlib";
 import { settings } from "./common";
 
 const name = settings.azureContainer;
@@ -26,14 +29,39 @@ export function ensureCreated(options: CreateContainerOptions): Promise<void> {
 	return promisifyErrorOrResult<ContainerResult>(cb => service.createContainerIfNotExists(name, options, cb)).then(() => {});
 }
 
-export function createBlobFromFile(blobName: string, fileName: string): Promise<BlobResult> {
-	const options: CreateBlobRequestOptions = {};
-	return promisifyErrorOrResult<BlobResult>(cb => service.createBlockBlobFromLocalFile(name, blobName, fileName, options, cb));
+export async function createBlobFromFile(blobName: string, fileName: string): Promise<void> {
+	return createBlobFromStream(blobName, fs.createReadStream(fileName));
 }
 
-export function createBlobFromText(blobName: string, text: string): Promise<BlobResult> {
-	const options: CreateBlobRequestOptions = {};
-	return promisifyErrorOrResult<BlobResult>(cb => service.createBlockBlobFromText(name, blobName, text, options, cb));
+export async function createBlobFromText(blobName: string, text: string): Promise<void> {
+	return createBlobFromStream(blobName, streamOfString(text));
+}
+
+function createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
+	const options: CreateBlobRequestOptions =  {
+		contentSettings: {
+			contentEncoding: "GZIP",
+			contentType: "application/json; charset=utf-8"
+		}
+	};
+	return streamDone(gzip(stream).pipe(service.createWriteStreamToBlockBlob(name, blobName, options)));
+}
+
+function streamOfString(text: string): NodeJS.ReadableStream {
+	const s = new stream.Readable();
+	s.push(text);
+	s.push(null);
+	return s;
+}
+
+function gzip(input: NodeJS.ReadableStream): zlib.Gzip {
+	return input.pipe(zlib.createGzip());
+}
+
+function streamDone(stream: NodeJS.WritableStream): Promise<void> {
+	return new Promise<void>((resolve, reject) => {
+		stream.on("error", reject).on("finish", resolve);
+	});
 }
 
 export function readBlob(blobName: string): Promise<_fetch.Response> {
