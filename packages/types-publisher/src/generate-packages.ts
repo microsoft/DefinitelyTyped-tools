@@ -1,5 +1,5 @@
 import * as common from "./lib/common";
-import { nAtATime } from "./lib/util";
+import { done, nAtATime } from "./lib/util";
 import * as generator from "./lib/package-generator";
 import Versions from "./lib/versions";
 
@@ -7,7 +7,7 @@ if (!module.parent) {
 	if (!Versions.existsSync()) {
 		console.log("Run calculate-versions first!");
 	} else {
-		main().catch(console.error);
+		done(main());
 	}
 }
 

@@ -8,11 +8,11 @@ import generatePackages from "./generate-packages";
 import createSearchIndex from "./create-search-index";
 import publishPackages from "./publish-packages";
 import uploadBlobs from "./upload-blobs";
-import { currentTimeStamp } from "./lib/util";
+import { currentTimeStamp, done } from "./lib/util";
 
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;
-	full(dry, currentTimeStamp()).then(() => console.log("Done!")).catch(console.error);
+	done(full(dry, currentTimeStamp()));
 }
 
 export default async function full(dry: boolean, timeStamp: string): Promise<void> {

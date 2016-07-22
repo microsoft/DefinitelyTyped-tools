@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as yargs from "yargs";
 import * as common from "./lib/common";
 import * as publisher from "./lib/package-publisher";
-import { nAtATime } from "./lib/util";
+import { done, nAtATime } from "./lib/util";
 
 if (!module.parent) {
 	if (!common.existsTypesDataFile() || !fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
@@ -14,7 +14,7 @@ if (!module.parent) {
 		// For testing only. Do not use on real @types repo.
 		const shouldUnpublish = !!yargs.argv.unpublish;
 
-		(shouldUnpublish ? unpublish : main)(dry).catch(console.error);
+		done((shouldUnpublish ? unpublish : main)(dry));
 	}
 }
 

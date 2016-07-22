@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 import { AnyPackage, existsTypesDataFile, readNotNeededPackages, readTypings, writeDataFile } from "./lib/common";
-import { nAtATime } from "./lib/util";
+import { done, nAtATime } from "./lib/util";
 import { createSearchRecord, minifySearchRecord } from "./lib/search-index-generator";
 
 if (!module.parent) {
@@ -8,7 +8,7 @@ if (!module.parent) {
 		console.log("Run parse-definitions first!");
 	} else {
 		const skipDownloads = yargs.argv.skipDownloads;
-		main(skipDownloads).catch(console.error);
+		done(main(skipDownloads));
 	}
 }
 

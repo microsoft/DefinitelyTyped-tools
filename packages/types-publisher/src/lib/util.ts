@@ -93,3 +93,7 @@ export function writeFile(path: string, content: string): Promise<void> {
 export function writeJson(path: string, content: any): Promise<void> {
 	return writeFile(path, JSON.stringify(content, undefined, 4));
 }
+
+export function done(promise: Promise<void>): void {
+	promise.catch(console.error);
+}

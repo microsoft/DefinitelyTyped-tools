@@ -1,13 +1,13 @@
 import * as parser from "./lib/definition-parser";
 import * as yargs from "yargs";
 import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeLogSync, writeDataFile, typesDataFilename } from "./lib/common";
-import { filterAsyncOrdered } from "./lib/util";
+import { done, filterAsyncOrdered } from "./lib/util";
 
 import fsp = require("fs-promise");
 
 if (!module.parent) {
 	const singleName = yargs.argv.single;
-	(singleName ? single(singleName) : main()).catch(console.error);
+	done((singleName ? single(singleName) : main()));
 }
 
 async function processDir(name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {

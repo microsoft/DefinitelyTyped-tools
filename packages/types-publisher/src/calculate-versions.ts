@@ -1,13 +1,14 @@
 import * as yargs from "yargs";
 import * as common from "./lib/common";
 import Versions, { Changes, writeChanges } from "./lib/versions";
+import { done } from "./lib/util";
 
 if (!module.parent) {
 	if (!common.existsTypesDataFile()) {
 		console.log("Run parse-definitions first!");
 	} else {
 		const forceUpdate = yargs.argv.forceUpdate;
-		main(forceUpdate).catch(console.error);
+		done(main(forceUpdate));
 	}
 }
 
