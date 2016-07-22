@@ -7,11 +7,14 @@
     "azure-storage": "^1.1.0",
     "buffer-equals-constant": "^1.0.0",
     "fs-promise": "^0.5.0",
+    "fstream": "^1.0.10",
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
+    "npm-registry-client": "^7.1.2",
     "recursive-readdir": "^2.0.0",
     "rimraf": "^2.5.2",
     "source-map-support": "^0.4.0",
+    "tar": "^2.2.1",
     "yargs": "^4.7.1"
   },
   "devDependencies": {
@@ -19,6 +22,7 @@
     "@types/recursive-readdir": "^1.2.27",
     "@types/rimraf": "^0.0.27",
     "@types/source-map-support": "^0.2.27",
+    "@types/tar": "^1.0.27",
     "@types/yargs": "^0.0.27",
     "tslint": "^3.14.0-dev.0",
     "typescript": "^2.0.0"

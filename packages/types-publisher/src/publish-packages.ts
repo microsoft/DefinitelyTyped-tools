@@ -1,7 +1,7 @@
-import * as child_process from "child_process";
 import * as fs from "fs";
 import * as yargs from "yargs";
 import * as common from "./lib/common";
+import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
 import { done, nAtATime } from "./lib/util";
 
@@ -11,35 +11,34 @@ if (!module.parent) {
 	}
 	else {
 		const dry = !!yargs.argv.dry;
+		const singleName = yargs.argv.single;
 		// For testing only. Do not use on real @types repo.
 		const shouldUnpublish = !!yargs.argv.unpublish;
 
-		done((shouldUnpublish ? unpublish : main)(dry));
+		if (singleName && shouldUnpublish) {
+			throw new Error("Select only one --singleName=foo or --shouldUnpublish");
+		}
+
+		done(go());
+
+		async function go(): Promise<void> {
+			if (shouldUnpublish) {
+				await unpublish(dry);
+			}
+			else {
+				const client = await NpmClient.create();
+				if (singleName) {
+					await single(client, singleName, dry);
+				}
+				else {
+					await main(client, dry);
+				}
+			}
+		}
 	}
 }
 
-export default async function main(dry: boolean): Promise<void> {
-	if (!dry) {
-		checkLoggedIn();
-	}
-	doPublish(dry);
-}
-
-export function checkLoggedIn(): void {
-	let whoami: string;
-	try {
-		whoami = child_process.execSync("npm whoami", { encoding: "utf8" }).trim();
-	}
-	catch (err) {
-		whoami = "";
-	}
-
-	if (whoami !== common.settings.npmUsername) {
-		throw new Error(`Must be logged in to npm as ${common.settings.npmUsername}`);
-	}
-}
-
-async function doPublish(dry: boolean) {
+export default async function main(client: NpmClient, dry: boolean): Promise<void> {
 	const log: string[] = [];
 	if (dry) {
 		console.log("=== DRY RUN ===");
@@ -64,7 +63,7 @@ async function doPublish(dry: boolean) {
 
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.libraryName}...`);
-		const publishLog = await publisher.publishPackage(pkg, dry);
+		const publishLog = await publisher.publishPackage(client, pkg, dry);
 		writeLogs(publishLog);
 	}
 
@@ -80,6 +79,17 @@ async function doPublish(dry: boolean) {
 
 	common.writeLogSync("publishing.md", log);
 	console.log("Done!");
+}
+
+async function single(client: NpmClient, name: string, dry: boolean): Promise<void> {
+	const pkg = allPackages().find(p => p.typingsPackageName === name);
+	if (pkg === undefined) {
+		throw new Error(`Can't find a package named ${name}`);
+	}
+
+	const publishLog = await publisher.publishPackage(client, pkg, dry);
+
+	console.log(publishLog);
 }
 
 async function unpublish(dry: boolean): Promise<void> {

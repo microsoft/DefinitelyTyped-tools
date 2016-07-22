@@ -1,4 +1,5 @@
 {
+	"npmRegistry": "https://registry.npmjs.org/",
 	"npmUsername": "types",
 	"scopeName": "types",
 	"outputPath": "./output",
