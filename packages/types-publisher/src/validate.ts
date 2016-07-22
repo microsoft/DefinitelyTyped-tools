@@ -3,7 +3,7 @@ import * as path from "path";
 import * as child_process from "child_process";
 import * as rimraf from "rimraf";
 import * as yargs from "yargs";
-import { nAtATime } from "./lib/util";
+import { nAtATime, writeFile, writeJson } from "./lib/util";
 import { Logger, ArrayLog, settings, writeLogSync, readTypings } from "./lib/common";
 
 if (!module.parent) {
@@ -110,7 +110,7 @@ function mergeLogs(log1: Logger, log2: ArrayLog) {
 
 async function writePackage(packageDirectory: string, packageName: string) {
 	// Write package.json
-	await fsp.writeFile(path.join(packageDirectory, "package.json"), JSON.stringify({
+	await writeJson(path.join(packageDirectory, "package.json"), {
 		name: `${packageName}_test`,
 		version: "1.0.0",
 		description: "test",
@@ -118,10 +118,10 @@ async function writePackage(packageDirectory: string, packageName: string) {
 		license: "ISC",
 		repository: "https://github.com/Microsoft/types-publisher",
 		dependencies: { [`@types/${packageName}`]: settings.tag }
-	}, undefined, 4), { encoding: "utf8" });
+	});
 
 	// Write tsconfig.json
-	await fsp.writeFile(path.join(packageDirectory, "tsconfig.json"), JSON.stringify({
+	await writeJson(path.join(packageDirectory, "tsconfig.json"), {
 		compilerOptions: {
 			module: "commonjs",
 			target: "es5",
@@ -130,10 +130,10 @@ async function writePackage(packageDirectory: string, packageName: string) {
 			noEmit: true,
 			lib: ["es5", "es2015.promise", "dom"]
 		}
-	}, undefined, 4), { encoding: "utf8" });
+	});
 
 	// Write index.ts
-	await fsp.writeFile(path.join(packageDirectory, "index.ts"), `/// <reference types="${packageName}" />\r\n`, { encoding: "utf8" });
+	await writeFile(path.join(packageDirectory, "index.ts"), `/// <reference types="${packageName}" />\r\n`);
 }
 
 // Returns whether the command succeeded.

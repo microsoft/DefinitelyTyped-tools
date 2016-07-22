@@ -3,7 +3,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, definitelyTypedPath, settings } from "./common";
-import { mapAsyncOrdered, readdirRecursive, stripQuotes } from "./util";
+import { mapAsyncOrdered, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
 
 enum DefinitionFileKind {
 	// Dunno
@@ -475,7 +475,7 @@ async function hash(directory: string, files: string[]): Promise<string> {
 }
 
 async function readFile(directory: string, fileName: string): Promise<string> {
-	const result = await fsp.readFile(path.join(directory, fileName), { encoding: "utf8" });
+	const result = await readFileText(path.join(directory, fileName));
 	// Skip BOM
 	return (result.charCodeAt(0) === 0xFEFF) ? result.substr(1) : result;
 }

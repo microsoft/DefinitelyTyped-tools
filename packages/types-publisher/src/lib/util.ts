@@ -2,6 +2,7 @@ import assert = require("assert");
 import moment = require("moment");
 import recursiveReaddir = require("recursive-readdir");
 import { Stats } from "fs";
+import * as fsp from "fs-promise";
 
 export function parseJson(text: string): any {
 	try {
@@ -75,4 +76,20 @@ export function stripQuotes(s: string): string {
 
 export function unique<T>(arr: T[]) {
 	return [...new Set(arr)];
+}
+
+export function readFile(path: string): Promise<string> {
+	return fsp.readFile(path, { encoding: "utf8" });
+}
+
+export async function readJson(path: string): Promise<any> {
+	return parseJson(await readFile(path));
+}
+
+export function writeFile(path: string, content: string): Promise<void> {
+	return fsp.writeFile(path, content, { encoding: "utf8" });
+}
+
+export function writeJson(path: string, content: any): Promise<void> {
+	return writeFile(path, JSON.stringify(content, undefined, 4));
 }

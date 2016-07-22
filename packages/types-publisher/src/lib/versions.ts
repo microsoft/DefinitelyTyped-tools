@@ -1,8 +1,7 @@
 import * as fs from "fs";
-import * as fsp from "fs-promise";
 import { createBlobFromText, readBlob } from "./azure-container";
 import { settings, TypingsData } from "./common";
-import { parseJson } from "./util";
+import { readFile, readJson, writeFile } from "./util";
 
 const versionsFilename = "data/versions.json";
 const changesFilename = "data/version-changes.txt";
@@ -13,7 +12,7 @@ export default class Versions {
 	}
 
 	static async loadFromLocalFile(): Promise<Versions> {
-		return new Versions(parseJson(await fsp.readFile(versionsFilename, { encoding: "utf8" })));
+		return new Versions(await readJson(versionsFilename));
 	}
 
 	static existsSync(): boolean {
@@ -23,7 +22,7 @@ export default class Versions {
 	private constructor(private data: VersionMap) {}
 
 	saveLocally(): Promise<void> {
-		return fsp.writeFile(versionsFilename, this.render(), { encoding: "utf8" });
+		return writeFile(versionsFilename, this.render());
 	}
 
 	upload(): Promise<void> {
@@ -58,11 +57,11 @@ export default class Versions {
 export type Changes = string[];
 
 export async function readChanges(): Promise<Changes> {
-	return (await fsp.readFile(changesFilename, { encoding: "utf8" })).split("\n");
+	return (await readFile(changesFilename)).split("\n");
 }
 
 export function writeChanges(changes: Changes): Promise<void> {
-	return fsp.writeFile(changesFilename, changes.join("\n"), { encoding: "utf8" });
+	return writeFile(changesFilename, changes.join("\n"));
 }
 
 interface VersionMap {

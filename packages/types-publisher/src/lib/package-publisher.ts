@@ -1,7 +1,6 @@
 import { AnyPackage, Logger, LogResult, ArrayLog, consoleLogger, fullPackageName, isNotNeededPackage, getOutputPath, notNeededReadme, settings } from "./common";
-import { parseJson } from "./util";
+import { parseJson, readJson } from "./util";
 import fetch = require("node-fetch");
-import fsp = require("fs-promise");
 import * as path from "path";
 import * as child_process from "child_process";
 
@@ -41,8 +40,8 @@ export async function shouldPublish(pkg: AnyPackage): Promise<[boolean, LogResul
 
 	const outputPath = getOutputPath(pkg);
 	// Read package.json for version number we would be publishing
-	const packageJson = await fsp.readFile(path.join(outputPath, "package.json"), { encoding: "utf8" });
-	const localVersion: string = parseJson(packageJson).version;
+	const packageJson = await readJson(path.join(outputPath, "package.json"));
+	const localVersion: string = packageJson.version;
 	log.info(`Local version from package.json is ${localVersion}`);
 
 	// Hit e.g. http://registry.npmjs.org/@ryancavanaugh%2fjquery for version data

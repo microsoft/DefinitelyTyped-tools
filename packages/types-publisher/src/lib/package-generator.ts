@@ -1,5 +1,5 @@
 import { TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
-import { parseJson } from "./util";
+import { readFile, readJson, writeFile } from "./util";
 import Versions from "./versions";
 import * as fsp from "fs-promise";
 import * as path from "path";
@@ -24,7 +24,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 	];
 	outputs.push(...typing.files.map(async file => {
 		log.push(`Copy and patch ${file}`);
-		let content = await fsp.readFile(filePath(typing, file), { encoding: "utf8" });
+		let content = await readFile(filePath(typing, file));
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
@@ -38,7 +38,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 		if (dir !== outputPath) {
 			await fsp.mkdirp(dir);
 		}
-		return await fsp.writeFile(full, content, { encoding: "utf8" });
+		return await writeFile(full, content);
 	}
 }
 
@@ -60,7 +60,7 @@ export async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<{
 	return { log };
 
 	function writeOutputFile(filename: string, content: string): Promise<void> {
-		return fsp.writeFile(path.join(outputPath, filename), content, { encoding: "utf8" });
+		return writeFile(path.join(outputPath, filename), content);
 	}
 }
 
@@ -99,9 +99,7 @@ async function createPackageJSON(typing: TypingsData, version: number, available
 		dependencies?: { [name: string]: string };
 		description: string;
 	}
-	let pkg: PartialPackageJson = typing.hasPackageJson ?
-		parseJson(await fsp.readFile(pkgPath, { encoding: "utf8" })) :
-		{};
+	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
 	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "description"].includes(field));
 	if (ignoredField) {
