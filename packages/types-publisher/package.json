@@ -42,8 +42,7 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts",
-    "start": "node bin/webhook.js --dry"
+    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
   },
   "repository": {
     "type": "git",

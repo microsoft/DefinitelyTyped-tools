@@ -28,26 +28,33 @@ function writeLog(log: ArrayLog): Promise<void> {
 	return rollingLogs.write(infos);
 }
 
-const webResult = `
+function webResult(dry: boolean, timeStamp: string): string {
+	return `
 <html>
 <head></head>
 <body>
-	This is the TypeScript types-publisher webhook server. You probably meant to see:
+	This is the TypeScript types-publisher webhook server.<br/>
+	If you can read this, the webhook is running. (Dry mode: <strong>${dry}</strong>)<br/>
+	Latest deploy was on <strong>${timeStamp}</strong>.
+	You probably meant to see:
 	<ul>
 		<li><a href="https://typespublisher.blob.core.windows.net/typespublisher/index.html">Latest data</a></li>
 		<li><a href="https://github.com/Microsoft/types-publisher">GitHub</a></li>
+		<li><a href="https://github.com/Microsoft/types-publisher/issues/40">Server status issue</a></li>
 		<li><a href="https://ms.portal.azure.com/?resourceMenuPerf=true#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/Default-Web-WestUS/providers/Microsoft.Web/sites/types-publisher/App%20Services">Azure account (must have permission)</a></li>
 	</ul>
 </body>
 </html>
 `;
+}
 
 /** @param onUpdate: returns a promise in case it may error. Server will shut down on errors. */
 function listenToGithub(key: string, githubAccessToken: string, dry: boolean, onUpdate: (log: ArrayLog, timeStamp: string) => Promise<void> | undefined): Server {
+	const webText = webResult(dry, currentTimeStamp());
 	const server = createServer((req, resp) => {
 		switch (req.method) {
 			case "GET":
-				resp.write(webResult);
+				resp.write(webText);
 				resp.end();
 				break;
 			case "POST":

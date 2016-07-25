@@ -313,7 +313,7 @@ This also uploads `versions.json` to [here](https://typespublisher.blob.core.win
 
 * Set up forwarding:
 	* Install [ngrok](https://ngrok.com)
-	* `ngrok http 80` (or whatever `webhookPort` you have in your `settings.json`)
+	* `ngrok http 80` (or whatever `PORT` environment variable you're using)
 	* Copy the forwarding URL (Looks like: http://deadbeef.ngrok.io)
 
 * Add a hook:
@@ -394,10 +394,6 @@ Name of the Azure storage account.
 
 Name of the Azure container.
 
-### webhookPort
-
-Port number used by the webhook.
-
 ### errorsIssue
 
 GitHub issue to use to report errors from the webhook.
@@ -430,6 +426,10 @@ Create a token [here](https://github.com/settings/tokens).
 
 This lets you run the webhook in dry mode in Azure, without needing command line flags.
 
+#### PORT
+
+This is the port the webhook uses for GET requests.
+
 ### Set environment variables in Azure
 
 * Go to https://ms.portal.azure.com
@@ -455,3 +455,29 @@ npm run validate node exress jquery
 will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
+
+
+# Publishing to azure
+
+Azure is set up to listen to the `production` branch, which is like `master` but includes `bin/`.
+
+## Update production branch
+
+    git checkout production
+    git merge master
+    git build
+    git add --all
+    git commit -m "Update bin/"
+    git push
+
+Azure is listening for changes to `production` and should restart itself.
+The server also serves a simple web page [here](http://types-publisher.azurewebsites.net).
+
+## Debugging Azure
+
+If the server is working normally, you can view log files [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html).
+
+If the server goes down, you can view server logs on [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
+For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
+You can also download a ZIP using the azure-cli command `azure site log download`.
+The most useful logs are in LogFiles/Application.

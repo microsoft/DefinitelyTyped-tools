@@ -13,6 +13,5 @@
 	"azureStorageAccount": "typespublisher",
 	"azureContainer": "typespublisher",
 	"versionsBlobName": "versions.json",
-	"webhookPort": 80,
 	"errorsIssue": "Microsoft/types-publisher/issues/40"
 }
