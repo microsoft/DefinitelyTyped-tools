@@ -73,8 +73,9 @@ export async function readBlob(blobName: string): Promise<string> {
 			switch (res.statusCode) {
 				case 200:
 					readResponse(res);
+					break;
 				default:
-					reject(new Error(`Can't get ${url}`));
+					reject(new Error(`Can't get ${url}: ${res.statusCode} error`));
 			}
 		});
 		req.on("error", reject);
