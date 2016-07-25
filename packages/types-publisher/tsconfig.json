@@ -29,7 +29,8 @@
 		"src/upload-blobs.ts",
 		"src/full.ts",
 		"src/webhook.ts",
-		"src/validate.ts"
+		"src/validate.ts",
+		"src/make-server-run.ts"
 	],
 
 	"compilerOptions": {

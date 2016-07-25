@@ -1,7 +1,7 @@
 import assert = require("assert");
 import bufferEqualsConstantTime = require("buffer-equals-constant");
 import { createHmac } from "crypto";
-import { createServer, Server } from "http";
+import { createServer, Server, ServerResponse } from "http";
 import full from "../full";
 import RollingLogs from "./rolling-logs";
 import { ArrayLog, settings } from "./common";
@@ -58,7 +58,7 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 				resp.end();
 				break;
 			case "POST":
-				req.on("data", (data: string) => receiveUpdate(data, req.headers));
+				req.on("data", (data: string) => receiveUpdate(data, req.headers, resp));
 				break;
 			default:
 				// Don't respond
@@ -66,7 +66,7 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 	});
 	return server;
 
-	function receiveUpdate(data: string, headers: any): void {
+	function receiveUpdate(data: string, headers: any, resp: ServerResponse): void {
 		const log = new ArrayLog(true);
 		const timeStamp = currentTimeStamp();
 		try {
@@ -80,6 +80,7 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 
 			const actualRef = parseJson(data).ref;
 			if (actualRef === expectedRef) {
+				respond("Thanks for the update! Running full.");
 				const update = onUpdate(log, timeStamp);
 				if (update) {
 					update.catch(onError);
@@ -87,7 +88,9 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 				return;
 			}
 			else {
-				log.info(`Ignoring push to ${actualRef}, expected ${expectedRef}.`);
+				const text = `Ignoring push to ${actualRef}, expected ${expectedRef}.`;
+				respond(text);
+				log.info(text);
 			}
 			writeLog(log).catch(onError);
 		} catch (error) {
@@ -102,6 +105,12 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 				console.error(error.stack);
 				process.exit(1);
 			});
+		}
+
+		// This is for the benefit of `npm run make-[production-]server-run`. GitHub ignores this.
+		function respond(text: string): void {
+			resp.write(text);
+			resp.end();
 		}
 	}
 }
@@ -136,17 +145,17 @@ function updateOneAtATime(doOnce: (log: ArrayLog, timeStamp: string) => Promise<
 }
 
 function checkSignature(key: string, data: string, actualSignature: string) {
-	const expectedSignature = `sha1=${getDigest()}`;
-	// Prevent timing attacks
-	return stringEqualsConstantTime(expectedSignature, actualSignature);
-
-	function getDigest(): string {
-		const hmac = createHmac("sha1", key);
-		hmac.write(data);
-		return hmac.digest("hex");
-	}
+	// Use a constant-time compare to prevent timing attacks
+	return stringEqualsConstantTime(expectedSignature(key, data), actualSignature);
 
 	function stringEqualsConstantTime(s1: string, s2: string): boolean {
 		return bufferEqualsConstantTime(new Buffer(s1), new Buffer(s2));
 	}
+}
+
+export function expectedSignature(key: string, data: string) {
+	const hmac = createHmac("sha1", key);
+	hmac.write(data);
+	const digest = hmac.digest("hex");
+	return `sha1=${digest}`;
 }

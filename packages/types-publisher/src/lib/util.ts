@@ -1,4 +1,5 @@
 import assert = require("assert");
+import fetch = require("node-fetch");
 import moment = require("moment");
 import recursiveReaddir = require("recursive-readdir");
 import { Stats } from "fs";
@@ -84,6 +85,12 @@ export function readFile(path: string): Promise<string> {
 
 export async function readJson(path: string): Promise<any> {
 	return parseJson(await readFile(path));
+}
+
+export async function fetchJson(url: string, init?: _fetch.RequestInit): Promise<any> {
+	const response = await fetch(url, init);
+	const text = await response.text();
+	return parseJson(text);
 }
 
 export function writeFile(path: string, content: string): Promise<void> {

@@ -4,7 +4,6 @@ import * as path from "path";
 import * as container from "./azure-container";
 import { Logger, ArrayLog, logPath, writeLogSync } from "./common";
 import { unique } from "./util";
-import Versions from "./versions";
 
 const maxNumberOfOldLogsDirectories = 5;
 
@@ -13,7 +12,6 @@ export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Prom
 	await container.setCorsProperties();
 	const [dataUrls, logUrls] = await uploadBlobs(timeStamp);
 	await uploadIndex(timeStamp, dataUrls, logUrls);
-	await (await Versions.loadFromLocalFile()).upload();
 };
 
 // View uploaded files at:

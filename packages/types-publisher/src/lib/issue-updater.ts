@@ -1,6 +1,5 @@
-import fetch = require("node-fetch");
 import { settings } from "./common";
-import { currentTimeStamp, indent } from "./util";
+import { currentTimeStamp, indent, fetchJson } from "./util";
 
 export async function setIssueOk(githubAccessToken: string): Promise<void> {
 	await doUpdate(githubAccessToken, `Server has been up as of **${currentTimeStamp()}**`);
@@ -27,8 +26,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 async function doUpdate(accessToken: string, body: string): Promise<void> {
 	const url = `https://api.github.com/repos/${settings.errorsIssue}?access_token=${accessToken}`;
 	const message = { body, state: "open" };
-	const response = await fetch(url, { method: "PATCH", body: JSON.stringify(message) });
-	const responseBody = await response.json();
+	const responseBody = await fetchJson(url, { method: "PATCH", body: JSON.stringify(message) });
 	if (responseBody.body !== body) {
 		throw new Error(JSON.stringify(responseBody, undefined, 4));
 	}

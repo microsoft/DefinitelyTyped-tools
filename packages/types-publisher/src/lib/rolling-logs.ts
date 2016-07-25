@@ -14,13 +14,12 @@ export default class RollingLogs {
 	}
 
 	private async readAllLogs(): Promise<string[]> {
-		const response = await readBlob(this.name);
-		if (response.status === 404) {
-			return [];
+		try {
+			return (await readBlob(this.name)).split("\n");
 		}
-		else {
-			const responseText = await response.text();
-			return responseText.split("\n");
+		catch (err) {
+			// 404
+			return [];
 		}
 	}
 }

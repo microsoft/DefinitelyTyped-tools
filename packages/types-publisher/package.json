@@ -42,7 +42,9 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts"
+    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts",
+    "make-server-run": "node bin/make-server-run.js",
+    "make-production-server-run": "node bin/make-server-run.js --remote"
   },
   "repository": {
     "type": "git",

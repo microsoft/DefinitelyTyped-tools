@@ -1,6 +1,5 @@
 import { AnyPackage } from "./common";
-import { parseJson } from "./util";
-import fetch = require("node-fetch");
+import { fetchJson } from "./util";
 
 export interface SearchRecord {
 	// types package name
@@ -64,8 +63,7 @@ export async function createSearchRecord(info: AnyPackage, skipDownloads: boolea
 		} else {
 			const url = `https://api.npmjs.org/downloads/point/last-month/${info.typingsPackageName}`;
 			interface NpmResult { downloads: number; }
-			const text = await (await fetch(url)).text();
-			const json = <NpmResult> parseJson(text);
+			const json = <NpmResult> (await fetchJson(url));
 			// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.
 			return json.downloads || 0;
 		}

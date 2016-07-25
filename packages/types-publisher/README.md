@@ -303,11 +303,16 @@ This uploads the `data` and `logs` directories to Azure.
 Blobs can be viewed [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html)
 or on [Azure](https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher).
 
-This also uploads `versions.json` to [here](https://typespublisher.blob.core.windows.net/typespublisher/versions.json).
-
 # Testing the webhook
 
 (Since this is a test, make sure you are not logged in to npm (`npm logout`), and use the `--dry` flag.)
+
+### Testing the webhook without a repository
+
+The script `npm run make-server-run` will trigger the local webhook just like Github would.
+(For the production server, use `npm run make-production-server-run`.)
+
+### Testing the webhook with a repository
 
 * Create a dummy repository (e.g. `https://github.com/your/dummy-repo`)
 
@@ -481,3 +486,9 @@ If the server goes down, you can view server logs on [ftp](ftp://waws-prod-bay-0
 For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
 You can also download a ZIP using the azure-cli command `azure site log download`.
 The most useful logs are in LogFiles/Application.
+
+## Testing Azure
+
+Instead of waiting for someone to push to DefinitelyTyped,
+you should test out your new deployment by running `npm run make-production-server-run`,
+which will trigger a full build .

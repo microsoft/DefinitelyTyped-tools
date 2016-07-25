@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { createBlobFromText, readBlob } from "./azure-container";
-import { settings, TypingsData } from "./common";
+import { readJsonBlob } from "./azure-container";
+import { TypingsData } from "./common";
 import { readFile, readJson, writeFile } from "./util";
 
 const versionsFilename = "data/versions.json";
@@ -8,7 +8,7 @@ const changesFilename = "data/version-changes.txt";
 
 export default class Versions {
 	static async loadFromBlob(): Promise<Versions> {
-		return new this(await (await readBlob(settings.versionsBlobName)).json());
+		return new this(await readJsonBlob(versionsFilename));
 	}
 
 	static async loadFromLocalFile(): Promise<Versions> {
@@ -23,10 +23,6 @@ export default class Versions {
 
 	saveLocally(): Promise<void> {
 		return writeFile(versionsFilename, this.render());
-	}
-
-	upload(): Promise<void> {
-		return createBlobFromText(settings.versionsBlobName, this.render());
 	}
 
 	recordUpdate(typing: TypingsData, forceUpdate: boolean): boolean {
