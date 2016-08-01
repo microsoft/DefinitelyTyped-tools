@@ -192,22 +192,18 @@ This argument may be needed during development,
 
 > `node bin/create-search-index.js`
 
-This script creates several data files useful for offering fast search of types data.
+This script creates `data/search-index-min.json`, which (in the upload step) will be uploaded to Azure and used by [TypeSearch](https://github.com/microsoft/typesearch).
 This step is not necessary for other steps in the process.
 
 ### Arguments to `create-search-index`
 
-By default, this script fetches download counts from NPM for use in search result ranking.
+You can generate a prettier output in `data/search-index-full.json`.
+This version is for human review only and is not compatible with TypeSearch.
+
+By default, `create-search-index` fetches download counts from NPM for use in search result ranking.
 The argument `--skipDownloads` disables this behavior.
 
-### Outputs of `create-search-index`
-
-This script generates the following files
- * `data/search-index-full.json`: An unminified index useful for searching
- * `data/search-index-min.json`: A minified index useful for searching
- * `data/search-index-head.json`: A minified index of the top 100 most-downloaded packages
-
-### Minified and Unminified Search Entries
+### Search Entries
 
 Each `search-*.json` file consists of an array.
 An example unminified entry is:
@@ -231,13 +227,7 @@ If `--skipDownloads` was specified, `downloads` will be -1.
 In the case where the type package name is different from the NPM package name,
   or no NPM package name exists, `downloads` will be 0.
 
-In the minified files, the properties are simply renamed:
- * `typePackageName` is `t`
- * `globals` is `g`
- * `declaredExternalModules` is `m`
- * `projectName` is `p`
- * `libraryName` is `l`
- * `downlaods` is `d`
+In the minified files, the properties are simply renamed. See `src/lib/search-index-generator.ts` for documentation.
 
 Empty arrays may be elided in future versions of the minified files.
 

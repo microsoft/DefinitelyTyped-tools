@@ -1,32 +1,51 @@
 import * as yargs from "yargs";
 import { existsTypesDataFileSync, readAllPackages, writeDataFile } from "./lib/common";
 import { done, nAtATime } from "./lib/util";
-import { createSearchRecord, minifySearchRecord } from "./lib/search-index-generator";
+import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
 		console.log("Run parse-definitions first!");
 	} else {
 		const skipDownloads = yargs.argv.skipDownloads;
-		done(main(skipDownloads));
+		const full = yargs.argv.full;
+		done(main(skipDownloads, full));
 	}
 }
 
-export default async function main(skipDownloads: boolean): Promise<void> {
+export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
 	let packages = await readAllPackages();
 	console.log(`Loaded ${packages.length} entries`);
 
 	const records = await nAtATime(100, packages, pkg => createSearchRecord(pkg, skipDownloads));
 	// Most downloads first
-	records.sort((a, b) => b.downloads - a.downloads);
+	records.sort((a, b) => b.d - a.d);
 
 	console.log(`Done generating search index`);
-	const minRecords = records.map(minifySearchRecord);
 
 	console.log(`Writing out data files`);
-	await Promise.all([
-		writeDataFile("search-index-full.json", records),
-		writeDataFile("search-index-min.json", minRecords, false),
-		writeDataFile("search-index-head.json", minRecords.slice(0, 100), false)
-	]);
+	await writeDataFile("search-index-min.json", records, false);
+	if (full) {
+		await writeDataFile("search-index-full.json", records.map(verboseRecord), true);
+	}
+}
+
+function verboseRecord(r: SearchRecord): {} {
+	return renameProperties(r, {
+		t: "typePackageName",
+		g: "globals",
+		m: "declaredExternalModules",
+		p: "projectName",
+		l: "libraryName",
+		d: "downloads",
+		r: "redirect"
+	});
+}
+
+function renameProperties(obj: {}, replacers: { [name: string]: string }): {} {
+	const out: any = {};
+	for (const key of Object.getOwnPropertyNames(obj)) {
+		out[replacers[key]] = (<any> obj)[key];
+	}
+	return out;
 }

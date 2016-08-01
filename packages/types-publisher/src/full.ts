@@ -24,7 +24,7 @@ export default async function full(client: NpmClient, dry: boolean, timeStamp: s
 	await checkParseResults();
 	await calculateVersions(/*forceUpdate*/ false);
 	await generatePackages();
-	await createSearchIndex(/*skipDownloads*/ false);
+	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false);
 	await publishPackages(client, dry);
 	if (!dry) {
 		await uploadBlobs(timeStamp);
