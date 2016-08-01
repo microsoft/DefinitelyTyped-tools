@@ -1,13 +1,14 @@
 import assert = require("assert");
 import path = require("path");
-import fs = require("fs");
+import { existsSync, readFileSync } from "fs";
+import * as fsp from "fs-promise";
 import crypto = require("crypto");
 import { install } from "source-map-support";
-import { parseJson } from "./util";
+import { parseJson, readJson, writeFile } from "./util";
 install();
 
 export const home = path.join(__dirname, "..", "..");
-export const settings: PublishSettings = parseJson(fs.readFileSync(path.join(home, "settings.json"), "utf-8"));
+export const settings: PublishSettings = parseJson(readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
 export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json");
 
@@ -145,32 +146,21 @@ export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t i
 	return (t as TypingParseFailResult).rejectionReason !== undefined;
 }
 
-function mkdir(p: string) {
-	try {
-		fs.statSync(p);
-	} catch (e) {
-		fs.mkdirSync(p);
-	}
-}
-
 const logDir = path.join(home, "logs");
 
 export function logPath(logName: string) {
 	return path.join(logDir, logName);
 }
 
-export function writeLogSync(logName: string, contents: string[]) {
-	mkdir(logDir);
-	fs.writeFileSync(logPath(logName), contents.join("\r\n"), "utf-8");
+export async function writeLog(logName: string, contents: string[]): Promise<void> {
+	await fsp.ensureDir(logDir);
+	await writeFile(logPath(logName), contents.join("\r\n"));
 }
 
-export function writeDataFile(filename: string, content: {}, formatted = true) {
+export async function writeDataFile(filename: string, content: {}, formatted = true) {
 	const dataDir = path.join(home, "data");
-	mkdir(dataDir);
-	if (typeof content !== "string") {
-		content = JSON.stringify(content, undefined, formatted ? 4 : undefined);
-	}
-	fs.writeFileSync(path.join(dataDir, filename), content, "utf-8");
+	await fsp.ensureDir(dataDir);
+	await writeFile(path.join(dataDir, filename), JSON.stringify(content, undefined, formatted ? 4 : undefined));
 }
 
 const dataDir = path.join(home, "data");
@@ -178,35 +168,22 @@ function dataFilePath(filename: string) {
 	return path.join(dataDir, filename);
 }
 
-function existsDataFile(filename: string): boolean {
-	return fs.existsSync(dataFilePath(filename));
+export function existsTypesDataFileSync(): boolean {
+	return existsSync(dataFilePath(typesDataFilename));
 }
 
-export function readDataFile(filename: string): {} | undefined {
-	const fullPath = dataFilePath(filename);
-	if (fs.existsSync(fullPath)) {
-		return parseJson(fs.readFileSync(fullPath, "utf-8"));
-	} else {
-		return undefined;
-	}
+export async function readTypesDataFile(): Promise<TypesDataFile> {
+	return <TypesDataFile> (await readJson(dataFilePath(typesDataFilename)));
 }
-
-export function existsTypesDataFile(): boolean {
-	return existsDataFile(typesDataFilename);
-}
-
-export function readTypesDataFile(): TypesDataFile | undefined {
-	return <TypesDataFile> readDataFile(typesDataFilename);
-}
-export function typings(typeData: TypesDataFile): TypingsData[] {
+export function typingsFromData(typeData: TypesDataFile): TypingsData[] {
 	return Object.keys(typeData).map(packageName => typeData[packageName]);
 }
-export function readTypings() {
-	return typings(readTypesDataFile());
+export async function readTypings(): Promise<TypingsData[]> {
+	return typingsFromData(await readTypesDataFile());
 }
 
-export function readNotNeededPackages(): NotNeededPackage[] {
-	const raw: any[] = parseJson(fs.readFileSync(notNeededPackagesPath, "utf-8")).packages;
+export async function readNotNeededPackages(): Promise<NotNeededPackage[]> {
+	const raw: any[] = (await readJson(notNeededPackagesPath)).packages;
 	for (const pkg of raw) {
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
 		assert(!pkg.projectName && !pkg.packageKind && !pkg.globals && !pkg.declaredModules);
@@ -216,6 +193,11 @@ export function readNotNeededPackages(): NotNeededPackage[] {
 		pkg.declaredModules = [];
 	}
 	return raw;
+}
+
+export async function readAllPackages(): Promise<AnyPackage[]> {
+	const [typings, notNeeded] = await Promise.all<AnyPackage[]>([ readTypings(), readNotNeededPackages() ]);
+	return typings.concat(notNeeded);
 }
 
 export function computeHash(content: string) {

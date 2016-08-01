@@ -1,23 +1,24 @@
-import { TypingsData, existsTypesDataFile, readTypings, writeLogSync } from "./lib/common";
+import { TypingsData, existsTypesDataFileSync, readTypings, writeLog } from "./lib/common";
+import { done } from "./lib/util";
 
 if (!module.parent) {
-	if (!existsTypesDataFile()) {
+	if (!existsTypesDataFileSync()) {
 		console.log("Run parse-definitions first!");
 	} else {
-		main();
+		done(main());
 	}
 }
 
-export default function main() {
-	const libConflicts = check(info => info.libraryName, "Library Name");
-	const projConflicts = check(info => info.projectName, "Project Name");
+export default async function main(): Promise<void> {
+	const infos = await readTypings();
+	const libConflicts = await check(infos, info => info.libraryName, "Library Name");
+	const projConflicts = await check(infos, info => info.projectName, "Project Name");
 
-	writeLogSync("conflicts.md", libConflicts.concat(projConflicts));
+	await writeLog("conflicts.md", libConflicts.concat(projConflicts));
 }
 
-function check(func: (info: TypingsData) => string, key: string) {
+async function check(infos: TypingsData[], func: (info: TypingsData) => string, key: string) {
 	const lookup: { [libName: string]: string[] } = {};
-	const infos = readTypings();
 	const result: string[] = [];
 	infos.forEach(info => {
 		const name = func(info);

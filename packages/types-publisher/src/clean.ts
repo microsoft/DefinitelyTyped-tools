@@ -1,4 +1,4 @@
-import * as rimraf from "rimraf";
+import * as fsp from "fs-promise";
 
 if (!module.parent) {
 	main();
@@ -7,6 +7,6 @@ if (!module.parent) {
 export default function main(): void {
 	for (const dir of ["data", "logs", "output"]) {
 		console.log("Clean " + dir);
-		rimraf.sync(dir);
+		fsp.remove(dir);
 	}
 }

@@ -1,12 +1,12 @@
 import * as fs from "fs";
 import * as yargs from "yargs";
-import * as common from "./lib/common";
+import { AnyPackage, existsTypesDataFileSync, LogResult, readAllPackages, writeLog } from "./lib/common";
 import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
 import { done, nAtATime } from "./lib/util";
 
 if (!module.parent) {
-	if (!common.existsTypesDataFile() || !fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
+	if (!existsTypesDataFileSync() || !fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
 		console.log("Run parse-definitions and generate-packages first!");
 	}
 	else {
@@ -45,10 +45,10 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 		log.push("=== DRY RUN ===");
 	}
 
-	const packagesShouldPublish: common.AnyPackage[] = [];
+	const packagesShouldPublish: AnyPackage[] = [];
 
 	log.push("Checking which packages we should publish");
-	await nAtATime(100, allPackages(), async pkg => {
+	await nAtATime(100, await readAllPackages(), async pkg => {
 		const [shouldPublish, checkLog] = await publisher.shouldPublish(pkg);
 
 		if (shouldPublish) {
@@ -67,7 +67,7 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 		writeLogs(publishLog);
 	}
 
-	function writeLogs(res: common.LogResult): void {
+	function writeLogs(res: LogResult): void {
 		for (const line of res.infos) {
 			log.push(`   * ${line}`);
 		}
@@ -77,12 +77,12 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 		}
 	}
 
-	common.writeLogSync("publishing.md", log);
+	await writeLog("publishing.md", log);
 	console.log("Done!");
 }
 
 async function single(client: NpmClient, name: string, dry: boolean): Promise<void> {
-	const pkg = allPackages().find(p => p.typingsPackageName === name);
+	const pkg = (await readAllPackages()).find(p => p.typingsPackageName === name);
 	if (pkg === undefined) {
 		throw new Error(`Can't find a package named ${name}`);
 	}
@@ -93,11 +93,7 @@ async function single(client: NpmClient, name: string, dry: boolean): Promise<vo
 }
 
 async function unpublish(dry: boolean): Promise<void> {
-	for (const pkg of allPackages()) {
+	for (const pkg of await readAllPackages()) {
 		await publisher.unpublishPackage(pkg, dry);
 	}
-}
-
-function allPackages(): common.AnyPackage[] {
-	return (common.readTypings() as common.AnyPackage[]).concat(common.readNotNeededPackages());
 }

@@ -1,14 +1,17 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
 import * as child_process from "child_process";
-import * as rimraf from "rimraf";
 import * as yargs from "yargs";
 import { nAtATime, writeFile, writeJson } from "./lib/util";
-import { Logger, ArrayLog, settings, writeLogSync, readTypings } from "./lib/common";
+import { Logger, ArrayLog, existsTypesDataFileSync, settings, writeLog, readTypings } from "./lib/common";
 
 if (!module.parent) {
-	const packageNames = yargs.argv._;
-	main(packageNames);
+	if (!existsTypesDataFileSync()) {
+		console.log("Run parse-definitions first!");
+	} else {
+		const packageNames = yargs.argv._;
+		main(packageNames);
+	}
 }
 
 export default async function main(packageNames?: string[]) {
@@ -16,7 +19,7 @@ export default async function main(packageNames?: string[]) {
 
 	if (!packageNames || !packageNames.length) {
 		console.info("Validating all packages");
-		packageNames = readTypings().map(t => t.typingsPackageName).sort();
+		packageNames = (await readTypings()).map(t => t.typingsPackageName).sort();
 	}
 	else {
 		console.info("Validating: " + JSON.stringify(packageNames));
@@ -26,8 +29,10 @@ export default async function main(packageNames?: string[]) {
 
 	const {infos, errors} = log.result();
 
-	writeLogSync("validate.md", infos);
-	writeLogSync("validate-errors.md", errors);
+	await Promise.all([
+		writeLog("validate.md", infos),
+		writeLog("validate-errors.md", errors)
+	]);
 }
 
 async function validatePackages(packageNames: string[], outPath: string, log: Logger) {
@@ -38,10 +43,7 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	const failed: string[] = [];
 	const passed: string[] = [];
 	try {
-		// Refresh the output folder
-		if (await fsp.exists(outPath)) {
-			await deleteDirectory(outPath, log);
-		}
+		fsp.remove(outPath);
 		await fsp.mkdirp(outPath);
 	}
 	catch (e) {
@@ -81,7 +83,7 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 		await writePackage(packageDirectory, packageName);
 		if (await runCommand("npm", log, packageDirectory, "npm install") &&
 			await runCommand("tsc", log, packageDirectory, "tsc")) {
-			await deleteDirectory(packageDirectory, log);
+			await fsp.remove(packageDirectory);
 			log.info("Passed.");
 			passed = true;
 		}
@@ -154,21 +156,6 @@ function runCommand(commandDescription: string, log: Logger, directory: string, 
 			}
 			else {
 				log.info(stdout);
-				resolve(true);
-			}
-		});
-	});
-}
-
-function deleteDirectory(path: string, log: Logger): Promise<boolean> {
-	return new Promise<boolean>((resolve, reject) => {
-		rimraf(path, err => {
-			if (err) {
-				log.error(`rimraf failed: ${JSON.stringify(err)}`);
-				log.info(`rimraf failed, refer to error log`);
-				resolve(false);
-			}
-			else {
 				resolve(true);
 			}
 		});

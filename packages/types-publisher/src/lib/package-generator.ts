@@ -69,12 +69,7 @@ async function clearOutputPath(outputPath: string, log: string[]): Promise<void>
 	await fsp.mkdirp(outputPath);
 
 	log.push(`Clear out old files`);
-	await removeAllFiles(outputPath);
-}
-
-async function removeAllFiles(dirPath: string): Promise<void> {
-	const files = await fsp.readdir(dirPath);
-	await Promise.all(files.map(file => fsp.unlink(path.join(dirPath, file))));
+	await fsp.emptyDir(outputPath);
 }
 
 function patchDefinitionFile(input: string): string {
