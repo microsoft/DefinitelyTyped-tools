@@ -12,8 +12,8 @@ if (!module.parent) {
 export default async function main(): Promise<void> {
 	const log = new ArrayLog();
 	await cloneIfNeeded(log);
-	checkBranch(log);
-	pull(log);
+	await checkBranch(log);
+	await pull(log);
 
 	const {infos, errors} = log.result();
 	assert(!errors.length);
