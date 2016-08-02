@@ -9,7 +9,7 @@ if (!module.parent) {
 export default async function main(): Promise<void> {
 	const key = process.env["GITHUB_SECRET"];
 	const githubAccessToken = process.env["GITHUB_ACCESS_TOKEN"];
-	const dry = yargs.argv.dry || process.env["WEBHOOK_FORCE_DRY"];
+	const dry = !!(yargs.argv.dry || process.env["WEBHOOK_FORCE_DRY"]);
 	const port = process.env["PORT"];
 
 	if (!(key && githubAccessToken && port)) {
