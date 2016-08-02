@@ -181,21 +181,26 @@ async function entryPoint(directory: string, folderName: string, log: string[]):
 async function allReferencedFiles(directory: string, entryPointFilename: string, log: string[]): Promise<Map<string, ts.SourceFile>> {
 	const all = new Map<string, ts.SourceFile>();
 
-	async function recur(filename: string): Promise<void> {
+	async function recur(referencedFrom: string, filename: string): Promise<void> {
 		if (all.has(filename)) {
 			return;
 		}
 
 		log.push(`Parse ${filename}`);
-		let content = await readFile(directory, filename);
+		let content: string;
+		try {
+			content = await readFile(directory, filename);
+		} catch (err) {
+			throw new Error(`In ${directory}, ${referencedFrom} references ${filename}, which does not exist.`);
+		}
 		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
 		all.set(filename, src);
 
 		const refs = referencedFiles(src, directory, path.dirname(filename));
-		await Promise.all(refs.map(recur));
+		await Promise.all(refs.map(ref => recur(filename, ref)));
 	}
 
-	await recur(entryPointFilename);
+	await recur("", entryPointFilename);
 	return all;
 }
 
