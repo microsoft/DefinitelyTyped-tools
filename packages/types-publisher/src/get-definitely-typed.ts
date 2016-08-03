@@ -46,9 +46,10 @@ async function pull(log: Logger): Promise<void> {
 
 function runCmd(cmd: string, cwd?: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
+		const minute = 60 * 1000;
 		const options = {
 			cwd,
-			timeout: 60 * 1000,
+			timeout: 10 * minute,
 			encoding: "utf8"
 		};
 		child_process.exec(cmd, options, (err, stdout, stderr) => {
