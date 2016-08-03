@@ -238,6 +238,9 @@ Empty arrays may be elided in future versions of the minified files.
 This step writes all type packages to disk.
 The output folder is specified in `settings.json` (see section "Settings").
 
+You can also output a single package with e.g. `node bin/generate-packages.js --single abs`.
+(This will still require parsing every package first, as we may need information about referenced packages.)
+
 ## Outputs of `generate-packages`
 
 ### Package Folders
