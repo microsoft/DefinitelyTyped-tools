@@ -1,13 +1,12 @@
-import assert = require("assert");
 import bufferEqualsConstantTime = require("buffer-equals-constant");
 import { createHmac } from "crypto";
-import { createServer, Server, ServerResponse } from "http";
+import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import full from "../full";
 import RollingLogs from "./rolling-logs";
 import { ArrayLog, settings } from "./common";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
-import { currentTimeStamp, parseJson } from "./util";
+import { currentTimeStamp, parseJson, stringOfStream } from "./util";
 
 const rollingLogs = new RollingLogs("webhook-logs.md", 1000);
 
@@ -24,8 +23,7 @@ export default async function server(key: string, githubAccessToken: string, dry
 
 function writeLog(log: ArrayLog): Promise<void> {
 	const { infos, errors } = log.result();
-	assert(!errors.length);
-	return rollingLogs.write(infos);
+	return rollingLogs.write(infos.concat(errors));
 }
 
 function webResult(dry: boolean, timeStamp: string): string {
@@ -58,7 +56,7 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 				resp.end();
 				break;
 			case "POST":
-				req.on("data", (data: string) => receiveUpdate(data, req.headers, resp));
+				receiveUpdate(req, resp);
 				break;
 			default:
 				// Don't respond
@@ -66,32 +64,11 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 	});
 	return server;
 
-	function receiveUpdate(data: string, headers: any, resp: ServerResponse): void {
+	function receiveUpdate(req: IncomingMessage, resp: ServerResponse): void {
 		const log = new ArrayLog(true);
 		const timeStamp = currentTimeStamp();
 		try {
-			if (!checkSignature(key, data, headers, log)) {
-				return;
-			}
-
-			log.info(`Message from github: ${data}`);
-			const expectedRef = `refs/heads/${settings.sourceBranch}`;
-
-			const actualRef = parseJson(data).ref;
-			if (actualRef === expectedRef) {
-				respond("Thanks for the update! Running full.");
-				const update = onUpdate(log, timeStamp);
-				if (update) {
-					update.catch(onError);
-				}
-				return;
-			}
-			else {
-				const text = `Ignoring push to ${actualRef}, expected ${expectedRef}.`;
-				respond(text);
-				log.info(text);
-			}
-			writeLog(log).catch(onError);
+			work().then(() => writeLog(log)).catch(onError);
 		} catch (error) {
 			writeLog(log).then(() => onError(error)).catch(onError);
 		}
@@ -104,6 +81,27 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 				console.error(error.stack);
 				process.exit(1);
 			});
+		}
+
+		async function work(): Promise<void> {
+			const data = await stringOfStream(req);
+			if (!checkSignature(key, data, req.headers, log)) {
+				return;
+			}
+
+			log.info(`Message from github: ${data}`);
+			const expectedRef = `refs/heads/${settings.sourceBranch}`;
+
+			const actualRef = parseJson(data).ref;
+			if (actualRef === expectedRef) {
+				respond("Thanks for the update! Running full.");
+				await onUpdate(log, timeStamp);
+			}
+			else {
+				const text = `Ignoring push to ${actualRef}, expected ${expectedRef}.`;
+				respond(text);
+				log.info(text);
+			}
 		}
 
 		// This is for the benefit of `npm run make-[production-]server-run`. GitHub ignores this.

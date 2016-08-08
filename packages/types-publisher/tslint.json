@@ -10,6 +10,7 @@
 		"no-empty": false,
 		"no-namespace": false,
 		"no-string-literal": false,
+		"no-var-requires": false,
 		"object-literal-sort-keys": false,
 		"one-line": false,
 		"ordered-imports": false,
