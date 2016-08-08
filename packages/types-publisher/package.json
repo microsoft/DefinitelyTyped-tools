@@ -8,6 +8,7 @@
     "buffer-equals-constant": "^1.0.0",
     "fs-promise": "^0.5.0",
     "fstream": "^1.0.10",
+    "longjohn": "^0.2.11",
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
     "npm-registry-client": "^7.1.2",

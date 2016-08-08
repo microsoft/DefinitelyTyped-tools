@@ -428,6 +428,10 @@ This lets you run the webhook in dry mode in Azure, without needing command line
 
 This is the port the webhook uses for GET requests.
 
+### LONGJOHN
+
+Setting this variable turns on [longjohn](https://github.com/mattinsler/longjohn) stacktraces.
+
 ### Set environment variables in Azure
 
 * Go to https://ms.portal.azure.com

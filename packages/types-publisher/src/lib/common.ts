@@ -6,6 +6,11 @@ import crypto = require("crypto");
 import { install } from "source-map-support";
 import { parseJson, readJson, writeFile } from "./util";
 install();
+if (process.env["LONGJOHN"]) {
+	console.log("=== USING LONGJOHN ===");
+	const longjohn = require("longjohn");
+	longjohn.async_trace_limit = -1; // unlimited
+}
 
 export const home = path.join(__dirname, "..", "..");
 export const settings: PublishSettings = parseJson(readFileSync(path.join(home, "settings.json"), "utf-8"));
