@@ -1,10 +1,10 @@
 import assert = require("assert");
-import { ReadStream } from "fs";
 import { Reader } from "fstream";
 import RegClient = require("npm-registry-client");
 import { Pack } from "tar";
 import * as url from "url";
 import { settings } from "./common";
+import { gzip } from "./util";
 
 const registry = settings.npmRegistry;
 assert(registry.endsWith("/"));
@@ -28,7 +28,7 @@ export default class NpmClient {
 
 	publish(publishedDirectory: string, packageJson: {}, dry: boolean): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			const body = createTar(publishedDirectory, reject);
+			const body = createTgz(publishedDirectory, reject);
 
 			const params = {
 				access: <"public"> "public",
@@ -103,8 +103,13 @@ async function logIn(client: RegClient, password: string): Promise<RegClient.Cre
 	return { token };
 }
 
-// To output this for testing: `createTar(...).pipe(fs.createWriteStream("test.tar"))`
-function createTar(dir: string, onError: (error: Error) => void): ReadStream {
+// To output this for testing: Export it and:
+// `require("./bin/lib/npm-client").createTgz("./output/foo", err => { throw err }).pipe(fs.createWriteStream("foo.tgz"))`
+function createTgz(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
+	return gzip(createTar(dir, onError));
+}
+
+function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
 	const packer = Pack(<any> { noProprietary: true })
 		.on("error", onError);
 
