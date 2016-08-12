@@ -14,18 +14,19 @@ export async function publishPackage(client: NpmClient, pkg: AnyPackage, dry: bo
 
 	const packageDir = path.join("output", name);
 	const packageJson = await readJson(path.join(packageDir, "package.json"));
+	const version = packageJson.version;
+	assert(typeof version === "string");
 
 	await client.publish(packageDir, packageJson, dry);
-	if (settings.tag && settings.tag !== "latest") { // "latest" is the default tag anyway
-		assert(packageJson.version);
-		await client.tag(name, packageJson.version, settings.tag);
+	if (settings.tag && settings.tag !== "latest" && !dry) { // "latest" is the default tag anyway
+		await client.tag(name, version, settings.tag);
 	}
 
 	if (isNotNeededPackage(pkg)) {
 		log.info(`Deprecating ${name}`);
 		const message = notNeededReadme(pkg);
 		if (!dry) {
-			await client.deprecate(name, message);
+			await client.deprecate(name, version, message);
 		}
 	}
 

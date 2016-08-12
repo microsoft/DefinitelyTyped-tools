@@ -41,6 +41,11 @@ export interface AnyPackage {
 
 export interface NotNeededPackage extends AnyPackage {
 	packageKind: "not-needed";
+	/**
+	 * If this is available, @types typings are deprecated as of this version.
+	 * This is useful for packages that previously had DefinitelyTyped definitions but which now provide their own.
+	 */
+	asOfVersion?: string;
 }
 
 export interface TypesDataFile {
@@ -190,8 +195,15 @@ export async function readTypings(): Promise<TypingsData[]> {
 export async function readNotNeededPackages(): Promise<NotNeededPackage[]> {
 	const raw: any[] = (await readJson(notNeededPackagesPath)).packages;
 	for (const pkg of raw) {
+		for (const key in pkg) {
+			if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
+				throw new Error(`Unexpected key in not-needed package: ${key}`);
+			}
+		}
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
+		assert(typeof pkg.asOfVersion === "string" || typeof pkg.asOfVersion === "undefined");
 		assert(!pkg.projectName && !pkg.packageKind && !pkg.globals && !pkg.declaredModules);
+
 		pkg.projectName = pkg.sourceRepoURL;
 		pkg.packageKind = "not-needed";
 		pkg.globals = [];

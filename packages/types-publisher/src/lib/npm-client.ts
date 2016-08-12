@@ -62,9 +62,10 @@ export default class NpmClient {
 		return promisifyVoid(cb => this.client.tag(packageUrl(packageName), params, cb));
 	}
 
-	deprecate(packageName: string, message: string): Promise<void> {
+	deprecate(packageName: string, version: string, message: string): Promise<void> {
 		const params = {
 			message,
+			version,
 			auth: this.auth,
 		};
 		return promisifyVoid(cb => this.client.deprecate(packageUrl(packageName), params, cb));

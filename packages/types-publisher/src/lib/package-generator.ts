@@ -161,10 +161,10 @@ function versionString(typing: TypingsData, version: number): string {
 	return versionString;
 }
 
-function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage): string {
+function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL, asOfVersion}: NotNeededPackage): string {
 	return JSON.stringify({
 		name: fullPackageName(typingsPackageName),
-		version: "0.0.0",
+		version: asOfVersion || "0.0.0",
 		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 		main: "",
 		scripts: {},

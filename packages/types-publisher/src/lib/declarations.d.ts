@@ -32,6 +32,7 @@ declare module "npm-registry-client" {
 			auth: Credentials;
 		}
 		interface DeprecateParams {
+			version: string;
 			message: string;
 			auth: Credentials;
 		}
