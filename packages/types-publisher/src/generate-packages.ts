@@ -1,5 +1,6 @@
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, NotNeededPackage, readNotNeededPackages, readTypesDataFile, TypesDataFile, TypingsData, typingsFromData, writeLog } from "./lib/common";
+import { AnyPackage, existsTypesDataFileSync, NotNeededPackage, readNotNeededPackages, readTypesDataFile, TypesDataFile, TypingsData, typingsFromData } from "./lib/common";
+import { Log, logger, moveLogs, writeLog } from "./lib/logging";
 import { done, nAtATime } from "./lib/util";
 import * as generator from "./lib/package-generator";
 import Versions from "./lib/versions";
@@ -16,7 +17,8 @@ if (!module.parent) {
 }
 
 export default async function main(): Promise<void> {
-	const log: string[] = [];
+	const [log, logResult] = logger();
+	log("\n## Generating packages\n");
 	const { typeData, typings, notNeededPackages, versions } = await loadPrerequisites();
 
 	await nAtATime(10, typings, async typing =>
@@ -25,18 +27,18 @@ export default async function main(): Promise<void> {
 	await nAtATime(10, notNeededPackages, async pkg =>
 		logGeneration(pkg, await generator.generateNotNeededPackage(pkg)));
 
-	await writeLog("package-generator.md", log);
+	await writeLog("package-generator.md", logResult());
 
-	async function logGeneration(pkg: AnyPackage, generateResult: { log: string[] }) {
-		log.push(` * ${pkg.libraryName}`);
-		generateResult.log.forEach(line => log.push(`   * ${line}`));
+	async function logGeneration(pkg: AnyPackage, logs: Log) {
+		log(` * ${pkg.libraryName}`);
+		moveLogs(log, logs, line => `   * ${line}`);
 	}
 }
 
 async function single(singleName: string): Promise<void> {
 	const { typeData, typings, notNeededPackages, versions } = await loadPrerequisites();
 
-	let generateResult: { log: string[] };
+	let generateResult: string[];
 	const typing = typings.find(t => t.typingsPackageName === singleName);
 	if (typing) {
 		generateResult = await generator.generatePackage(typing, typeData, versions);
@@ -49,7 +51,7 @@ async function single(singleName: string): Promise<void> {
 		generateResult = await generator.generateNotNeededPackage(notNeededPackage);
 	}
 
-	console.log(generateResult.log.join("\n"));
+	console.log(generateResult.join("\n"));
 }
 
 async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, typings: TypingsData[], notNeededPackages: NotNeededPackage[], versions: Versions }> {

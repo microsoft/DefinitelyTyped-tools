@@ -2,7 +2,7 @@ import assert = require("assert");
 import * as fsp from "fs-promise";
 import * as path from "path";
 import * as container from "./azure-container";
-import { Logger, ArrayLog, logPath, writeLog } from "./common";
+import { Logger, logger, logPath, writeLog } from "./logging";
 import { unique } from "./util";
 
 const maxNumberOfOldLogsDirectories = 5;
@@ -17,17 +17,15 @@ export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Prom
 // View uploaded files at:
 // https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher
 async function uploadBlobs(timeStamp: string): Promise<[string[], string[]]> {
-	const logger = new ArrayLog();
+	const [log, logResult] = logger();
 	const [dataUrls, logUrls] = await Promise.all([
-		await uploadDirectory("data", "data", logger),
-		await uploadLogs(timeStamp, logger)
+		await uploadDirectory("data", "data", log),
+		await uploadLogs(timeStamp, log)
 	]);
 
 	// Finally, output blob logs and upload them.
 	const blobLogs = "upload-blobs.md";
-	const {infos, errors} = logger.result();
-	assert(!errors.length);
-	await writeLog(blobLogs, infos);
+	await writeLog(blobLogs, logResult());
 	logUrls.push(await uploadFile(logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
 
 	return [dataUrls, logUrls];
@@ -59,7 +57,7 @@ async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Lo
 
 async function logAndUploadFile(blobName: string, filePath: string, log: Logger): Promise<string> {
 	const url = container.urlOfBlob(blobName);
-	log.info(`Uploading ${filePath} to ${url}`);
+	log(`Uploading ${filePath} to ${url}`);
 	await container.createBlobFromFile(blobName, filePath);
 	return url;
 }
@@ -72,7 +70,7 @@ async function uploadFile(blobName: string, filePath: string): Promise<string> {
 async function deleteDirectory(uploadedDirPath: string, log: Logger): Promise<void> {
 	const blobs = await container.listBlobs(uploadedDirPath);
 	const blobNames = blobs.map(b => b.name);
-	log.info(`Deleting directory ${uploadedDirPath}: delete files ${blobNames}`);
+	log(`Deleting directory ${uploadedDirPath}: delete files ${blobNames}`);
 	await Promise.all(blobNames.map(b => container.deleteBlob(b)));
 }
 
@@ -85,7 +83,7 @@ async function removeOldDirectories(prefix: string, maxDirectories: number, log:
 	}));
 
 	if (dirNames.length <= maxDirectories) {
-		log.info(`No need to remove old directories: have ${dirNames.length}, can go up to ${maxDirectories}.`);
+		log(`No need to remove old directories: have ${dirNames.length}, can go up to ${maxDirectories}.`);
 		return;
 	}
 
@@ -93,7 +91,7 @@ async function removeOldDirectories(prefix: string, maxDirectories: number, log:
 	const sortedNames = dirNames.sort();
 	const toDelete = sortedNames.slice(0, sortedNames.length - maxDirectories);
 
-	log.info(`Too many old logs, so removing the following directories: [${toDelete}]`);
+	log(`Too many old logs, so removing the following directories: [${toDelete}]`);
 	await Promise.all(toDelete.map(d => deleteDirectory(prefix + d, log)));
 }
 

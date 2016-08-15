@@ -1,6 +1,7 @@
 import * as parser from "./lib/definition-parser";
 import * as yargs from "yargs";
-import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeLog, writeDataFile, typesDataFilename } from "./lib/common";
+import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeDataFile, typesDataFilename } from "./lib/common";
+import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./lib/logging";
 import { done, filterAsyncOrdered } from "./lib/util";
 
 import fsp = require("fs-promise");
@@ -10,12 +11,12 @@ if (!module.parent) {
 	done((singleName ? single(singleName) : main()));
 }
 
-async function processDir(name: string): Promise<{ data: TypingsData, log: string[], warnings: string[], outcome: string }> {
+async function processDir(name: string): Promise<{ data: TypingsData, logs: LogWithErrors, outcome: string }> {
 	let data: TypingsData;
 	let outcome: string;
 
 	const info = await parser.getTypingInfo(name);
-	const log = info.log;
+	const logs = info.logs;
 	if (isSuccess(info)) {
 		data = info.data;
 		outcome = `Succeeded (${info.data.kind})`;
@@ -25,7 +26,7 @@ async function processDir(name: string): Promise<{ data: TypingsData, log: strin
 		outcome =  `Failed (${RejectionReason[info.rejectionReason]})`;
 	}
 
-	return { data, log, warnings: info.warnings, outcome: outcome };
+	return { data, logs, outcome: outcome };
 }
 
 async function filterPaths(paths: string[]): Promise<string[]> {
@@ -39,21 +40,21 @@ async function filterPaths(paths: string[]): Promise<string[]> {
 }
 
 export default async function main(): Promise<void> {
-	const summaryLog: string[] = [];
-	const detailedLog: string[] = [];
+	const [summaryLog, summaryLogResult] = logger();
+	const [detailedLog, detailedLogResult] = quietLogger();
 
-	summaryLog.push("# Typing Publish Report Summary");
-	summaryLog.push(`Started at ${(new Date()).toUTCString()}`);
+	summaryLog("# Typing Publish Report Summary");
+	summaryLog(`Started at ${(new Date()).toUTCString()}`);
 
 	// TypesData
 	const paths = await fsp.readdir(settings.definitelyTypedPath);
 
 	const folders = await filterPaths(paths);
 
-	summaryLog.push(`Found ${folders.length} typings folders in ${settings.definitelyTypedPath}`);
+	summaryLog(`Found ${folders.length} typings folders in ${settings.definitelyTypedPath}`);
 
 	const outcomes: { [name: string]: number} = {};
-	const warningLog: string[] = [];
+	const [warningLog, warningLogResult] = logger();
 	const typings: { [name: string]: TypingsData } = {};
 
 	for (const s of folders) {
@@ -62,14 +63,14 @@ export default async function main(): Promise<void> {
 		// Record outcome
 		outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
 
-		detailedLog.push(`# ${s}`);
+		detailedLog(`# ${s}`);
 
 		// Push warnings
-		if (result.warnings.length > 0) {
-			warningLog.push(` * ${s}`);
-			result.warnings.forEach(w => {
-				warningLog.push(`   * ${w}`);
-				detailedLog.push(`**Warning**: ${w}`);
+		if (result.logs.errors.length > 0) {
+			warningLog(` * ${s}`);
+			result.logs.errors.forEach(w => {
+				warningLog(`   * ${w}`);
+				detailedLog(`**Warning**: ${w}`);
 			});
 		}
 
@@ -78,25 +79,25 @@ export default async function main(): Promise<void> {
 		}
 
 		// Flush detailed log
-		result.log.forEach(e => detailedLog.push(e));
+		result.logs.infos.forEach(e => detailedLog(e));
 	}
 
-	summaryLog.push("\r\n### Overall Results\r\n");
+	summaryLog("\r\n### Overall Results\r\n");
 
-	summaryLog.push(" * Pass / fail");
+	summaryLog(" * Pass / fail");
 
 	const outcomeKeys = Object.keys(outcomes);
 	outcomeKeys.sort();
 	outcomeKeys.forEach(k => {
-		summaryLog.push(`   * ${k}: ${outcomes[k]}`);
+		summaryLog(`   * ${k}: ${outcomes[k]}`);
 	});
 
-	summaryLog.push("\r\n### Warnings\r\n");
-	warningLog.forEach(w => summaryLog.push(w));
+	summaryLog("\r\n### Warnings\r\n");
+	moveLogs(summaryLog, warningLogResult());
 
 	await Promise.all([
-		writeLog("parser-log-summary.md", summaryLog),
-		writeLog("parser-log-details.md", detailedLog),
+		writeLog("parser-log-summary.md", summaryLogResult()),
+		writeLog("parser-log-details.md", detailedLogResult()),
 		writeDataFile(typesDataFilename, typings)
 	]);
 }

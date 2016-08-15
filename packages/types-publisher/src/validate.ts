@@ -3,7 +3,8 @@ import * as path from "path";
 import * as child_process from "child_process";
 import * as yargs from "yargs";
 import { nAtATime, writeFile, writeJson } from "./lib/util";
-import { Logger, ArrayLog, existsTypesDataFileSync, settings, writeLog, readTypings } from "./lib/common";
+import { existsTypesDataFileSync, settings, readTypings } from "./lib/common";
+import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./lib/logging";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
@@ -15,19 +16,19 @@ if (!module.parent) {
 }
 
 export default async function main(packageNames?: string[]) {
-	const log = new ArrayLog();
+	const [log, logResult] = loggerWithErrors();
 
 	if (!packageNames || !packageNames.length) {
-		console.info("Validating all packages");
+		log.info("Validating all packages");
 		packageNames = (await readTypings()).map(t => t.typingsPackageName).sort();
 	}
 	else {
-		console.info("Validating: " + JSON.stringify(packageNames));
+		log.info("Validating: " + JSON.stringify(packageNames));
 	}
 
 	await validatePackages(packageNames, settings.validateOutputPath, log);
 
-	const {infos, errors} = log.result();
+	const {infos, errors} = logResult();
 
 	await Promise.all([
 		writeLog("validate.md", infos),
@@ -35,7 +36,7 @@ export default async function main(packageNames?: string[]) {
 	]);
 }
 
-async function validatePackages(packageNames: string[], outPath: string, log: Logger) {
+async function validatePackages(packageNames: string[], outPath: string, log: LoggerWithErrors) {
 	log.info("");
 	log.info("Using output path: " + outPath);
 	log.info("Running tests....");
@@ -72,8 +73,8 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	log.info(`These packages failed: ${failed}`);
 }
 
-async function validatePackage(packageName: string, outputDirecory: string, mainLog: Logger) {
-	const log = new ArrayLog();
+async function validatePackage(packageName: string, outputDirecory: string, mainLog: LoggerWithErrors) {
+	const [log, logResult] = quietLoggerWithErrors();
 	let passed = false;
 	try {
 		const packageDirectory = path.join(outputDirecory, packageName);
@@ -94,20 +95,10 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 	}
 
 	// Write the log as one entry to the main log
-	mergeLogs(mainLog, log);
+	moveLogsWithErrors(mainLog, logResult());
 
 	console.info(`${packageName} -- ${passed ? "Passed" : "Failed"}.`);
 	return passed;
-}
-
-function mergeLogs(log1: Logger, log2: ArrayLog) {
-	const {infos, errors} = log2.result();
-	for (const info of infos) {
-		log1.info(info);
-	}
-	for (const error of errors) {
-		log1.error(error);
-	}
 }
 
 async function writePackage(packageDirectory: string, packageName: string) {
@@ -139,7 +130,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 }
 
 // Returns whether the command succeeded.
-function runCommand(commandDescription: string, log: Logger, directory: string, ...args: string[]): Promise<boolean> {
+function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, ...args: string[]): Promise<boolean> {
 	const cmd = args.join(" ");
 	log.info(`Run ${cmd}`);
 	return new Promise<boolean>((resolve, reject) => {

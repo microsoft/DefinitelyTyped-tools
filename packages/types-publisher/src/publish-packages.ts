@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, LogResult, readAllPackages, writeLog } from "./lib/common";
+import { AnyPackage, existsTypesDataFileSync, readAllPackages } from "./lib/common";
+import { LogWithErrors, logger, writeLog } from "./lib/logging";
 import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
 import { done, nAtATime } from "./lib/util";
@@ -16,7 +17,7 @@ if (!module.parent) {
 		const shouldUnpublish = !!yargs.argv.unpublish;
 
 		if (singleName && shouldUnpublish) {
-			throw new Error("Select only one --single=foo or --shouldUnpublish");
+			throw new Error("Selet only one --single=foo or --shouldUnpublish");
 		}
 
 		done(go());
@@ -39,15 +40,14 @@ if (!module.parent) {
 }
 
 export default async function main(client: NpmClient, dry: boolean): Promise<void> {
-	const log: string[] = [];
+	const [log, logResult] = logger();
 	if (dry) {
-		console.log("=== DRY RUN ===");
-		log.push("=== DRY RUN ===");
+		log("=== DRY RUN ===");
 	}
 
 	const packagesShouldPublish: AnyPackage[] = [];
 
-	log.push("Checking which packages we should publish");
+	log("Checking which packages we should publish");
 	await nAtATime(100, await readAllPackages(), async pkg => {
 		const [shouldPublish, checkLog] = await publisher.shouldPublish(pkg);
 
@@ -55,7 +55,7 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 			packagesShouldPublish.push(pkg);
 		}
 
-		log.push(`Checking ${pkg.libraryName}...`);
+		log(`Checking ${pkg.libraryName}...`);
 		writeLogs(checkLog);
 	});
 
@@ -64,20 +64,19 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.libraryName}...`);
 		const publishLog = await publisher.publishPackage(client, pkg, dry);
-		writeLogs(publishLog);
+		writeLogs({ infos: publishLog, errors: [] });
 	}
 
-	function writeLogs(res: LogResult): void {
+	function writeLogs(res: LogWithErrors): void {
 		for (const line of res.infos) {
-			log.push(`   * ${line}`);
+			log(`   * ${line}`);
 		}
 		for (const err of res.errors) {
-			log.push(`   * ERROR: ${err}`);
-			console.error(` Error! ${err}`);
+			log(`   * ERROR: ${err}`);
 		}
 	}
 
-	await writeLog("publishing.md", log);
+	await writeLog("publishing.md", logResult());
 	console.log("Done!");
 }
 

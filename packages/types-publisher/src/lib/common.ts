@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "fs";
 import * as fsp from "fs-promise";
 import crypto = require("crypto");
 import { install } from "source-map-support";
+import { LogWithErrors } from "./logging";
 import { parseJson, readJson, writeFile } from "./util";
 install();
 if (process.env["LONGJOHN"]) {
@@ -94,54 +95,12 @@ export enum RejectionReason {
 
 export interface TypingParseFailResult {
 	rejectionReason: RejectionReason;
-	log: string[];
-	warnings: string[];
+	logs: LogWithErrors;
 }
 
 export interface TypingParseSucceedResult {
 	data: TypingsData;
-	log: string[];
-	warnings: string[];
-}
-
-export interface Logger {
-	info(message: string): void;
-	error(message: string): void;
-}
-
-export const consoleLogger: Logger = { info: console.log, error: console.error };
-
-export interface LogResult {
-	infos: string[];
-	errors: string[];
-}
-
-export class ArrayLog implements Logger {
-	private infos: string[];
-	private errors: string[];
-
-	constructor(public alsoOutput = false) {
-		this.infos = [];
-		this.errors = [];
-	}
-
-	info(message: string): void {
-		if (this.alsoOutput) {
-			console.log(message);
-		}
-		this.infos.push(message);
-	}
-
-	error(message: string): void {
-		if (this.alsoOutput) {
-			console.error(message);
-		}
-		this.errors.push(message);
-	}
-
-	result(): LogResult {
-		return { infos: this.infos, errors: this.errors };
-	}
+	logs: LogWithErrors;
 }
 
 export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
@@ -154,17 +113,6 @@ export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): 
 
 export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseFailResult {
 	return (t as TypingParseFailResult).rejectionReason !== undefined;
-}
-
-const logDir = path.join(home, "logs");
-
-export function logPath(logName: string) {
-	return path.join(logDir, logName);
-}
-
-export async function writeLog(logName: string, contents: string[]): Promise<void> {
-	await fsp.ensureDir(logDir);
-	await writeFile(logPath(logName), contents.join("\r\n"));
 }
 
 export async function writeDataFile(filename: string, content: {}, formatted = true) {

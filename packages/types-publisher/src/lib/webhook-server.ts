@@ -3,7 +3,8 @@ import { createHmac } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import full from "../full";
 import RollingLogs from "./rolling-logs";
-import { ArrayLog, settings } from "./common";
+import { settings } from "./common";
+import { LoggerWithErrors, LogWithErrors, joinLogWithErrors, loggerWithErrors } from "./logging";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
 import { currentTimeStamp, parseJson, stringOfStream } from "./util";
@@ -21,9 +22,8 @@ export default async function server(key: string, githubAccessToken: string, dry
 	}));
 }
 
-function writeLog(log: ArrayLog): Promise<void> {
-	const { infos, errors } = log.result();
-	return rollingLogs.write(infos.concat(errors));
+function writeLog(logs: LogWithErrors): Promise<void> {
+	return rollingLogs.write(joinLogWithErrors(logs));
 }
 
 function webResult(dry: boolean, timeStamp: string): string {
@@ -47,7 +47,7 @@ function webResult(dry: boolean, timeStamp: string): string {
 }
 
 /** @param onUpdate: returns a promise in case it may error. Server will shut down on errors. */
-function listenToGithub(key: string, githubAccessToken: string, dry: boolean, onUpdate: (log: ArrayLog, timeStamp: string) => Promise<void> | undefined): Server {
+function listenToGithub(key: string, githubAccessToken: string, dry: boolean, onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined): Server {
 	const webText = webResult(dry, currentTimeStamp());
 	const server = createServer((req, resp) => {
 		switch (req.method) {
@@ -65,12 +65,12 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 	return server;
 
 	function receiveUpdate(req: IncomingMessage, resp: ServerResponse): void {
-		const log = new ArrayLog(true);
+		const [log, logResult] = loggerWithErrors();
 		const timeStamp = currentTimeStamp();
 		try {
-			work().then(() => writeLog(log)).catch(onError);
+			work().then(() => writeLog(logResult())).catch(onError);
 		} catch (error) {
-			writeLog(log).then(() => onError(error)).catch(onError);
+			writeLog(logResult()).then(() => onError(error)).catch(onError);
 		}
 
 		function onError(error: Error): void {
@@ -113,7 +113,7 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 }
 
 // Even if there are many changes to DefinitelyTyped in a row, we only perform one update at a time.
-function updateOneAtATime(doOnce: (log: ArrayLog, timeStamp: string) => Promise<void>): (log: ArrayLog, timeStamp: string) => Promise<void> | undefined {
+function updateOneAtATime(doOnce: (log: LoggerWithErrors, timeStamp: string) => Promise<void>): (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined {
 	let working = false;
 	let anyUpdatesWhileWorking = false;
 
@@ -141,7 +141,7 @@ function updateOneAtATime(doOnce: (log: ArrayLog, timeStamp: string) => Promise<
 	};
 }
 
-function checkSignature(key: string, data: string, headers: any, log: ArrayLog): boolean {
+function checkSignature(key: string, data: string, headers: any, log: LoggerWithErrors): boolean {
 	const signature = headers["x-hub-signature"];
 	const expected = expectedSignature(key, data);
 	if (stringEqualsConstantTime(signature, expected)) {

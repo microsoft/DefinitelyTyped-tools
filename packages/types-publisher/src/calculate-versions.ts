@@ -13,10 +13,12 @@ if (!module.parent) {
 }
 
 export default async function main(forceUpdate: boolean): Promise<void> {
+	console.log("\n## Calculating versions\n");
 	const versions = await Versions.loadFromBlob();
 	const changes: Changes = [];
 	for (const typing of await readTypings()) {
 		if (versions.recordUpdate(typing, forceUpdate)) {
+			console.log(`Changed: ${typing.typingsPackageName}`);
 			changes.push(typing.typingsPackageName);
 		}
 	}
