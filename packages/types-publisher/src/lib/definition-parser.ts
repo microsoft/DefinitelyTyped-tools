@@ -242,9 +242,10 @@ function imports(src: ts.SourceFile): string[] {
 
 	for (const node of src.statements) {
 		switch (node.kind) {
-			case ts.SyntaxKind.ImportDeclaration: {
-				const decl = node as ts.ImportDeclaration;
-				if (decl.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
+			case ts.SyntaxKind.ImportDeclaration:
+			case ts.SyntaxKind.ExportDeclaration: {
+				const decl = node as ts.ImportDeclaration | ts.ExportDeclaration;
+				if (decl.moduleSpecifier && decl.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
 					out.push(stripQuotes(decl.moduleSpecifier.getText()));
 				}
 				break;
