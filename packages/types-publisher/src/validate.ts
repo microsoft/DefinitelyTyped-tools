@@ -44,7 +44,7 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	const failed: string[] = [];
 	const passed: string[] = [];
 	try {
-		fsp.remove(outPath);
+		await fsp.remove(outPath);
 		await fsp.mkdirp(outPath);
 	}
 	catch (e) {
