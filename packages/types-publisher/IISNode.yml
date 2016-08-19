@@ -1,2 +1,5 @@
+# For all options see https://github.com/tjanczuk/iisnode/blob/master/src/samples/configuration/iisnode.yml
 loggingEnabled: true
 devErrorsEnabled: false
+maxLogFileSizeInKB: 2048
+maxTotalLogFileSizeInKB: 16384
