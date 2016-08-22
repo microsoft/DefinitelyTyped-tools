@@ -82,8 +82,8 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 		log.info("Processing `" + packageName + "`...");
 		await fsp.mkdirp(packageDirectory);
 		await writePackage(packageDirectory, packageName);
-		if (await runCommand("npm", log, packageDirectory, "npm install") &&
-			await runCommand("tsc", log, packageDirectory, "tsc")) {
+		if (await runCommand("npm", log, packageDirectory, "../../node_modules/npm/bin/npm-cli.js", "install") &&
+			await runCommand("tsc", log, packageDirectory, "../../node_modules/typescript/lib/tsc.js")) {
 			await fsp.remove(packageDirectory);
 			log.info("Passed.");
 			passed = true;
@@ -130,11 +130,11 @@ async function writePackage(packageDirectory: string, packageName: string) {
 }
 
 // Returns whether the command succeeded.
-function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, ...args: string[]): Promise<boolean> {
-	const cmd = args.join(" ");
-	log.info(`Run ${cmd}`);
+function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, cmd: string, ...args: string[]): Promise<boolean> {
+	const nodeCmd = `node ${cmd} ${args.join(" ")}`;
+	log.info(`Run ${nodeCmd}`);
 	return new Promise<boolean>((resolve, reject) => {
-		child_process.exec(cmd, { encoding: "utf8", cwd: directory }, (err, stdoutBuffer, stderrBuffer) => {
+		child_process.exec(nodeCmd, { encoding: "utf8", cwd: directory }, (err, stdoutBuffer, stderrBuffer) => {
 			// These are wrongly typed as Buffer.
 			const stdout = <string> <any> stdoutBuffer;
 			const stderr = <string> <any> stderrBuffer;

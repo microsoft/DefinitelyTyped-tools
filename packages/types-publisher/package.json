@@ -12,6 +12,7 @@
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
     "nodegit": "^0.15.1",
+    "npm": "^3.10.7",
     "npm-registry-client": "^7.1.2",
     "recursive-readdir": "^2.0.0",
     "source-map-support": "^0.4.0",
