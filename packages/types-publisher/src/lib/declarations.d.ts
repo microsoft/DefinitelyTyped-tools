@@ -236,3 +236,23 @@ declare module "azure-storage" {
 		continuationToken?: ContinuationToken;
 	}
 }
+
+// Based on http://www.nodegit.org/api/
+declare module "nodegit" {
+	export function Clone(url: string, local_path: string): Promise<Repository>;
+
+	export namespace Repository {
+		export function open(path: string): Repository;
+	}
+
+	export interface Repository {
+		checkoutBranch(branch: string): Promise<void>;
+		fetchAll(): Promise<void>;
+		mergeBranches(to: string, from: string): Promise<void>;
+		getStatus(): Promise<StatusFile[]>;
+	}
+
+	export interface StatusFile {
+		path(): string;
+	}
+}
