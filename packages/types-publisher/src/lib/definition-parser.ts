@@ -107,7 +107,6 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 		mi.declaredModules.push(folderName);
 	}
 
-	//TODO: don't need defaultValue
 	function regexMatch<T>(rx: RegExp, defaultValue: string): string {
 		const match = rx.exec(entryPointContent);
 		return match ? match[1] : defaultValue;

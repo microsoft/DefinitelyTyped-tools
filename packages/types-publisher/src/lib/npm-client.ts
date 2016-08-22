@@ -1,10 +1,11 @@
 import assert = require("assert");
 import { Reader } from "fstream";
 import RegClient = require("npm-registry-client");
+import * as path from "path";
 import { Pack } from "tar";
 import * as url from "url";
 import { settings } from "./common";
-import { gzip } from "./util";
+import { gzip, readFile } from "./util";
 
 const registry = settings.npmRegistry;
 assert(registry.endsWith("/"));
@@ -26,14 +27,17 @@ export default class NpmClient {
 
 	private constructor(private client: RegClient, private auth: RegClient.Credentials) {}
 
-	publish(publishedDirectory: string, packageJson: {}, dry: boolean): Promise<void> {
+	async publish(publishedDirectory: string, packageJson: {}, dry: boolean): Promise<void> {
+		const readme = await readFile(path.join(publishedDirectory, "README.md"));
+
 		return new Promise<void>((resolve, reject) => {
 			const body = createTgz(publishedDirectory, reject);
+			const metadata = Object.assign({ readme }, packageJson);
 
 			const params = {
 				access: <"public"> "public",
 				auth: this.auth,
-				metadata: packageJson,
+				metadata,
 				body
 			};
 
