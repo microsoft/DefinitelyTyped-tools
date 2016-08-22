@@ -166,6 +166,7 @@ function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepo
 	return JSON.stringify({
 		name: fullPackageName(typingsPackageName),
 		version: asOfVersion || "0.0.0",
+		typings: null,
 		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 		main: "",
 		scripts: {},
