@@ -1,6 +1,6 @@
 import * as parser from "./lib/definition-parser";
 import * as yargs from "yargs";
-import { TypingsData, RejectionReason, settings, definitelyTypedPath, isSuccess, isFail, writeDataFile, typesDataFilename } from "./lib/common";
+import { TypingsData, RejectionReason, settings, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
 import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./lib/logging";
 import { done, filterAsyncOrdered } from "./lib/util";
 
@@ -11,22 +11,22 @@ if (!module.parent) {
 	done((singleName ? single(singleName) : main()));
 }
 
-async function processDir(name: string): Promise<{ data: TypingsData, logs: LogWithErrors, outcome: string }> {
-	let data: TypingsData;
+async function processDir(name: string): Promise<{ data: TypingsData | undefined, logs: LogWithErrors, outcome: string }> {
+	let data: TypingsData | undefined;
 	let outcome: string;
 
 	const info = await parser.getTypingInfo(name);
 	const logs = info.logs;
-	if (isSuccess(info)) {
+
+	if (info.kind === "success") {
 		data = info.data;
 		outcome = `Succeeded (${info.data.kind})`;
-
-	} else if (isFail(info)) {
+	} else {
 		data = undefined;
-		outcome =  `Failed (${RejectionReason[info.rejectionReason]})`;
+		outcome = `Failed (${RejectionReason[info.rejectionReason]})`;
 	}
 
-	return { data, logs, outcome: outcome };
+	return { data, logs, outcome };
 }
 
 async function filterPaths(paths: string[]): Promise<string[]> {

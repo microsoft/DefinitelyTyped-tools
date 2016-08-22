@@ -43,7 +43,7 @@ async function single(singleName: string): Promise<void> {
 	if (typing) {
 		generateResult = await generator.generatePackage(typing, typeData, versions);
 	}
-	if (!typing) {
+	else {
 		const notNeededPackage = notNeededPackages.find(t => t.typingsPackageName === singleName);
 		if (!notNeededPackage) {
 			throw new Error(`No package ${singleName} to generate.`);

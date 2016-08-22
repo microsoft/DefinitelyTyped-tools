@@ -4,7 +4,6 @@ import { existsSync, readFileSync } from "fs";
 import * as fsp from "fs-promise";
 import crypto = require("crypto");
 import { install } from "source-map-support";
-import { LogWithErrors } from "./logging";
 import { parseJson, readJson, writeFile } from "./util";
 install();
 if (process.env["LONGJOHN"]) {
@@ -31,13 +30,13 @@ export interface AnyPackage {
 	sourceRepoURL: string;
 
 	// Optionally-present name or URL of the project, e.g. "http://cordova.apache.org"
-	projectName: string | undefined;
+	projectName: string;
 
 	// Names introduced into the global scope by this definition set
-	globals: string[] | undefined;
+	globals: string[];
 
 	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
-	declaredModules: string[] | undefined;
+	declaredModules: string[];
 }
 
 export interface NotNeededPackage extends AnyPackage {
@@ -93,26 +92,8 @@ export enum RejectionReason {
 	ReferencePaths
 }
 
-export interface TypingParseFailResult {
-	rejectionReason: RejectionReason;
-	logs: LogWithErrors;
-}
-
-export interface TypingParseSucceedResult {
-	data: TypingsData;
-	logs: LogWithErrors;
-}
-
 export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
 	return pkg.packageKind === "not-needed";
-}
-
-export function isSuccess(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseSucceedResult {
-	return (t as TypingParseSucceedResult).data !== undefined;
-}
-
-export function isFail(t: TypingParseSucceedResult | TypingParseFailResult): t is TypingParseFailResult {
-	return (t as TypingParseFailResult).rejectionReason !== undefined;
 }
 
 export async function writeDataFile(filename: string, content: {}, formatted = true) {

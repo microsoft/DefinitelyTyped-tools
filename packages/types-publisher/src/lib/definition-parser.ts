@@ -2,9 +2,21 @@ import * as ts from "typescript";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
-import { RejectionReason, TypingParseSucceedResult, TypingParseFailResult, computeHash, definitelyTypedPath, settings } from "./common";
-import { Logger, quietLoggerWithErrors } from "./logging";
+import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
+import { Logger, LogWithErrors, quietLoggerWithErrors } from "./logging";
 import { mapAsyncOrdered, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
+
+export interface TypingParseFailResult {
+	kind: "fail";
+	rejectionReason: RejectionReason;
+	logs: LogWithErrors;
+}
+
+export interface TypingParseSucceedResult {
+	kind: "success";
+	data: TypingsData;
+	logs: LogWithErrors;
+}
 
 enum DefinitionFileKind {
 	// Dunno
@@ -37,6 +49,9 @@ enum DeclarationFlags {
 
 function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	let result = DeclarationFlags.None;
+	if (!ns.body) {
+		throw new Error("@types should not use shorthand ambient modules");
+	}
 	if (ns.body.kind === ts.SyntaxKind.ModuleDeclaration) {
 		return getNamespaceFlags(ns.body as ts.ModuleDeclaration);
 	}
@@ -76,7 +91,7 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	if (entryPointResult.kind === "failure") {
 		log.info(entryPointResult.message);
 		log.error(entryPointResult.message);
-		return { logs: logResult(), rejectionReason: RejectionReason.TooManyFiles };
+		return { kind: "fail", logs: logResult(), rejectionReason: RejectionReason.TooManyFiles };
 	}
 	const entryPointFilename = entryPointResult.filename;
 	const entryPointContent = await readFile(directory, entryPointFilename);
@@ -92,7 +107,8 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 		mi.declaredModules.push(folderName);
 	}
 
-	function regexMatch(rx: RegExp, defaultValue: string): string {
+	//TODO: don't need defaultValue
+	function regexMatch<T>(rx: RegExp, defaultValue: string): string {
 		const match = rx.exec(entryPointContent);
 		return match ? match[1] : defaultValue;
 	}
@@ -117,6 +133,7 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	const allFiles = hasPackageJson ? mi.declFiles.concat(["package.json"]) : mi.declFiles;
 
 	return {
+		kind: "success",
 		logs: logResult(),
 		data: {
 			authors,
@@ -361,7 +378,7 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 						}
 						isProperModule = true;
 					} else {
-						const declName = (node as ts.DeclarationStatement).name.getText();
+						const declName = ((node as ts.DeclarationStatement).name as ts.Identifier).getText();
 						const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
 						log(`Found global ${isType ? "type" : "value"} declaration "${declName}"`);
 						recordSymbol(declName, isType ? DeclarationFlags.Type : DeclarationFlags.Value);

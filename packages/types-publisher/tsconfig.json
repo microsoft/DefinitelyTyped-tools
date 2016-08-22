@@ -1,41 +1,8 @@
 {
-	"files": [
-		"src/settings.d.ts",
-		"typings/tsd.d.ts",
-
-		"src/lib/declarations.d.ts",
-
-		"src/lib/definition-parser.ts",
-		"src/lib/package-generator.ts",
-		"src/lib/package-publisher.ts",
-		"src/lib/search-index-generator.ts",
-		"src/lib/blob-uploader.ts",
-		"src/lib/issue-updater.ts",
-		"src/lib/webhook-server.ts",
-		"src/lib/common.ts",
-		"src/lib/util.ts",
-		"src/lib/azure-container.ts",
-		"src/lib/rolling-logs.ts",
-		"src/lib/versions.ts",
-
-		"src/clean.ts",
-		"src/get-definitely-typed.ts",
-		"src/parse-definitions.ts",
-		"src/calculate-versions.ts",
-		"src/generate-packages.ts",
-		"src/publish-packages.ts",
-		"src/create-search-index.ts",
-		"src/check-parse-results.ts",
-		"src/upload-blobs.ts",
-		"src/full.ts",
-		"src/webhook.ts",
-		"src/validate.ts",
-		"src/make-server-run.ts"
-	],
-
 	"compilerOptions": {
 		"module": "commonjs",
 		"noImplicitAny": true,
+		"strictNullChecks": true,
 		"outDir": "bin",
 		"sourceMap": true,
 		"target": "ES6"

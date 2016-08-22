@@ -95,8 +95,7 @@ export async function shouldPublish(pkg: AnyPackage): Promise<[boolean, LogWithE
 	}
 }
 
-// Returns whether the command succeeded.
-function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: string[]): Promise<boolean> {
+function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: string[]): Promise<void> {
 	const cmd = args.join(" ");
 	log.info(`Run ${cmd}`);
 	if (!dry) {
@@ -109,16 +108,16 @@ function runCommand(commandDescription: string, log: LoggerWithErrors, dry: bool
 					log.error(`${commandDescription} failed: ${JSON.stringify(err)}`);
 					log.info(`${commandDescription} failed, refer to error log`);
 					log.error(stderr);
-					resolve(false);
 				}
 				else {
 					log.info("Ran successfully");
 					log.info(stdout);
-					resolve(true);
 				}
+				resolve();
 			});
 		});
 	} else {
 		log.info("(dry run)");
+		return Promise.resolve();
 	}
 }

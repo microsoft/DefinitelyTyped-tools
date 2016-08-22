@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^4.0.29",
+    "@types/node-fetch": "0.0.2",
     "@types/recursive-readdir": "^1.2.27",
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",

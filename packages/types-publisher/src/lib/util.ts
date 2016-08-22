@@ -1,6 +1,7 @@
 import assert = require("assert");
 import fetch = require("node-fetch");
 import moment = require("moment");
+import * as path from "path";
 import recursiveReaddir = require("recursive-readdir");
 import { Stats } from "fs";
 import * as fsp from "fs-promise";
@@ -45,7 +46,7 @@ export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<
 
 export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: Stats) => boolean): Promise<string[]> {
 	function relativePath(file: string): string {
-		const prefix = `${dirPath}\\`;
+		const prefix = dirPath + path.sep;
 		assert(file.startsWith(prefix));
 		return file.slice(prefix.length);
 	}

@@ -18,7 +18,7 @@ export default async function main(): Promise<void> {
 	await writeLog("conflicts.md", logResult());
 }
 
-function check(infos: TypingsData[], func: (info: TypingsData) => string, key: string, log: Logger): void {
+function check(infos: TypingsData[], func: (info: TypingsData) => string | undefined, key: string, log: Logger): void {
 	const lookup: { [libName: string]: string[] } = {};
 	infos.forEach(info => {
 		const name = func(info);

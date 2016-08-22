@@ -78,13 +78,13 @@ export async function readJsonBlob(blobName: string): Promise<any> {
 }
 
 export async function listBlobs(prefix: string): Promise<BlobResult[]> {
-	const once = (token: ContinuationToken | null) =>
+	const once = (token: ContinuationToken | undefined) =>
 		promisifyErrorOrResult<ListBlobsResult>(cb => service.listBlobsSegmentedWithPrefix(name, prefix, token, cb));
 
 	const out: BlobResult[] = [];
-	let token: ContinuationToken | null = null;
+	let token: ContinuationToken | undefined = undefined;
 	do {
-		const {entries, continuationToken} = await once(token);
+		const {entries, continuationToken}: ListBlobsResult = await once(token);
 		out.push(...entries);
 		token = continuationToken;
 	} while (token);

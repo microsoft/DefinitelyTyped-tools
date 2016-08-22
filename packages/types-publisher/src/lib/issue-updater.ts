@@ -18,7 +18,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 		const url = `https://${settings.azureContainer}.blob.core.windows.net/${settings.azureContainer}/index.html`;
 		l(`Logs are available [here](${url}).`);
 		l("");
-		l(indent(error.stack));
+		l(indent(<string> error.stack));
 		return lines.join("\n");
 	}
 }

@@ -69,7 +69,7 @@ declare module "azure-storage" {
 	export interface BlobService {
 		createContainerIfNotExists(container: string, options: CreateContainerOptions, callback: ErrorOrResult<ContainerResult>): void;
 		createWriteStreamToBlockBlob(container: string, blob: string, options: CreateBlobRequestOptions): NodeJS.WritableStream;
-		listBlobsSegmentedWithPrefix(container: string, prefix: string, currentToken: ContinuationToken, callback: ErrorOrResult<ListBlobsResult>): void;
+		listBlobsSegmentedWithPrefix(container: string, prefix: string, currentToken: ContinuationToken | undefined, callback: ErrorOrResult<ListBlobsResult>): void;
 		deleteBlob(container: string, blob: string, callback: ErrorOrResponse): void;
 
 		createOrReplaceAppendBlob(container: string, blob: string, options: CreateBlobRequestOptions, callback: ErrorOrResponse): void;

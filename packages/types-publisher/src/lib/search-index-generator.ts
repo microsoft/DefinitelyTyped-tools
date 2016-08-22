@@ -15,7 +15,7 @@ export interface SearchRecord {
 	// downloads in the last month from NPM
 	d: number;
 	// redirect: In the case of a not-needed package, we link to their repository instead of the dummy @types package on npm.
-	r: string;
+	r: string | undefined;
 }
 
 export async function createSearchRecord(info: AnyPackage, skipDownloads: boolean): Promise<SearchRecord> {
