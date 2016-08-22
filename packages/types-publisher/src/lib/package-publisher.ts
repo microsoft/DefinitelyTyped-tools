@@ -25,9 +25,10 @@ export async function publishPackage(client: NpmClient, pkg: AnyPackage, dry: bo
 
 	if (isNotNeededPackage(pkg)) {
 		log(`Deprecating ${name}`);
-		const message = notNeededReadme(pkg);
+		// Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
+		const message = notNeededReadme(pkg, /*useNewline*/ false);
 		if (!dry) {
-			await client.deprecate(name, version, message);
+			await client.deprecate(fullPackageName(name), version, message);
 		}
 	}
 
