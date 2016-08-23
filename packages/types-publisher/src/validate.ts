@@ -133,7 +133,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, cmd: string, ...args: string[]): Promise<boolean> {
 	const nodeCmd = `node ${cmd} ${args.join(" ")}`;
 	log.info(`Run ${nodeCmd}`);
-	return new Promise<boolean>((resolve, reject) => {
+	return new Promise<boolean>(resolve => {
 		child_process.exec(nodeCmd, { encoding: "utf8", cwd: directory }, (err, stdoutBuffer, stderrBuffer) => {
 			// These are wrongly typed as Buffer.
 			const stdout = <string> <any> stdoutBuffer;

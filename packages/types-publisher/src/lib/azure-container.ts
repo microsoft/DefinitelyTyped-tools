@@ -102,7 +102,7 @@ export function urlOfBlob(blobName: string): string {
 
 function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Promise<A> {
 	return new Promise<A>((resolve, reject) => {
-		callsBack((err, result, response) => {
+		callsBack((err, result) => {
 			if (err) {
 				reject(err);
 			}
@@ -115,7 +115,7 @@ function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Pr
 
 function promisifyErrorOrResponse(callsBack: (x: ErrorOrResponse) => void): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
-		callsBack((err, response) => {
+		callsBack(err => {
 			if (err) {
 				reject(err);
 			}

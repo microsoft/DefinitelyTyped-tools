@@ -4,6 +4,8 @@
 		"module": "commonjs",
 		"noImplicitAny": true,
 		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
 		"outDir": "bin",
 		"sourceMap": true,
 		"target": "ES6"

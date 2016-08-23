@@ -107,7 +107,7 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 		mi.declaredModules.push(folderName);
 	}
 
-	function regexMatch<T>(rx: RegExp, defaultValue: string): string {
+	function regexMatch(rx: RegExp, defaultValue: string): string {
 		const match = rx.exec(entryPointContent);
 		return match ? match[1] : defaultValue;
 	}
@@ -211,7 +211,7 @@ async function allReferencedFiles(directory: string, entryPointFilename: string,
 		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
 		all.set(filename, src);
 
-		const refs = referencedFiles(src, directory, path.dirname(filename));
+		const refs = referencedFiles(src, path.dirname(filename));
 		await Promise.all(refs.map(ref => recur(filename, ref)));
 	}
 
@@ -223,7 +223,7 @@ async function allReferencedFiles(directory: string, entryPointFilename: string,
  * @param subDirectory The specific directory within the DefinitelyTyped directory we are in.
  * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  */
-function referencedFiles(src: ts.SourceFile, directory: string, subDirectory: string): string[] {
+function referencedFiles(src: ts.SourceFile, subDirectory: string): string[] {
 	const out: string[] = [];
 
 	for (const ref of src.referencedFiles) {
