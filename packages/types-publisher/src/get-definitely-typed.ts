@@ -1,5 +1,5 @@
 import * as fsp from "fs-promise";
-import { Clone, Repository } from "nodegit";
+import { Clone, Ignore, Repository } from "nodegit";
 import { settings } from "./lib/common";
 import { done } from "./lib/util";
 
@@ -31,8 +31,8 @@ async function pull(repo: Repository): Promise<void> {
 
 async function checkStatus(repo: Repository): Promise<void> {
 	const statuses = await repo.getStatus();
-	if (statuses.length) {
-		const changedFiles = statuses.map(s => s.path());
+	const changedFiles = statuses.map(s => s.path()).filter(path => !Ignore.pathIsIgnored(repo, path));
+	if (changedFiles.length) {
 		throw new Error(`The following files are dirty: ${changedFiles}`);
 	}
 }

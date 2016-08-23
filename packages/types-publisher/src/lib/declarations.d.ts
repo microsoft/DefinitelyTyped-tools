@@ -241,8 +241,12 @@ declare module "azure-storage" {
 declare module "nodegit" {
 	export function Clone(url: string, local_path: string): Promise<Repository>;
 
+	export namespace Ignore {
+		export function pathIsIgnored(repo: Repository, path: string): Promise<boolean>;
+	}
+
 	export namespace Repository {
-		export function open(path: string): Repository;
+		export function open(path: string): Promise<Repository>;
 	}
 
 	export interface Repository {
