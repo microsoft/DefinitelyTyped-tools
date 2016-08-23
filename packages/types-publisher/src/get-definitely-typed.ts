@@ -20,6 +20,7 @@ async function getRepo(): Promise<Repository> {
 	else {
 		const repo = await Clone(settings.sourceRepository, settings.definitelyTypedPath);
 		await repo.checkoutBranch(settings.sourceBranch);
+		return repo;
 	}
 }
 
