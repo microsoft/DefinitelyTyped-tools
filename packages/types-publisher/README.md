@@ -1,6 +1,11 @@
-TODO: Finish readme!
+# About
 
-# Quick Recap
+This is the source code for the types-publisher service, which publishes the contents of (DefinitelyTyped)[https://github.com/DefinitelyTyped/DefinitelyTyped] to npm.
+
+# Manually running
+
+Normally, types-publisher is run through its webhook, but to test it out you can do it yourself.
+You will need to see the "Environment variables" section first.
 
 ```
 cat settings.json
@@ -30,18 +35,17 @@ npm run upload-blobs
 
 To update the types packages, the following steps must be performed:
 
- * Update the local DefinitelyTyped repo
- * Parse the definitions
- * Check for conflicts
- * Calculate versions
- * Generate packages on disk
- * Create a search index
- * Publish packages on disk
- * Upload blobs to Azure
+	* Update the local DefinitelyTyped repo
+	* Parse the definitions
+	* Check for conflicts
+	* Calculate versions
+	* Generate packages on disk
+	* Create a search index
+	* Publish packages on disk
+	* Upload blobs to Azure
 
 Importantly, each of these steps is *idempotent*.
-Running the entire sequence twice should not have any different results
-  unless one of the inputs has changed.
+Running the entire sequence twice should not have any different results unless one of the inputs has changed.
 
 # Update the local DefinitelyTyped repo
 
@@ -63,70 +67,67 @@ This file is a key/value mapping used by other steps in the process.
 ### Example entry
 ```js
 "jquery": {
-    "authors": "Boris Yankov <https://github.com/borisyankov/>",
-    "definitionFilename": "jquery.d.ts",
-    "libraryDependencies": [],
-    "moduleDependencies": [],
-    "libraryMajorVersion": "1",
-    "libraryMinorVersion": "10",
-    "libraryName": "jQuery 1.10.x / 2.0.x",
-    "typingsPackageName": "jquery",
-    "projectName": "http://jquery.com/",
-    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
-    "kind": "Mixed",
-    "globals": [
-        "jQuery",
-        "$"
-    ],
-    "declaredModules": [
-        "jquery"
-    ],
-    "root": "C:\\github\\DefinitelyTyped\\jquery",
-    "files": [
-        "jquery.d.ts"
-    ],
-    "contentHash": "5cfce9ba1a777bf2eecb20d0830f4f4bcd5eee2e1fd9936ca6c2f2201a44b618"
-}
+	"authors": "Boris Yankov <https://github.com/borisyankov/>",
+	"definitionFilename": "jquery.d.ts",
+	"libraryDependencies": [],
+	"moduleDependencies": [],
+	"libraryMajorVersion": "1",
+	"libraryMinorVersion": "10",
+	"libraryName": "jQuery 1.10.x / 2.0.x",
+	"typingsPackageName": "jquery",
+	"projectName": "http://jquery.com/",
+	"sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+	"kind": "Mixed",
+	"globals": [
+		"jQuery",
+		"$"
+	],
+	"declaredModules": [
+		"jquery"
+	],
+	"root": "C:\\github\\DefinitelyTyped\\jquery",
+	"files": [
+		"jquery.d.ts"
+	],
+	"contentHash": "5cfce9ba1a777bf2eecb20d0830f4f4bcd5eee2e1fd9936ca6c2f2201a44b618"
+	}
 ```
 
 ### Fields in `data/definitions.json`
 
- * `"jquery"` (i.e. the property name): The name of the *folder* from the source repo
- * `authors`: Author data parsed from a header comment in the entry point .d.ts file
- * `definitionFilename`: The filename of the entry point .d.ts file. This file must be either `index.d.ts`, `folderName.d.ts` (where `folderName` is the folder name), or the only .d.ts file in the folder
- * `libraryDependencies`: Which other definitions this file depends on. These will refer to *package names*, not *folder names*
- * `libraryMajorVersion` / `libraryMinorVersion`: Version data parsed from a header comment in the entry point .d.ts. These values will be `0` if the entry point .d.ts file did not specify a version
- * `libraryName`: Library name parsed from a header comment in the entry point .d.ts file
- * `typingsPackageName`: The name on NPM that the type package will be published under
- * `projectName`: Project name or URL information parsed from a header comment in the entry point .d.ts file
- * `sourceRepoURL`: The URL to the originating type definition repo. Currently hardcoded to DefinitelyType's URL
- * `kind`: One of the following strings based on the declarations in the folder:
-   * `Unknown`: The type of declaration could not be detected
-   * `MultipleModules`: Multiple ambient module declarations (`declare module "modName" {`) were found
-   * `Mixed`: At least one global declaration and exactly one ambient module declaration
-   * `DeclareModule`: Exactly one ambient module declaration and zero global declarations
-   * `Global`: Only global declarations. **Preferred**
-   * `ProperModule`: Only top-level `import` and `export` declarations. **Preferred**
-   * `ModuleAugmentation`: An ambient module declaration and at top-level `import` or `export` declaration. **Preferred**
-   * `UMD`: Only top-level `import` and `export` declarations, as well as a UMD declaration. **Preferred**
-   * `OldUMD`: Exactly one namespace declaration and exactly one ambient module declaration
- * `globals`: A list of *values* declared in the global namespace. Note that this does not include types declared in the global namespace
- * `declaredModules`: A list of modules declared. If `kind` is `ProperModule`, this list will explicitly list the containing folder name
- * `root`: A full path to the declaration folder
- * `files`: A list of the .d.ts files in the declaration folder
- * `contentHash`: A hash of the names and contents of the `files` list, used for versioning
+* `"jquery"` (i.e. the property name): The name of the *folder* from the source repo
+* `authors`: Author data parsed from a header comment in the entry point .d.ts file
+* `definitionFilename`: The filename of the entry point .d.ts file. This file must be either `index.d.ts`, `folderName.d.ts` (where `folderName` is the folder name), or the only .d.ts file in the folder
+* `libraryDependencies`: Which other definitions this file depends on. These will refer to *package names*, not *folder names*
+* `libraryMajorVersion` / `libraryMinorVersion`: Version data parsed from a header comment in the entry point .d.ts. These values will be `0` if the entry point .d.ts file did not specify a version
+* `libraryName`: Library name parsed from a header comment in the entry point .d.ts file
+* `typingsPackageName`: The name on NPM that the type package will be published under
+* `projectName`: Project name or URL information parsed from a header comment in the entry point .d.ts file
+* `sourceRepoURL`: The URL to the originating type definition repo. Currently hardcoded to DefinitelyType's URL
+* `kind`: One of the following strings based on the declarations in the folder:
+	* `Unknown`: The type of declaration could not be detected
+	* `MultipleModules`: Multiple ambient module declarations (`declare module "modName" {`) were found
+	* `Mixed`: At least one global declaration and exactly one ambient module declaration
+	* `DeclareModule`: Exactly one ambient module declaration and zero global declarations
+	* `Global`: Only global declarations. **Preferred**
+	* `ProperModule`: Only top-level `import` and `export` declarations. **Preferred**
+	* `ModuleAugmentation`: An ambient module declaration and at top-level `import` or `export` declaration. **Preferred**
+	* `UMD`: Only top-level `import` and `export` declarations, as well as a UMD declaration. **Preferred**
+	* `OldUMD`: Exactly one namespace declaration and exactly one ambient module declaration
+* `globals`: A list of *values* declared in the global namespace. Note that this does not include types declared in the global namespace
+* `declaredModules`: A list of modules declared. If `kind` is `ProperModule`, this list will explicitly list the containing folder name
+* `root`: A full path to the declaration folder
+* `files`: A list of the .d.ts files in the declaration folder
+* `contentHash`: A hash of the names and contents of the `files` list, used for versioning
 
 ## Contents of `logs/parser-log-summary.md`
 
-This log file contains a summary of the outcome of each declaration,
-  as well as a set of warnings.
+This log file contains a summary of the outcome of each declaration, as well as a set of warnings.
 
 ### Failure States
 
-Currently, the only error condition is if there are multiple .d.ts files in the declaration folder
-  and none of them are the obvious entry point.
-These will be listed in the *warnings* section of `parser-log-summary.md`;
-  search for "Found either zero or more" in this file.
+Currently, the only error condition is if there are multiple .d.ts files in the declaration folder and none of them are the obvious entry point.
+These will be listed in the *warnings* section of `parser-log-summary.md`; search for "Found either zero or more" in this file.
 
 ### Warnings
 
@@ -159,8 +160,7 @@ This warning might not be appropriate; consider logging an issue.
 
 > `node bin/check-parse-results.js`
 
-This is an optional script that checks for multiple declaration packages
-  with the same library name or same project name.
+This is an optional script that checks for multiple declaration packages with the same library name or same project name.
 
 ### Contents of `logs/conflicts.md`
 
@@ -183,10 +183,8 @@ This generates `versions.json` based on the last uploaded `versions.json` and by
 
 ## Arguments to `calculate-versions`
 
-The `--forceUpdate` argument will cause a build version bump even if
-  the `contentHash` of the originating types folder has not changed.
-This argument may be needed during development,
-  but should not be used during routine usage.
+The `--forceUpdate` argument will cause a build version bump even if the `contentHash` of the originating types folder has not changed.
+This argument may be needed during development, but should not be used during routine usage.
 
 # Create a search index
 
@@ -208,24 +206,23 @@ The argument `--skipDownloads` disables this behavior.
 Each `search-*.json` file consists of an array.
 An example unminified entry is:
 ```js
-    {
-        "projectName": "http://backgridjs.com/",
-        "libraryName": "Backgrid",
-        "globals": [
-            "Backgrid"
-        ],
-        "typePackageName": "backgrid",
-        "declaredExternalModules": [
-            "backgrid"
-        ],
-        "downloads": 532234
-    },
+{
+	"projectName": "http://backgridjs.com/",
+	"libraryName": "Backgrid",
+	"globals": [
+		"Backgrid"
+	],
+	"typePackageName": "backgrid",
+	"declaredExternalModules": [
+		"backgrid"
+	],
+	"downloads": 532234
+},
 ```
 These fields should hopefully be self-explanatory.
 `downloads` refers to the number in the past month.
 If `--skipDownloads` was specified, `downloads` will be -1.
-In the case where the type package name is different from the NPM package name,
-  or no NPM package name exists, `downloads` will be 0.
+In the case where the type package name is different from the NPM package name, or no NPM package name exists, `downloads` will be 0.
 
 In the minified files, the properties are simply renamed. See `src/lib/search-index-generator.ts` for documentation.
 
@@ -256,8 +253,8 @@ The following files are produced automatically:
 ### Definition File Transforms
 
 The following changes occur when a file is transformed:
- * `/// <reference path=` directives are changed to corresponding `/// <reference types=` directives
- * The file is saved in UTF-8 format
+* `/// <reference path=` directives are changed to corresponding `/// <reference types=` directives
+* The file is saved in UTF-8 format
 
 ### `logs/package-generator.md`
 
@@ -267,16 +264,11 @@ This file is currently uninteresting.
 
 > `node bin/publish-packages.js`
 
-This step runs `npm publish` to publish the files to the NPM registry.
+This step publishes the files to the NPM registry.
 
 Several keys in `settings.json` affect this step; be sure to read this section.
 
-As a prerequisite,
-  the appropriate `npm login` command must be manually executed
-  to ensure the same user as the `scopeName` setting is logged in.
-
-Before publishing, the script checks the NPM registry to see if a package
-  with the same version number has already been published.
+Before publishing, the script checks the NPM registry to see if a package with the same version number has already been published.
 If so, the publishing is skipped.
 
 ## Outputs of `publish-packages.js`
@@ -339,7 +331,9 @@ The script `npm run make-server-run` will trigger the local webhook just like Gi
 
 # Using the webhook
 
-  npm run webhook
+```sh
+npm run webhook
+```
 
 This requires the `GITHUB_SECRET` and `GITHUB_ACCESS_TOKEN` environment variables to be set; see the "Environment variables" section.
 
@@ -443,14 +437,14 @@ Setting this variable turns on [longjohn](https://github.com/mattinsler/longjohn
 
 To validate published packages run:
 
-```cmd
+```sh
 npm run build
 npm run validate [<package>]
 ```
 
 for instance:
 
-```cmd
+```sh
 npm run validate node exress jquery
 ```
 
@@ -465,21 +459,33 @@ Azure is set up to listen to the `production` branch, which is like `master` but
 
 ## Update production branch
 
-    git checkout production
-    git merge master
-    git build
-    git add --all
-    git commit -m "Update bin/"
-    git push
+```sh
+git checkout production
+git merge master
+npm run build
+git status # Should see changes to bin/
+git add --all
+git commit -m "Update bin/"
+git push
+```
 
 Azure is listening for changes to `production` and should restart itself.
 The server also serves a simple web page [here](http://types-publisher.azurewebsites.net).
 
 ## Debugging Azure
 
+While the server is running, you can view logs live:
+
+```sh
+npm install -g azure-cli
+azure config mode asm
+azure login
+azure site log tail types-publisher
+```
+
 If the server is working normally, you can view log files [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html).
 
-If the server goes down, you can view server logs on [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
+You can view the full server logs at [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
 For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
 You can also download a ZIP using the azure-cli command `azure site log download`.
 The most useful logs are in LogFiles/Application.
