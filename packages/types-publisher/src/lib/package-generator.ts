@@ -1,4 +1,4 @@
-import { TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
+import { AnyPackage, TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
 import { Log, Logger, quietLogger } from "./logging";
 import { readFile, readJson, writeFile } from "./util";
 import Versions from "./versions";
@@ -6,7 +6,11 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 /** Generates the package to disk */
-export async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
+export default function generateAnyPackage(pkg: AnyPackage, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
+	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg) : generatePackage(pkg, availableTypes, versions);
+}
+
+async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
 	const outputPath = getOutputPath(typing);
@@ -43,7 +47,7 @@ export async function generatePackage(typing: TypingsData, availableTypes: Types
 	}
 }
 
-export async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<string[]> {
+async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<string[]> {
 	const [log, logResult] = quietLogger();
 	const outputPath = getOutputPath(pkg);
 	await clearOutputPath(outputPath, log);

@@ -17,9 +17,10 @@ export const settings: PublishSettings = parseJson(readFileSync(path.join(home, 
 export const typesDataFilename = "definitions.json";
 export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json");
 
-export interface AnyPackage {
-	packageKind?: "not-needed" | undefined;
+export type AnyPackage = NotNeededPackage | TypingsData;
 
+/** Prefer to use `AnyPackage` instead of this. */
+export interface PackageCommonProperties {
 	// The name of the library (human readable, e.g. might be "Moment.js" even though packageName is "moment")
 	libraryName: string;
 
@@ -39,7 +40,7 @@ export interface AnyPackage {
 	declaredModules: string[];
 }
 
-export interface NotNeededPackage extends AnyPackage {
+export interface NotNeededPackage extends PackageCommonProperties {
 	packageKind: "not-needed";
 	/**
 	 * If this is available, @types typings are deprecated as of this version.
@@ -52,7 +53,13 @@ export interface TypesDataFile {
 	[folderName: string]: TypingsData;
 }
 
-export interface TypingsData extends AnyPackage {
+export interface TypingsData extends PackageCommonProperties {
+	/**
+	 * Never include this property;
+	 * the declaration is just here so that the AnyPackage union is discriminated by `packageKind`.
+	 */
+	packageKind?: undefined;
+
 	kind: string; // Name of a member in DefinitionFileKind
 
 	moduleDependencies: string[];

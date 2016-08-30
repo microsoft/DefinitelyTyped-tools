@@ -238,6 +238,11 @@ The output folder is specified in `settings.json` (see section "Settings").
 You can also output a single package with e.g. `node bin/generate-packages.js --single abs`.
 (This will still require parsing every package first, as we may need information about referenced packages.)
 
+## Arguments to `generate-packages`
+
+Use the `--single foo` option to generate just the package named "foo".
+Use the `--all` option to generate even packages that have not changed.
+
 ## Outputs of `generate-packages`
 
 ### Package Folders

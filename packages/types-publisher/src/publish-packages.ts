@@ -17,7 +17,7 @@ if (!module.parent) {
 		const shouldUnpublish = !!yargs.argv.unpublish;
 
 		if (singleName && shouldUnpublish) {
-			throw new Error("Selet only one --single=foo or --shouldUnpublish");
+			throw new Error("Select only one of --single=foo or --shouldUnpublish");
 		}
 
 		done(go());

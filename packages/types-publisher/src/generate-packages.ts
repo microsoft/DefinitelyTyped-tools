@@ -1,9 +1,9 @@
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, NotNeededPackage, readNotNeededPackages, readTypesDataFile, TypesDataFile, TypingsData, typingsFromData } from "./lib/common";
-import { Log, logger, moveLogs, writeLog } from "./lib/logging";
+import { AnyPackage, existsTypesDataFileSync, readNotNeededPackages, readTypesDataFile, TypesDataFile, typingsFromData } from "./lib/common";
+import { logger, moveLogs, writeLog } from "./lib/logging";
 import { done, nAtATime } from "./lib/util";
-import * as generator from "./lib/package-generator";
-import Versions from "./lib/versions";
+import generateAnyPackage from "./lib/package-generator";
+import Versions, { readChanges } from "./lib/versions";
 
 if (!module.parent) {
 	if (!Versions.existsSync()) {
@@ -11,51 +11,56 @@ if (!module.parent) {
 	} else if (!existsTypesDataFileSync()) {
 		console.log("Run parse-definitions first!");
 	} else {
+		const all = yargs.argv.all;
 		const singleName = yargs.argv.single;
-		done((singleName ? single(singleName) : main()));
+		if (all && singleName) {
+			throw new Error("Select only one of -single=foo or --all.");
+		}
+		done((singleName ? single(singleName) : main(all)));
 	}
 }
 
-export default async function main(): Promise<void> {
+export default async function main(all: boolean = false): Promise<void> {
 	const [log, logResult] = logger();
-	log("\n## Generating packages\n");
-	const { typeData, typings, notNeededPackages, versions } = await loadPrerequisites();
+	log(`\n## Generating ${all ? "all" : "changed"} packages\n`);
+	const { typeData, allPackages, versions } = await loadPrerequisites();
 
-	await nAtATime(10, typings, async typing =>
-		logGeneration(typing, await generator.generatePackage(typing, typeData, versions)));
+	const packages = all ? allPackages : await changedPackages(allPackages);
 
-	await nAtATime(10, notNeededPackages, async pkg =>
-		logGeneration(pkg, await generator.generateNotNeededPackage(pkg)));
-
-	await writeLog("package-generator.md", logResult());
-
-	async function logGeneration(pkg: AnyPackage, logs: Log) {
+	await nAtATime(10, packages, async pkg => {
+		const logs = await generateAnyPackage(pkg, typeData, versions);
 		log(` * ${pkg.libraryName}`);
 		moveLogs(log, logs, line => `   * ${line}`);
-	}
+	});
+
+	await writeLog("package-generator.md", logResult());
 }
 
 async function single(singleName: string): Promise<void> {
-	const { typeData, typings, notNeededPackages, versions } = await loadPrerequisites();
+	const { typeData, allPackages, versions } = await loadPrerequisites();
 
-	let generateResult: string[];
-	const typing = typings.find(t => t.typingsPackageName === singleName);
-	if (typing) {
-		generateResult = await generator.generatePackage(typing, typeData, versions);
+	const pkg = allPackages.find(t => t.typingsPackageName === singleName);
+	if (!pkg) {
+		throw new Error(`No package ${singleName} to generate.`);
 	}
-	else {
-		const notNeededPackage = notNeededPackages.find(t => t.typingsPackageName === singleName);
-		if (!notNeededPackage) {
-			throw new Error(`No package ${singleName} to generate.`);
-		}
-		generateResult = await generator.generateNotNeededPackage(notNeededPackage);
-	}
-
-	console.log(generateResult.join("\n"));
+	const logs = await generateAnyPackage(pkg, typeData, versions);
+	console.log(logs.join("\n"));
 }
 
-async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, typings: TypingsData[], notNeededPackages: NotNeededPackage[], versions: Versions }> {
+async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, allPackages: AnyPackage[], versions: Versions }> {
 	const [typeData, notNeededPackages, versions] = await Promise.all([await readTypesDataFile(), await readNotNeededPackages(), await Versions.loadFromLocalFile()]);
 	const typings = typingsFromData(typeData);
-	return { typeData, typings, notNeededPackages, versions };
+	const allPackages = (<AnyPackage[]> typings).concat(notNeededPackages);
+	return { typeData, allPackages, versions };
+}
+
+async function changedPackages(allPackages: AnyPackage[]): Promise<AnyPackage[]> {
+	const changes = await readChanges();
+	return changes.map(changedPackageName => {
+		const pkg = allPackages.find(p => p.typingsPackageName === changedPackageName);
+		if (pkg === undefined) {
+			throw new Error(`Expected to find a package named ${changedPackageName}`);
+		}
+		return pkg;
+	});
 }
