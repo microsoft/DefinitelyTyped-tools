@@ -113,8 +113,8 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	}
 
 	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, "Unknown");
-	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for [^\d\n]+ v?(\d+)/m, "0");
-	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for [^\d\n]+ v?\d+\.(\d+)/m, "0");
+	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for [^\n]+ v?(\d+)/m, "0");
+	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for [^\n]+ v?\d+\.(\d+)/m, "0");
 	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
 	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
 	const packageName = path.basename(directory);
