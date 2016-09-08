@@ -8,6 +8,7 @@ import generatePackages from "./generate-packages";
 import createSearchIndex from "./create-search-index";
 import publishPackages from "./publish-packages";
 import uploadBlobs from "./upload-blobs";
+import validate from "./validate";
 import NpmClient from "./lib/npm-client";
 import { currentTimeStamp, done } from "./lib/util";
 
@@ -26,6 +27,7 @@ export default async function full(client: NpmClient, dry: boolean, timeStamp: s
 	await generatePackages();
 	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false);
 	await publishPackages(client, dry);
+	await validate();
 	if (!dry) {
 		await uploadBlobs(timeStamp);
 	}

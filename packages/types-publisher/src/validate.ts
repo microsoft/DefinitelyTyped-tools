@@ -3,33 +3,49 @@ import * as path from "path";
 import * as child_process from "child_process";
 import * as yargs from "yargs";
 import { nAtATime, writeFile, writeJson } from "./lib/util";
-import { existsTypesDataFileSync, settings, readTypings } from "./lib/common";
+import { existsTypesDataFileSync, settings, readAllPackages, readTypings } from "./lib/common";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./lib/logging";
+import { done } from "./lib/util";
+import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
 		console.log("Run parse-definitions first!");
 	} else {
+		const all = !!yargs.argv.all;
 		const packageNames = yargs.argv._;
-		main(packageNames);
+		if (all && packageNames) {
+			throw new Error("Can't combine --all with listed package names.");
+		}
+
+		if (all) {
+			console.log("Validating all packages");
+			done(doAll());
+		}
+		else if (packageNames.length) {
+			console.log("Validating: " + JSON.stringify(packageNames));
+			done(doValidate(packageNames));
+		}
+		else {
+			main();
+		}
 	}
 }
 
-export default async function main(packageNames?: string[]) {
+export default async function main(): Promise<void> {
+	const changed = await changedPackages(await readAllPackages());
+	await doValidate(changed.map(c => c.typingsPackageName));
+}
+
+async function doAll(): Promise<void> {
+	const packageNames = (await readTypings()).map(t => t.typingsPackageName).sort();
+	await doValidate(packageNames);
+}
+
+async function doValidate(packageNames: string[]): Promise<void> {
 	const [log, logResult] = loggerWithErrors();
-
-	if (!packageNames || !packageNames.length) {
-		log.info("Validating all packages");
-		packageNames = (await readTypings()).map(t => t.typingsPackageName).sort();
-	}
-	else {
-		log.info("Validating: " + JSON.stringify(packageNames));
-	}
-
 	await validatePackages(packageNames, settings.validateOutputPath, log);
-
 	const {infos, errors} = logResult();
-
 	await Promise.all([
 		writeLog("validate.md", infos),
 		writeLog("validate-errors.md", errors)

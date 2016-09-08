@@ -3,7 +3,7 @@ import { AnyPackage, existsTypesDataFileSync, readNotNeededPackages, readTypesDa
 import { logger, moveLogs, writeLog } from "./lib/logging";
 import { done, nAtATime } from "./lib/util";
 import generateAnyPackage from "./lib/package-generator";
-import Versions, { readChanges } from "./lib/versions";
+import Versions, { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
 	if (!Versions.existsSync()) {
@@ -52,15 +52,4 @@ async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, allPackag
 	const typings = typingsFromData(typeData);
 	const allPackages = (<AnyPackage[]> typings).concat(notNeededPackages);
 	return { typeData, allPackages, versions };
-}
-
-async function changedPackages(allPackages: AnyPackage[]): Promise<AnyPackage[]> {
-	const changes = await readChanges();
-	return changes.map(changedPackageName => {
-		const pkg = allPackages.find(p => p.typingsPackageName === changedPackageName);
-		if (pkg === undefined) {
-			throw new Error(`Expected to find a package named ${changedPackageName}`);
-		}
-		return pkg;
-	});
 }

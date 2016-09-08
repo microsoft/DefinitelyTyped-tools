@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, readAllPackages } from "./lib/common";
+import { existsTypesDataFileSync, readAllPackages } from "./lib/common";
 import { LogWithErrors, logger, writeLog } from "./lib/logging";
 import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
-import { done, nAtATime } from "./lib/util";
+import { done } from "./lib/util";
+import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync() || !fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
@@ -45,21 +46,7 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 		log("=== DRY RUN ===");
 	}
 
-	const packagesShouldPublish: AnyPackage[] = [];
-
-	log("Checking which packages we should publish");
-	await nAtATime(100, await readAllPackages(), async pkg => {
-		const [shouldPublish, checkLog] = await publisher.shouldPublish(pkg);
-
-		if (shouldPublish) {
-			packagesShouldPublish.push(pkg);
-		}
-
-		log(`Checking ${pkg.libraryName}...`);
-		writeLogs(checkLog);
-	});
-
-	packagesShouldPublish.sort((pkgA, pkgB) => pkgA.libraryName.localeCompare(pkgB.libraryName));
+	const packagesShouldPublish = await changedPackages(await readAllPackages());
 
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.libraryName}...`);
