@@ -107,7 +107,7 @@ async function createPackageJSON(typing: TypingsData, { lastVersion, lastContent
 	}
 
 	const dependencies = pkg.dependencies || {};
-	addInferredDependencies(dependencies, typing, availableTypes, lastVersion);
+	addInferredDependencies(dependencies, typing, availableTypes);
 
 	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
 
@@ -136,24 +136,15 @@ async function createPackageJSON(typing: TypingsData, { lastVersion, lastContent
 	return JSON.stringify(out, undefined, 4);
 }
 
-function addInferredDependencies(dependencies: { [name: string]: string }, typing: TypingsData, availableTypes: { [name: string]: TypingsData }, version: number): void {
-	function addDependency(d: string): void {
-		if (dependencies.hasOwnProperty(d) || !availableTypes.hasOwnProperty(d)) {
-			// 1st case: don't add a dependency if it was specified in the package.json or if it has already been added.
+function addInferredDependencies(dependencies: { [name: string]: string }, typing: TypingsData, availableTypes: { [name: string]: TypingsData }): void {
+	function addDependency(depdendency: string): void {
+		if (!Object.prototype.hasOwnProperty.call(dependencies, depdendency) && availableTypes.hasOwnProperty(depdendency)) {
+			// 1st case: Don't add a dependency if it was specified in the package.json or if it has already been added.
 			// 2nd case: If it's not a package we know of, just ignore it.
 			// For example, we may have an import of "http", where the package is depending on "node" to provide that.
-			return;
+			dependencies[fullPackageName(depdendency)] = "*";
+			// To use a non-latest version, that version must be made explicit in the partial package.json from a DefinitelyTyped directory.
 		}
-
-		const type = availableTypes[d];
-		// In normal releases, we want to allow patch updates, so we use `foo.bar.*`.
-		// In a prerelease, we can only reference *exact* packages.
-		// See https://github.com/npm/node-semver#prerelease-tags
-		const patch = settings.prereleaseTag ?
-			`${version}-${settings.prereleaseTag}` :
-			"*";
-		const semver = `${type.libraryMajorVersion}.${type.libraryMinorVersion}.${patch}`;
-		dependencies[fullPackageName(d)] = semver;
 	}
 	typing.moduleDependencies.forEach(addDependency);
 	typing.libraryDependencies.forEach(addDependency);
