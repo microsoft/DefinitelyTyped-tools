@@ -26,7 +26,7 @@ export default class Versions {
 	}
 
 	recordUpdate(typing: TypingsData, forceUpdate: boolean): boolean {
-		const {lastVersion, lastContentHash} = this.getLastVersionAndContentHash(typing);
+		const {lastVersion, lastContentHash} = this.versionInfo(typing);
 		const shouldIncrement = forceUpdate || lastContentHash !== typing.contentHash;
 		if (shouldIncrement) {
 			const key = typing.typingsPackageName;
@@ -36,11 +36,7 @@ export default class Versions {
 		return shouldIncrement;
 	}
 
-	getVersion(typing: TypingsData): number {
-		return this.getLastVersionAndContentHash(typing).lastVersion;
-	}
-
-	private getLastVersionAndContentHash(typing: TypingsData): { lastVersion: number, lastContentHash: string } {
+	versionInfo(typing: TypingsData): { lastVersion: number, lastContentHash: string } {
 		return this.data[typing.typingsPackageName] || { lastVersion: 0, lastContentHash: "" };
 	}
 
@@ -60,9 +56,11 @@ export function writeChanges(changes: Changes): Promise<void> {
 	return writeFile(changesFilename, changes.join("\n"));
 }
 
+export interface VersionInfo {
+	lastVersion: number;
+	lastContentHash: string;
+}
+
 interface VersionMap {
-	[typingsPackageName: string]: {
-		lastVersion: number;
-		lastContentHash: string;
-	};
+	[typingsPackageName: string]: VersionInfo;
 }
