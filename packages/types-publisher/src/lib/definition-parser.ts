@@ -3,7 +3,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
-import { Logger, LogWithErrors, quietLoggerWithErrors } from "./logging";
+import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "./logging";
 import { mapAsyncOrdered, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
 
 export interface TypingParseFailResult {
@@ -81,34 +81,17 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	return result;
 }
 
-export async function getTypingInfo(folderName: string): Promise<TypingParseFailResult | TypingParseSucceedResult> {
-	const [log, logResult] = quietLoggerWithErrors();
-	const directory = definitelyTypedPath(folderName);
+interface Metadata {
+	authors: string;
+	libraryMajorVersion: string;
+	libraryMinorVersion: string;
+	libraryName: string;
+	projectName: string;
+}
 
-	log.info(`Reading contents of ${directory}`);
-
-	const entryPointResult = await entryPoint(directory, folderName, log.info);
-	if (entryPointResult.kind === "failure") {
-		log.info(entryPointResult.message);
-		log.error(entryPointResult.message);
-		return { kind: "fail", logs: logResult(), rejectionReason: RejectionReason.TooManyFiles };
-	}
-	const entryPointFilename = entryPointResult.filename;
-	const entryPointContent = await readFile(directory, entryPointFilename);
-
-	const mi = await getModuleInfo(directory, entryPointFilename, log.info);
-	let fileKind = getFileKind(mi, log.info);
-
-	if (mi.declaredModules.length === 1 && fileKind !== DefinitionFileKind.ModuleAugmentation && mi.declaredModules[0].toLowerCase() !== folderName.toLowerCase()) {
-		log.error(`Declared module \`${mi.declaredModules[0]}\` is in folder with incorrect name \`${folderName}\``);
-	}
-
-	if (mi.declaredModules.length === 0 && fileKind === DefinitionFileKind.ProperModule) {
-		mi.declaredModules.push(folderName);
-	}
-
+function parseMetadata(mainFileContent: string): Metadata {
 	function regexMatch(rx: RegExp, defaultValue: string): string {
-		const match = rx.exec(entryPointContent);
+		const match = rx.exec(mainFileContent);
 		return match ? match[1] : defaultValue;
 	}
 
@@ -117,89 +100,140 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for [^\n]+ v?\d+\.(\d+)/m, "0");
 	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
 	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
-	const packageName = path.basename(directory);
-	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 
-	if (packageName !== packageName.toLowerCase()) {
-		log.error(`Package name \`${packageName}\` should be strictly lowercase`);
+	return { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName };
+}
+
+async function moduleInfoAndFileKind(directory: string, folderName: string, allEntryFilenames: string[], log: LoggerWithErrors): Promise<ModuleInfo & { fileKind: DefinitionFileKind }> {
+	const mi = await getModuleInfo(directory, folderName, allEntryFilenames, log.info);
+	const fileKind = getFileKind(mi, log.info);
+
+	if (mi.declaredModules.length === 1 && fileKind !== DefinitionFileKind.ModuleAugmentation && mi.declaredModules[0].toLowerCase() !== folderName) {
+		log.error(`Declared module \`${mi.declaredModules[0]}\` is in folder with incorrect name \`${folderName}\``);
 	}
 
-	if (mi.referencedLibraries.concat(mi.moduleDependencies).some(s => s === libraryName)) {
-		throw new Error(`Package references itself: ${libraryName}`);
+	if (mi.declaredModules.length === 0 && fileKind === DefinitionFileKind.ProperModule) {
+		mi.declaredModules.push(folderName);
 	}
+
+	return Object.assign({fileKind}, mi);
+}
+
+export async function getTypingInfo(folderName: string): Promise<TypingParseFailResult | TypingParseSucceedResult> {
+	const [log, logResult] = quietLoggerWithErrors();
+	const directory = definitelyTypedPath(folderName);
+	if (folderName !== folderName.toLowerCase()) {
+		throw new Error(`Package name \`${folderName}\` should be strictly lowercase`);
+	}
+
+	log.info(`Reading contents of ${directory}`);
+
+	// There is a *single* main file, containing metadata comments.
+	// But there may be many entryFilenames, which are the starting points of inferring all files to be included.
+	const mainFileResult = await mainFile(directory, folderName, log.info);
+	if (mainFileResult.kind === "failure") {
+		log.info(mainFileResult.message);
+		log.error(mainFileResult.message);
+		return { kind: "fail", logs: logResult(), rejectionReason: RejectionReason.TooManyFiles };
+	}
+	const mainFilename = mainFileResult.filename;
+	const mainFileContent = await readFile(directory, mainFilename);
+
+	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName } = parseMetadata(mainFileContent);
+
+	const allEntryFilenames = await entryFilesFromTsConfig(directory, log.info) || [mainFilename];
+	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles, fileKind } = await moduleInfoAndFileKind(directory, folderName, allEntryFilenames, log);
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
-	const allFiles = hasPackageJson ? mi.declFiles.concat(["package.json"]) : mi.declFiles;
+	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
+	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 	return {
 		kind: "success",
 		logs: logResult(),
 		data: {
 			authors,
-			definitionFilename: entryPointFilename,
-			libraryDependencies: mi.referencedLibraries,
-			moduleDependencies: mi.moduleDependencies,
+			definitionFilename: mainFilename,
+			libraryDependencies: referencedLibraries,
+			moduleDependencies,
 			libraryMajorVersion,
 			libraryMinorVersion,
 			libraryName,
-			typingsPackageName: folderName.toLowerCase(),
+			typingsPackageName: folderName,
 			projectName,
 			sourceRepoURL,
 			sourceBranch: settings.sourceBranch,
 			kind: DefinitionFileKind[fileKind],
-			globals: Object.keys(mi.globalSymbols).filter(k => !!(mi.globalSymbols[k] & DeclarationFlags.Value)).sort(),
-			declaredModules: mi.declaredModules,
+			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)).sort(),
+			declaredModules,
 			root: path.resolve(directory),
-			files: mi.declFiles,
+			files: declFiles,
 			hasPackageJson,
 			contentHash: await hash(directory, allFiles)
 		}
 	};
 }
 
-interface EntryPointSuccess {
+interface MainFileSuccess {
 	kind: "success";
 	filename: string;
 }
-interface EntryPointFailure {
+interface MainFileFailure {
 	kind: "failure";
 	message: string;
 }
-async function entryPoint(directory: string, folderName: string, log: Logger): Promise<EntryPointSuccess | EntryPointFailure> {
+async function mainFile(directory: string, folderName: string, log: Logger): Promise<MainFileSuccess | MainFileFailure> {
+	// otherwise, load all files from the directory
 	const declFiles = await readdirRecursive(directory, (file, stats) =>
-		// Only include type declaration files.
+			// Only include type declaration files.
 		stats.isDirectory() || file.endsWith(".d.ts"));
 	declFiles.sort();
 
-	log(`Found ${declFiles.length} '.d.ts' files (${declFiles.join(", ")})`);
+	log(`Found ${declFiles.length} '.d.ts' files in directory (${declFiles.join(", ")})`);
 
 	if (declFiles.length === 1) {
 		return { kind: "success", filename: declFiles[0] };
 	} else {
 		// You can have [foldername].d.ts, or index.d.ts to rescue yourself from this situation
 		const candidates = [folderName + ".d.ts", "index.d.ts"];
-		const filename = candidates.find(c => declFiles.includes(c));
-		if (filename === undefined) {
+		const existingCandidates = candidates.filter(c => declFiles.includes(c));
+		if (existingCandidates.length > 1) {
+			throw new Error(`Conflicting main files: ${existingCandidates}`);
+		} else if (!existingCandidates.length) {
 			return {
 				kind: "failure",
 				message: "Exiting, found either zero or more than one .d.ts file and none of " + candidates.map(c => "`" + c + "`").join(" or ")
 			};
 		} else {
-			log(`Used ${filename} as entry point`);
-			return { kind: "success", filename };
+			return { kind: "success", filename: existingCandidates[0] };
 		}
 	}
 }
 
+async function entryFilesFromTsConfig(directory: string, log: Logger): Promise<string[] | undefined> {
+	// If there is a tsconfig.json with a "files" property use this as the entry point
+	if (await fsp.exists(path.join(directory, "tsconfig.json"))) {
+		const files: string[] = JSON.parse(await readFile(directory, "tsconfig.json")).files;
+		if (files) {
+			const filenames = files.filter(file => file.endsWith(".d.ts"));
+			log(`Found ${filenames.length} '.d.ts' files listed in tsconfig.json (${filenames.join(", ")})`);
+			return filenames;
+		}
+	}
+	return undefined;
+}
+
 // See GH#68 for why we don't just include every file
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
-async function allReferencedFiles(directory: string, entryPointFilename: string, log: Logger): Promise<Map<string, ts.SourceFile>> {
+async function allReferencedFiles(directory: string, entryFilenames: string[], log: Logger): Promise<Map<string, ts.SourceFile>> {
 	const all = new Map<string, ts.SourceFile>();
 
 	async function recur(referencedFrom: string, filename: string): Promise<void> {
 		if (all.has(filename)) {
 			return;
 		}
+		// Placeholder so no other thread will pick up this filename
+		all.set(filename, undefined);
 
 		log(`Parse ${filename}`);
 		let content: string;
@@ -215,7 +249,7 @@ async function allReferencedFiles(directory: string, entryPointFilename: string,
 		await Promise.all(refs.map(ref => recur(filename, ref)));
 	}
 
-	await recur("", entryPointFilename);
+	await Promise.all(entryFilenames.map(filename => recur("", filename)));
 	return all;
 }
 
@@ -290,7 +324,7 @@ function imports(src: ts.SourceFile): string[] {
 	}
 }
 
-async function getModuleInfo(directory: string, entryPointFilename: string, log: Logger): Promise<ModuleInfo> {
+async function getModuleInfo(directory: string, folderName: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
 	let hasUmdDecl = false;
 	let isProperModule = false;
 	let hasGlobalDeclarations = false;
@@ -305,7 +339,7 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 		globalSymbols[name] = (globalSymbols[name] || DeclarationFlags.None) | flags;
 	}
 
-	const all = await allReferencedFiles(directory, entryPointFilename, log);
+	const all = await allReferencedFiles(directory, allEntryFilenames, log);
 
 	for (const src of all.values()) {
 		for (const ref of imports(src)) {
@@ -402,6 +436,10 @@ async function getModuleInfo(directory: string, entryPointFilename: string, log:
 			}
 		}
 	}
+
+	// Some files may reference the main module, but don't include that as a real dependency.
+	referencedLibraries.delete(folderName);
+	moduleDependencies.delete(folderName);
 
 	return {
 		declFiles: arrayOf(all.keys()),
