@@ -21,14 +21,21 @@ export function currentTimeStamp(): string {
 	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 }
 
-export async function nAtATime<T, U>(n: number, input: T[], use: (t: T) => Promise<U>): Promise<U[]> {
-	let res: U[] = [];
-	for (let i = 0; i < input.length; i += n) {
-		const thisInputs = input.slice(i, i + n);
-		const thisBatch = await Promise.all(thisInputs.map(use));
-		res.push(...thisBatch);
+export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>): Promise<U[]> {
+	const results = new Array(inputs.length);
+	// We have n "threads" which each run `continuouslyWork`.
+	// They all share `nextIndex`, so each work item is done only once.
+	let nextIndex = n;
+	async function continuouslyWork(): Promise<void> {
+		while (nextIndex !== inputs.length) {
+			const index = nextIndex;
+			const input = inputs[nextIndex];
+			nextIndex++;
+			results[index] = await use(input);
+		}
 	}
-	return res;
+	await Promise.all(new Array(n).map(continuouslyWork));
+	return results;
 }
 
 export async function filterAsyncOrdered<T>(arr: T[], shouldKeep: (t: T) => Promise<boolean>): Promise<T[]> {
