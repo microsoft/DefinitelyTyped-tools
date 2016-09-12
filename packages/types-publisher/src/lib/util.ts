@@ -25,16 +25,14 @@ export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Prom
 	const results = new Array(inputs.length);
 	// We have n "threads" which each run `continuouslyWork`.
 	// They all share `nextIndex`, so each work item is done only once.
-	let nextIndex = n;
-	async function continuouslyWork(): Promise<void> {
+	let nextIndex = 0;
+	await Promise.all(initArray(n, async () => {
 		while (nextIndex !== inputs.length) {
 			const index = nextIndex;
-			const input = inputs[nextIndex];
 			nextIndex++;
-			results[index] = await use(input);
+			results[index] = await use(inputs[index]);
 		}
-	}
-	await Promise.all(new Array(n).map(continuouslyWork));
+	}));
 	return results;
 }
 
@@ -141,4 +139,12 @@ export function stringOfStream(stream: NodeJS.ReadableStream): Promise<string> {
 		stream.on("error", reject);
 		stream.on("end", () => resolve(body));
 	});
+}
+
+function initArray<T>(length: number, makeElement: () => T): T[] {
+	const arr = new Array(length);
+	for (let i = 0; i < length; i++) {
+		arr[i] = makeElement();
+	}
+	return arr;
 }

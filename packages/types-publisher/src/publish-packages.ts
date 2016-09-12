@@ -8,8 +8,11 @@ import { done } from "./lib/util";
 import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
-	if (!existsTypesDataFileSync() || !fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
-		console.log("Run parse-definitions and generate-packages first!");
+	if (!existsTypesDataFileSync()) {
+		console.log("Run parse-definitions first!");
+	}
+	else if (!fs.existsSync("./output") || fs.readdirSync("./output").length === 0) {
+		console.log("Run generate-packages first!");
 	}
 	else {
 		const dry = !!yargs.argv.dry;
