@@ -29,6 +29,7 @@ export async function createSearchRecord(info: AnyPackage, skipDownloads: boolea
 		r: info.packageKind === "not-needed" ? info.sourceRepoURL : undefined
 	};
 
+	// See https://github.com/npm/download-counts
 	async function getDownloads(): Promise<number> {
 		if (skipDownloads) {
 			return -1;

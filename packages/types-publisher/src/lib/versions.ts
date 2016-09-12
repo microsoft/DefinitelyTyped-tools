@@ -1,17 +1,14 @@
+import assert = require("assert");
 import * as fs from "fs";
-import { readJsonBlob } from "./azure-container";
-import { AnyPackage, TypingsData } from "./common";
-import { readFile, readJson, writeFile } from "./util";
+import { AnyPackage, TypingsData, fullPackageName, settings } from "./common";
+import { Logger } from "./logging";
+import { fetchJson, nAtATime, readFile, readJson, writeFile } from "./util";
 
 const versionsFilename = "data/versions.json";
 const changesFilename = "data/version-changes.txt";
 
 export default class Versions {
-	static async loadFromBlob(): Promise<Versions> {
-		return new this(await readJsonBlob(versionsFilename));
-	}
-
-	static async loadFromLocalFile(): Promise<Versions> {
+	static async load(): Promise<Versions> {
 		return new Versions(await readJson(versionsFilename));
 	}
 
@@ -19,30 +16,73 @@ export default class Versions {
 		return fs.existsSync(versionsFilename);
 	}
 
+	/** Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry. */
+	static async determineFromNpm(packages: TypingsData[], log: Logger, forceUpdate: boolean): Promise<{changes: Changes, versions: Versions}> {
+		const changes: Changes = [];
+		const data: VersionMap = {};
+		await nAtATime(100, packages, async pkg => {
+			const packageName = pkg.typingsPackageName;
+			let { version, contentHash } = await fetchVersionInfoFromNpm(packageName);
+			if (forceUpdate || pkg.contentHash !== contentHash) {
+				log(`Changed: ${packageName}`);
+				changes.push(packageName);
+				version++;
+				contentHash = pkg.contentHash;
+			}
+			data[packageName] = { version, contentHash };
+		});
+		return { changes, versions: new Versions(data) };
+	}
+
 	private constructor(private data: VersionMap) {}
 
-	saveLocally(): Promise<void> {
+	save(): Promise<void> {
 		return writeFile(versionsFilename, this.render());
 	}
 
-	recordUpdate(typing: TypingsData, forceUpdate: boolean): boolean {
-		const {lastVersion, lastContentHash} = this.versionInfo(typing);
-		const shouldIncrement = forceUpdate || lastContentHash !== typing.contentHash;
-		if (shouldIncrement) {
-			const key = typing.typingsPackageName;
-			const newVersion = lastVersion + 1;
-			this.data[key] = { lastVersion: newVersion, lastContentHash: typing.contentHash };
+	versionInfo(typing: TypingsData): VersionInfo {
+		const info = this.data[typing.typingsPackageName];
+		if (!info) {
+			throw new Error(`No version info for ${typing.typingsPackageName}`);
 		}
-		return shouldIncrement;
-	}
-
-	versionInfo(typing: TypingsData): { lastVersion: number, lastContentHash: string } {
-		return this.data[typing.typingsPackageName] || { lastVersion: 0, lastContentHash: "" };
+		return info;
 	}
 
 	private render() {
 		return JSON.stringify(this.data, undefined, 4);
 	}
+}
+
+async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo> {
+	const escapedPackageName = fullPackageName(packageName).replace(/\//g, "%2f");
+	const uri = settings.npmRegistry + escapedPackageName;
+	const info = await fetchJson(uri);
+
+	if (info.error) {
+		if (info.error === "Not found") {
+			return { version: 0, contentHash: "" };
+		}
+		else {
+			throw new Error(`Error getting version of ${packageName}: ${info.error}`);
+		}
+	}
+	else {
+		const versionSemver: string = info["dist-tags"].latest;
+		assert(typeof versionSemver === "string");
+		const latestVersionInfo = info.versions[versionSemver];
+		assert(!!latestVersionInfo);
+		const contentHash = latestVersionInfo.typesPublisherContentHash || "";
+		return { version: versionNumberFromSemver(versionSemver), contentHash };
+	}
+}
+
+function versionNumberFromSemver(semver: string): number {
+	const rgx = /^\d+\.\d+\.(\d+)$/;
+	const match = rgx.exec(semver);
+	if (!match) {
+		throw new Error(`Unexpected semver: ${semver}`);
+	}
+	return Number.parseInt(match[1], 10);
 }
 
 // List of package names that have changed
@@ -56,11 +96,17 @@ export function writeChanges(changes: Changes): Promise<void> {
 	return writeFile(changesFilename, changes.join("\n"));
 }
 
+/** Latest version info for a package.
+ * If it needs to be published, `version` is the version to publish and `contentHash` is the new hash.
+ */
 export interface VersionInfo {
-	lastVersion: number;
-	lastContentHash: string;
+	/** Semver patch version. */
+	version: number;
+	/** Hash of content from DefinitelyTyped. Also stored in "typesPublisherContentHash" on NPM. */
+	contentHash: string;
 }
 
+/** Used to store a JSON file of version info for every package. */
 interface VersionMap {
 	[typingsPackageName: string]: VersionInfo;
 }

@@ -1,7 +1,8 @@
 import * as yargs from "yargs";
 import { existsTypesDataFileSync, readTypings } from "./lib/common";
-import Versions, { Changes, writeChanges } from "./lib/versions";
+import Versions, { writeChanges } from "./lib/versions";
 import { done } from "./lib/util";
+import { consoleLogger } from "./lib/logging";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
@@ -13,15 +14,8 @@ if (!module.parent) {
 }
 
 export default async function main(forceUpdate: boolean): Promise<void> {
-	console.log("\n## Calculating versions\n");
-	const versions = await Versions.loadFromBlob();
-	const changes: Changes = [];
-	for (const typing of await readTypings()) {
-		if (versions.recordUpdate(typing, forceUpdate)) {
-			console.log(`Changed: ${typing.typingsPackageName}`);
-			changes.push(typing.typingsPackageName);
-		}
-	}
-	await versions.saveLocally();
+	const typings = await readTypings();
+	const { changes, versions } = await Versions.determineFromNpm(typings, consoleLogger.info, forceUpdate);
 	await writeChanges(changes);
+	await versions.save();
 }

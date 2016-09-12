@@ -92,7 +92,7 @@ function filePath(typing: TypingsData, fileName: string): string {
 	return path.join(typing.root, fileName);
 }
 
-async function createPackageJSON(typing: TypingsData, { lastVersion, lastContentHash }: VersionInfo, availableTypes: { [name: string]: TypingsData }): Promise<string> {
+async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: { [name: string]: TypingsData }): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = filePath(typing, "package.json");
 	interface PartialPackageJson {
@@ -114,7 +114,7 @@ async function createPackageJSON(typing: TypingsData, { lastVersion, lastContent
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
 		name: fullPackageName(typing.typingsPackageName),
-		version: versionString(typing, lastVersion),
+		version: versionString(typing, version),
 		description,
 		// keywords,
 		// homepage,
@@ -130,7 +130,7 @@ async function createPackageJSON(typing: TypingsData, { lastVersion, lastContent
 		scripts: {},
 		dependencies,
 		typings: typing.definitionFilename,
-		typesPublisherContentHash: lastContentHash
+		typesPublisherContentHash: contentHash
 	};
 
 	return JSON.stringify(out, undefined, 4);
