@@ -251,9 +251,14 @@ declare module "nodegit" {
 
 	export interface Repository {
 		checkoutBranch(branch: string): Promise<void>;
+		getCurrentBranch(): Promise<Reference>;
 		fetchAll(): Promise<void>;
 		mergeBranches(to: string, from: string): Promise<void>;
 		getStatus(): Promise<StatusFile[]>;
+	}
+
+	export interface Reference {
+		name(): string;
 	}
 
 	export interface StatusFile {

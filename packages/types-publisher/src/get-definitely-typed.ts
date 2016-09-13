@@ -15,7 +15,13 @@ export default async function main(): Promise<void> {
 
 async function getRepo(): Promise<Repository> {
 	if (fsp.exists(settings.definitelyTypedPath)) {
-		return await Repository.open(settings.definitelyTypedPath);
+		const repo = await Repository.open(settings.definitelyTypedPath);
+		const currentBranch = (await repo.getCurrentBranch()).name();
+		const correctBranch = `refs/heads/${settings.sourceBranch}`;
+		if (currentBranch !== correctBranch) {
+			throw new Error(`Need to checkout ${correctBranch}, currently on ${currentBranch}`);
+		}
+		return repo;
 	}
 	else {
 		const repo = await Clone(settings.sourceRepository, settings.definitelyTypedPath);
