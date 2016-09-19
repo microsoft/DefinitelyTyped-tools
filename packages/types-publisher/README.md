@@ -2,6 +2,10 @@
 
 This is the source code for the types-publisher service, which publishes the contents of (DefinitelyTyped)[https://github.com/DefinitelyTyped/DefinitelyTyped] to npm.
 
+# Disclaimer  
+
+If there's functionality from the project you'd like to use, please file an issue detailing that. The script isn't intended for public consumption (i.e. we will break the API whenever convenient for us).
+
 # Manually running
 
 Normally, types-publisher is run through its webhook, but to test it out you can do it yourself.
