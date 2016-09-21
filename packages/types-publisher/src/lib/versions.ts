@@ -20,7 +20,7 @@ export default class Versions {
 	static async determineFromNpm(packages: TypingsData[], log: Logger, forceUpdate: boolean): Promise<{changes: Changes, versions: Versions}> {
 		const changes: Changes = [];
 		const data: VersionMap = {};
-		await nAtATime(100, packages, async pkg => {
+		await nAtATime(25, packages, async pkg => {
 			const packageName = pkg.typingsPackageName;
 			let { version, contentHash } = await fetchVersionInfoFromNpm(packageName);
 			if (forceUpdate || pkg.contentHash !== contentHash) {

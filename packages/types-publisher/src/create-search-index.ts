@@ -17,7 +17,7 @@ export default async function main(skipDownloads: boolean, full: boolean): Promi
 	let packages = await readAllPackages();
 	console.log(`Loaded ${packages.length} entries`);
 
-	const records = await nAtATime(100, packages, pkg => createSearchRecord(pkg, skipDownloads));
+	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
 	// Most downloads first
 	records.sort((a, b) => b.d - a.d);
 
