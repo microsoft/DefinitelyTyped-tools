@@ -1,6 +1,6 @@
 # About
 
-This is the source code for the types-publisher service, which publishes the contents of (DefinitelyTyped)[https://github.com/DefinitelyTyped/DefinitelyTyped] to npm.
+This is the source code for the types-publisher service, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
 
 # Disclaimer  
 
