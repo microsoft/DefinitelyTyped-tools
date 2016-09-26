@@ -4,7 +4,7 @@ import * as path from "path";
 
 import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "./logging";
-import { mapAsyncOrdered, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
+import { mapAsyncOrdered, normalizeSlashes, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
 
 export interface TypingParseFailResult {
 	kind: "fail";
@@ -278,7 +278,7 @@ function referencedFiles(src: ts.SourceFile, subDirectory: string): string[] {
 		const full = path.normalize(path.join(subDirectory, ref));
 		// If the *normalized* path starts with "..", then it reaches outside of srcDirectory.
 		if (!full.startsWith("..")) {
-			out.push(full);
+			out.push(normalizeSlashes(full));
 		}
 	}
 }

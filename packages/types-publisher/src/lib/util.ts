@@ -53,7 +53,7 @@ export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: 
 	function relativePath(file: string): string {
 		const prefix = dirPath + path.sep;
 		assert(file.startsWith(prefix));
-		return file.slice(prefix.length);
+		return normalizeSlashes(file.slice(prefix.length));
 	}
 	function ignoreRelative(file: string, stats: Stats): boolean {
 		return !keepIf(relativePath(file), stats);
@@ -147,4 +147,8 @@ function initArray<T>(length: number, makeElement: () => T): T[] {
 		arr[i] = makeElement();
 	}
 	return arr;
+}
+
+export function normalizeSlashes(path: string): string {
+	return path.replace(/\\/g, "/");
 }
