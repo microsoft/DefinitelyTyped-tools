@@ -11,23 +11,23 @@
     "longjohn": "^0.2.11",
     "moment": "^2.13.0",
     "node-fetch": "^1.5.3",
-    "nodegit": "^0.15.1",
+    "nodegit": "^0.16.0",
     "npm": "^3.10.7",
     "npm-registry-client": "^7.1.2",
     "recursive-readdir": "^2.0.0",
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
-    "yargs": "^4.7.1"
+    "typescript": "^2.0.3",
+    "yargs": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^4.0.29",
-    "@types/node-fetch": "0.0.2",
+    "@types/node": "^6.0.41",
+    "@types/node-fetch": "0.0.4",
     "@types/recursive-readdir": "^1.2.27",
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",
-    "@types/yargs": "^0.0.27",
-    "tslint": "^3.14.0-dev.0",
-    "typescript": "^2.0.0"
+    "@types/yargs": "^0.0.31",
+    "tslint": "^3.15.1"
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",

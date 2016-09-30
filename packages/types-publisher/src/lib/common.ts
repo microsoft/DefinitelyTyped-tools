@@ -158,7 +158,7 @@ export function computeHash(content: string) {
 	content = content.replace(/\r\n?/g, "\n");
 
 	const h = crypto.createHash("sha256");
-	h.update(content, "utf-8");
+	h.update(content, "utf8");
 	return <string> h.digest("hex");
 }
 
