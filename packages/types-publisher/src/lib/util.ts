@@ -152,3 +152,7 @@ function initArray<T>(length: number, makeElement: () => T): T[] {
 export function normalizeSlashes(path: string): string {
 	return path.replace(/\\/g, "/");
 }
+
+export function hasOwnProperty(object: {}, propertyName: string): boolean {
+	return Object.prototype.hasOwnProperty.call(object, propertyName);
+}

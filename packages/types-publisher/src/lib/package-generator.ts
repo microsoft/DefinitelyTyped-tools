@@ -1,6 +1,6 @@
 import { AnyPackage, TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
 import { Log, Logger, quietLogger } from "./logging";
-import { readFile, readJson, writeFile } from "./util";
+import { hasOwnProperty, readFile, readJson, writeFile } from "./util";
 import Versions, { VersionInfo } from "./versions";
 import * as fsp from "fs-promise";
 import * as path from "path";
@@ -92,23 +92,27 @@ function filePath(typing: TypingsData, fileName: string): string {
 	return path.join(typing.root, fileName);
 }
 
-async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: { [name: string]: TypingsData }): Promise<string> {
+type Dependencies = { [name: string]: string };
+
+async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = filePath(typing, "package.json");
 	interface PartialPackageJson {
-		dependencies?: { [name: string]: string };
+		dependencies?: Dependencies;
+		peerDependencies?: Dependencies;
 		description: string;
 	}
 	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
-	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "description"].includes(field));
+	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
 	// Kludge: ignore "scripts" (See https://github.com/DefinitelyTyped/definition-tester/issues/35)
 	if (ignoredField && ignoredField !== "scripts") {
 		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
 	}
 
 	const dependencies = pkg.dependencies || {};
-	addInferredDependencies(dependencies, typing, availableTypes);
+	const peerDependencies = pkg.peerDependencies || {};
+	addInferredDependencies(dependencies, peerDependencies, typing, availableTypes);
 
 	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
 
@@ -130,6 +134,7 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 		},
 		scripts: {},
 		dependencies,
+		peerDependencies,
 		typings: typing.definitionFilename,
 		typesPublisherContentHash: contentHash
 	};
@@ -137,16 +142,25 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 	return JSON.stringify(out, undefined, 4);
 }
 
-function addInferredDependencies(dependencies: { [name: string]: string }, typing: TypingsData, availableTypes: { [name: string]: TypingsData }): void {
-	function addDependency(depdendency: string): void {
-		if (!Object.prototype.hasOwnProperty.call(dependencies, depdendency) && availableTypes.hasOwnProperty(depdendency)) {
-			// 1st case: Don't add a dependency if it was specified in the package.json or if it has already been added.
-			// 2nd case: If it's not a package we know of, just ignore it.
+/** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
+function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, availableTypes: TypesDataFile): void {
+	function addDependency(dependency: string): void {
+		const typesDependency = fullPackageName(dependency);
+
+		// A dependency "foo" is already handled if we already have a dependency/peerDependency on the package "foo" or "@types/foo".
+		function handlesDependency(deps: Dependencies): boolean {
+			return hasOwnProperty(deps, dependency) || hasOwnProperty(deps, typesDependency);
+		}
+
+		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && hasOwnProperty(availableTypes, dependency)) {
+			// 1st/2nd case: Don't add a dependency if it was specified in the package.json or if it has already been added.
+			// 3rd case: If it's not a package we know of, just ignore it.
 			// For example, we may have an import of "http", where the package is depending on "node" to provide that.
-			dependencies[fullPackageName(depdendency)] = "*";
+			dependencies[typesDependency] = "*";
 			// To use a non-latest version, that version must be made explicit in the partial package.json from a DefinitelyTyped directory.
 		}
 	}
+
 	typing.moduleDependencies.forEach(addDependency);
 	typing.libraryDependencies.forEach(addDependency);
 }
