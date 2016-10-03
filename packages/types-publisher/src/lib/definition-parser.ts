@@ -289,31 +289,41 @@ function referencedFiles(src: ts.SourceFile, subDirectory: string): string[] {
  */
 function imports(src: ts.SourceFile): string[] {
 	const out: string[] = [];
+	findImports(src.statements);
+	return out;
 
-	for (const node of src.statements) {
-		switch (node.kind) {
-			case ts.SyntaxKind.ImportDeclaration:
-			case ts.SyntaxKind.ExportDeclaration: {
-				const decl = node as ts.ImportDeclaration | ts.ExportDeclaration;
-				if (decl.moduleSpecifier && decl.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
-					out.push(stripQuotes(decl.moduleSpecifier.getText()));
+	function findImports(statements: ts.Statement[]) {
+		for (const node of statements) {
+			switch (node.kind) {
+				case ts.SyntaxKind.ImportDeclaration:
+				case ts.SyntaxKind.ExportDeclaration: {
+					const decl = node as ts.ImportDeclaration | ts.ExportDeclaration;
+					if (decl.moduleSpecifier && decl.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
+						out.push(stripQuotes(decl.moduleSpecifier.getText()));
+					}
+					break;
 				}
-				break;
-			}
 
-			case ts.SyntaxKind.ImportEqualsDeclaration: {
-				const decl = node as ts.ImportEqualsDeclaration;
-				if (decl.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
-					out.push(parseRequire(decl.moduleReference.getText()));
+				case ts.SyntaxKind.ImportEqualsDeclaration: {
+					const decl = node as ts.ImportEqualsDeclaration;
+					if (decl.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
+						out.push(parseRequire(decl.moduleReference.getText()));
+					}
+					break;
 				}
-				break;
-			}
 
-			default:
+				case ts.SyntaxKind.ModuleDeclaration: {
+					const decl = node as ts.ModuleDeclaration;
+					if (decl.name.kind === ts.SyntaxKind.StringLiteral) {
+						findImports((decl.body as ts.ModuleBlock).statements);
+					}
+					break;
+				}
+
+				default:
+			}
 		}
 	}
-
-	return out;
 
 	function parseRequire(text: string): string {
 		const match = /require\(["'](.*)["']\)/.exec(text);
