@@ -2,7 +2,7 @@
 
 This is the source code for the types-publisher service, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
 
-# Disclaimer  
+# Disclaimer
 
 If there's functionality from the project you'd like to use, please file an issue detailing that. The script isn't intended for public consumption (i.e. we will break the API whenever convenient for us).
 
@@ -341,10 +341,10 @@ The script `npm run make-server-run` will trigger the local webhook just like Gi
 # Using the webhook
 
 ```sh
-npm run webhook
+npm run webhook-dry
 ```
 
-This requires the `GITHUB_SECRET` and `GITHUB_ACCESS_TOKEN` environment variables to be set; see the "Environment variables" section.
+This requires the `GITHUB_SECRET`, `GITHUB_ACCESS_TOKEN`, and `PORT` environment variables to be set; see the "Environment variables" section.
 
 # Settings
 

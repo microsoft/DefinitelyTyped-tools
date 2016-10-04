@@ -43,11 +43,6 @@ declare module "npm-registry-client" {
 	export = RegClient;
 }
 
-declare module "buffer-equals-constant" {
-	function f(a: Buffer, b: Buffer): boolean;
-	export = f;
-}
-
 declare module "fs-promise" {
 	export function emptyDir(dirPath: string): Promise<void>
 	export function ensureDir(dirPath: string): Promise<void>;

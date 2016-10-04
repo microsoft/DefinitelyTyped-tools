@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "azure-storage": "1.2.0",
-    "buffer-equals-constant": "^1.0.0",
     "fs-promise": "^0.5.0",
     "fstream": "^1.0.10",
     "longjohn": "^0.2.11",
@@ -45,6 +44,7 @@
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
     "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts",
+    "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
     "make-production-server-run": "node bin/make-server-run.js --remote"
   },
@@ -58,7 +58,7 @@
     "url": "https://github.com/Microsoft/types-publisher/issues"
   },
   "engines": {
-    "node": "^6.2.2"
+    "node": "^6.7.0"
   },
   "homepage": "https://github.com/Microsoft/types-publisher#readme"
 }
