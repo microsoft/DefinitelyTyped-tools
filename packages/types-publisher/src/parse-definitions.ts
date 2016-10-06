@@ -31,8 +31,8 @@ async function processDir(name: string): Promise<{ data: TypingsData | undefined
 
 async function filterPaths(paths: string[]): Promise<string[]> {
 	const fullPaths = paths
-		// Remove hidden paths and node_modules
-		.filter(s => s[0] !== "_" && s[0] !== "." && s !== "node_modules")
+		// Remove hidden paths and known non-package directories
+		.filter(s => s[0] !== "_" && s[0] !== "." && s !== "node_modules" && s !== "scripts")
 		// Sort by name
 		.sort();
 	// Remove non-folders
