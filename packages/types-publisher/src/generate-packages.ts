@@ -1,5 +1,5 @@
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, readNotNeededPackages, readTypesDataFile, TypesDataFile, typingsFromData } from "./lib/common";
+import { AnyPackage, existsTypesDataFileSync, getPackage, readNotNeededPackages, readTypesDataFile, TypesDataFile, typingsFromData } from "./lib/common";
 import { logger, moveLogs, writeLog } from "./lib/logging";
 import { done, nAtATime } from "./lib/util";
 import generateAnyPackage from "./lib/package-generator";
@@ -37,12 +37,8 @@ export default async function main(all: boolean = false): Promise<void> {
 }
 
 async function single(singleName: string): Promise<void> {
-	const { typeData, allPackages, versions } = await loadPrerequisites();
-
-	const pkg = allPackages.find(t => t.typingsPackageName === singleName);
-	if (!pkg) {
-		throw new Error(`No package ${singleName} to generate.`);
-	}
+	const { typeData, versions } = await loadPrerequisites();
+	const pkg = getPackage(typeData, singleName);
 	const logs = await generateAnyPackage(pkg, typeData, versions);
 	console.log(logs.join("\n"));
 }

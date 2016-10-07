@@ -121,6 +121,23 @@ export function existsTypesDataFileSync(): boolean {
 export async function readTypesDataFile(): Promise<TypesDataFile> {
 	return <TypesDataFile> (await readJson(dataFilePath(typesDataFilename)));
 }
+
+/**
+ * Read all typings and extract a single one.
+ * Do *not* call this in a loop; use `readTypings` instead.
+ */
+export async function readPackage(packageName: string): Promise<TypingsData> {
+	return getPackage(await readTypesDataFile(), packageName);
+}
+
+export function getPackage(typings: TypesDataFile, packageName: string): TypingsData {
+	const pkg = typings[packageName];
+	if (pkg === undefined) {
+		throw new Error(`Can't find package ${packageName}`);
+	}
+	return pkg;
+}
+
 export function typingsFromData(typeData: TypesDataFile): TypingsData[] {
 	return Object.keys(typeData).map(packageName => typeData[packageName]);
 }

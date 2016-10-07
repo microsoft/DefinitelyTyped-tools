@@ -1,5 +1,5 @@
 import * as yargs from "yargs";
-import { existsTypesDataFileSync, readAllPackages, writeDataFile } from "./lib/common";
+import { existsTypesDataFileSync, readAllPackages, readPackage, writeDataFile } from "./lib/common";
 import { done, nAtATime } from "./lib/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 
@@ -8,13 +8,18 @@ if (!module.parent) {
 		console.log("Run parse-definitions first!");
 	} else {
 		const skipDownloads = yargs.argv.skipDownloads;
-		const full = yargs.argv.full;
-		done(main(skipDownloads, full));
+		const single = yargs.argv.single;
+		if (single) {
+			done(doSingle(single, skipDownloads));
+		} else {
+			const full = yargs.argv.full;
+			done(main(skipDownloads, full));
+		}
 	}
 }
 
 export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
-	let packages = await readAllPackages();
+	const packages = await readAllPackages();
 	console.log(`Loaded ${packages.length} entries`);
 
 	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
@@ -28,6 +33,12 @@ export default async function main(skipDownloads: boolean, full: boolean): Promi
 	if (full) {
 		await writeDataFile("search-index-full.json", records.map(verboseRecord), true);
 	}
+}
+
+async function doSingle(name: string, skipDownloads: boolean): Promise<void> {
+	const pkg = await readPackage(name);
+	const record = await createSearchRecord(pkg, skipDownloads);
+	console.log(verboseRecord(record));
 }
 
 function verboseRecord(r: SearchRecord): {} {
