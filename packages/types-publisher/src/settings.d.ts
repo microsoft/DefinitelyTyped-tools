@@ -1,9 +1,6 @@
 interface PublishSettings {
 	// URL of the NPM registry to upload to.
 	npmRegistry: string;
-	// Username to use to publish to NPM.
-	// Password is in the environment variable NPM_PASSWORD.
-	npmUsername: string;
 
 	// e.g. 'typings', not '@typings'
 	scopeName: string;
@@ -33,6 +30,9 @@ interface PublishSettings {
 
 	// Name of the azure container.
 	azureContainer: string;
+
+	// URL of azure keyvault.
+	azureKeyvault: string;
 
 	// Issue in types-publisher that we will use to report webhook errors.
 	errorsIssue: string;

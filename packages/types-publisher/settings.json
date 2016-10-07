@@ -1,6 +1,5 @@
 {
 	"npmRegistry": "https://registry.npmjs.org/",
-	"npmUsername": "types",
 	"scopeName": "types",
 	"outputPath": "./output",
 	"validateOutputPath": "./validateOutput",
@@ -12,5 +11,6 @@
 
 	"azureStorageAccount": "typespublisher",
 	"azureContainer": "typespublisher",
+	"azureKeyvault": "https://types-publisher-keys.vault.azure.net",
 	"errorsIssue": "Microsoft/types-publisher/issues/40"
 }

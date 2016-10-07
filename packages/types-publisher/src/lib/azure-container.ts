@@ -1,49 +1,79 @@
-import { BlobResult, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
+import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
 import { settings } from "./common";
+import { getSecret, Secret } from "./secrets";
 import { gzip, unGzip, parseJson, streamOfString, stringOfStream } from "./util";
 
 const name = settings.azureContainer;
-const service = createBlobService(settings.azureStorageAccount, process.env["AZURE_STORAGE_ACCESS_KEY"]);
 
-export function setCorsProperties(): Promise<void> {
-	const properties: ServicePropertiesResult.ServiceProperties = {
-		Cors: {
-			CorsRule: [
-				{
-					AllowedOrigins: ["*"],
-					AllowedMethods: ["GET"],
-					AllowedHeaders: [],
-					ExposedHeaders: [],
-					MaxAgeInSeconds: 60 * 60 * 24 // 1 day
-				}
-			]
-		}
-	};
-	return promisifyErrorOrResponse(cb => service.setServiceProperties(properties, cb));
-}
+export default class BlobWriter {
+	static async create(): Promise<BlobWriter> {
+		return new BlobWriter(createBlobService(settings.azureStorageAccount, await getSecret(Secret.AZURE_STORAGE_ACCESS_KEY)));
+	}
 
-export function ensureCreated(options: CreateContainerOptions): Promise<void> {
-	return promisifyErrorOrResult<ContainerResult>(cb => service.createContainerIfNotExists(name, options, cb)).then(() => {});
-}
+	private constructor(private service: BlobService) {}
 
-export async function createBlobFromFile(blobName: string, fileName: string): Promise<void> {
-	return createBlobFromStream(blobName, fs.createReadStream(fileName));
-}
+	setCorsProperties(): Promise<void> {
+		const properties: ServicePropertiesResult.ServiceProperties = {
+			Cors: {
+				CorsRule: [
+					{
+						AllowedOrigins: ["*"],
+						AllowedMethods: ["GET"],
+						AllowedHeaders: [],
+						ExposedHeaders: [],
+						MaxAgeInSeconds: 60 * 60 * 24 // 1 day
+					}
+				]
+			}
+		};
+		return promisifyErrorOrResponse(cb => this.service.setServiceProperties(properties, cb));
+	}
 
-export async function createBlobFromText(blobName: string, text: string): Promise<void> {
-	return createBlobFromStream(blobName, streamOfString(text));
-}
+	ensureCreated(options: CreateContainerOptions): Promise<void> {
+		return promisifyErrorOrResult<ContainerResult>(cb =>
+			this.service.createContainerIfNotExists(name, options, cb)).then(() => {});
+	}
 
-function createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
-	const options: CreateBlobRequestOptions =  {
-		contentSettings: {
-			contentEncoding: "GZIP",
-			contentType: "application/json; charset=utf-8"
-		}
-	};
-	return streamDone(gzip(stream).pipe(service.createWriteStreamToBlockBlob(name, blobName, options)));
+	createBlobFromFile(blobName: string, fileName: string): Promise<void> {
+		return this.createBlobFromStream(blobName, fs.createReadStream(fileName));
+	}
+
+	createBlobFromText(blobName: string, text: string): Promise<void> {
+		return this.createBlobFromStream(blobName, streamOfString(text));
+	}
+
+	async listBlobs(prefix: string): Promise<BlobResult[]> {
+		const once = (token: ContinuationToken | undefined) =>
+			promisifyErrorOrResult<ListBlobsResult>(cb =>
+				this.service.listBlobsSegmentedWithPrefix(name, prefix, token, cb));
+
+		const out: BlobResult[] = [];
+		let token: ContinuationToken | undefined = undefined;
+		do {
+			const {entries, continuationToken}: ListBlobsResult = await once(token);
+			out.push(...entries);
+			token = continuationToken;
+		} while (token);
+
+		return out;
+	}
+
+	deleteBlob(blobName: string): Promise<void> {
+		return promisifyErrorOrResponse(cb =>
+			this.service.deleteBlob(name, blobName, cb));
+	}
+
+	private createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
+		const options: CreateBlobRequestOptions =  {
+			contentSettings: {
+				contentEncoding: "GZIP",
+				contentType: "application/json; charset=utf-8"
+			}
+		};
+		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(name, blobName, options)));
+	}
 }
 
 function streamDone(stream: NodeJS.WritableStream): Promise<void> {
@@ -75,25 +105,6 @@ export async function readBlob(blobName: string): Promise<string> {
 
 export async function readJsonBlob(blobName: string): Promise<any> {
 	return parseJson(await readBlob(blobName));
-}
-
-export async function listBlobs(prefix: string): Promise<BlobResult[]> {
-	const once = (token: ContinuationToken | undefined) =>
-		promisifyErrorOrResult<ListBlobsResult>(cb => service.listBlobsSegmentedWithPrefix(name, prefix, token, cb));
-
-	const out: BlobResult[] = [];
-	let token: ContinuationToken | undefined = undefined;
-	do {
-		const {entries, continuationToken}: ListBlobsResult = await once(token);
-		out.push(...entries);
-		token = continuationToken;
-	} while (token);
-
-	return out;
-}
-
-export function deleteBlob(blobName: string): Promise<void> {
-	return promisifyErrorOrResponse(cb => service.deleteBlob(name, blobName, cb));
 }
 
 export function urlOfBlob(blobName: string): string {

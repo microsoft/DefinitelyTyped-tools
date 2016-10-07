@@ -1,32 +1,33 @@
 import assert = require("assert");
 import * as fsp from "fs-promise";
 import * as path from "path";
-import * as container from "./azure-container";
+import BlobWriter, { urlOfBlob } from "./azure-container";
 import { Logger, logger, logPath, writeLog } from "./logging";
 import { unique } from "./util";
 
 const maxNumberOfOldLogsDirectories = 5;
 
 export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Promise<void> {
+	const container = await BlobWriter.create();
 	await container.ensureCreated({ publicAccessLevel: "blob" });
 	await container.setCorsProperties();
-	const [dataUrls, logUrls] = await uploadBlobs(timeStamp);
-	await uploadIndex(timeStamp, dataUrls, logUrls);
+	const [dataUrls, logUrls] = await uploadBlobs(container, timeStamp);
+	await uploadIndex(container, timeStamp, dataUrls, logUrls);
 };
 
 // View uploaded files at:
 // https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher
-async function uploadBlobs(timeStamp: string): Promise<[string[], string[]]> {
+async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[string[], string[]]> {
 	const [log, logResult] = logger();
 	const [dataUrls, logUrls] = await Promise.all([
-		await uploadDirectory("data", "data", log),
-		await uploadLogs(timeStamp, log)
+		await uploadDirectory(container, "data", "data", log),
+		await uploadLogs(container, timeStamp, log)
 	]);
 
 	// Finally, output blob logs and upload them.
 	const blobLogs = "upload-blobs.md";
 	await writeLog(blobLogs, logResult());
-	logUrls.push(await uploadFile(logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
+	logUrls.push(await uploadFile(container, logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
 
 	return [dataUrls, logUrls];
 };
@@ -38,12 +39,12 @@ function logsUploadedLocation(timeStamp: string) {
 	return logsPrefix + timeStamp;
 }
 
-async function uploadLogs(timeStamp: string, log: Logger): Promise<string[]> {
-	await removeOldDirectories(logsPrefix, maxNumberOfOldLogsDirectories - 1, log);
-	return await uploadDirectory(logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
+async function uploadLogs(container: BlobWriter, timeStamp: string, log: Logger): Promise<string[]> {
+	await removeOldDirectories(container, logsPrefix, maxNumberOfOldLogsDirectories - 1, log);
+	return await uploadDirectory(container, logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
 }
 
-async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Logger, filter?: (fileName: string) => boolean): Promise<string[]> {
+async function uploadDirectory(container: BlobWriter, uploadedDirPath: string, dirPath: string, log: Logger, filter?: (fileName: string) => boolean): Promise<string[]> {
 	let files = await fsp.readdir(dirPath);
 	if (filter) {
 		files = files.filter(filter);
@@ -51,30 +52,30 @@ async function uploadDirectory(uploadedDirPath: string, dirPath: string, log: Lo
 	return await Promise.all(files.map(fileName => {
 		const fullPath = path.join(dirPath, fileName);
 		const blobName = `${uploadedDirPath}/${fileName}`;
-		return logAndUploadFile(blobName, fullPath, log);
+		return logAndUploadFile(container, blobName, fullPath, log);
 	}));
 }
 
-async function logAndUploadFile(blobName: string, filePath: string, log: Logger): Promise<string> {
-	const url = container.urlOfBlob(blobName);
+async function logAndUploadFile(container: BlobWriter, blobName: string, filePath: string, log: Logger): Promise<string> {
+	const url = urlOfBlob(blobName);
 	log(`Uploading ${filePath} to ${url}`);
 	await container.createBlobFromFile(blobName, filePath);
 	return url;
 }
-async function uploadFile(blobName: string, filePath: string): Promise<string> {
-	const url = container.urlOfBlob(blobName);
+async function uploadFile(container: BlobWriter, blobName: string, filePath: string): Promise<string> {
+	const url = urlOfBlob(blobName);
 	await container.createBlobFromFile(blobName, filePath);
 	return url;
 }
 
-async function deleteDirectory(uploadedDirPath: string, log: Logger): Promise<void> {
+async function deleteDirectory(container: BlobWriter, uploadedDirPath: string, log: Logger): Promise<void> {
 	const blobs = await container.listBlobs(uploadedDirPath);
 	const blobNames = blobs.map(b => b.name);
 	log(`Deleting directory ${uploadedDirPath}: delete files ${blobNames}`);
 	await Promise.all(blobNames.map(b => container.deleteBlob(b)));
 }
 
-async function removeOldDirectories(prefix: string, maxDirectories: number, log: Logger): Promise<void> {
+async function removeOldDirectories(container: BlobWriter, prefix: string, maxDirectories: number, log: Logger): Promise<void> {
 	const list = await container.listBlobs(prefix);
 
 	const dirNames = unique(list.map(({name}) => {
@@ -92,12 +93,12 @@ async function removeOldDirectories(prefix: string, maxDirectories: number, log:
 	const toDelete = sortedNames.slice(0, sortedNames.length - maxDirectories);
 
 	log(`Too many old logs, so removing the following directories: [${toDelete}]`);
-	await Promise.all(toDelete.map(d => deleteDirectory(prefix + d, log)));
+	await Promise.all(toDelete.map(d => deleteDirectory(container, prefix + d, log)));
 }
 
 // Provides links to the latest blobs.
 // These are at: https://typespublisher.blob.core.windows.net/typespublisher/index.html
-function uploadIndex(timeStamp: string, dataUrls: string[], logUrls: string[]): Promise<void> {
+function uploadIndex(container: BlobWriter, timeStamp: string, dataUrls: string[], logUrls: string[]): Promise<void> {
 	return container.createBlobFromText("index.html", createIndex());
 
 	function createIndex(): string {

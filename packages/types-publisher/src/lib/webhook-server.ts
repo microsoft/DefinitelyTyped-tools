@@ -8,8 +8,6 @@ import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
 import { currentTimeStamp, parseJson, stringOfStream } from "./util";
 
-const rollingLogs = new RollingLogs("webhook-logs.md", 1000);
-
 export default async function server(key: string, githubAccessToken: string, dry: boolean): Promise<Server> {
 	const client = await NpmClient.create();
 	return listenToGithub(key, githubAccessToken, dry, updateOneAtATime(async (log, timeStamp) => {
@@ -21,7 +19,7 @@ export default async function server(key: string, githubAccessToken: string, dry
 	}));
 }
 
-function writeLog(logs: LogWithErrors): Promise<void> {
+function writeLog(rollingLogs: RollingLogs, logs: LogWithErrors): Promise<void> {
 	return rollingLogs.write(joinLogWithErrors(logs));
 }
 
@@ -47,6 +45,7 @@ function webResult(dry: boolean, timeStamp: string): string {
 
 /** @param onUpdate: returns a promise in case it may error. Server will shut down on errors. */
 function listenToGithub(key: string, githubAccessToken: string, dry: boolean, onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined): Server {
+	const rollingLogs = RollingLogs.create("webhook-logs.md", 1000);
 	const webText = webResult(dry, currentTimeStamp());
 	const server = createServer((req, resp) => {
 		switch (req.method) {
@@ -67,9 +66,9 @@ function listenToGithub(key: string, githubAccessToken: string, dry: boolean, on
 		const [log, logResult] = loggerWithErrors();
 		const timeStamp = currentTimeStamp();
 		try {
-			work().then(() => writeLog(logResult())).catch(onError);
+			work().then(() => rollingLogs.then(logs => writeLog(logs, logResult()))).catch(onError);
 		} catch (error) {
-			writeLog(logResult()).then(() => onError(error)).catch(onError);
+			rollingLogs.then(logs => writeLog(logs, logResult())).then(() => onError(error)).catch(onError);
 		}
 
 		function onError(error: Error): void {

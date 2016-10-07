@@ -1,14 +1,15 @@
 import * as yargs from "yargs";
 import server from "./lib/webhook-server";
 import { setIssueOk } from "./lib/issue-updater";
+import { getSecret, Secret } from "./lib/secrets";
 
 if (!module.parent) {
 	main().catch(console.error);
 }
 
 export default async function main(): Promise<void> {
-	const key = process.env["GITHUB_SECRET"];
-	const githubAccessToken = process.env["GITHUB_ACCESS_TOKEN"];
+	const key = await getSecret(Secret.GITHUB_SECRET);
+	const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
 	const dry = !!(yargs.argv.dry || process.env["WEBHOOK_FORCE_DRY"]);
 	const port = process.env["PORT"];
 
