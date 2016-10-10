@@ -10,8 +10,8 @@ if (!module.parent) {
 export default async function main(): Promise<void> {
 	const key = await getSecret(Secret.GITHUB_SECRET);
 	const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
-	const dry = !!(yargs.argv.dry || process.env["WEBHOOK_FORCE_DRY"]);
-	const port = process.env["PORT"];
+	const dry = !!(yargs.argv.dry || process.env.WEBHOOK_FORCE_DRY);
+	const port = process.env.PORT;
 
 	if (!(key && githubAccessToken && port)) {
 		console.log("The environment variables GITHUB_SECRET and GITHUB_ACCESS_TOKEN and PORT must be set.");

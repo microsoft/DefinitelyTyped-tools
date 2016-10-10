@@ -15,8 +15,7 @@ export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Prom
 	await uploadIndex(container, timeStamp, dataUrls, logUrls);
 };
 
-// View uploaded files at:
-// https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher
+// View uploaded files at: https://ms.portal.azure.com under "typespublisher"
 async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[string[], string[]]> {
 	const [log, logResult] = logger();
 	const [dataUrls, logUrls] = await Promise.all([
@@ -44,7 +43,10 @@ async function uploadLogs(container: BlobWriter, timeStamp: string, log: Logger)
 	return await uploadDirectory(container, logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
 }
 
-async function uploadDirectory(container: BlobWriter, uploadedDirPath: string, dirPath: string, log: Logger, filter?: (fileName: string) => boolean): Promise<string[]> {
+async function uploadDirectory(
+	container: BlobWriter, uploadedDirPath: string, dirPath: string, log: Logger,
+	filter?: (fileName: string) => boolean): Promise<string[]> {
+
 	let files = await fsp.readdir(dirPath);
 	if (filter) {
 		files = files.filter(filter);

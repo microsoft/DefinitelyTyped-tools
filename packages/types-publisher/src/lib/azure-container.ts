@@ -1,4 +1,5 @@
-import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions, ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
+import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions,
+	ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
 import { settings } from "./common";
@@ -33,7 +34,7 @@ export default class BlobWriter {
 
 	ensureCreated(options: CreateContainerOptions): Promise<void> {
 		return promisifyErrorOrResult<ContainerResult>(cb =>
-			this.service.createContainerIfNotExists(name, options, cb)).then(() => {});
+			this.service.createContainerIfNotExists(name, options, cb)) as any as Promise<void>;
 	}
 
 	createBlobFromFile(blobName: string, fileName: string): Promise<void> {

@@ -104,7 +104,9 @@ function parseMetadata(mainFileContent: string): Metadata {
 	return { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName };
 }
 
-async function moduleInfoAndFileKind(directory: string, folderName: string, allEntryFilenames: string[], log: LoggerWithErrors): Promise<ModuleInfo & { fileKind: DefinitionFileKind }> {
+async function moduleInfoAndFileKind(directory: string, folderName: string, allEntryFilenames: string[], log: LoggerWithErrors
+	): Promise<ModuleInfo & { fileKind: DefinitionFileKind }> {
+
 	const mi = await getModuleInfo(directory, folderName, allEntryFilenames, log.info);
 	const fileKind = getFileKind(mi, log.info);
 
@@ -142,7 +144,8 @@ export async function getTypingInfo(folderName: string): Promise<TypingParseFail
 	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName } = parseMetadata(mainFileContent);
 
 	const allEntryFilenames = await entryFilesFromTsConfig(directory, log.info) || [mainFilename];
-	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles, fileKind } = await moduleInfoAndFileKind(directory, folderName, allEntryFilenames, log);
+	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles, fileKind } =
+		await moduleInfoAndFileKind(directory, folderName, allEntryFilenames, log);
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
 	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
@@ -487,7 +490,8 @@ interface ModuleInfo {
 
 function isNewGlobal(name: string): boolean {
 	// This is not a new global if it simply augments an existing one.
-	const augmentedGlobals = ["Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
+	const augmentedGlobals = [
+		"Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
 	return !augmentedGlobals.includes(name);
 }
 

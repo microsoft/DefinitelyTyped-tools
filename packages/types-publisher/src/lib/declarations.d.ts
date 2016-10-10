@@ -44,7 +44,7 @@ declare module "npm-registry-client" {
 }
 
 declare module "fs-promise" {
-	export function emptyDir(dirPath: string): Promise<void>
+	export function emptyDir(dirPath: string): Promise<void>;
 	export function ensureDir(dirPath: string): Promise<void>;
 	export function exists(path: string): Promise<boolean>;
 	export function writeFile(path: string, content: string, options: { encoding: "utf8" }): Promise<void>;
@@ -59,12 +59,13 @@ declare module "azure-storage" {
 	// Based on https://github.com/Azure/azure-storage-node/blob/master/typings/azure-storage/azure-storage.d.ts
 	// Subset that works for ts@next
 
-	export function createBlobService(storageAccount: string, storageAccessKey: string): BlobService
+	export function createBlobService(storageAccount: string, storageAccessKey: string): BlobService;
 
 	export interface BlobService {
 		createContainerIfNotExists(container: string, options: CreateContainerOptions, callback: ErrorOrResult<ContainerResult>): void;
 		createWriteStreamToBlockBlob(container: string, blob: string, options: CreateBlobRequestOptions): NodeJS.WritableStream;
-		listBlobsSegmentedWithPrefix(container: string, prefix: string, currentToken: ContinuationToken | undefined, callback: ErrorOrResult<ListBlobsResult>): void;
+		listBlobsSegmentedWithPrefix(container: string, prefix: string, currentToken: ContinuationToken | undefined,
+			callback: ErrorOrResult<ListBlobsResult>): void;
 		deleteBlob(container: string, blob: string, callback: ErrorOrResponse): void;
 
 		createOrReplaceAppendBlob(container: string, blob: string, options: CreateBlobRequestOptions, callback: ErrorOrResponse): void;
@@ -234,7 +235,7 @@ declare module "azure-storage" {
 
 // Based on http://www.nodegit.org/api/
 declare module "nodegit" {
-	export function Clone(url: string, local_path: string): Promise<Repository>;
+	export function Clone(url: string, localPath: string): Promise<Repository>;
 
 	export namespace Ignore {
 		export function pathIsIgnored(repo: Repository, path: string): Promise<boolean>;
@@ -277,7 +278,7 @@ declare module "adal-node" {
 }
 
 declare module "azure-keyvault" {
-	type AuthenticatorCallback = (error: Error | null | undefined, authorization?: string) => void
+	type AuthenticatorCallback = (error: Error | null | undefined, authorization?: string) => void;
 	class KeyVaultCredentials {
 		constructor(authenticator: (challenge: Challenge, callback: AuthenticatorCallback) => void);
 	}

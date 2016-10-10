@@ -1,5 +1,6 @@
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, getPackage, readNotNeededPackages, readTypesDataFile, TypesDataFile, typingsFromData } from "./lib/common";
+import { AnyPackage, existsTypesDataFileSync, getPackage, readNotNeededPackages, readTypesDataFile,
+	TypesDataFile, typingsFromData } from "./lib/common";
 import { logger, moveLogs, writeLog } from "./lib/logging";
 import { done, nAtATime } from "./lib/util";
 import generateAnyPackage from "./lib/package-generator";

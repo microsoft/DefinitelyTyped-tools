@@ -143,7 +143,9 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 }
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, availableTypes: TypesDataFile): void {
+function addInferredDependencies(
+	dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, availableTypes: TypesDataFile): void {
+
 	function addDependency(dependency: string): void {
 		const typesDependency = fullPackageName(dependency);
 
