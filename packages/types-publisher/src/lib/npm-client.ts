@@ -63,12 +63,13 @@ export default class NpmClient {
 	}
 
 	deprecate(packageName: string, version: string, message: string): Promise<void> {
+		const url = packageUrl(packageName.replace("/", "%2f"));
 		const params = {
 			message,
 			version,
 			auth: this.auth,
 		};
-		return promisifyVoid(cb => this.client.deprecate(packageUrl(packageName), params, cb));
+		return promisifyVoid(cb => this.client.deprecate(url, params, cb));
 	}
 }
 

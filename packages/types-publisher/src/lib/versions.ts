@@ -1,6 +1,6 @@
 import assert = require("assert");
 import * as fs from "fs";
-import { AnyPackage, TypingsData, fullPackageName, settings } from "./common";
+import { AnyPackage, TypingsData, AllPackages, fullPackageName, settings } from "./common";
 import { Logger } from "./logging";
 import { fetchJson, nAtATime, readFile, readJson, writeFile } from "./util";
 
@@ -17,20 +17,34 @@ export default class Versions {
 	}
 
 	/** Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry. */
-	static async determineFromNpm(packages: TypingsData[], log: Logger, forceUpdate: boolean): Promise<{changes: Changes, versions: Versions}> {
+	static async determineFromNpm({ typings, notNeeded }: AllPackages, log: Logger, forceUpdate: boolean): Promise<{changes: Changes, versions: Versions}> {
 		const changes: Changes = [];
 		const data: VersionMap = {};
-		await nAtATime(25, packages, async pkg => {
+
+		await nAtATime(25, typings, async pkg => {
 			const packageName = pkg.typingsPackageName;
-			let { version, contentHash } = await fetchVersionInfoFromNpm(packageName);
+			let { version, contentHash, deprecated } = await fetchVersionInfoFromNpm(packageName);
+			assert(!deprecated, `Package ${packageName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
 			if (forceUpdate || pkg.contentHash !== contentHash) {
 				log(`Changed: ${packageName}`);
 				changes.push(packageName);
 				version++;
 				contentHash = pkg.contentHash;
 			}
-			data[packageName] = { version, contentHash };
+			data[packageName] = { version, contentHash, deprecated };
 		});
+
+		await nAtATime(25, notNeeded, async pkg => {
+			const packageName = pkg.typingsPackageName;
+			let { version, contentHash, deprecated } = await fetchVersionInfoFromNpm(packageName);
+			if (!deprecated) {
+				log(`Now deprecated: ${packageName}`);
+				changes.push(packageName);
+				version++;
+			}
+			data[packageName] = { version, contentHash, deprecated };
+		});
+
 		return { changes, versions: new Versions(data) };
 	}
 
@@ -60,7 +74,7 @@ async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo
 
 	if (info.error) {
 		if (info.error === "Not found") {
-			return { version: 0, contentHash: "" };
+			return { version: 0, contentHash: "", deprecated: false };
 		}
 		else {
 			throw new Error(`Error getting version of ${packageName}: ${info.error}`);
@@ -72,7 +86,8 @@ async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo
 		const latestVersionInfo = info.versions[versionSemver];
 		assert(!!latestVersionInfo);
 		const contentHash = latestVersionInfo.typesPublisherContentHash || "";
-		return { version: versionNumberFromSemver(versionSemver), contentHash };
+		const deprecated = !!latestVersionInfo.deprecated;
+		return { version: versionNumberFromSemver(versionSemver), contentHash, deprecated };
 	}
 }
 
@@ -104,6 +119,8 @@ export interface VersionInfo {
 	version: number;
 	/** Hash of content from DefinitelyTyped. Also stored in "typesPublisherContentHash" on NPM. */
 	contentHash: string;
+	/** True if this package has been deprecated (is a not-needed package). */
+	deprecated: boolean;
 }
 
 /** Used to store a JSON file of version info for every package. */

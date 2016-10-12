@@ -45,7 +45,7 @@ function runCommand(commandDescription: string, log: LoggerWithErrors, dry: bool
 	const cmd = args.join(" ");
 	log.info(`Run ${cmd}`);
 	if (!dry) {
-		return new Promise<boolean>((resolve, reject) => {
+		return new Promise<void>((resolve, reject) => {
 			child_process.exec(cmd, { encoding: "utf8" }, (err, stdoutBuffer, stderrBuffer) => {
 				// These are wrongly typed as Buffer.
 				const stdout = <string> <any> stdoutBuffer;

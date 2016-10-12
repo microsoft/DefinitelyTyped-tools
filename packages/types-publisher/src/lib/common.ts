@@ -165,9 +165,19 @@ export async function readNotNeededPackages(): Promise<NotNeededPackage[]> {
 	return raw;
 }
 
-export async function readAllPackages(): Promise<AnyPackage[]> {
-	const [typings, notNeeded] = await Promise.all<AnyPackage[]>([ readTypings(), readNotNeededPackages() ]);
-	return typings.concat(notNeeded);
+export interface AllPackages {
+	typings: TypingsData[];
+	notNeeded: NotNeededPackage[];
+}
+
+export async function readAllPackages(): Promise<AllPackages> {
+	const [typings, notNeeded] = await Promise.all([readTypings(), readNotNeededPackages()]);
+	return { typings, notNeeded };
+}
+
+export async function readAllPackagesArray(): Promise<AnyPackage[]> {
+	const {typings, notNeeded} = await readAllPackages();
+	return (typings as AnyPackage[]).concat(notNeeded);
 }
 
 export function computeHash(content: string) {
