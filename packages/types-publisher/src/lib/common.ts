@@ -154,7 +154,7 @@ export async function readNotNeededPackages(): Promise<NotNeededPackage[]> {
 			}
 		}
 		assert(pkg.libraryName && pkg.typingsPackageName && pkg.sourceRepoURL);
-		assert(typeof pkg.asOfVersion === "string" || typeof pkg.asOfVersion === "undefined");
+		assert(typeof pkg.asOfVersion === "string" || pkg.asOfVersion === undefined);
 		assert(!pkg.projectName && !pkg.packageKind && !pkg.globals && !pkg.declaredModules);
 
 		pkg.projectName = pkg.sourceRepoURL;
