@@ -74,7 +74,7 @@ export default class Versions {
 async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo> {
 	const escapedPackageName = fullPackageName(packageName).replace(/\//g, "%2f");
 	const uri = settings.npmRegistry + escapedPackageName;
-	const info = await fetchJson(uri);
+	const info = await fetchJson(uri, { retries: true });
 
 	if (info.error) {
 		if (info.error === "Not found") {

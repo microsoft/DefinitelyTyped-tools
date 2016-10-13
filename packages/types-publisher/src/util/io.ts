@@ -38,10 +38,10 @@ export async function readJson(path: string): Promise<any> {
 	return parseJson(await readFile(path));
 }
 
-export async function fetchJson(url: string, init?: _fetch.RequestInit): Promise<any> {
-	const response = await fetch(url, init);
-	const text = await response.text();
-	return parseJson(text);
+export async function fetchJson(url: string, init?: _fetch.RequestInit & { retries?: number | true }): Promise<any> {
+	// Cast needed: https://github.com/Microsoft/TypeScript/issues/10065
+	const response = await (init && init.retries ? fetchWithRetries(url, init as _fetch.RequestInit & { retries: number | true }) : fetch(url, init));
+	return parseJson(await response.text());
 }
 
 export function writeFile(path: string, content: string): Promise<void> {
@@ -74,4 +74,17 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
 		stream.on("error", reject).on("finish", resolve);
 	});
+}
+
+async function fetchWithRetries(url: string, init: _fetch.RequestInit & { retries: number | true }): Promise<_fetch.Response> {
+	for (let retries = init.retries === true ? 5 : init.retries; retries > 1; retries--) {
+		try {
+			return await fetch(url, init);
+		} catch (err) {
+			if (!/ETIMEDOUT|ECONNRESET/.test(err.message)) {
+				throw err;
+			}
+		}
+	}
+	return await fetch(url);
 }
