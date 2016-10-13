@@ -1,4 +1,5 @@
 import * as yargs from "yargs";
+
 import server from "./lib/webhook-server";
 import { setIssueOk } from "./lib/issue-updater";
 import { getSecret, Secret } from "./lib/secrets";

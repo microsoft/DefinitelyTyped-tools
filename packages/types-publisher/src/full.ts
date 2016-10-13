@@ -1,4 +1,5 @@
 import * as yargs from "yargs";
+
 import clean from "./clean";
 import getDefinitelyTyped from "./get-definitely-typed";
 import parseDefinitions from "./parse-definitions";
@@ -10,7 +11,7 @@ import publishPackages from "./publish-packages";
 import uploadBlobs from "./upload-blobs";
 import validate from "./validate";
 import NpmClient from "./lib/npm-client";
-import { currentTimeStamp, done } from "./lib/util";
+import { currentTimeStamp, done } from "./util/util";
 
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;

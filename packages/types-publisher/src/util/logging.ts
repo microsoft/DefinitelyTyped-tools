@@ -1,7 +1,8 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
-import { home } from "./common";
-import { writeFile } from "./util";
+
+import { home } from "../lib/common";
+import { writeFile } from "./io";
 
 /** Anything capable of receiving messages is a logger. */
 export type Logger = (message: string) => void;

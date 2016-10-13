@@ -3,9 +3,12 @@ import path = require("path");
 import { existsSync, readFileSync } from "fs";
 import * as fsp from "fs-promise";
 import crypto = require("crypto");
-import { install } from "source-map-support";
-import { parseJson, readJson, writeFile } from "./util";
-install();
+import * as sourceMapSupport from "source-map-support";
+
+import { readJson, writeFile } from "../util/io";
+import { parseJson } from "../util/util";
+
+sourceMapSupport.install();
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");
 	const longjohn = require("longjohn");

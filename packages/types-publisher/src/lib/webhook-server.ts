@@ -1,12 +1,15 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
+
 import full from "../full";
+import { LoggerWithErrors, LogWithErrors, joinLogWithErrors, loggerWithErrors } from "../util/logging";
+import { stringOfStream } from "../util/io";
+import { currentTimeStamp, parseJson } from "../util/util";
+
 import RollingLogs from "./rolling-logs";
 import { settings } from "./common";
-import { LoggerWithErrors, LogWithErrors, joinLogWithErrors, loggerWithErrors } from "./logging";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
-import { currentTimeStamp, parseJson, stringOfStream } from "./util";
 
 export default async function server(key: string, githubAccessToken: string, dry: boolean): Promise<Server> {
 	const client = await NpmClient.create();

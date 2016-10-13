@@ -1,9 +1,11 @@
 import * as yargs from "yargs";
-import { AnyPackage, existsTypesDataFileSync, getPackage, readNotNeededPackages, readTypesDataFile,
+
+import { AnyPackage, existsTypesDataFileSync, getOutputPath, getPackage, readNotNeededPackages, readTypesDataFile,
 	TypesDataFile, typingsFromData } from "./lib/common";
-import { logger, moveLogs, writeLog } from "./lib/logging";
-import { done, nAtATime } from "./lib/util";
 import generateAnyPackage from "./lib/package-generator";
+import { logger, moveLogs, writeLog } from "./util/logging";
+import { writeTgz } from "./util/tgz";
+import { done, nAtATime } from "./util/util";
 import Versions, { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
@@ -14,14 +16,15 @@ if (!module.parent) {
 	} else {
 		const all = yargs.argv.all;
 		const singleName = yargs.argv.single;
+		const tgz = !!yargs.argv.tgz;
 		if (all && singleName) {
 			throw new Error("Select only one of -single=foo or --all.");
 		}
-		done((singleName ? single(singleName) : main(all)));
+		done((singleName ? single(singleName) : main(all, tgz)));
 	}
 }
 
-export default async function main(all: boolean = false): Promise<void> {
+export default async function main(all = false, tgz = false): Promise<void> {
 	const [log, logResult] = logger();
 	log(`\n## Generating ${all ? "all" : "changed"} packages\n`);
 	const { typeData, allPackages, versions } = await loadPrerequisites();
@@ -30,6 +33,9 @@ export default async function main(all: boolean = false): Promise<void> {
 
 	await nAtATime(10, packages, async pkg => {
 		const logs = await generateAnyPackage(pkg, typeData, versions);
+		if (tgz) {
+			await writeTgz(getOutputPath(pkg), getOutputPath(pkg) + ".tgz");
+		}
 		log(` * ${pkg.libraryName}`);
 		moveLogs(log, logs, line => `   * ${line}`);
 	});

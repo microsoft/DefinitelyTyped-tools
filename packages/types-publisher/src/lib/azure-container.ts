@@ -2,9 +2,13 @@ import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlob
 	ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
+
+import { streamDone, streamOfString, stringOfStream } from "../util/io";
+import { gzip, unGzip } from "../util/tgz";
+import { parseJson } from "../util/util";
+
 import { settings } from "./common";
 import { getSecret, Secret } from "./secrets";
-import { gzip, unGzip, parseJson, streamOfString, stringOfStream } from "./util";
 
 const name = settings.azureContainer;
 
@@ -75,12 +79,6 @@ export default class BlobWriter {
 		};
 		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(name, blobName, options)));
 	}
-}
-
-function streamDone(stream: NodeJS.WritableStream): Promise<void> {
-	return new Promise<void>((resolve, reject) => {
-		stream.on("error", reject).on("finish", resolve);
-	});
 }
 
 export async function readBlob(blobName: string): Promise<string> {

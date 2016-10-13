@@ -1,5 +1,7 @@
+import { fetchJson } from "../util/io";
+import { currentTimeStamp, indent } from "../util/util";
+
 import { settings } from "./common";
-import { currentTimeStamp, indent, fetchJson } from "./util";
 
 export async function setIssueOk(githubAccessToken: string): Promise<void> {
 	await doUpdate(githubAccessToken, `Server has been up as of **${currentTimeStamp()}**`);

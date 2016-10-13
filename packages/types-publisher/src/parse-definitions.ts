@@ -1,8 +1,9 @@
-import * as parser from "./lib/definition-parser";
 import * as yargs from "yargs";
+
+import * as parser from "./lib/definition-parser";
 import { TypingsData, RejectionReason, settings, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
-import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./lib/logging";
-import { done, filterAsyncOrdered } from "./lib/util";
+import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./util/logging";
+import { done, filterAsyncOrdered } from "./util/util";
 
 import fsp = require("fs-promise");
 

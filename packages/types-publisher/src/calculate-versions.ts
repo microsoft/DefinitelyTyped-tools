@@ -1,8 +1,9 @@
 import * as yargs from "yargs";
+
 import { existsTypesDataFileSync, readAllPackages } from "./lib/common";
 import Versions, { writeChanges } from "./lib/versions";
-import { done } from "./lib/util";
-import { consoleLogger } from "./lib/logging";
+import { consoleLogger } from "./util/logging";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {

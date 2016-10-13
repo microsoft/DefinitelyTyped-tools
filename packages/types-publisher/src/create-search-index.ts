@@ -1,6 +1,7 @@
 import * as yargs from "yargs";
+
 import { existsTypesDataFileSync, readAllPackagesArray, readPackage, writeDataFile } from "./lib/common";
-import { done, nAtATime } from "./lib/util";
+import { done, nAtATime } from "./util/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 
 if (!module.parent) {

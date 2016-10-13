@@ -1,9 +1,10 @@
 import fetch = require("node-fetch");
+import * as yargs from "yargs";
+
 import { settings } from "./lib/common";
-import { done } from "./lib/util";
 import { getSecret, Secret } from "./lib/secrets";
 import { expectedSignature } from "./lib/webhook-server";
-import * as yargs from "yargs";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	const remote = yargs.argv.remote;

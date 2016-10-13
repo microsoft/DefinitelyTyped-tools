@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import * as yargs from "yargs";
+
 import { existsTypesDataFileSync, readAllPackagesArray } from "./lib/common";
-import { LogWithErrors, logger, writeLog } from "./lib/logging";
 import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
-import { done } from "./lib/util";
 import Versions, { changedPackages } from "./lib/versions";
+import { LogWithErrors, logger, writeLog } from "./util/logging";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {

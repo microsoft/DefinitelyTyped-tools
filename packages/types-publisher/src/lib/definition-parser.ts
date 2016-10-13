@@ -2,9 +2,11 @@ import * as ts from "typescript";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
+import { readdirRecursive, readFile as readFileText } from "../util/io";
+import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
+import { mapAsyncOrdered, normalizeSlashes, stripQuotes } from "../util/util";
+
 import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
-import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "./logging";
-import { mapAsyncOrdered, normalizeSlashes, readdirRecursive, readFile as readFileText, stripQuotes } from "./util";
 
 export interface TypingParseFailResult {
 	kind: "fail";

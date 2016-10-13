@@ -246,6 +246,7 @@ You can also output a single package with e.g. `node bin/generate-packages.js --
 
 Use the `--single foo` option to generate just the package named "foo".
 Use the `--all` option to generate even packages that have not changed.
+Use the `--tgz` option to create `.tgz` archives as well. These should represent what is actually uploaded to NPM.
 
 ## Outputs of `generate-packages`
 

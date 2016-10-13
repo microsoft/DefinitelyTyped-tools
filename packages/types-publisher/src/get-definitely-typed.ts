@@ -1,7 +1,8 @@
 import * as fsp from "fs-promise";
 import { Clone, Ignore, Repository } from "nodegit";
+
 import { settings } from "./lib/common";
-import { done } from "./lib/util";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	done(main());

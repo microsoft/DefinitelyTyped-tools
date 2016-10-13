@@ -1,5 +1,5 @@
 import uploadBlobs from "./lib/blob-uploader";
-import { currentTimeStamp, done } from "./lib/util";
+import { currentTimeStamp, done } from "./util/util";
 
 if (!module.parent) {
 	done(uploadBlobs(currentTimeStamp()));

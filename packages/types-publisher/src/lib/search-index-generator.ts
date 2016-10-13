@@ -1,5 +1,6 @@
+import { fetchJson } from "../util/io";
+
 import { AnyPackage } from "./common";
-import { fetchJson } from "./util";
 
 export interface SearchRecord {
 	// types package name

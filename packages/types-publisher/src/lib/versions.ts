@@ -1,8 +1,11 @@
 import assert = require("assert");
 import * as fs from "fs";
+
+import { fetchJson, readFile, readJson, writeFile } from "../util/io";
+import { Logger } from "../util/logging";
+import { nAtATime } from "../util/util";
+
 import { AnyPackage, TypingsData, AllPackages, fullPackageName, settings } from "./common";
-import { Logger } from "./logging";
-import { fetchJson, nAtATime, readFile, readJson, writeFile } from "./util";
 
 const versionsFilename = "data/versions.json";
 const changesFilename = "data/version-changes.txt";
@@ -17,7 +20,8 @@ export default class Versions {
 	}
 
 	/** Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry. */
-	static async determineFromNpm({ typings, notNeeded }: AllPackages, log: Logger, forceUpdate: boolean): Promise<{changes: Changes, versions: Versions}> {
+	static async determineFromNpm({ typings, notNeeded }: AllPackages, log: Logger, forceUpdate: boolean
+		): Promise<{changes: Changes, versions: Versions}> {
 		const changes: Changes = [];
 		const data: VersionMap = {};
 

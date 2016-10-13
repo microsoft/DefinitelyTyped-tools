@@ -1,9 +1,11 @@
 import assert = require("assert");
-import { AnyPackage, fullPackageName, isNotNeededPackage, notNeededReadme, settings } from "./common";
-import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "./logging";
-import { readJson } from "./util";
-import * as path from "path";
 import * as child_process from "child_process";
+import * as path from "path";
+
+import { readJson } from "../util/io";
+import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "../util/logging";
+
+import { AnyPackage, fullPackageName, isNotNeededPackage, notNeededReadme, settings } from "./common";
 import NpmClient from "./npm-client";
 
 export async function publishPackage(client: NpmClient, pkg: AnyPackage, dry: boolean): Promise<Log> {

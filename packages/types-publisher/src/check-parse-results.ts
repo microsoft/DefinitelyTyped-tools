@@ -1,6 +1,6 @@
 import { TypingsData, existsTypesDataFileSync, readTypings } from "./lib/common";
-import { Logger, logger, writeLog } from "./lib/logging";
-import { done } from "./lib/util";
+import { Logger, logger, writeLog } from "./util/logging";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {

@@ -1,9 +1,11 @@
 import assert = require("assert");
 import * as fsp from "fs-promise";
 import * as path from "path";
+
+import { Logger, logger, logPath, writeLog } from "../util/logging";
+import { unique } from "../util/util";
+
 import BlobWriter, { urlOfBlob } from "./azure-container";
-import { Logger, logger, logPath, writeLog } from "./logging";
-import { unique } from "./util";
 
 const maxNumberOfOldLogsDirectories = 5;
 
