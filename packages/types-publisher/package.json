@@ -19,11 +19,11 @@
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
     "typescript": "^2.0.3",
-    "yargs": "^5.0.0"
+    "yargs": "^6.2.0"
   },
   "devDependencies": {
     "@types/node": "^6.0.41",
-    "@types/node-fetch": "0.0.4",
+    "@types/node-fetch": "1.6.5",
     "@types/recursive-readdir": "^1.2.27",
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",

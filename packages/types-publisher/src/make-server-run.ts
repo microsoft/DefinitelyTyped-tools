@@ -1,4 +1,4 @@
-import fetch = require("node-fetch");
+import fetch from "node-fetch";
 import * as yargs from "yargs";
 
 import { settings } from "./lib/common";

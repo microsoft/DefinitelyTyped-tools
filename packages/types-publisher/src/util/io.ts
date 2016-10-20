@@ -1,5 +1,5 @@
 import assert = require("assert");
-import fetch = require("node-fetch");
+import fetch, { RequestInit, Response } from "node-fetch";
 import * as path from "path";
 import recursiveReaddir = require("recursive-readdir");
 import { Stats } from "fs";
@@ -38,9 +38,9 @@ export async function readJson(path: string): Promise<any> {
 	return parseJson(await readFile(path));
 }
 
-export async function fetchJson(url: string, init?: _fetch.RequestInit & { retries?: number | true }): Promise<any> {
+export async function fetchJson(url: string, init?: RequestInit & { retries?: number | true }): Promise<any> {
 	// Cast needed: https://github.com/Microsoft/TypeScript/issues/10065
-	const response = await (init && init.retries ? fetchWithRetries(url, init as _fetch.RequestInit & { retries: number | true }) : fetch(url, init));
+	const response = await (init && init.retries ? fetchWithRetries(url, init as RequestInit & { retries: number | true }) : fetch(url, init));
 	return parseJson(await response.text());
 }
 
@@ -76,7 +76,7 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
 	});
 }
 
-async function fetchWithRetries(url: string, init: _fetch.RequestInit & { retries: number | true }): Promise<_fetch.Response> {
+async function fetchWithRetries(url: string, init: RequestInit & { retries: number | true }): Promise<Response> {
 	for (let retries = init.retries === true ? 5 : init.retries; retries > 1; retries--) {
 		try {
 			return await fetch(url, init);
