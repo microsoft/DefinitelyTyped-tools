@@ -5,12 +5,12 @@ import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty } from "../util/util";
 
-import { AnyPackage, TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, settings, getOutputPath } from "./common";
-import Versions, { VersionInfo } from "./versions";
+import { AnyPackage, TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, getOutputPath } from "./common";
+import Versions, { Semver, VersionInfo, versionString } from "./versions";
 
 /** Generates the package to disk */
 export default function generateAnyPackage(pkg: AnyPackage, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
-	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg) : generatePackage(pkg, availableTypes, versions);
+	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, availableTypes, versions);
 }
 
 async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
@@ -50,13 +50,13 @@ async function generatePackage(typing: TypingsData, availableTypes: TypesDataFil
 	}
 }
 
-async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<string[]> {
+async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Versions): Promise<string[]> {
 	const [log, logResult] = quietLogger();
 	const outputPath = getOutputPath(pkg);
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json and README.md");
-	const packageJson = createNotNeededPackageJSON(pkg);
+	const packageJson = createNotNeededPackageJSON(pkg, versions.versionInfo(pkg).version);
 	const readme = notNeededReadme(pkg);
 
 	log("Write metadata files to disk");
@@ -122,7 +122,7 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
 		name: fullPackageName(typing.typingsPackageName),
-		version: versionString(typing, version),
+		version: versionString(version),
 		description,
 		// keywords,
 		// homepage,
@@ -170,18 +170,10 @@ function addInferredDependencies(
 	typing.libraryDependencies.forEach(addDependency);
 }
 
-function versionString(typing: TypingsData, version: number): string {
-	let versionString = `${typing.libraryMajorVersion}.${typing.libraryMinorVersion}.${version}`;
-	if (settings.prereleaseTag) {
-		versionString = `${version}-${settings.prereleaseTag}`;
-	}
-	return versionString;
-}
-
-function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL, asOfVersion}: NotNeededPackage): string {
+function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
 	return JSON.stringify({
 		name: fullPackageName(typingsPackageName),
-		version: asOfVersion || "0.0.0",
+		version: versionString(version),
 		typings: null,
 		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 		main: "",

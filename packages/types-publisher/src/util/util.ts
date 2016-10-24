@@ -76,3 +76,19 @@ export function normalizeSlashes(path: string): string {
 export function hasOwnProperty(object: {}, propertyName: string): boolean {
 	return Object.prototype.hasOwnProperty.call(object, propertyName);
 }
+
+export function intOfString(str: string) {
+	const n = Number.parseInt(str, 10);
+	if (Number.isNaN(n)) {
+		throw new Error(`Error in parseInt(${JSON.stringify(str)})`);
+	}
+	return n;
+}
+
+export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
+	const out = {} as T;
+	for (const key of Object.keys(data).sort()) {
+		out[key] = data[key];
+	}
+	return out;
+}

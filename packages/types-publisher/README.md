@@ -376,12 +376,6 @@ This is the path to the DefinitelyTyped (or other similarly-structured) repo.
 
 This is the URL of the DefinitelyTyped repo.
 
-### prereleaseTag
-
-Optional. Example value `alpha`
-
-If present, packages are published with an e.g. `-alpha` prerelease tag as part of the version.
-
 ### tag
 
 Optional. Example value `latest`

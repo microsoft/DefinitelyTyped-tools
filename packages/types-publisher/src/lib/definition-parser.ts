@@ -4,7 +4,7 @@ import * as path from "path";
 
 import { readdirRecursive, readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { mapAsyncOrdered, normalizeSlashes, stripQuotes } from "../util/util";
+import { mapAsyncOrdered, normalizeSlashes, intOfString, stripQuotes } from "../util/util";
 
 import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 
@@ -85,8 +85,8 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 
 interface Metadata {
 	authors: string;
-	libraryMajorVersion: string;
-	libraryMinorVersion: string;
+	libraryMajorVersion: number;
+	libraryMinorVersion: number;
 	libraryName: string;
 	projectName: string;
 }
@@ -98,8 +98,8 @@ function parseMetadata(mainFileContent: string): Metadata {
 	}
 
 	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, "Unknown");
-	const libraryMajorVersion = regexMatch(/^\/\/ Type definitions for [^\n]+ v?(\d+)/m, "0");
-	const libraryMinorVersion = regexMatch(/^\/\/ Type definitions for [^\n]+ v?\d+\.(\d+)/m, "0");
+	const libraryMajorVersion = intOfString(regexMatch(/^\/\/ Type definitions for [^\n]+ v?(\d+)/m, "0"));
+	const libraryMinorVersion = intOfString(regexMatch(/^\/\/ Type definitions for [^\n]+ v?\d+\.(\d+)/m, "0"));
 	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
 	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
 

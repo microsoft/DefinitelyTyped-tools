@@ -3,9 +3,9 @@ import * as fs from "fs";
 
 import { fetchJson, readFile, readJson, writeFile } from "../util/io";
 import { Logger } from "../util/logging";
-import { nAtATime } from "../util/util";
+import { nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
-import { AnyPackage, TypingsData, AllPackages, fullPackageName, settings } from "./common";
+import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
 
 const versionsFilename = "data/versions.json";
 const changesFilename = "data/version-changes.txt";
@@ -32,7 +32,7 @@ export default class Versions {
 			if (forceUpdate || pkg.contentHash !== contentHash) {
 				log(`Changed: ${packageName}`);
 				changes.push(packageName);
-				version++;
+				version = updateVersion(version, pkg.libraryMajorVersion, pkg.libraryMinorVersion);
 				contentHash = pkg.contentHash;
 			}
 			data[packageName] = { version, contentHash, deprecated };
@@ -44,12 +44,13 @@ export default class Versions {
 			if (!deprecated) {
 				log(`Now deprecated: ${packageName}`);
 				changes.push(packageName);
-				version++;
+				version = pkg.asOfVersion ? parseSemver(pkg.asOfVersion) : { major: 0, minor: 0, patch: 0 };
 			}
 			data[packageName] = { version, contentHash, deprecated };
 		});
 
-		return { changes, versions: new Versions(data) };
+		// Sort keys so that versions.json is easy to read
+		return { changes, versions: new Versions(sortObjectKeys(data)) };
 	}
 
 	private constructor(private data: VersionMap) {}
@@ -58,10 +59,10 @@ export default class Versions {
 		return writeFile(versionsFilename, this.render());
 	}
 
-	versionInfo(typing: TypingsData): VersionInfo {
-		const info = this.data[typing.typingsPackageName];
+	versionInfo({typingsPackageName}: AnyPackage): VersionInfo {
+		const info = this.data[typingsPackageName];
 		if (!info) {
-			throw new Error(`No version info for ${typing.typingsPackageName}`);
+			throw new Error(`No version info for ${typingsPackageName}`);
 		}
 		return info;
 	}
@@ -71,6 +72,26 @@ export default class Versions {
 	}
 }
 
+/** Version of a package published to NPM. */
+export interface Semver {
+	major: number;
+	minor: number;
+	patch: number;
+}
+
+function updateVersion(prev: Semver, newMajor: number, newMinor: number): Semver {
+	if (prev.major === newMajor && prev.minor === newMinor) {
+		return { major: prev.major, minor: prev.minor, patch: prev.patch + 1 };
+	}
+	else {
+		return { major: newMajor, minor: newMinor, patch: 0 };
+	}
+}
+
+export function versionString(version: Semver): string {
+	return `${version.major}.${version.minor}.${version.patch}`;
+}
+
 async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo> {
 	const escapedPackageName = fullPackageName(packageName).replace(/\//g, "%2f");
 	const uri = settings.npmRegistry + escapedPackageName;
@@ -78,7 +99,7 @@ async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo
 
 	if (info.error) {
 		if (info.error === "Not found") {
-			return { version: 0, contentHash: "", deprecated: false };
+			return { version: { major: -1, minor: -1, patch: -1 }, contentHash: "", deprecated: false };
 		}
 		else {
 			throw new Error(`Error getting version of ${packageName}: ${info.error}`);
@@ -91,17 +112,19 @@ async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo
 		assert(!!latestVersionInfo);
 		const contentHash = latestVersionInfo.typesPublisherContentHash || "";
 		const deprecated = !!latestVersionInfo.deprecated;
-		return { version: versionNumberFromSemver(versionSemver), contentHash, deprecated };
+		return { version: parseSemver(versionSemver), contentHash, deprecated };
 	}
 }
 
-function versionNumberFromSemver(semver: string): number {
-	const rgx = /^\d+\.\d+\.(\d+)$/;
+function parseSemver(semver: string): Semver {
+	// Per the semver spec <http://semver.org/#spec-item-2>:
+ 	// "A normal version number MUST take the form X.Y.Z where X, Y, and Z are non-negative integers, and MUST NOT contain leading zeroes."
+	const rgx = /^(\d+)\.(\d+)\.(\d+)$/;
 	const match = rgx.exec(semver);
 	if (!match) {
 		throw new Error(`Unexpected semver: ${semver}`);
 	}
-	return Number.parseInt(match[1], 10);
+	return { major: intOfString(match[1]), minor: intOfString(match[2]), patch: intOfString(match[3]) };
 }
 
 // List of package names that have changed
@@ -119,8 +142,11 @@ export function writeChanges(changes: Changes): Promise<void> {
  * If it needs to be published, `version` is the version to publish and `contentHash` is the new hash.
  */
 export interface VersionInfo {
-	/** Semver patch version. */
-	version: number;
+	/**
+	 * If this package has changed, the version that we should publish.
+	 * If this package has not changed, the last version.
+	 */
+	version: Semver;
 	/** Hash of content from DefinitelyTyped. Also stored in "typesPublisherContentHash" on NPM. */
 	contentHash: string;
 	/** True if this package has been deprecated (is a not-needed package). */

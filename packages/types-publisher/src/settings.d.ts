@@ -19,9 +19,6 @@ interface PublishSettings {
 	// The branch that DefinitelyTyped is sourced from
 	sourceBranch: string;
 
-	// e.g. 'alpha'
-	prereleaseTag?: string;
-
 	// e.g. 'latest'
 	tag?: string;
 
