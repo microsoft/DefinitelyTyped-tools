@@ -18,7 +18,7 @@
     "recursive-readdir": "^2.0.0",
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
-    "typescript": "^2.0.3",
+    "typescript": "^2.0.6",
     "yargs": "^6.2.0"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",
     "@types/yargs": "^0.0.31",
-    "tslint": "4.0.0-dev.0"
+    "tslint": "4.0.0-dev.1"
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",
@@ -42,6 +42,7 @@
     "index": "node bin/create-search-index.js",
     "publish": "node bin/publish-packages.js",
     "publish-dry": "node bin/publish-packages.js --dry",
+    "publish-registry": "node bin/publish-registry.js",
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",

@@ -72,7 +72,7 @@ async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Version
 	}
 }
 
-async function clearOutputPath(outputPath: string, log: Logger): Promise<void> {
+export async function clearOutputPath(outputPath: string, log: Logger): Promise<void> {
 	log(`Create output path ${outputPath}`);
 	await fsp.mkdirp(outputPath);
 

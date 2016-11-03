@@ -51,8 +51,10 @@ async function single(singleName: string): Promise<void> {
 }
 
 async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, allPackages: AnyPackage[], versions: Versions }> {
-	const [typeData, notNeededPackages, versions] = await Promise.all([readTypesDataFile(), readNotNeededPackages(), Versions.load()]);
+	const typeData = await readTypesDataFile();
+	const notNeededPackages = await readNotNeededPackages();
+	const versions = await Versions.load();
 	const typings = typingsFromData(typeData);
-	const allPackages = (<AnyPackage[]> typings).concat(notNeededPackages);
+	const allPackages = [ ...typings, ...notNeededPackages ];
 	return { typeData, allPackages, versions };
 }

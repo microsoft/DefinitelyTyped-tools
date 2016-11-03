@@ -9,6 +9,7 @@ import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
 
 const versionsFilename = "data/versions.json";
 const changesFilename = "data/version-changes.txt";
+const additionsFilename = "data/version-additions.txt";
 
 export default class Versions {
 	static async load(): Promise<Versions> {
@@ -19,17 +20,28 @@ export default class Versions {
 		return fs.existsSync(versionsFilename);
 	}
 
-	/** Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry. */
+	/**
+	 * Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry.
+	 * `additions` is a subset of `changes`.
+	 */
 	static async determineFromNpm({ typings, notNeeded }: AllPackages, log: Logger, forceUpdate: boolean
-		): Promise<{changes: Changes, versions: Versions}> {
+		): Promise<{changes: Changes, additions: Changes, versions: Versions}> {
 		const changes: Changes = [];
+		const additions: Changes = [];
 		const data: VersionMap = {};
+
+		const defaultVersionInfo = { version: { major: -1, minor: -1, patch: -1 }, contentHash: "", deprecated: false };
 
 		await nAtATime(25, typings, async pkg => {
 			const packageName = pkg.typingsPackageName;
-			let { version, contentHash, deprecated } = await fetchVersionInfoFromNpm(packageName);
+			const versionInfo = await fetchTypesPackageVersionInfo(packageName);
+			if (!versionInfo) {
+				log(`Added: ${packageName}`);
+				additions.push(packageName);
+			}
+			let { version, contentHash, deprecated } = versionInfo || defaultVersionInfo;
 			assert(!deprecated, `Package ${packageName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
-			if (forceUpdate || pkg.contentHash !== contentHash) {
+			if (forceUpdate || !versionInfo || pkg.contentHash !== contentHash) {
 				log(`Changed: ${packageName}`);
 				changes.push(packageName);
 				version = updateVersion(version, pkg.libraryMajorVersion, pkg.libraryMinorVersion);
@@ -40,7 +52,7 @@ export default class Versions {
 
 		await nAtATime(25, notNeeded, async pkg => {
 			const packageName = pkg.typingsPackageName;
-			let { version, contentHash, deprecated } = await fetchVersionInfoFromNpm(packageName);
+			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(packageName) || defaultVersionInfo;
 			if (!deprecated) {
 				log(`Now deprecated: ${packageName}`);
 				changes.push(packageName);
@@ -50,7 +62,7 @@ export default class Versions {
 		});
 
 		// Sort keys so that versions.json is easy to read
-		return { changes, versions: new Versions(sortObjectKeys(data)) };
+		return { changes, additions, versions: new Versions(sortObjectKeys(data)) };
 	}
 
 	private constructor(private data: VersionMap) {}
@@ -92,18 +104,26 @@ export function versionString(version: Semver): string {
 	return `${version.major}.${version.minor}.${version.patch}`;
 }
 
-async function fetchVersionInfoFromNpm(packageName: string): Promise<VersionInfo> {
-	const escapedPackageName = fullPackageName(packageName).replace(/\//g, "%2f");
+/** Returns undefined if the package does not exist. */
+async function fetchTypesPackageVersionInfo(packageName: string): Promise<VersionInfo | undefined> {
+	return fetchVersionInfoFromNpm(fullPackageName(packageName).replace(/\//g, "%2f"));
+}
+
+export async function fetchVersionInfoFromNpm(escapedPackageName: string): Promise<VersionInfo | undefined> {
 	const uri = settings.npmRegistry + escapedPackageName;
 	const info = await fetchJson(uri, { retries: true });
 
 	if (info.error) {
 		if (info.error === "Not found") {
-			return { version: { major: -1, minor: -1, patch: -1 }, contentHash: "", deprecated: false };
+			return undefined;
 		}
 		else {
-			throw new Error(`Error getting version of ${packageName}: ${info.error}`);
+			throw new Error(`Error getting version at ${uri}: ${info.error}`);
 		}
+	}
+	// Kludge: NPM started returning `{}` for not-found @types packages. Should be able to remove this case once that behavior is changed.
+	else if (!info["dist-tags"]) {
+		return undefined;
 	}
 	else {
 		const versionSemver: string = info["dist-tags"].latest;
@@ -130,12 +150,19 @@ function parseSemver(semver: string): Semver {
 // List of package names that have changed
 export type Changes = string[];
 
-async function readChanges(): Promise<Changes> {
+/** Read all changed packages. */
+export async function readChanges(): Promise<Changes> {
 	return (await readFile(changesFilename)).split("\n");
 }
 
-export function writeChanges(changes: Changes): Promise<void> {
-	return writeFile(changesFilename, changes.join("\n"));
+/** Read only packages which are newly added. */
+export async function readAdditions(): Promise<Changes> {
+	return (await readFile(additionsFilename)).split("\n");
+}
+
+export async function writeChanges(changes: Changes, additions: Changes): Promise<void> {
+	await writeFile(changesFilename, changes.join("\n"));
+	await writeFile(additionsFilename, additions.join("\n"));
 }
 
 /** Latest version info for a package.

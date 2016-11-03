@@ -174,8 +174,7 @@ export interface AllPackages {
 }
 
 export async function readAllPackages(): Promise<AllPackages> {
-	const [typings, notNeeded] = await Promise.all([readTypings(), readNotNeededPackages()]);
-	return { typings, notNeeded };
+	return { typings: await readTypings(), notNeeded: await readNotNeededPackages() };
 }
 
 export async function readAllPackagesArray(): Promise<AnyPackage[]> {
