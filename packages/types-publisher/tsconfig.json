@@ -9,6 +9,12 @@
 		"noUnusedParameters": true,
 		"outDir": "bin",
 		"sourceMap": true,
-		"target": "ES6"
+		"target": "ES6",
+		"lib": ["es2016", "dom"],
+
+		"baseUrl": ".",
+		"paths": {
+			"*": ["src/types/*"]
+		}
 	}
 }
