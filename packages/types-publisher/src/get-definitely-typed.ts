@@ -15,7 +15,7 @@ export default async function main(): Promise<void> {
 }
 
 async function getRepo(): Promise<Repository> {
-	if (fsp.exists(settings.definitelyTypedPath)) {
+	if (await fsp.exists(settings.definitelyTypedPath)) {
 		const repo = await Repository.open(settings.definitelyTypedPath);
 		const currentBranch = (await repo.getCurrentBranch()).name();
 		const correctBranch = `refs/heads/${settings.sourceBranch}`;
