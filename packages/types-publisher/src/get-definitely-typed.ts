@@ -2,6 +2,7 @@ import * as fsp from "fs-promise";
 import { Clone, Ignore, Repository } from "nodegit";
 
 import { settings } from "./lib/common";
+import { Logger } from "./util/logging";
 import { done } from "./util/util";
 
 if (!module.parent) {
@@ -10,7 +11,7 @@ if (!module.parent) {
 
 export default async function main(): Promise<void> {
 	const repo = await getRepo();
-	await pull(repo);
+	await pull(repo, console.log);
 	await checkStatus(repo);
 }
 
@@ -31,7 +32,8 @@ async function getRepo(): Promise<Repository> {
 	}
 }
 
-async function pull(repo: Repository): Promise<void> {
+async function pull(repo: Repository, log: Logger): Promise<void> {
+	log(`Pulling new changes from ${settings.sourceBranch}`);
 	await repo.fetchAll();
 	await repo.mergeBranches(settings.sourceBranch, `origin/${settings.sourceBranch}`);
 }

@@ -1,7 +1,7 @@
 import assert = require("assert");
 import * as fs from "fs";
 
-import { fetchJson, readFile, readJson, writeFile } from "../util/io";
+import { fetchJson, readJson, writeJson } from "../util/io";
 import { Logger } from "../util/logging";
 import { nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
@@ -68,7 +68,7 @@ export default class Versions {
 	private constructor(private data: VersionMap) {}
 
 	save(): Promise<void> {
-		return writeFile(versionsFilename, this.render());
+		return writeJson(versionsFilename, this.data);
 	}
 
 	versionInfo({typingsPackageName}: AnyPackage): VersionInfo {
@@ -77,10 +77,6 @@ export default class Versions {
 			throw new Error(`No version info for ${typingsPackageName}`);
 		}
 		return info;
-	}
-
-	private render() {
-		return JSON.stringify(this.data, undefined, 4);
 	}
 }
 
@@ -151,18 +147,18 @@ function parseSemver(semver: string): Semver {
 export type Changes = string[];
 
 /** Read all changed packages. */
-export async function readChanges(): Promise<Changes> {
-	return (await readFile(changesFilename)).split("\n");
+export function readChanges(): Promise<Changes> {
+	return readJson(changesFilename);
 }
 
 /** Read only packages which are newly added. */
-export async function readAdditions(): Promise<Changes> {
-	return (await readFile(additionsFilename)).split("\n");
+export function readAdditions(): Promise<Changes> {
+	return readJson(additionsFilename);
 }
 
 export async function writeChanges(changes: Changes, additions: Changes): Promise<void> {
-	await writeFile(changesFilename, changes.join("\n"));
-	await writeFile(additionsFilename, additions.join("\n"));
+	await writeJson(changesFilename, changes);
+	await writeJson(additionsFilename, additions);
 }
 
 /** Latest version info for a package.

@@ -87,7 +87,9 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	log.info(`Failed ${failed.length}`);
 	log.info("");
 
-	log.info(`These packages failed: ${failed}`);
+	if (failed.length) {
+		log.info(`These packages failed: ${failed}`);
+	}
 }
 
 async function validatePackage(packageName: string, outputDirecory: string, mainLog: LoggerWithErrors) {

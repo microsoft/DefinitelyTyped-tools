@@ -60,8 +60,8 @@ async function generate(typings: TypingsData[], packageJson: {}, log: Logger): P
 	await writeOutputFile("index.json", generateRegistry(typings));
 	await writeOutputFile("README.md", readme);
 
-	async function writeOutputFile(filename: string, content: {}): Promise<void> {
-		return await writeDataFile(path.join(outputPath, filename), content);
+	function writeOutputFile(filename: string, content: {}): Promise<void> {
+		return writeDataFile(path.join(outputPath, filename), content);
 	}
 }
 
