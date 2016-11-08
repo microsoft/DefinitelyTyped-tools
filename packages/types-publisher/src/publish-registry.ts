@@ -2,9 +2,10 @@ import * as path from "path";
 import { clearOutputPath } from "./lib/package-generator";
 import * as yargs from "yargs";
 
-import { TypingsData, existsTypesDataFileSync, readTypings, writeDataFile, settings } from "./lib/common";
+import { TypingsData, existsTypesDataFileSync, readTypings, settings } from "./lib/common";
 import NpmClient from "./lib/npm-client";
 import Versions, { fetchVersionInfoFromNpm, readAdditions } from "./lib/versions";
+import { writeJson } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { done } from "./util/util";
 
@@ -61,7 +62,7 @@ async function generate(typings: TypingsData[], packageJson: {}, log: Logger): P
 	await writeOutputFile("README.md", readme);
 
 	function writeOutputFile(filename: string, content: {}): Promise<void> {
-		return writeDataFile(path.join(outputPath, filename), content);
+		return writeJson(path.join(outputPath, filename), content);
 	}
 }
 

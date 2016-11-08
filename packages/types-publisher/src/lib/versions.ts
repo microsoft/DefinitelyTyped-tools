@@ -8,8 +8,8 @@ import { nAtATime, intOfString, sortObjectKeys } from "../util/util";
 import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
 
 const versionsFilename = "data/versions.json";
-const changesFilename = "data/version-changes.txt";
-const additionsFilename = "data/version-additions.txt";
+const changesFilename = "data/version-changes.json";
+const additionsFilename = "data/version-additions.json";
 
 export default class Versions {
 	static async load(): Promise<Versions> {
