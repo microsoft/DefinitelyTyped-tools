@@ -41,7 +41,7 @@ export default async function main(dry = false) {
 		log("No new packages published, so no need to publish new registry.");
 	}
 
-	await writeLog("publishing.md", logResult());
+	await writeLog("publish-registry.md", logResult());
 }
 
 async function generateAndPublishRegistry(log: Logger, dry: boolean) {
