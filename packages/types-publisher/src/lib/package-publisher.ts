@@ -1,9 +1,9 @@
 import assert = require("assert");
-import * as child_process from "child_process";
 import * as path from "path";
 
 import { readJson } from "../util/io";
 import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "../util/logging";
+import { exec } from "../util/util";
 
 import { AnyPackage, fullPackageName, isNotNeededPackage, notNeededReadme, settings } from "./common";
 import NpmClient from "./npm-client";
@@ -43,28 +43,22 @@ export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<v
 	await runCommand("Unpublish", consoleLogger, dry, args);
 }
 
-function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: string[]): Promise<void> {
+async function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: string[]): Promise<void> {
 	const cmd = args.join(" ");
 	log.info(`Run ${cmd}`);
 	if (!dry) {
-		return new Promise<void>((resolve, reject) => {
-			child_process.exec(cmd, { encoding: "utf8" }, (err, stdoutBuffer, stderrBuffer) => {
-				// These are wrongly typed as Buffer.
-				const stdout = <string> <any> stdoutBuffer;
-				const stderr = <string> <any> stderrBuffer;
-				if (err) {
-					log.error(`${commandDescription} failed: ${JSON.stringify(err)}`);
-					log.info(`${commandDescription} failed, refer to error log`);
-					log.error(stderr);
-					reject(new Error(stderr));
-				}
-				else {
-					log.info("Ran successfully");
-					log.info(stdout);
-				}
-				resolve();
-			});
-		});
+		const { error, stdout, stderr } = await exec(cmd);
+		if (error) {
+			log.error(`${commandDescription} failed: ${JSON.stringify(error)}`);
+			log.info(`${commandDescription} failed, refer to error log`);
+			log.error(stderr);
+			throw new Error(stderr);
+		}
+		else {
+			log.info("Ran successfully");
+			log.info(stdout);
+		}
+
 	} else {
 		log.info("(dry run)");
 		return Promise.resolve();

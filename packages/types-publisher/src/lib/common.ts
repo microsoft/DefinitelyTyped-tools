@@ -5,7 +5,7 @@ import * as fsp from "fs-promise";
 import crypto = require("crypto");
 import * as sourceMapSupport from "source-map-support";
 
-import { readJson, writeFile } from "../util/io";
+import { readJson, writeJson } from "../util/io";
 import { parseJson } from "../util/util";
 
 sourceMapSupport.install();
@@ -18,7 +18,21 @@ if (process.env.LONGJOHN) {
 export const home = path.join(__dirname, "..", "..");
 export const settings: PublishSettings = parseJson(readFileSync(path.join(home, "settings.json"), "utf-8"));
 export const typesDataFilename = "definitions.json";
-export const notNeededPackagesPath = path.join(settings.definitelyTypedPath, "notNeededPackages.json");
+function notNeededPackagesPath(options: Options) {
+	return path.join(options.definitelyTypedPath, "notNeededPackages.json");
+}
+
+/** Settings that may be determined dynamically. */
+export interface Options {
+	// e.g. '../DefinitelyTyped'
+	// This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
+	definitelyTypedPath: string;
+}
+export namespace Options {
+	export const defaults: Options = {
+		definitelyTypedPath: "../DefinitelyTyped",
+	};
+}
 
 export type AnyPackage = NotNeededPackage | TypingsData;
 
@@ -106,10 +120,17 @@ export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
 	return pkg.packageKind === "not-needed";
 }
 
+export function existsDataFileSync(filename: string): boolean {
+	return existsSync(dataFilePath(filename));
+}
+
+export function readDataFile(filename: string): Promise<any> {
+	return readJson(dataFilePath(filename));
+}
+
 export async function writeDataFile(filename: string, content: {}, formatted = true) {
-	const dataDir = path.join(home, "data");
 	await fsp.ensureDir(dataDir);
-	await writeFile(path.join(dataDir, filename), JSON.stringify(content, undefined, formatted ? 4 : undefined));
+	await writeJson(dataFilePath(filename), content, formatted);
 }
 
 const dataDir = path.join(home, "data");
@@ -142,14 +163,14 @@ export function getPackage(typings: TypesDataFile, packageName: string): Typings
 }
 
 export function typingsFromData(typeData: TypesDataFile): TypingsData[] {
-	return Object.keys(typeData).map(packageName => typeData[packageName]);
+	return Object.values(typeData);
 }
 export async function readTypings(): Promise<TypingsData[]> {
 	return typingsFromData(await readTypesDataFile());
 }
 
-export async function readNotNeededPackages(): Promise<NotNeededPackage[]> {
-	const raw: any[] = (await readJson(notNeededPackagesPath)).packages;
+export async function readNotNeededPackages(options: Options): Promise<NotNeededPackage[]> {
+	const raw: any[] = (await readJson(notNeededPackagesPath(options))).packages;
 	for (const pkg of raw) {
 		for (const key in pkg) {
 			if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
@@ -173,12 +194,12 @@ export interface AllPackages {
 	notNeeded: NotNeededPackage[];
 }
 
-export async function readAllPackages(): Promise<AllPackages> {
-	return { typings: await readTypings(), notNeeded: await readNotNeededPackages() };
+export async function readAllPackages(options: Options): Promise<AllPackages> {
+	return { typings: await readTypings(), notNeeded: await readNotNeededPackages(options) };
 }
 
-export async function readAllPackagesArray(): Promise<AnyPackage[]> {
-	const {typings, notNeeded} = await readAllPackages();
+export async function readAllPackagesArray(options: Options): Promise<AnyPackage[]> {
+	const {typings, notNeeded} = await readAllPackages(options);
 	return (typings as AnyPackage[]).concat(notNeeded);
 }
 
@@ -191,12 +212,13 @@ export function computeHash(content: string) {
 	return <string> h.digest("hex");
 }
 
-export function definitelyTypedPath(dirName: string): string {
-	return path.join(settings.definitelyTypedPath, dirName);
+export function definitelyTypedPath(dirName: string, options: Options): string {
+	return path.join(options.definitelyTypedPath, dirName);
 }
 
+const outputDir = path.join(home, settings.outputPath);
 export function getOutputPath({typingsPackageName}: AnyPackage) {
-	return path.join(settings.outputPath, typingsPackageName);
+	return path.join(outputDir, typingsPackageName);
 }
 
 export function fullPackageName(typingsPackageName: string): string {

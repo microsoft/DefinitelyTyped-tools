@@ -82,9 +82,9 @@ export function moveLogs(dest: Logger, src: Log, mapper?: (message: string) => s
 }
 
 /** Perform `moveLogs` for both parts of a LogWithErrors. */
-export function moveLogsWithErrors(dest: LoggerWithErrors, {infos, errors}: LogWithErrors): void {
-	moveLogs(dest.info, infos);
-	moveLogs(dest.error, errors);
+export function moveLogsWithErrors(dest: LoggerWithErrors, {infos, errors}: LogWithErrors, mapper?: (message: string) => string): void {
+	moveLogs(dest.info, infos, mapper);
+	moveLogs(dest.error, errors, mapper);
 }
 
 const logDir = path.join(home, "logs");

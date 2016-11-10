@@ -10,9 +10,6 @@ interface PublishSettings {
 	// e.g. './validateOutput/'
 	validateOutputPath: string;
 
-	// e.g. '../DefinitelyTyped'
-	definitelyTypedPath: string;
-
 	// Git location of the source repository.
 	sourceRepository: "https://github.com/DefinitelyTyped/DefinitelyTyped.git";
 

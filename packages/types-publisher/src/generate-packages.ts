@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import { AnyPackage, existsTypesDataFileSync, getOutputPath, getPackage, readNotNeededPackages, readTypesDataFile,
+import { AnyPackage, Options, existsTypesDataFileSync, getOutputPath, getPackage, readNotNeededPackages, readTypesDataFile,
 	TypesDataFile, typingsFromData } from "./lib/common";
 import generateAnyPackage from "./lib/package-generator";
 import { logger, moveLogs, writeLog } from "./util/logging";
@@ -20,14 +20,14 @@ if (!module.parent) {
 		if (all && singleName) {
 			throw new Error("Select only one of -single=foo or --all.");
 		}
-		done((singleName ? single(singleName) : main(all, tgz)));
+		done((singleName ? single(singleName, Options.defaults) : main(Options.defaults, all, tgz)));
 	}
 }
 
-export default async function main(all = false, tgz = false): Promise<void> {
+export default async function main(options: Options, all = false, tgz = false): Promise<void> {
 	const [log, logResult] = logger();
 	log(`\n## Generating ${all ? "all" : "changed"} packages\n`);
-	const { typeData, allPackages, versions } = await loadPrerequisites();
+	const { typeData, allPackages, versions } = await loadPrerequisites(options);
 
 	const packages = all ? allPackages : await changedPackages(allPackages);
 
@@ -43,16 +43,16 @@ export default async function main(all = false, tgz = false): Promise<void> {
 	await writeLog("package-generator.md", logResult());
 }
 
-async function single(singleName: string): Promise<void> {
-	const { typeData, versions } = await loadPrerequisites();
+async function single(singleName: string, options: Options): Promise<void> {
+	const { typeData, versions } = await loadPrerequisites(options);
 	const pkg = getPackage(typeData, singleName);
 	const logs = await generateAnyPackage(pkg, typeData, versions);
 	console.log(logs.join("\n"));
 }
 
-async function loadPrerequisites(): Promise<{ typeData: TypesDataFile, allPackages: AnyPackage[], versions: Versions }> {
+async function loadPrerequisites(options: Options): Promise<{ typeData: TypesDataFile, allPackages: AnyPackage[], versions: Versions }> {
 	const typeData = await readTypesDataFile();
-	const notNeededPackages = await readNotNeededPackages();
+	const notNeededPackages = await readNotNeededPackages(options);
 	const versions = await Versions.load();
 	const typings = typingsFromData(typeData);
 	const allPackages = [ ...typings, ...notNeededPackages ];

@@ -1,12 +1,11 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
-import * as child_process from "child_process";
 import * as yargs from "yargs";
 
-import { existsTypesDataFileSync, settings, readAllPackagesArray, readTypings } from "./lib/common";
+import { Options, existsTypesDataFileSync, settings, readAllPackagesArray, readTypings } from "./lib/common";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
-import { done, nAtATime } from "./util/util";
+import { done, exec, nAtATime } from "./util/util";
 import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
@@ -28,13 +27,13 @@ if (!module.parent) {
 			done(doValidate(packageNames));
 		}
 		else {
-			main();
+			main(Options.defaults);
 		}
 	}
 }
 
-export default async function main(): Promise<void> {
-	const changed = await changedPackages(await readAllPackagesArray());
+export default async function main(options: Options): Promise<void> {
+	const changed = await changedPackages(await readAllPackagesArray(options));
 	await doValidate(changed.map(c => c.typingsPackageName));
 }
 
@@ -149,25 +148,19 @@ async function writePackage(packageDirectory: string, packageName: string) {
 }
 
 // Returns whether the command succeeded.
-function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, cmd: string, ...args: string[]): Promise<boolean> {
+async function runCommand(commandDescription: string, log: LoggerWithErrors, directory: string, cmd: string, ...args: string[]): Promise<boolean> {
 	const nodeCmd = `node ${cmd} ${args.join(" ")}`;
 	log.info(`Run ${nodeCmd}`);
-	return new Promise<boolean>(resolve => {
-		child_process.exec(nodeCmd, { encoding: "utf8", cwd: directory }, (err, stdoutBuffer, stderrBuffer) => {
-			// These are wrongly typed as Buffer.
-			const stdout = <string> <any> stdoutBuffer;
-			const stderr = <string> <any> stderrBuffer;
-			if (err) {
-				log.error(stderr);
-				log.info(stdout);
-				log.error(`${commandDescription} failed: ${JSON.stringify(err)}`);
-				log.info(`${commandDescription} failed, refer to error log`);
-				resolve(false);
-			}
-			else {
-				log.info(stdout);
-				resolve(true);
-			}
-		});
-	});
+	const { error, stdout, stderr } = await exec(nodeCmd, directory);
+	if (error) {
+		log.error(stderr);
+		log.info(stdout);
+		log.error(`${commandDescription} failed: ${JSON.stringify(error)}`);
+		log.info(`${commandDescription} failed, refer to error log`);
+		return false;
+	}
+	else {
+		log.info(stdout);
+		return true;
+	}
 }

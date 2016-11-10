@@ -7,18 +7,18 @@ import { stringOfStream } from "../util/io";
 import { currentTimeStamp, parseJson } from "../util/util";
 
 import RollingLogs from "./rolling-logs";
-import { settings } from "./common";
+import { Options, settings } from "./common";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
 
-export default async function server(key: string, githubAccessToken: string, dry: boolean): Promise<Server> {
+export default async function server(key: string, githubAccessToken: string, dry: boolean, options: Options): Promise<Server> {
 	const client = await NpmClient.create();
 	return listenToGithub(key, githubAccessToken, dry, updateOneAtATime(async (log, timeStamp) => {
 		log.info(""); log.info("");
 		log.info(`# ${timeStamp}`);
 		log.info("");
 		log.info("Starting full...");
-		await full(client, dry, timeStamp);
+		await full(client, dry, timeStamp, options);
 	}));
 }
 

@@ -1,23 +1,23 @@
 import * as fsp from "fs-promise";
 import { Clone, Ignore, Repository } from "nodegit";
 
-import { settings } from "./lib/common";
+import { Options, settings } from "./lib/common";
 import { Logger } from "./util/logging";
 import { done } from "./util/util";
 
 if (!module.parent) {
-	done(main());
+	done(main(Options.defaults));
 }
 
-export default async function main(): Promise<void> {
-	const repo = await getRepo();
+export default async function main(options: Options): Promise<void> {
+	const repo = await getRepo(options);
 	await pull(repo, console.log);
 	await checkStatus(repo);
 }
 
-async function getRepo(): Promise<Repository> {
-	if (await fsp.exists(settings.definitelyTypedPath)) {
-		const repo = await Repository.open(settings.definitelyTypedPath);
+async function getRepo(options: Options): Promise<Repository> {
+	if (await fsp.exists(options.definitelyTypedPath)) {
+		const repo = await Repository.open(options.definitelyTypedPath);
 		const currentBranch = (await repo.getCurrentBranch()).name();
 		const correctBranch = `refs/heads/${settings.sourceBranch}`;
 		if (currentBranch !== correctBranch) {
@@ -26,7 +26,7 @@ async function getRepo(): Promise<Repository> {
 		return repo;
 	}
 	else {
-		const repo = await Clone(settings.sourceRepository, settings.definitelyTypedPath);
+		const repo = await Clone(settings.sourceRepository, options.definitelyTypedPath);
 		await repo.checkoutBranch(settings.sourceBranch);
 		return repo;
 	}

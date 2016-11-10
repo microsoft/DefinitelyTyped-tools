@@ -48,8 +48,8 @@ export function writeFile(path: string, content: string): Promise<void> {
 	return fsp.writeFile(path, content, { encoding: "utf8" });
 }
 
-export function writeJson(path: string, content: any): Promise<void> {
-	return writeFile(path, JSON.stringify(content, undefined, 4));
+export function writeJson(path: string, content: any, formatted = true): Promise<void> {
+	return writeFile(path, JSON.stringify(content, undefined, formatted ? 4 : undefined));
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {

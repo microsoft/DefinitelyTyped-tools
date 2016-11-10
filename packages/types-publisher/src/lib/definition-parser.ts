@@ -6,7 +6,7 @@ import { readdirRecursive, readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { mapAsyncOrdered, normalizeSlashes, intOfString, stripQuotes } from "../util/util";
 
-import { RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
+import { Options, RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 
 export interface TypingParseFailResult {
 	kind: "fail";
@@ -123,9 +123,9 @@ async function moduleInfoAndFileKind(directory: string, folderName: string, allE
 	return Object.assign({fileKind}, mi);
 }
 
-export async function getTypingInfo(folderName: string): Promise<TypingParseFailResult | TypingParseSucceedResult> {
+export async function getTypingInfo(folderName: string, options: Options): Promise<TypingParseFailResult | TypingParseSucceedResult> {
 	const [log, logResult] = quietLoggerWithErrors();
-	const directory = definitelyTypedPath(folderName);
+	const directory = definitelyTypedPath(folderName, options);
 	if (folderName !== folderName.toLowerCase()) {
 		throw new Error(`Package name \`${folderName}\` should be strictly lowercase`);
 	}

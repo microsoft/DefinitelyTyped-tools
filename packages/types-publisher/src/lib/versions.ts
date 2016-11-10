@@ -1,23 +1,23 @@
 import assert = require("assert");
-import * as fs from "fs";
 
-import { fetchJson, readJson, writeJson } from "../util/io";
+import { existsDataFileSync, readDataFile, writeDataFile } from "../lib/common";
+import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
 import { nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
 import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
 
-const versionsFilename = "data/versions.json";
-const changesFilename = "data/version-changes.json";
-const additionsFilename = "data/version-additions.json";
+const versionsFilename = "versions.json";
+const changesFilename = "version-changes.json";
+const additionsFilename = "version-additions.json";
 
 export default class Versions {
 	static async load(): Promise<Versions> {
-		return new Versions(await readJson(versionsFilename));
+		return new Versions(await readDataFile(versionsFilename));
 	}
 
 	static existsSync(): boolean {
-		return fs.existsSync(versionsFilename);
+		return existsDataFileSync(versionsFilename);
 	}
 
 	/**
@@ -68,7 +68,7 @@ export default class Versions {
 	private constructor(private data: VersionMap) {}
 
 	save(): Promise<void> {
-		return writeJson(versionsFilename, this.data);
+		return writeDataFile(versionsFilename, this.data);
 	}
 
 	versionInfo({typingsPackageName}: AnyPackage): VersionInfo {
@@ -148,17 +148,17 @@ export type Changes = string[];
 
 /** Read all changed packages. */
 export function readChanges(): Promise<Changes> {
-	return readJson(changesFilename);
+	return readDataFile(changesFilename);
 }
 
 /** Read only packages which are newly added. */
 export function readAdditions(): Promise<Changes> {
-	return readJson(additionsFilename);
+	return readDataFile(additionsFilename);
 }
 
 export async function writeChanges(changes: Changes, additions: Changes): Promise<void> {
-	await writeJson(changesFilename, changes);
-	await writeJson(additionsFilename, additions);
+	await writeDataFile(changesFilename, changes);
+	await writeDataFile(additionsFilename, additions);
 }
 
 /** Latest version info for a package.
@@ -181,7 +181,7 @@ interface VersionMap {
 	[typingsPackageName: string]: VersionInfo;
 }
 
-export async function changedPackages(allPackages: AnyPackage[]): Promise<AnyPackage[]> {
+export async function changedPackages<T extends AnyPackage>(allPackages: T[]): Promise<T[]> {
 	const changes = await readChanges();
 	return changes.map(changedPackageName => {
 		const pkg = allPackages.find(p => p.typingsPackageName === changedPackageName);

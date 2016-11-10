@@ -1,5 +1,6 @@
 import * as yargs from "yargs";
 
+import { Options } from "./lib/common";
 import server from "./lib/webhook-server";
 import { setIssueOk } from "./lib/issue-updater";
 import { getSecret, Secret } from "./lib/secrets";
@@ -19,7 +20,7 @@ export default async function main(): Promise<void> {
 	}
 	else {
 		console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
-		const s = await server(key, githubAccessToken, dry);
+		const s = await server(key, githubAccessToken, dry, Options.defaults);
 		await setIssueOk(githubAccessToken);
 		console.log(`Listening on port ${port}`);
 		s.listen(port);

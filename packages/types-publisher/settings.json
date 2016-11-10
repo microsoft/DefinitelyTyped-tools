@@ -3,7 +3,6 @@
 	"scopeName": "types",
 	"outputPath": "./output",
 	"validateOutputPath": "./validateOutput",
-	"definitelyTypedPath": "../DefinitelyTyped",
 	"sourceRepository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
 	"sourceBranch": "types-2.0",
 	"tag": "latest",

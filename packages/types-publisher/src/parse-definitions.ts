@@ -1,7 +1,7 @@
 import * as yargs from "yargs";
 
 import * as parser from "./lib/definition-parser";
-import { TypingsData, RejectionReason, settings, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
+import { Options, TypingsData, RejectionReason, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
 import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./util/logging";
 import { done, filterAsyncOrdered } from "./util/util";
 
@@ -9,14 +9,14 @@ import fsp = require("fs-promise");
 
 if (!module.parent) {
 	const singleName = yargs.argv.single;
-	done((singleName ? single(singleName) : main()));
+	done((singleName ? single(singleName, Options.defaults) : main(Options.defaults)));
 }
 
-async function processDir(name: string): Promise<{ data: TypingsData | undefined, logs: LogWithErrors, outcome: string }> {
+async function processDir(name: string, options: Options): Promise<{ data: TypingsData | undefined, logs: LogWithErrors, outcome: string }> {
 	let data: TypingsData | undefined;
 	let outcome: string;
 
-	const info = await parser.getTypingInfo(name);
+	const info = await parser.getTypingInfo(name, options);
 	const logs = info.logs;
 
 	if (info.kind === "success") {
@@ -30,17 +30,17 @@ async function processDir(name: string): Promise<{ data: TypingsData | undefined
 	return { data, logs, outcome };
 }
 
-async function filterPaths(paths: string[]): Promise<string[]> {
+async function filterPaths(paths: string[], options: Options): Promise<string[]> {
 	const fullPaths = paths
 		// Remove hidden paths and known non-package directories
 		.filter(s => s[0] !== "." && s !== "node_modules" && s !== "scripts")
 		// Sort by name
 		.sort();
 	// Remove non-folders
-	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(definitelyTypedPath(s))).isDirectory());
+	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(definitelyTypedPath(s, options))).isDirectory());
 }
 
-export default async function main(): Promise<void> {
+export default async function main(options: Options): Promise<void> {
 	const [summaryLog, summaryLogResult] = logger();
 	const [detailedLog, detailedLogResult] = quietLogger();
 
@@ -48,18 +48,18 @@ export default async function main(): Promise<void> {
 	summaryLog(`Started at ${(new Date()).toUTCString()}`);
 
 	// TypesData
-	const paths = await fsp.readdir(settings.definitelyTypedPath);
+	const paths = await fsp.readdir(options.definitelyTypedPath);
 
-	const folders = await filterPaths(paths);
+	const folders = await filterPaths(paths, options);
 
-	summaryLog(`Found ${folders.length} typings folders in ${settings.definitelyTypedPath}`);
+	summaryLog(`Found ${folders.length} typings folders in ${options.definitelyTypedPath}`);
 
 	const outcomes: { [name: string]: number} = {};
 	const [warningLog, warningLogResult] = logger();
 	const typings: { [name: string]: TypingsData } = {};
 
 	for (const s of folders) {
-		const result = await processDir(s);
+		const result = await processDir(s, options);
 
 		// Record outcome
 		outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
@@ -103,8 +103,8 @@ export default async function main(): Promise<void> {
 	]);
 }
 
-async function single(singleName: string): Promise<void> {
-	const result = await processDir(singleName);
+async function single(singleName: string, options: Options): Promise<void> {
+	const result = await processDir(singleName, options);
 	const typings = { [singleName]: result.data };
 	await writeDataFile(typesDataFilename, typings);
 	console.log(result);

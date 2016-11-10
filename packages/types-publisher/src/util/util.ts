@@ -1,4 +1,10 @@
+import * as child_process from "child_process";
 import moment = require("moment");
+import * as os from "os";
+import { shim as shimEntries } from "object.entries";
+shimEntries();
+import { shim as shimValues } from "object.values";
+shimValues();
 
 export function parseJson(text: string): any {
 	try {
@@ -12,6 +18,8 @@ export function parseJson(text: string): any {
 export function currentTimeStamp(): string {
 	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 }
+
+export const numberOfOsProcesses = os.cpus().length;
 
 export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>): Promise<U[]> {
 	const results = new Array(inputs.length);
@@ -58,7 +66,10 @@ export function unique<T>(arr: T[]) {
 }
 
 export function done(promise: Promise<void>): void {
-	promise.catch(console.error);
+	promise.catch(error => {
+		console.error(error);
+		process.exit(1);
+	});
 }
 
 function initArray<T>(length: number, makeElement: () => T): T[] {
@@ -91,4 +102,24 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 		out[key] = data[key];
 	}
 	return out;
+}
+
+/** Run a command and return the error, stdout, and stderr. (Never throws.) */
+export function exec(cmd: string, cwd?: string): Promise<{ error?: Error, stdout: string, stderr: string }> {
+	return new Promise((resolve) => {
+		child_process.exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
+			stdout = stdout.trim();
+			stderr = stderr.trim();
+			resolve({ error, stdout, stderr });
+		});
+	});
+}
+
+/** Run a command and return the stdout, or if there was an error, throw. */
+export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<string> {
+	const { error, stdout, stderr } = await exec(cmd, cwd);
+	if (error) {
+		throw new Error(stderr);
+	}
+	return stdout;
 }

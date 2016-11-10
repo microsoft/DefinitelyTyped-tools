@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as yargs from "yargs";
 
-import { existsTypesDataFileSync, readAllPackagesArray } from "./lib/common";
+import { Options, existsTypesDataFileSync, readAllPackagesArray } from "./lib/common";
 import NpmClient from "./lib/npm-client";
 import * as publisher from "./lib/package-publisher";
 import Versions, { changedPackages } from "./lib/versions";
@@ -32,28 +32,28 @@ if (!module.parent) {
 
 		async function go(): Promise<void> {
 			if (shouldUnpublish) {
-				await unpublish(dry);
+				await unpublish(dry, Options.defaults);
 			}
 			else {
 				const client = await NpmClient.create();
 				if (singleName) {
-					await single(client, singleName, dry);
+					await single(client, singleName, dry, Options.defaults);
 				}
 				else {
-					await main(client, dry);
+					await main(client, dry, Options.defaults);
 				}
 			}
 		}
 	}
 }
 
-export default async function main(client: NpmClient, dry: boolean): Promise<void> {
+export default async function main(client: NpmClient, dry: boolean, options: Options): Promise<void> {
 	const [log, logResult] = logger();
 	if (dry) {
 		log("=== DRY RUN ===");
 	}
 
-	const packagesShouldPublish = await changedPackages(await readAllPackagesArray());
+	const packagesShouldPublish = await changedPackages(await readAllPackagesArray(options));
 
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.libraryName}...`);
@@ -74,8 +74,8 @@ export default async function main(client: NpmClient, dry: boolean): Promise<voi
 	console.log("Done!");
 }
 
-async function single(client: NpmClient, name: string, dry: boolean): Promise<void> {
-	const pkg = (await readAllPackagesArray()).find(p => p.typingsPackageName === name);
+async function single(client: NpmClient, name: string, dry: boolean, options: Options): Promise<void> {
+	const pkg = (await readAllPackagesArray(options)).find(p => p.typingsPackageName === name);
 	if (pkg === undefined) {
 		throw new Error(`Can't find a package named ${name}`);
 	}
@@ -85,8 +85,8 @@ async function single(client: NpmClient, name: string, dry: boolean): Promise<vo
 	console.log(publishLog);
 }
 
-async function unpublish(dry: boolean): Promise<void> {
-	for (const pkg of await readAllPackagesArray()) {
+async function unpublish(dry: boolean, options: Options): Promise<void> {
+	for (const pkg of await readAllPackagesArray(options)) {
 		await publisher.unpublishPackage(pkg, dry);
 	}
 }

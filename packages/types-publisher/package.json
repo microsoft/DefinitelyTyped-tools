@@ -1,24 +1,27 @@
 {
-  "name": "publish-typings",
-  "version": "0.6.0",
+  "private": true,
+  "name": "types-publisher",
+  "version": "0.0.0",
   "description": "Publish DefinitelyTyped definitions to NPM",
-  "main": "index.js",
   "dependencies": {
     "adal-node": "^0.1.22",
     "azure-keyvault": "^0.11.0",
     "azure-storage": "1.2.0",
-    "fs-promise": "^0.5.0",
+    "fs-promise": "^1.0.0",
     "fstream": "^1.0.10",
     "longjohn": "^0.2.11",
-    "moment": "^2.13.0",
+    "moment": "2.15.2",
     "node-fetch": "^1.5.3",
     "nodegit": "^0.16.0",
-    "npm": "^3.10.7",
+    "npm": "^3.10.10",
     "npm-registry-client": "^7.1.2",
+    "object.entries": "^1.0.3",
+    "object.values": "^1.0.3",
     "recursive-readdir": "^2.0.0",
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
-    "typescript": "^2.0.6",
+    "tslint": "4.0.0-dev.1",
+    "typescript": "^2.0.8",
     "yargs": "^6.2.0"
   },
   "devDependencies": {
@@ -27,8 +30,7 @@
     "@types/recursive-readdir": "^1.2.27",
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",
-    "@types/yargs": "^0.0.31",
-    "tslint": "4.0.0-dev.1"
+    "@types/yargs": "^6.3.1"
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",
@@ -46,7 +48,7 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint src/*.ts src/*/*.ts",
+    "lint": "node node_modules/tslint/bin/tslint src/**/*.ts",
     "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
     "make-production-server-run": "node bin/make-server-run.js --remote"
@@ -61,7 +63,7 @@
     "url": "https://github.com/Microsoft/types-publisher/issues"
   },
   "engines": {
-    "node": "^6.7.0"
+    "node": "^6.9.1"
   },
   "homepage": "https://github.com/Microsoft/types-publisher#readme"
 }

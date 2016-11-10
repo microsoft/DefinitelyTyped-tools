@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import { existsTypesDataFileSync, readAllPackagesArray, readPackage, writeDataFile } from "./lib/common";
+import { Options, existsTypesDataFileSync, readAllPackagesArray, readPackage, writeDataFile } from "./lib/common";
 import { done, nAtATime } from "./util/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 
@@ -14,13 +14,13 @@ if (!module.parent) {
 			done(doSingle(single, skipDownloads));
 		} else {
 			const full = yargs.argv.full;
-			done(main(skipDownloads, full));
+			done(main(skipDownloads, full, Options.defaults));
 		}
 	}
 }
 
-export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
-	const packages = await readAllPackagesArray();
+export default async function main(skipDownloads: boolean, full: boolean, options: Options): Promise<void> {
+	const packages = await readAllPackagesArray(options);
 	console.log(`Loaded ${packages.length} entries`);
 
 	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
