@@ -51,7 +51,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 	nProcesses = nProcesses || numberOfOsProcesses;
 
 	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.typingsPackageName)}`);
-	console.log(`Runing with ${nProcesses} processes.`);
+	console.log(`Running with ${nProcesses} processes.`);
 
 	const allErrors: { pkg: TypingsData, err: TesterError }[] = [];
 
