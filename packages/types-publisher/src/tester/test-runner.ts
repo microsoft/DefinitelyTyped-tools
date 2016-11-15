@@ -19,8 +19,20 @@ if (!module.parent) {
 	}
 	else {
 		const regexp = yargs.argv.all ? new RegExp("") : yargs.argv._[0] && new RegExp(yargs.argv._[0]);
-		done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), regexp));
+		done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), regexp));
 	}
+}
+
+export function parseNProcesses(): number | undefined {
+	const str = yargs.argv.nProcesses;
+	if (!str) {
+		return undefined;
+	}
+	const nProcesses = Number.parseInt(yargs.argv.nProcesses, 10);
+	if (Number.isNaN(nProcesses)) {
+		throw new Error("Expected nProcesses to be a number.");
+	}
+	return nProcesses;
 }
 
 export function testerOptions(runFromDefinitelyTyped: boolean): Options {
@@ -31,16 +43,19 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	}
 }
 
-export default async function main(options: Options, regexp?: RegExp) {
+export default async function main(options: Options, nProcesses?: number, regexp?: RegExp) {
 	const typings: TypingsData[] = regexp
 		? (await readTypings()).filter(t => regexp.test(t.typingsPackageName))
 		: await getAffectedPackages(console.log, options);
 
+	nProcesses = nProcesses || numberOfOsProcesses;
+
 	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.typingsPackageName)}`);
+	console.log(`Runing with ${nProcesses} processes.`);
 
 	const allErrors: { pkg: TypingsData, err: TesterError }[] = [];
 
-	await nAtATime(numberOfOsProcesses, typings, async pkg => {
+	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
 		const err = await single(pkg, log, options);
 		console.log(`Testing ${pkg.typingsPackageName}`);

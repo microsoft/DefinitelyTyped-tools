@@ -6,16 +6,16 @@ import checkParseResults from "../check-parse-results";
 import { Options } from "../lib/common";
 import { done } from "../util/util";
 
-import runTests, { testerOptions } from "./test-runner";
+import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
 	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-	done(main(options));
+	done(main(options, parseNProcesses()));
 }
 
-export default async function main(options: Options): Promise<void> {
+async function main(options: Options, nProcesses?: number): Promise<void> {
 	await clean();
 	await parseDefinitions(options);
 	await checkParseResults();
-	await runTests(options);
+	await runTests(options, nProcesses);
 }
