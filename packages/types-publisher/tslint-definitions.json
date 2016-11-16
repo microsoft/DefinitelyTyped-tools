@@ -1,10 +1,6 @@
 {
-	"extends": "tslint:latest",
-	"rulesDirectory": [
-		"bin/tester/tslint"
-	],
+	"extends": "./tslint-common.json",
 	"rules": {
-		"adjacent-overload-signatures": false,
 		"align": false, // TODO
 		"only-arrow-functions": false, // TODO: This was activating for `declare function socket(type: string, options?: any): Socket;`
 		"class-name": false, // TODO
@@ -12,24 +8,15 @@
 		"curly": false,
 		"eofline": false,
 		"indent": false,
-		"interface-name": false,
 		"jsdoc-format": false,
 		"max-line-length": false, // TODO
-		"member-access": false,
-		"member-ordering": false,
-		"no-bitwise": false,
 		"no-consecutive-blank-lines": false,
-		"no-console": false,
-		"no-namespace": false,
-		"no-reference": true, // TODO
+		"no-reference": false, // TODO: forbid "../" reference, but not "./" reference
 		"no-shadowed-variable": false,
 		"no-string-literal": false,
 		"no-unused-variable": false,
-		"no-var-keyword": false, // TODO
-		"object-literal-sort-keys": false,
-		"ordered-imports": false,
-		"quotemark": false, // TODO
-		"trailing-comma": false, // TODO
+		"no-var-keyword": false,
+		"quotemark": false,
 		"variable-name": false,
 		"whitespace": [
 			"check-branch",

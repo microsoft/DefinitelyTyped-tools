@@ -34,6 +34,7 @@
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",
+    "watch": "node node_modules/typescript/lib/tsc.js --watch",
     "clean": "node bin/clean.js",
     "get-definitely-typed": "node bin/get-definitely-typed.js",
     "parse": "node bin/parse-definitions.js",
@@ -48,7 +49,7 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint src/**/*.ts",
+    "lint": "node node_modules/tslint/bin/tslint --format stylish src/**/*.ts",
     "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
     "make-production-server-run": "node bin/make-server-run.js --remote"

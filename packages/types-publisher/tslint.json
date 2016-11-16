@@ -1,17 +1,9 @@
 {
-	"extends": "tslint:latest",
+	"extends": "./tslint-common.json",
 	"rules": {
 		"indent": [true, "tabs"],
-		"interface-name": false,
 		"max-line-length": [true, 150],
-		"member-access": false,
-		"no-bitwise": false,
-		"no-console": false,
-		"no-namespace": false,
 		"no-var-requires": false,
-		"object-literal-sort-keys": false,
-		"one-line": false,
-		"ordered-imports": false,
-		"trailing-comma": false
+		"one-line": false
 	}
 }

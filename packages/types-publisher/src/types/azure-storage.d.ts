@@ -86,13 +86,9 @@ export interface CreateBlobRequestOptions {
 	};
 }
 
-interface ErrorOrResponse {
-	(error: Error, response: ServiceResponse): void;
-}
+type ErrorOrResponse = (error: Error, response: ServiceResponse) => void;
 
-export interface ErrorOrResult<TResult> {
-	(error: Error, result: TResult, response: ServiceResponse): void;
-}
+type ErrorOrResult<TResult> = (error: Error, result: TResult, response: ServiceResponse) => void;
 
 interface ServiceResponse {
 	isSuccessful: boolean;

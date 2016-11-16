@@ -95,7 +95,7 @@ function filePath(typing: TypingsData, fileName: string): string {
 	return path.join(typing.root, fileName);
 }
 
-type Dependencies = { [name: string]: string };
+interface Dependencies { [name: string]: string; }
 
 async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
