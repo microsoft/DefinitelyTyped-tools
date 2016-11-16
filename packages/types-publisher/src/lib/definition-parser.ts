@@ -380,7 +380,7 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 					break;
 
 				case ts.SyntaxKind.ModuleDeclaration:
-					if (node.flags & ts.NodeFlags.Export) {
+					if (isExport(node)) {
 						log(`Found exported namespace \`${(node as ts.ModuleDeclaration).name.getText()}\``);
 						isProperModule = true;
 					} else {
@@ -400,7 +400,7 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 					break;
 
 				case ts.SyntaxKind.VariableStatement:
-					if (node.flags & ts.NodeFlags.Export) {
+					if (isExport(node)) {
 						log("Found exported variables");
 						isProperModule = true;
 					} else {
@@ -419,7 +419,7 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 				case ts.SyntaxKind.ClassDeclaration:
 				case ts.SyntaxKind.FunctionDeclaration:
 					// If these nodes have an 'export' modifier, the file is an external module
-					if (node.flags & ts.NodeFlags.Export) {
+					if (isExport(node)) {
 						const declName = (node as ts.DeclarationStatement).name;
 						if (declName) {
 							log(`Found exported declaration "${declName.getText()}"`);
@@ -553,4 +553,8 @@ async function readFile(directory: string, fileName: string): Promise<string> {
 	const result = await readFileText(path.join(directory, fileName));
 	// Skip BOM
 	return (result.charCodeAt(0) === 0xFEFF) ? result.substr(1) : result;
+}
+
+function isExport(node: ts.Node): boolean {
+	return (ts as any).hasModifier(node, ts.ModifierFlags.Export);
 }

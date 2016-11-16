@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 		type: "functionality"
 	};
 
-	static FAILURE_STRING = "Don't use <reference path> to reference another package. Use an import or <reference types> instead."
+	static FAILURE_STRING = "Don't use <reference path> to reference another package. Use an import or <reference types> instead.";
 
 	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
 		return this.applyWithWalker(new Walker(sourceFile, this.getOptions()));
