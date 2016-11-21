@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "no-single-declare-module",
 		description: "Don't use an ambient module declaration if you can use an external module file.",
 		rationale: "Cuts down on nesting",
-		options: {},
-		type: "style"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "style",
+		typescriptOnly: true,
 	};
 
 	static FAILURE_STRING = "File has only 1 module declaration — write it as an external module.";

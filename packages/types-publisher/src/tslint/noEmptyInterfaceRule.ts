@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "no-empty-interface",
 		description: "Forbids empty interfaces",
 		rationale: "Empty interfaces as not useful.",
-		options: {},
-		type: "style"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "style",
+		typescriptOnly: true,
 	};
 
 	static FAILURE_STRING = "An empty interface is equivalent to `{}`.";

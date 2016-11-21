@@ -5,6 +5,7 @@
 	],
 	"rules": {
 		// Custom rules
+		"dt-header": true,
 		"forbidden-types": true,
 		"functional-interfaces": true,
 		"interface-over-type-literal": true,
@@ -15,14 +16,18 @@
 		"unified-signatures": true,
 
 		"array-type": [true, "array-simple"],
+		"arrow-parens": false,
 		"interface-name": false,
+		"max-classes-per-file": false,
 		"member-access": false,
 		"member-ordering": false,
 		"no-bitwise": false,
 		"no-console": false,
 		"no-namespace": false,
 		"object-literal-sort-keys": false,
+		"one-variable-per-declaration": false,
 		"ordered-imports": false,
+		"prefer-for-of": false, // Enable when https://github.com/palantir/tslint/pull/1758 is in
 		"trailing-comma": false
     }
 }

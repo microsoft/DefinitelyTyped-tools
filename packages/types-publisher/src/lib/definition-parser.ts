@@ -4,9 +4,10 @@ import * as path from "path";
 
 import { readdirRecursive, readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { mapAsyncOrdered, normalizeSlashes, intOfString, stripQuotes } from "../util/util";
+import { mapAsyncOrdered, normalizeSlashes, skipBOM, stripQuotes } from "../util/util";
 
 import { Options, RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
+import { parseHeaderOrFail } from "./header";
 
 export interface TypingParseFailResult {
 	kind: "fail";
@@ -83,29 +84,6 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	return result;
 }
 
-interface Metadata {
-	authors: string;
-	libraryMajorVersion: number;
-	libraryMinorVersion: number;
-	libraryName: string;
-	projectName: string;
-}
-
-function parseMetadata(mainFileContent: string): Metadata {
-	function regexMatch(rx: RegExp, defaultValue: string): string {
-		const match = rx.exec(mainFileContent);
-		return match ? match[1] : defaultValue;
-	}
-
-	const authors = regexMatch(/^\/\/ Definitions by: (.+)$/m, "Unknown");
-	const libraryMajorVersion = intOfString(regexMatch(/^\/\/ Type definitions for [^\n]+ v?(\d+)/m, "0"));
-	const libraryMinorVersion = intOfString(regexMatch(/^\/\/ Type definitions for [^\n]+ v?\d+\.(\d+)/m, "0"));
-	const libraryName = regexMatch(/^\/\/ Type definitions for (.+)$/m, "Unknown").trim();
-	const projectName = regexMatch(/^\/\/ Project: (.+)$/m, "");
-
-	return { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName };
-}
-
 async function moduleInfoAndFileKind(directory: string, folderName: string, allEntryFilenames: string[], log: LoggerWithErrors
 	): Promise<ModuleInfo & { fileKind: DefinitionFileKind }> {
 
@@ -143,7 +121,7 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 	const mainFilename = mainFileResult.filename;
 	const mainFileContent = await readFile(directory, mainFilename);
 
-	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projectName } = parseMetadata(mainFileContent);
+	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projects } = parseHeaderOrFail(mainFileContent, folderName);
 
 	const allEntryFilenames = await entryFilesFromTsConfig(directory, log.info) || [mainFilename];
 	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles, fileKind } =
@@ -157,7 +135,7 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 		kind: "success",
 		logs: logResult(),
 		data: {
-			authors,
+			authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
 			definitionFilename: mainFilename,
 			libraryDependencies: referencedLibraries,
 			moduleDependencies,
@@ -165,7 +143,7 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 			libraryMinorVersion,
 			libraryName,
 			typingsPackageName: folderName,
-			projectName,
+			projectName: projects[0], // TODO: collect multiple project names
 			sourceRepoURL,
 			sourceBranch: settings.sourceBranch,
 			kind: DefinitionFileKind[fileKind],
@@ -550,9 +528,7 @@ async function hash(directory: string, files: string[]): Promise<string> {
 }
 
 async function readFile(directory: string, fileName: string): Promise<string> {
-	const result = await readFileText(path.join(directory, fileName));
-	// Skip BOM
-	return (result.charCodeAt(0) === 0xFEFF) ? result.substr(1) : result;
+	return skipBOM(await readFileText(path.join(directory, fileName)));
 }
 
 function isExport(node: ts.Node): boolean {

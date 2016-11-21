@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "forbidden-types",
 		description: "Forbid the Function, Object, Boolean, Number, and String types.",
 		rationale: "Certain types are never a good idea.",
-		options: {},
-		type: "functionality"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "functionality",
+		typescriptOnly: true,
 	};
 
 	static upperCaseFailureString(name: string) {

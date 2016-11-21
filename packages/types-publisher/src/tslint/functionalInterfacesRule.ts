@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "functional-interface",
 		description: "An interface with just a call signature can be written as a function type.",
 		rationale: "For simplicity",
-		options: {},
-		type: "style"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "style",
+		typescriptOnly: true,
 	};
 
 	static failureString(name: string, { parameters, returnType }: Signature): string {

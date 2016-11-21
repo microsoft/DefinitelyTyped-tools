@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "no-public",
 		description: "Forbids the 'public' keyword.",
 		rationale: "For simplicity",
-		options: {},
-		type: "style"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "style",
+		typescriptOnly: true,
 	};
 
 	static FAILURE_STRING = "No need to write `public`; this is implicit.";

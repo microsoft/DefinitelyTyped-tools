@@ -1,4 +1,4 @@
-import * as Lint from "tslint/lib/lint";
+import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -6,8 +6,10 @@ export class Rule extends Lint.Rules.AbstractRule {
 		ruleName: "array-type-style",
 		description: "Array types should be written with the `Foo[]` syntax",
 		rationale: "For consistency",
-		options: {},
-		type: "style"
+		optionsDescription: "Not configurable.",
+		options: null,
+		type: "style",
+		typescriptOnly: true,
 	};
 
 	static FAILURE_STRING_OMITTING_SINGLE_PARAMETER = `These overloads can be combined into one signature with an optional parameter.`;
