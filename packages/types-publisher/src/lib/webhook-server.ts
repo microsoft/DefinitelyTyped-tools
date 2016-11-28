@@ -4,7 +4,7 @@ import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import full from "../full";
 import { LoggerWithErrors, LogWithErrors, joinLogWithErrors, loggerWithErrors } from "../util/logging";
 import { stringOfStream } from "../util/io";
-import { currentTimeStamp, parseJson } from "../util/util";
+import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
 
 import RollingLogs from "./rolling-logs";
 import { Options, settings } from "./common";
@@ -82,9 +82,9 @@ function listenToGithub(
 		function onError(error: Error): void {
 			server.close();
 			reopenIssue(githubAccessToken, timeStamp, error).catch(issueError => {
-				console.error(issueError.stack);
+				console.error(errorDetails(issueError));
 			}).then(() => {
-				console.error(error.stack);
+				console.error(errorDetails(error));
 				process.exit(1);
 			});
 		}

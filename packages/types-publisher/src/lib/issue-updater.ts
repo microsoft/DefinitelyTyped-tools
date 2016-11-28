@@ -1,5 +1,5 @@
 import { fetchJson } from "../util/io";
-import { currentTimeStamp, indent } from "../util/util";
+import { currentTimeStamp, errorDetails, indent } from "../util/util";
 
 import { settings } from "./common";
 
@@ -20,7 +20,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 		const url = `https://${settings.azureContainer}.blob.core.windows.net/${settings.azureContainer}/index.html`;
 		l(`Logs are available [here](${url}).`);
 		l("");
-		l(indent(<string> error.stack));
+		l(indent(errorDetails(error)));
 		return lines.join("\n");
 	}
 }
