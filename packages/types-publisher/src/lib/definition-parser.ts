@@ -4,7 +4,7 @@ import * as path from "path";
 
 import { readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { mapAsyncOrdered, normalizeSlashes, skipBOM, stripQuotes } from "../util/util";
+import { mapAsyncOrdered, skipBOM, stripQuotes } from "../util/util";
 
 import { Options, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 import { parseHeaderOrFail } from "./header";
@@ -172,7 +172,7 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
 		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
 		all.set(filename, src);
 
-		const refs = referencedFiles(src, path.dirname(filename));
+		const refs = referencedFiles(src, path.dirname(filename), directory);
 		await Promise.all(refs.map(ref => recur(filename, ref)));
 	}
 
@@ -184,29 +184,29 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
  * @param subDirectory The specific directory within the DefinitelyTyped directory we are in.
  * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  */
-function referencedFiles(src: ts.SourceFile, subDirectory: string): string[] {
+function referencedFiles(src: ts.SourceFile, subDirectory: string, directory: string): string[] {
 	const out: string[] = [];
 
 	for (const ref of src.referencedFiles) {
 		// Any <reference path="foo"> is assumed to be local
-		maybeAdd(ref.fileName);
+		addReference(ref.fileName);
 	}
 
 	for (const ref of imports(src)) {
 		if (ref.startsWith(".")) {
-			maybeAdd(`${ref}.d.ts`);
+			addReference(`${ref}.d.ts`);
 		}
 	}
 
 	return out;
 
-	// GH#69: We should just forbid all non-global references to the outside.
-	function maybeAdd(ref: string): void {
+	function addReference(ref: string): void {
 		const full = path.normalize(path.join(subDirectory, ref));
 		// If the *normalized* path starts with "..", then it reaches outside of srcDirectory.
-		if (!full.startsWith("..")) {
-			out.push(normalizeSlashes(full));
+		if (full.startsWith("..")) {
+			throw new Error(`In ${directory} ${src.fileName}: Definitions must use global references rather than reaching outside of their directory.`);
 		}
+		out.push(full);
 	}
 }
 
