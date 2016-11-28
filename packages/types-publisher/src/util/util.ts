@@ -125,10 +125,6 @@ export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<str
 	return stdout;
 }
 
-export function skipBOM(str: string): string {
-	return str.charCodeAt(0) === 0xFEFF ? str.slice(1) : str;
-}
-
 export function errorDetails(error: Error): string {
 	return error.stack || error.message || `Non-Error error: ${inspect(error)}`;
 }

@@ -4,7 +4,7 @@ import * as path from "path";
 
 import { readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { mapAsyncOrdered, skipBOM, stripQuotes } from "../util/util";
+import { mapAsyncOrdered, stripQuotes } from "../util/util";
 
 import { Options, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 import { parseHeaderOrFail } from "./header";
@@ -472,7 +472,17 @@ async function hash(directory: string, files: string[]): Promise<string> {
 }
 
 async function readFile(directory: string, fileName: string): Promise<string> {
-	return skipBOM(await readFileText(path.join(directory, fileName)));
+	const full = path.join(directory, fileName);
+	const text = await readFileText(full);
+	if (text.charCodeAt(0) === 0xFEFF) {
+		const commands = [
+			"npm install -g strip-bom-cli",
+			`strip-bom ${fileName} > fix`,
+			`mv fix ${fileName}`
+		];
+		throw new Error(`File '${full}' has a BOM. Try using:\n${commands.join("\n")}`);
+	}
+	return text;
 }
 
 function isExport(node: ts.Node): boolean {

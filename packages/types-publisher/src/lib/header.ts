@@ -1,4 +1,4 @@
-import { intOfString, skipBOM } from "../util/util";
+import { intOfString } from "../util/util";
 import pm = require("parsimmon");
 
 /*
@@ -53,7 +53,6 @@ function isParseError(x: {}): x is ParseError {
 
 /** @param strict If true, we allow fewer things to be parsed. Turned on by linting. */
 function parseHeader(text: string, strict: boolean): Header | ParseError {
-	text = skipBOM(text);
 	const res = headerParser(strict).parse(text);
 
 	if (res.status) {
