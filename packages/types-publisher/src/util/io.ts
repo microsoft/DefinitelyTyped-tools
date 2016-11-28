@@ -1,34 +1,8 @@
-import assert = require("assert");
 import fetch, { RequestInit, Response } from "node-fetch";
-import * as path from "path";
-import recursiveReaddir = require("recursive-readdir");
-import { Stats } from "fs";
 import * as fsp from "fs-promise";
 import * as stream from "stream";
 
-import { normalizeSlashes, parseJson } from "./util";
-
-export function readdirRecursive(dirPath: string, keepIf: (file: string, stats: Stats) => boolean): Promise<string[]> {
-	function relativePath(file: string): string {
-		const prefix = dirPath + path.sep;
-		assert(file.startsWith(prefix));
-		return normalizeSlashes(file.slice(prefix.length));
-	}
-	function ignoreRelative(file: string, stats: Stats): boolean {
-		return !keepIf(relativePath(file), stats);
-	}
-
-	return new Promise<string[]>((resolve, reject) => {
-		recursiveReaddir(dirPath, [ignoreRelative], (err, files) => {
-			if (err) {
-				reject(err);
-			}
-			else {
-				resolve(files.map(relativePath));
-			}
-		});
-	});
-}
+import { parseJson } from "./util";
 
 export function readFile(path: string): Promise<string> {
 	return fsp.readFile(path, { encoding: "utf8" });

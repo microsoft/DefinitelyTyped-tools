@@ -1,8 +1,8 @@
 import * as yargs from "yargs";
 
 import * as parser from "./lib/definition-parser";
-import { Options, TypingsData, RejectionReason, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
-import { LogWithErrors, logger, quietLogger, moveLogs, writeLog } from "./util/logging";
+import { Options, TypingsData, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
+import { logger, quietLogger, moveLogs, writeLog } from "./util/logging";
 import { done, filterAsyncOrdered } from "./util/util";
 
 import fsp = require("fs-promise");
@@ -10,24 +10,6 @@ import fsp = require("fs-promise");
 if (!module.parent) {
 	const singleName = yargs.argv.single;
 	done((singleName ? single(singleName, Options.defaults) : main(Options.defaults)));
-}
-
-async function processDir(name: string, options: Options): Promise<{ data: TypingsData | undefined, logs: LogWithErrors, outcome: string }> {
-	let data: TypingsData | undefined;
-	let outcome: string;
-
-	const info = await parser.getTypingInfo(name, options);
-	const logs = info.logs;
-
-	if (info.kind === "success") {
-		data = info.data;
-		outcome = `Succeeded (${info.data.kind})`;
-	} else {
-		data = undefined;
-		outcome = `Failed (${RejectionReason[info.rejectionReason]})`;
-	}
-
-	return { data, logs, outcome };
 }
 
 async function filterPaths(paths: string[], options: Options): Promise<string[]> {
@@ -54,15 +36,11 @@ export default async function main(options: Options): Promise<void> {
 
 	summaryLog(`Found ${folders.length} typings folders in ${options.definitelyTypedPath}`);
 
-	const outcomes: { [name: string]: number} = {};
 	const [warningLog, warningLogResult] = logger();
 	const typings: { [name: string]: TypingsData } = {};
 
 	for (const s of folders) {
-		const result = await processDir(s, options);
-
-		// Record outcome
-		outcomes[result.outcome] = (outcomes[result.outcome] || 0) + 1;
+		const result = await parser.getTypingInfo(s, options);
 
 		detailedLog(`# ${s}`);
 
@@ -85,14 +63,6 @@ export default async function main(options: Options): Promise<void> {
 
 	summaryLog("\r\n### Overall Results\r\n");
 
-	summaryLog(" * Pass / fail");
-
-	const outcomeKeys = Object.keys(outcomes);
-	outcomeKeys.sort();
-	outcomeKeys.forEach(k => {
-		summaryLog(`   * ${k}: ${outcomes[k]}`);
-	});
-
 	summaryLog("\r\n### Warnings\r\n");
 	moveLogs(summaryLog, warningLogResult());
 
@@ -104,7 +74,7 @@ export default async function main(options: Options): Promise<void> {
 }
 
 async function single(singleName: string, options: Options): Promise<void> {
-	const result = await processDir(singleName, options);
+	const result = await parser.getTypingInfo(singleName, options);
 	const typings = { [singleName]: result.data };
 	await writeDataFile(typesDataFilename, typings);
 	console.log(result);

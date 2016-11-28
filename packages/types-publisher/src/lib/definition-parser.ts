@@ -2,24 +2,12 @@ import * as ts from "typescript";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
-import { readdirRecursive, readFile as readFileText } from "../util/io";
+import { readFile as readFileText } from "../util/io";
 import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { mapAsyncOrdered, normalizeSlashes, skipBOM, stripQuotes } from "../util/util";
 
-import { Options, RejectionReason, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
+import { Options, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 import { parseHeaderOrFail } from "./header";
-
-export interface TypingParseFailResult {
-	kind: "fail";
-	rejectionReason: RejectionReason;
-	logs: LogWithErrors;
-}
-
-export interface TypingParseSucceedResult {
-	kind: "success";
-	data: TypingsData;
-	logs: LogWithErrors;
-}
 
 enum DefinitionFileKind {
 	// Dunno
@@ -101,7 +89,7 @@ async function moduleInfoAndFileKind(directory: string, folderName: string, allE
 	return Object.assign({fileKind}, mi);
 }
 
-export async function getTypingInfo(folderName: string, options: Options): Promise<TypingParseFailResult | TypingParseSucceedResult> {
+export async function getTypingInfo(folderName: string, options: Options): Promise<{ data: TypingsData, logs: LogWithErrors }> {
 	const [log, logResult] = quietLoggerWithErrors();
 	const directory = definitelyTypedPath(folderName, options);
 	if (folderName !== folderName.toLowerCase()) {
@@ -112,13 +100,7 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 
 	// There is a *single* main file, containing metadata comments.
 	// But there may be many entryFilenames, which are the starting points of inferring all files to be included.
-	const mainFileResult = await mainFile(directory, folderName, log.info);
-	if (mainFileResult.kind === "failure") {
-		log.info(mainFileResult.message);
-		log.error(mainFileResult.message);
-		return { kind: "fail", logs: logResult(), rejectionReason: RejectionReason.TooManyFiles };
-	}
-	const mainFilename = mainFileResult.filename;
+	const mainFilename = "index.d.ts";
 	const mainFileContent = await readFile(directory, mainFilename);
 
 	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projects } = parseHeaderOrFail(mainFileContent, folderName);
@@ -132,11 +114,9 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 
 	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 	return {
-		kind: "success",
 		logs: logResult(),
 		data: {
 			authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
-			definitionFilename: mainFilename,
 			libraryDependencies: referencedLibraries,
 			moduleDependencies,
 			libraryMajorVersion,
@@ -155,42 +135,6 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 			contentHash: await hash(directory, allFiles)
 		}
 	};
-}
-
-interface MainFileSuccess {
-	kind: "success";
-	filename: string;
-}
-interface MainFileFailure {
-	kind: "failure";
-	message: string;
-}
-async function mainFile(directory: string, folderName: string, log: Logger): Promise<MainFileSuccess | MainFileFailure> {
-	// otherwise, load all files from the directory
-	const declFiles = await readdirRecursive(directory, (file, stats) =>
-			// Only include type declaration files.
-		stats.isDirectory() || file.endsWith(".d.ts"));
-	declFiles.sort();
-
-	log(`Found ${declFiles.length} '.d.ts' files in directory (${declFiles.join(", ")})`);
-
-	if (declFiles.length === 1) {
-		return { kind: "success", filename: declFiles[0] };
-	} else {
-		// You can have [foldername].d.ts, or index.d.ts to rescue yourself from this situation
-		const candidates = [folderName + ".d.ts", "index.d.ts"];
-		const existingCandidates = candidates.filter(c => declFiles.includes(c));
-		if (existingCandidates.length > 1) {
-			throw new Error(`Conflicting main files: ${existingCandidates}`);
-		} else if (!existingCandidates.length) {
-			return {
-				kind: "failure",
-				message: "Exiting, found either zero or more than one .d.ts file and none of " + candidates.map(c => "`" + c + "`").join(" or ")
-			};
-		} else {
-			return { kind: "success", filename: existingCandidates[0] };
-		}
-	}
 }
 
 async function entryFilesFromTsConfig(directory: string, log: Logger): Promise<string[] | undefined> {

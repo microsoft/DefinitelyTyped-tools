@@ -85,9 +85,6 @@ export interface TypingsData extends PackageCommonProperties {
 	// e.g. "master"
 	sourceBranch: string;
 
-	// The name of the primary definition file, e.g. "jquery.d.ts"
-	definitionFilename: string;
-
 	// Parsed from "Definitions by:"
 	authors: string;
 
@@ -108,12 +105,6 @@ export interface TypingsData extends PackageCommonProperties {
 
 	// A hash computed from all files from this definition
 	contentHash: string;
-}
-
-export enum RejectionReason {
-	TooManyFiles,
-	BadFileFormat,
-	ReferencePaths
 }
 
 export function isNotNeededPackage(pkg: AnyPackage): pkg is NotNeededPackage {
