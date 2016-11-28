@@ -5,6 +5,7 @@ import { shim as shimEntries } from "object.entries";
 shimEntries();
 import { shim as shimValues } from "object.values";
 shimValues();
+import { inspect } from "util";
 
 export function parseJson(text: string): any {
 	try {
@@ -129,5 +130,5 @@ export function skipBOM(str: string): string {
 }
 
 export function errorDetails(error: Error): string {
-	return error.stack || error.message;
+	return error.stack || error.message || `Non-Error error: ${inspect(error)}`;
 }

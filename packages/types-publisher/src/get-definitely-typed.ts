@@ -33,8 +33,9 @@ async function getRepo(options: Options): Promise<Repository> {
 }
 
 async function pull(repo: Repository, log: Logger): Promise<void> {
-	log(`Pulling new changes from ${settings.sourceBranch}`);
+	log(`Fetching changes from ${settings.sourceBranch}`);
 	await repo.fetchAll();
+	log(`Merging changes`);
 	await repo.mergeBranches(settings.sourceBranch, `origin/${settings.sourceBranch}`);
 }
 
