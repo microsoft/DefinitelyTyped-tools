@@ -2,14 +2,13 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypingsData, existsTypesDataFileSync, readTypings } from "../lib/common";
+import { Options, TypingsData, existsTypesDataFileSync, packagePath, readTypings } from "../lib/common";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { done, exec, nAtATime, numberOfOsProcesses } from "../util/util";
+import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
 
 import getAffectedPackages from "./get-affected-packages";
 
-const npmPath = path.join(require.resolve("npm"), "../../bin/npm-cli.js");
 const tscPath = path.join(require.resolve("typescript"), "../tsc.js");
 const tslintPath = path.join(require.resolve("tslint"), "../tslint-cli.js");
 
@@ -55,6 +54,21 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	const allErrors: Array<{ pkg: TypingsData, err: TesterError }> = [];
 
+	console.log("Installing dependencies...");
+
+	await nAtATime(nProcesses, typings, async pkg => {
+		const cwd = packagePath(pkg, options);
+		if (await fsp.exists(path.join(cwd, "package.json"))) {
+			let stdout = await execAndThrowErrors(`npm install`, cwd);
+			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
+			if (stdout) {
+				console.log(stdout);
+			}
+		}
+	});
+
+	console.log("Testing...");
+
 	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
 		const err = await single(pkg, log, options);
@@ -79,8 +93,8 @@ export default async function main(options: Options, nProcesses?: number, regexp
 }
 
 async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
-	const cwd = path.join(options.definitelyTypedPath, pkg.typingsPackageName);
-	return (await tsConfig()) || (await npmInstall()) || (await tsc()) || (await tslint());
+	const cwd = packagePath(pkg, options);
+	return (await tsConfig()) || (await tsc()) || (await tslint());
 
 	async function tsConfig(): Promise<TesterError | undefined> {
 		const tsconfigPath = path.join(cwd, "tsconfig.json");
@@ -92,11 +106,6 @@ async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options)
 			return { message: error.message };
 		}
 		return undefined;
-	}
-	async function npmInstall(): Promise<TesterError | undefined> {
-		return (await fsp.exists(path.join(cwd, "package.json")))
-			? runCommand(log, cwd, npmPath, "install")
-			: undefined;
 	}
 	function tsc(): Promise<TesterError | undefined> {
 		return runCommand(log, cwd, tscPath);

@@ -203,6 +203,10 @@ export function computeHash(content: string) {
 	return <string> h.digest("hex");
 }
 
+export function packagePath(pkg: TypingsData, options: Options): string {
+	return definitelyTypedPath(pkg.typingsPackageName, options);
+}
+
 export function definitelyTypedPath(dirName: string, options: Options): string {
 	return path.join(options.definitelyTypedPath, dirName);
 }

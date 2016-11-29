@@ -122,7 +122,7 @@ export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<str
 	if (error) {
 		throw new Error(stderr);
 	}
-	return stdout;
+	return stdout + stderr;
 }
 
 export function errorDetails(error: Error): string {
