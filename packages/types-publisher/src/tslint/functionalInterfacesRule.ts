@@ -13,7 +13,9 @@ export class Rule extends Lint.Rules.AbstractRule {
 	};
 
 	static failureString(name: string, { parameters, returnType }: Signature): string {
-		return `Interface has only a call signature -- use \`type ${name} = (${parameters}) => ${returnType}\` instead.`;
+		const suggestion = `type ${name} = (${parameters}) => ${returnType}`;
+		const disable = "Use `// tslint:disable-next-line:functional-interfaces` if you will extend this interface.";
+		return `Interface has only a call signature — use \`${suggestion}\` instead.\n${disable}`;
 	}
 
 	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -23,7 +25,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 class Walker extends Lint.RuleWalker {
 	visitInterfaceDeclaration(node: ts.InterfaceDeclaration) {
-		if (!node.heritageClauses && node.members.length === 1 && node.members[0].kind === ts.SyntaxKind.CallSignature) {
+		if (noSupertype(node.heritageClauses) && node.members.length === 1 && node.members[0].kind === ts.SyntaxKind.CallSignature) {
 			const sig = signatureString(node.members[0] as ts.CallSignatureDeclaration);
 			if (sig) {
 				this.fail(node, Rule.failureString(node.name!.getText(), sig));
@@ -36,6 +38,22 @@ class Walker extends Lint.RuleWalker {
 	private fail(node: ts.Node, message: string) {
 		this.addFailure(this.createFailure(node.getStart(), node.getWidth(), message));
 	}
+}
+
+/** True if there is no supertype or if the supertype is `Function`. */
+function noSupertype(heritageClauses: ts.NodeArray<ts.HeritageClause> | undefined): boolean {
+	if (!heritageClauses) {
+		return true;
+	}
+
+	if (heritageClauses.length === 1) {
+		const expr = heritageClauses[0].types![0].expression;
+		if (expr.kind === ts.SyntaxKind.Identifier && (expr as ts.Identifier).text === "Function") {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 function signatureString(node: ts.SignatureDeclaration): Signature | undefined {
