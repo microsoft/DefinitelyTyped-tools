@@ -1,6 +1,5 @@
 import * as Lint from "tslint";
 import * as ts from "typescript";
-import * as path from "path";
 
 import { validate, renderExpected } from "../lib/header";
 
@@ -39,8 +38,7 @@ class Walker extends Lint.RuleWalker {
 	}
 }
 
-/** Whether it's `foo/index.d.ts` */
 function isMainFile(fileName: string) {
-	const parts = fileName.split(path.sep);
-	return parts.length === 2 && parts[1] === "index.d.ts";
+	// Linter must be run with cwd of the package. We want `index.d.ts` but not `submodule/index.d.ts` to match.
+	return fileName === "index.d.ts";
 }
