@@ -1,34 +1,15 @@
+import assert = require("assert");
 import * as ts from "typescript";
 import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { readFile as readFileText } from "../util/io";
-import { Logger, LoggerWithErrors, LogWithErrors, quietLoggerWithErrors } from "../util/logging";
+import { Logger, Log, quietLogger } from "../util/logging";
+import { isExternalModule } from "../util/ts";
 import { mapAsyncOrdered, stripQuotes } from "../util/util";
 
 import { Options, TypingsData, computeHash, definitelyTypedPath, settings } from "./common";
 import { parseHeaderOrFail } from "./header";
-
-enum DefinitionFileKind {
-	// Dunno
-	Unknown,
-	// UMD module file
-	UMD,
-	// File has global variables or interfaces, but not any external modules
-	Global,
-	// File has top-level export declarations
-	ProperModule,
-	// File has a single declare module "foo" but no global interfaces or variables
-	DeclareModule,
-	// Some combination of Global and DeclareModule
-	Mixed,
-	// More than one 'declare module "foo"'
-	MultipleModules,
-	// Augments an external module
-	ModuleAugmentation,
-	// Old-style UMD
-	OldUMD
-}
 
 enum DeclarationFlags {
 	None = 0,
@@ -72,31 +53,14 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	return result;
 }
 
-async function moduleInfoAndFileKind(directory: string, folderName: string, allEntryFilenames: string[], log: LoggerWithErrors
-	): Promise<ModuleInfo & { fileKind: DefinitionFileKind }> {
-
-	const mi = await getModuleInfo(directory, folderName, allEntryFilenames, log.info);
-	const fileKind = getFileKind(mi, log.info);
-
-	if (mi.declaredModules.length === 1 && fileKind !== DefinitionFileKind.ModuleAugmentation && mi.declaredModules[0].toLowerCase() !== folderName) {
-		log.error(`Declared module \`${mi.declaredModules[0]}\` is in folder with incorrect name \`${folderName}\``);
-	}
-
-	if (mi.declaredModules.length === 0 && fileKind === DefinitionFileKind.ProperModule) {
-		mi.declaredModules.push(folderName);
-	}
-
-	return Object.assign({fileKind}, mi);
-}
-
-export async function getTypingInfo(folderName: string, options: Options): Promise<{ data: TypingsData, logs: LogWithErrors }> {
-	const [log, logResult] = quietLoggerWithErrors();
+export async function getTypingInfo(folderName: string, options: Options): Promise<{ data: TypingsData, logs: Log }> {
+	const [log, logResult] = quietLogger();
 	const directory = definitelyTypedPath(folderName, options);
 	if (folderName !== folderName.toLowerCase()) {
 		throw new Error(`Package name \`${folderName}\` should be strictly lowercase`);
 	}
 
-	log.info(`Reading contents of ${directory}`);
+	log(`Reading contents of ${directory}`);
 
 	// There is a *single* main file, containing metadata comments.
 	// But there may be many entryFilenames, which are the starting points of inferring all files to be included.
@@ -105,36 +69,33 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 
 	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projects } = parseHeaderOrFail(mainFileContent, folderName);
 
-	const allEntryFilenames = await entryFilesFromTsConfig(directory, log.info) || [mainFilename];
-	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles, fileKind } =
-		await moduleInfoAndFileKind(directory, folderName, allEntryFilenames, log);
+	const allEntryFilenames = await entryFilesFromTsConfig(directory, log) || [mainFilename];
+	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles } =
+		await getModuleInfo(directory, folderName, allEntryFilenames, log);
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
 	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
 	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
-	return {
-		logs: logResult(),
-		data: {
-			authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
-			libraryDependencies: referencedLibraries,
-			moduleDependencies,
-			libraryMajorVersion,
-			libraryMinorVersion,
-			libraryName,
-			typingsPackageName: folderName,
-			projectName: projects[0], // TODO: collect multiple project names
-			sourceRepoURL,
-			sourceBranch: settings.sourceBranch,
-			kind: DefinitionFileKind[fileKind],
-			globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)).sort(),
-			declaredModules,
-			root: path.resolve(directory),
-			files: declFiles,
-			hasPackageJson,
-			contentHash: await hash(directory, allFiles)
-		}
+	const data: TypingsData = {
+		authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
+		libraryDependencies: referencedLibraries,
+		moduleDependencies,
+		libraryMajorVersion,
+		libraryMinorVersion,
+		libraryName,
+		typingsPackageName: folderName,
+		projectName: projects[0], // TODO: collect multiple project names
+		sourceRepoURL,
+		sourceBranch: settings.sourceBranch,
+		globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)).sort(),
+		declaredModules,
+		root: path.resolve(directory),
+		files: declFiles,
+		hasPackageJson,
+		contentHash: await hash(directory, allFiles)
 	};
+	return { data, logs: logResult() };
 }
 
 async function entryFilesFromTsConfig(directory: string, log: Logger): Promise<string[] | undefined> {
@@ -263,7 +224,6 @@ function imports(src: ts.SourceFile): string[] {
 
 async function getModuleInfo(directory: string, folderName: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
 	let hasUmdDecl = false;
-	let isProperModule = false;
 	let hasGlobalDeclarations = false;
 	let ambientModuleCount = 0;
 
@@ -279,11 +239,15 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 	const all = await allReferencedFiles(directory, allEntryFilenames, log);
 
 	for (const src of all.values()) {
+		const isExternal = isExternalModule(src);
+		// A file is a proper module if it is an external module *and* it has at least one export.
+		// A module with only imports is not a proper module; it likely just augments some other module.
+		let hasAnyExport = false;
+
 		for (const ref of imports(src)) {
 			if (!ref.startsWith(".")) {
 				moduleDependencies.add(ref);
 				log(`Found import declaration from \`"${ref}"\``);
-				isProperModule = true;
 			}
 		}
 
@@ -297,21 +261,24 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 					// Don't set hasGlobalDeclarations = true even though we add a symbol here
 					// since this is still a legal module-only declaration
 					globalSymbols[globalName] = ts.SymbolFlags.Value;
-					isProperModule = true;
+					hasAnyExport = true;
 					hasUmdDecl = true;
 					break;
 
 				case ts.SyntaxKind.ModuleDeclaration:
-					if (isExport(node)) {
+					if (isExternal) {
 						log(`Found exported namespace \`${(node as ts.ModuleDeclaration).name.getText()}\``);
-						isProperModule = true;
+						hasAnyExport = true;
 					} else {
 						const nameKind = (node as ts.ModuleDeclaration).name.kind;
 						if (nameKind === ts.SyntaxKind.StringLiteral) {
-							const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
-							declaredModules.push(name);
-							log(`Found ambient external module \`"${name}"\``);
-							ambientModuleCount++;
+							// If we're in an external module, this is an augmentation, not a declaration.
+							if (!isExternalModule(src)) {
+								const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
+								declaredModules.push(name);
+								log(`Found ambient external module \`"${name}"\``);
+								ambientModuleCount++;
+							}
 						} else {
 							const moduleName = (node as ts.ModuleDeclaration).name.getText();
 							log(`Found global namespace declaration \`${moduleName}\``);
@@ -322,9 +289,9 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 					break;
 
 				case ts.SyntaxKind.VariableStatement:
-					if (isExport(node)) {
+					if (isExternal) {
 						log("Found exported variables");
-						isProperModule = true;
+						hasAnyExport = true;
 					} else {
 						(node as ts.VariableStatement).declarationList.declarations.forEach(decl => {
 							const declName = decl.name.getText();
@@ -341,12 +308,12 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 				case ts.SyntaxKind.ClassDeclaration:
 				case ts.SyntaxKind.FunctionDeclaration:
 					// If these nodes have an 'export' modifier, the file is an external module
-					if (isExport(node)) {
+					if (isExternal) {
 						const declName = (node as ts.DeclarationStatement).name;
 						if (declName) {
 							log(`Found exported declaration "${declName.getText()}"`);
 						}
-						isProperModule = true;
+						hasAnyExport = true;
 					} else {
 						const declName = ((node as ts.DeclarationStatement).name as ts.Identifier).getText();
 						const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
@@ -360,7 +327,7 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 				case ts.SyntaxKind.ExportAssignment:
 					// These nodes always indicate an external module
 					log(`Found export assignment or export declaration`);
-					isProperModule = true;
+					hasAnyExport = true;
 					break;
 
 				case ts.SyntaxKind.ImportEqualsDeclaration:
@@ -372,6 +339,12 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 					throw new Error(`Bad node in ${path.join(directory, src.fileName)}: '${node.getText()}' is of kind ${ts.SyntaxKind[node.kind]}`);
 			}
 		}
+
+		const isProperModule = isExternal && hasAnyExport;
+
+		if (isProperModule) {
+			declaredModules.push(properModuleName(folderName, src.fileName));
+		}
 	}
 
 	// Some files may reference the main module, but don't include that as a real dependency.
@@ -382,7 +355,7 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 		declFiles: arrayOf(all.keys()),
 		referencedLibraries: arrayOf(referencedLibraries),
 		moduleDependencies: arrayOf(moduleDependencies),
-		hasUmdDecl, isProperModule, hasGlobalDeclarations, ambientModuleCount, declaredModules, globalSymbols
+		declaredModules, globalSymbols
 	};
 
 	function arrayOf(strings: Iterable<string>): string[] {
@@ -390,18 +363,26 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 	}
 }
 
+/**
+ * Given a file name, get the name of the module it declares.
+ * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
+ */
+function properModuleName(folderName: string, fileName: string): string {
+	const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtension(fileName, ".d.ts");
+	return path.join(folderName, part);
+}
+
+function withoutExtension(str: string, ext: string): string {
+	assert(str.endsWith(ext));
+	return str.slice(0, str.length - ext.length);
+}
+
 interface GlobalSymbols {
 	[name: string]: ts.SymbolFlags;
 }
 interface ModuleInfo {
-	hasUmdDecl: boolean;
-	isProperModule: boolean;
-	hasGlobalDeclarations: boolean;
-	ambientModuleCount: number;
-
 	// Every declaration file used (starting from the entry point)
 	declFiles: string[];
-
 	// Anything from an `import ... from "foo"`
 	moduleDependencies: string[];
 	// Anything from a `<reference types="foo">
@@ -410,59 +391,6 @@ interface ModuleInfo {
 	declaredModules: string[];
 	// Every global symbol
 	globalSymbols: GlobalSymbols;
-}
-
-function isNewGlobal(name: string): boolean {
-	// This is not a new global if it simply augments an existing one.
-	const augmentedGlobals = [
-		"Array", "Function", "String", "Number", "Window", "Date", "StringConstructor", "NumberConstructor", "Math", "HTMLElement"];
-	return !augmentedGlobals.includes(name);
-}
-
-function getFileKind(mi: ModuleInfo, log: Logger): DefinitionFileKind {
-	const globals = Object.keys(mi.globalSymbols).filter(isNewGlobal);
-	if (mi.isProperModule) {
-		if (mi.hasUmdDecl) {
-			log(`UMD module declaration detected`);
-			return DefinitionFileKind.UMD;
-		} else {
-			if (mi.ambientModuleCount > 0) {
-				log(`At least one import declaration and an ambient module declaration, this is a ModuleAugmentation file`);
-				return DefinitionFileKind.ModuleAugmentation;
-			} else {
-				log(`At least one export declaration, this is a ProperModule file`);
-				return DefinitionFileKind.ProperModule;
-			}
-		}
-	} else {
-		if (mi.hasGlobalDeclarations) {
-			if (mi.ambientModuleCount === 1) {
-				if (globals.length === 1) {
-					log(`One global declaration and one ambient module declaration, this is an OldUMD file`);
-					return DefinitionFileKind.OldUMD;
-				} else {
-					log(`${globals.length} global declarations and one ambient module declaration, this is a Mixed file`);
-					return DefinitionFileKind.Mixed;
-				}
-			} else if (mi.ambientModuleCount > 1) {
-				log(`Global declarations and multiple ambient module declaration, this is a MultipleModules file`);
-				return DefinitionFileKind.MultipleModules;
-			} else {
-				log(`Global declarations and no ambient module declaration, this is a Global file`);
-				return DefinitionFileKind.Global;
-			}
-		} else {
-			if (mi.ambientModuleCount === 1) {
-				log(`Exactly one ambient module declaration, this is a DeclareModule file`);
-				return DefinitionFileKind.DeclareModule;
-			} else if (mi.ambientModuleCount > 1) {
-				log(`Multiple ambient module declaration, this is a MultipleModules file`);
-				return DefinitionFileKind.MultipleModules;
-			} else {
-				return DefinitionFileKind.Unknown;
-			}
-		}
-	}
 }
 
 async function hash(directory: string, files: string[]): Promise<string> {
@@ -483,8 +411,4 @@ async function readFile(directory: string, fileName: string): Promise<string> {
 		throw new Error(`File '${full}' has a BOM. Try using:\n${commands.join("\n")}`);
 	}
 	return text;
-}
-
-function isExport(node: ts.Node): boolean {
-	return (ts as any).hasModifier(node, ts.ModifierFlags.Export);
 }

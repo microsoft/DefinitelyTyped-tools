@@ -77,8 +77,6 @@ export interface TypingsData extends PackageCommonProperties {
 	 */
 	packageKind?: undefined;
 
-	kind: string; // Name of a member in DefinitionFileKind
-
 	moduleDependencies: string[];
 	libraryDependencies: string[];
 

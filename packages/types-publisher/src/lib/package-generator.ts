@@ -207,7 +207,6 @@ function createReadme(typing: TypingsData) {
 	lines.push("");
 	lines.push(`Additional Details`);
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
-	lines.push(` * File structure: ${typing.kind}`);
 	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(", ") : "none"}`);
 	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(", ") : "none"}`);
 	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);

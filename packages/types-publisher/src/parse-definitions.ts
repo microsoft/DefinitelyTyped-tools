@@ -36,35 +36,17 @@ export default async function main(options: Options): Promise<void> {
 
 	summaryLog(`Found ${folders.length} typings folders in ${options.definitelyTypedPath}`);
 
-	const [warningLog, warningLogResult] = logger();
 	const typings: { [name: string]: TypingsData } = {};
 
 	for (const s of folders) {
-		const result = await parser.getTypingInfo(s, options);
+		const { data, logs } = await parser.getTypingInfo(s, options);
 
 		detailedLog(`# ${s}`);
-
-		// Push warnings
-		if (result.logs.errors.length > 0) {
-			warningLog(` * ${s}`);
-			result.logs.errors.forEach(w => {
-				warningLog(`   * ${w}`);
-				detailedLog(`**Warning**: ${w}`);
-			});
-		}
-
-		if (result.data !== undefined) {
-			typings[s] = result.data;
-		}
+		typings[s] = data;
 
 		// Flush detailed log
-		result.logs.infos.forEach(e => detailedLog(e));
+		moveLogs(detailedLog, logs);
 	}
-
-	summaryLog("\r\n### Overall Results\r\n");
-
-	summaryLog("\r\n### Warnings\r\n");
-	moveLogs(summaryLog, warningLogResult());
 
 	await Promise.all([
 		writeLog("parser-log-summary.md", summaryLogResult()),
