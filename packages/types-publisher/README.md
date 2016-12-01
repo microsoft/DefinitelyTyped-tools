@@ -6,6 +6,12 @@ This is the source code for the types-publisher service, which publishes the con
 
 If there's functionality from the project you'd like to use, please file an issue detailing that. The script isn't intended for public consumption (i.e. we will break the API whenever convenient for us).
 
+# Filing issues
+
+If you've noticed a problem with the way a package is published, file an issue here.
+If you don't like the contents of a given definition, file an issue (or pull request) on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) instead.
+
+
 # Manually running
 
 Normally, types-publisher is run through its webhook, but to test it out you can do it yourself.
