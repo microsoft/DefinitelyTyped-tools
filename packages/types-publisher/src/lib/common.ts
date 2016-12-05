@@ -91,9 +91,6 @@ export interface TypingsData extends PackageCommonProperties {
 	// The minor version of the library
 	libraryMinorVersion: number;
 
-	// The full path to the containing folder of all files, e.g. "C:/github/DefinitelyTyped/some-package"
-	root: string;
-
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
 	// Does *not* include a partial `package.json` because that will not be copied directly.
 	files: string[];
@@ -203,6 +200,10 @@ export function computeHash(content: string) {
 
 export function packagePath(pkg: TypingsData, options: Options): string {
 	return definitelyTypedPath(pkg.typingsPackageName, options);
+}
+
+export function filePath(pkg: TypingsData, fileName: string, options: Options): string {
+	return path.join(packagePath(pkg, options), fileName);
 }
 
 export function definitelyTypedPath(dirName: string, options: Options): string {

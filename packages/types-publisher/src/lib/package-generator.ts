@@ -5,22 +5,22 @@ import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty } from "../util/util";
 
-import { AnyPackage, TypesDataFile, TypingsData, NotNeededPackage, fullPackageName, notNeededReadme, getOutputPath } from "./common";
+import { AnyPackage, Options, TypesDataFile, TypingsData, NotNeededPackage, filePath, fullPackageName, notNeededReadme, getOutputPath } from "./common";
 import Versions, { Semver, VersionInfo, versionString } from "./versions";
 
 /** Generates the package to disk */
-export default function generateAnyPackage(pkg: AnyPackage, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
-	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, availableTypes, versions);
+export default function generateAnyPackage(pkg: AnyPackage, availableTypes: TypesDataFile, versions: Versions, options: Options): Promise<Log> {
+	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, availableTypes, versions, options);
 }
 
-async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions): Promise<Log> {
+async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
 	const outputPath = getOutputPath(typing);
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json, metadata.json, and README.md");
-	const packageJson = await createPackageJSON(typing, versions.versionInfo(typing), availableTypes);
+	const packageJson = await createPackageJSON(typing, versions.versionInfo(typing), availableTypes, options);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -32,7 +32,7 @@ async function generatePackage(typing: TypingsData, availableTypes: TypesDataFil
 	];
 	outputs.push(...typing.files.map(async file => {
 		log(`Copy and patch ${file}`);
-		let content = await readFile(filePath(typing, file));
+		let content = await readFile(filePath(typing, file, options));
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
@@ -91,27 +91,18 @@ function createMetadataJSON(typing: TypingsData): string {
 	return JSON.stringify(typing, replacer, 4);
 }
 
-function filePath(typing: TypingsData, fileName: string): string {
-	return path.join(typing.root, fileName);
-}
-
 interface Dependencies { [name: string]: string; }
 
-async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile): Promise<string> {
-	// typing may provide a partial `package.json` for us to complete
-	const pkgPath = filePath(typing, "package.json");
-	interface PartialPackageJson {
-		dependencies?: Dependencies;
-		peerDependencies?: Dependencies;
-		description: string;
-	}
-	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
+interface PartialPackageJson {
+	dependencies?: Dependencies;
+	peerDependencies?: Dependencies;
+	description?: string;
+}
 
-	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
-	// Kludge: ignore "scripts" (See https://github.com/DefinitelyTyped/definition-tester/issues/35)
-	if (ignoredField && ignoredField !== "scripts") {
-		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
-	}
+async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile, options: Options): Promise<string> {
+	// typing may provide a partial `package.json` for us to complete
+	const pkgPath = filePath(typing, "package.json", options);
+	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
 	const dependencies = pkg.dependencies || {};
 	const peerDependencies = pkg.peerDependencies || {};

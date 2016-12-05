@@ -90,7 +90,6 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 		sourceBranch: settings.sourceBranch,
 		globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)).sort(),
 		declaredModules,
-		root: path.resolve(directory),
 		files: declFiles,
 		hasPackageJson,
 		contentHash: await hash(directory, allFiles)

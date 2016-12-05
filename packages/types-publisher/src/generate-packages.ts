@@ -32,7 +32,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 	const packages = all ? allPackages : await changedPackages(allPackages);
 
 	await nAtATime(10, packages, async pkg => {
-		const logs = await generateAnyPackage(pkg, typeData, versions);
+		const logs = await generateAnyPackage(pkg, typeData, versions, options);
 		if (tgz) {
 			await writeTgz(getOutputPath(pkg), getOutputPath(pkg) + ".tgz");
 		}
@@ -46,7 +46,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 async function single(singleName: string, options: Options): Promise<void> {
 	const { typeData, versions } = await loadPrerequisites(options);
 	const pkg = getPackage(typeData, singleName);
-	const logs = await generateAnyPackage(pkg, typeData, versions);
+	const logs = await generateAnyPackage(pkg, typeData, versions, options);
 	console.log(logs.join("\n"));
 }
 

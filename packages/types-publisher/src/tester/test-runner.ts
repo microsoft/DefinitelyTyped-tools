@@ -2,7 +2,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypingsData, existsTypesDataFileSync, packagePath, readTypings } from "../lib/common";
+import { Options, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypings } from "../lib/common";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
@@ -94,18 +94,16 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
 	const cwd = packagePath(pkg, options);
-	return (await tsConfig()) || (await tsc()) || (await tslint());
+	return (await tsConfig()) || (await packageJson()) || (await tsc()) || (await tslint());
 
 	async function tsConfig(): Promise<TesterError | undefined> {
+		//use filePath
 		const tsconfigPath = path.join(cwd, "tsconfig.json");
-		try {
-			checkTsconfig(await readJson(tsconfigPath));
-		}
-		catch (error) {
-			log.error(error.message);
-			return { message: error.message };
-		}
-		return undefined;
+		return catchErrors(log, async () =>
+			checkTsconfig(await readJson(tsconfigPath)));
+	}
+	async function packageJson(): Promise<TesterError | undefined> {
+		return catchErrors(log, () => checkPackageJson(pkg, options));
 	}
 	function tsc(): Promise<TesterError | undefined> {
 		return runCommand(log, cwd, tscPath);
@@ -115,6 +113,17 @@ async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options)
 			? runCommand(log, cwd, tslintPath, "--format stylish", ...pkg.files)
 			: undefined;
 	}
+}
+
+async function catchErrors(log: LoggerWithErrors, action: () => Promise<void>): Promise<TesterError | undefined> {
+	try {
+		await action();
+	}
+	catch (error) {
+		log.error(error.message);
+		return { message: error.message };
+	}
+	return undefined;
 }
 
 interface TesterError {
@@ -154,4 +163,19 @@ function checkTsconfig(tsconfig: any) {
 	}
 
 	// baseUrl / typeRoots / types may be missing.
+}
+
+async function checkPackageJson(typing: TypingsData, options: Options): Promise<void> {
+	if (!typing.hasPackageJson) {
+		return;
+	}
+
+	const pkgPath = filePath(typing, "package.json", options);
+	const pkg = await readJson(pkgPath);
+
+	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
+	// Kludge: ignore "scripts" (See https://github.com/DefinitelyTyped/definition-tester/issues/35)
+	if (ignoredField && ignoredField !== "scripts") {
+		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
+	}
 }
