@@ -97,7 +97,6 @@ async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options)
 	return (await tsConfig()) || (await packageJson()) || (await tsc()) || (await tslint());
 
 	async function tsConfig(): Promise<TesterError | undefined> {
-		//use filePath
 		const tsconfigPath = path.join(cwd, "tsconfig.json");
 		return catchErrors(log, async () =>
 			checkTsconfig(await readJson(tsconfigPath)));
@@ -174,8 +173,7 @@ async function checkPackageJson(typing: TypingsData, options: Options): Promise<
 	const pkg = await readJson(pkgPath);
 
 	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
-	// Kludge: ignore "scripts" (See https://github.com/DefinitelyTyped/definition-tester/issues/35)
-	if (ignoredField && ignoredField !== "scripts") {
+	if (ignoredField) {
 		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
 	}
 }

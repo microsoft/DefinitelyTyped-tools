@@ -5,7 +5,8 @@ import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty } from "../util/util";
 
-import { AnyPackage, Options, TypesDataFile, TypingsData, NotNeededPackage, filePath, fullPackageName, notNeededReadme, getOutputPath } from "./common";
+import { AnyPackage, Options, TypesDataFile, TypingsData, NotNeededPackage, filePath, fullPackageName, notNeededReadme, getOutputPath
+	} from "./common";
 import Versions, { Semver, VersionInfo, versionString } from "./versions";
 
 /** Generates the package to disk */
@@ -99,7 +100,8 @@ interface PartialPackageJson {
 	description?: string;
 }
 
-async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile, options: Options): Promise<string> {
+async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile, options: Options
+	): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = filePath(typing, "package.json", options);
 	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
