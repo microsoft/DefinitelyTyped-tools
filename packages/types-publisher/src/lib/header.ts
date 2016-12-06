@@ -123,7 +123,8 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 		// Parse in reverse. Once we've stripped off the version, the rest is the libary name.
 		const reversed = reverse(tilNewline);
 
-		const rgx = /((\d+)\.(\d+)(\.\d+)?(v)? )?(.+)/;
+		// Last digit is allowed to be "x", which acts like "0"
+		const rgx = /((\d+|x)\.(\d+)(\.\d+)?(v)? )?(.+)/;
 		const match = rgx.exec(reversed);
 		if (!match) {
 			return fail();
@@ -155,7 +156,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 		}
 
 		const [name, major, minor] = [reverse(nameReverse), reverse(majorReverse), reverse(minorReverse)];
-		return pm.makeSuccess<Label>(end, { name, major: intOfString(major), minor: intOfString(minor) });
+		return pm.makeSuccess<Label>(end, { name, major: intOfString(major), minor: minor === "x" ? 0 : intOfString(minor) });
 
 		function fail(msg?: string): pm.Result<Label> {
 			let expected = "foo MAJOR.MINOR";
