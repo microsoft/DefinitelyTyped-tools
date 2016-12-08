@@ -21,7 +21,7 @@
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
     "tslint": "next",
-    "typescript": "next",
+    "typescript": "^2.0.10",
     "yargs": "^6.2.0"
   },
   "devDependencies": {
