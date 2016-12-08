@@ -162,6 +162,9 @@ function checkTsconfig(tsconfig: any) {
 	}
 
 	// baseUrl / typeRoots / types may be missing.
+	if (options.types && options.types.length) {
+		throw new Error('Use `/// <reference types="" />` in source files instead of using "types" in tsconfig.');
+	}
 }
 
 async function checkPackageJson(typing: TypingsData, options: Options): Promise<void> {
