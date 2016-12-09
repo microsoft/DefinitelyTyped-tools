@@ -128,3 +128,18 @@ export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<str
 export function errorDetails(error: Error): string {
 	return error.stack || error.message || `Non-Error error: ${inspect(error)}`;
 }
+
+export function min<T>(inputs: T[], lessThan: (a: T, b: T) => boolean): T | undefined {
+	if (!inputs.length) {
+		return undefined;
+	}
+
+	let min = inputs[0];
+	for (let i = 1; i < inputs.length; i++) {
+		const candidate = inputs[i];
+		if (lessThan(candidate, min)) {
+			min = candidate;
+		}
+	}
+	return min;
+}

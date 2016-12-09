@@ -1,6 +1,8 @@
-import { TypingsData, existsTypesDataFileSync, readTypings } from "./lib/common";
+import * as semver from "semver";
+import { TypingsData, existsTypesDataFileSync, readTypings, settings } from "./lib/common";
 import { Logger, logger, writeLog } from "./util/logging";
-import { done } from "./util/util";
+import { fetchJson} from "./util/io";
+import { done, min, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
@@ -15,6 +17,7 @@ export default async function main(): Promise<void> {
 	const [log, logResult] = logger();
 	check(infos, info => info.libraryName, "Library Name", log);
 	check(infos, info => info.projectName, "Project Name", log);
+	await nAtATime(10, infos, pkg => checkNpm(pkg, log));
 	await writeLog("conflicts.md", logResult());
 }
 
@@ -32,4 +35,28 @@ function check(infos: TypingsData[], func: (info: TypingsData) => string | undef
 			lookup[k].forEach(n => log(`   * ${n}`));
 		}
 	}
+}
+
+async function checkNpm(pkg: TypingsData, log: Logger): Promise<void> {
+	const uri = settings.npmRegistry + pkg.typingsPackageName;
+	const info = await fetchJson(uri, { retries: true });
+	// Info may be empty if the package is not on NPM
+	if (!info.versions) {
+		return;
+	}
+
+	const asOfVersion = firstVersionWithTypes(info.versions);
+	if (asOfVersion) {
+		const ourVersion = `${pkg.libraryMajorVersion}.${pkg.libraryMinorVersion}`;
+		log(`Typings already defined for ${pkg.typingsPackageName} (${pkg.libraryName}) as of ${asOfVersion} (our version: ${ourVersion})`);
+	}
+}
+
+function firstVersionWithTypes(versions: { [version: string]: any }): string | undefined {
+	const versionsWithTypings = Object.entries(versions).filter(([_version, info]) => hasTypes(info)).map(([version]) => version);
+	return min(versionsWithTypings, semver.lt);
+}
+
+function hasTypes(info: any): boolean {
+	return "types" in info || "typings" in info;
 }
