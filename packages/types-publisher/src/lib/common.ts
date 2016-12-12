@@ -216,7 +216,7 @@ export function getOutputPath({typingsPackageName}: AnyPackage) {
 }
 
 export function fullPackageName(typingsPackageName: string): string {
-	return `@${settings.scopeName}/${typingsPackageName.toLowerCase()}`;
+	return `@${settings.scopeName}/${typingsPackageName}`;
 }
 
 export function notNeededReadme({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage, useNewline: boolean = true): string {
