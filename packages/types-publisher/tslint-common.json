@@ -18,7 +18,7 @@
 
 		"array-type": [true, "array-simple"],
 		"arrow-parens": false,
-		"interface-name": false,
+		"interface-name": [true, "never-prefix"],
 		"max-classes-per-file": false,
 		"member-access": false,
 		"member-ordering": false,
