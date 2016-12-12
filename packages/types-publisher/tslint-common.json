@@ -9,6 +9,7 @@
 		"forbidden-types": true,
 		"functional-interfaces": true,
 		"interface-over-type-literal": true,
+		"no-dead-reference": true,
 		"no-empty-interface": true,
 		"no-parent-references": true,
 		"no-public": true,
