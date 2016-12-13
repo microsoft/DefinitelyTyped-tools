@@ -12,10 +12,14 @@ export class Rule extends Lint.Rules.AbstractRule {
 		typescriptOnly: true,
 	};
 
-	static failureString(name: string, { parameters, returnType }: Signature): string {
+	static failureStringForInterface(name: string, { parameters, returnType }: Signature): string {
 		const suggestion = `type ${name} = (${parameters}) => ${returnType}`;
 		const disable = "Use `// tslint:disable-next-line:functional-interfaces` if you will extend this interface.";
 		return `Interface has only a call signature — use \`${suggestion}\` instead.\n${disable}`;
+	}
+
+	static failureStringForTypeLiteral({ parameters, returnType }: Signature): string {
+		return `Type literal has only a call signature — use \`(${parameters}) => ${returnType}\` instead.`;
 	}
 
 	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -25,14 +29,24 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 class Walker extends Lint.RuleWalker {
 	visitInterfaceDeclaration(node: ts.InterfaceDeclaration) {
-		if (noSupertype(node.heritageClauses) && node.members.length === 1 && node.members[0].kind === ts.SyntaxKind.CallSignature) {
+		if (noSupertype(node.heritageClauses)) {
+			this.check(node);
+		}
+		super.visitInterfaceDeclaration(node);
+	}
+
+	visitTypeLiteral(node: ts.TypeLiteralNode) {
+		this.check(node);
+		super.visitTypeLiteral(node);
+	}
+
+	private check(node: ts.InterfaceDeclaration | ts.TypeLiteralNode) {
+		if (node.members.length === 1 && node.members[0].kind === ts.SyntaxKind.CallSignature) {
 			const sig = signatureString(node.members[0] as ts.CallSignatureDeclaration);
 			if (sig) {
-				this.fail(node, Rule.failureString(node.name!.getText(), sig));
+				this.fail(node, node.name ? Rule.failureStringForInterface(node.name.getText(), sig) : Rule.failureStringForTypeLiteral(sig));
 			}
 		}
-
-		super.visitInterfaceDeclaration(node);
 	}
 
 	private fail(node: ts.Node, message: string) {

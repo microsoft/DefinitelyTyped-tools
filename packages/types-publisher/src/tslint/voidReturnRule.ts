@@ -61,6 +61,7 @@ function isReturnType(node: ts.Node): boolean {
 function isSignatureDeclaration(node: ts.Node): node is ts.SignatureDeclaration {
 	switch (node.kind) {
 		case ts.SyntaxKind.ArrowFunction:
+		case ts.SyntaxKind.CallSignature:
 		case ts.SyntaxKind.FunctionDeclaration:
 		case ts.SyntaxKind.FunctionType:
 		case ts.SyntaxKind.MethodDeclaration:
