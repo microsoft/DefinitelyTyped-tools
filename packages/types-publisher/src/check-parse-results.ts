@@ -2,7 +2,7 @@ import * as semver from "semver";
 import { TypingsData, existsTypesDataFileSync, readTypings, settings } from "./lib/common";
 import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
-import { done, min, nAtATime } from "./util/util";
+import { best, done, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	if (!existsTypesDataFileSync()) {
@@ -54,7 +54,7 @@ async function checkNpm(pkg: TypingsData, log: Logger): Promise<void> {
 
 function firstVersionWithTypes(versions: { [version: string]: any }): string | undefined {
 	const versionsWithTypings = Object.entries(versions).filter(([_version, info]) => hasTypes(info)).map(([version]) => version);
-	return min(versionsWithTypings, semver.lt);
+	return best(versionsWithTypings, semver.lt);
 }
 
 function hasTypes(info: any): boolean {

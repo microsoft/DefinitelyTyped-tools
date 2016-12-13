@@ -3,7 +3,7 @@ import assert = require("assert");
 import { existsDataFileSync, readDataFile, writeDataFile } from "../lib/common";
 import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
-import { nAtATime, intOfString, sortObjectKeys } from "../util/util";
+import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
 import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
 
@@ -34,7 +34,7 @@ export default class Versions {
 
 		await nAtATime(25, typings, async pkg => {
 			const packageName = pkg.typingsPackageName;
-			const versionInfo = await fetchTypesPackageVersionInfo(packageName);
+			const versionInfo = await fetchTypesPackageVersionInfo(packageName, [pkg.libraryMajorVersion, pkg.libraryMinorVersion]);
 			if (!versionInfo) {
 				log(`Added: ${packageName}`);
 				additions.push(packageName);
@@ -101,11 +101,11 @@ export function versionString(version: Semver): string {
 }
 
 /** Returns undefined if the package does not exist. */
-async function fetchTypesPackageVersionInfo(packageName: string): Promise<VersionInfo | undefined> {
-	return fetchVersionInfoFromNpm(fullPackageName(packageName).replace(/\//g, "%2f"));
+async function fetchTypesPackageVersionInfo(packageName: string, newMajorAndMinor?: [number, number]): Promise<VersionInfo | undefined> {
+	return fetchVersionInfoFromNpm(fullPackageName(packageName).replace(/\//g, "%2f"), newMajorAndMinor);
 }
 
-export async function fetchVersionInfoFromNpm(escapedPackageName: string): Promise<VersionInfo | undefined> {
+export async function fetchVersionInfoFromNpm(escapedPackageName: string, newMajorAndMinor?: [number, number]): Promise<VersionInfo | undefined> {
 	const uri = settings.npmRegistry + escapedPackageName;
 	const info = await fetchJson(uri, { retries: true });
 
@@ -122,8 +122,7 @@ export async function fetchVersionInfoFromNpm(escapedPackageName: string): Promi
 		return undefined;
 	}
 	else {
-		const versionSemver: string = info["dist-tags"].latest;
-		assert(typeof versionSemver === "string");
+		const versionSemver = getVersionSemver(info, newMajorAndMinor);
 		const latestVersionInfo = info.versions[versionSemver];
 		assert(!!latestVersionInfo);
 		const contentHash = latestVersionInfo.typesPublisherContentHash || "";
@@ -132,15 +131,45 @@ export async function fetchVersionInfoFromNpm(escapedPackageName: string): Promi
 	}
 }
 
+function getVersionSemver(info: any, newMajorAndMinor?: [number, number]): string {
+	// If there's already a published package with this version, look for that first.
+	if (newMajorAndMinor) {
+		const [newMajor, newMinor] = newMajorAndMinor;
+		const patch = newMajor === -1 ? undefined : latestPatchMatchingMajorAndMinor(info.versions, newMajor, newMinor);
+		if (patch !== undefined) {
+			return `${newMajor}.${newMinor}.${patch}`;
+		}
+	}
+	return info["dist-tags"].latest;
+}
+
+/** Finds the version with matching major/minor with the latest patch version. */
+function latestPatchMatchingMajorAndMinor(versions: { [version: string]: never }, newMajor: number, newMinor: number): number | undefined {
+	const versionsWithTypings = Object.keys(versions).map(v => {
+		const semver = tryParseSemver(v);
+		if (!semver) {
+			return undefined;
+		}
+		const { major, minor, patch } = semver;
+		return major === newMajor && minor === newMinor ? patch : undefined;
+	}).filter(x => x !== undefined);
+	return best(versionsWithTypings, (a, b) => a > b);
+}
+
 function parseSemver(semver: string): Semver {
+	const result = tryParseSemver(semver);
+	if (!result) {
+		throw new Error(`Unexpected semver: ${semver}`);
+	}
+	return result;
+}
+
+function tryParseSemver(semver: string): Semver | undefined {
 	// Per the semver spec <http://semver.org/#spec-item-2>:
  	// "A normal version number MUST take the form X.Y.Z where X, Y, and Z are non-negative integers, and MUST NOT contain leading zeroes."
 	const rgx = /^(\d+)\.(\d+)\.(\d+)$/;
 	const match = rgx.exec(semver);
-	if (!match) {
-		throw new Error(`Unexpected semver: ${semver}`);
-	}
-	return { major: intOfString(match[1]), minor: intOfString(match[2]), patch: intOfString(match[3]) };
+	return match ? { major: intOfString(match[1]), minor: intOfString(match[2]), patch: intOfString(match[3]) } : undefined;
 }
 
 // List of package names that have changed
