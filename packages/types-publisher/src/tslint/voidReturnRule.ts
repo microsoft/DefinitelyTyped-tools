@@ -21,7 +21,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 class Walker extends Lint.RuleWalker {
 	visitNode(node: ts.Node) {
-		if (node.kind === ts.SyntaxKind.VoidKeyword && node.parent!.kind !== ts.SyntaxKind.TypeReference && !isReturnType(node)) {
+		if (node.kind === ts.SyntaxKind.VoidKeyword && !mayContainVoid(node.parent!) && !isReturnType(node)) {
 			this.fail(node, Rule.FAILURE_STRING);
 		}
 		super.visitNode(node);
@@ -30,6 +30,10 @@ class Walker extends Lint.RuleWalker {
 	private fail(node: ts.Node, message: string) {
 		this.addFailure(this.createFailure(node.getStart(), node.getWidth(), message));
 	}
+}
+
+function mayContainVoid({ kind }: ts.Node) {
+	return kind === ts.SyntaxKind.TypeReference || kind === ts.SyntaxKind.NewExpression;
 }
 
 function isReturnType(node: ts.Node): boolean {
