@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/node": "^6.0.41",
     "@types/node-fetch": "1.6.5",
-    "@types/parsimmon": "^0.9.31",
+    "@types/parsimmon": "^1.0.1",
     "@types/semver": "^5.3.30",
     "@types/source-map-support": "^0.2.27",
     "@types/tar": "^1.0.27",
