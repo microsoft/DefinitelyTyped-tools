@@ -161,9 +161,13 @@ function checkTsconfig(tsconfig: any) {
 		throw new Error(`Expected compilerOptions["noImplicitAny"] and compilerOptions["strictNullChecks"] to exist`);
 	}
 
+	if (("typeRoots" in options) && !("types" in options)) {
+		throw new Error('If the "typeRoots" option is specified in your tsconfig, you must include `"types": []` to prevent very long compile times.');
+	}
+
 	// baseUrl / typeRoots / types may be missing.
 	if (options.types && options.types.length) {
-		throw new Error('Use `/// <reference types="" />` in source files instead of using "types" in tsconfig.');
+		throw new Error('Use `/// <reference types="..." />` directives in source files and ensure that the "types" field in your tsconfig is an empty array.');
 	}
 }
 
