@@ -26,6 +26,7 @@
     "yargs": "^6.2.0"
   },
   "devDependencies": {
+    "@types/fs-promise": "^1.0.0",
     "@types/node": "^6.0.41",
     "@types/node-fetch": "1.6.5",
     "@types/parsimmon": "^1.0.1",
