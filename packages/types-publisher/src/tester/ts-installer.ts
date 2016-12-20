@@ -14,7 +14,7 @@ export async function installAllTypeScriptVersions(): Promise<void> {
 	for (const version of TypeScriptVersion.All) {
 		const dir = installDir(version);
 		await fsp.mkdirp(dir);
-		writeJson(path.join(dir, "package.json"), packageJson(version));
+		await writeJson(path.join(dir, "package.json"), packageJson(version));
 		await execAndThrowErrors("npm install", dir);
 	}
 }

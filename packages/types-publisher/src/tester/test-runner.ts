@@ -42,7 +42,7 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	}
 }
 
-export default async function main(options: Options, nProcesses?: number, regexp?: RegExp) {
+export default async function main(options: Options, nProcesses?: number, regexp?: RegExp): Promise<void> {
 	await installAllTypeScriptVersions();
 
 	const typings: TypingsData[] = regexp
