@@ -5,7 +5,7 @@ import { TypeScriptVersion } from "../lib/common";
 import { writeJson } from "../util/io";
 import { execAndThrowErrors } from "../util/util";
 
-const installsDir = "typescript-installs";
+const installsDir = path.join(__dirname, "..", "..", "typescript-installs");
 
 export async function installAllTypeScriptVersions(): Promise<void> {
 	console.log("Installing TypeScript versions...");
@@ -20,7 +20,7 @@ export async function installAllTypeScriptVersions(): Promise<void> {
 }
 
 export function pathToTsc(version: TypeScriptVersion): string {
-	return path.join(__dirname, "..", "..", installDir(version), "node_modules", "typescript", "lib", "tsc.js");
+	return path.join(installDir(version), "node_modules", "typescript", "lib", "tsc.js");
 }
 
 function installDir(version: TypeScriptVersion) {
