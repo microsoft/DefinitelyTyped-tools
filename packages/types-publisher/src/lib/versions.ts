@@ -118,15 +118,10 @@ export async function fetchVersionInfoFromNpm(
 	const info = await fetchJson(uri, { retries: true });
 
 	if (info.error) {
-		if (info.error === "Not found") {
-			return undefined;
-		}
-		else {
-			throw new Error(`Error getting version at ${uri}: ${info.error}`);
-		}
+		throw new Error(`Error getting version at ${uri}: ${info.error}`);
 	}
-	// Kludge: NPM started returning `{}` for not-found @types packages. Should be able to remove this case once that behavior is changed.
 	else if (!info["dist-tags"]) {
+		// NPM returns `{}` for missing packages.
 		return undefined;
 	}
 	else {
