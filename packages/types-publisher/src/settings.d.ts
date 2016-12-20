@@ -16,9 +16,6 @@ interface PublishSettings {
 	// The branch that DefinitelyTyped is sourced from
 	sourceBranch: string;
 
-	// e.g. 'latest'
-	tag?: string;
-
 	// Name of the azure storage account. Used for uploading data and logs.
 	azureStorageAccount: string;
 

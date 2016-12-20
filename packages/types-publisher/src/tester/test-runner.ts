@@ -2,14 +2,14 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypings } from "../lib/common";
+import { Options, TypeScriptVersion, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypings } from "../lib/common";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
 
 import getAffectedPackages from "./get-affected-packages";
+import { installAllTypeScriptVersions, pathToTsc } from "./ts-installer";
 
-const tscPath = path.join(require.resolve("typescript"), "../tsc.js");
 const tslintPath = path.join(require.resolve("tslint"), "../tslint-cli.js");
 
 if (!module.parent) {
@@ -43,6 +43,8 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 }
 
 export default async function main(options: Options, nProcesses?: number, regexp?: RegExp) {
+	await installAllTypeScriptVersions();
+
 	const typings: TypingsData[] = regexp
 		? (await readTypings()).filter(t => regexp.test(t.typingsPackageName))
 		: await getAffectedPackages(console.log, options);
@@ -104,8 +106,18 @@ async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options)
 	async function packageJson(): Promise<TesterError | undefined> {
 		return catchErrors(log, () => checkPackageJson(pkg, options));
 	}
-	function tsc(): Promise<TesterError | undefined> {
-		return runCommand(log, cwd, tscPath);
+	async function tsc(): Promise<TesterError | undefined> {
+		const error = await runCommand(log, cwd, pathToTsc(pkg.typeScriptVersion));
+		if (error && pkg.typeScriptVersion !== TypeScriptVersion.Latest) {
+			const newError = await runCommand(log, cwd, pathToTsc(TypeScriptVersion.Latest));
+			if (!newError) {
+				const message = `${error.message}\n` +
+					`Package compiles in TypeScript ${TypeScriptVersion.Latest} but not in ${pkg.typeScriptVersion}.\n` +
+					`You can add a line '// TypeScript Version: ${TypeScriptVersion.Latest}' to the end of the header to specify a new compiler version.`;
+				return { message };
+			}
+		}
+		return error;
 	}
 	async function tslint(): Promise<TesterError | undefined> {
 		return (await fsp.exists(path.join(cwd, "tslint.json")))

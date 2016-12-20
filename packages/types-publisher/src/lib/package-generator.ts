@@ -131,7 +131,8 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 		scripts: {},
 		dependencies,
 		peerDependencies,
-		typesPublisherContentHash: contentHash
+		typesPublisherContentHash: contentHash,
+		typeScriptVersion: typing.typeScriptVersion
 	};
 
 	return JSON.stringify(out, undefined, 4);

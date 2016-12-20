@@ -2,7 +2,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, existsTypesDataFileSync, settings, readAllPackagesArray, readTypings } from "./lib/common";
+import { Options, existsTypesDataFileSync, fullPackageName, settings, readAllPackagesArray, readTypings } from "./lib/common";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
 import { done, exec, nAtATime } from "./util/util";
@@ -128,7 +128,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 		author: "",
 		license: "ISC",
 		repository: "https://github.com/Microsoft/types-publisher",
-		dependencies: { [`@types/${packageName}`]: settings.tag }
+		dependencies: { [fullPackageName(packageName)]: "latest" }
 	});
 
 	// Write tsconfig.json

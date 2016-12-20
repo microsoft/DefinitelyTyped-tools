@@ -67,7 +67,8 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 	const mainFilename = "index.d.ts";
 	const mainFileContent = await readFile(directory, mainFilename);
 
-	const { authors, libraryMajorVersion, libraryMinorVersion, libraryName, projects } = parseHeaderOrFail(mainFileContent, folderName);
+	const { authors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
+		parseHeaderOrFail(mainFileContent, folderName);
 
 	const allEntryFilenames = await entryFilesFromTsConfig(directory, log) || [mainFilename];
 	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles } =
@@ -83,6 +84,7 @@ export async function getTypingInfo(folderName: string, options: Options): Promi
 		moduleDependencies,
 		libraryMajorVersion,
 		libraryMinorVersion,
+		typeScriptVersion,
 		libraryName,
 		typingsPackageName: folderName,
 		projectName: projects[0], // TODO: collect multiple project names

@@ -72,7 +72,7 @@ async function publish(packageJson: {}, dry: boolean): Promise<void> {
 }
 
 async function fetchLastPatchNumber(): Promise<number> {
-	return (await fetchVersionInfoFromNpm(packageName))!.version.patch;
+	return (await fetchVersionInfoFromNpm(packageName, /*isPrerelease*/ false))!.version.patch;
 }
 
 function generatePackageJson(patch: number): {} {

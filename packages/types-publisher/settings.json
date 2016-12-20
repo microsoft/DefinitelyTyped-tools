@@ -5,7 +5,6 @@
 	"validateOutputPath": "./validateOutput",
 	"sourceRepository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
 	"sourceBranch": "master",
-	"tag": "latest",
 
 	"azureStorageAccount": "typespublisher",
 	"azureContainer": "typespublisher",

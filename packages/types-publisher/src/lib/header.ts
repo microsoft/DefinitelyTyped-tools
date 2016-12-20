@@ -1,5 +1,6 @@
-import { intOfString } from "../util/util";
 import pm = require("parsimmon");
+import { intOfString } from "../util/util";
+import { TypeScriptVersion } from "./common";
 
 /*
 Example:
@@ -7,12 +8,14 @@ Example:
 // Project: https://github.com/foo/foo, https://foo.com
 // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 2.1
 */
 
 export interface Header {
 	libraryName: string;
 	libraryMajorVersion: number;
 	libraryMinorVersion: number;
+	typeScriptVersion: TypeScriptVersion;
 	projects: string[];
 	authors: Author[];
 }
@@ -56,14 +59,14 @@ function parseHeader(text: string, strict: boolean): Header | ParseError {
 	const res = headerParser(strict).parse(text);
 
 	if (res.status) {
-		const { label: { name, major, minor }, projects, authors } = res.value!;
-		return { libraryName: name, libraryMajorVersion: major, libraryMinorVersion: minor, projects, authors };
+		const { label: { name, major, minor }, projects, authors, typeScriptVersion } = res.value!;
+		return { libraryName: name, libraryMajorVersion: major, libraryMinorVersion: minor, projects, authors, typeScriptVersion };
 	}
 	// parsimmon types are wrong: expected is actually string[]
 	return { index: res.index!.offset, line: res.index!.line, column: res.index!.column, expected: res.expected as any as string[] };
 }
 
-function headerParser(strict: boolean): pm.Parser<{ label: Label, projects: string[], authors: Author[] }> {
+function headerParser(strict: boolean): pm.Parser<{ label: Label, projects: string[], authors: Author[], typeScriptVersion: TypeScriptVersion }> {
 	return pm.seqMap(
 		pm.string("// Type definitions for "),
 		parseLabel(strict),
@@ -72,9 +75,10 @@ function headerParser(strict: boolean): pm.Parser<{ label: Label, projects: stri
 		pm.regexp(/\r?\n\/\/ Definitions by: /),
 		authorsParser(strict),
 		parseDefinitions,
+		parseTypeScriptVersion,
 		pm.all, // Don't care about the rest of the file
 		// tslint:disable-next-line:variable-name
-		(_str, label, _project, projects, _defsBy, authors) => ({ label, projects, authors }));
+		(_str, label, _project, projects, _defsBy, authors, _definitions, typeScriptVersion) => ({ label, projects, authors, typeScriptVersion }));
 }
 
 interface Label { name: string; major: number; minor: number; }
@@ -168,6 +172,11 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 	});
 }
 
+const parseTypeScriptVersion: pm.Parser<TypeScriptVersion> =
+	pm.regexp(/\r?\n\/\/ TypeScript Version: 2.1/)
+		.result<TypeScriptVersion>("2.1")
+		.fallback<TypeScriptVersion>("2.0");
+
 function reverse(s: string): string {
 	let out = "";
 	for (let i = s.length - 1; i >= 0; i--) {
@@ -179,4 +188,10 @@ function reverse(s: string): string {
 function regexpIndexOf(s: string, rgx: RegExp, start: number): number {
 	const index = s.slice(start).search(rgx);
 	return index === -1 ? index : index + start;
+}
+
+declare module "parsimmon" {
+	export function seqMap<T, U, V, W, X, Y, Z, A, B, C>(
+		p1: Parser<T>, p2: Parser<U>, p3: Parser<V>, p4: Parser<W>, p5: Parser<X>, p6: Parser<Y>, p7: Parser<Z>, p8: Parser<A>, p9: Parser<B>,
+		cb: (a1: T, a2: U, a3: V, a4: W, a5: X, a6: Y, a7: Z, a8: A, a9: B) => C): Parser<C>;
 }

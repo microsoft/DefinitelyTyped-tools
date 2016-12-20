@@ -22,7 +22,7 @@
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
     "tslint": "^4.1.0",
-    "typescript": "^2.0.10",
+    "typescript": "next",
     "yargs": "^6.2.0"
   },
   "devDependencies": {

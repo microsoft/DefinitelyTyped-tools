@@ -41,7 +41,7 @@ export interface PackageCommonProperties {
 	// The name of the library (human readable, e.g. might be "Moment.js" even though packageName is "moment")
 	libraryName: string;
 
-	// The NPM name to publish this under, e.g. "jquery". May not be lower-cased yet.
+	// The NPM name to publish this under, e.g. "jquery". Does not include "@types".
 	typingsPackageName: string;
 
 	// e.g. https://github.com/DefinitelyTyped
@@ -70,6 +70,36 @@ export interface TypesDataFile {
 	[folderName: string]: TypingsData;
 }
 
+export type TypeScriptVersion = "2.0" | "2.1";
+export namespace TypeScriptVersion {
+	export const All: TypeScriptVersion[] = ["2.0", "2.1"];
+	export const Latest = "2.1";
+
+	export function isPrerelease(version: TypeScriptVersion): boolean {
+		return version === "2.1";
+	}
+
+	/** List of NPM tags that should be changed to point to the latest version. */
+	export function tagsToUpdate(typeScriptVersion: TypeScriptVersion): string[]  {
+		switch (typeScriptVersion) {
+			case "2.0":
+				// A 2.0-compatible package is assumed compatible with TypeScript 2.1
+				// We want the "2.1" tag to always exist.
+				return [tags.latest, tags.v2_0, tags.v2_1];
+			case "2.1":
+				// Eventually this will change to include "latest", too.
+				// And obviously we shouldn't advance the "2.0" tag if the package is now 2.1-specific.
+				return [tags.v2_1];
+		}
+	}
+
+	namespace tags {
+		export const latest = "latest";
+		export const v2_0 = "ts2.0";
+		export const v2_1 = "ts2.1";
+	}
+}
+
 export interface TypingsData extends PackageCommonProperties {
 	/**
 	 * Never include this property;
@@ -90,6 +120,8 @@ export interface TypingsData extends PackageCommonProperties {
 	libraryMajorVersion: number;
 	// The minor version of the library
 	libraryMinorVersion: number;
+
+	typeScriptVersion: TypeScriptVersion;
 
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
 	// Does *not* include a partial `package.json` because that will not be copied directly.
