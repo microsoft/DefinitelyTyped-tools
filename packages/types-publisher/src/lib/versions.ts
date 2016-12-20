@@ -5,7 +5,7 @@ import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
 import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
-import { AnyPackage, AllPackages, fullPackageName, settings } from "./common";
+import { AnyPackage, AllPackages, fullEscapedPackageName, settings } from "./common";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
@@ -108,7 +108,7 @@ export function versionString({ isPrerelease, major, minor, patch }: Semver): st
 /** Returns undefined if the package does not exist. */
 async function fetchTypesPackageVersionInfo(
 	packageName: string, isPrerelease: boolean, newMajorAndMinor?: [number, number]): Promise<VersionInfo | undefined> {
-	return fetchVersionInfoFromNpm(fullPackageName(packageName).replace(/\//g, "%2f"), isPrerelease, newMajorAndMinor);
+	return fetchVersionInfoFromNpm(fullEscapedPackageName(packageName), isPrerelease, newMajorAndMinor);
 }
 
 export async function fetchVersionInfoFromNpm(

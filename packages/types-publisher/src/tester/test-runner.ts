@@ -181,7 +181,8 @@ function checkTsconfig(tsconfig: any) {
 
 	// baseUrl / typeRoots / types may be missing.
 	if (options.types && options.types.length) {
-		throw new Error('Use `/// <reference types="..." />` directives in source files and ensure that the "types" field in your tsconfig is an empty array.');
+		throw new Error(
+			'Use `/// <reference types="..." />` directives in source files and ensure that the "types" field in your tsconfig is an empty array.');
 	}
 }
 

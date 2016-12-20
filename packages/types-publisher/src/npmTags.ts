@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import { AnyPackage, TypeScriptVersion, existsTypesDataFileSync, fullPackageName, readTypings } from "./lib/common";
+import { AnyPackage, TypeScriptVersion, existsTypesDataFileSync, fullPackageName, fullEscapedPackageName, readTypings } from "./lib/common";
 import NpmClient from "./lib/npm-client";
 import Versions, { versionString } from "./lib/versions";
 
@@ -42,7 +42,7 @@ export async function addNpmTagsForPackage(pkg: AnyPackage, version: string, cli
 	log(`Tag ${fullPackageName(pkg.typingsPackageName)}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
 		for (const tag of tags) {
-			await client.tag(fullPackageName(pkg.typingsPackageName), version, tag);
+			await client.tag(fullEscapedPackageName(pkg.typingsPackageName), version, tag);
 		}
 	}
 }

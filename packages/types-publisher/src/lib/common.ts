@@ -251,6 +251,10 @@ export function fullPackageName(typingsPackageName: string): string {
 	return `@${settings.scopeName}/${typingsPackageName}`;
 }
 
+export function fullEscapedPackageName(typingsPackageName: string): string {
+	return `@${settings.scopeName}%2f${typingsPackageName}`;
+}
+
 export function notNeededReadme({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage, useNewline: boolean = true): string {
 	const lines = [
 		`This is a stub types definition for ${libraryName} (${sourceRepoURL}).`,
