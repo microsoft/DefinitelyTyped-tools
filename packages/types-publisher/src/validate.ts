@@ -14,7 +14,7 @@ if (!module.parent) {
 	} else {
 		const all = !!yargs.argv.all;
 		const packageNames = yargs.argv._;
-		if (all && packageNames) {
+		if (all && packageNames.length) {
 			throw new Error("Can't combine --all with listed package names.");
 		}
 
