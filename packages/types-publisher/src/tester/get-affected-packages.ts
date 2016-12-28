@@ -1,6 +1,8 @@
+import flatten = require("lodash.flatten");
+
 import { Options, TypesDataFile, TypingsData, readTypesDataFile, settings, typingsFromData } from "../lib/common";
 import { Logger } from "../util/logging";
-import { done, execAndThrowErrors } from "../util/util";
+import { done, execAndThrowErrors, unique } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
@@ -16,6 +18,11 @@ export default async function getAffectedPackages(log: Logger, options: Options)
 	const typings = await readTypesDataFile();
 	const dependedOn = getReverseDependencies(typings);
 	return collectDependers(typings, changedPackageNames, dependedOn);
+}
+
+/** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
+export function allDependencies(packages: TypingsData[]): string[] {
+	return unique(flatten(packages.map(getDependencies)));
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
@@ -58,7 +65,7 @@ function getReverseDependencies(typesData: TypesDataFile): Map<TypingsData, Set<
 	}
 
 	for (const typing of typings) {
-		for (const dependencyName of typing.libraryDependencies.concat(typing.moduleDependencies)) {
+		for (const dependencyName of getDependencies(typing)) {
 			const dependency = typesData[dependencyName];
 			if (dependency) {
 				map.get(dependency)!.add(typing);
@@ -67,6 +74,10 @@ function getReverseDependencies(typesData: TypesDataFile): Map<TypingsData, Set<
 	}
 
 	return map;
+}
+
+function getDependencies(typing: TypingsData): string[] {
+	return typing.libraryDependencies.concat(typing.moduleDependencies);
 }
 
 /** Returns all immediate subdirectories of the root directory that have changed. */

@@ -2,12 +2,13 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypeScriptVersion, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypings } from "../lib/common";
+import { Options, TypeScriptVersion, TypingsData, definitelyTypedPath, existsTypesDataFileSync, filePath, packagePath, readTypings
+	} from "../lib/common";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
 
-import getAffectedPackages from "./get-affected-packages";
+import getAffectedPackages, { allDependencies } from "./get-affected-packages";
 import { installAllTypeScriptVersions, pathToTsc } from "./ts-installer";
 
 const tslintPath = path.join(require.resolve("tslint"), "../tslint-cli.js");
@@ -58,8 +59,8 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	console.log("Installing dependencies...");
 
-	await nAtATime(nProcesses, typings, async pkg => {
-		const cwd = packagePath(pkg, options);
+	await nAtATime(nProcesses, allDependencies(typings), async packageName => {
+		const cwd = definitelyTypedPath(packageName, options);
 		if (await fsp.exists(path.join(cwd, "package.json"))) {
 			let stdout = await execAndThrowErrors(`npm install`, cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
