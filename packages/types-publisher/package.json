@@ -9,7 +9,6 @@
     "azure-storage": "1.2.0",
     "fs-promise": "^1.0.0",
     "fstream": "^1.0.10",
-    "lodash.flatten": "^4.4.0",
     "longjohn": "^0.2.11",
     "moment": "2.15.2",
     "node-fetch": "^1.5.3",
@@ -28,7 +27,6 @@
   },
   "devDependencies": {
     "@types/fs-promise": "^1.0.0",
-    "@types/lodash.flatten": "^4.4.0",
     "@types/node": "^6.0.41",
     "@types/node-fetch": "1.6.5",
     "@types/parsimmon": "^1.0.1",

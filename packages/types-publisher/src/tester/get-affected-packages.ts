@@ -1,58 +1,67 @@
-import flatten = require("lodash.flatten");
-
 import { Options, TypesDataFile, TypingsData, readTypesDataFile, settings, typingsFromData } from "../lib/common";
 import { Logger } from "../util/logging";
-import { done, execAndThrowErrors, unique } from "../util/util";
+import { done, execAndThrowErrors } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 async function main(options: Options) {
-	const changes = await getAffectedPackages(console.log, options);
+	const changes = await getAffectedPackages(await readTypesDataFile(), console.log, options);
 	console.log(Array.from(changes).map(t => t.typingsPackageName));
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
-export default async function getAffectedPackages(log: Logger, options: Options): Promise<TypingsData[]> {
+export default async function getAffectedPackages(typings: TypesDataFile, log: Logger, options: Options): Promise<TypingsData[]> {
 	const changedPackageNames = await gitChanges(log, options);
-	const typings = await readTypesDataFile();
 	const dependedOn = getReverseDependencies(typings);
 	return collectDependers(typings, changedPackageNames, dependedOn);
 }
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(packages: TypingsData[]): string[] {
-	return unique(flatten(packages.map(getDependencies)));
+export function allDependencies(typings: TypesDataFile, packages: TypingsData[]): TypingsData[] {
+	return Array.from(transitiveClosure(packages, pkg => packagesFromNames(typings, getDependencies(pkg))));
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
 function collectDependers(typings: TypesDataFile, changedPackageNames: Iterable<string>, reverseDependencies: Map<TypingsData, Set<TypingsData>>) {
-	// All packages that have change or depend on something in allDependers.
-	const allDependers = new Set<TypingsData>();
-	// Packages that we need to collect dependers for.
-	const workList: TypingsData[] = [];
+	return sortPackages(transitiveClosure(packagesFromNames(typings, changedPackageNames), pkg => reverseDependencies.get(pkg) || []));
+}
 
-	function add(typing: TypingsData) {
-		if (!allDependers.has(typing)) {
-			allDependers.add(typing);
-			workList.push(typing);
+function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item: T) => Iterable<T>): Set<T> {
+	const all = new Set<T>();
+	const workList: T[] = [];
+
+	function add(item: T) {
+		if (!all.has(item)) {
+			all.add(item);
+			workList.push(item);
 		}
 	}
 
-	for (const pkg of changedPackageNames) {
-		if (pkg in typings) {
-			add(typings[pkg]);
-		}
+	for (const item of initialItems) {
+		add(item);
 	}
 
 	while (workList.length) {
-		const t = workList.pop()!;
-		for (const depender of reverseDependencies.get(t)!) {
-			add(depender);
+		const item = workList.pop()!;
+		for (const newItem of getRelatedItems(item)) {
+			add(newItem);
 		}
 	}
 
-	return Array.from(allDependers).sort((a, b) => a.typingsPackageName.localeCompare(b.typingsPackageName));
+	return all;
+}
+
+function* packagesFromNames(typings: TypesDataFile, names: Iterable<string>): IterableIterator<TypingsData> {
+	for (const name of names) {
+		if (name in typings) {
+			yield typings[name];
+		}
+	}
+}
+
+function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
+	return Array.from(packages).sort((a, b) => a.typingsPackageName.localeCompare(b.typingsPackageName));
 }
 
 /** Generate a map from a package to packages that depend on it. */

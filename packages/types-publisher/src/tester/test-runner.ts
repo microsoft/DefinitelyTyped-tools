@@ -2,7 +2,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypeScriptVersion, TypingsData, definitelyTypedPath, existsTypesDataFileSync, filePath, packagePath, readTypings
+import { Options, TypeScriptVersion, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypesDataFile, typingsFromData
 	} from "../lib/common";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
@@ -46,9 +46,10 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 export default async function main(options: Options, nProcesses?: number, regexp?: RegExp): Promise<void> {
 	await installAllTypeScriptVersions();
 
+	const typesData = await readTypesDataFile();
 	const typings: TypingsData[] = regexp
-		? (await readTypings()).filter(t => regexp.test(t.typingsPackageName))
-		: await getAffectedPackages(console.log, options);
+		? (typingsFromData(typesData)).filter(t => regexp.test(t.typingsPackageName))
+		: await getAffectedPackages(typesData, console.log, options);
 
 	nProcesses = nProcesses || numberOfOsProcesses;
 
@@ -59,8 +60,8 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	console.log("Installing dependencies...");
 
-	await nAtATime(nProcesses, allDependencies(typings), async packageName => {
-		const cwd = definitelyTypedPath(packageName, options);
+	await nAtATime(nProcesses, allDependencies(typesData, typings), async pkg => {
+		const cwd = packagePath(pkg, options);
 		if (await fsp.exists(path.join(cwd, "package.json"))) {
 			let stdout = await execAndThrowErrors(`npm install`, cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
