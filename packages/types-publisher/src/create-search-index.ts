@@ -1,26 +1,23 @@
 import * as yargs from "yargs";
 
-import { Options, existsTypesDataFileSync, readAllPackagesArray, readPackage, writeDataFile } from "./lib/common";
+import { writeDataFile } from "./lib/common";
+import { AllPackages } from "./lib/packages";
 import { done, nAtATime } from "./util/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 
 if (!module.parent) {
-	if (!existsTypesDataFileSync()) {
-		console.log("Run parse-definitions first!");
+	const skipDownloads = yargs.argv.skipDownloads;
+	const single = yargs.argv.single;
+	if (single) {
+		done(doSingle(single, skipDownloads));
 	} else {
-		const skipDownloads = yargs.argv.skipDownloads;
-		const single = yargs.argv.single;
-		if (single) {
-			done(doSingle(single, skipDownloads));
-		} else {
-			const full = yargs.argv.full;
-			done(main(skipDownloads, full, Options.defaults));
-		}
+		const full = yargs.argv.full;
+		done(main(skipDownloads, full));
 	}
 }
 
-export default async function main(skipDownloads: boolean, full: boolean, options: Options): Promise<void> {
-	const packages = await readAllPackagesArray(options);
+export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
+	const packages = await AllPackages.readTypings();
 	console.log(`Loaded ${packages.length} entries`);
 
 	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
@@ -37,7 +34,7 @@ export default async function main(skipDownloads: boolean, full: boolean, option
 }
 
 async function doSingle(name: string, skipDownloads: boolean): Promise<void> {
-	const pkg = await readPackage(name);
+	const pkg = await AllPackages.readSingle(name);
 	const record = await createSearchRecord(pkg, skipDownloads);
 	console.log(verboseRecord(record));
 }

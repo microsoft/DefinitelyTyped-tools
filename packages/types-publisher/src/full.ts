@@ -28,7 +28,7 @@ export default async function full(client: NpmClient, dry: boolean, timeStamp: s
 	await checkParseResults();
 	await calculateVersions(/*forceUpdate*/ false, options);
 	await generatePackages(options);
-	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false, options);
+	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false);
 	await publishPackages(client, dry, options);
 	await publishRegistry();
 	await validate(options);

@@ -1,4 +1,5 @@
 import * as child_process from "child_process";
+import * as crypto from "crypto";
 import moment = require("moment");
 import * as os from "os";
 import { shim as shimEntries } from "object.entries";
@@ -146,4 +147,21 @@ export function best<T>(inputs: T[], isBetter: (a: T, b: T) => boolean): T | und
 		}
 	}
 	return best;
+}
+
+export function computeHash(content: string): string {
+	// Normalize line endings
+	content = content.replace(/\r\n?/g, "\n");
+
+	const h = crypto.createHash("sha256");
+	h.update(content, "utf8");
+	return <string> h.digest("hex");
+}
+
+export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) => V2): Map<V1, V2> {
+	const out = new Map();
+	map.forEach((value, key) => {
+		out.set(key, valueMapper(value));
+	});
+	return out;
 }

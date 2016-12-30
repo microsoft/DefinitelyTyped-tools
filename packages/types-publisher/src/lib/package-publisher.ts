@@ -2,33 +2,33 @@ import assert = require("assert");
 import * as path from "path";
 
 import { addNpmTagsForPackage } from "../npmTags";
-import { readJson } from "../util/io";
+import { readFileAndWarn } from "../lib/common";
 import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "../util/logging";
 import { exec } from "../util/util";
 
-import { AnyPackage, fullPackageName, isNotNeededPackage, notNeededReadme } from "./common";
+import { AnyPackage } from "./packages";
 import NpmClient from "./npm-client";
 
 export async function publishPackage(client: NpmClient, pkg: AnyPackage, dry: boolean): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const name = pkg.typingsPackageName;
-	log(`Publishing ${name}`);
+	log(`Publishing ${pkg.typingsPackageName}`);
 
-	const packageDir = path.join("output", name);
-	const packageJson = await readJson(path.join(packageDir, "package.json"));
+	const packageDir = pkg.outputDir();
+	const packageJson = await readFileAndWarn("generate", path.join(packageDir, "package.json"));
+
 	const version = packageJson.version;
 	assert(typeof version === "string");
 
 	await client.publish(packageDir, packageJson, dry);
 	await addNpmTagsForPackage(pkg, version, client, log, dry);
 
-	if (isNotNeededPackage(pkg)) {
-		log(`Deprecating ${name}`);
+	if (pkg.isNotNeeded()) {
+		log(`Deprecating ${pkg.typingsPackageName}`);
 		// Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
-		const message = notNeededReadme(pkg, /*useNewline*/ false);
+		const message = pkg.readme(/*useNewline*/ false);
 		if (!dry) {
-			await client.deprecate(fullPackageName(name), version, message);
+			await client.deprecate(pkg.fullName(), version, message);
 		}
 	}
 
@@ -37,7 +37,7 @@ export async function publishPackage(client: NpmClient, pkg: AnyPackage, dry: bo
 
 // Used for testing only.
 export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<void> {
-	const name = fullPackageName(pkg.typingsPackageName);
+	const name = pkg.fullName();
 	const args: string[] = ["npm", "unpublish", name, "--force"];
 	await runCommand("Unpublish", consoleLogger, dry, args);
 }

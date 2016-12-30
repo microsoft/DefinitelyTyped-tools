@@ -2,8 +2,8 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, TypeScriptVersion, TypingsData, existsTypesDataFileSync, filePath, packagePath, readTypesDataFile, typingsFromData
-	} from "../lib/common";
+import { Options } from "../lib/common";
+import { AllPackages, TypeScriptVersion, TypingsData } from "../lib/packages";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
@@ -14,13 +14,8 @@ import { installAllTypeScriptVersions, pathToTsc } from "./ts-installer";
 const tslintPath = path.join(require.resolve("tslint"), "../tslint-cli.js");
 
 if (!module.parent) {
-	if (!existsTypesDataFileSync()) {
-		console.log("Run parse-definitions first!");
-	}
-	else {
-		const regexp = yargs.argv.all ? new RegExp("") : yargs.argv._[0] && new RegExp(yargs.argv._[0]);
-		done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), regexp));
-	}
+	const regexp = yargs.argv.all ? new RegExp("") : yargs.argv._[0] && new RegExp(yargs.argv._[0]);
+	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), regexp));
 }
 
 export function parseNProcesses(): number | undefined {
@@ -46,10 +41,10 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 export default async function main(options: Options, nProcesses?: number, regexp?: RegExp): Promise<void> {
 	await installAllTypeScriptVersions();
 
-	const typesData = await readTypesDataFile();
+	const allPackages = await AllPackages.read(options);
 	const typings: TypingsData[] = regexp
-		? (typingsFromData(typesData)).filter(t => regexp.test(t.typingsPackageName))
-		: await getAffectedPackages(typesData, console.log, options);
+		? allPackages.allTypings().filter(t => regexp.test(t.typingsPackageName))
+		: await getAffectedPackages(allPackages, console.log, options);
 
 	nProcesses = nProcesses || numberOfOsProcesses;
 
@@ -60,8 +55,8 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	console.log("Installing dependencies...");
 
-	await nAtATime(nProcesses, allDependencies(typesData, typings), async pkg => {
-		const cwd = packagePath(pkg, options);
+	await nAtATime(nProcesses, allDependencies(allPackages, typings), async pkg => {
+		const cwd = pkg.directoryPath(options);
 		if (await fsp.exists(path.join(cwd, "package.json"))) {
 			let stdout = await execAndThrowErrors(`npm install`, cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
@@ -97,7 +92,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 }
 
 async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
-	const cwd = packagePath(pkg, options);
+	const cwd = pkg.directoryPath(options);
 	return (await tsConfig()) || (await packageJson()) || (await tsc()) || (await tslint());
 
 	async function tsConfig(): Promise<TesterError | undefined> {
@@ -193,11 +188,11 @@ async function checkPackageJson(typing: TypingsData, options: Options): Promise<
 		return;
 	}
 
-	const pkgPath = filePath(typing, "package.json", options);
-	const pkg = await readJson(pkgPath);
+	const pkgJsonPath = typing.filePath("package.json", options);
+	const pkgJson = await readJson(pkgJsonPath);
 
-	const ignoredField = Object.keys(pkg).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
+	const ignoredField = Object.keys(pkgJson).find(field => !["dependencies", "peerDependencies", "description"].includes(field));
 	if (ignoredField) {
-		throw new Error(`Ignored field in ${pkgPath}: ${ignoredField}`);
+		throw new Error(`Ignored field in ${pkgJsonPath}: ${ignoredField}`);
 	}
 }

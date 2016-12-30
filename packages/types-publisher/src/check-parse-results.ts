@@ -1,23 +1,20 @@
 import * as semver from "semver";
-import { TypingsData, existsTypesDataFileSync, readTypings, settings } from "./lib/common";
+import { settings } from "./lib/common";
+import { AllPackages, TypingsData } from "./lib/packages";
 import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
 import { best, done, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	if (!existsTypesDataFileSync()) {
-		console.log("Run parse-definitions first!");
-	} else {
-		done(main());
-	}
+	done(main());
 }
 
 export default async function main(): Promise<void> {
-	const infos = await readTypings();
+	const packages = await AllPackages.readTypings();
 	const [log, logResult] = logger();
-	check(infos, info => info.libraryName, "Library Name", log);
-	check(infos, info => info.projectName, "Project Name", log);
-	await nAtATime(10, infos, pkg => checkNpm(pkg, log));
+	check(packages, info => info.libraryName, "Library Name", log);
+	check(packages, info => info.projectName, "Project Name", log);
+	await nAtATime(10, packages, pkg => checkNpm(pkg, log));
 	await writeLog("conflicts.md", logResult());
 }
 

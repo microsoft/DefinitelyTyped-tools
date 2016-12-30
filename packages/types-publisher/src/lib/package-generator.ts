@@ -5,23 +5,23 @@ import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty } from "../util/util";
 
-import { AnyPackage, Options, TypesDataFile, TypingsData, NotNeededPackage, filePath, fullPackageName, notNeededReadme, getOutputPath
-	} from "./common";
+import { Options } from "./common";
+import { AllPackages, AnyPackage, TypingsData, NotNeededPackage, fullPackageName } from "./packages";
 import Versions, { Semver, VersionInfo, versionString } from "./versions";
 
 /** Generates the package to disk */
-export default function generateAnyPackage(pkg: AnyPackage, availableTypes: TypesDataFile, versions: Versions, options: Options): Promise<Log> {
-	return pkg.packageKind === "not-needed" ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, availableTypes, versions, options);
+export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
+	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, options);
 }
 
-async function generatePackage(typing: TypingsData, availableTypes: TypesDataFile, versions: Versions, options: Options): Promise<Log> {
+async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const outputPath = getOutputPath(typing);
+	const outputPath = typing.getOutputPath();
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json, metadata.json, and README.md");
-	const packageJson = await createPackageJSON(typing, versions.versionInfo(typing), availableTypes, options);
+	const packageJson = await createPackageJSON(typing, versions.versionInfo(typing), packages, options);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -33,7 +33,7 @@ async function generatePackage(typing: TypingsData, availableTypes: TypesDataFil
 	];
 	outputs.push(...typing.files.map(async file => {
 		log(`Copy and patch ${file}`);
-		let content = await readFile(filePath(typing, file, options));
+		let content = await readFile(typing.filePath(file, options));
 		content = patchDefinitionFile(content);
 		return writeOutputFile(file, content);
 	}));
@@ -53,12 +53,12 @@ async function generatePackage(typing: TypingsData, availableTypes: TypesDataFil
 
 async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Versions): Promise<string[]> {
 	const [log, logResult] = quietLogger();
-	const outputPath = getOutputPath(pkg);
+	const outputPath = pkg.getOutputPath();
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json and README.md");
 	const packageJson = createNotNeededPackageJSON(pkg, versions.versionInfo(pkg).version);
-	const readme = notNeededReadme(pkg);
+	const readme = pkg.readme();
 
 	log("Write metadata files to disk");
 	await writeOutputFile("package.json", packageJson);
@@ -100,21 +100,21 @@ interface PartialPackageJson {
 	description?: string;
 }
 
-async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, availableTypes: TypesDataFile, options: Options
+async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, packages: AllPackages, options: Options
 	): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
-	const pkgPath = filePath(typing, "package.json", options);
+	const pkgPath = typing.filePath("package.json", options);
 	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
 	const dependencies = pkg.dependencies || {};
 	const peerDependencies = pkg.peerDependencies || {};
-	addInferredDependencies(dependencies, peerDependencies, typing, availableTypes);
+	addInferredDependencies(dependencies, peerDependencies, typing, packages);
 
 	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
-		name: fullPackageName(typing.typingsPackageName),
+		name: typing.fullName(),
 		version: versionString(version),
 		description,
 		// keywords,
@@ -139,9 +139,7 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 }
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function addInferredDependencies(
-	dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, availableTypes: TypesDataFile): void {
-
+function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, packages: AllPackages): void {
 	function addDependency(dependency: string): void {
 		const typesDependency = fullPackageName(dependency);
 
@@ -150,7 +148,7 @@ function addInferredDependencies(
 			return hasOwnProperty(deps, dependency) || hasOwnProperty(deps, typesDependency);
 		}
 
-		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && hasOwnProperty(availableTypes, dependency)) {
+		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && packages.hasTypingFor(dependency)) {
 			// 1st/2nd case: Don't add a dependency if it was specified in the package.json or if it has already been added.
 			// 3rd case: If it's not a package we know of, just ignore it.
 			// For example, we may have an import of "http", where the package is depending on "node" to provide that.

@@ -1,6 +1,6 @@
 import { fetchJson } from "../util/io";
 
-import { AnyPackage } from "./common";
+import { AnyPackage } from "./packages";
 
 export interface SearchRecord {
 	// types package name
@@ -27,7 +27,7 @@ export async function createSearchRecord(info: AnyPackage, skipDownloads: boolea
 		t: info.typingsPackageName,
 		m: info.declaredModules,
 		d: await getDownloads(),
-		r: info.packageKind === "not-needed" ? info.sourceRepoURL : undefined
+		r: info.isNotNeeded() ? info.sourceRepoURL : undefined
 	};
 
 	// See https://github.com/npm/download-counts

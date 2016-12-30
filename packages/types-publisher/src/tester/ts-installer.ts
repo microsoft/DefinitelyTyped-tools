@@ -1,7 +1,7 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
 
-import { TypeScriptVersion } from "../lib/common";
+import { TypeScriptVersion } from "../lib/packages";
 import { writeJson } from "../util/io";
 import { execAndThrowErrors } from "../util/util";
 

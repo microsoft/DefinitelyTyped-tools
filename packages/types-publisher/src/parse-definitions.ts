@@ -1,7 +1,8 @@
 import * as yargs from "yargs";
 
 import * as parser from "./lib/definition-parser";
-import { Options, TypingsData, definitelyTypedPath, writeDataFile, typesDataFilename } from "./lib/common";
+import { Options, writeDataFile } from "./lib/common";
+import { TypingsDataRaw, definitelyTypedPath, typesDataFilename } from "./lib/packages";
 import { logger, quietLogger, moveLogs, writeLog } from "./util/logging";
 import { done, filterAsyncOrdered } from "./util/util";
 
@@ -36,7 +37,7 @@ export default async function main(options: Options): Promise<void> {
 
 	summaryLog(`Found ${folders.length} typings folders in ${options.definitelyTypedPath}`);
 
-	const typings: { [name: string]: TypingsData } = {};
+	const typings: { [name: string]: TypingsDataRaw } = {};
 
 	for (const s of folders) {
 		const { data, logs } = await parser.getTypingInfo(s, options);

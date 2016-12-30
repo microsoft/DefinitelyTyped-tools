@@ -2,43 +2,40 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { Options, existsTypesDataFileSync, fullPackageName, settings, readAllPackagesArray, readTypings } from "./lib/common";
+import { Options, settings } from "./lib/common";
+import { AllPackages, fullPackageName } from "./lib/packages";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
 import { done, exec, nAtATime } from "./util/util";
 import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
-	if (!existsTypesDataFileSync()) {
-		console.log("Run parse-definitions first!");
-	} else {
-		const all = !!yargs.argv.all;
-		const packageNames = yargs.argv._;
-		if (all && packageNames.length) {
-			throw new Error("Can't combine --all with listed package names.");
-		}
+	const all = !!yargs.argv.all;
+	const packageNames = yargs.argv._;
+	if (all && packageNames.length) {
+		throw new Error("Can't combine --all with listed package names.");
+	}
 
-		if (all) {
-			console.log("Validating all packages");
-			done(doAll());
-		}
-		else if (packageNames.length) {
-			console.log("Validating: " + JSON.stringify(packageNames));
-			done(doValidate(packageNames));
-		}
-		else {
-			main(Options.defaults);
-		}
+	if (all) {
+		console.log("Validating all packages");
+		done(doAll());
+	}
+	else if (packageNames.length) {
+		console.log("Validating: " + JSON.stringify(packageNames));
+		done(doValidate(packageNames));
+	}
+	else {
+		main(Options.defaults);
 	}
 }
 
 export default async function main(options: Options): Promise<void> {
-	const changed = await changedPackages(await readAllPackagesArray(options));
+	const changed = await changedPackages(await AllPackages.read(options));
 	await doValidate(changed.map(c => c.typingsPackageName));
 }
 
 async function doAll(): Promise<void> {
-	const packageNames = (await readTypings()).map(t => t.typingsPackageName).sort();
+	const packageNames = (await AllPackages.readTypings()).map(t => t.typingsPackageName).sort();
 	await doValidate(packageNames);
 }
 

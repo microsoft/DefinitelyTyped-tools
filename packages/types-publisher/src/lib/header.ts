@@ -1,6 +1,6 @@
 import pm = require("parsimmon");
 import { intOfString } from "../util/util";
-import { TypeScriptVersion } from "./common";
+import { TypeScriptVersion } from "./packages";
 
 /*
 Example:

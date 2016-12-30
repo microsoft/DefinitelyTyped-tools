@@ -1,11 +1,11 @@
 import assert = require("assert");
 
-import { TypeScriptVersion, existsDataFileSync, readDataFile, writeDataFile } from "../lib/common";
 import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
 import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
-import { AnyPackage, AllPackages, fullEscapedPackageName, settings } from "./common";
+import { readDataFile, settings, writeDataFile } from "./common";
+import { AllPackages, AnyPackage, TypeScriptVersion } from "./packages";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
@@ -13,27 +13,23 @@ const additionsFilename = "version-additions.json";
 
 export default class Versions {
 	static async load(): Promise<Versions> {
-		return new Versions(await readDataFile(versionsFilename));
-	}
-
-	static existsSync(): boolean {
-		return existsDataFileSync(versionsFilename);
+		return new Versions(await readDataFile("calculate-versions", versionsFilename));
 	}
 
 	/**
 	 * Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry.
 	 * `additions` is a subset of `changes`.
 	 */
-	static async determineFromNpm({ typings, notNeeded }: AllPackages, log: Logger, forceUpdate: boolean
+	static async determineFromNpm(allPackages: AllPackages, log: Logger, forceUpdate: boolean
 		): Promise<{changes: Changes, additions: Changes, versions: Versions}> {
 		const changes: Changes = [];
 		const additions: Changes = [];
 		const data: VersionMap = {};
 
-		await nAtATime(25, typings, async pkg => {
+		await nAtATime(25, allPackages.allTypings(), async pkg => {
 			const packageName = pkg.typingsPackageName;
 			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
-			const versionInfo = await fetchTypesPackageVersionInfo(packageName, isPrerelease, [pkg.libraryMajorVersion, pkg.libraryMinorVersion]);
+			const versionInfo = await fetchTypesPackageVersionInfo(pkg, isPrerelease, [pkg.libraryMajorVersion, pkg.libraryMinorVersion]);
 			if (!versionInfo) {
 				log(`Added: ${packageName}`);
 				additions.push(packageName);
@@ -49,10 +45,10 @@ export default class Versions {
 			data[packageName] = { version, contentHash, deprecated };
 		});
 
-		await nAtATime(25, notNeeded, async pkg => {
+		await nAtATime(25, allPackages.allNotNeeded(), async pkg => {
 			const packageName = pkg.typingsPackageName;
 			const isPrerelease = false; // Not-needed packages are never prerelease.
-			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(packageName, isPrerelease) || defaultVersionInfo(isPrerelease);
+			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
 			if (!deprecated) {
 				log(`Now deprecated: ${packageName}`);
 				changes.push(packageName);
@@ -107,8 +103,8 @@ export function versionString({ isPrerelease, major, minor, patch }: Semver): st
 
 /** Returns undefined if the package does not exist. */
 async function fetchTypesPackageVersionInfo(
-	packageName: string, isPrerelease: boolean, newMajorAndMinor?: [number, number]): Promise<VersionInfo | undefined> {
-	return fetchVersionInfoFromNpm(fullEscapedPackageName(packageName), isPrerelease, newMajorAndMinor);
+	pkg: AnyPackage, isPrerelease: boolean, newMajorAndMinor?: [number, number]): Promise<VersionInfo | undefined> {
+	return fetchVersionInfoFromNpm(pkg.fullEscapedName(), isPrerelease, newMajorAndMinor);
 }
 
 export async function fetchVersionInfoFromNpm(
@@ -184,12 +180,12 @@ export type Changes = string[];
 
 /** Read all changed packages. */
 export function readChanges(): Promise<Changes> {
-	return readDataFile(changesFilename);
+	return readDataFile("calculate-versions", changesFilename);
 }
 
 /** Read only packages which are newly added. */
 export function readAdditions(): Promise<Changes> {
-	return readDataFile(additionsFilename);
+	return readDataFile("calculate-versions", additionsFilename);
 }
 
 export async function writeChanges(changes: Changes, additions: Changes): Promise<void> {
@@ -218,13 +214,7 @@ interface VersionMap {
 	[typingsPackageName: string]: VersionInfo;
 }
 
-export async function changedPackages<T extends AnyPackage>(allPackages: T[]): Promise<T[]> {
+export async function changedPackages(allPackages: AllPackages): Promise<AnyPackage[]> {
 	const changes = await readChanges();
-	return changes.map(changedPackageName => {
-		const pkg = allPackages.find(p => p.typingsPackageName === changedPackageName);
-		if (pkg === undefined) {
-			throw new Error(`Expected to find a package named ${changedPackageName}`);
-		}
-		return pkg;
-	});
+	return changes.map(changedPackageName => allPackages.getAnyPackage(changedPackageName));
 }
