@@ -248,8 +248,9 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 
 		for (const ref of imports(src)) {
 			if (!ref.startsWith(".")) {
-				moduleDependencies.add(ref);
-				log(`Found import declaration from \`"${ref}"\``);
+				const importedModule = rootName(ref);
+				moduleDependencies.add(importedModule);
+				log(`Found import declaration from \`"${importedModule}"\``);
 			}
 		}
 
@@ -363,6 +364,17 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 	function arrayOf(strings: Iterable<string>): string[] {
 		return Array.from(strings).sort();
 	}
+}
+
+/** Given "foo/bar/baz", return "foo". */
+function rootName(importText: string) {
+	let slash = importText.indexOf("/");
+	// Root of `@foo/bar/baz` is `@foo/bar`
+	if (importText.startsWith("@")) {
+		// Use second "/"
+		slash = importText.indexOf("/", slash + 1);
+	}
+	return slash === -1 ? importText : importText.slice(0, slash);
 }
 
 /**
