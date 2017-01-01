@@ -14,7 +14,6 @@
 		"no-reference": false, // TODO: forbid "../" reference, but not "./" reference
 		"no-shadowed-variable": false,
 		"no-string-literal": false,
-		"no-unused-variable": false,
 		"no-var-keyword": false,
 		"quotemark": false,
 		"variable-name": false,

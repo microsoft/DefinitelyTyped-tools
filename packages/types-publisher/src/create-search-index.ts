@@ -18,7 +18,7 @@ if (!module.parent) {
 
 export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
 	const packages = await AllPackages.readTypings();
-	console.log(`Loaded ${packages.length} entries`);
+	console.log(`Generating search index...`);
 
 	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
 	// Most downloads first

@@ -83,7 +83,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 		console.log("\n\n=== ERRORS ===\n");
 		for (const { err, pkg } of allErrors) {
-			console.error(`Error in ${pkg.typingsPackageName}`);
+			console.error(`\n\nError in ${pkg.typingsPackageName}`);
 			console.error(err.message);
 		}
 

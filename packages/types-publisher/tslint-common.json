@@ -6,6 +6,7 @@
 	"rules": {
 		// Custom rules
 		"dt-header": true,
+		"export-just-namespace": true,
 		"forbidden-types": true,
 		"functional-interfaces": true,
 		"interface-over-type-literal": true,

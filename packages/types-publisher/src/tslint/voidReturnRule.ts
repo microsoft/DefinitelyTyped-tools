@@ -33,7 +33,7 @@ class Walker extends Lint.RuleWalker {
 }
 
 function mayContainVoid({ kind }: ts.Node): boolean {
-	return kind === ts.SyntaxKind.TypeReference || kind === ts.SyntaxKind.NewExpression;
+	return kind === ts.SyntaxKind.TypeReference || kind === ts.SyntaxKind.ExpressionWithTypeArguments || kind === ts.SyntaxKind.NewExpression;
 }
 
 function isReturnType(node: ts.Node): boolean {
