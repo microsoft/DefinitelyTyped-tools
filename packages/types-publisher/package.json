@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/fs-promise": "^1.0.0",
     "@types/node": "^6.0.41",
-    "@types/node-fetch": "1.6.5",
+    "@types/node-fetch": "^1.6.7",
     "@types/oboe": "^2.0.28",
     "@types/parsimmon": "^1.0.1",
     "@types/semver": "^5.3.30",

@@ -11,7 +11,7 @@
 		"outDir": "bin",
 		"sourceMap": true,
 		"target": "ES6",
-		"lib": ["es2017", "dom"],
+		"lib": ["es2017"],
 
 		"baseUrl": ".",
 		"paths": {
