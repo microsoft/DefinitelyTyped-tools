@@ -14,7 +14,10 @@ export default async function main(): Promise<void> {
 	const [log, logResult] = logger();
 	check(packages, info => info.libraryName, "Library Name", log);
 	check(packages, info => info.projectName, "Project Name", log);
-	await nAtATime(10, packages, pkg => checkNpm(pkg, log));
+	await nAtATime(10, packages, pkg => checkNpm(pkg, log), {
+		name: "Checking for typed packages...",
+		flavor: pkg => pkg.typingsPackageName
+	});
 	await writeLog("conflicts.md", logResult());
 }
 
@@ -35,18 +38,26 @@ function check(infos: TypingsData[], func: (info: TypingsData) => string | undef
 }
 
 async function checkNpm(pkg: TypingsData, log: Logger): Promise<void> {
-	const uri = settings.npmRegistry + pkg.typingsPackageName;
-	const info = await fetchJson(uri, { retries: true });
-	// Info may be empty if the package is not on NPM
-	if (!info.versions) {
-		return;
-	}
-
-	const asOfVersion = firstVersionWithTypes(info.versions);
+	const asOfVersion = await firstPackageVersionWithTypes(pkg.typingsPackageName);
 	if (asOfVersion) {
 		const ourVersion = `${pkg.libraryMajorVersion}.${pkg.libraryMinorVersion}`;
 		log(`Typings already defined for ${pkg.typingsPackageName} (${pkg.libraryName}) as of ${asOfVersion} (our version: ${ourVersion})`);
 	}
+}
+
+export async function packageHasTypes(packageName: string): Promise<boolean> {
+	return (await firstPackageVersionWithTypes(packageName)) !== undefined;
+}
+
+async function firstPackageVersionWithTypes(packageName: string): Promise<string | undefined> {
+	const uri = settings.npmRegistry + packageName;
+	const info = await fetchJson(uri, { retries: true });
+	// Info may be empty if the package is not on NPM
+	if (!info.versions) {
+		return undefined;
+	}
+
+	return firstVersionWithTypes(info.versions);
 }
 
 function firstVersionWithTypes(versions: { [version: string]: any }): string | undefined {

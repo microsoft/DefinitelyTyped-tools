@@ -20,7 +20,9 @@ export default async function main(skipDownloads: boolean, full: boolean): Promi
 	const packages = await AllPackages.readTypings();
 	console.log(`Generating search index...`);
 
-	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads));
+	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), {
+		name: "Indexing...", flavor: pkg => pkg.typingsPackageName
+	});
 	// Most downloads first
 	records.sort((a, b) => b.d - a.d);
 

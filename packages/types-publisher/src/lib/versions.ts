@@ -5,7 +5,7 @@ import { Logger } from "../util/logging";
 import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
 import { readDataFile, settings, writeDataFile } from "./common";
-import { AllPackages, AnyPackage, TypeScriptVersion } from "./packages";
+import { AllPackages, AnyPackage, NotNeededPackage, TypeScriptVersion, TypingsData } from "./packages";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
@@ -26,7 +26,8 @@ export default class Versions {
 		const additions: Changes = [];
 		const data: VersionMap = {};
 
-		await nAtATime(25, allPackages.allTypings(), async pkg => {
+		await nAtATime(25, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor });
+		async function getTypingsVersion(pkg: TypingsData) {
 			const packageName = pkg.typingsPackageName;
 			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
 			const versionInfo = await fetchTypesPackageVersionInfo(pkg, isPrerelease, [pkg.libraryMajorVersion, pkg.libraryMinorVersion]);
@@ -43,9 +44,10 @@ export default class Versions {
 				contentHash = pkg.contentHash;
 			}
 			data[packageName] = { version, contentHash, deprecated };
-		});
+		}
 
-		await nAtATime(25, allPackages.allNotNeeded(), async pkg => {
+		await nAtATime(25, allPackages.allNotNeeded(), getNotNeededVersion, { name: "Versions for not-needed packages...", flavor });
+		async function getNotNeededVersion(pkg: NotNeededPackage) {
 			const packageName = pkg.typingsPackageName;
 			const isPrerelease = false; // Not-needed packages are never prerelease.
 			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
@@ -55,7 +57,11 @@ export default class Versions {
 				version = pkg.asOfVersion ? parseSemver(pkg.asOfVersion, isPrerelease) : { isPrerelease, major: 0, minor: 0, patch: 0 };
 			}
 			data[packageName] = { version, contentHash, deprecated };
-		});
+		}
+
+		function flavor(pkg: AnyPackage): string {
+			return pkg.typingsPackageName;
+		}
 
 		// Sort keys so that versions.json is easy to read
 		return { changes, additions, versions: new Versions(sortObjectKeys(data)) };

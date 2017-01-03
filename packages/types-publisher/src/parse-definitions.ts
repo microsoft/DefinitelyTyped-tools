@@ -4,7 +4,7 @@ import * as parser from "./lib/definition-parser";
 import { Options, writeDataFile } from "./lib/common";
 import { TypingsDataRaw, definitelyTypedPath, typesDataFilename } from "./lib/packages";
 import { logger, quietLogger, moveLogs, writeLog } from "./util/logging";
-import { done, filterAsyncOrdered } from "./util/util";
+import { done, filterAsyncOrdered, nAtATime } from "./util/util";
 
 import fsp = require("fs-promise");
 
@@ -39,11 +39,11 @@ export default async function main(options: Options): Promise<void> {
 
 	const typings: { [name: string]: TypingsDataRaw } = {};
 
-	for (const s of folders) {
-		const { data, logs } = await parser.getTypingInfo(s, options);
-
-		detailedLog(`# ${s}`);
-		typings[s] = data;
+	await nAtATime(1, folders, use, { name: "Parsing...", flavor: name => name });
+	async function use(pkgName: string): Promise<void> {
+		const { data, logs } = await parser.getTypingInfo(pkgName, options);
+		detailedLog(`# ${pkgName}`);
+		typings[pkgName] = data;
 
 		// Flush detailed log
 		moveLogs(detailedLog, logs);

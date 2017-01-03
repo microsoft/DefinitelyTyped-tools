@@ -1,12 +1,10 @@
 import path = require("path");
 import { readFileSync } from "fs";
 import * as fsp from "fs-promise";
-import * as sourceMapSupport from "source-map-support";
 
 import { readJson, writeJson } from "../util/io";
 import { parseJson } from "../util/util";
 
-sourceMapSupport.install();
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");
 	const longjohn = require("longjohn");

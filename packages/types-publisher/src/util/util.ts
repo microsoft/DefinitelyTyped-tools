@@ -6,7 +6,11 @@ import { shim as shimEntries } from "object.entries";
 shimEntries();
 import { shim as shimValues } from "object.values";
 shimValues();
+import * as sourceMapSupport from "source-map-support";
+sourceMapSupport.install();
 import { inspect } from "util";
+
+import ProgressBar from "./progress";
 
 export function parseJson(text: string): any {
 	try {
@@ -23,7 +27,14 @@ export function currentTimeStamp(): string {
 
 export const numberOfOsProcesses = os.cpus().length;
 
-export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>): Promise<U[]> {
+/** Progress options needed for `nAtATime`. Other options will be inferred. */
+interface ProgressOptions<T, U> {
+	name: string;
+	flavor(input: T, output: U): string | undefined;
+}
+
+export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>, progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
+	const progress = progressOptions && new ProgressBar({ name: progressOptions.name });
 	const results = new Array(inputs.length);
 	// We have n "threads" which each run `continuouslyWork`.
 	// They all share `nextIndex`, so each work item is done only once.
@@ -32,10 +43,24 @@ export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Prom
 		while (nextIndex !== inputs.length) {
 			const index = nextIndex;
 			nextIndex++;
-			results[index] = await use(inputs[index]);
+			const input = inputs[index];
+			const output = await use(inputs[index]);
+			results[index] = output;
+			if (progress) {
+				progress!.update(index / inputs.length, progressOptions!.flavor(input, output));
+			}
 		}
 	}));
+	if (progress) {
+		progress.done();
+	}
 	return results;
+}
+
+export async function filterNAtATime<T>(
+	n: number, inputs: T[], shouldKeep: (input: T) => Promise<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
+	const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
+	return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 
 export async function filterAsyncOrdered<T>(arr: T[], shouldKeep: (t: T) => Promise<boolean>): Promise<T[]> {

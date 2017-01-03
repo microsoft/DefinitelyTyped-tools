@@ -3,10 +3,10 @@ import * as yargs from "yargs";
 import { Options } from "./lib/common";
 import { AllPackages } from "./lib/packages";
 import generateAnyPackage from "./lib/package-generator";
+import Versions, { changedPackages } from "./lib/versions";
 import { logger, moveLogs, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
 import { done, nAtATime } from "./util/util";
-import Versions, { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
 	const all = yargs.argv.all;
