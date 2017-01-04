@@ -47,11 +47,7 @@ class Walker extends Lint.RuleWalker {
 
 	private check(node: ts.Node) {
 		if (node.modifiers && Lint.hasModifier(node.modifiers, ts.SyntaxKind.PublicKeyword)) {
-			this.fail(node, Rule.FAILURE_STRING);
+			this.addFailureAtNode(node, Rule.FAILURE_STRING);
 		}
-	}
-
-	private fail(node: ts.Node, message: string) {
-		this.addFailure(this.createFailure(node.getStart(), node.getWidth(), message));
 	}
 }

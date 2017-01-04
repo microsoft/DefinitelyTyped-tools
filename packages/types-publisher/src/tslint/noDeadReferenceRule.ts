@@ -37,7 +37,7 @@ class Walker extends Lint.RuleWalker {
 			return;
 		}
 
-		this.addFailure(this.createFailure(match.index, 0, Rule.FAILURE_STRING));
+		this.addFailureAt(match.index, 0, Rule.FAILURE_STRING);
 
 		// Don't recurse; we're done.
 	}

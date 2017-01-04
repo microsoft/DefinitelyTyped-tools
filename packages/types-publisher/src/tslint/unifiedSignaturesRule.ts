@@ -85,18 +85,14 @@ class Walker extends Lint.RuleWalker {
 		}
 
 		if (signaturesDifferByOptionalParameter(sig1, sig2)) {
-			this.fail(b, Rule.FAILURE_STRING_OMITTING_SINGLE_PARAMETER);
+			this.addFailureAtNode(b, Rule.FAILURE_STRING_OMITTING_SINGLE_PARAMETER);
 		}
 		else {
 			const parameterTypes = signaturesDifferBySingleParameter(sig1, sig2);
 			if (parameterTypes) {
-				this.fail(b, Rule.FAILURE_STRING_SINGLE_PARAMETER_DIFFERENCE(parameterTypes[0], parameterTypes[1]));
+				this.addFailureAtNode(b, Rule.FAILURE_STRING_SINGLE_PARAMETER_DIFFERENCE(parameterTypes[0], parameterTypes[1]));
 			}
 		}
-	}
-
-	private fail(node: ts.Node, message: string) {
-		this.addFailure(this.createFailure(node.getStart(), node.getWidth(), message));
 	}
 }
 

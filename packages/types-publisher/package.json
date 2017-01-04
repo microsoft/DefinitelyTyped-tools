@@ -23,7 +23,7 @@
     "semver": "^5.3.0",
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
-    "tslint": "^4.1.0",
+    "tslint": "^4.2.0",
     "typescript": "next",
     "yargs": "^6.2.0"
   },

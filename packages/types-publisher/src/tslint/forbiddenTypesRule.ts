@@ -30,13 +30,9 @@ class Walker extends Lint.RuleWalker {
 		const name = node.typeName.getText();
 		const failure = nameFailure(name);
 		if (failure) {
-			this.fail(node, failure);
+			this.addFailureAtNode(node, failure);
 		}
 		super.visitTypeReference(node);
-	}
-
-	private fail(node: ts.Node, message: string) {
-		this.addFailure(this.createFailure(node.getStart(), node.getWidth(), message));
 	}
 }
 

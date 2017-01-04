@@ -26,7 +26,7 @@ class Walker extends Lint.RuleWalker {
 		const imports = allImports(node);
 		for (const ref of node.typeReferenceDirectives) {
 			if (imports.has(ref.fileName)) {
-				this.addFailure(this.createFailure(ref.pos, ref.end, Rule.FAILURE_STRING(ref.fileName)));
+				this.addFailureAt(ref.pos, ref.end, Rule.FAILURE_STRING(ref.fileName));
 			}
 		}
 
