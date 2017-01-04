@@ -1,4 +1,3 @@
-import assert = require("assert");
 import charm = require("charm");
 
 export interface Options {
@@ -40,7 +39,7 @@ export default class ProgressBar {
 	}
 
 	private doUpdate(current: number): void {
-		assert(current >= 0 && current <= 1);
+		current = Math.min(1, Math.max(0, current));
 		const nCellsFilled = Math.ceil(this.width * current);
 		this.console.update(charm => {
 			charm.write(this.name);
@@ -69,7 +68,7 @@ class UpdatableConsole {
 
 	update(action: (charm: charm.CharmInstance) => void) {
 		this.charm.push();
-		this.charm.delete("line");
+		this.charm.erase("line");
 		action(this.charm);
 		this.charm.pop();
 	}

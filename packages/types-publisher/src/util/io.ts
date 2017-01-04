@@ -51,7 +51,8 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
 }
 
 async function fetchWithRetries(url: string, init: RequestInit & { retries: number | true }): Promise<Response> {
-	for (let retries = init.retries === true ? 5 : init.retries; retries > 1; retries--) {
+	const maxRetries = init.retries === true ? 10 : init.retries;
+	for (let retries = maxRetries; retries > 1; retries--) {
 		try {
 			return await fetch(url, init);
 		} catch (err) {
