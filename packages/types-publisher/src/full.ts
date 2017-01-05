@@ -25,7 +25,7 @@ export default async function full(client: NpmClient, dry: boolean, timeStamp: s
 	await clean();
 	await getDefinitelyTyped(options);
 	await parseDefinitions(options);
-	await checkParseResults();
+	await checkParseResults(/*includeNpmChecks*/ false);
 	await calculateVersions(/*forceUpdate*/ false, options);
 	await generatePackages(options);
 	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false);

@@ -6,18 +6,20 @@ import { fetchJson} from "./util/io";
 import { best, done, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main());
+	done(main(true));
 }
 
-export default async function main(): Promise<void> {
+export default async function main(includeNpmChecks: boolean): Promise<void> {
 	const packages = await AllPackages.readTypings();
 	const [log, logResult] = logger();
 	check(packages, info => info.libraryName, "Library Name", log);
 	check(packages, info => info.projectName, "Project Name", log);
-	await nAtATime(10, packages, pkg => checkNpm(pkg, log), {
-		name: "Checking for typed packages...",
-		flavor: pkg => pkg.typingsPackageName
-	});
+	if (includeNpmChecks) {
+		await nAtATime(10, packages, pkg => checkNpm(pkg, log), {
+			name: "Checking for typed packages...",
+			flavor: pkg => pkg.typingsPackageName
+		});
+	}
 	await writeLog("conflicts.md", logResult());
 }
 
