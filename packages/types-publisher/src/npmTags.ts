@@ -2,7 +2,7 @@ import * as yargs from "yargs";
 
 import { AnyPackage, AllPackages, TypeScriptVersion } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
-import Versions, { versionString } from "./lib/versions";
+import Versions from "./lib/versions";
 
 import { Logger } from "./util/logging";
 import { done } from "./util/util";
@@ -21,9 +21,12 @@ async function tagAll(dry: boolean) {
 	const versions = await Versions.load();
 	const client = await NpmClient.create();
 
-	for (const t of await AllPackages.readTypings()) {
-		const version = versionString(versions.versionInfo(t).version);
-		await addNpmTagsForPackage(t, version, client, console.log, dry);
+	for (const pkg of await AllPackages.readTypings()) {
+		// Only update tags for the latest version of the package.
+		if (pkg.isLatest) {
+			const version = versions.getVersion(pkg.id).versionString;
+			await addNpmTagsForPackage(pkg, version, client, console.log, dry);
+		}
 	}
 
 	// Don't tag notNeeded packages
@@ -31,10 +34,10 @@ async function tagAll(dry: boolean) {
 
 export async function addNpmTagsForPackage(pkg: AnyPackage, version: string, client: NpmClient, log: Logger, dry: boolean): Promise<void> {
 	const tags = TypeScriptVersion.tagsToUpdate(pkg.isNotNeeded() ? "2.0" : pkg.typeScriptVersion);
-	log(`Tag ${pkg.fullName()}@${version} as ${JSON.stringify(tags)}`);
+	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
 		for (const tag of tags) {
-			await client.tag(pkg.fullEscapedName(), version, tag);
+			await client.tag(pkg.fullEscapedNpmName, version, tag);
 		}
 	}
 }

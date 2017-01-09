@@ -91,8 +91,8 @@ function generatePackageJson(patch: number): {} {
 
 function generateRegistry(typings: TypingsData[]): {} {
 	const entries: { [packageName: string]: 1 } = {};
-	for (const { typingsPackageName } of typings) {
-		entries[typingsPackageName] = 1;
+	for (const { name } of typings) {
+		entries[name] = 1;
 	}
 	return { entries };
 }

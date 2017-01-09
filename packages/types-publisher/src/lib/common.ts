@@ -49,3 +49,7 @@ const dataDir = path.join(home, "data");
 function dataFilePath(filename: string) {
 	return path.join(dataDir, filename);
 }
+
+export function isTypingDirectory(directoryName: string) {
+	return directoryName !== "node_modules" && directoryName !== "scripts";
+}

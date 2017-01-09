@@ -3,7 +3,7 @@ import * as path from "path";
 import * as yargs from "yargs";
 
 import { Options, settings } from "./lib/common";
-import { AllPackages, fullPackageName } from "./lib/packages";
+import { AllPackages, fullNpmName } from "./lib/packages";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
 import { done, exec, nAtATime } from "./util/util";
@@ -31,11 +31,12 @@ if (!module.parent) {
 
 export default async function main(options: Options): Promise<void> {
 	const changed = await changedPackages(await AllPackages.read(options));
-	await doValidate(changed.map(c => c.typingsPackageName));
+	await doValidate(changed.map(c => c.name));
 }
 
 async function doAll(): Promise<void> {
-	const packageNames = (await AllPackages.readTypings()).map(t => t.typingsPackageName).sort();
+	//todo: validate older versions too
+	const packageNames = (await AllPackages.readTypings()).map(t => t.name).sort();
 	await doValidate(packageNames);
 }
 
@@ -125,7 +126,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 		author: "",
 		license: "ISC",
 		repository: "https://github.com/Microsoft/types-publisher",
-		dependencies: { [fullPackageName(packageName)]: "latest" }
+		dependencies: { [fullNpmName(packageName)]: "latest" }
 	});
 
 	// Write tsconfig.json

@@ -1,8 +1,8 @@
 import * as yargs from "yargs";
 
 import * as parser from "./lib/definition-parser";
-import { Options, writeDataFile } from "./lib/common";
-import { TypingsDataRaw, definitelyTypedPath, typesDataFilename } from "./lib/packages";
+import { Options, isTypingDirectory, writeDataFile } from "./lib/common";
+import { TypingsVersionsRaw, packageRootPath, typesDataFilename } from "./lib/packages";
 import { logger, quietLogger, moveLogs, writeLog } from "./util/logging";
 import { done, filterAsyncOrdered, nAtATime } from "./util/util";
 
@@ -16,11 +16,11 @@ if (!module.parent) {
 async function filterPaths(paths: string[], options: Options): Promise<string[]> {
 	const fullPaths = paths
 		// Remove hidden paths and known non-package directories
-		.filter(s => s[0] !== "." && s[0] !== "_" && s !== "node_modules" && s !== "scripts")
+		.filter(s => s[0] !== "." && s[0] !== "_" && isTypingDirectory(s))
 		// Sort by name
 		.sort();
 	// Remove non-folders
-	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(definitelyTypedPath(s, options))).isDirectory());
+	return filterAsyncOrdered(fullPaths, async s => (await fsp.stat(packageRootPath(s, options))).isDirectory());
 }
 
 export default async function main(options: Options): Promise<void> {
@@ -30,22 +30,19 @@ export default async function main(options: Options): Promise<void> {
 	summaryLog("# Typing Publish Report Summary");
 	summaryLog(`Started at ${(new Date()).toUTCString()}`);
 
-	// TypesData
-	const paths = await fsp.readdir(options.definitelyTypedPath);
+	const packageNames = await filterPaths(await fsp.readdir(options.definitelyTypedPath), options);
 
-	const folders = await filterPaths(paths, options);
+	summaryLog(`Found ${packageNames.length} typings folders in ${options.definitelyTypedPath}`);
 
-	summaryLog(`Found ${folders.length} typings folders in ${options.definitelyTypedPath}`);
+	const typings: { [name: string]: TypingsVersionsRaw } = {};
 
-	const typings: { [name: string]: TypingsDataRaw } = {};
-
-	await nAtATime(1, folders, use, { name: "Parsing...", flavor: name => name });
-	async function use(pkgName: string): Promise<void> {
-		const { data, logs } = await parser.getTypingInfo(pkgName, options);
-		detailedLog(`# ${pkgName}`);
-		typings[pkgName] = data;
+	await nAtATime(1, packageNames, use, { name: "Parsing...", flavor: name => name });
+	async function use(packageName: string): Promise<void> {
+		const { data, logs } = await parser.getTypingInfo(packageName, options);
+		typings[packageName] = data;
 
 		// Flush detailed log
+		detailedLog(`# ${packageName}`);
 		moveLogs(detailedLog, logs);
 	}
 

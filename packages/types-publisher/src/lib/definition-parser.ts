@@ -4,12 +4,12 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { readFile as readFileText } from "../util/io";
-import { Logger, Log, quietLogger } from "../util/logging";
+import { Logger, Log, moveLogs, quietLogger } from "../util/logging";
 import { isExternalModule } from "../util/ts";
-import { computeHash, mapAsyncOrdered, stripQuotes } from "../util/util";
+import { computeHash, join, mapDefined, mapAsyncOrdered, normalizeSlashes, stripQuotes, sort } from "../util/util";
 
-import { Options, settings } from "./common";
-import { TypingsDataRaw, definitelyTypedPath } from "./packages";
+import { Options } from "./common";
+import { DependenciesRaw, TypingsDataRaw, TypingsVersionsRaw, packageRootPath } from "./packages";
 import { parseHeaderOrFail } from "./header";
 
 enum DeclarationFlags {
@@ -54,66 +54,150 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 	return result;
 }
 
-export async function getTypingInfo(folderName: string, options: Options): Promise<{ data: TypingsDataRaw, logs: Log }> {
-	const [log, logResult] = quietLogger();
-	const directory = definitelyTypedPath(folderName, options);
-	if (folderName !== folderName.toLowerCase()) {
-		throw new Error(`Package name \`${folderName}\` should be strictly lowercase`);
+export async function getTypingInfo(packageName: string, options: Options): Promise<{ data: TypingsVersionsRaw, logs: Log }> {
+	if (packageName !== packageName.toLowerCase()) {
+		throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
 	}
+	const rootDirectory = packageRootPath(packageName, options);
+	const { rootDirectoryLs, olderVersionDirectories } = await getOlderVersions(rootDirectory);
+
+	const { data: latestData, logs: latestLogs } = await getTypingData(packageName, rootDirectory, rootDirectoryLs);
+	const latestVersion = latestData.libraryMajorVersion;
+
+	const [log, logResult] = quietLogger();
+	moveLogs(log, latestLogs);
+
+	const older = await mapAsyncOrdered(olderVersionDirectories, async ({ directoryName, majorVersion }) => {
+		if (majorVersion === latestVersion) {
+			throw new Error(`The latest major version is ${latestVersion}, but a directory v${latestVersion} exists.`);
+		}
+
+		const directory = path.join(rootDirectory, directoryName);
+		const files = await fsp.readdir(directory);
+		const { data, logs } = await getTypingData(packageName, directory, files);
+		log(`Parsing older version ${majorVersion}`);
+		moveLogs(log, logs, (msg) => "    " + msg);
+
+		if (data.libraryMajorVersion !== majorVersion) {
+			throw new Error(`Directory ${directory} indicates major version ${majorVersion}, but header indicates major version ${data.libraryMajorVersion}`);
+		}
+		return data;
+	});
+
+	const data: TypingsVersionsRaw = {};
+	data[latestVersion] = latestData;
+	for (const o of older) {
+		data[o.libraryMajorVersion] = o;
+	}
+	return { data, logs: logResult() };
+}
+
+interface OlderVersionDirectory { directoryName: string; majorVersion: number; }
+
+async function getOlderVersions(rootDirectory: string): Promise<{ rootDirectoryLs: string[], olderVersionDirectories: OlderVersionDirectory[] }> {
+	const lsRootDirectory = await fsp.readdir(rootDirectory);
+	const rootDirectoryLs: string[] = [];
+	const olderVersionDirectories: OlderVersionDirectory[] = [];
+	for (const fileOrDirectoryName of lsRootDirectory) {
+		const majorVersion = parseMajorVersionFromDirectoryName(fileOrDirectoryName);
+		if (majorVersion === undefined) {
+			rootDirectoryLs.push(fileOrDirectoryName);
+		} else {
+			olderVersionDirectories.push({ directoryName: fileOrDirectoryName, majorVersion });
+		}
+	}
+	return { rootDirectoryLs, olderVersionDirectories };
+}
+
+export function parseMajorVersionFromDirectoryName(directoryName: string): number | undefined {
+	const match = /^v(\d+)$/.exec(directoryName);
+	return match === null ? undefined : Number(match[1]);
+}
+
+/**
+ * @param packageName Name of the outermost directory; e.g. for "node/v4" this is just "node".
+ * @param directory Full path to the directory for this package; e.g. "../DefinitelyTyped/foo/v3".
+ * @param ls All file/directory names in `directory`.
+ */
+async function getTypingData(packageName: string, directory: string, ls: string[]): Promise<{ data: TypingsDataRaw, logs: Log }> {
+	const [log, logResult] = quietLogger();
 
 	log(`Reading contents of ${directory}`);
 
 	// There is a *single* main file, containing metadata comments.
 	// But there may be many entryFilenames, which are the starting points of inferring all files to be included.
 	const mainFilename = "index.d.ts";
-	const mainFileContent = await readFile(directory, mainFilename);
 
 	const { authors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
-		parseHeaderOrFail(mainFileContent, folderName);
+		parseHeaderOrFail(await readFile(directory, mainFilename), packageName);
 
-	const allEntryFilenames = await entryFilesFromTsConfig(directory, log) || [mainFilename];
-	const { referencedLibraries, moduleDependencies, globalSymbols, declaredModules, declFiles } =
-		await getModuleInfo(directory, folderName, allEntryFilenames, log);
+	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory);
+	const { dependencies, globalSymbols, declaredModules, declFiles } =
+		await getModuleInfo(packageName, directory, typeFiles, log);
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
-	const allFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
+	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
+
+	const allFiles = new Set(allContentHashFiles.concat(testFiles, ["tsconfig.json", "tslint.json"]));
+	await checkAllFilesUsed(directory, ls, allFiles);
 
 	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 	const data: TypingsDataRaw = {
 		authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
-		libraryDependencies: referencedLibraries,
-		moduleDependencies,
+		dependencies,
 		libraryMajorVersion,
 		libraryMinorVersion,
 		typeScriptVersion,
 		libraryName,
-		typingsPackageName: folderName,
+		typingsPackageName: packageName,
 		projectName: projects[0], // TODO: collect multiple project names
 		sourceRepoURL,
-		sourceBranch: settings.sourceBranch,
 		globals: Object.keys(globalSymbols).filter(k => !!(globalSymbols[k] & DeclarationFlags.Value)).sort(),
 		declaredModules,
 		files: declFiles,
 		hasPackageJson,
-		contentHash: await hash(directory, allFiles)
+		contentHash: await hash(directory, allContentHashFiles)
 	};
 	return { data, logs: logResult() };
 }
 
-async function entryFilesFromTsConfig(directory: string, log: Logger): Promise<string[] | undefined> {
-	// If there is a tsconfig.json with a "files" property use this as the entry point
-	if (await fsp.exists(path.join(directory, "tsconfig.json"))) {
-		const files: string[] = JSON.parse(await readFile(directory, "tsconfig.json")).files;
-		if (files) {
-			const filenames = files.filter(file => file.endsWith(".d.ts"));
-			log(`Found ${filenames.length} '.d.ts' files listed in tsconfig.json (${filenames.join(", ")})`);
-			return filenames;
+async function entryFilesFromTsConfig(packageName: string, directory: string): Promise<{ typeFiles: string[], testFiles: string[] }> {
+	const tsconfigPath = path.join(directory, "tsconfig.json");
+	const tsconfig = await fsp.readJson(tsconfigPath);
+	if (tsconfig.include) {
+		throw new Error(`${tsconfigPath}: Don't use "include", must use "files"`);
+	}
+
+	const files: string[] = tsconfig.files;
+	if (!files) {
+		throw new Error(`${tsconfigPath} needs to specify  "files"`);
+	}
+
+	const typeFiles: string[] = [];
+	const testFiles: string[] = [];
+
+	for (const file of files) {
+		if (file.startsWith("./")) {
+			throw new Error(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
+		}
+
+		if (file.endsWith(".d.ts")) {
+			typeFiles.push(file);
+		} else {
+			if (!file.startsWith("test/")) {
+				const expectedName = `${packageName}-tests.ts`;
+				if (file !== expectedName && file !== expectedName + "x") {
+					// TODO: throw error
+					console.error(`In ${directory}: Expected file '${file}' to be named ${expectedName}`);
+				}
+			}
+			testFiles.push(file);
 		}
 	}
-	return undefined;
+
+	return { typeFiles, testFiles };
 }
 
-// See GH#68 for why we don't just include every file
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
 async function allReferencedFiles(directory: string, entryFilenames: string[], log: Logger): Promise<Map<string, ts.SourceFile>> {
 	const all = new Map<string, ts.SourceFile>();
@@ -130,13 +214,14 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
 		try {
 			content = await readFile(directory, filename);
 		} catch (err) {
-			throw new Error(`In ${directory}, ${referencedFrom} references ${filename}, which does not exist.`);
+			console.error(`In ${directory}, ${referencedFrom} references ${filename}, which can't be read.`);
+			throw err;
 		}
 		const src = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, true);
 		all.set(filename, src);
 
 		const refs = referencedFiles(src, path.dirname(filename), directory);
-		await Promise.all(refs.map(ref => recur(filename, ref)));
+		await Promise.all(refs.map(ref => recur(filename, normalizeSlashes(ref))));
 	}
 
 	await Promise.all(entryFilenames.map(filename => recur("", filename)));
@@ -165,9 +250,9 @@ function referencedFiles(src: ts.SourceFile, subDirectory: string, directory: st
 
 	function addReference(ref: string): void {
 		const full = path.normalize(path.join(subDirectory, ref));
-		// If the *normalized* path starts with "..", then it reaches outside of srcDirectory.
-		if (full.startsWith("..")) {
-			throw new Error(`In ${directory} ${src.fileName}: Definitions must use global references rather than reaching outside of their directory.`);
+		if (full.startsWith(".")) {
+			throw new Error(
+				`In ${directory} ${src.fileName}: Definitions must use global references, not local references. (Based on reference '${ref}')`);
 		}
 		out.push(full);
 	}
@@ -197,7 +282,7 @@ function imports(src: ts.SourceFile): string[] {
 				case ts.SyntaxKind.ImportEqualsDeclaration: {
 					const decl = node as ts.ImportEqualsDeclaration;
 					if (decl.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
-						out.push(parseRequire(decl.moduleReference.getText()));
+						out.push(parseRequire(decl.moduleReference));
 					}
 					break;
 				}
@@ -215,26 +300,25 @@ function imports(src: ts.SourceFile): string[] {
 		}
 	}
 
-	function parseRequire(text: string): string {
-		const match = /require\(["'](.*)["']\)/.exec(text);
-		if (match === null) {
-			throw new Error(`Failed to parse import = declaration "${text}"`);
+	function parseRequire(reference: ts.ExternalModuleReference): string {
+		const expr = reference.expression;
+		if (!expr || expr.kind !== ts.SyntaxKind.StringLiteral) {
+			throw new Error(`Bad 'import =' reference: ${reference.getText()}`);
 		}
-		return match[1];
+		return (expr as ts.StringLiteral).text;
 	}
 }
 
-async function getModuleInfo(directory: string, folderName: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
+async function getModuleInfo(packageName: string, directory: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
 	let hasUmdDecl = false;
 	let hasGlobalDeclarations = false;
 	let ambientModuleCount = 0;
 
-	const moduleDependencies = new Set<string>();
-	const referencedLibraries = new Set<string>();
+	const dependencies = new Set<string>();
 	const declaredModules: string[] = [];
 
 	let globalSymbols: GlobalSymbols = {};
-	function recordSymbol(name: string, flags: DeclarationFlags) {
+	function recordSymbol(name: string, flags: DeclarationFlags): void {
 		globalSymbols[name] = (globalSymbols[name] || DeclarationFlags.None) | flags;
 	}
 
@@ -249,12 +333,12 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 		for (const ref of imports(src)) {
 			if (!ref.startsWith(".")) {
 				const importedModule = rootName(ref);
-				moduleDependencies.add(importedModule);
+				dependencies.add(importedModule);
 				log(`Found import declaration from \`"${importedModule}"\``);
 			}
 		}
 
-		src.typeReferenceDirectives.forEach(ref => referencedLibraries.add(ref.fileName));
+		src.typeReferenceDirectives.forEach(ref => dependencies.add(ref.fileName));
 
 		for (const node of src.statements) {
 			switch (node.kind) {
@@ -346,24 +430,61 @@ async function getModuleInfo(directory: string, folderName: string, allEntryFile
 		const isProperModule = isExternal && hasAnyExport;
 
 		if (isProperModule) {
-			declaredModules.push(properModuleName(folderName, src.fileName));
+			declaredModules.push(properModuleName(packageName, src.fileName));
 		}
 	}
 
 	// Some files may reference the main module, but don't include that as a real dependency.
-	referencedLibraries.delete(folderName);
-	moduleDependencies.delete(folderName);
+	dependencies.delete(packageName);
 
 	return {
-		declFiles: arrayOf(all.keys()),
-		referencedLibraries: arrayOf(referencedLibraries),
-		moduleDependencies: arrayOf(moduleDependencies),
+		declFiles: sort(all.keys()),
+		dependencies: await calculateDependencies(packageName, directory, dependencies),
 		declaredModules, globalSymbols
 	};
+}
 
-	function arrayOf(strings: Iterable<string>): string[] {
-		return Array.from(strings).sort();
+/** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
+async function calculateDependencies(packageName: string, directory: string, dependencies: Set<string>): Promise<DependenciesRaw> {
+	const tsconfig = await fsp.readJSON(path.join(directory, "tsconfig.json"));
+	const res: DependenciesRaw = {};
+
+	const { paths } = tsconfig;
+	for (const key in paths) {
+		if (key !== packageName && !dependencies.has(key)) {
+			throw new Error(`In ${packageName}: path mapping for '${key}' is not used.`);
+		}
 	}
+
+	for (const dependency of dependencies) {
+		const path = paths && paths[dependency];
+		const version = path === undefined ? "*" : parseDependencyVersionFromPath(packageName, dependency, paths[dependency]);
+		res[dependency] = version;
+	}
+
+	return res;
+}
+
+// e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
+function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {
+	let short = dependencyPath;
+	for (let x = withoutStart(short, "../"); x !== undefined; x = withoutStart(short, "../")) {
+		short = x;
+	}
+
+	const versionString = withoutStart(short, dependencyName + "/");
+	const version = versionString === undefined ? undefined : parseMajorVersionFromDirectoryName(versionString);
+	if (version === undefined) {
+		throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
+	}
+	return version;
+}
+
+function withoutStart(s: string, start: string): string | undefined {
+	if (s.startsWith(start)) {
+		return s.slice(start.length);
+	}
+	return undefined;
 }
 
 /** Given "foo/bar/baz", return "foo". */
@@ -397,10 +518,7 @@ interface GlobalSymbols {
 interface ModuleInfo {
 	// Every declaration file used (starting from the entry point)
 	declFiles: string[];
-	// Anything from an `import ... from "foo"`
-	moduleDependencies: string[];
-	// Anything from a `<reference types="foo">
-	referencedLibraries: string[];
+	dependencies: DependenciesRaw;
 	// Anything from a `declare module "foo"`
 	declaredModules: string[];
 	// Every global symbol
@@ -425,4 +543,45 @@ async function readFile(directory: string, fileName: string): Promise<string> {
 		throw new Error(`File '${full}' has a BOM. Try using:\n${commands.join("\n")}`);
 	}
 	return text;
+}
+
+async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set<string>): Promise<void> {
+	const unusedFilesName = "UNUSED_FILES.txt";
+	if (ls.includes(unusedFilesName)) {
+		const lsMinusUnusedFiles = new Set(ls);
+		lsMinusUnusedFiles.delete(unusedFilesName);
+		const unusedFiles = (await fsp.readFile(path.join(directory, unusedFilesName), "utf-8")).split(/\r?\n/g);
+		for (const unusedFile of unusedFiles) {
+			if (!lsMinusUnusedFiles.delete(unusedFile)) {
+				throw new Error(`In ${directory}: file ${unusedFile} listed in ${unusedFilesName} does not exist.`);
+			}
+		}
+		ls = Array.from(lsMinusUnusedFiles);
+	}
+
+	for (const lsEntry of ls) {
+		if (usedFiles.has(lsEntry)) {
+			continue;
+		}
+
+		const stat = await fsp.stat(path.join(directory, lsEntry));
+		if (stat.isDirectory()) {
+			// We allow a "scripts" directory to be used for scripts.
+			if (lsEntry === "node_modules" || lsEntry === "scripts") {
+				continue;
+			}
+
+			const subdir = path.join(directory, lsEntry);
+			const lssubdir = await fsp.readdir(subdir);
+			if (lssubdir.length === 0) {
+				throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
+			}
+			const usedInSubdir = mapDefined(usedFiles, u => withoutStart(u, lsEntry + "/"));
+			await checkAllFilesUsed(subdir, lssubdir, new Set(usedInSubdir));
+		} else {
+			if (lsEntry.toLowerCase() !== "readme.md" && lsEntry !== "NOTICE" && lsEntry !== ".editorconfig") {
+				throw new Error(`Directory ${directory} has unused file ${lsEntry}`);
+			}
+		}
+	}
 }

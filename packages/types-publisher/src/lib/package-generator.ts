@@ -5,9 +5,9 @@ import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty } from "../util/util";
 
-import { Options } from "./common";
-import { AllPackages, AnyPackage, TypingsData, NotNeededPackage, fullPackageName } from "./packages";
-import Versions, { Semver, VersionInfo, versionString } from "./versions";
+import { Options, settings } from "./common";
+import { AllPackages, AnyPackage, DependencyVersion, TypingsData, NotNeededPackage, fullNpmName } from "./packages";
+import Versions, { Semver } from "./versions";
 
 /** Generates the package to disk */
 export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
@@ -17,11 +17,11 @@ export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackage
 async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const outputPath = typing.getOutputPath();
+	const outputPath = typing.outputDirectory;
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json, metadata.json, and README.md");
-	const packageJson = await createPackageJSON(typing, versions.versionInfo(typing), packages, options);
+	const packageJson = await createPackageJSON(typing, versions.getVersion(typing.id), packages, options);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -53,11 +53,11 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 
 async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Versions): Promise<string[]> {
 	const [log, logResult] = quietLogger();
-	const outputPath = pkg.getOutputPath();
+	const outputPath = pkg.outputDirectory;
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json and README.md");
-	const packageJson = createNotNeededPackageJSON(pkg, versions.versionInfo(pkg).version);
+	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg.id));
 	const readme = pkg.readme();
 
 	log("Write metadata files to disk");
@@ -100,8 +100,7 @@ interface PartialPackageJson {
 	description?: string;
 }
 
-async function createPackageJSON(typing: TypingsData, { version, contentHash }: VersionInfo, packages: AllPackages, options: Options
-	): Promise<string> {
+async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages, options: Options): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = typing.filePath("package.json", options);
 	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
@@ -114,8 +113,8 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
-		name: typing.fullName(),
-		version: versionString(version),
+		name: typing.fullNpmName,
+		version: version.versionString,
 		description,
 		// keywords,
 		// homepage,
@@ -131,7 +130,7 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 		scripts: {},
 		dependencies,
 		peerDependencies,
-		typesPublisherContentHash: contentHash,
+		typesPublisherContentHash: typing.contentHash,
 		typeScriptVersion: typing.typeScriptVersion
 	};
 
@@ -139,32 +138,29 @@ async function createPackageJSON(typing: TypingsData, { version, contentHash }: 
 }
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, packages: AllPackages): void {
-	function addDependency(dependency: string): void {
-		const typesDependency = fullPackageName(dependency);
+function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, allPackages: AllPackages): void {
+	for (const dependency of typing.dependencies) {
+		const typesDependency = fullNpmName(dependency.name);
 
 		// A dependency "foo" is already handled if we already have a dependency/peerDependency on the package "foo" or "@types/foo".
 		function handlesDependency(deps: Dependencies): boolean {
-			return hasOwnProperty(deps, dependency) || hasOwnProperty(deps, typesDependency);
+			return hasOwnProperty(deps, dependency.name) || hasOwnProperty(deps, typesDependency);
 		}
 
-		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && packages.hasTypingFor(dependency)) {
-			// 1st/2nd case: Don't add a dependency if it was specified in the package.json or if it has already been added.
-			// 3rd case: If it's not a package we know of, just ignore it.
-			// For example, we may have an import of "http", where the package is depending on "node" to provide that.
-			dependencies[typesDependency] = "*";
-			// To use a non-latest version, that version must be made explicit in the partial package.json from a DefinitelyTyped directory.
+		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && allPackages.hasTypingFor(dependency)) {
+			dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
 		}
 	}
-
-	typing.moduleDependencies.forEach(addDependency);
-	typing.libraryDependencies.forEach(addDependency);
 }
 
-function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
+function dependencySemver(dependency: DependencyVersion): string {
+	return dependency === "*" ? dependency : `^${dependency}`;
+}
+
+function createNotNeededPackageJSON({libraryName, name, fullNpmName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
 	return JSON.stringify({
-		name: fullPackageName(typingsPackageName),
-		version: versionString(version),
+		name: fullNpmName,
+		version: version.versionString,
 		typings: null,
 		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 		main: "",
@@ -174,7 +170,7 @@ function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepo
 		license: "MIT",
 		// No `typings`, that's provided by the dependency.
 		dependencies: {
-			[typingsPackageName]: "*"
+			[name]: "*"
 		}
 	}, undefined, 4);
 }
@@ -182,7 +178,7 @@ function createNotNeededPackageJSON({libraryName, typingsPackageName, sourceRepo
 function createReadme(typing: TypingsData) {
 	const lines: string[] = [];
 	lines.push("# Installation");
-	lines.push("> `npm install --save " + fullPackageName(typing.typingsPackageName) + "`");
+	lines.push("> `npm install --save " + typing.fullNpmName + "`");
 	lines.push("");
 
 	lines.push("# Summary");
@@ -194,14 +190,14 @@ function createReadme(typing: TypingsData) {
 	lines.push("");
 
 	lines.push("# Details");
-	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${typing.sourceBranch}/${typing.typingsPackageName}`);
+	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${settings.sourceBranch}/${typing.subDirectoryPath}`);
 
 	lines.push("");
 	lines.push(`Additional Details`);
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
-	lines.push(` * Library Dependencies: ${typing.libraryDependencies.length ? typing.libraryDependencies.join(", ") : "none"}`);
-	lines.push(` * Module Dependencies: ${typing.moduleDependencies.length ? typing.moduleDependencies.join(", ") : "none"}`);
-	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
+	const dependencies = Array.from(typing.dependencies).map(d => d.name);
+	lines.push(" * Dependencies: " + dependencies.length ? dependencies.join(", ") : "none");
+	lines.push(" * Global values: " + typing.globals.length ? typing.globals.join(", ") : "none");
 	lines.push("");
 
 	if (typing.authors) {

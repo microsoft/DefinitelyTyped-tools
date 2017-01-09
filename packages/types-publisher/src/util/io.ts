@@ -63,3 +63,7 @@ async function fetchWithRetries(url: string, init: RequestInit & { retries: numb
 	}
 	return await fetch(url);
 }
+
+export async function isDirectory(path: string): Promise<boolean> {
+	return (await fsp.stat(path)).isDirectory();
+}

@@ -35,6 +35,7 @@ interface ProgressOptions<T, U> {
 
 export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>, progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
 	const progress = progressOptions && new ProgressBar({ name: progressOptions.name });
+
 	const results = new Array(inputs.length);
 	// We have n "threads" which each run `continuouslyWork`.
 	// They all share `nextIndex`, so each work item is done only once.
@@ -183,10 +184,54 @@ export function computeHash(content: string): string {
 	return <string> h.digest("hex");
 }
 
-export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) => V2): Map<V1, V2> {
-	const out = new Map();
+export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) => V2): Map<K, V2> {
+	const out = new Map<K, V2>();
 	map.forEach((value, key) => {
 		out.set(key, valueMapper(value));
 	});
 	return out;
+}
+
+export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V) {
+	let values = map.get(key);
+	if (values) {
+		values.push(value);
+	} else {
+		map.set(key, [value]);
+	}
+}
+
+export function mapDefined<T, U>(arr: Iterable<T>, mapper: (t: T) => U | undefined): U[] {
+	const out = [];
+	for (const a of arr) {
+		const res = mapper(a);
+		if (res !== undefined) {
+			out.push(res);
+		}
+	}
+	return out;
+}
+
+export function* map<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
+	for (const input of inputs) {
+		yield mapper(input);
+	}
+}
+
+export function* flatMap<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U>): Iterable<U> {
+	for (const input of inputs) {
+		yield* mapper(input);
+	}
+}
+
+export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
+	return Array.from(values).sort(comparer);
+}
+
+export function join<T>(values: Iterable<T>, joiner = ", ") {
+	let s = "";
+	for (const v of values) {
+		s += v + joiner;
+	}
+	return s.slice(0, s.length - joiner.length);
 }

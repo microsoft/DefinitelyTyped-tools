@@ -19,15 +19,15 @@ export interface SearchRecord {
 	r: string | undefined;
 }
 
-export async function createSearchRecord(info: AnyPackage, skipDownloads: boolean): Promise<SearchRecord> {
+export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean): Promise<SearchRecord> {
 	return {
-		p: info.projectName,
-		l: info.libraryName,
-		g: info.globals,
-		t: info.typingsPackageName,
-		m: info.declaredModules,
+		p: pkg.projectName,
+		l: pkg.libraryName,
+		g: pkg.globals,
+		t: pkg.name,
+		m: pkg.declaredModules,
 		d: await getDownloads(),
-		r: info.isNotNeeded() ? info.sourceRepoURL : undefined
+		r: pkg.isNotNeeded() ? pkg.sourceRepoURL : undefined
 	};
 
 	// See https://github.com/npm/download-counts
@@ -35,7 +35,7 @@ export async function createSearchRecord(info: AnyPackage, skipDownloads: boolea
 		if (skipDownloads) {
 			return -1;
 		} else {
-			const url = `https://api.npmjs.org/downloads/point/last-month/${info.typingsPackageName}`;
+			const url = `https://api.npmjs.org/downloads/point/last-month/${pkg.name}`;
 			interface NpmResult { downloads: number; }
 			const json = <NpmResult> (await fetchJson(url, { retries: true }));
 			// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.

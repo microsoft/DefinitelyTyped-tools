@@ -1,31 +1,40 @@
-import { Options,  settings } from "../lib/common";
-import { AllPackages, TypingsData } from "../lib/packages";
+import * as path from "path";
+
+import { Options, isTypingDirectory, settings } from "../lib/common";
+import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
+import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { Logger } from "../util/logging";
-import { done, execAndThrowErrors } from "../util/util";
+import { done, execAndThrowErrors, flatMap, map, join, sort } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 async function main(options: Options) {
 	const changes = await getAffectedPackages(await AllPackages.read(options), console.log, options);
-	console.log(Array.from(changes).map(t => t.typingsPackageName));
+	console.log(join(map(changes, t => t.desc)));
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, options: Options): Promise<TypingsData[]> {
-	const changedPackageNames = await gitChanges(log, options);
+	const changedPackageIds = await gitChanges(log, options);
+	const changedPackages = map(changedPackageIds, (({ name, majorVersion }) =>
+		majorVersion === "latest" ? allPackages.getLatestVersion(name) : allPackages.getTypingsData({ name, majorVersion })));
 	const dependedOn = getReverseDependencies(allPackages);
-	return collectDependers(allPackages, changedPackageNames, dependedOn);
+	return collectDependers(changedPackages, dependedOn);
 }
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
 export function allDependencies(allPackages: AllPackages, packages: TypingsData[]): TypingsData[] {
-	return Array.from(transitiveClosure(packages, pkg => packagesFromNames(allPackages, getDependencies(pkg))));
+	return sortPackages(transitiveClosure(packages, pkg => allPackages.dependencyTypings(pkg)));
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
-function collectDependers(allPackages: AllPackages, changedPackageNames: Iterable<string>, reverseDependencies: Map<TypingsData, Set<TypingsData>>) {
-	return sortPackages(transitiveClosure(packagesFromNames(allPackages, changedPackageNames), pkg => reverseDependencies.get(pkg) || []));
+function collectDependers(changedPackages: Iterable<TypingsData>, reverseDependencies: Map<TypingsData, Set<TypingsData>>): TypingsData[] {
+	return sortPackages(transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []));
+}
+
+function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
+	return sort<TypingsData>(packages, PackageBase.compare);
 }
 
 function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item: T) => Iterable<T>): Set<T> {
@@ -53,19 +62,6 @@ function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item:
 	return all;
 }
 
-function* packagesFromNames(allPackages: AllPackages, names: Iterable<string>): IterableIterator<TypingsData> {
-	for (const name of names) {
-		const pkg = allPackages.tryGetTypingsData(name);
-		if (pkg) {
-			yield pkg;
-		}
-	}
-}
-
-function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
-	return Array.from(packages).sort((a, b) => a.typingsPackageName.localeCompare(b.typingsPackageName));
-}
-
 /** Generate a map from a package to packages that depend on it. */
 function getReverseDependencies(allPackages: AllPackages): Map<TypingsData, Set<TypingsData>> {
 	const map = new Map<TypingsData, Set<TypingsData>>();
@@ -75,33 +71,34 @@ function getReverseDependencies(allPackages: AllPackages): Map<TypingsData, Set<
 	}
 
 	for (const typing of allPackages.allTypings()) {
-		for (const dependencyName of getDependencies(typing)) {
-			const dependency = allPackages.tryGetTypingsData(dependencyName);
-			if (dependency) {
-				map.get(dependency)!.add(typing);
-			}
+		for (const dependency of allPackages.dependencyTypings(typing)) {
+			map.get(dependency)!.add(typing);
 		}
 	}
 
 	return map;
 }
 
-function getDependencies(typing: TypingsData): string[] {
-	return typing.libraryDependencies.concat(typing.moduleDependencies);
-}
+interface PackageVersion { name: string; majorVersion: number | "latest"; }
 
 /** Returns all immediate subdirectories of the root directory that have changed. */
-async function gitChanges(log: Logger, options: Options): Promise<Iterable<string>> {
-	const changedPackages = new Set<string>();
+async function gitChanges(log: Logger, options: Options): Promise<Iterable<PackageVersion>> {
+	const changedPackages = new Map<string, Set<number | "latest">>();
 
 	for (const fileName of await gitDiff(log, options)) {
-		const root = rootDirName(fileName);
-		if (root) {
-			changedPackages.add(root);
+		const dep = getDependencyFromFile(fileName);
+		if (dep) {
+			const versions = changedPackages.get(dep.name);
+			if (!versions) {
+				changedPackages.set(dep.name, new Set([dep.majorVersion]));
+			} else {
+				versions.add(dep.majorVersion);
+			}
 		}
 	}
 
-	return changedPackages;
+	return flatMap(changedPackages, ([name, versions]) =>
+		map(versions, majorVersion => ({ name, majorVersion })));
 }
 
 /*
@@ -138,8 +135,30 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 	}
 }
 
-// For "a/b/c", returns "a". For "a", returns undefined.
-function rootDirName(fileName: string): string | undefined {
-	const slash = fileName.indexOf("/");
-	return slash === -1 ? undefined : fileName.slice(0, slash);
+/**
+ * For "a/b/c", returns { name: "a", version: "latest" }.
+ * For "a/v3/c", returns { name: "a", version: 3 }.
+ * For "a", returns undefined.
+ */
+function getDependencyFromFile(fileName: string): PackageVersion | undefined {
+	path.parse("");
+	const parts = fileName.split(path.sep);
+	if (parts.length === 1) {
+		// It's not in a typings directory at all.
+		return undefined;
+	}
+
+	const name = parts[0];
+	if (!isTypingDirectory(name)) {
+		return undefined;
+	}
+
+	if (parts.length > 2) {
+		const majorVersion = parseMajorVersionFromDirectoryName(parts[1]);
+		if (majorVersion !== undefined) {
+			return { name,  majorVersion };
+		}
+	}
+
+	return { name, majorVersion: "latest" };
 }

@@ -1,6 +1,7 @@
 {
 	"extends": "./tslint-common.json",
 	"rules": {
+		"forin": false,
 		"indent": [true, "tabs"],
 		"max-line-length": [true, 150],
 		"no-var-requires": false,

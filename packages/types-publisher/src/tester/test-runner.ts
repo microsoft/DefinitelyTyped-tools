@@ -3,7 +3,7 @@ import * as path from "path";
 import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
-import { AllPackages, TypeScriptVersion, TypingsData } from "../lib/packages";
+import { AllPackages, PackageBase, TypeScriptVersion, TypingsData } from "../lib/packages";
 import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, nAtATime, numberOfOsProcesses } from "../util/util";
@@ -43,12 +43,12 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	const allPackages = await AllPackages.read(options);
 	const typings: TypingsData[] = regexp
-		? allPackages.allTypings().filter(t => regexp.test(t.typingsPackageName))
+		? allPackages.allTypings().filter(t => regexp.test(t.name))
 		: await getAffectedPackages(allPackages, console.log, options);
 
 	nProcesses = nProcesses || numberOfOsProcesses;
 
-	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.typingsPackageName)}`);
+	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.desc)}`);
 	console.log(`Running with ${nProcesses} processes.`);
 
 	const allErrors: Array<{ pkg: TypingsData, err: TesterError }> = [];
@@ -71,7 +71,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
 		const err = await single(pkg, log, options);
-		console.log(`Testing ${pkg.typingsPackageName}`);
+		console.log(`Testing ${pkg.desc}`);
 		moveLogsWithErrors(console, logResult(), msg => "\t" + msg);
 		if (err) {
 			allErrors.push({ err, pkg });
@@ -79,11 +79,11 @@ export default async function main(options: Options, nProcesses?: number, regexp
 	});
 
 	if (allErrors.length) {
-		allErrors.sort(({ pkg: pkgA }, { pkg: pkgB}) => pkgA.typingsPackageName.localeCompare(pkgB.typingsPackageName));
+		allErrors.sort(({ pkg: pkgA }, { pkg: pkgB}) => PackageBase.compare(pkgA, pkgB));
 
 		console.log("\n\n=== ERRORS ===\n");
 		for (const { err, pkg } of allErrors) {
-			console.error(`\n\nError in ${pkg.typingsPackageName}`);
+			console.error(`\n\nError in ${pkg.desc}`);
 			console.error(err.message);
 		}
 

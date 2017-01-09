@@ -29,7 +29,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 	await nAtATime(10, packages, async pkg => {
 		const logs = await generateAnyPackage(pkg, allPackages, versions, options);
 		if (tgz) {
-			await writeTgz(pkg.getOutputPath(), pkg.getOutputPath() + ".tgz");
+			await writeTgz(pkg.outputDirectory, pkg.outputDirectory + ".tgz");
 		}
 		log(` * ${pkg.libraryName}`);
 		moveLogs(log, logs, line => `   * ${line}`);
@@ -40,7 +40,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 
 async function single(singleName: string, options: Options): Promise<void> {
 	const allPackages = await AllPackages.read(options);
-	const pkg = allPackages.getAnyPackage(singleName);
+	const pkg = allPackages.getLatestVersion(singleName);
 	const versions = await Versions.load();
 	const logs = await generateAnyPackage(pkg, allPackages, versions, options);
 	console.log(logs.join("\n"));

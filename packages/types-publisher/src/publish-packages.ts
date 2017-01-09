@@ -1,11 +1,11 @@
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
-import { AllPackages } from "./lib/packages";
+import { AllPackages, AnyPackage } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
-import { publishPackage, unpublishPackage } from "./lib/package-publisher";
-import { changedPackages } from "./lib/versions";
-import { LogWithErrors, logger, writeLog } from "./util/logging";
+import publishPackage, { unpublishPackage } from "./lib/package-publisher";
+import Versions, { changedPackages } from "./lib/versions";
+import { Log, LogWithErrors, logger, writeLog } from "./util/logging";
 import { done } from "./util/util";
 
 if (!module.parent) {
@@ -27,7 +27,7 @@ if (!module.parent) {
 		else {
 			const client = await NpmClient.create();
 			if (singleName) {
-				await single(client, singleName, dry);
+				await single(client, singleName, Options.defaults, dry);
 			}
 			else {
 				await main(client, dry, Options.defaults);
@@ -42,11 +42,13 @@ export default async function main(client: NpmClient, dry: boolean, options: Opt
 		log("=== DRY RUN ===");
 	}
 
-	const packagesShouldPublish = await changedPackages(await AllPackages.read(options));
+	const allPackages = await AllPackages.read(options);
+	const versions = await Versions.load();
+	const packagesShouldPublish = await changedPackages(allPackages);
 
 	for (const pkg of packagesShouldPublish) {
-		console.log(`Publishing ${pkg.libraryName}...`);
-		const publishLog = await publishPackage(client, pkg, dry);
+		console.log(`Publishing ${pkg.desc}...`);
+		const publishLog = await publish(pkg, client, allPackages, versions, dry);
 		writeLogs({ infos: publishLog, errors: [] });
 	}
 
@@ -63,10 +65,17 @@ export default async function main(client: NpmClient, dry: boolean, options: Opt
 	console.log("Done!");
 }
 
-async function single(client: NpmClient, name: string, dry: boolean): Promise<void> {
+async function single(client: NpmClient, name: string, options: Options, dry: boolean): Promise<void> {
+	const allPackages = await AllPackages.read(options);
+	const versions = await Versions.load();
 	const pkg = await AllPackages.readSingle(name);
-	const publishLog = await publishPackage(client, pkg, dry);
+	const publishLog = await publish(pkg, client, allPackages, versions, dry);
 	console.log(publishLog);
+}
+
+function publish(pkg: AnyPackage, client: NpmClient, allPackages: AllPackages, versions: Versions, dry: boolean): Promise<Log> {
+	const latest = allPackages.getLatestVersion(pkg.name);
+	return publishPackage(client, pkg, latest, versions.getVersion(latest.id).versionString, dry);
 }
 
 async function unpublish(dry: boolean): Promise<void> {
