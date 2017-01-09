@@ -28,6 +28,7 @@
     "yargs": "^6.2.0"
   },
   "devDependencies": {
+    "@types/charm": "^1.0.0",
     "@types/fs-promise": "^1.0.0",
     "@types/node": "^6.0.41",
     "@types/node-fetch": "^1.6.7",
