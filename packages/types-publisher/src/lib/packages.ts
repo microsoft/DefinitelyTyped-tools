@@ -384,8 +384,8 @@ export namespace TypeScriptVersion {
 	export const Lowest = "2.0";
 	export const Latest = "2.1";
 
-	export function isPrerelease(version: TypeScriptVersion): boolean {
-		return version === "2.1";
+	export function isPrerelease(_version: TypeScriptVersion): boolean {
+		return false;
 	}
 
 	/** List of NPM tags that should be changed to point to the latest version. */
@@ -398,7 +398,7 @@ export namespace TypeScriptVersion {
 			case "2.1":
 				// Eventually this will change to include "latest", too.
 				// And obviously we shouldn't advance the "2.0" tag if the package is now 2.1-specific.
-				return [tags.v2_1];
+				return [tags.latest, tags.v2_1];
 		}
 	}
 
