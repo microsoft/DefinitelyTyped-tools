@@ -1,7 +1,7 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
 
-import { readFile, readJson, writeFile } from "../util/io";
+import { readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty, joinPaths } from "../util/util";
 
@@ -32,22 +32,24 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 		writeOutputFile("README.md", readme)
 	];
 	outputs.push(...typing.files.map(async file => {
-		log(`Copy and patch ${file}`);
-		let content = await readFile(typing.filePath(file, options));
-		content = patchDefinitionFile(content);
-		return writeOutputFile(file, content);
+		log(`Copy ${file}`);
+		await fsp.copy(typing.filePath(file, options), await outputFilePath(file));
 	}));
 
 	await Promise.all(outputs);
 	return logResult();
 
 	async function writeOutputFile(filename: string, content: string): Promise<void> {
+		await writeFile(await outputFilePath(filename), content);
+	}
+
+	async function outputFilePath(filename: string): Promise<string> {
 		const full = joinPaths(outputPath, filename);
 		const dir = path.dirname(full);
 		if (dir !== outputPath) {
 			await fsp.mkdirp(dir);
 		}
-		return await writeFile(full, content);
+		return full;
 	}
 }
 
@@ -79,12 +81,6 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 
 	log(`Clear out old files`);
 	await fsp.emptyDir(outputPath);
-}
-
-function patchDefinitionFile(input: string): string {
-	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+"/gm;
-	const output = input.replace(pathToLibrary, '/// <reference types="$1"');
-	return output;
 }
 
 function createMetadataJSON(typing: TypingsData): string {
@@ -196,8 +192,8 @@ function createReadme(typing: TypingsData) {
 	lines.push(`Additional Details`);
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
 	const dependencies = Array.from(typing.dependencies).map(d => d.name);
-	lines.push(" * Dependencies: " + dependencies.length ? dependencies.join(", ") : "none");
-	lines.push(" * Global values: " + typing.globals.length ? typing.globals.join(", ") : "none");
+	lines.push(` * Dependencies: ${dependencies.length ? dependencies.join(", ") : "none"}`);
+	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
 	lines.push("");
 
 	if (typing.authors) {
