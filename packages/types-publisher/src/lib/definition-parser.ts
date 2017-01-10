@@ -187,8 +187,7 @@ async function entryFilesFromTsConfig(packageName: string, directory: string): P
 			if (!file.startsWith("test/")) {
 				const expectedName = `${packageName}-tests.ts`;
 				if (file !== expectedName && file !== expectedName + "x") {
-					// TODO: throw error
-					console.error(`In ${directory}: Expected file '${file}' to be named ${expectedName}`);
+					throw new Error(`In ${directory}: Expected file '${file}' to be named ${expectedName}`);
 				}
 			}
 			testFiles.push(file);
