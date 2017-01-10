@@ -5,7 +5,7 @@ import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch } from "../lib/settings";
 import { Logger } from "../util/logging";
-import { done, execAndThrowErrors, flatMap, map, join, sort } from "../util/util";
+import { done, execAndThrowErrors, flatMap, map, mapDefined, join, sort } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
@@ -18,8 +18,9 @@ async function main(options: Options) {
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, options: Options): Promise<TypingsData[]> {
 	const changedPackageIds = await gitChanges(log, options);
-	const changedPackages = map(changedPackageIds, (({ name, majorVersion }) =>
-		majorVersion === "latest" ? allPackages.getLatestVersion(name) : allPackages.getTypingsData({ name, majorVersion })));
+	// If a package doesn't exist, that's because it was deleted.
+	const changedPackages = mapDefined(changedPackageIds, (({ name, majorVersion }) =>
+		majorVersion === "latest" ? allPackages.tryGetLatestVersion(name) : allPackages.tryGetTypingsData({ name, majorVersion })));
 	const dependedOn = getReverseDependencies(allPackages);
 	return collectDependers(changedPackages, dependedOn);
 }
