@@ -141,7 +141,6 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
  * For "a", returns undefined.
  */
 function getDependencyFromFile(fileName: string): PackageVersion | undefined {
-	path.parse("");
 	const parts = fileName.split(path.sep);
 	if (parts.length === 1) {
 		// It's not in a typings directory at all.
