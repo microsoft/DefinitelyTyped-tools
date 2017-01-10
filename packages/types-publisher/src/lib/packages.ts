@@ -145,9 +145,11 @@ export abstract class PackageBase {
 	}
 
 	abstract readonly isLatest: boolean;
+	abstract readonly isPrerelease: boolean;
 	abstract readonly projectName: string;
 	abstract readonly declaredModules: string[];
 	abstract readonly globals: string[];
+	abstract readonly typeScriptVersion: TypeScriptVersion;
 
 	/** '@types/foo' for a package 'foo'. */
 	get fullNpmName(): string {
@@ -205,9 +207,11 @@ export class NotNeededPackage extends PackageBase {
 
 	// A not-needed package has no other versions. (TODO: allow that?)
 	get isLatest() { return true; }
+	get isPrerelease() { return false; }
 	get projectName(): string { return this.sourceRepoURL; }
 	get declaredModules(): string[] { return []; }
 	get globals(): string[] { return this.globals; }
+	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.Lowest; }
 
 	readme(useNewline = true): string {
 		const { libraryName, sourceRepoURL, name } = this;
@@ -320,6 +324,10 @@ export class TypingsData extends PackageBase {
 	get projectName(): string { return this.data.projectName; }
 	get globals(): string[] { return this.data.globals; }
 
+	get isPrerelease(): boolean {
+		return TypeScriptVersion.isPrerelease(this.typeScriptVersion);
+	}
+
 	get dependencies(): Iterable<PackageId> {
 		return this.deps();
 	}
@@ -374,6 +382,7 @@ export function packageRootPath(packageName: string, options: Options): string {
 export type TypeScriptVersion = "2.0" | "2.1";
 export namespace TypeScriptVersion {
 	export const All: TypeScriptVersion[] = ["2.0", "2.1"];
+	export const Lowest = "2.0";
 	export const Latest = "2.1";
 
 	export function isPrerelease(version: TypeScriptVersion): boolean {

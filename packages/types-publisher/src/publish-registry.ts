@@ -5,7 +5,7 @@ import * as yargs from "yargs";
 import { settings } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
-import { fetchVersionInfoFromNpm, readAdditions } from "./lib/versions";
+import { fetchLastPatchNumber, readAdditions } from "./lib/versions";
 import { writeJson } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { done } from "./util/util";
@@ -41,7 +41,7 @@ async function generateAndPublishRegistry(log: Logger, dry: boolean) {
 	// Don't include not-needed packages in the registry.
 	const typings = await AllPackages.readTypings();
 
-	const last = await fetchLastPatchNumber();
+	const last = await fetchLastPatchNumber(packageName);
 	const packageJson = generatePackageJson(last + 1);
 
 	await generate(typings, packageJson, log);
@@ -62,10 +62,6 @@ async function generate(typings: TypingsData[], packageJson: {}, log: Logger): P
 async function publish(packageJson: {}, dry: boolean): Promise<void> {
 	const client = await NpmClient.create();
 	await client.publish(outputPath, packageJson, dry);
-}
-
-async function fetchLastPatchNumber(): Promise<number> {
-	return (await fetchVersionInfoFromNpm(packageName, /*isPrerelease*/ false))!.version.patch;
 }
 
 function generatePackageJson(patch: number): {} {
