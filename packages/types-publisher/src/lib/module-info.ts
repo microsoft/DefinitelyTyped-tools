@@ -4,7 +4,7 @@ import * as ts from "typescript";
 
 import { Logger } from "../util/logging";
 import { isExternalModule } from "../util/ts";
-import { mapDefined, normalizeSlashes, stripQuotes, sort } from "../util/util";
+import { hasWindowsSlashes, joinPaths, mapDefined, normalizeSlashes, stripQuotes, sort } from "../util/util";
 
 import { readFile } from "./definition-parser";
 
@@ -61,6 +61,8 @@ export default async function getModuleInfo(packageName: string, directory: stri
 							// If we're in an external module, this is an augmentation, not a declaration.
 							if (!isExternalModule(src)) {
 								const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
+								noWindowsSlashes(packageName, name);
+
 								declaredModules.push(name);
 								log(`Found ambient external module \`"${name}"\``);
 								ambientModuleCount++;
@@ -122,7 +124,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 					break;
 
 				default:
-					throw new Error(`Bad node in ${path.join(directory, src.fileName)}: '${node.getText()}' is of kind ${ts.SyntaxKind[node.kind]}`);
+					throw new Error(`Bad node in ${joinPaths(directory, src.fileName)}: '${node.getText()}' is of kind ${ts.SyntaxKind[node.kind]}`);
 			}
 		}
 
@@ -160,7 +162,7 @@ interface ModuleInfo {
  */
 function properModuleName(folderName: string, fileName: string): string {
 	const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtension(fileName, ".d.ts");
-	return path.join(folderName, part);
+	return joinPaths(folderName, part);
 }
 
 /** Given "foo/bar/baz", return "foo". */
@@ -202,7 +204,7 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
 		all.set(filename, src);
 
 		const refs = referencedFiles(src, path.dirname(filename), directory);
-		await Promise.all(refs.map(ref => recur(filename, normalizeSlashes(ref))));
+		await Promise.all(refs.map(ref => recur(filename, ref)));
 	}
 
 	await Promise.all(entryFilenames.map(filename => recur("", filename)));
@@ -230,7 +232,10 @@ function referencedFiles(src: ts.SourceFile, subDirectory: string, directory: st
 	return out;
 
 	function addReference(ref: string): void {
-		const full = path.normalize(path.join(subDirectory, ref));
+		noWindowsSlashes(src.fileName, ref);
+		let full = path.normalize(joinPaths(subDirectory, ref));
+		// `path.normalize` may add windows slashes
+		full = normalizeSlashes(full);
 		if (full.startsWith(".")) {
 			throw new Error(
 				`In ${directory} ${src.fileName}: Definitions must use global references, not local references. (Based on reference '${ref}')`);
@@ -330,4 +335,10 @@ function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
 		}
 	});
 	return result;
+}
+
+function noWindowsSlashes(packageName: string, fileName: string): void {
+	if (hasWindowsSlashes(fileName)) {
+		throw new Error(`In ${packageName}: Use forward slash instead when referencing ${fileName}`);
+	}
 }

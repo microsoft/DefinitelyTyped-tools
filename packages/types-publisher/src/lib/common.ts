@@ -1,9 +1,8 @@
-import path = require("path");
 import { readFileSync } from "fs";
 import * as fsp from "fs-promise";
 
 import { readJson, writeJson } from "../util/io";
-import { parseJson } from "../util/util";
+import { joinPaths, parseJson } from "../util/util";
 
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");
@@ -11,8 +10,8 @@ if (process.env.LONGJOHN) {
 	longjohn.async_trace_limit = -1; // unlimited
 }
 
-export const home = path.join(__dirname, "..", "..");
-export const settings: PublishSettings = parseJson(readFileSync(path.join(home, "settings.json"), "utf-8"));
+export const home = joinPaths(__dirname, "..", "..");
+export const settings: PublishSettings = parseJson(readFileSync(joinPaths(home, "settings.json"), "utf-8"));
 
 /** Settings that may be determined dynamically. */
 export interface Options {
@@ -45,9 +44,9 @@ export async function writeDataFile(filename: string, content: {}, formatted = t
 	await writeJson(dataFilePath(filename), content, formatted);
 }
 
-const dataDir = path.join(home, "data");
+const dataDir = joinPaths(home, "data");
 function dataFilePath(filename: string) {
-	return path.join(dataDir, filename);
+	return joinPaths(dataDir, filename);
 }
 
 export function isTypingDirectory(directoryName: string) {

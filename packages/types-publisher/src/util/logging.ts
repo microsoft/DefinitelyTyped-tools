@@ -1,7 +1,8 @@
 import * as fsp from "fs-promise";
-import * as path from "path";
 
 import { home } from "../lib/common";
+import { joinPaths } from "../util/util";
+
 import { writeFile } from "./io";
 
 /** Anything capable of receiving messages is a logger. */
@@ -87,10 +88,10 @@ export function moveLogsWithErrors(dest: LoggerWithErrors, {infos, errors}: LogW
 	moveLogs(dest.error, errors, mapper);
 }
 
-const logDir = path.join(home, "logs");
+const logDir = joinPaths(home, "logs");
 
 export function logPath(logName: string) {
-	return path.join(logDir, logName);
+	return joinPaths(logDir, logName);
 }
 
 export async function writeLog(logName: string, contents: string[]): Promise<void> {

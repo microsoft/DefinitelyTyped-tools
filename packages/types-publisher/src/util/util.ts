@@ -108,8 +108,18 @@ function initArray<T>(length: number, makeElement: () => T): T[] {
 	return arr;
 }
 
+/** Always use "/" for consistency. (This affects package content hash.) */
+export function joinPaths(...paths: string[]) {
+	return paths.join("/");
+}
+
+/** Convert a path to use "/" instead of "\\" for consistency. (This affects content hash.) */
 export function normalizeSlashes(path: string): string {
 	return path.replace(/\\/g, "/");
+}
+
+export function hasWindowsSlashes(path: string): boolean {
+	return path.includes("\\");
 }
 
 export function hasOwnProperty(object: {}, propertyName: string): boolean {

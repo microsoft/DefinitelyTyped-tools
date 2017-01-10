@@ -1,12 +1,11 @@
 import * as fsp from "fs-promise";
-import * as path from "path";
 import * as yargs from "yargs";
 
 import { Options, settings } from "./lib/common";
 import { AllPackages, fullNpmName } from "./lib/packages";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
-import { done, exec, nAtATime } from "./util/util";
+import { done, exec, joinPaths, nAtATime } from "./util/util";
 import { changedPackages } from "./lib/versions";
 
 if (!module.parent) {
@@ -93,7 +92,7 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 	const [log, logResult] = quietLoggerWithErrors();
 	let passed = false;
 	try {
-		const packageDirectory = path.join(outputDirecory, packageName);
+		const packageDirectory = joinPaths(outputDirecory, packageName);
 		log.info("");
 		log.info("Processing `" + packageName + "`...");
 		await fsp.mkdirp(packageDirectory);
@@ -119,7 +118,7 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 
 async function writePackage(packageDirectory: string, packageName: string) {
 	// Write package.json
-	await writeJson(path.join(packageDirectory, "package.json"), {
+	await writeJson(joinPaths(packageDirectory, "package.json"), {
 		name: `${packageName}_test`,
 		version: "1.0.0",
 		description: "test",
@@ -130,7 +129,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 	});
 
 	// Write tsconfig.json
-	await writeJson(path.join(packageDirectory, "tsconfig.json"), {
+	await writeJson(joinPaths(packageDirectory, "tsconfig.json"), {
 		compilerOptions: {
 			module: "commonjs",
 			target: "es5",
@@ -142,7 +141,7 @@ async function writePackage(packageDirectory: string, packageName: string) {
 	});
 
 	// Write index.ts
-	await writeFile(path.join(packageDirectory, "index.ts"), `/// <reference types="${packageName}" />\r\n`);
+	await writeFile(joinPaths(packageDirectory, "index.ts"), `/// <reference types="${packageName}" />\r\n`);
 }
 
 // Returns whether the command succeeded.

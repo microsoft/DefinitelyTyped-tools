@@ -1,11 +1,10 @@
 import assert = require("assert");
-import * as path from "path";
 
 import { addNpmTagsForPackage } from "../npmTags";
 import { readFileAndWarn } from "../lib/common";
 import Versions from "../lib/versions";
 import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "../util/logging";
-import { exec } from "../util/util";
+import { exec, joinPaths } from "../util/util";
 
 import { AnyPackage } from "./packages";
 import NpmClient from "./npm-client";
@@ -18,7 +17,7 @@ export default async function publishPackage(
 	log(`Publishing ${pkg.desc}`);
 
 	const packageDir = pkg.outputDirectory;
-	const packageJson = await readFileAndWarn("generate", path.join(packageDir, "package.json"));
+	const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
 
 	await client.publish(packageDir, packageJson, dry);
 

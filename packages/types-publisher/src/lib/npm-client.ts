@@ -1,10 +1,10 @@
 import assert = require("assert");
 import RegClient = require("npm-registry-client");
-import * as path from "path";
 import * as url from "url";
 
 import { readFile } from "../util/io";
 import { createTgz } from "../util/tgz";
+import { joinPaths } from "../util/util";
 
 import { settings } from "./common";
 import { getSecret, Secret } from "./secrets";
@@ -25,7 +25,7 @@ export default class NpmClient {
 	private constructor(private client: RegClient, private auth: RegClient.Credentials) {}
 
 	async publish(publishedDirectory: string, packageJson: {}, dry: boolean): Promise<void> {
-		const readme = await readFile(path.join(publishedDirectory, "README.md"));
+		const readme = await readFile(joinPaths(publishedDirectory, "README.md"));
 
 		return new Promise<void>((resolve, reject) => {
 			const body = createTgz(publishedDirectory, reject);

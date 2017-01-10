@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { readFile, readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
-import { hasOwnProperty } from "../util/util";
+import { hasOwnProperty, joinPaths } from "../util/util";
 
 import { Options, settings } from "./common";
 import { AllPackages, AnyPackage, DependencyVersion, TypingsData, NotNeededPackage, fullNpmName } from "./packages";
@@ -42,7 +42,7 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 	return logResult();
 
 	async function writeOutputFile(filename: string, content: string): Promise<void> {
-		const full = path.join(outputPath, filename);
+		const full = joinPaths(outputPath, filename);
 		const dir = path.dirname(full);
 		if (dir !== outputPath) {
 			await fsp.mkdirp(dir);
@@ -69,7 +69,7 @@ async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Version
 	return logResult();
 
 	function writeOutputFile(filename: string, content: string): Promise<void> {
-		return writeFile(path.join(outputPath, filename), content);
+		return writeFile(joinPaths(outputPath, filename), content);
 	}
 }
 

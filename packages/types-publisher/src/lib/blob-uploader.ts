@@ -3,7 +3,7 @@ import * as fsp from "fs-promise";
 import * as path from "path";
 
 import { Logger, logger, logPath, writeLog } from "../util/logging";
-import { unique } from "../util/util";
+import { joinPaths, unique } from "../util/util";
 
 import BlobWriter, { urlOfBlob } from "./azure-container";
 
@@ -54,8 +54,8 @@ async function uploadDirectory(
 		files = files.filter(filter);
 	}
 	return await Promise.all(files.map(fileName => {
-		const fullPath = path.join(dirPath, fileName);
-		const blobName = `${uploadedDirPath}/${fileName}`;
+		const fullPath = joinPaths(dirPath, fileName);
+		const blobName = joinPaths(uploadedDirPath, fileName);
 		return logAndUploadFile(container, blobName, fullPath, log);
 	}));
 }

@@ -1,8 +1,7 @@
 import assert = require("assert");
-import * as path from "path";
 
 import { readJson } from "../util/io";
-import { mapValues } from "../util/util";
+import { joinPaths, mapValues } from "../util/util";
 
 import { Options, home, readDataFile, settings } from "./common";
 import { Semver } from "./versions";
@@ -168,7 +167,7 @@ export abstract class PackageBase {
 	}
 
 	get outputDirectory() {
-		return path.join(outputDir, this.desc);
+		return joinPaths(outputDir, this.desc);
 	}
 }
 
@@ -176,7 +175,7 @@ export function fullNpmName(packageName: string) {
 	return `@${settings.scopeName}/${packageName}`;
 }
 
-const outputDir = path.join(home, settings.outputPath);
+const outputDir = joinPaths(home, settings.outputPath);
 
 interface NotNeededPackageRaw extends BaseRaw {
 	/**
@@ -345,11 +344,11 @@ export class TypingsData extends PackageBase {
 	}
 
 	directoryPath(options: Options): string {
-		return path.join(options.definitelyTypedPath, this.subDirectoryPath);
+		return joinPaths(options.definitelyTypedPath, this.subDirectoryPath);
 	}
 
 	filePath(fileName: string, options: Options): string {
-		return path.join(this.directoryPath(options), fileName);
+		return joinPaths(this.directoryPath(options), fileName);
 	}
 }
 
@@ -367,7 +366,7 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 }
 
 function notNeededPackagesPath(options: Options) {
-	return path.join(options.definitelyTypedPath, "notNeededPackages.json");
+	return joinPaths(options.definitelyTypedPath, "notNeededPackages.json");
 }
 
 async function readNotNeededPackages(options: Options): Promise<NotNeededPackageRaw[]> {
@@ -376,7 +375,7 @@ async function readNotNeededPackages(options: Options): Promise<NotNeededPackage
 
 /** Path to the *root* for a given package. Path to a particular version may differ. */
 export function packageRootPath(packageName: string, options: Options): string {
-	return path.join(options.definitelyTypedPath, packageName);
+	return joinPaths(options.definitelyTypedPath, packageName);
 }
 
 export type TypeScriptVersion = "2.0" | "2.1";

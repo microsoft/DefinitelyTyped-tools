@@ -1,10 +1,9 @@
 import * as fsp from "fs-promise";
-import * as path from "path";
 import * as ts from "typescript";
 
 import { readFile as readFileText } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, join, mapDefined, mapAsyncOrdered, makeObject } from "../util/util";
+import { computeHash, hasWindowsSlashes, join, joinPaths, mapDefined, mapAsyncOrdered, makeObject } from "../util/util";
 
 import { Options } from "./common";
 import { parseHeaderOrFail } from "./header";
@@ -29,7 +28,7 @@ export async function getTypingInfo(packageName: string, options: Options): Prom
 			throw new Error(`The latest major version is ${latestVersion}, but a directory v${latestVersion} exists.`);
 		}
 
-		const directory = path.join(rootDirectory, directoryName);
+		const directory = joinPaths(rootDirectory, directoryName);
 		const files = await fsp.readdir(directory);
 		const { data, logs } = await getTypingData(packageName, directory, files, majorVersion);
 		log(`Parsing older version ${majorVersion}`);
@@ -93,11 +92,18 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
 	const dependencies = await calculateDependencies(packageName, directory, dependenciesSet, oldMajorVersion);
 
-	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
+	const hasPackageJson = await fsp.exists(joinPaths(directory, "package.json"));
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
 	const allFiles = new Set(allContentHashFiles.concat(testFiles, ["tsconfig.json", "tslint.json"]));
 	await checkAllFilesUsed(directory, ls, allFiles);
+
+	// Double-check that no windows "\\" broke in.
+	for (const fileName of allContentHashFiles) {
+		if (hasWindowsSlashes(fileName)) {
+			throw new Error(`In ${packageName}: windows slash detected in ${fileName}`);
+		}
+	}
 
 	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
 	const data: TypingsDataRaw = {
@@ -120,7 +126,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 }
 
 async function entryFilesFromTsConfig(packageName: string, directory: string): Promise<{ typeFiles: string[], testFiles: string[] }> {
-	const tsconfigPath = path.join(directory, "tsconfig.json");
+	const tsconfigPath = joinPaths(directory, "tsconfig.json");
 	const tsconfig = await fsp.readJson(tsconfigPath);
 	if (tsconfig.include) {
 		throw new Error(`${tsconfigPath}: Don't use "include", must use "files"`);
@@ -158,7 +164,7 @@ async function entryFilesFromTsConfig(packageName: string, directory: string): P
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
 async function calculateDependencies(packageName: string, directory: string, dependencies: Set<string>, oldMajorVersion: number | undefined
 	): Promise<DependenciesRaw> {
-	const tsconfig: { compilerOptions: ts.CompilerOptions } = await fsp.readJSON(path.join(directory, "tsconfig.json"));
+	const tsconfig: { compilerOptions: ts.CompilerOptions } = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
 	const { paths } = tsconfig.compilerOptions;
 
 	for (const key in paths!) {
@@ -212,7 +218,7 @@ async function hash(directory: string, files: string[]): Promise<string> {
 }
 
 export async function readFile(directory: string, fileName: string): Promise<string> {
-	const full = path.join(directory, fileName);
+	const full = joinPaths(directory, fileName);
 	const text = await readFileText(full);
 	if (text.charCodeAt(0) === 0xFEFF) {
 		const commands = [
@@ -230,7 +236,7 @@ async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set
 	if (ls.includes(unusedFilesName)) {
 		const lsMinusUnusedFiles = new Set(ls);
 		lsMinusUnusedFiles.delete(unusedFilesName);
-		const unusedFiles = (await fsp.readFile(path.join(directory, unusedFilesName), "utf-8")).split(/\r?\n/g);
+		const unusedFiles = (await fsp.readFile(joinPaths(directory, unusedFilesName), "utf-8")).split(/\r?\n/g);
 		for (const unusedFile of unusedFiles) {
 			if (!lsMinusUnusedFiles.delete(unusedFile)) {
 				throw new Error(`In ${directory}: file ${unusedFile} listed in ${unusedFilesName} does not exist.`);
@@ -244,14 +250,14 @@ async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set
 			continue;
 		}
 
-		const stat = await fsp.stat(path.join(directory, lsEntry));
+		const stat = await fsp.stat(joinPaths(directory, lsEntry));
 		if (stat.isDirectory()) {
 			// We allow a "scripts" directory to be used for scripts.
 			if (lsEntry === "node_modules" || lsEntry === "scripts") {
 				continue;
 			}
 
-			const subdir = path.join(directory, lsEntry);
+			const subdir = joinPaths(directory, lsEntry);
 			const lssubdir = await fsp.readdir(subdir);
 			if (lssubdir.length === 0) {
 				throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
