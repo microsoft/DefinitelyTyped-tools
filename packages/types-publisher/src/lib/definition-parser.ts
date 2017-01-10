@@ -1,9 +1,10 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
+import * as ts from "typescript";
 
 import { readFile as readFileText } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, join, mapDefined, mapAsyncOrdered } from "../util/util";
+import { computeHash, join, mapDefined, mapAsyncOrdered, makeObject } from "../util/util";
 
 import { Options } from "./common";
 import { parseHeaderOrFail } from "./header";
@@ -30,7 +31,7 @@ export async function getTypingInfo(packageName: string, options: Options): Prom
 
 		const directory = path.join(rootDirectory, directoryName);
 		const files = await fsp.readdir(directory);
-		const { data, logs } = await getTypingData(packageName, directory, files);
+		const { data, logs } = await getTypingData(packageName, directory, files, majorVersion);
 		log(`Parsing older version ${majorVersion}`);
 		moveLogs(log, logs, (msg) => "    " + msg);
 
@@ -75,7 +76,8 @@ export function parseMajorVersionFromDirectoryName(directoryName: string): numbe
  * @param directory Full path to the directory for this package; e.g. "../DefinitelyTyped/foo/v3".
  * @param ls All file/directory names in `directory`.
  */
-async function getTypingData(packageName: string, directory: string, ls: string[]): Promise<{ data: TypingsDataRaw, logs: Log }> {
+async function getTypingData(packageName: string, directory: string, ls: string[], oldMajorVersion?: number
+	): Promise<{ data: TypingsDataRaw, logs: Log }> {
 	const [log, logResult] = quietLogger();
 
 	log(`Reading contents of ${directory}`);
@@ -89,7 +91,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory);
 	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
-	const dependencies = await calculateDependencies(packageName, directory, dependenciesSet);
+	const dependencies = await calculateDependencies(packageName, directory, dependenciesSet, oldMajorVersion);
 
 	const hasPackageJson = await fsp.exists(path.join(directory, "package.json"));
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
@@ -154,34 +156,41 @@ async function entryFilesFromTsConfig(packageName: string, directory: string): P
 }
 
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
-async function calculateDependencies(packageName: string, directory: string, dependencies: Set<string>): Promise<DependenciesRaw> {
-	const tsconfig = await fsp.readJSON(path.join(directory, "tsconfig.json"));
-	const res: DependenciesRaw = {};
+async function calculateDependencies(packageName: string, directory: string, dependencies: Set<string>, oldMajorVersion: number | undefined
+	): Promise<DependenciesRaw> {
+	const tsconfig: { compilerOptions: ts.CompilerOptions } = await fsp.readJSON(path.join(directory, "tsconfig.json"));
+	const { paths } = tsconfig.compilerOptions;
 
-	const { paths } = tsconfig;
-	for (const key in paths) {
+	for (const key in paths!) {
 		if (key !== packageName && !dependencies.has(key)) {
 			throw new Error(`In ${packageName}: path mapping for '${key}' is not used.`);
 		}
 	}
 
-	for (const dependency of dependencies) {
-		const path = paths && paths[dependency];
-		const version = path === undefined ? "*" : parseDependencyVersionFromPath(packageName, dependency, paths[dependency]);
-		res[dependency] = version;
+	if (oldMajorVersion !== undefined) {
+		const selfPath: string[] | undefined = paths && paths[packageName];
+		const version = selfPath === undefined ? undefined : parseDependencyVersionFromPath(packageName, packageName, selfPath);
+		if (version !== oldMajorVersion) {
+			console.log(version, oldMajorVersion);
+			const correctPathMapping = `${packageName}/v${oldMajorVersion}`;
+			throw new Error(`${packageName}: Must have a "paths" entry of "${packageName}": ${JSON.stringify([correctPathMapping])}`);
+		}
 	}
 
-	return res;
+	return makeObject(dependencies, dependency => {
+		const path = paths && paths[dependency];
+		return path === undefined ? "*" : parseDependencyVersionFromPath(packageName, dependency, path);
+	});
 }
 
 // e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
-function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {
-	let short = dependencyPath;
-	for (let x = withoutStart(short, "../"); x !== undefined; x = withoutStart(short, "../")) {
-		short = x;
+function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPaths: string[]): number {
+	if (dependencyPaths.length !== 1) {
+		throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
 	}
 
-	const versionString = withoutStart(short, dependencyName + "/");
+	const dependencyPath = dependencyPaths[0];
+	const versionString = withoutStart(dependencyPath, dependencyName + "/");
 	const version = versionString === undefined ? undefined : parseMajorVersionFromDirectoryName(versionString);
 	if (version === undefined) {
 		throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);

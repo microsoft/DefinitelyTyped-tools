@@ -1,5 +1,6 @@
 import * as fsp from "fs-promise";
 import * as path from "path";
+import * as ts from "typescript";
 import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
@@ -152,7 +153,7 @@ async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: s
 	return error && { message: `${error.message}\n${stdout}\n${stderr}` };
 }
 
-function checkTsconfig(tsconfig: any) {
+function checkTsconfig(tsconfig: { compilerOptions: ts.CompilerOptions }) {
 	const options = tsconfig.compilerOptions;
 	const mustHave = {
 		module: "commonjs",
