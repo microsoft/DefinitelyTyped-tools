@@ -1,15 +1,15 @@
 import * as semver from "semver";
-import { settings } from "./lib/common";
+import { Options, settings } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
 import { best, done, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main(true));
+	done(main(true, Options.defaults));
 }
 
-export default async function main(includeNpmChecks: boolean): Promise<void> {
+export default async function main(includeNpmChecks: boolean, options: Options): Promise<void> {
 	const packages = await AllPackages.readTypings();
 	const [log, logResult] = logger();
 	check(packages, info => info.libraryName, "Library Name", log);
@@ -17,7 +17,8 @@ export default async function main(includeNpmChecks: boolean): Promise<void> {
 	if (includeNpmChecks) {
 		await nAtATime(10, packages, pkg => checkNpm(pkg, log), {
 			name: "Checking for typed packages...",
-			flavor: pkg => pkg.desc
+			flavor: pkg => pkg.desc,
+			options
 		});
 	}
 	await writeLog("conflicts.md", logResult());

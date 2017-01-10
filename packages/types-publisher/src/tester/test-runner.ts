@@ -32,7 +32,7 @@ export function parseNProcesses(): number | undefined {
 
 export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	if (runFromDefinitelyTyped) {
-		return { definitelyTypedPath: process.cwd() };
+		return { definitelyTypedPath: process.cwd(), progress: false };
 	} else {
 		return Options.defaults;
 	}

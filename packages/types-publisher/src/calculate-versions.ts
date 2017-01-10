@@ -14,7 +14,7 @@ if (!module.parent) {
 export default async function main(forceUpdate: boolean, options: Options): Promise<void> {
 	console.log("=== Calculating versions ===");
 
-	const { changes, additions, versions } = await Versions.determineFromNpm(await AllPackages.read(options), consoleLogger.info, forceUpdate);
+	const { changes, additions, versions } = await Versions.determineFromNpm(await AllPackages.read(options), consoleLogger.info, forceUpdate, options);
 	await writeChanges(changes, additions);
 	await versions.save();
 }

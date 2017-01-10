@@ -18,10 +18,15 @@ export interface Options {
 	// e.g. '../DefinitelyTyped'
 	// This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
 	definitelyTypedPath: string;
+
+	// Whether to show progress bars. Good when running locally, bad when running on travis / azure.
+	progress: boolean;
 }
 export namespace Options {
+	/** Options for running locally. */
 	export const defaults: Options = {
 		definitelyTypedPath: "../DefinitelyTyped",
+		progress: true
 	};
 }
 

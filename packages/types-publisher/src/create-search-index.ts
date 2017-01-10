@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import { writeDataFile } from "./lib/common";
+import { Options, writeDataFile } from "./lib/common";
 import { AllPackages } from "./lib/packages";
 import { done, nAtATime } from "./util/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
@@ -12,15 +12,15 @@ if (!module.parent) {
 		done(doSingle(single, skipDownloads));
 	} else {
 		const full = yargs.argv.full;
-		done(main(skipDownloads, full));
+		done(main(skipDownloads, full, Options.defaults));
 	}
 }
 
-export default async function main(skipDownloads: boolean, full: boolean): Promise<void> {
+export default async function main(skipDownloads: boolean, full: boolean, options: Options): Promise<void> {
 	const packages = await AllPackages.readTypings();
 	console.log(`Generating search index...`);
 
-	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), { name: "Indexing...", flavor: pkg => pkg.desc });
+	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), { name: "Indexing...", flavor: pkg => pkg.desc, options });
 	// Most downloads first
 	records.sort((a, b) => b.d - a.d);
 

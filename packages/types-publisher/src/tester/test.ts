@@ -16,6 +16,6 @@ if (!module.parent) {
 async function main(options: Options, nProcesses?: number): Promise<void> {
 	await clean();
 	await parseDefinitions(options);
-	await checkParseResults(/*includeNpmChecks*/false);
+	await checkParseResults(/*includeNpmChecks*/false, options);
 	await runTests(options, nProcesses);
 }

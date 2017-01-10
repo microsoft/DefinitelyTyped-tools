@@ -25,10 +25,10 @@ export default async function full(client: NpmClient, dry: boolean, timeStamp: s
 	await clean();
 	await getDefinitelyTyped(options);
 	await parseDefinitions(options);
-	await checkParseResults(/*includeNpmChecks*/ false);
+	await checkParseResults(/*includeNpmChecks*/ false, options);
 	await calculateVersions(/*forceUpdate*/ false, options);
 	await generatePackages(options);
-	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false);
+	await createSearchIndex(/*skipDownloads*/ false, /*full*/ false, options);
 	await publishPackages(client, dry, options);
 	await publishRegistry();
 	await validate(options);

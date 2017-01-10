@@ -2,21 +2,22 @@ import assert = require("assert");
 import oboe = require("oboe");
 
 import { packageHasTypes } from "./check-parse-results";
-import { settings, writeDataFile } from "./lib/common";
+import { Options, settings, writeDataFile } from "./lib/common";
 import ProgressBar, { strProgress } from "./util/progress";
 import { done, filterNAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main());
+	done(main(Options.defaults));
 }
 
 /** Prints out every package on NPM with 'types'. */
-async function main() {
+async function main(options: Options) {
 	const all = await allNpmPackages();
 	await writeDataFile("all-npm-packages.json", all);
 	const allTyped = await filterNAtATime(10, all, packageHasTypes, {
 		name: "Checking for types...",
-		flavor: (name, isTyped) => isTyped ? name : undefined
+		flavor: (name, isTyped) => isTyped ? name : undefined,
+		options
 	});
 	await writeDataFile("all-typed-packages.json", allTyped);
 	console.log(allTyped.join("\n"));

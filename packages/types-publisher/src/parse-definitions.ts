@@ -36,7 +36,7 @@ export default async function main(options: Options): Promise<void> {
 
 	const typings: { [name: string]: TypingsVersionsRaw } = {};
 
-	await nAtATime(1, packageNames, use, { name: "Parsing...", flavor: name => name });
+	await nAtATime(1, packageNames, use, { name: "Parsing...", flavor: name => name, options });
 	async function use(packageName: string): Promise<void> {
 		const { data, logs } = await parser.getTypingInfo(packageName, options);
 		typings[packageName] = data;

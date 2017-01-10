@@ -10,6 +10,7 @@ import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
 import { inspect } from "util";
 
+import { Options } from "../lib/common";
 import ProgressBar from "./progress";
 
 export function parseJson(text: string): any {
@@ -31,10 +32,11 @@ export const numberOfOsProcesses = os.cpus().length;
 interface ProgressOptions<T, U> {
 	name: string;
 	flavor(input: T, output: U): string | undefined;
+	options: Options;
 }
 
 export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>, progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
-	const progress = progressOptions && new ProgressBar({ name: progressOptions.name });
+	const progress = progressOptions && progressOptions.options.progress ? new ProgressBar({ name: progressOptions.name }) : undefined;
 
 	const results = new Array(inputs.length);
 	// We have n "threads" which each run `continuouslyWork`.
