@@ -51,10 +51,10 @@ function verboseRecord(r: SearchRecord): {} {
 	});
 }
 
-function renameProperties(obj: {}, replacers: { [name: string]: string }): {} {
+function renameProperties(obj: any, replacers: { [name: string]: string }): {} {
 	const out: any = {};
 	for (const key of Object.getOwnPropertyNames(obj)) {
-		out[replacers[key]] = (<any> obj)[key];
+		out[replacers[key]] = obj[key];
 	}
 	return out;
 }

@@ -27,7 +27,7 @@ export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.
 }
 
 function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-	const packer = Pack(<any> { noProprietary: true })
+	const packer = Pack({ noProprietary: true } as any)
 		.on("error", onError);
 
 	return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission } as any)

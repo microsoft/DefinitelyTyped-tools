@@ -45,6 +45,7 @@ export default class Versions {
 				log(`Added: ${pkg.desc}`);
 				additions.push(pkg.id);
 			}
+			// tslint:disable-next-line:prefer-const
 			let { version, latestNonPrerelease, contentHash, deprecated } = versionInfo || defaultVersionInfo(isPrerelease);
 			assert(!deprecated, `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
 			if (forceUpdate || !versionInfo || pkg.major !== version.major || pkg.minor !== version.minor || pkg.contentHash !== contentHash) {
@@ -59,6 +60,7 @@ export default class Versions {
 		await nAtATime(25, allPackages.allNotNeeded(), getNotNeededVersion, { name: "Versions for not-needed packages...", flavor });
 		async function getNotNeededVersion(pkg: NotNeededPackage) {
 			const isPrerelease = false; // Not-needed packages are never prerelease.
+			// tslint:disable-next-line:prefer-const
 			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
 			if (!deprecated) {
 				log(`Now deprecated: ${pkg.name}`);

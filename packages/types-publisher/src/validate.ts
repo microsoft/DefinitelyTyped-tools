@@ -34,7 +34,7 @@ export default async function main(options: Options): Promise<void> {
 }
 
 async function doAll(): Promise<void> {
-	//todo: validate older versions too
+	// todo: validate older versions too
 	const packageNames = (await AllPackages.readTypings()).map(t => t.name).sort();
 	await doValidate(packageNames);
 }

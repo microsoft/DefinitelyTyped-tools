@@ -32,7 +32,8 @@ async function tagAll(dry: boolean) {
 	// Don't tag notNeeded packages
 }
 
-export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, version: string, client: NpmClient, log: Logger, dry: boolean): Promise<void> {
+export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, version: string, client: NpmClient, log: Logger, dry: boolean
+	): Promise<void> {
 	const tags = TypeScriptVersion.tagsToUpdate(pkg.typeScriptVersion);
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
@@ -50,7 +51,7 @@ export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, 
 		}
 	}
 
-	async function tag(version: string, tag: string) {
-		await client.tag(pkg.fullEscapedNpmName, version, tag);
+	async function tag(versionString: string, tag: string) {
+		await client.tag(pkg.fullEscapedNpmName, versionString, tag);
 	}
 }

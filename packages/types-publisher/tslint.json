@@ -6,6 +6,8 @@
 		"max-line-length": [true, 150],
 		"no-var-requires": false,
 		"one-line": false,
+		// https://github.com/palantir/tslint/issues/2001
+		"space-before-function-paren": [true, {"asyncArrow": "always"}],
 		"variable-name": false
 	}
 }

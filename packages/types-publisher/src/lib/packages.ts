@@ -36,7 +36,7 @@ export class AllPackages {
 		private readonly notNeeded: NotNeededPackage[]) {}
 
 	getAnyPackage(id: PackageId): AnyPackage {
-		let pkg: AnyPackage | undefined = this.tryGetTypingsData(id) || this.notNeeded.find(p => p.name === id.name);
+		const pkg: AnyPackage | undefined = this.tryGetTypingsData(id) || this.notNeeded.find(p => p.name === id.name);
 		if (!pkg) {
 			throw new Error(`Expected to find a package named ${id.name}`);
 		}

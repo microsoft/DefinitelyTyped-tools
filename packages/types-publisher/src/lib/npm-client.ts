@@ -32,7 +32,7 @@ export default class NpmClient {
 			const metadata = Object.assign({ readme }, packageJson);
 
 			const params = {
-				access: <"public"> "public",
+				access: "public" as "public",
 				auth: this.auth,
 				metadata,
 				body

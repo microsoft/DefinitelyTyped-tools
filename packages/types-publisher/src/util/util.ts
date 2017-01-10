@@ -191,7 +191,7 @@ export function computeHash(content: string): string {
 
 	const h = crypto.createHash("sha256");
 	h.update(content, "utf8");
-	return <string> h.digest("hex");
+	return h.digest("hex");
 }
 
 export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) => V2): Map<K, V2> {
@@ -203,7 +203,7 @@ export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) =
 }
 
 export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V) {
-	let values = map.get(key);
+	const values = map.get(key);
 	if (values) {
 		values.push(value);
 	} else {

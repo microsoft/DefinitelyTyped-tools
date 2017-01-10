@@ -83,7 +83,7 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 
 function patchDefinitionFile(input: string): string {
 	const pathToLibrary = /\/\/\/ <reference path="..\/(\w.+)\/.+"/gm;
-	let output = input.replace(pathToLibrary, '/// <reference types="$1"');
+	const output = input.replace(pathToLibrary, '/// <reference types="$1"');
 	return output;
 }
 
@@ -103,7 +103,7 @@ interface PartialPackageJson {
 async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages, options: Options): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const pkgPath = typing.filePath("package.json", options);
-	let pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
+	const pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
 	const dependencies = pkg.dependencies || {};
 	const peerDependencies = pkg.peerDependencies || {};
