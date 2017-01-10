@@ -26,6 +26,11 @@ export namespace Options {
 		definitelyTypedPath: "../DefinitelyTyped",
 		progress: true
 	};
+
+	export const azure: Options = {
+		definitelyTypedPath: "../DefinitelyTyped",
+		progress: false
+	};
 }
 
 export function readDataFile(generatedBy: string, fileName: string): Promise<any> {

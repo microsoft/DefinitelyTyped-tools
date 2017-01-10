@@ -21,7 +21,7 @@ export default async function main(): Promise<void> {
 	}
 	else {
 		console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
-		const s = await server(key, githubAccessToken, dry, Options.defaults);
+		const s = await server(key, githubAccessToken, dry, Options.azure);
 		await setIssueOk(githubAccessToken);
 		console.log(`Listening on port ${port}`);
 		s.listen(port);
