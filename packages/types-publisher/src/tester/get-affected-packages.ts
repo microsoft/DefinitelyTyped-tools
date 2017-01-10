@@ -1,8 +1,9 @@
 import * as path from "path";
 
-import { Options, isTypingDirectory, settings } from "../lib/common";
+import { Options, isTypingDirectory } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
+import { sourceBranch } from "../lib/settings";
 import { Logger } from "../util/logging";
 import { done, execAndThrowErrors, flatMap, map, join, sort } from "../util/util";
 
@@ -114,17 +115,17 @@ If editing this code, be sure to test on both full and shallow clones.
 */
 async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 	try {
-		await run(`git rev-parse --verify ${settings.sourceBranch}`);
+		await run(`git rev-parse --verify ${sourceBranch}`);
 		// If this succeeds, we got the full clone.
 	} catch (_) {
 		// This is a shallow clone.
-		await run(`git fetch origin ${settings.sourceBranch}`);
-		await run(`git branch ${settings.sourceBranch} FETCH_HEAD`);
+		await run(`git fetch origin ${sourceBranch}`);
+		await run(`git branch ${sourceBranch} FETCH_HEAD`);
 	}
 
 	// `git diff foo...bar` gets all changes from X to `bar` where X is the common ancestor of `foo` and `bar`.
 	// Source: https://git-scm.com/docs/git-diff
-	const diff = await run(`git diff ${settings.sourceBranch}...HEAD --name-only`);
+	const diff = await run(`git diff ${sourceBranch}...HEAD --name-only`);
 	return diff.trim().split("\n");
 
 	async function run(cmd: string): Promise<string> {

@@ -1,6 +1,6 @@
 import { KeyVaultClient, KeyVaultCredentials } from "azure-keyvault";
 import { AuthenticationContext } from "adal-node";
-import { settings } from "./common";
+import { azureKeyvault } from "./settings";
 
 export enum Secret {
 	/**
@@ -48,7 +48,7 @@ function azureSecretName(secret: Secret): string {
 
 export function getSecret(secret: Secret): Promise<string> {
 	const client = getClient();
-	const secretUrl = `${settings.azureKeyvault}/secrets/${azureSecretName(secret)}`;
+	const secretUrl = `${azureKeyvault}/secrets/${azureSecretName(secret)}`;
 
 	return new Promise((resolve, reject) => {
 		client.getSecret(secretUrl, (error, bundle) => {

@@ -4,8 +4,9 @@ import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
 import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
 
-import { Options, readDataFile, settings, writeDataFile } from "./common";
+import { Options, readDataFile, writeDataFile } from "./common";
 import { AllPackages, AnyPackage, PackageId, MajorMinor, NotNeededPackage, TypeScriptVersion, TypingsData } from "./packages";
+import { npmRegistry } from "./settings";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
@@ -177,7 +178,7 @@ export async function fetchLastPatchNumber(packageName: string): Promise<number>
 async function fetchVersionInfoFromNpm(
 	escapedPackageName: string, isPrerelease: boolean, newMajorAndMinor?: MajorMinor): Promise<VersionInfo | undefined> {
 
-	const uri = settings.npmRegistry + escapedPackageName;
+	const uri = npmRegistry + escapedPackageName;
 	const info = await fetchJson(uri, { retries: true });
 
 	if (info.error) {

@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
 import * as yargs from "yargs";
 
-import { settings } from "./lib/common";
 import { getSecret, Secret } from "./lib/secrets";
+import { sourceBranch } from "./lib/settings";
 import { expectedSignature } from "./lib/webhook-server";
 import { done } from "./util/util";
 
@@ -23,7 +23,7 @@ if (!module.parent) {
 
 async function main(url: string): Promise<void> {
 	const key = await getSecret(Secret.GITHUB_SECRET);
-	const body = JSON.stringify({ ref: `refs/heads/${settings.sourceBranch}` });
+	const body = JSON.stringify({ ref: `refs/heads/${sourceBranch}` });
 	const headers = { "x-hub-signature": expectedSignature(key, body) };
 	const resp = await fetch(url, { method: "POST", body, headers });
 	console.log(await resp.text());

@@ -7,14 +7,12 @@ import { streamDone, streamOfString, stringOfStream } from "../util/io";
 import { gzip, unGzip } from "../util/tgz";
 import { parseJson } from "../util/util";
 
-import { settings } from "./common";
 import { getSecret, Secret } from "./secrets";
-
-const name = settings.azureContainer;
+import { azureContainer, azureStorageAccount } from "./settings";
 
 export default class BlobWriter {
 	static async create(): Promise<BlobWriter> {
-		return new BlobWriter(createBlobService(settings.azureStorageAccount, await getSecret(Secret.AZURE_STORAGE_ACCESS_KEY)));
+		return new BlobWriter(createBlobService(azureStorageAccount, await getSecret(Secret.AZURE_STORAGE_ACCESS_KEY)));
 	}
 
 	private constructor(private service: BlobService) {}
@@ -38,7 +36,7 @@ export default class BlobWriter {
 
 	ensureCreated(options: CreateContainerOptions): Promise<void> {
 		return promisifyErrorOrResult<ContainerResult>(cb =>
-			this.service.createContainerIfNotExists(name, options, cb)) as any as Promise<void>;
+			this.service.createContainerIfNotExists(azureContainer, options, cb)) as any as Promise<void>;
 	}
 
 	createBlobFromFile(blobName: string, fileName: string): Promise<void> {
@@ -52,7 +50,7 @@ export default class BlobWriter {
 	async listBlobs(prefix: string): Promise<BlobResult[]> {
 		const once = (token: ContinuationToken | undefined) =>
 			promisifyErrorOrResult<ListBlobsResult>(cb =>
-				this.service.listBlobsSegmentedWithPrefix(name, prefix, token, cb));
+				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token, cb));
 
 		const out: BlobResult[] = [];
 		let token: ContinuationToken | undefined = undefined;
@@ -67,7 +65,7 @@ export default class BlobWriter {
 
 	deleteBlob(blobName: string): Promise<void> {
 		return promisifyErrorOrResponse(cb =>
-			this.service.deleteBlob(name, blobName, cb));
+			this.service.deleteBlob(azureContainer, blobName, cb));
 	}
 
 	private createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
@@ -77,7 +75,7 @@ export default class BlobWriter {
 				contentType: "application/json; charset=utf-8"
 			}
 		};
-		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(name, blobName, options)));
+		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(azureContainer, blobName, options)));
 	}
 }
 
@@ -107,7 +105,7 @@ export async function readJsonBlob(blobName: string): Promise<any> {
 }
 
 export function urlOfBlob(blobName: string): string {
-	return `https://${name}.blob.core.windows.net/${name}/${blobName}`;
+	return `https://${azureContainer}.blob.core.windows.net/${azureContainer}/${blobName}`;
 }
 
 function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Promise<A> {

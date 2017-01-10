@@ -1,7 +1,8 @@
 import * as fsp from "fs-promise";
 import { Clone, Ignore, Repository } from "nodegit";
 
-import { Options, settings } from "./lib/common";
+import { Options } from "./lib/common";
+import { sourceBranch, sourceRepository } from "./lib/settings";
 import { Logger } from "./util/logging";
 import { done } from "./util/util";
 
@@ -19,24 +20,24 @@ async function getRepo(options: Options): Promise<Repository> {
 	if (await fsp.exists(options.definitelyTypedPath)) {
 		const repo = await Repository.open(options.definitelyTypedPath);
 		const currentBranch = (await repo.getCurrentBranch()).name();
-		const correctBranch = `refs/heads/${settings.sourceBranch}`;
+		const correctBranch = `refs/heads/${sourceBranch}`;
 		if (currentBranch !== correctBranch) {
 			throw new Error(`Need to checkout ${correctBranch}, currently on ${currentBranch}`);
 		}
 		return repo;
 	}
 	else {
-		const repo = await Clone(settings.sourceRepository, options.definitelyTypedPath);
-		await repo.checkoutBranch(settings.sourceBranch);
+		const repo = await Clone(sourceRepository, options.definitelyTypedPath);
+		await repo.checkoutBranch(sourceBranch);
 		return repo;
 	}
 }
 
 async function pull(repo: Repository, log: Logger): Promise<void> {
-	log(`Fetching changes from ${settings.sourceBranch}`);
+	log(`Fetching changes from ${sourceBranch}`);
 	await repo.fetchAll();
 	log(`Merging changes`);
-	await repo.mergeBranches(settings.sourceBranch, `origin/${settings.sourceBranch}`);
+	await repo.mergeBranches(sourceBranch, `origin/${sourceBranch}`);
 }
 
 async function checkStatus(repo: Repository): Promise<void> {

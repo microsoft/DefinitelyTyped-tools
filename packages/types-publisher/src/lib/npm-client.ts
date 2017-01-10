@@ -6,14 +6,13 @@ import { readFile } from "../util/io";
 import { createTgz } from "../util/tgz";
 import { joinPaths } from "../util/util";
 
-import { settings } from "./common";
 import { getSecret, Secret } from "./secrets";
+import { npmRegistry } from "./settings";
 
-const registry = settings.npmRegistry;
-assert(registry.endsWith("/"));
+assert(npmRegistry.endsWith("/"));
 
 function packageUrl(packageName: string): string {
-	return url.resolve(registry, packageName);
+	return url.resolve(npmRegistry, packageName);
 }
 
 export default class NpmClient {
@@ -42,7 +41,7 @@ export default class NpmClient {
 				resolve();
 			}
 			else {
-				this.client.publish(registry, params, err => {
+				this.client.publish(npmRegistry, params, err => {
 					if (err) {
 						reject(err);
 					}

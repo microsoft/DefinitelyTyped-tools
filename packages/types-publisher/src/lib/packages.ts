@@ -3,7 +3,8 @@ import assert = require("assert");
 import { readJson } from "../util/io";
 import { joinPaths, mapValues } from "../util/util";
 
-import { Options, home, readDataFile, settings } from "./common";
+import { Options, home, readDataFile } from "./common";
+import { scopeName, outputPath } from "./settings";
 import { Semver } from "./versions";
 
 export class AllPackages {
@@ -157,7 +158,7 @@ export abstract class PackageBase {
 
 	/** '@types%2ffoo' for a package 'foo'. */
 	get fullEscapedNpmName() {
-		return `@${settings.scopeName}%2f${this.name}`;
+		return `@${scopeName}%2f${this.name}`;
 	}
 
 	abstract readonly major: number;
@@ -172,10 +173,10 @@ export abstract class PackageBase {
 }
 
 export function fullNpmName(packageName: string) {
-	return `@${settings.scopeName}/${packageName}`;
+	return `@${scopeName}/${packageName}`;
 }
 
-const outputDir = joinPaths(home, settings.outputPath);
+const outputDir = joinPaths(home, outputPath);
 
 interface NotNeededPackageRaw extends BaseRaw {
 	/**

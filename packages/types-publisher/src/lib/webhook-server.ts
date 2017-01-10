@@ -7,9 +7,10 @@ import { stringOfStream } from "../util/io";
 import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
 
 import RollingLogs from "./rolling-logs";
-import { Options, settings } from "./common";
+import { Options } from "./common";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
+import { sourceBranch } from "./settings";
 
 export default async function server(key: string, githubAccessToken: string, dry: boolean, options: Options): Promise<Server> {
 	const client = await NpmClient.create();
@@ -96,7 +97,7 @@ function listenToGithub(
 			}
 
 			log.info(`Message from github: ${data}`);
-			const expectedRef = `refs/heads/${settings.sourceBranch}`;
+			const expectedRef = `refs/heads/${sourceBranch}`;
 
 			const actualRef = parseJson(data).ref;
 			if (actualRef === expectedRef) {

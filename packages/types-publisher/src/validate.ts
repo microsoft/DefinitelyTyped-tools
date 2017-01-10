@@ -1,8 +1,9 @@
 import * as fsp from "fs-promise";
 import * as yargs from "yargs";
 
-import { Options, settings } from "./lib/common";
+import { Options } from "./lib/common";
 import { AllPackages, fullNpmName } from "./lib/packages";
+import { validateOutputPath } from "./lib/settings";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
 import { done, exec, joinPaths, nAtATime } from "./util/util";
@@ -41,7 +42,7 @@ async function doAll(): Promise<void> {
 
 async function doValidate(packageNames: string[]): Promise<void> {
 	const [log, logResult] = loggerWithErrors();
-	await validatePackages(packageNames, settings.validateOutputPath, log);
+	await validatePackages(packageNames, validateOutputPath, log);
 	const {infos, errors} = logResult();
 	await Promise.all([
 		writeLog("validate.md", infos),

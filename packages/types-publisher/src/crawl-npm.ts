@@ -2,7 +2,8 @@ import assert = require("assert");
 import oboe = require("oboe");
 
 import { packageHasTypes } from "./check-parse-results";
-import { Options, settings, writeDataFile } from "./lib/common";
+import { Options, writeDataFile } from "./lib/common";
+import { npmRegistry } from "./lib/settings";
 import ProgressBar, { strProgress } from "./util/progress";
 import { done, filterNAtATime } from "./util/util";
 
@@ -28,7 +29,7 @@ function allNpmPackages(): Promise<string[]> {
 	const progress = new ProgressBar({ name: "Loading NPM packages..." });
 
 	// https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md
-	const url = settings.npmRegistry + "-/all";
+	const url = npmRegistry + "-/all";
 	const all: string[] = [];
 	return new Promise((resolve, reject) => {
 		oboe(url)

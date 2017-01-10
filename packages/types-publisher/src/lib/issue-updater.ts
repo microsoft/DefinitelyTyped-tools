@@ -1,7 +1,7 @@
 import { fetchJson } from "../util/io";
 import { currentTimeStamp, errorDetails, indent } from "../util/util";
 
-import { settings } from "./common";
+import { azureContainer, errorsIssue } from "./settings";
 
 export async function setIssueOk(githubAccessToken: string): Promise<void> {
 	await doUpdate(githubAccessToken, `Server has been up as of **${currentTimeStamp()}**`);
@@ -17,7 +17,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 		l("The types-publisher server has shut down.");
 		l("Please fix the issue and restart the server. The server will update this issue.");
 		l("");
-		const url = `https://${settings.azureContainer}.blob.core.windows.net/${settings.azureContainer}/index.html`;
+		const url = `https://${azureContainer}.blob.core.windows.net/${azureContainer}/index.html`;
 		l(`Logs are available [here](${url}).`);
 		l("");
 		l(indent(errorDetails(error)));
@@ -26,7 +26,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 }
 
 async function doUpdate(accessToken: string, body: string): Promise<void> {
-	const url = `https://api.github.com/repos/${settings.errorsIssue}?access_token=${accessToken}`;
+	const url = `https://api.github.com/repos/${errorsIssue}?access_token=${accessToken}`;
 	const message = { body, state: "open" };
 	const responseBody = await fetchJson(url, { method: "PATCH", body: JSON.stringify(message) });
 	if (responseBody.body !== body) {

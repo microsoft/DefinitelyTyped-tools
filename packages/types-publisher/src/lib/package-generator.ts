@@ -5,8 +5,9 @@ import { readJson, writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty, joinPaths } from "../util/util";
 
-import { Options, settings } from "./common";
+import { Options } from "./common";
 import { AllPackages, AnyPackage, DependencyVersion, TypingsData, NotNeededPackage, fullNpmName } from "./packages";
+import { sourceBranch } from "./settings";
 import Versions, { Semver } from "./versions";
 
 /** Generates the package to disk */
@@ -186,7 +187,7 @@ function createReadme(typing: TypingsData) {
 	lines.push("");
 
 	lines.push("# Details");
-	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${settings.sourceBranch}/${typing.subDirectoryPath}`);
+	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${sourceBranch}/${typing.subDirectoryPath}`);
 
 	lines.push("");
 	lines.push(`Additional Details`);

@@ -1,6 +1,7 @@
 import * as semver from "semver";
-import { Options, settings } from "./lib/common";
+import { Options } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
+import { npmRegistry } from "./lib/settings";
 import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
 import { best, done, multiMapAdd, nAtATime } from "./util/util";
@@ -56,7 +57,7 @@ export async function packageHasTypes(packageName: string): Promise<boolean> {
 }
 
 async function firstPackageVersionWithTypes(packageName: string): Promise<string | undefined> {
-	const uri = settings.npmRegistry + packageName;
+	const uri = npmRegistry + packageName;
 	const info = await fetchJson(uri, { retries: true });
 	// Info may be empty if the package is not on NPM
 	if (!info.versions) {
