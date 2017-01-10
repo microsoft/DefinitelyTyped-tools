@@ -1,5 +1,5 @@
 import { createWriteStream } from "fs";
-import { Reader } from "fstream";
+import { FStreamEntry, Reader } from "fstream";
 import { Pack } from "tar";
 import * as zlib from "zlib";
 import { streamDone } from "./io";
@@ -27,10 +27,10 @@ export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.
 }
 
 function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-	const packer = Pack({ noProprietary: true } as any)
+	const packer = Pack({ noProprietary: true })
 		.on("error", onError);
 
-	return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission } as any)
+	return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission })
 		.on("error", onError)
 		.pipe(packer);
 }
@@ -39,7 +39,7 @@ function createTar(dir: string, onError: (error: Error) => void): NodeJS.Readabl
  * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
  * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
  */
-function addDirectoryExecutablePermission(entry: any): boolean {
+function addDirectoryExecutablePermission(entry: FStreamEntry): boolean {
 	if (entry.props.type === "Directory") {
 		entry.props.mode = addExecutePermissionsFromReadPermissions(entry.props.mode);
 	}
