@@ -4,7 +4,7 @@ import * as ts from "typescript";
 
 import { Logger } from "../util/logging";
 import { isExternalModule } from "../util/ts";
-import { hasWindowsSlashes, joinPaths, mapDefined, normalizeSlashes, stripQuotes, sort } from "../util/util";
+import { hasWindowsSlashes, joinPaths, normalizeSlashes, stripQuotes, sort } from "../util/util";
 
 import { readFile } from "./definition-parser";
 
@@ -15,11 +15,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 
 	const dependencies = new Set<string>();
 	const declaredModules: string[] = [];
-
-	const globalSymbols = new Map<string, DeclarationFlags>();
-	function recordSymbol(name: string, flags: DeclarationFlags): void {
-		globalSymbols.set(name, (globalSymbols.get(name) || DeclarationFlags.None) | flags);
-	}
+	const globals = new Set<string>();
 
 	const all = await allReferencedFiles(directory, allEntryFilenames, log);
 
@@ -46,7 +42,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 					log(`Found UMD module declaration for global \`${globalName}\``);
 					// Don't set hasGlobalDeclarations = true even though we add a symbol here
 					// since this is still a legal module-only declaration
-					globalSymbols.set(globalName, DeclarationFlags.Value);
+					globals.add(globalName);
 					hasAnyExport = true;
 					hasUmdDecl = true;
 					break;
@@ -71,7 +67,9 @@ export default async function getModuleInfo(packageName: string, directory: stri
 							const moduleName = (node as ts.ModuleDeclaration).name.getText();
 							log(`Found global namespace declaration \`${moduleName}\``);
 							hasGlobalDeclarations = true;
-							recordSymbol(moduleName, getNamespaceFlags(node as ts.ModuleDeclaration));
+							if (isValueNamespace(node as ts.ModuleDeclaration)) {
+								globals.add(moduleName);
+							}
 						}
 					}
 					break;
@@ -84,7 +82,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 						(node as ts.VariableStatement).declarationList.declarations.forEach(decl => {
 							const declName = decl.name.getText();
 							log(`Found global variable \`${declName}\``);
-							recordSymbol(declName, DeclarationFlags.Value);
+							globals.add(declName);
 						});
 						hasGlobalDeclarations = true;
 					}
@@ -106,7 +104,9 @@ export default async function getModuleInfo(packageName: string, directory: stri
 						const declName = ((node as ts.DeclarationStatement).name as ts.Identifier).getText();
 						const isType = node.kind === ts.SyntaxKind.InterfaceDeclaration || node.kind === ts.SyntaxKind.TypeAliasDeclaration;
 						log(`Found global ${isType ? "type" : "value"} declaration "${declName}"`);
-						recordSymbol(declName, isType ? DeclarationFlags.Type : DeclarationFlags.Value);
+						if (!isType) {
+							globals.add(declName);
+						}
 						hasGlobalDeclarations = true;
 					}
 					break;
@@ -142,7 +142,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 		declFiles: sort(all.keys()),
 		dependencies,
 		declaredModules,
-		globals: sort(mapDefined(globalSymbols, ([k, v]) => v & DeclarationFlags.Value ? k : undefined))
+		globals: sort(globals)
 	};
 }
 
@@ -295,46 +295,35 @@ function imports(src: ts.SourceFile): string[] {
 	}
 }
 
-const enum DeclarationFlags {
-	None = 0,
-	Value = 1 << 0,
-	Type = 1 << 1,
-	Namespace = 1 << 2,
-	Augmentation = 1 << 3
-}
-
-function getNamespaceFlags(ns: ts.ModuleDeclaration): DeclarationFlags {
-	let result = DeclarationFlags.None;
+function isValueNamespace(ns: ts.ModuleDeclaration): boolean {
 	if (!ns.body) {
 		throw new Error("@types should not use shorthand ambient modules");
 	}
 	if (ns.body.kind === ts.SyntaxKind.ModuleDeclaration) {
-		return getNamespaceFlags(ns.body as ts.ModuleDeclaration);
+		return isValueNamespace(ns.body as ts.ModuleDeclaration);
 	}
-	(ns.body as ts.ModuleBlock).statements.forEach(child => {
-		switch (child.kind) {
-			case ts.SyntaxKind.VariableStatement:
-			case ts.SyntaxKind.ClassDeclaration:
-			case ts.SyntaxKind.FunctionDeclaration:
-			case ts.SyntaxKind.EnumDeclaration:
-				result |= DeclarationFlags.Value;
-				break;
+	return (ns.body as ts.ModuleBlock).statements.some(statementDeclaresValue);
+}
 
-			case ts.SyntaxKind.InterfaceDeclaration:
-			case ts.SyntaxKind.TypeAliasDeclaration:
-			case ts.SyntaxKind.ImportEqualsDeclaration:
-				result |= DeclarationFlags.Type;
-				break;
+function statementDeclaresValue(statement: ts.Statement): boolean {
+	switch (statement.kind) {
+		case ts.SyntaxKind.VariableStatement:
+		case ts.SyntaxKind.ClassDeclaration:
+		case ts.SyntaxKind.FunctionDeclaration:
+		case ts.SyntaxKind.EnumDeclaration:
+			return true;
 
-			case ts.SyntaxKind.ModuleDeclaration:
-				result |= getNamespaceFlags(child as ts.ModuleDeclaration);
-				break;
+		case ts.SyntaxKind.ModuleDeclaration:
+			return isValueNamespace(statement as ts.ModuleDeclaration);
 
-			default:
-				console.log(`Forgot to implement ambient namespace statement ${ts.SyntaxKind[child.kind]}`);
-		}
-	});
-	return result;
+		case ts.SyntaxKind.InterfaceDeclaration:
+		case ts.SyntaxKind.TypeAliasDeclaration:
+		case ts.SyntaxKind.ImportEqualsDeclaration:
+			return false;
+
+		default:
+			throw new Error(`Forgot to implement ambient namespace statement ${ts.SyntaxKind[statement.kind]}`);
+	}
 }
 
 function noWindowsSlashes(packageName: string, fileName: string): void {
