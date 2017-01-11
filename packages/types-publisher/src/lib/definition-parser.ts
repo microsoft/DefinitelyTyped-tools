@@ -3,7 +3,7 @@ import * as ts from "typescript";
 
 import { readFile as readFileText } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, hasWindowsSlashes, join, joinPaths, mapDefined, mapAsyncOrdered, makeObject } from "../util/util";
+import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered, makeObject } from "../util/util";
 
 import { Options } from "./common";
 import { parseHeaderOrFail } from "./header";
@@ -231,22 +231,23 @@ export async function readFile(directory: string, fileName: string): Promise<str
 	return text;
 }
 
-async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set<string>): Promise<void> {
-	const unusedFilesName = "UNUSED_FILES.txt";
-	if (ls.includes(unusedFilesName)) {
-		const lsMinusUnusedFiles = new Set(ls);
-		lsMinusUnusedFiles.delete(unusedFilesName);
-		const unusedFiles = (await fsp.readFile(joinPaths(directory, unusedFilesName), "utf-8")).split(/\r?\n/g);
-		for (const unusedFile of unusedFiles) {
-			if (!lsMinusUnusedFiles.delete(unusedFile)) {
-				throw new Error(`In ${directory}: file ${unusedFile} listed in ${unusedFilesName} does not exist.`);
-			}
-		}
-		ls = Array.from(lsMinusUnusedFiles);
-	}
+const unusedFilesName = "UNUSED_FILES.txt";
 
+async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set<string>): Promise<void> {
+	const lsSet = new Set(ls);
+	const unusedFiles = lsSet.delete(unusedFilesName)
+		? new Set((await fsp.readFile(joinPaths(directory, unusedFilesName), "utf-8")).split(/\r?\n/g))
+		: new Set<string>();
+	await checkAllUsedRecur(directory, lsSet, usedFiles, unusedFiles);
+}
+
+async function checkAllUsedRecur(directory: string, ls: Iterable<string>, usedFiles: Set<string>, unusedFiles: Set<string>): Promise<void> {
 	for (const lsEntry of ls) {
 		if (usedFiles.has(lsEntry)) {
+			continue;
+		}
+		if (unusedFiles.has(lsEntry)) {
+			unusedFiles.delete(lsEntry);
 			continue;
 		}
 
@@ -262,12 +263,27 @@ async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set
 			if (lssubdir.length === 0) {
 				throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
 			}
-			const usedInSubdir = mapDefined(usedFiles, u => withoutStart(u, lsEntry + "/"));
-			await checkAllFilesUsed(subdir, lssubdir, new Set(usedInSubdir));
+
+			function takeSubdirectoryOutOfSet(originalSet: Set<string>) {
+				const subdirSet = new Set<string>();
+				for (const file of originalSet) {
+					const sub = withoutStart(file, lsEntry + "/");
+					if (sub !== undefined) {
+						originalSet.delete(file);
+						subdirSet.add(sub);
+					}
+				}
+				return subdirSet;
+			}
+			await checkAllUsedRecur(subdir, lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(unusedFiles));
 		} else {
 			if (lsEntry.toLowerCase() !== "readme.md" && lsEntry !== "NOTICE" && lsEntry !== ".editorconfig") {
 				throw new Error(`Directory ${directory} has unused file ${lsEntry}`);
 			}
 		}
+	}
+
+	for (const unusedFile of unusedFiles) {
+		throw new Error(`In ${directory}: file ${unusedFile} listed in ${unusedFilesName} does not exist.`);
 	}
 }
