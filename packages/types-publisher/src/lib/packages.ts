@@ -48,7 +48,17 @@ export class AllPackages {
 		return this.tryGetTypingsData(dep) !== undefined;
 	}
 
-	getLatestVersion(packageName: string): TypingsData {
+	/** Gets the latest version of a package. E.g. getLatest(node v6) = node v7. */
+	getLatest(pkg: AnyPackage): AnyPackage {
+		return pkg.isNotNeeded ? pkg : this.getLatestVersion(pkg.name);
+	}
+
+	/** Use only with `--single` tasks. */
+	getSingle(packageName: string): TypingsData {
+		return this.getLatestVersion(packageName);
+	}
+
+	private getLatestVersion(packageName: string): TypingsData {
 		const latest = this.tryGetLatestVersion(packageName);
 		if (!latest) {
 			throw new Error(`No such package ${packageName}.`);

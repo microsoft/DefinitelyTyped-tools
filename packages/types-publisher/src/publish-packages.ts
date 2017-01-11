@@ -74,8 +74,7 @@ async function single(client: NpmClient, name: string, options: Options, dry: bo
 }
 
 function publish(pkg: AnyPackage, client: NpmClient, allPackages: AllPackages, versions: Versions, dry: boolean): Promise<Log> {
-	const latest = allPackages.getLatestVersion(pkg.name);
-	return publishPackage(client, pkg, versions, latest, dry);
+	return publishPackage(client, pkg, versions, allPackages.getLatest(pkg), dry);
 }
 
 async function unpublish(dry: boolean): Promise<void> {

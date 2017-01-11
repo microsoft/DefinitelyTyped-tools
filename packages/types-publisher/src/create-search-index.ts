@@ -20,7 +20,11 @@ export default async function main(skipDownloads: boolean, full: boolean, option
 	const packages = await AllPackages.readTypings();
 	console.log(`Generating search index...`);
 
-	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), { name: "Indexing...", flavor: pkg => pkg.desc, options });
+	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), {
+		name: "Indexing...",
+		flavor: pkg => pkg.desc,
+		options
+	});
 	// Most downloads first
 	records.sort((a, b) => b.d - a.d);
 

@@ -40,7 +40,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 
 async function single(singleName: string, options: Options): Promise<void> {
 	const allPackages = await AllPackages.read(options);
-	const pkg = allPackages.getLatestVersion(singleName);
+	const pkg = allPackages.getSingle(singleName);
 	const versions = await Versions.load();
 	const logs = await generateAnyPackage(pkg, allPackages, versions, options);
 	console.log(logs.join("\n"));
