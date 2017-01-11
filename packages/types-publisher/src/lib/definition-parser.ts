@@ -3,12 +3,12 @@ import * as ts from "typescript";
 
 import { readFile as readFileText } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered, makeObject } from "../util/util";
+import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
 
 import { Options } from "./common";
 import { parseHeaderOrFail } from "./header";
 import getModuleInfo from "./module-info";
-import { DependenciesRaw, TypingsDataRaw, TypingsVersionsRaw, packageRootPath } from "./packages";
+import { DependenciesRaw, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw, packageRootPath } from "./packages";
 
 export async function getTypingInfo(packageName: string, options: Options): Promise<{ data: TypingsVersionsRaw, logs: Log }> {
 	if (packageName !== packageName.toLowerCase()) {
@@ -90,7 +90,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory);
 	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
-	const dependencies = await calculateDependencies(packageName, directory, dependenciesSet, oldMajorVersion);
+	const { dependencies, pathMappings } = await calculateDependencies(packageName, directory, dependenciesSet, oldMajorVersion);
 
 	const hasPackageJson = await fsp.exists(joinPaths(directory, "package.json"));
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
@@ -109,6 +109,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	const data: TypingsDataRaw = {
 		authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
 		dependencies,
+		pathMappings,
 		libraryMajorVersion,
 		libraryMinorVersion,
 		typeScriptVersion,
@@ -162,31 +163,53 @@ async function entryFilesFromTsConfig(packageName: string, directory: string): P
 }
 
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
-async function calculateDependencies(packageName: string, directory: string, dependencies: Set<string>, oldMajorVersion: number | undefined
-	): Promise<DependenciesRaw> {
+async function calculateDependencies(packageName: string, directory: string, dependencyNames: Set<string>, oldMajorVersion: number | undefined
+	): Promise<{ dependencies: DependenciesRaw, pathMappings: PathMappingsRaw }> {
 	const tsconfig: { compilerOptions: ts.CompilerOptions } = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
 	const { paths } = tsconfig.compilerOptions;
 
-	for (const key in paths!) {
-		if (key !== packageName && !dependencies.has(key)) {
-			throw new Error(`In ${packageName}: path mapping for '${key}' is not used.`);
+	const dependencies: DependenciesRaw = {};
+	const pathMappings: PathMappingsRaw = {};
+
+	for (const dependencyName in paths!) {
+		// Might have a path mapping for "foo/*" to support subdirectories
+		const rootDirectory = withoutEnd(dependencyName, "/*");
+		if (rootDirectory !== undefined) {
+			if (!(rootDirectory in paths!)) {
+				throw new Error(`In ${packageName}: found path mapping for ${dependencyName} but not for ${rootDirectory}`);
+			}
+			continue;
+		}
+
+		const pathMapping = paths![dependencyName];
+		const version = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
+		if (dependencyName === packageName) {
+			if (oldMajorVersion === undefined) {
+				throw new Error(`In ${packageName}: Latest version of a package should not have a path mapping for itself.`);
+			} else if (version !== oldMajorVersion) {
+				const correctPathMapping = [`${dependencyName}/v${oldMajorVersion}`];
+				throw new Error(`In ${packageName}: Must have a "paths" entry of "${dependencyName}": ${JSON.stringify(correctPathMapping)}`);
+			}
+		} else {
+			if (dependencyNames.has(dependencyName)) {
+				dependencies[dependencyName] = version;
+			}
+			// Else, the path mapping may be necessary if it is for a dependency-of-a-dependency. We will check this in check-parse-results.
+			pathMappings[dependencyName] = version;
 		}
 	}
 
-	if (oldMajorVersion !== undefined) {
-		const selfPath: string[] | undefined = paths && paths[packageName];
-		const version = selfPath === undefined ? undefined : parseDependencyVersionFromPath(packageName, packageName, selfPath);
-		if (version !== oldMajorVersion) {
-			console.log(version, oldMajorVersion);
-			const correctPathMapping = `${packageName}/v${oldMajorVersion}`;
-			throw new Error(`${packageName}: Must have a "paths" entry of "${packageName}": ${JSON.stringify([correctPathMapping])}`);
+	if (oldMajorVersion !== undefined && !(paths && packageName in paths)) {
+		throw new Error(`${packageName}: Older version ${oldMajorVersion} must have a path mapping for itself.`);
+	}
+
+	for (const dependency of dependencyNames) {
+		if (!(dependency in dependencies)) {
+			dependencies[dependency] = "*";
 		}
 	}
 
-	return makeObject(dependencies, dependency => {
-		const path = paths && paths[dependency];
-		return path === undefined ? "*" : parseDependencyVersionFromPath(packageName, dependency, path);
-	});
+	return { dependencies, pathMappings };
 }
 
 // e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
@@ -207,6 +230,13 @@ function parseDependencyVersionFromPath(packageName: string, dependencyName: str
 function withoutStart(s: string, start: string): string | undefined {
 	if (s.startsWith(start)) {
 		return s.slice(start.length);
+	}
+	return undefined;
+}
+
+function withoutEnd(s: string, end: string): string | undefined {
+	if (s.endsWith(end)) {
+		return s.slice(0, s.length - end.length);
 	}
 	return undefined;
 }

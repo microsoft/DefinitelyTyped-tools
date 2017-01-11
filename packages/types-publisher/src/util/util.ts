@@ -247,11 +247,3 @@ export function join<T>(values: Iterable<T>, joiner = ", ") {
 	}
 	return s.slice(0, s.length - joiner.length);
 }
-
-export function makeObject<T>(keys: Iterable<string>, getValue: (key: string) => T): { [key: string]: T } {
-	const obj = Object.create(null);
-	for (const key of keys) {
-		obj[key] = getValue(key);
-	}
-	return obj;
-}

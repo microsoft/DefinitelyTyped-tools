@@ -249,11 +249,21 @@ export interface TypingsVersionsRaw {
 export interface DependenciesRaw {
 	[packageName: string]: DependencyVersion;
 }
+/**
+ * Maps that name of a package to a major version number from a path mapping.
+ * Not all path mappings are direct dependencies: They may be necessary for dependencies-of-dependencies.
+ * But, where dependencies and pathMappings share a key, they must share the same value.
+ */
+export interface PathMappingsRaw {
+	[packageName: string]: number;
+}
+
 /** If no version is specified, uses "*". */
 export type DependencyVersion = number | "*";
 
 export interface TypingsDataRaw extends BaseRaw {
 	readonly dependencies: DependenciesRaw;
+	readonly pathMappings: PathMappingsRaw;
 
 	// Parsed from "Definitions by:"
 	readonly authors: string;
@@ -338,6 +348,9 @@ export class TypingsData extends PackageBase {
 	get declaredModules(): string[] { return this.data.declaredModules; }
 	get projectName(): string { return this.data.projectName; }
 	get globals(): string[] { return this.data.globals; }
+	get pathMappings(): Iterable<[string, number]> {
+		return Object.entries(this.data.pathMappings);
+	}
 
 	get isPrerelease(): boolean {
 		return TypeScriptVersion.isPrerelease(this.typeScriptVersion);

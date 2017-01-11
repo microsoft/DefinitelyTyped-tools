@@ -1,6 +1,6 @@
 import * as semver from "semver";
 import { Options } from "./lib/common";
-import { AllPackages, TypingsData } from "./lib/packages";
+import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { npmRegistry } from "./lib/settings";
 import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
@@ -11,23 +11,29 @@ if (!module.parent) {
 }
 
 export default async function main(includeNpmChecks: boolean, options: Options): Promise<void> {
-	const packages = await AllPackages.readTypings();
+	const allPackages = await AllPackages.read(options);
 	const [log, logResult] = logger();
-	check(packages, info => info.libraryName, "Library Name", log);
-	check(packages, info => info.projectName, "Project Name", log);
+
+	checkPathMappings(allPackages);
+
+	const packages = allPackages.allPackages();
+	checkForDuplicates(packages, pkg => pkg.libraryName, "Library Name", log);
+	checkForDuplicates(packages, pkg => pkg.projectName, "Project Name", log);
+
 	if (includeNpmChecks) {
-		await nAtATime(10, packages, pkg => checkNpm(pkg, log), {
+		await nAtATime(10, allPackages.allTypings(), pkg => checkNpm(pkg, log), {
 			name: "Checking for typed packages...",
 			flavor: pkg => pkg.desc,
 			options
 		});
 	}
+
 	await writeLog("conflicts.md", logResult());
 }
 
-function check(infos: TypingsData[], func: (info: TypingsData) => string | undefined, key: string, log: Logger): void {
+function checkForDuplicates(packages: AnyPackage[], func: (info: AnyPackage) => string | undefined, key: string, log: Logger): void {
 	const lookup = new Map<string, TypingsData[]>();
-	for (const info of infos) {
+	for (const info of packages) {
 		const libraryOrProjectName = func(info);
 		if (libraryOrProjectName !== undefined) {
 			multiMapAdd(lookup, libraryOrProjectName, info);
@@ -40,6 +46,30 @@ function check(infos: TypingsData[], func: (info: TypingsData) => string | undef
 			for (const n of values) {
 				log(`   * ${n.desc}`);
 			}
+		}
+	}
+}
+
+function checkPathMappings(allPackages: AllPackages) {
+	for (const pkg of allPackages.allTypings()) {
+		const pathMappings = new Map(pkg.pathMappings);
+		const unusedPathMappings = new Set(pathMappings.keys());
+
+		// If A depends on B, and B has path mappings, A must have the same mappings.
+		for (const dependency of allPackages.dependencyTypings(pkg)) {
+			for (const [name, dependencyMappingVersion] of dependency.pathMappings) {
+				if (pathMappings.get(name) !== dependencyMappingVersion) {
+					throw new Error(
+						`${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${name} v${dependencyMappingVersion}. ${pkg.desc} must have the same path mappings as its dependencies.`);
+				}
+				unusedPathMappings.delete(name);
+			}
+
+			unusedPathMappings.delete(dependency.name);
+		}
+
+		for (const unusedPathMapping of unusedPathMappings) {
+			throw new Error(`${pkg.desc} has unused path mapping for ${unusedPathMapping}`);
 		}
 	}
 }
