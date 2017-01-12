@@ -1,5 +1,3 @@
-import * as path from "path";
-
 import { Options, isTypingDirectory } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
@@ -143,7 +141,7 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
  * For "a", returns undefined.
  */
 function getDependencyFromFile(fileName: string): PackageVersion | undefined {
-	const parts = fileName.split(path.sep);
+	const parts = fileName.split("/");
 	if (parts.length === 1) {
 		// It's not in a typings directory at all.
 		return undefined;
