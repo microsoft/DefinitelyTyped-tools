@@ -124,8 +124,12 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 
 	// `git diff foo...bar` gets all changes from X to `bar` where X is the common ancestor of `foo` and `bar`.
 	// Source: https://git-scm.com/docs/git-diff
-	const diff = await run(`git diff ${sourceBranch}...HEAD --name-only`);
-	return diff.trim().split("\n");
+	let diff = (await run(`git diff ${sourceBranch}...HEAD --name-only`)).trim();
+	if (diff === "") {
+		// We are probably already on master, so compare to the last commit.
+		diff = (await run(`git diff ${sourceBranch}~1...HEAD --name-only`)).trim();
+	}
+	return diff.split("\n");
 
 	async function run(cmd: string): Promise<string> {
 		log("Running: " + cmd);
