@@ -1,8 +1,6 @@
 import * as Lint from "tslint";
 import * as ts from "typescript";
 
-import { isExternalModule } from "../util/ts";
-
 export class Rule extends Lint.Rules.AbstractRule {
 	static metadata: Lint.IRuleMetadata = {
 		ruleName: "no-single-declare-module",
@@ -18,7 +16,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
 		// If it's an external module, any module declarations inside are augmentations.
-		if (isExternalModule(sourceFile)) {
+		if (ts.isExternalModule(sourceFile)) {
 			return [];
 		}
 
