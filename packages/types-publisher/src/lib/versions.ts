@@ -243,7 +243,7 @@ function latestPatchMatchingMajorAndMinor(
 		}
 		const { major, minor, patch } = semver;
 		return major === newMajor && minor === newMinor ? patch : undefined;
-	}).filter(x => x !== undefined);
+	}).filter(x => x !== undefined) as number[];
 	return best(versionsWithTypings, (a, b) => a > b);
 }
 

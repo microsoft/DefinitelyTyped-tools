@@ -63,7 +63,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 						const nameKind = (node as ts.ModuleDeclaration).name.kind;
 						if (nameKind === ts.SyntaxKind.StringLiteral) {
 							// If we're in an external module, this is an augmentation, not a declaration.
-							if (!isExternalModule(src)) {
+							if (!ts.isExternalModule(src)) {
 								const name = stripQuotes((node as ts.ModuleDeclaration).name.getText());
 								noWindowsSlashes(packageName, name);
 

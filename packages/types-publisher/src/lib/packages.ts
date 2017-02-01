@@ -423,11 +423,11 @@ export namespace TypeScriptVersion {
 			case "2.0":
 				// A 2.0-compatible package is assumed compatible with TypeScript 2.1
 				// We want the "2.1" tag to always exist.
-				return [tags.latest, tags.v2_0, tags.v2_1];
+				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2];
 			case "2.1":
 				// Eventually this will change to include "latest", too.
 				// And obviously we shouldn't advance the "2.0" tag if the package is now 2.1-specific.
-				return [tags.latest, tags.v2_1];
+				return [tags.latest, tags.v2_1, tags.v2_2];
 		}
 	}
 
@@ -435,5 +435,6 @@ export namespace TypeScriptVersion {
 		export const latest = "latest";
 		export const v2_0 = "ts2.0";
 		export const v2_1 = "ts2.1";
+		export const v2_2 = "ts2.2";
 	}
 }
