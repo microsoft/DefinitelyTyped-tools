@@ -117,8 +117,7 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 		// homepage,
 		// bugs,
 		license: "MIT",
-		author: typing.authors,
-		// contributors
+		contributors: typing.contributors,
 		main: "",
 		repository: {
 			type: "git",
@@ -197,11 +196,10 @@ function createReadme(typing: TypingsData) {
 	lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
 	lines.push("");
 
-	if (typing.authors) {
-		lines.push("# Credits");
-		lines.push(`These definitions were written by ${typing.authors}.`);
-		lines.push("");
-	}
+	lines.push("# Credits");
+	const contributors = typing.contributors.map(({ name, url }) => `${name} <${url}>`).join(", ");
+	lines.push(`These definitions were written by ${contributors}.`);
+	lines.push("");
 
 	return lines.join("\r\n");
 }

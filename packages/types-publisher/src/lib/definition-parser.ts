@@ -85,7 +85,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	// But there may be many entryFilenames, which are the starting points of inferring all files to be included.
 	const mainFilename = "index.d.ts";
 
-	const { authors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
+	const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
 		parseHeaderOrFail(await readFile(directory, mainFilename), packageName);
 
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory);
@@ -106,8 +106,9 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	}
 
 	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
+
 	const data: TypingsDataRaw = {
-		authors: authors.map(a => `${a.name} <${a.url}>`).join(", "), // TODO: Store as JSON?
+		contributors,
 		dependencies,
 		pathMappings,
 		libraryMajorVersion,

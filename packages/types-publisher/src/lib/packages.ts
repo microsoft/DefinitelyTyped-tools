@@ -267,7 +267,7 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly pathMappings: PathMappingsRaw;
 
 	// Parsed from "Definitions by:"
-	readonly authors: string;
+	readonly contributors: Contributor[];
 
 	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
 	readonly libraryMajorVersion: number;
@@ -333,12 +333,17 @@ export interface MajorMinor {
 	readonly minor: number;
 }
 
+export interface Contributor {
+	name: string;
+	url: string;
+}
+
 export class TypingsData extends PackageBase {
 	constructor(private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
 		super(data);
 	}
 
-	get authors(): string { return this.data.authors; }
+	get contributors(): Contributor[] { return this.data.contributors; }
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }
 	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }
