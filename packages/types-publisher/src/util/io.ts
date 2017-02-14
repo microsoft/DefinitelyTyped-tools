@@ -23,7 +23,7 @@ export function writeFile(path: string, content: string): Promise<void> {
 }
 
 export function writeJson(path: string, content: any, formatted = true): Promise<void> {
-	return fsp.writeJson(path, content, formatted ? { spaces: 4 } : undefined);
+	return fsp.writeJson(path, content, { spaces: formatted ? 4 : 0 });
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {
