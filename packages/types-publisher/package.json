@@ -8,7 +8,7 @@
     "azure-keyvault": "^1.0.0",
     "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
-    "fs-promise": "^1.0.0",
+    "fs-promise": "^2.0.0",
     "fstream": "^1.0.10",
     "longjohn": "^0.2.11",
     "moment": "2.17.1",
@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@types/charm": "^1.0.0",
-    "@types/fs-promise": "^1.0.0",
     "@types/node": "^7.0.0",
     "@types/node-fetch": "^1.6.7",
     "@types/oboe": "^2.0.28",
