@@ -1,5 +1,4 @@
-import { BlobResult, BlobService, ContainerResult, ContinuationToken, CreateBlobRequestOptions, CreateContainerOptions,
-	ErrorOrResponse, ErrorOrResult, ListBlobsResult, ServicePropertiesResult, createBlobService } from "azure-storage";
+import { BlobService, common, ErrorOrResponse, ErrorOrResult, createBlobService } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
 
@@ -18,7 +17,7 @@ export default class BlobWriter {
 	private constructor(private service: BlobService) {}
 
 	setCorsProperties(): Promise<void> {
-		const properties: ServicePropertiesResult.ServiceProperties = {
+		const properties: common.models.ServicePropertiesResult.ServiceProperties = {
 			Cors: {
 				CorsRule: [
 					{
@@ -34,8 +33,8 @@ export default class BlobWriter {
 		return promisifyErrorOrResponse(cb => this.service.setServiceProperties(properties, cb));
 	}
 
-	ensureCreated(options: CreateContainerOptions): Promise<void> {
-		return promisifyErrorOrResult<ContainerResult>(cb =>
+	ensureCreated(options: BlobService.CreateContainerOptions): Promise<void> {
+		return promisifyErrorOrResult<BlobService.ContainerResult>(cb =>
 			this.service.createContainerIfNotExists(azureContainer, options, cb)) as any as Promise<void>;
 	}
 
@@ -47,15 +46,15 @@ export default class BlobWriter {
 		return this.createBlobFromStream(blobName, streamOfString(text));
 	}
 
-	async listBlobs(prefix: string): Promise<BlobResult[]> {
-		const once = (token: ContinuationToken | undefined) =>
-			promisifyErrorOrResult<ListBlobsResult>(cb =>
-				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token, cb));
+	async listBlobs(prefix: string): Promise<BlobService.BlobResult[]> {
+		const once = (token: common.ContinuationToken | undefined) =>
+			promisifyErrorOrResult<BlobService.ListBlobsResult>(cb =>
+				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token!, cb));
 
-		const out: BlobResult[] = [];
-		let token: ContinuationToken | undefined = undefined;
+		const out: BlobService.BlobResult[] = [];
+		let token: common.ContinuationToken | undefined;
 		do {
-			const {entries, continuationToken}: ListBlobsResult = await once(token);
+			const {entries, continuationToken}: BlobService.ListBlobsResult = await once(token);
 			out.push(...entries);
 			token = continuationToken;
 		} while (token);
@@ -69,13 +68,14 @@ export default class BlobWriter {
 	}
 
 	private createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
-		const options: CreateBlobRequestOptions =  {
+		const options: BlobService.CreateBlobRequestOptions =  {
 			contentSettings: {
 				contentEncoding: "GZIP",
 				contentType: "application/json; charset=utf-8"
 			}
 		};
-		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(azureContainer, blobName, options)));
+		// Remove `undefined!` once https://github.com/Azure/azure-storage-node/pull/267 is in
+		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(azureContainer, blobName, options, undefined!)));
 	}
 }
 

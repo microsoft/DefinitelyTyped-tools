@@ -6,7 +6,7 @@
   "dependencies": {
     "adal-node": "^0.1.22",
     "azure-keyvault": "^1.0.0",
-    "azure-storage": "1.4.0",
+    "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
     "fs-promise": "^1.0.0",
     "fstream": "^1.0.10",
