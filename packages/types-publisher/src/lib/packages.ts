@@ -422,8 +422,10 @@ export type TypeScriptVersion = "2.0" | "2.1";
 export namespace TypeScriptVersion {
 	export const All: TypeScriptVersion[] = ["2.0", "2.1"];
 	export const Lowest = "2.0";
+	/** Latest version that may be specified in a `// TypeScript Version:` header. */
 	export const Latest = "2.1";
 
+	/** True if a package with the given typescript version should be published as prerelease. */
 	export function isPrerelease(_version: TypeScriptVersion): boolean {
 		return false;
 	}
@@ -434,11 +436,9 @@ export namespace TypeScriptVersion {
 			case "2.0":
 				// A 2.0-compatible package is assumed compatible with TypeScript 2.1
 				// We want the "2.1" tag to always exist.
-				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2];
+				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2, tags.v2_3];
 			case "2.1":
-				// Eventually this will change to include "latest", too.
-				// And obviously we shouldn't advance the "2.0" tag if the package is now 2.1-specific.
-				return [tags.latest, tags.v2_1, tags.v2_2];
+				return [tags.latest, tags.v2_1, tags.v2_2, tags.v2_3];
 		}
 	}
 
@@ -447,5 +447,6 @@ export namespace TypeScriptVersion {
 		export const v2_0 = "ts2.0";
 		export const v2_1 = "ts2.1";
 		export const v2_2 = "ts2.2";
+		export const v2_3 = "ts2.3";
 	}
 }
