@@ -13,7 +13,6 @@
     "longjohn": "^0.2.11",
     "moment": "2.17.1",
     "node-fetch": "^1.6.3",
-    "nodegit": "^0.16.0",
     "npm": "^3.10.10",
     "npm-registry-client": "^7.4.5",
     "object.entries": "^1.0.3",
