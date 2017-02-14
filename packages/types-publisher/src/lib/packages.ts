@@ -81,10 +81,7 @@ export class AllPackages {
 
 	tryGetTypingsData({ name, majorVersion }: PackageId): TypingsData | undefined {
 		const versions = this.data.get(name);
-		if (!versions) {
-			return undefined;
-		}
-		return versions.get(majorVersion);
+		return versions && versions.tryGet(majorVersion);
 	}
 
 	allPackages(): AnyPackage[] {
@@ -315,16 +312,24 @@ class TypingsVersions {
 		return majorVersion === "*" ? this.getLatest() : this.getExact(majorVersion);
 	}
 
+	tryGet(majorVersion: DependencyVersion): TypingsData | undefined {
+		return majorVersion === "*" ? this.getLatest() : this.tryGetExact(majorVersion);
+	}
+
 	getLatest(): TypingsData {
 		return this.getExact(this.latest);
 	}
 
-	private getExact(majorVersion: number) {
-		const data = this.map.get(majorVersion);
+	private getExact(majorVersion: number): TypingsData {
+		const data = this.tryGetExact(majorVersion);
 		if (!data) {
 			throw new Error(`Could not find version ${majorVersion}`);
 		}
 		return data;
+	}
+
+	private tryGetExact(majorVersion: number): TypingsData | undefined {
+		return this.map.get(majorVersion);
 	}
 }
 
