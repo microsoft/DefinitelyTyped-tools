@@ -5,7 +5,7 @@ import NpmClient from "./lib/npm-client";
 import Versions from "./lib/versions";
 
 import { Logger } from "./util/logging";
-import { done } from "./util/util";
+import { done, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;
@@ -21,13 +21,13 @@ async function tagAll(dry: boolean) {
 	const versions = await Versions.load();
 	const client = await NpmClient.create();
 
-	for (const pkg of await AllPackages.readTypings()) {
+	await nAtATime(10, await AllPackages.readTypings(), async pkg => {
 		// Only update tags for the latest version of the package.
 		if (pkg.isLatest) {
 			const version = versions.getVersion(pkg).versionString;
 			await addNpmTagsForPackage(pkg, versions, version, client, console.log, dry);
 		}
-	}
+	});
 
 	// Don't tag notNeeded packages
 }
