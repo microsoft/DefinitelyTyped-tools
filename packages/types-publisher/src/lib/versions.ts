@@ -19,7 +19,6 @@ export default class Versions {
 			const majorVersions = raw[packageName];
 			for (const majorVersion in majorVersions) {
 				const info = majorVersions[majorVersion];
-				info.version = Semver.fromRaw(info.version);
 				if (info.latestNonPrerelease) {
 					info.latestNonPrerelease = Semver.fromRaw(info.latestNonPrerelease);
 				}
@@ -53,22 +52,21 @@ export default class Versions {
 				log(`Changed: ${pkg.desc}`);
 				changes.push(pkg.id);
 				version = version.update(pkg.majorMinor, isPrerelease);
-				contentHash = pkg.contentHash;
 			}
-			addToData(pkg.name, version, latestNonPrerelease, contentHash, deprecated);
+			addToData(pkg.name, version, latestNonPrerelease);
 		}
 
 		await nAtATime(25, allPackages.allNotNeeded(), getNotNeededVersion, { name: "Versions for not-needed packages...", flavor, options });
 		async function getNotNeededVersion(pkg: NotNeededPackage) {
 			const isPrerelease = false; // Not-needed packages are never prerelease.
 			// tslint:disable-next-line:prefer-const
-			let { version, contentHash, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
+			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
 			if (!deprecated) {
 				log(`Now deprecated: ${pkg.name}`);
 				changes.push({ name: pkg.name, majorVersion: version.major });
 				version = pkg.version;
 			}
-			addToData(pkg.name, version, /*latestNonPrerelease*/undefined, contentHash, deprecated);
+			addToData(pkg.name, version);
 		}
 
 		function flavor(pkg: AnyPackage): string { return pkg.desc; }
@@ -80,18 +78,13 @@ export default class Versions {
 			return { version: new Semver(-1, -1, -1, isPrerelease), latestNonPrerelease: undefined, contentHash: "", deprecated: false };
 		}
 
-		function addToData(packageName: string, version: Semver, latestNonPrerelease: Semver | undefined, contentHash: string, deprecated: boolean): void {
-			const info: VersionInfo = { version, contentHash, deprecated };
-			if (latestNonPrerelease) {
-				info.latestNonPrerelease = latestNonPrerelease;
-			}
-
+		function addToData(packageName: string, { major, patch }: Semver, latestNonPrerelease?: Semver): void {
 			let majorVersions = data[packageName];
 			if (!majorVersions) {
 				majorVersions = data[packageName] = {};
 			}
-			assert(!majorVersions[version.major]);
-			majorVersions[version.major] = info;
+			assert(!majorVersions[major]);
+			majorVersions[major] = latestNonPrerelease ? { patch, latestNonPrerelease } : { patch };
 		}
 	}
 
@@ -101,15 +94,15 @@ export default class Versions {
 		return writeDataFile(versionsFilename, this.data);
 	}
 
-	getVersion(id: PackageId): Semver {
-		return this.info(id).version;
+	getVersion(pkg: AnyPackage): Semver {
+		return new Semver(pkg.major, pkg.minor, this.info(pkg.id).patch, pkg.isPrerelease);
 	}
 
-	latestNonPrerelease(id: PackageId): Semver | undefined {
-		return this.info(id).latestNonPrerelease;
+	latestNonPrerelease(pkg: AnyPackage): Semver | undefined {
+		return this.info(pkg.id).latestNonPrerelease;
 	}
 
-	private info({name, majorVersion}: PackageId): VersionInfo {
+	private info({name, majorVersion}: PackageId): VersionData {
 		const info = this.data[name][majorVersion];
 		if (!info) {
 			throw new Error(`No version info for ${name}@${majorVersion}`);
@@ -266,7 +259,7 @@ export async function writeChanges(changes: Changes, additions: Changes): Promis
 }
 
 /**
- * Latest version info for a package.
+ * Latest version info for a package. Used to calculate versions.
  * If it needs to be published, `version` is the version to publish and `contentHash` is the new hash.
  */
 interface VersionInfo {
@@ -286,7 +279,13 @@ interface VersionInfo {
 	deprecated: boolean;
 }
 
+/** Stores the result of calculating a package's version. */
+interface VersionData {
+	patch: number;
+	latestNonPrerelease?: Semver;
+}
+
 /** Used to store a JSON file of version info for every package. */
 interface VersionMap {
-	[packageName: string]: { [version: string]: VersionInfo };
+	[packageName: string]: { [version: string]: VersionData };
 }

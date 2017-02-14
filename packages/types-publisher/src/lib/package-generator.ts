@@ -22,7 +22,7 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json, metadata.json, and README.md");
-	const packageJson = await createPackageJSON(typing, versions.getVersion(typing.id), packages, options);
+	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages, options);
 	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
@@ -60,7 +60,7 @@ async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Version
 	await clearOutputPath(outputPath, log);
 
 	log("Generate package.json and README.md");
-	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg.id));
+	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg));
 	const readme = pkg.readme();
 
 	log("Write metadata files to disk");

@@ -24,7 +24,7 @@ async function tagAll(dry: boolean) {
 	for (const pkg of await AllPackages.readTypings()) {
 		// Only update tags for the latest version of the package.
 		if (pkg.isLatest) {
-			const version = versions.getVersion(pkg.id).versionString;
+			const version = versions.getVersion(pkg).versionString;
 			await addNpmTagsForPackage(pkg, versions, version, client, console.log, dry);
 		}
 	}
@@ -43,7 +43,7 @@ export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, 
 	}
 
 	// Prerelease packages should never be tagged latest
-	const latestNonPrerelease = versions.latestNonPrerelease(pkg.id);
+	const latestNonPrerelease = versions.latestNonPrerelease(pkg);
 	if (latestNonPrerelease) {
 		log(`	but tag ${pkg.fullNpmName}@${latestNonPrerelease.versionString} as "latest"`);
 		if (!dry) {

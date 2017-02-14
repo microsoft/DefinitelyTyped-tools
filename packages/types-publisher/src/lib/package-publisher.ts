@@ -21,7 +21,7 @@ export default async function publishPackage(
 
 	await client.publish(packageDir, packageJson, dry);
 
-	const latestVersionString = versions.getVersion(latestVersion.id).versionString;
+	const latestVersionString = versions.getVersion(latestVersion).versionString;
 
 	// If this is an older version of the package, we still update tags for the *latest*.
 	// NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),

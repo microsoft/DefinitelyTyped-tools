@@ -219,6 +219,7 @@ export class NotNeededPackage extends PackageBase {
 	}
 
 	get major(): number { return this.version.major; }
+	get minor(): number { return this.version.minor; }
 
 	// A not-needed package has no other versions. (TODO: allow that?)
 	get isLatest() { return true; }
