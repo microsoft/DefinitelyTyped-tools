@@ -45,6 +45,7 @@ function isSignatureDeclaration(node: ts.Node): node is ts.SignatureDeclaration 
 		case ts.SyntaxKind.ArrowFunction:
 		case ts.SyntaxKind.CallSignature:
 		case ts.SyntaxKind.FunctionDeclaration:
+		case ts.SyntaxKind.FunctionExpression:
 		case ts.SyntaxKind.FunctionType:
 		case ts.SyntaxKind.MethodDeclaration:
 		case ts.SyntaxKind.MethodSignature:
