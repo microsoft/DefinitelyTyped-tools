@@ -23,13 +23,11 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 
 	log("Generate package.json, metadata.json, and README.md");
 	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages, options);
-	const metadataJson = createMetadataJSON(typing);
 	const readme = createReadme(typing);
 
 	log("Write metadata files to disk");
 	const outputs = [
 		writeOutputFile("package.json", packageJson),
-		writeOutputFile("types-metadata.json", metadataJson),
 		writeOutputFile("README.md", readme)
 	];
 	outputs.push(...typing.files.map(async file => {
@@ -82,11 +80,6 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 
 	log(`Clear out old files`);
 	await fsp.emptyDir(outputPath);
-}
-
-function createMetadataJSON(typing: TypingsData): string {
-	const replacer = (key: string, value: any) => key === "root" ? undefined : value;
-	return JSON.stringify(typing, replacer, 4);
 }
 
 interface Dependencies { [name: string]: string; }
