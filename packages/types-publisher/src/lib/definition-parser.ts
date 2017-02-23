@@ -121,6 +121,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 		globals,
 		declaredModules,
 		files: declFiles,
+		testFiles,
 		hasPackageJson,
 		contentHash: await hash(directory, allContentHashFiles)
 	};

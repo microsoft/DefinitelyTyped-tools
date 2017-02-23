@@ -277,6 +277,9 @@ export interface TypingsDataRaw extends BaseRaw {
 	// Does *not* include a partial `package.json` because that will not be copied directly.
 	readonly files: string[];
 
+	// List of all test files.
+	readonly testFiles: string[];
+
 	// Whether a "package.json" exists
 	readonly hasPackageJson: boolean;
 
@@ -354,6 +357,7 @@ export class TypingsData extends PackageBase {
 	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }
 	get typeScriptVersion(): TypeScriptVersion { return this.data.typeScriptVersion; }
 	get files(): string[] { return this.data.files; }
+	get testFiles(): string[] { return this.data.testFiles; }
 	get hasPackageJson(): boolean { return this.data.hasPackageJson; }
 	get contentHash(): string { return this.data.contentHash; }
 	get declaredModules(): string[] { return this.data.declaredModules; }

@@ -118,7 +118,7 @@ async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options)
 	}
 	async function tslint(): Promise<TesterError | undefined> {
 		return (await fsp.exists(joinPaths(cwd, "tslint.json")))
-			? runCommand(log, cwd, tslintPath, "--format stylish", ...pkg.files)
+			? runCommand(log, cwd, tslintPath, "--format stylish", ...pkg.files, ...pkg.testFiles)
 			: undefined;
 	}
 }
