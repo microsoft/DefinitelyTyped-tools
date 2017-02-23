@@ -1,0 +1,13 @@
+{
+    "extends": "tslint:latest",
+    "rules": {
+        "arrow-parens": false,
+        "indent": [true, "tab"],
+        "interface-name": false,
+        "no-namespace": false,
+        "object-literal-sort-keys": false,
+        "switch-default": false,
+        "trailing-comma": false,
+        "variable-name": false
+    }
+}
