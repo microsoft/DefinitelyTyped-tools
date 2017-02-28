@@ -35,7 +35,6 @@ export default async function main(options: Options): Promise<void> {
 	}
 }
 
-
 function exec(cmd: string, cwd?: string): string {
 	console.log(`Exec${cwd ? " at " + cwd : ""}: ${cmd}`);
 	const result = execSync(cmd, { cwd, encoding: "utf8" }).trim();

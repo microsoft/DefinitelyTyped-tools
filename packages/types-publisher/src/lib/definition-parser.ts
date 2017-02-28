@@ -88,9 +88,10 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
 		parseHeaderOrFail(await readFile(directory, mainFilename), packageName);
 
-	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory);
+	const tsconfig: TsConfig = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
+	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory, tsconfig);
 	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
-	const { dependencies, pathMappings } = await calculateDependencies(packageName, directory, dependenciesSet, oldMajorVersion);
+	const { dependencies, pathMappings } = await calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
 
 	const hasPackageJson = await fsp.exists(joinPaths(directory, "package.json"));
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
@@ -123,14 +124,14 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 		files: declFiles,
 		testFiles,
 		hasPackageJson,
-		contentHash: await hash(directory, allContentHashFiles)
+		contentHash: await hash(directory, allContentHashFiles, tsconfig.compilerOptions.paths)
 	};
 	return { data, logs: logResult() };
 }
 
-async function entryFilesFromTsConfig(packageName: string, directory: string): Promise<{ typeFiles: string[], testFiles: string[] }> {
+async function entryFilesFromTsConfig(packageName: string, directory: string, tsconfig: TsConfig
+	): Promise<{ typeFiles: string[], testFiles: string[] }> {
 	const tsconfigPath = joinPaths(directory, "tsconfig.json");
-	const tsconfig = await fsp.readJson(tsconfigPath);
 	if (tsconfig.include) {
 		throw new Error(`${tsconfigPath}: Don't use "include", must use "files"`);
 	}
@@ -164,10 +165,15 @@ async function entryFilesFromTsConfig(packageName: string, directory: string): P
 	return { typeFiles, testFiles };
 }
 
+interface TsConfig {
+	include: string[];
+	files: string[];
+	compilerOptions: ts.CompilerOptions;
+}
+
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
-async function calculateDependencies(packageName: string, directory: string, dependencyNames: Set<string>, oldMajorVersion: number | undefined
+async function calculateDependencies(packageName: string, tsconfig: TsConfig, dependencyNames: Set<string>, oldMajorVersion: number | undefined
 	): Promise<{ dependencies: DependenciesRaw, pathMappings: PathMappingsRaw }> {
-	const tsconfig: { compilerOptions: ts.CompilerOptions } = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
 	const { paths } = tsconfig.compilerOptions;
 
 	const dependencies: DependenciesRaw = {};
@@ -243,9 +249,12 @@ function withoutEnd(s: string, end: string): string | undefined {
 	return undefined;
 }
 
-async function hash(directory: string, files: string[]): Promise<string> {
+async function hash(directory: string, files: string[], tsconfigPaths: ts.MapLike<string[]> | undefined): Promise<string> {
 	const fileContents = await mapAsyncOrdered(files, async f => f + "**" + await readFile(directory, f));
-	const allContent = fileContents.join("||");
+	let allContent = fileContents.join("||");
+	if (tsconfigPaths) {
+		allContent += JSON.stringify(tsconfigPaths);
+	}
 	return computeHash(allContent);
 }
 
