@@ -369,17 +369,18 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 	for (const filename of testFiles) {
 		const content = await readFile(directory, filename);
 		const { fileName, imports, referencedFiles, typeReferenceDirectives } = createSourceFile(filename, content);
+		const filePath = () => path.join(pkgName, fileName);
 
 		for (const { fileName: ref } of referencedFiles) {
-			throw new Error(`Test files should not use '<reference path="" />'. '${fileName}' references '${ref}'.`);
+			throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
 		}
 
 		for (const { fileName: referencedPackage } of typeReferenceDirectives) {
 			if (dependencies.has(referencedPackage)) {
-				throw new Error(`'${fileName}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`);
+				throw new Error(`'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`);
 			}
 			if (referencedPackage === pkgName) {
-				throw new Error(`'${fileName}' unnecessarily references itself. This can be removed.`);
+				throw new Error(`'${filePath()}' unnecessarily references the package. This can be removed.`);
 			}
 
 			testDependencies.add(referencedPackage);
