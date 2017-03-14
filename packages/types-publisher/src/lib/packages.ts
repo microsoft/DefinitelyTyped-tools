@@ -438,12 +438,18 @@ export function packageRootPath(packageName: string, options: Options): string {
 	return joinPaths(options.definitelyTypedPath, packageName);
 }
 
-export type TypeScriptVersion = "2.0" | "2.1";
+export type TypeScriptVersion = "2.0" | "2.1" | "2.2";
 export namespace TypeScriptVersion {
-	export const All: TypeScriptVersion[] = ["2.0", "2.1"];
+	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2"];
 	export const Lowest = "2.0";
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
-	export const Latest = "2.1";
+	export const Latest = "2.2";
+
+	for (const v of All) {
+			if (v > Latest) {
+				throw new Error("'Latest' not properly set.");
+			}
+	}
 
 	/** True if a package with the given typescript version should be published as prerelease. */
 	export function isPrerelease(_version: TypeScriptVersion): boolean {
@@ -459,6 +465,8 @@ export namespace TypeScriptVersion {
 				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2, tags.v2_3];
 			case "2.1":
 				return [tags.latest, tags.v2_1, tags.v2_2, tags.v2_3];
+			case "2.2":
+				return [tags.latest, tags.v2_2, tags.v2_3];
 		}
 	}
 

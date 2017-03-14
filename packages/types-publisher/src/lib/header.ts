@@ -69,7 +69,7 @@ function headerParser(strict: boolean): pm.Parser<Header> {
 		pm.regexp(/\r?\n\/\/ Definitions by: /),
 		contributorsParser(strict),
 		parseDefinitions,
-		parseTypeScriptVersion,
+		typeScriptVersionParser,
 		pm.all, // Don't care about the rest of the file
 		// tslint:disable-next-line:variable-name
 		(_str, label, _project, projects, _defsBy, contributors, _definitions, typeScriptVersion) => ({
@@ -168,9 +168,21 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 	});
 }
 
-const parseTypeScriptVersion: pm.Parser<TypeScriptVersion> =
-	pm.regexp(/\r?\n\/\/ TypeScript Version: 2.1/)
-		.result<TypeScriptVersion>("2.1")
+const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
+	pm.regexp(/\/\/ TypeScript Version: 2.(\d)/, 1).chain<TypeScriptVersion>(d => {
+		switch (d) {
+			case "1":
+				return pm.succeed<TypeScriptVersion>("2.1");
+			case "2":
+				return pm.succeed<TypeScriptVersion>("2.2");
+			default:
+				return pm.fail(`TypeScript 2.${d} is not yet supported.`);
+		}
+	});
+
+const typeScriptVersionParser: pm.Parser<TypeScriptVersion> =
+	pm.regexp(/\r?\n/)
+		.then(typeScriptVersionLineParser)
 		.fallback<TypeScriptVersion>("2.0");
 
 function reverse(s: string): string {
