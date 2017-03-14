@@ -105,6 +105,18 @@ export class AllPackages {
 			}
 		}
 	}
+
+	/** Like 'dependencyTypings', but includes test dependencies. */
+	*allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
+		yield* this.dependencyTypings(pkg);
+
+		for (const name of pkg.testDependencies) {
+			const versions = this.data.get(name);
+			if (versions) {
+				yield versions.getLatest();
+			}
+		}
+	}
 }
 
 export const typesDataFilename = "definitions.json";
@@ -261,6 +273,9 @@ export type DependencyVersion = number | "*";
 
 export interface TypingsDataRaw extends BaseRaw {
 	readonly dependencies: DependenciesRaw;
+	 // These are always the latest version.
+	 // Will not include anything already in `dependencies`.
+	readonly testDependencies: string[];
 	readonly pathMappings: PathMappingsRaw;
 
 	// Parsed from "Definitions by:"
@@ -351,6 +366,7 @@ export class TypingsData extends PackageBase {
 		super(data);
 	}
 
+	get testDependencies(): string[] { return this.data.testDependencies; }
 	get contributors(): Contributor[] { return this.data.contributors; }
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }

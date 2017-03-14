@@ -83,14 +83,6 @@ export function indent(str: string): string {
 	return "\t" + str.replace(/\n/g, "\n\t");
 }
 
-export function stripQuotes(s: string): string {
-	if (s[0] === '"' || s[0] === "'") {
-		return s.substr(1, s.length - 2);
-	} else {
-		throw new Error(`${s} is not quoted`);
-	}
-}
-
 export function unique<T>(arr: T[]) {
 	return [...new Set(arr)];
 }

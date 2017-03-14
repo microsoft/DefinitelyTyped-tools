@@ -71,7 +71,7 @@ function getReverseDependencies(allPackages: AllPackages): Map<TypingsData, Set<
 	}
 
 	for (const typing of allPackages.allTypings()) {
-		for (const dependency of allPackages.dependencyTypings(typing)) {
+		for (const dependency of allPackages.allDependencyTypings(typing)) {
 			map.get(dependency)!.add(typing);
 		}
 	}
