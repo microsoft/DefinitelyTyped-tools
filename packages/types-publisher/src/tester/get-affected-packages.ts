@@ -23,11 +23,6 @@ export default async function getAffectedPackages(allPackages: AllPackages, log:
 	return collectDependers(changedPackages, dependedOn);
 }
 
-/** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(allPackages: AllPackages, packages: TypingsData[]): TypingsData[] {
-	return sortPackages(transitiveClosure(packages, pkg => allPackages.dependencyTypings(pkg)));
-}
-
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
 function collectDependers(changedPackages: Iterable<TypingsData>, reverseDependencies: Map<TypingsData, Set<TypingsData>>): TypingsData[] {
 	return sortPackages(transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []));
@@ -124,10 +119,10 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 
 	// `git diff foo...bar` gets all changes from X to `bar` where X is the common ancestor of `foo` and `bar`.
 	// Source: https://git-scm.com/docs/git-diff
-	let diff = (await run(`git diff ${sourceBranch}...HEAD --name-only`)).trim();
+	let diff = (await run(`git diff ${sourceBranch} --name-only`)).trim();
 	if (diff === "") {
 		// We are probably already on master, so compare to the last commit.
-		diff = (await run(`git diff ${sourceBranch}~1...HEAD --name-only`)).trim();
+		diff = (await run(`git diff ${sourceBranch}~1 --name-only`)).trim();
 	}
 	return diff.split("\n");
 

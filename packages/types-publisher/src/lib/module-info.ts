@@ -368,7 +368,8 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 
 	for (const filename of testFiles) {
 		const content = await readFile(directory, filename);
-		const { fileName, imports, referencedFiles, typeReferenceDirectives } = createSourceFile(filename, content);
+		const sourceFile = createSourceFile(filename, content);
+		const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
 		const filePath = () => path.join(pkgName, fileName);
 
 		for (const { fileName: ref } of referencedFiles) {
@@ -386,11 +387,9 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 			testDependencies.add(referencedPackage);
 		}
 
-		if (imports) {
-			for (const { text } of imports) {
-				if (!dependencies.has(text)) {
-					testDependencies.add(text);
-				}
+		for (const imported of imports(sourceFile)) {
+			if (!imported.startsWith(".") && !dependencies.has(imported)) {
+				testDependencies.add(imported);
 			}
 		}
 	}
@@ -400,10 +399,4 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 
 function createSourceFile(filename: string, content: string): ts.SourceFile {
 	return ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/false);
-}
-
-declare module "typescript" {
-	export interface SourceFile {
-		imports: LiteralExpression[];
-	}
 }

@@ -57,5 +57,5 @@ async function single(singleName: string, options: Options): Promise<void> {
 	const result = await parser.getTypingInfo(singleName, options);
 	const typings = { [singleName]: result.data };
 	await writeDataFile(typesDataFilename, typings);
-	console.log(result);
+	console.log(JSON.stringify(result, undefined, 4));
 }

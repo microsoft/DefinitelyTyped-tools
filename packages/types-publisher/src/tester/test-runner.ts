@@ -8,7 +8,7 @@ import { readJson } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
 
-import getAffectedPackages, { allDependencies } from "./get-affected-packages";
+import getAffectedPackages from "./get-affected-packages";
 import { installAllTypeScriptVersions, pathToTsc } from "./ts-installer";
 
 const tslintPath = joinPaths(require.resolve("tslint"), "../tslint-cli.js");
@@ -55,7 +55,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	console.log("Installing dependencies...");
 
-	await nAtATime(nProcesses, allDependencies(allPackages, typings), async pkg => {
+	await nAtATime(nProcesses, typings, async pkg => {
 		const cwd = pkg.directoryPath(options);
 		if (await fsp.exists(joinPaths(cwd, "package.json"))) {
 			let stdout = await execAndThrowErrors(`npm install`, cwd);
