@@ -23,6 +23,11 @@ export default async function getAffectedPackages(allPackages: AllPackages, log:
 	return collectDependers(changedPackages, dependedOn);
 }
 
+/** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
+export function allDependencies(allPackages: AllPackages, packages: TypingsData[]): TypingsData[] {
+	return sortPackages(transitiveClosure(packages, pkg => allPackages.allDependencyTypings(pkg)));
+}
+
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
 function collectDependers(changedPackages: Iterable<TypingsData>, reverseDependencies: Map<TypingsData, Set<TypingsData>>): TypingsData[] {
 	return sortPackages(transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []));
