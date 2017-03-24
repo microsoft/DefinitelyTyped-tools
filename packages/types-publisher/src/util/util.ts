@@ -66,11 +66,6 @@ export async function filterNAtATime<T>(
 	return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 
-export async function filterAsyncOrdered<T>(arr: T[], shouldKeep: (t: T) => Promise<boolean>): Promise<T[]> {
-	const shouldKeeps: boolean[] = await Promise.all(arr.map(shouldKeep));
-	return arr.filter((_, idx) => shouldKeeps[idx]);
-}
-
 export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<U>): Promise<U[]> {
 	const out = new Array(arr.length);
 	await Promise.all(arr.map(async (em, idx) => {

@@ -1,7 +1,7 @@
-import { Options, isTypingDirectory } from "../lib/common";
+import { Options } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
-import { sourceBranch } from "../lib/settings";
+import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { Logger } from "../util/logging";
 import { done, execAndThrowErrors, flatMap, map, mapDefined, join, sort } from "../util/util";
 
@@ -140,24 +140,26 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 }
 
 /**
- * For "a/b/c", returns { name: "a", version: "latest" }.
- * For "a/v3/c", returns { name: "a", version: 3 }.
- * For "a", returns undefined.
+ * For "types/a/b/c", returns { name: "a", version: "latest" }.
+ * For "types/a/v3/c", returns { name: "a", version: 3 }.
+ * For "x", returns undefined.
  */
 function getDependencyFromFile(fileName: string): PackageVersion | undefined {
 	const parts = fileName.split("/");
-	if (parts.length === 1) {
+	if (parts.length <= 2) {
 		// It's not in a typings directory at all.
 		return undefined;
 	}
 
-	const name = parts[0];
-	if (!isTypingDirectory(name)) {
+	const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+
+	if (typesDirName !== typesDirectoryName) {
 		return undefined;
 	}
 
-	if (parts.length > 2) {
-		const majorVersion = parseMajorVersionFromDirectoryName(parts[1]);
+	if (subDirName) {
+		// Looks like "types/a/v3/c"
+		const majorVersion = parseMajorVersionFromDirectoryName(subDirName);
 		if (majorVersion !== undefined) {
 			return { name,  majorVersion };
 		}

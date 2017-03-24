@@ -404,7 +404,7 @@ export class TypingsData extends PackageBase {
 	}
 
 	directoryPath(options: Options): string {
-		return joinPaths(options.definitelyTypedPath, this.subDirectoryPath);
+		return joinPaths(options.typesPath, this.subDirectoryPath);
 	}
 
 	filePath(fileName: string, options: Options): string {
@@ -435,7 +435,7 @@ async function readNotNeededPackages(options: Options): Promise<NotNeededPackage
 
 /** Path to the *root* for a given package. Path to a particular version may differ. */
 export function packageRootPath(packageName: string, options: Options): string {
-	return joinPaths(options.definitelyTypedPath, packageName);
+	return joinPaths(options.typesPath, packageName);
 }
 
 export type TypeScriptVersion = "2.0" | "2.1" | "2.2";

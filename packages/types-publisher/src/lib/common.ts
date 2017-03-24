@@ -2,6 +2,7 @@ import * as fsp from "fs-promise";
 
 import { readJson, writeJson } from "../util/io";
 import { joinPaths } from "../util/util";
+import { typesDirectoryName } from "../lib/settings";
 
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");
@@ -12,25 +13,23 @@ if (process.env.LONGJOHN) {
 export const home = joinPaths(__dirname, "..", "..");
 
 /** Settings that may be determined dynamically. */
-export interface Options {
-	// e.g. '../DefinitelyTyped'
-	// This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
-	definitelyTypedPath: string;
-
-	// Whether to show progress bars. Good when running locally, bad when running on travis / azure.
-	progress: boolean;
-}
-export namespace Options {
+export class Options {
 	/** Options for running locally. */
-	export const defaults: Options = {
-		definitelyTypedPath: "../DefinitelyTyped",
-		progress: true
-	};
+	static defaults = new Options("../DefinitelyTyped", true);
+	static azure = new Options("../DefinitelyTyped", false);
 
-	export const azure: Options = {
-		definitelyTypedPath: "../DefinitelyTyped",
-		progress: false
-	};
+	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
+	readonly typesPath: string;
+	constructor(
+		/** e.g. '../DefinitelyTyped'
+		 * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
+		 */
+		readonly definitelyTypedPath: string,
+		/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
+		readonly progress: boolean) {
+
+		this.typesPath = joinPaths(definitelyTypedPath, typesDirectoryName);
+	}
 }
 
 export function readDataFile(generatedBy: string, fileName: string): Promise<any> {
@@ -55,8 +54,4 @@ export async function writeDataFile(filename: string, content: {}, formatted = t
 const dataDir = joinPaths(home, "data");
 function dataFilePath(filename: string) {
 	return joinPaths(dataDir, filename);
-}
-
-export function isTypingDirectory(directoryName: string) {
-	return directoryName !== "node_modules" && directoryName !== "scripts";
 }

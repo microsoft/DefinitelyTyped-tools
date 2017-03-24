@@ -17,3 +17,5 @@ export const azureContainer = "typespublisher";
 export const azureKeyvault = "https://types-publisher-keys.vault.azure.net";
 /** Issue in types-publisher that we will use to report webhook errors. */
 export const errorsIssue = "Microsoft/types-publisher/issues/40";
+
+export const typesDirectoryName = "types";
