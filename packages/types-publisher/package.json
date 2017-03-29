@@ -15,7 +15,6 @@
     "longjohn": "^0.2.11",
     "moment": "^2.18.1",
     "node-fetch": "^1.6.3",
-    "npm": "^4.4.4",
     "npm-registry-client": "^8.1.0",
     "object.entries": "^1.0.3",
     "object.values": "^1.0.3",
