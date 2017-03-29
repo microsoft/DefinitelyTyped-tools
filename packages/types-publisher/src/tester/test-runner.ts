@@ -62,6 +62,8 @@ export default async function main(options: Options, nProcesses?: number, regexp
 		}
 	});
 
+	await runCommand(console, undefined, pathToDtsLint, "--installAll");
+
 	console.log("Testing...");
 
 	await nAtATime(nProcesses, typings, async pkg => {

@@ -148,7 +148,8 @@ function checkPackageJson(pkg: PartialPackageJson, path: string): void {
 	for (const key in pkg) {
 		const dependencies = (pkg as any)[key];
 		for (const dependencyName in dependencies) {
-			if (dependencyName.startsWith("@types/")) {
+			// TODO: don't specially allow @types/vue, it should use the real vue typings.
+			if (dependencyName.startsWith("@types/") && dependencyName !== "@types/vue") {
 				throw new Error(`In ${path}: Don't use a 'package.json' for @types dependencies.`);
 			}
 		}
