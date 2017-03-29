@@ -475,7 +475,7 @@
     "dtslint": {
       "version": "0.0.0",
       "from": "microsoft/dtslint#production",
-      "resolved": "git://github.com/microsoft/dtslint.git#086bc67e06b0d2f5bc59d7872b37d5c3a63f82e5"
+      "resolved": "git://github.com/microsoft/dtslint.git#418a79b5cff6cb4466554887a8245a29ecab0d95"
     },
     "duplexer": {
       "version": "0.1.1",
