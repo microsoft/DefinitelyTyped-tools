@@ -1,9 +1,9 @@
 import yargs = require("yargs");
 
-import clean from "../clean";
-import parseDefinitions from "../parse-definitions";
 import checkParseResults from "../check-parse-results";
+import clean from "../clean";
 import { Options } from "../lib/common";
+import parseDefinitions from "../parse-definitions";
 import { done } from "../util/util";
 
 import runTests, { parseNProcesses, testerOptions } from "./test-runner";

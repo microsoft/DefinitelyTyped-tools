@@ -1,5 +1,5 @@
-import { KeyVaultClient, KeyVaultCredentials } from "azure-keyvault";
 import { AuthenticationContext } from "adal-node";
+import { KeyVaultClient, KeyVaultCredentials } from "azure-keyvault";
 import { azureKeyvault } from "./settings";
 
 export enum Secret {

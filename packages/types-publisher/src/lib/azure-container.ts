@@ -1,4 +1,4 @@
-import { BlobService, common, ErrorOrResponse, ErrorOrResult, createBlobService } from "azure-storage";
+import { BlobService, common, createBlobService, ErrorOrResponse, ErrorOrResult } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
 

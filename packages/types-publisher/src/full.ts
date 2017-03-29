@@ -1,19 +1,19 @@
 import * as yargs from "yargs";
 
-import clean from "./clean";
-import getDefinitelyTyped from "./get-definitely-typed";
-import parseDefinitions from "./parse-definitions";
-import checkParseResults from "./check-parse-results";
 import calculateVersions from "./calculate-versions";
-import generatePackages from "./generate-packages";
+import checkParseResults from "./check-parse-results";
+import clean from "./clean";
 import createSearchIndex from "./create-search-index";
+import generatePackages from "./generate-packages";
+import getDefinitelyTyped from "./get-definitely-typed";
+import { Options } from "./lib/common";
+import NpmClient from "./lib/npm-client";
+import parseDefinitions from "./parse-definitions";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
 import uploadBlobs from "./upload-blobs";
-import validate from "./validate";
-import { Options } from "./lib/common";
-import NpmClient from "./lib/npm-client";
 import { currentTimeStamp, done } from "./util/util";
+import validate from "./validate";
 
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;

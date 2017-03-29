@@ -1,9 +1,9 @@
 import * as yargs from "yargs";
 
-import * as parser from "./lib/definition-parser";
 import { Options, writeDataFile } from "./lib/common";
-import { TypingsVersionsRaw, typesDataFilename } from "./lib/packages";
-import { logger, quietLogger, moveLogs, writeLog } from "./util/logging";
+import * as parser from "./lib/definition-parser";
+import { typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
+import { logger, moveLogs, quietLogger, writeLog } from "./util/logging";
 import { done, nAtATime } from "./util/util";
 
 import fsp = require("fs-promise");
@@ -28,7 +28,9 @@ export default async function main(options: Options): Promise<void> {
 
 	await nAtATime(1, packageNames, use, { name: "Parsing...", flavor: name => name, options });
 	async function use(packageName: string): Promise<void> {
-		if (packageName === "tslint.json") return;
+		if (packageName === "tslint.json") {
+			return;
+		}
 
 		const { data, logs } = await parser.getTypingInfo(packageName, options);
 		typings[packageName] = data;

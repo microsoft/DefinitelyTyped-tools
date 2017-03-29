@@ -1,8 +1,8 @@
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
-import { AllPackages } from "./lib/packages";
 import generateAnyPackage from "./lib/package-generator";
+import { AllPackages } from "./lib/packages";
 import Versions, { changedPackages } from "./lib/versions";
 import { logger, moveLogs, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";

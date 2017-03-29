@@ -1,13 +1,13 @@
 import assert = require("assert");
 
-import { addNpmTagsForPackage } from "../npmTags";
 import { readFileAndWarn } from "../lib/common";
 import Versions from "../lib/versions";
-import { consoleLogger, quietLogger, Log, LoggerWithErrors } from "../util/logging";
+import { addNpmTagsForPackage } from "../npmTags";
+import { consoleLogger, Log, LoggerWithErrors, quietLogger } from "../util/logging";
 import { exec, joinPaths } from "../util/util";
 
-import { AnyPackage } from "./packages";
 import NpmClient from "./npm-client";
+import { AnyPackage } from "./packages";
 
 export default async function publishPackage(
 	client: NpmClient, pkg: AnyPackage, versions: Versions, latestVersion: AnyPackage, dry: boolean): Promise<Log> {

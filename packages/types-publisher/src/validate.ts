@@ -4,10 +4,10 @@ import * as yargs from "yargs";
 import { Options } from "./lib/common";
 import { AllPackages, fullNpmName } from "./lib/packages";
 import { validateOutputPath } from "./lib/settings";
-import { writeFile, writeJson } from "./util/io";
-import { LoggerWithErrors, quietLoggerWithErrors, loggerWithErrors, moveLogsWithErrors, writeLog } from "./util/logging";
-import { done, exec, joinPaths, nAtATime } from "./util/util";
 import { changedPackages } from "./lib/versions";
+import { writeFile, writeJson } from "./util/io";
+import { LoggerWithErrors, loggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors, writeLog } from "./util/logging";
+import { done, exec, joinPaths, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const all = !!yargs.argv.all;

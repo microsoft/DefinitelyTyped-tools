@@ -1,11 +1,12 @@
 import assert = require("assert");
+import { TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
-import { best, nAtATime, intOfString, sortObjectKeys } from "../util/util";
+import { best, intOfString, nAtATime, sortObjectKeys } from "../util/util";
 
 import { Options, readDataFile, writeDataFile } from "./common";
-import { AllPackages, AnyPackage, PackageId, MajorMinor, NotNeededPackage, TypeScriptVersion, TypingsData } from "./packages";
+import { AllPackages, AnyPackage, MajorMinor, NotNeededPackage, PackageId, TypingsData } from "./packages";
 import { npmRegistry } from "./settings";
 
 const versionsFilename = "versions.json";

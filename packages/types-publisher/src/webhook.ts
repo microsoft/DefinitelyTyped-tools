@@ -1,9 +1,9 @@
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
-import server from "./lib/webhook-server";
 import { setIssueOk } from "./lib/issue-updater";
 import { getSecret, Secret } from "./lib/secrets";
+import server from "./lib/webhook-server";
 import { done } from "./util/util";
 
 if (!module.parent) {

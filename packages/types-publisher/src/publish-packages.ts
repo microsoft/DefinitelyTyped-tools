@@ -1,11 +1,11 @@
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
-import { AllPackages, AnyPackage } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
 import publishPackage, { unpublishPackage } from "./lib/package-publisher";
+import { AllPackages, AnyPackage } from "./lib/packages";
 import Versions, { changedPackages } from "./lib/versions";
-import { Log, LogWithErrors, logger, writeLog } from "./util/logging";
+import { Log, logger, LogWithErrors, writeLog } from "./util/logging";
 import { done } from "./util/util";
 
 if (!module.parent) {

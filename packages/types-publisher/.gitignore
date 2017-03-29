@@ -3,5 +3,4 @@ data/
 logs/
 node_modules/
 output/
-typescript-installs
 validateOutput/

@@ -2,14 +2,14 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 import full from "../full";
-import { LoggerWithErrors, LogWithErrors, joinLogWithErrors, loggerWithErrors } from "../util/logging";
 import { stringOfStream } from "../util/io";
+import { joinLogWithErrors, LoggerWithErrors, loggerWithErrors, LogWithErrors } from "../util/logging";
 import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
 
-import RollingLogs from "./rolling-logs";
 import { Options } from "./common";
 import { reopenIssue } from "./issue-updater";
 import NpmClient from "./npm-client";
+import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
 
 export default async function server(key: string, githubAccessToken: string, dry: boolean, options: Options): Promise<Server> {

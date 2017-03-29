@@ -1,5 +1,5 @@
-import fetch, { RequestInit, Response } from "node-fetch";
 import * as fsp from "fs-promise";
+import fetch, { RequestInit, Response } from "node-fetch";
 import * as stream from "stream";
 
 import { parseJson } from "./util";

@@ -1,5 +1,5 @@
-import * as fsp from "fs-promise";
 import { execSync } from "child_process";
+import * as fsp from "fs-promise";
 import { dirname } from "path";
 
 import { Options } from "./lib/common";

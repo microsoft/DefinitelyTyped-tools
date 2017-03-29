@@ -1,8 +1,8 @@
-import { clearOutputPath } from "./lib/package-generator";
 import * as yargs from "yargs";
 
-import { AllPackages, TypingsData } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
+import { clearOutputPath } from "./lib/package-generator";
+import { AllPackages, TypingsData } from "./lib/packages";
 import { outputPath } from "./lib/settings";
 import { fetchLastPatchNumber, readAdditions } from "./lib/versions";
 import { writeJson } from "./util/io";

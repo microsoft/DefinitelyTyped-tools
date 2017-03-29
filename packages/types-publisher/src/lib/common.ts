@@ -1,8 +1,8 @@
 import * as fsp from "fs-promise";
 
+import { typesDirectoryName } from "../lib/settings";
 import { readJson, writeJson } from "../util/io";
 import { joinPaths } from "../util/util";
-import { typesDirectoryName } from "../lib/settings";
 
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");

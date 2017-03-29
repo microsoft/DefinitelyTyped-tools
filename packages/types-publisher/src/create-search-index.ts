@@ -2,8 +2,8 @@ import * as yargs from "yargs";
 
 import { Options, writeDataFile } from "./lib/common";
 import { AllPackages } from "./lib/packages";
-import { done, nAtATime } from "./util/util";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
+import { done, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const skipDownloads = yargs.argv.skipDownloads;

@@ -1,3 +1,4 @@
+import { parseHeaderOrFail } from "definitelytyped-header-parser";
 import * as fsp from "fs-promise";
 import * as ts from "typescript";
 
@@ -6,10 +7,10 @@ import { Log, moveLogs, quietLogger } from "../util/logging";
 import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
 
 import { Options } from "./common";
-import { parseHeaderOrFail } from "./header";
 import getModuleInfo, { getTestDependencies } from "./module-info";
-import { DependenciesRaw, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw, packageRootPath } from "./packages";
+
 import { PartialPackageJson } from "./package-generator";
+import { DependenciesRaw, packageRootPath, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
 
 export async function getTypingInfo(packageName: string, options: Options): Promise<{ data: TypingsVersionsRaw, logs: Log }> {
 	if (packageName !== packageName.toLowerCase()) {
@@ -87,7 +88,7 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	const mainFilename = "index.d.ts";
 
 	const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
-		parseHeaderOrFail(await readFile(directory, mainFilename), packageName);
+		parseHeaderOrFail(await readFile(directory, mainFilename));
 
 	const tsconfig: TsConfig = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory, tsconfig);

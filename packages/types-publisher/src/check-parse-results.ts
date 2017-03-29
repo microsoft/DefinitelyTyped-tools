@@ -2,8 +2,8 @@ import * as semver from "semver";
 import { Options } from "./lib/common";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { npmRegistry } from "./lib/settings";
-import { Logger, logger, writeLog } from "./util/logging";
 import { fetchJson} from "./util/io";
+import { Logger, logger, writeLog } from "./util/logging";
 import { best, done, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {

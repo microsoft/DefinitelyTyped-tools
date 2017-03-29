@@ -43,7 +43,6 @@ export default async function getModuleInfo(packageName: string, directory: stri
 			addDependency(ref.fileName);
 		}
 
-
 		for (const node of sourceFile.statements) {
 			switch (node.kind) {
 				case ts.SyntaxKind.NamespaceExportDeclaration: {

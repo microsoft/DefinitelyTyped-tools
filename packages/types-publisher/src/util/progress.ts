@@ -79,7 +79,8 @@ class UpdatableConsole {
 	}
 }
 
-const firstLetter = "a".charCodeAt(0), lastLetter = "z".charCodeAt(0);
+const firstLetter = "a".charCodeAt(0);
+const lastLetter = "z".charCodeAt(0);
 const charWidth = lastLetter - firstLetter;
 const strProgressTotal = charWidth * charWidth; // 2 characters
 

@@ -6,7 +6,7 @@ import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty, joinPaths } from "../util/util";
 
 import { Options } from "./common";
-import { AllPackages, AnyPackage, DependencyVersion, TypingsData, NotNeededPackage, fullNpmName } from "./packages";
+import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, NotNeededPackage, TypingsData } from "./packages";
 import { sourceBranch } from "./settings";
 import Versions, { Semver } from "./versions";
 

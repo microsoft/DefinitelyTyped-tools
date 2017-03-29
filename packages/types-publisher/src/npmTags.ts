@@ -1,7 +1,8 @@
+import { TypeScriptVersion } from "definitelytyped-header-parser";
 import * as yargs from "yargs";
 
-import { AnyPackage, AllPackages, TypeScriptVersion } from "./lib/packages";
 import NpmClient from "./lib/npm-client";
+import { AllPackages, AnyPackage } from "./lib/packages";
 import Versions from "./lib/versions";
 
 import { Logger } from "./util/logging";

@@ -1,7 +1,23 @@
 {
+	"extends": "tslint:latest",
 	"rules": {
 		"indent": [true, "tabs"],
 		"max-line-length": [true, 150],
+
+		"arrow-parens": false,
+		"forin": false,
+		"interface-name": false,
+		"max-classes-per-file": false,
+		"member-access": false,
+		"member-ordering": false,
+		"no-bitwise": false,
+		"no-console": false,
+		"no-namespace": false,
+		"no-var-requires": false,
+		"object-literal-sort-keys": false,
+		"one-line": false,
+		"switch-default": false,
+		"trailing-comma": false,
 		"variable-name": false
 	}
 }
