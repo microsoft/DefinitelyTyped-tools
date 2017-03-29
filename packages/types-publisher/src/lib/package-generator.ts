@@ -84,10 +84,9 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 
 interface Dependencies { [name: string]: string; }
 
-interface PartialPackageJson {
+export interface PartialPackageJson {
 	dependencies?: Dependencies;
 	peerDependencies?: Dependencies;
-	description?: string;
 }
 
 async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages, options: Options): Promise<string> {
@@ -99,7 +98,7 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 	const peerDependencies = pkg.peerDependencies || {};
 	addInferredDependencies(dependencies, peerDependencies, typing, packages);
 
-	const description = pkg.description || `TypeScript definitions for ${typing.libraryName}`;
+	const description = `TypeScript definitions for ${typing.libraryName}`;
 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out = {
