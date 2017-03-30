@@ -178,7 +178,7 @@ function createReadme(typing: TypingsData) {
 	lines.push("");
 
 	lines.push("# Details");
-	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${sourceBranch}/${typing.subDirectoryPath}`);
+	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}`);
 
 	lines.push("");
 	lines.push(`Additional Details`);
