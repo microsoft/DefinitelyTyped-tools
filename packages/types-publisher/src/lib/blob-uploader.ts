@@ -15,7 +15,7 @@ export default async function uploadBlobsAndUpdateIssue(timeStamp: string): Prom
 	await container.setCorsProperties();
 	const [dataUrls, logUrls] = await uploadBlobs(container, timeStamp);
 	await uploadIndex(container, timeStamp, dataUrls, logUrls);
-};
+}
 
 // View uploaded files at: https://ms.portal.azure.com under "typespublisher"
 async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[string[], string[]]> {
@@ -31,7 +31,7 @@ async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[s
 	logUrls.push(await uploadFile(container, logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
 
 	return [dataUrls, logUrls];
-};
+}
 
 const logsDirectoryName = "logs";
 const logsPrefix = logsDirectoryName + "/";
