@@ -54,7 +54,9 @@ export default async function main(options: Options, nProcesses?: number, regexp
 	await nAtATime(nProcesses, allDependencies(allPackages, typings), async pkg => {
 		const cwd = pkg.directoryPath(options);
 		if (await fsp.exists(joinPaths(cwd, "package.json"))) {
-			let stdout = await execAndThrowErrors(`npm install`, cwd);
+			// Scripts may try to compile native code.
+			// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
+			let stdout = await execAndThrowErrors(`npm install --ignore-scripts`, cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
 			if (stdout) {
 				console.log(stdout);
