@@ -1,10 +1,6 @@
 import * as child_process from "child_process";
 import * as crypto from "crypto";
 import moment = require("moment");
-import { shim as shimEntries } from "object.entries";
-shimEntries();
-import { shim as shimValues } from "object.values";
-shimValues();
 import * as os from "os";
 import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
