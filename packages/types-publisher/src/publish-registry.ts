@@ -80,7 +80,7 @@ function generatePackageJson(patch: number): {} {
 			"packages"
 		],
 		author: "Microsoft Corp.",
-		license: "Apache-2.0"
+		license: "MIT"
 	};
 }
 
