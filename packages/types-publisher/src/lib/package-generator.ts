@@ -15,63 +15,54 @@ export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackage
 	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, options);
 }
 
+const license = fsp.readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
+
 async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const outputPath = typing.outputDirectory;
-	await clearOutputPath(outputPath, log);
-
-	log("Generate package.json, metadata.json, and README.md");
 	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages, options);
-	const readme = createReadme(typing);
-
 	log("Write metadata files to disk");
-	const outputs = [
-		writeOutputFile("package.json", packageJson),
-		writeOutputFile("README.md", readme)
-	];
-	outputs.push(...typing.files.map(async file => {
+	await writeCommonOutputs(typing, packageJson, createReadme(typing), log);
+	await Promise.all(typing.files.map(async file => {
 		log(`Copy ${file}`);
-		await fsp.copy(typing.filePath(file, options), await outputFilePath(file));
+		await fsp.copy(typing.filePath(file, options), await outputFilePath(typing, file));
 	}));
 
-	await Promise.all(outputs);
 	return logResult();
-
-	async function writeOutputFile(filename: string, content: string): Promise<void> {
-		await writeFile(await outputFilePath(filename), content);
-	}
-
-	async function outputFilePath(filename: string): Promise<string> {
-		const full = joinPaths(outputPath, filename);
-		const dir = path.dirname(full);
-		if (dir !== outputPath) {
-			await fsp.mkdirp(dir);
-		}
-		return full;
-	}
 }
 
 async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Versions): Promise<string[]> {
 	const [log, logResult] = quietLogger();
-	const outputPath = pkg.outputDirectory;
-	await clearOutputPath(outputPath, log);
 
-	log("Generate package.json and README.md");
 	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg));
-	const readme = pkg.readme();
-
 	log("Write metadata files to disk");
-	await writeOutputFile("package.json", packageJson);
-	await writeOutputFile("README.md", readme);
-
-	// Not-needed packages never change version
+	await writeCommonOutputs(pkg, packageJson, pkg.readme(), log);
 
 	return logResult();
+}
 
-	function writeOutputFile(filename: string, content: string): Promise<void> {
-		return writeFile(joinPaths(outputPath, filename), content);
+async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string, log: Logger): Promise<void> {
+	await clearOutputPath(pkg.outputDirectory, log);
+
+	await Promise.all([
+		writeOutputFile("package.json", packageJson),
+		writeOutputFile("README.md", readme),
+		writeOutputFile("LICENSE", license),
+	]);
+
+	async function writeOutputFile(filename: string, content: string): Promise<void> {
+		await writeFile(await outputFilePath(pkg, filename), content);
 	}
+
+}
+
+async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string> {
+	const full = joinPaths(pkg.outputDirectory, filename);
+	const dir = path.dirname(full);
+	if (dir !== pkg.outputDirectory) {
+		await fsp.mkdirp(dir);
+	}
+	return full;
 }
 
 export async function clearOutputPath(outputPath: string, log: Logger): Promise<void> {
