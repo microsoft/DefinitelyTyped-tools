@@ -87,7 +87,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 			console.error(err.message);
 		}
 
-		console.error(`The following packages had errors: ${allErrors.map(e => e.pkg.name).join(", ")}`);
+		console.error(`The following packages had errors: ${allErrors.map(e => e.pkg.desc).join(", ")}`);
 
 		throw new Error("There was a test failure.");
 	}
@@ -96,7 +96,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
 	const cwd = pkg.directoryPath(options);
 	const shouldLint = await fsp.exists(joinPaths(cwd, "tslint.json"));
-	return runCommand(log, cwd, pathToDtsLint, "--dt", ...(shouldLint ? [] : ["--noLint"]));
+	return runCommand(log, cwd, pathToDtsLint, ...(shouldLint ? [] : ["--noLint"]));
 }
 
 interface TesterError {

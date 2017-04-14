@@ -28,10 +28,6 @@ export default async function main(options: Options): Promise<void> {
 
 	await nAtATime(1, packageNames, use, { name: "Parsing...", flavor: name => name, options });
 	async function use(packageName: string): Promise<void> {
-		if (packageName === "tslint.json") {
-			return;
-		}
-
 		const { data, logs } = await parser.getTypingInfo(packageName, options);
 		typings[packageName] = data;
 
