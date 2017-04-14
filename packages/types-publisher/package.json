@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/charm": "^1.0.0",
     "@types/fs-extra": "^2.0.0",
-    "@types/mz": "0.0.30",
+    "@types/mz": "^0.0.31",
     "@types/node": "^7.0.0",
     "@types/node-fetch": "^1.6.7",
     "@types/oboe": "^2.0.28",
