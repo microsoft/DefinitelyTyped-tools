@@ -9,16 +9,17 @@ import { done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesse
 import getAffectedPackages, { allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
-	const regexp = yargs.argv.all ? new RegExp("") : yargs.argv._[0] && new RegExp(yargs.argv._[0]);
-	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), regexp));
+	const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
+	const tsNext = !!yargs.argv.tsNext;
+	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), selection, tsNext));
 }
 
 const pathToDtsLint = joinPaths(__dirname, "..", "..", "node_modules", "dtslint", "bin", "index.js");
 
-export function parseNProcesses(): number | undefined {
+export function parseNProcesses(): number {
 	const str = yargs.argv.nProcesses;
 	if (!str) {
-		return undefined;
+		return numberOfOsProcesses;
 	}
 	const nProcesses = Number.parseInt(yargs.argv.nProcesses, 10);
 	if (Number.isNaN(nProcesses)) {
@@ -35,13 +36,13 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	}
 }
 
-export default async function main(options: Options, nProcesses?: number, regexp?: RegExp): Promise<void> {
+export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp, tsNext: boolean): Promise<void> {
 	const allPackages = await AllPackages.read(options);
-	const typings: TypingsData[] = regexp
-		? allPackages.allTypings().filter(t => regexp.test(t.name))
-		: await getAffectedPackages(allPackages, console.log, options);
-
-	nProcesses = nProcesses || numberOfOsProcesses;
+	const typings: TypingsData[] = selection === "all"
+		? allPackages.allTypings()
+		: selection === "affected"
+		? await getAffectedPackages(allPackages, console.log, options)
+		: allPackages.allTypings().filter(t => selection.test(t.name));
 
 	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.desc)}`);
 	console.log(`Running with ${nProcesses} processes.`);
@@ -70,7 +71,7 @@ export default async function main(options: Options, nProcesses?: number, regexp
 
 	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
-		const err = await single(pkg, log, options);
+		const err = await single(pkg, log, options, tsNext);
 		console.log(`Testing ${pkg.desc}`);
 		moveLogsWithErrors(console, logResult(), msg => "\t" + msg);
 		if (err) {
@@ -93,10 +94,17 @@ export default async function main(options: Options, nProcesses?: number, regexp
 	}
 }
 
-async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
+async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options, tsNext: boolean): Promise<TesterError | undefined> {
 	const cwd = pkg.directoryPath(options);
 	const shouldLint = await fsp.exists(joinPaths(cwd, "tslint.json"));
-	return runCommand(log, cwd, pathToDtsLint, ...(shouldLint ? [] : ["--noLint"]));
+	const args = [];
+	if (!shouldLint) {
+		args.push("--noLint");
+	}
+	if (tsNext) {
+		args.push("--tsNext");
+	}
+	return runCommand(log, cwd, pathToDtsLint, ...args);
 }
 
 interface TesterError {

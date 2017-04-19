@@ -10,12 +10,14 @@ import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
 	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-	done(main(options, parseNProcesses()));
+	const tsNext = !!yargs.argv.tsNext;
+	const all = !!yargs.argv.all;
+	done(main(options, parseNProcesses(), all, tsNext));
 }
 
-async function main(options: Options, nProcesses?: number): Promise<void> {
+async function main(options: Options, nProcesses: number, all: boolean, tsNext: boolean): Promise<void> {
 	await clean();
 	await parseDefinitions(options);
 	await checkParseResults(/*includeNpmChecks*/false, options);
-	await runTests(options, nProcesses);
+	await runTests(options, nProcesses, all ? "all" : "affected", tsNext);
 }

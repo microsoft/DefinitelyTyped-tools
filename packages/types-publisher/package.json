@@ -56,7 +56,8 @@
     "lint": "node node_modules/tslint/bin/tslint --format stylish src/**/*.ts",
     "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
-    "make-production-server-run": "node bin/make-server-run.js --remote"
+    "make-production-server-run": "node bin/make-server-run.js --remote",
+    "test-tsNext": "node bin/tester/test.js --all --tsNext"
   },
   "repository": {
     "type": "git",
