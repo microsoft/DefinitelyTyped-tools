@@ -6,6 +6,11 @@ import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
 import { inspect } from "util";
 
+if (!Object.entries) {
+	Object.entries = (obj: any) =>
+		Object.getOwnPropertyNames(obj).map(key => [key, obj[key]] as [string, any]);
+}
+
 import { Options } from "../lib/common";
 import ProgressBar from "./progress";
 
