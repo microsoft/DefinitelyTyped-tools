@@ -50,7 +50,7 @@ export function getSecret(secret: Secret): Promise<string> {
 	const client = getClient();
 	const secretUrl = `${azureKeyvault}/secrets/${azureSecretName(secret)}`;
 
-	return new Promise((resolve, reject) => {
+	return new Promise<string>((resolve, reject) => {
 		client.getSecret(secretUrl, (error, bundle) => {
 			if (error) {
 				reject(error);

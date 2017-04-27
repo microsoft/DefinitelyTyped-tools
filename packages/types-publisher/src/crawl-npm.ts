@@ -31,7 +31,7 @@ function allNpmPackages(): Promise<string[]> {
 	// https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md
 	const url = npmRegistry + "-/all";
 	const all: string[] = [];
-	return new Promise((resolve, reject) => {
+	return new Promise<string[]>((resolve, reject) => {
 		oboe(url)
 		.node("!.*", (x, path) => {
 			assert(path.length > 0);

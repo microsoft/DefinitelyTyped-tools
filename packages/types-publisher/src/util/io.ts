@@ -38,7 +38,7 @@ export function stringOfStream(stream: NodeJS.ReadableStream): Promise<string> {
 	stream.on("data", (data: Buffer) => {
 		body += data.toString("utf8");
 	});
-	return new Promise((resolve, reject) => {
+	return new Promise<string>((resolve, reject) => {
 		stream.on("error", reject);
 		stream.on("end", () => resolve(body));
 	});

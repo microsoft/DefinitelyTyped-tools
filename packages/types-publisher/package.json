@@ -20,7 +20,7 @@
     "semver": "^5.3.0",
     "source-map-support": "^0.4.0",
     "tar": "^2.2.1",
-    "typescript": "^2.2.0",
+    "typescript": "next",
     "yargs": "^7.0.2"
   },
   "devDependencies": {
