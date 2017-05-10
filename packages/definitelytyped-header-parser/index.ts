@@ -9,12 +9,12 @@ Example:
 // TypeScript Version: 2.1
 */
 
-export type TypeScriptVersion = "2.0" | "2.1" | "2.2";
+export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3";
 export namespace TypeScriptVersion {
-	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2"];
+	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2", "2.3"];
 	export const Lowest = "2.0";
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
-	export const Latest = "2.2";
+	export const Latest = "2.3";
 
 	for (const v of All) {
 		if (v > Latest) {
@@ -33,11 +33,13 @@ export namespace TypeScriptVersion {
 			case "2.0":
 				// A 2.0-compatible package is assumed compatible with TypeScript 2.1
 				// We want the "2.1" tag to always exist.
-				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2, tags.v2_3];
+				return [tags.latest, tags.v2_0, tags.v2_1, tags.v2_2, tags.v2_3, tags.v2_4];
 			case "2.1":
-				return [tags.latest, tags.v2_1, tags.v2_2, tags.v2_3];
+				return [tags.latest, tags.v2_1, tags.v2_2, tags.v2_3, tags.v2_4];
 			case "2.2":
-				return [tags.latest, tags.v2_2, tags.v2_3];
+				return [tags.latest, tags.v2_2, tags.v2_3, tags.v2_4];
+			case "2.3":
+				return [tags.latest, tags.v2_3, tags.v2_4];
 		}
 	}
 
@@ -47,6 +49,7 @@ export namespace TypeScriptVersion {
 		export const v2_1 = "ts2.1";
 		export const v2_2 = "ts2.2";
 		export const v2_3 = "ts2.3";
+		export const v2_4 = "ts2.4";
 	}
 }
 
