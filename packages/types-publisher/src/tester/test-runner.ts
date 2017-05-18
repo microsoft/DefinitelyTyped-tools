@@ -1,4 +1,4 @@
-import * as fsp from "fs-promise";
+import { pathExists } from "fs-extra";
 import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
@@ -54,7 +54,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 	// We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
 	await nAtATime(nProcesses, allDependencies(allPackages, typings), async pkg => {
 		const cwd = pkg.directoryPath(options);
-		if (await fsp.exists(joinPaths(cwd, "package.json"))) {
+		if (await pathExists(joinPaths(cwd, "package.json"))) {
 			// Scripts may try to compile native code.
 			// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
 			let stdout = await execAndThrowErrors(`npm install --ignore-scripts`, cwd);
@@ -96,7 +96,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options, tsNext: boolean): Promise<TesterError | undefined> {
 	const cwd = pkg.directoryPath(options);
-	const shouldLint = await fsp.exists(joinPaths(cwd, "tslint.json"));
+	const shouldLint = await pathExists(joinPaths(cwd, "tslint.json"));
 	const args = [];
 	if (!shouldLint) {
 		args.push("--noLint");

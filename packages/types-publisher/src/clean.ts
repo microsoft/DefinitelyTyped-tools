@@ -1,12 +1,14 @@
-import * as fsp from "fs-promise";
+import { remove } from "fs-extra";
+
+import { done } from "./util/util";
 
 if (!module.parent) {
-	main();
+	done(main());
 }
 
-export default function main(): void {
+export default async function main(): Promise<void> {
 	for (const dir of ["data", "logs", "output"]) {
 		console.log("Clean " + dir);
-		fsp.remove(dir);
+		await remove(dir);
 	}
 }

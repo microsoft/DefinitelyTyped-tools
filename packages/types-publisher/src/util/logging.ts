@@ -1,4 +1,4 @@
-import * as fsp from "fs-promise";
+import { ensureDir } from "fs-extra";
 
 import { home } from "../lib/common";
 import { joinPaths } from "../util/util";
@@ -95,7 +95,7 @@ export function logPath(logName: string) {
 }
 
 export async function writeLog(logName: string, contents: string[]): Promise<void> {
-	await fsp.ensureDir(logDir);
+	await ensureDir(logDir);
 	await writeFile(logPath(logName), contents.join("\r\n"));
 }
 

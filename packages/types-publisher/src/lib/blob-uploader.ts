@@ -1,5 +1,5 @@
 import assert = require("assert");
-import * as fsp from "fs-promise";
+import { readdir } from "fs-extra";
 import * as path from "path";
 
 import { Logger, logger, logPath, writeLog } from "../util/logging";
@@ -49,7 +49,7 @@ async function uploadDirectory(
 	container: BlobWriter, uploadedDirPath: string, dirPath: string, log: Logger,
 	filter?: (fileName: string) => boolean): Promise<string[]> {
 
-	let files = await fsp.readdir(dirPath);
+	let files = await readdir(dirPath);
 	if (filter) {
 		files = files.filter(filter);
 	}

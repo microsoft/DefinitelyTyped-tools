@@ -1,8 +1,8 @@
 import { parseHeaderOrFail } from "definitelytyped-header-parser";
-import * as fsp from "fs-promise";
+import { pathExists, readdir, readJSON } from "fs-extra";
 import * as ts from "typescript";
 
-import { readFile as readFileText, readJson } from "../util/io";
+import { isDirectory, readFile, readJson } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
 import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
 
@@ -31,7 +31,7 @@ export async function getTypingInfo(packageName: string, options: Options): Prom
 		}
 
 		const directory = joinPaths(rootDirectory, directoryName);
-		const files = await fsp.readdir(directory);
+		const files = await readdir(directory);
 		const { data, logs } = await getTypingData(packageName, directory, files, majorVersion);
 		log(`Parsing older version ${majorVersion}`);
 		moveLogs(log, logs, (msg) => "    " + msg);
@@ -53,7 +53,7 @@ export async function getTypingInfo(packageName: string, options: Options): Prom
 interface OlderVersionDirectory { directoryName: string; majorVersion: number; }
 
 async function getOlderVersions(rootDirectory: string): Promise<{ rootDirectoryLs: string[], olderVersionDirectories: OlderVersionDirectory[] }> {
-	const lsRootDirectory = await fsp.readdir(rootDirectory);
+	const lsRootDirectory = await readdir(rootDirectory);
 	const rootDirectoryLs: string[] = [];
 	const olderVersionDirectories: OlderVersionDirectory[] = [];
 	for (const fileOrDirectoryName of lsRootDirectory) {
@@ -88,16 +88,16 @@ async function getTypingData(packageName: string, directory: string, ls: string[
 	const mainFilename = "index.d.ts";
 
 	const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion, libraryName, projects } =
-		parseHeaderOrFail(await readFile(directory, mainFilename));
+		parseHeaderOrFail(await readFileAndThrowOnBOM(directory, mainFilename));
 
-	const tsconfig: TsConfig = await fsp.readJSON(joinPaths(directory, "tsconfig.json"));
+	const tsconfig: TsConfig = await readJSON(joinPaths(directory, "tsconfig.json"));
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory, tsconfig);
 	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
 	const testDependencies = await getTestDependencies(packageName, directory, testFiles, dependenciesSet);
 	const { dependencies, pathMappings } = await calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
 
 	const packageJsonPath = joinPaths(directory, "package.json");
-	const hasPackageJson = await fsp.exists(packageJsonPath);
+	const hasPackageJson = await pathExists(packageJsonPath);
 	if (hasPackageJson) {
 		checkPackageJson(await readJson(packageJsonPath), packageJsonPath);
 	}
@@ -277,7 +277,7 @@ function withoutEnd(s: string, end: string): string | undefined {
 }
 
 async function hash(directory: string, files: string[], tsconfigPaths: ts.MapLike<string[]> | undefined): Promise<string> {
-	const fileContents = await mapAsyncOrdered(files, async f => f + "**" + await readFile(directory, f));
+	const fileContents = await mapAsyncOrdered(files, async f => f + "**" + await readFileAndThrowOnBOM(directory, f));
 	let allContent = fileContents.join("||");
 	if (tsconfigPaths) {
 		allContent += JSON.stringify(tsconfigPaths);
@@ -285,9 +285,9 @@ async function hash(directory: string, files: string[], tsconfigPaths: ts.MapLik
 	return computeHash(allContent);
 }
 
-export async function readFile(directory: string, fileName: string): Promise<string> {
+export async function readFileAndThrowOnBOM(directory: string, fileName: string): Promise<string> {
 	const full = joinPaths(directory, fileName);
-	const text = await readFileText(full);
+	const text = await readFile(full);
 	if (text.charCodeAt(0) === 0xFEFF) {
 		const commands = [
 			"npm install -g strip-bom-cli",
@@ -304,7 +304,7 @@ const unusedFilesName = "UNUSED_FILES.txt";
 async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set<string>): Promise<void> {
 	const lsSet = new Set(ls);
 	const unusedFiles = lsSet.delete(unusedFilesName)
-		? new Set((await fsp.readFile(joinPaths(directory, unusedFilesName), "utf-8")).split(/\r?\n/g))
+		? new Set((await readFile(joinPaths(directory, unusedFilesName))).split(/\r?\n/g))
 		: new Set<string>();
 	await checkAllUsedRecur(directory, lsSet, usedFiles, unusedFiles);
 }
@@ -319,15 +319,14 @@ async function checkAllUsedRecur(directory: string, ls: Iterable<string>, usedFi
 			continue;
 		}
 
-		const stat = await fsp.stat(joinPaths(directory, lsEntry));
-		if (stat.isDirectory()) {
+		if (await isDirectory(joinPaths(directory, lsEntry))) {
 			// We allow a "scripts" directory to be used for scripts.
 			if (lsEntry === "node_modules" || lsEntry === "scripts") {
 				continue;
 			}
 
 			const subdir = joinPaths(directory, lsEntry);
-			const lssubdir = await fsp.readdir(subdir);
+			const lssubdir = await readdir(subdir);
 			if (lssubdir.length === 0) {
 				throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
 			}

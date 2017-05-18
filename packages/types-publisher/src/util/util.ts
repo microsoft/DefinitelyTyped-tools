@@ -125,7 +125,7 @@ export function intOfString(str: string) {
 }
 
 export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
-	const out = {} as T;
+	const out = {} as T; // tslint:disable-line no-object-literal-type-assertion
 	for (const key of Object.keys(data).sort()) {
 		out[key] = data[key];
 	}

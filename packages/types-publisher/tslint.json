@@ -1,6 +1,8 @@
 {
 	"extends": "tslint:latest",
 	"rules": {
+		"await-promise": true,
+
 		"indent": [true, "tabs"],
 		"max-line-length": [true, 150],
 

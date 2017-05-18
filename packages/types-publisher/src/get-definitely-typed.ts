@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import * as fsp from "fs-promise";
+import { pathExists } from "fs-extra";
 import { dirname } from "path";
 
 import { Options } from "./lib/common";
@@ -13,7 +13,7 @@ if (!module.parent) {
 export default async function main(options: Options): Promise<void> {
 	const dtPath = options.definitelyTypedPath;
 
-	if (await fsp.exists(options.definitelyTypedPath)) {
+	if (await pathExists(options.definitelyTypedPath)) {
 		console.log(`Fetching changes from ${sourceBranch}`);
 
 		const actualBranch = exec(`git rev-parse --abbrev-ref HEAD`, dtPath);

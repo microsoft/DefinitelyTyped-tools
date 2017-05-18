@@ -5,7 +5,7 @@ import * as ts from "typescript";
 import { Logger } from "../util/logging";
 import { hasWindowsSlashes, joinPaths, normalizeSlashes, sort } from "../util/util";
 
-import { readFile } from "./definition-parser";
+import { readFileAndThrowOnBOM } from "./definition-parser";
 
 export default async function getModuleInfo(packageName: string, directory: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
 	let hasUmdDecl = false;
@@ -219,7 +219,7 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
 async function resolveModule(referencedFrom: string, directory: string, filename: string): Promise<{ resolvedFilename: string, content: string }> {
 	try {
 		const dts = filename + ".d.ts";
-		return { resolvedFilename: dts, content: await readFile(directory, dts) };
+		return { resolvedFilename: dts, content: await readFileAndThrowOnBOM(directory, dts) };
 	} catch (_) {
 		const index = joinPaths(filename, "index.d.ts");
 		return { resolvedFilename: index, content: await readFileAndReportErrors(referencedFrom, directory, filename, index) };
@@ -228,7 +228,7 @@ async function resolveModule(referencedFrom: string, directory: string, filename
 
 async function readFileAndReportErrors(referencedFrom: string, directory: string, referenceText: string, filename: string): Promise<string> {
 	try {
-		return await readFile(directory, filename);
+		return await readFileAndThrowOnBOM(directory, filename);
 	} catch (err) {
 		console.error(`In ${directory}, ${referencedFrom} references ${referenceText}, which can't be read.`);
 		throw err;
@@ -366,7 +366,7 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 	const testDependencies = new Set();
 
 	for (const filename of testFiles) {
-		const content = await readFile(directory, filename);
+		const content = await readFileAndThrowOnBOM(directory, filename);
 		const sourceFile = createSourceFile(filename, content);
 		const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
 		const filePath = () => path.join(pkgName, fileName);

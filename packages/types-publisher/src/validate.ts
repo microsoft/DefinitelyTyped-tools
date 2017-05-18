@@ -1,4 +1,4 @@
-import * as fsp from "fs-promise";
+import { mkdirp, remove } from "fs-extra";
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
@@ -58,8 +58,8 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	const failed: string[] = [];
 	const passed: string[] = [];
 	try {
-		await fsp.remove(outPath);
-		await fsp.mkdirp(outPath);
+		await remove(outPath);
+		await mkdirp(outPath);
 	}
 	catch (e) {
 		log.error("Could not recreate output directory. " + e);
@@ -96,11 +96,11 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 		const packageDirectory = joinPaths(outputDirecory, packageName);
 		log.info("");
 		log.info("Processing `" + packageName + "`...");
-		await fsp.mkdirp(packageDirectory);
+		await mkdirp(packageDirectory);
 		await writePackage(packageDirectory, packageName);
 		if (await runCommand("npm", log, packageDirectory, "../../node_modules/npm/bin/npm-cli.js", "install") &&
 			await runCommand("tsc", log, packageDirectory, "../../node_modules/typescript/lib/tsc.js")) {
-			await fsp.remove(packageDirectory);
+			await remove(packageDirectory);
 			log.info("Passed.");
 			passed = true;
 		}

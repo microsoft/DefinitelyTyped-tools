@@ -1,4 +1,4 @@
-import * as fsp from "fs-promise";
+import { copy, emptyDir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 
 import { readJson, writeFile } from "../util/io";
@@ -15,7 +15,7 @@ export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackage
 	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, options);
 }
 
-const license = fsp.readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
+const license = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
 
 async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
@@ -25,7 +25,7 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 	await writeCommonOutputs(typing, packageJson, createReadme(typing), log);
 	await Promise.all(typing.files.map(async file => {
 		log(`Copy ${file}`);
-		await fsp.copy(typing.filePath(file, options), await outputFilePath(typing, file));
+		await copy(typing.filePath(file, options), await outputFilePath(typing, file));
 	}));
 
 	return logResult();
@@ -60,17 +60,17 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 	const full = joinPaths(pkg.outputDirectory, filename);
 	const dir = path.dirname(full);
 	if (dir !== pkg.outputDirectory) {
-		await fsp.mkdirp(dir);
+		await mkdirp(dir);
 	}
 	return full;
 }
 
 export async function clearOutputPath(outputPath: string, log: Logger): Promise<void> {
 	log(`Create output path ${outputPath}`);
-	await fsp.mkdirp(outputPath);
+	await mkdirp(outputPath);
 
 	log(`Clear out old files`);
-	await fsp.emptyDir(outputPath);
+	await emptyDir(outputPath);
 }
 
 interface Dependencies { [name: string]: string; }

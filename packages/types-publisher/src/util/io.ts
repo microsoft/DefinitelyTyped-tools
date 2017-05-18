@@ -1,11 +1,11 @@
-import * as fsp from "fs-promise";
+import { readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
 import fetch, { RequestInit, Response } from "node-fetch";
 import * as stream from "stream";
 
 import { parseJson } from "./util";
 
 export function readFile(path: string): Promise<string> {
-	return fsp.readFile(path, { encoding: "utf8" });
+	return readFileWithEncoding(path, { encoding: "utf8" });
 }
 
 export async function readJson(path: string): Promise<any> {
@@ -19,11 +19,11 @@ export async function fetchJson(url: string, init?: RequestInit & { retries?: nu
 }
 
 export function writeFile(path: string, content: string): Promise<void> {
-	return fsp.writeFile(path, content, { encoding: "utf8" });
+	return writeFileWithEncoding(path, content, { encoding: "utf8" });
 }
 
 export function writeJson(path: string, content: any, formatted = true): Promise<void> {
-	return fsp.writeJson(path, content, { spaces: formatted ? 4 : 0 });
+	return writeJsonRaw(path, content, { spaces: formatted ? 4 : 0 });
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {
@@ -65,5 +65,5 @@ async function fetchWithRetries(url: string, init: RequestInit & { retries: numb
 }
 
 export async function isDirectory(path: string): Promise<boolean> {
-	return (await fsp.stat(path)).isDirectory();
+	return (await stat(path)).isDirectory();
 }

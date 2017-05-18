@@ -1,4 +1,4 @@
-import * as fsp from "fs-promise";
+import { ensureDir } from "fs-extra";
 
 import { typesDirectoryName } from "../lib/settings";
 import { readJson, writeJson } from "../util/io";
@@ -47,7 +47,7 @@ export async function readFileAndWarn(generatedBy: string, filePath: string): Pr
 }
 
 export async function writeDataFile(filename: string, content: {}, formatted = true) {
-	await fsp.ensureDir(dataDir);
+	await ensureDir(dataDir);
 	await writeJson(dataFilePath(filename), content, formatted);
 }
 
