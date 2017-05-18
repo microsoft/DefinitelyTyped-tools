@@ -11,20 +11,20 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "lint": "tslint --format stylish index.ts test/*.ts",
-    "test": "mocha --require test/mocha-require.js 'test/*.ts'"
+    "test": "mocha --require test/mocha-require.js \"test/*.ts\""
   },
   "dependencies": {
     "parsimmon": "^1.2.0",
-    "@types/parsimmon": "^1.0.1"
+    "@types/parsimmon": "^1.0.4"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.39",
-    "@types/node": "^7.0.5",
-    "mocha": "^3.2.0",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.18",
+    "mocha": "^3.4.1",
     "npm-run-all": "^4.0.1",
-    "ts-node": "^2.1.0",
-    "tslint": "^4.4.2",
-    "typescript": "^2.2.0"
+    "ts-node": "^3.0.4",
+    "tslint": "^5.2.0",
+    "typescript": "^2.3.2"
   },
   "license": "MIT"
 }

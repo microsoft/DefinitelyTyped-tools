@@ -19,8 +19,8 @@ describe("parse", () => {
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
 				{ name: "My Self", url: "https://github.com/me" },
-				{ name: "Some Other Guy", url: "https://github.com/otherguy" }
-			]
+				{ name: "Some Other Guy", url: "https://github.com/otherguy" },
+			],
 		});
 	});
 
@@ -43,8 +43,8 @@ describe("parse", () => {
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
 				{ name: "My Self", url: "https://github.com/me" },
-				{ name: "Some Other Guy", url: "https://github.com/otherguy" }
-			]
+				{ name: "Some Other Guy", url: "https://github.com/otherguy" },
+			],
 		});
 	});
 });

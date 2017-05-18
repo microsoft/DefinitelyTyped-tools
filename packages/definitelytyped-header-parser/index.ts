@@ -23,8 +23,8 @@ export namespace TypeScriptVersion {
 	}
 
 	/** True if a package with the given typescript version should be published as prerelease. */
-	export function isPrerelease(version: TypeScriptVersion): boolean {
-		return version === Latest;
+	export function isPrerelease(_version: TypeScriptVersion): boolean {
+		return false;
 	}
 
 	/** List of NPM tags that should be changed to point to the latest version. */
@@ -120,7 +120,7 @@ function headerParser(strict: boolean): pm.Parser<Header> {
 			libraryName: label.name,
 			libraryMajorVersion: label.major,
 			libraryMinorVersion: label.minor,
-			projects, contributors, typeScriptVersion
+			projects, contributors, typeScriptVersion,
 		}));
 }
 
@@ -151,7 +151,7 @@ function contributorsParser(strict: boolean): pm.Parser<Author[]> {
 		return pm.seqMap(contributors, pm.regexp(/ */), a => a);
 	}
 	return contributors;
-};
+}
 
 // TODO: Should we do something with the URL?
 const definitionsParser = pm.regexp(/\r?\n\/\/ Definitions: [^\r\n]+/);
