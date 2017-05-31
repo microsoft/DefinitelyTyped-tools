@@ -28,7 +28,7 @@ export default class NpmClient {
 
 		return new Promise<void>((resolve, reject) => {
 			const body = createTgz(publishedDirectory, reject);
-			const metadata = Object.assign({ readme }, packageJson);
+			const metadata = { readme, ...packageJson };
 
 			const params = {
 				access: "public" as "public",
