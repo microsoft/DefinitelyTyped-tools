@@ -222,6 +222,8 @@ const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
 				return pm.succeed<TypeScriptVersion>("2.1");
 			case "2":
 				return pm.succeed<TypeScriptVersion>("2.2");
+			case "3":
+				return pm.succeed<TypeScriptVersion>("2.3");
 			default:
 				return pm.fail(`TypeScript 2.${d} is not yet supported.`);
 		}

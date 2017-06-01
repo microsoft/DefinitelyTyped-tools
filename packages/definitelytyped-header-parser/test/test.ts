@@ -57,6 +57,11 @@ describe("parseTypeScriptVersionLine", () => {
 		const wrong = "// TypeScript Version: 3.14";
 		assert.throws(() => parseTypeScriptVersionLine(wrong));
 	});
+
+	it("allows typescript 2.3", () => {
+		const src = "// TypeScript Version: 2.3";
+		assert.equal(parseTypeScriptVersionLine(src), "2.3");
+	});
 });
 
 function dedent(strings: TemplateStringsArray) {
