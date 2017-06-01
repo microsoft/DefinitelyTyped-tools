@@ -21,9 +21,9 @@
       "dev": true
     },
     "@types/node": {
-      "version": "7.0.22",
+      "version": "7.0.23",
       "from": "@types/node@>=7.0.0 <8.0.0",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-7.0.22.tgz",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-7.0.23.tgz",
       "dev": true
     },
     "@types/node-fetch": {
@@ -381,7 +381,7 @@
     "definitelytyped-header-parser": {
       "version": "0.0.0",
       "from": "microsoft/definitelytyped-header-parser#production",
-      "resolved": "git://github.com/microsoft/definitelytyped-header-parser.git#c2a414a4cc8417575fe414fd7dd0a2bb10c45dbb"
+      "resolved": "git://github.com/microsoft/definitelytyped-header-parser.git#1fd60d367b95045e27608fd9feb0f2e65a733bc3"
     },
     "delayed-stream": {
       "version": "1.0.0",
@@ -818,21 +818,14 @@
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz"
     },
     "minimist": {
-      "version": "0.0.10",
-      "from": "minimist@>=0.0.1 <0.1.0",
-      "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
+      "version": "0.0.8",
+      "from": "minimist@0.0.8",
+      "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
     },
     "mkdirp": {
       "version": "0.5.1",
       "from": "mkdirp@>=0.5.0 >=0.0.0 <1.0.0",
-      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz",
-      "dependencies": {
-        "minimist": {
-          "version": "0.0.8",
-          "from": "minimist@0.0.8",
-          "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
     },
     "moment": {
       "version": "2.18.1",
@@ -963,11 +956,6 @@
       "version": "1.4.0",
       "from": "once@>=1.3.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/once/-/once-1.4.0.tgz"
-    },
-    "optimist": {
-      "version": "0.6.1",
-      "from": "optimist@>=0.6.0 <0.7.0",
-      "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz"
     },
     "os-homedir": {
       "version": "1.0.2",
@@ -1275,17 +1263,17 @@
     },
     "tslib": {
       "version": "1.7.1",
-      "from": "tslib@>=1.6.0 <2.0.0",
+      "from": "tslib@>=1.7.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.7.1.tgz"
     },
     "tslint": {
-      "version": "5.3.2",
+      "version": "5.4.1",
       "from": "tslint@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/tslint/-/tslint-5.3.2.tgz",
+      "resolved": "https://registry.npmjs.org/tslint/-/tslint-5.4.1.tgz",
       "dependencies": {
         "tsutils": {
           "version": "2.3.0",
-          "from": "tsutils@>=2.0.0 <3.0.0",
+          "from": "tsutils@>=2.3.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/tsutils/-/tsutils-2.3.0.tgz"
         }
       }
@@ -1317,9 +1305,9 @@
       "resolved": "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
     },
     "typescript": {
-      "version": "2.4.0-dev.20170531",
+      "version": "2.4.0-dev.20170601",
       "from": "typescript@next",
-      "resolved": "https://registry.npmjs.org/typescript/-/typescript-2.4.0-dev.20170531.tgz"
+      "resolved": "https://registry.npmjs.org/typescript/-/typescript-2.4.0-dev.20170601.tgz"
     },
     "underscore": {
       "version": "1.8.3",
@@ -1371,11 +1359,6 @@
       "from": "wide-align@>=1.1.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/wide-align/-/wide-align-1.1.2.tgz",
       "optional": true
-    },
-    "wordwrap": {
-      "version": "0.0.3",
-      "from": "wordwrap@>=0.0.2 <0.1.0",
-      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz"
     },
     "wrap-ansi": {
       "version": "2.1.0",
