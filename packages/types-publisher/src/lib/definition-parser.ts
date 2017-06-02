@@ -201,22 +201,22 @@ interface TsConfig {
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
 async function calculateDependencies(packageName: string, tsconfig: TsConfig, dependencyNames: Set<string>, oldMajorVersion: number | undefined
 	): Promise<{ dependencies: DependenciesRaw, pathMappings: PathMappingsRaw }> {
-	const { paths } = tsconfig.compilerOptions;
+	const paths = tsconfig.compilerOptions && tsconfig.compilerOptions.paths || {};
 
 	const dependencies: DependenciesRaw = {};
 	const pathMappings: PathMappingsRaw = {};
 
-	for (const dependencyName in paths!) {
+	for (const dependencyName in paths) {
 		// Might have a path mapping for "foo/*" to support subdirectories
 		const rootDirectory = withoutEnd(dependencyName, "/*");
 		if (rootDirectory !== undefined) {
-			if (!(rootDirectory in paths!)) {
+			if (!(rootDirectory in paths)) {
 				throw new Error(`In ${packageName}: found path mapping for ${dependencyName} but not for ${rootDirectory}`);
 			}
 			continue;
 		}
 
-		const pathMapping = paths![dependencyName];
+		const pathMapping = paths[dependencyName];
 		const version = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
 		if (dependencyName === packageName) {
 			if (oldMajorVersion === undefined) {
