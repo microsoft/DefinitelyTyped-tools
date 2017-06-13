@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { parseHeaderOrFail, parseTypeScriptVersionLine } from "..";
+import { parseHeaderOrFail, parseTypeScriptVersionLine, TypeScriptVersion } from "..";
 
 describe("parse", () => {
 	it("works", () => {
@@ -61,6 +61,12 @@ describe("parseTypeScriptVersionLine", () => {
 	it("allows typescript 2.3", () => {
 		const src = "// TypeScript Version: 2.3";
 		assert.equal(parseTypeScriptVersionLine(src), "2.3");
+	});
+});
+
+describe("tagsToUpdate", () => {
+	it("works", () => {
+		assert.deepEqual(TypeScriptVersion.tagsToUpdate("2.2"), ["ts2.2", "ts2.3", "ts2.4", "ts2.5", "latest"]);
 	});
 });
 
