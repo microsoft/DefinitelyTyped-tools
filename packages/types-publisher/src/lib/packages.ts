@@ -274,8 +274,8 @@ export type DependencyVersion = number | "*";
 
 export interface TypingsDataRaw extends BaseRaw {
 	readonly dependencies: DependenciesRaw;
-	 // These are always the latest version.
-	 // Will not include anything already in `dependencies`.
+	// These are always the latest version.
+	// Will not include anything already in `dependencies`.
 	readonly testDependencies: string[];
 	readonly pathMappings: PathMappingsRaw;
 

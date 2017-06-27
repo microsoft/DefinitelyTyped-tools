@@ -27,7 +27,7 @@ export function currentTimeStamp(): string {
 	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 }
 
-export const numberOfOsProcesses = os.cpus().length;
+export const numberOfOsProcesses = process.env.TRAVIS === "true" ? 8 : os.cpus().length * 4;
 
 /** Progress options needed for `nAtATime`. Other options will be inferred. */
 interface ProgressOptions<T, U> {
