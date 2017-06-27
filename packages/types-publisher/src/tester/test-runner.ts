@@ -57,7 +57,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 		if (await pathExists(joinPaths(cwd, "package.json"))) {
 			// Scripts may try to compile native code.
 			// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-			let stdout = await execAndThrowErrors(`npm install --ignore-scripts`, cwd);
+			let stdout = await execAndThrowErrors(`npm install --ignore-scripts --no-shrinkwrap`, cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
 			if (stdout) {
 				console.log(stdout);
