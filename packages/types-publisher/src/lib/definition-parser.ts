@@ -216,7 +216,22 @@ async function calculateDependencies(packageName: string, tsconfig: TsConfig, de
 			continue;
 		}
 
-		const pathMapping = paths[dependencyName];
+		const pathMappingList = paths[dependencyName];
+		if (pathMappingList.length !== 1) {
+			throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
+		}
+		const pathMapping = pathMappingList[0];
+
+		// Path mapping may be for "@foo/bar" -> "foo__bar". Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
+		const mangledScopedPackageSeparator = "__";
+		if (pathMapping.indexOf(mangledScopedPackageSeparator) !== -1) {
+			const expected = "@" + pathMapping.replace(mangledScopedPackageSeparator, "/");
+			if (dependencyName !== expected) {
+				throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
+			}
+			continue;
+		}
+
 		const version = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
 		if (dependencyName === packageName) {
 			if (oldMajorVersion === undefined) {
@@ -248,12 +263,7 @@ async function calculateDependencies(packageName: string, tsconfig: TsConfig, de
 }
 
 // e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
-function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPaths: string[]): number {
-	if (dependencyPaths.length !== 1) {
-		throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
-	}
-
-	const dependencyPath = dependencyPaths[0];
+function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {
 	const versionString = withoutStart(dependencyPath, dependencyName + "/");
 	const version = versionString === undefined ? undefined : parseMajorVersionFromDirectoryName(versionString);
 	if (version === undefined) {
