@@ -1,11 +1,12 @@
-import { readdir } from "fs-extra";
+import { readdir, stat } from "fs-extra";
+import * as path from "path";
 import * as yargs from "yargs";
 
 import { Options, writeDataFile } from "./lib/common";
 import * as parser from "./lib/definition-parser";
 import { typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
 import { logger, moveLogs, quietLogger, writeLog } from "./util/logging";
-import { done, nAtATime } from "./util/util";
+import { done, filterNAtATime, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const singleName = yargs.argv.single;
@@ -19,7 +20,8 @@ export default async function main(options: Options): Promise<void> {
 	summaryLog("# Typing Publish Report Summary");
 	summaryLog(`Started at ${(new Date()).toUTCString()}`);
 
-	const packageNames = await readdir(options.typesPath);
+	const packageNames = await filterNAtATime(10, await readdir(options.typesPath), async packageName =>
+		(await stat(path.join(options.typesPath, packageName))).isDirectory());
 
 	summaryLog(`Found ${packageNames.length} typings folders in ${options.typesPath}`);
 
