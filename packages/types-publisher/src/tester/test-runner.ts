@@ -14,7 +14,7 @@ if (!module.parent) {
 	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), selection, tsNext));
 }
 
-const pathToDtsLint = joinPaths(__dirname, "..", "..", "node_modules", "dtslint", "bin", "index.js");
+const pathToDtsLint = require.resolve("dtslint");
 
 export function parseNProcesses(): number {
 	const str = yargs.argv.nProcesses;
