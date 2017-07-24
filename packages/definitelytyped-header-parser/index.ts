@@ -9,12 +9,12 @@ Example:
 // TypeScript Version: 2.1
 */
 
-export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3";
+export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4";
 export namespace TypeScriptVersion {
-	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2", "2.3"];
+	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2", "2.3", "2.4"];
 	export const Lowest = "2.0";
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
-	export const Latest = "2.3";
+	export const Latest = "2.4";
 
 	for (const v of All) {
 		if (v > Latest) {
@@ -202,16 +202,15 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 }
 
 const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
-	pm.regexp(/\/\/ TypeScript Version: 2.(\d)/, 1).chain<TypeScriptVersion>(d => {
-		switch (d) {
-			case "1":
-				return pm.succeed<TypeScriptVersion>("2.1");
-			case "2":
-				return pm.succeed<TypeScriptVersion>("2.2");
-			case "3":
-				return pm.succeed<TypeScriptVersion>("2.3");
+	pm.regexp(/\/\/ TypeScript Version: (2.(\d))/, 1).chain<TypeScriptVersion>(v => {
+		switch (v) {
+			case "2.1":
+			case "2.2":
+			case "2.3":
+			case "2.4":
+				return pm.succeed<TypeScriptVersion>(v);
 			default:
-				return pm.fail(`TypeScript 2.${d} is not yet supported.`);
+				return pm.fail(`TypeScript ${v} is not yet supported.`);
 		}
 	});
 
