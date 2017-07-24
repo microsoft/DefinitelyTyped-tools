@@ -29,7 +29,7 @@ export function writeJson(path: string, content: any, formatted = true): Promise
 export function streamOfString(text: string): NodeJS.ReadableStream {
 	const s = new stream.Readable();
 	s.push(text);
-	s.push(null);
+	s.push(null); // tslint:disable-line no-null-keyword
 	return s;
 }
 
@@ -40,7 +40,7 @@ export function stringOfStream(stream: NodeJS.ReadableStream): Promise<string> {
 	});
 	return new Promise<string>((resolve, reject) => {
 		stream.on("error", reject);
-		stream.on("end", () => resolve(body));
+		stream.on("end", () => { resolve(body); });
 	});
 }
 

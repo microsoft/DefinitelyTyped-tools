@@ -20,8 +20,7 @@ export default class RollingLogs {
 	private async readAllLogs(): Promise<string[]> {
 		try {
 			return (await readBlob(this.name)).split("\n");
-		}
-		catch (err) {
+		} catch (err) {
 			// 404
 			return [];
 		}

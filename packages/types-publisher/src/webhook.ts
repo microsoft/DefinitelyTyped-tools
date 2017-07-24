@@ -18,8 +18,7 @@ export default async function main(): Promise<void> {
 
 	if (!(key && githubAccessToken && port)) {
 		console.log("The environment variables GITHUB_SECRET and GITHUB_ACCESS_TOKEN and PORT must be set.");
-	}
-	else {
+	} else {
 		console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
 		const s = await server(key, githubAccessToken, dry, Options.azure);
 		await setIssueOk(githubAccessToken);

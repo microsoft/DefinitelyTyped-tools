@@ -20,7 +20,7 @@ if (!module.parent) {
 	done(main(dry));
 }
 
-export default async function main(dry = false) {
+export default async function main(dry = false): Promise<void> {
 	const [log, logResult] = logger();
 	log("=== Publishing types-registry ===");
 
@@ -36,7 +36,7 @@ export default async function main(dry = false) {
 	await writeLog("publish-registry.md", logResult());
 }
 
-async function generateAndPublishRegistry(log: Logger, dry: boolean) {
+async function generateAndPublishRegistry(log: Logger, dry: boolean): Promise<void> {
 	// Don't include not-needed packages in the registry.
 	const typings = await AllPackages.readTypings();
 
@@ -47,7 +47,7 @@ async function generateAndPublishRegistry(log: Logger, dry: boolean) {
 	await publish(packageJson, dry);
 }
 
-async function generate(typings: TypingsData[], packageJson: {}, log: Logger): Promise<void> {
+async function generate(typings: ReadonlyArray<TypingsData>, packageJson: {}, log: Logger): Promise<void> {
 	await clearOutputPath(registryOutputPath, log);
 	await writeOutputFile("package.json", packageJson);
 	await writeOutputFile("index.json", generateRegistry(typings));
@@ -84,7 +84,7 @@ function generatePackageJson(patch: number): {} {
 	};
 }
 
-function generateRegistry(typings: TypingsData[]): {} {
+function generateRegistry(typings: ReadonlyArray<TypingsData>): {} {
 	const entries: { [packageName: string]: 1 } = {};
 	for (const { name } of typings) {
 		entries[name] = 1;

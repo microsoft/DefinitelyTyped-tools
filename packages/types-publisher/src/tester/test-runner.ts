@@ -38,7 +38,7 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 
 export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp, tsNext: boolean): Promise<void> {
 	const allPackages = await AllPackages.read(options);
-	const typings: TypingsData[] = selection === "all"
+	const typings = selection === "all"
 		? allPackages.allTypings()
 		: selection === "affected"
 		? await getAffectedPackages(allPackages, console.log, options)
@@ -57,7 +57,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 		if (await pathExists(joinPaths(cwd, "package.json"))) {
 			// Scripts may try to compile native code.
 			// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-			let stdout = await execAndThrowErrors(`npm install --ignore-scripts --no-shrinkwrap`, cwd);
+			let stdout = await execAndThrowErrors("npm install --ignore-scripts --no-shrinkwrap", cwd);
 			stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
 			if (stdout) {
 				console.log(stdout);
@@ -73,7 +73,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 		const [log, logResult] = quietLoggerWithErrors();
 		const err = await single(pkg, log, options, tsNext);
 		console.log(`Testing ${pkg.desc}`);
-		moveLogsWithErrors(console, logResult(), msg => "\t" + msg);
+		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
 		if (err) {
 			allErrors.push({ err, pkg });
 		}

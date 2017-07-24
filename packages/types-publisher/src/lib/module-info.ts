@@ -126,7 +126,7 @@ export default async function getModuleInfo(packageName: string, directory: stri
 				case ts.SyntaxKind.ExportDeclaration:
 				case ts.SyntaxKind.ExportAssignment:
 					// These nodes always indicate an external module
-					log(`Found export assignment or export declaration`);
+					log("Found export assignment or export declaration");
 					hasAnyExport = true;
 					break;
 
@@ -175,7 +175,7 @@ function properModuleName(folderName: string, fileName: string): string {
 }
 
 /** Given "foo/bar/baz", return "foo". */
-function rootName(importText: string) {
+function rootName(importText: string): string {
 	let slash = importText.indexOf("/");
 	// Root of `@foo/bar/baz` is `@foo/bar`
 	if (importText.startsWith("@")) {
@@ -218,7 +218,7 @@ async function allReferencedFiles(directory: string, entryFilenames: string[], l
 
 async function resolveModule(referencedFrom: string, directory: string, filename: string): Promise<{ resolvedFilename: string, content: string }> {
 	try {
-		const dts = filename + ".d.ts";
+		const dts = `${filename}.d.ts`;
 		return { resolvedFilename: dts, content: await readFileAndThrowOnBOM(directory, dts) };
 	} catch (_) {
 		const index = joinPaths(filename, "index.d.ts");
@@ -283,7 +283,7 @@ function imports(sourceFile: ts.SourceFile): string[] {
 	findImports(sourceFile.statements);
 	return out;
 
-	function findImports(statements: ts.Statement[]) {
+	function findImports(statements: ReadonlyArray<ts.Statement>): void {
 		for (const node of statements) {
 			switch (node.kind) {
 				case ts.SyntaxKind.ImportDeclaration:

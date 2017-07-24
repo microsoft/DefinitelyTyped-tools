@@ -46,7 +46,7 @@ export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<v
 	await runCommand("Unpublish", consoleLogger, dry, args);
 }
 
-async function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: string[]): Promise<void> {
+async function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: ReadonlyArray<string>): Promise<void> {
 	const cmd = args.join(" ");
 	log.info(`Run ${cmd}`);
 	if (!dry) {
@@ -56,12 +56,10 @@ async function runCommand(commandDescription: string, log: LoggerWithErrors, dry
 			log.info(`${commandDescription} failed, refer to error log`);
 			log.error(stderr);
 			throw new Error(stderr);
-		}
-		else {
+		} else {
 			log.info("Ran successfully");
 			log.info(stdout);
 		}
-
 	} else {
 		log.info("(dry run)");
 		return Promise.resolve();

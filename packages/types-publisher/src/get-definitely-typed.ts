@@ -16,19 +16,18 @@ export default async function main(options: Options): Promise<void> {
 	if (await pathExists(options.definitelyTypedPath)) {
 		console.log(`Fetching changes from ${sourceBranch}`);
 
-		const actualBranch = exec(`git rev-parse --abbrev-ref HEAD`, dtPath);
+		const actualBranch = exec("git rev-parse --abbrev-ref HEAD", dtPath);
 		if (actualBranch !== sourceBranch) {
 			throw new Error(`Please checkout branch '${sourceBranch}`);
 		}
 
-		const diff = exec(`git diff --name-only`, dtPath);
+		const diff = exec("git diff --name-only", dtPath);
 		if (diff) {
 			throw new Error(`'git diff' should be empty. Following files changed:\n${diff}`);
 		}
 
-		exec(`git pull`, dtPath);
-	}
-	else {
+		exec("git pull", dtPath);
+	} else {
 		console.log(`Cloning ${sourceRepository} to ${dtPath}`);
 		exec(`git clone ${sourceRepository}`, dirname(dtPath));
 		exec(`git checkout ${sourceBranch}`, dtPath);
@@ -36,7 +35,7 @@ export default async function main(options: Options): Promise<void> {
 }
 
 function exec(cmd: string, cwd?: string): string {
-	console.log(`Exec${cwd ? " at " + cwd : ""}: ${cmd}`);
+	console.log(`Exec${cwd ? ` at ${cwd}` : ""}: ${cmd}`);
 	const result = execSync(cmd, { cwd, encoding: "utf8" }).trim();
 	console.log(result);
 	return result.trim();

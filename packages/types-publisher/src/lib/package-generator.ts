@@ -69,7 +69,7 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 	log(`Create output path ${outputPath}`);
 	await mkdirp(outputPath);
 
-	log(`Clear out old files`);
+	log("Clear out old files");
 	await emptyDir(outputPath);
 }
 
@@ -137,27 +137,30 @@ function dependencySemver(dependency: DependencyVersion): string {
 }
 
 function createNotNeededPackageJSON({libraryName, name, fullNpmName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
-	return JSON.stringify({
-		name: fullNpmName,
-		version: version.versionString,
-		typings: null,
-		description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
-		main: "",
-		scripts: {},
-		author: "",
-		repository: sourceRepoURL,
-		license: "MIT",
-		// No `typings`, that's provided by the dependency.
-		dependencies: {
-			[name]: "*"
-		}
-	}, undefined, 4);
+	return JSON.stringify(
+		{
+			name: fullNpmName,
+			version: version.versionString,
+			typings: null, // tslint:disable-line no-null-keyword
+			description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
+			main: "",
+			scripts: {},
+			author: "",
+			repository: sourceRepoURL,
+			license: "MIT",
+			// No `typings`, that's provided by the dependency.
+			dependencies: {
+				[name]: "*"
+			}
+		},
+		undefined,
+		4);
 }
 
-function createReadme(typing: TypingsData) {
+function createReadme(typing: TypingsData): string {
 	const lines: string[] = [];
 	lines.push("# Installation");
-	lines.push("> `npm install --save " + typing.fullNpmName + "`");
+	lines.push(`> \`npm install --save ${typing.fullNpmName}\``);
 	lines.push("");
 
 	lines.push("# Summary");
@@ -172,7 +175,7 @@ function createReadme(typing: TypingsData) {
 	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}`);
 
 	lines.push("");
-	lines.push(`Additional Details`);
+	lines.push("Additional Details");
 	lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
 	const dependencies = Array.from(typing.dependencies).map(d => d.name);
 	lines.push(` * Dependencies: ${dependencies.length ? dependencies.join(", ") : "none"}`);

@@ -28,15 +28,15 @@ async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[s
 	// Finally, output blob logs and upload them.
 	const blobLogs = "upload-blobs.md";
 	await writeLog(blobLogs, logResult());
-	logUrls.push(await uploadFile(container, logsUploadedLocation(timeStamp) + "/" + blobLogs, logPath(blobLogs)));
+	logUrls.push(await uploadFile(container, `${logsUploadedLocation(timeStamp)}/${blobLogs}`, logPath(blobLogs)));
 
 	return [dataUrls, logUrls];
 }
 
 const logsDirectoryName = "logs";
-const logsPrefix = logsDirectoryName + "/";
+const logsPrefix = `${logsDirectoryName}/`;
 
-function logsUploadedLocation(timeStamp: string) {
+function logsUploadedLocation(timeStamp: string): string {
 	return logsPrefix + timeStamp;
 }
 
@@ -102,7 +102,7 @@ async function removeOldDirectories(container: BlobWriter, prefix: string, maxDi
 
 // Provides links to the latest blobs.
 // These are at: https://typespublisher.blob.core.windows.net/typespublisher/index.html
-function uploadIndex(container: BlobWriter, timeStamp: string, dataUrls: string[], logUrls: string[]): Promise<void> {
+function uploadIndex(container: BlobWriter, timeStamp: string, dataUrls: ReadonlyArray<string>, logUrls: ReadonlyArray<string>): Promise<void> {
 	return container.createBlobFromText("index.html", createIndex());
 
 	function createIndex(): string {

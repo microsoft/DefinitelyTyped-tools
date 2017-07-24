@@ -90,11 +90,11 @@ export function moveLogsWithErrors(dest: LoggerWithErrors, {infos, errors}: LogW
 
 const logDir = joinPaths(home, "logs");
 
-export function logPath(logName: string) {
+export function logPath(logName: string): string {
 	return joinPaths(logDir, logName);
 }
 
-export async function writeLog(logName: string, contents: string[]): Promise<void> {
+export async function writeLog(logName: string, contents: ReadonlyArray<string>): Promise<void> {
 	await ensureDir(logDir);
 	await writeFile(logPath(logName), contents.join("\r\n"));
 }

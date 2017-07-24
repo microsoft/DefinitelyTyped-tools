@@ -50,7 +50,7 @@ export default class ProgressBar {
 			}
 			charm.write("]");
 			if (this.flavor.length) {
-				charm.write(" " + this.flavor);
+				charm.write(` ${this.flavor}`);
 			}
 		});
 	}
@@ -66,14 +66,14 @@ export default class ProgressBar {
 class UpdatableConsole {
 	private readonly charm = charm(process.stdout);
 
-	update(action: (charm: charm.CharmInstance) => void) {
+	update(action: (charm: charm.CharmInstance) => void): void {
 		this.charm.push();
 		this.charm.erase("line");
 		action(this.charm);
 		this.charm.pop();
 	}
 
-	end() {
+	end(): void {
 		this.charm.write("\n");
 		this.charm.end();
 	}

@@ -34,7 +34,7 @@ export async function getTypingInfo(packageName: string, options: Options): Prom
 		const files = await readdir(directory);
 		const { data, logs } = await getTypingData(packageName, directory, files, majorVersion);
 		log(`Parsing older version ${majorVersion}`);
-		moveLogs(log, logs, (msg) => "    " + msg);
+		moveLogs(log, logs, msg => `    ${msg}`);
 
 		if (data.libraryMajorVersion !== majorVersion) {
 			throw new Error(`Directory ${directory} indicates major version ${majorVersion}, but header indicates major version ${data.libraryMajorVersion}`);
@@ -69,6 +69,7 @@ async function getOlderVersions(rootDirectory: string): Promise<{ rootDirectoryL
 
 export function parseMajorVersionFromDirectoryName(directoryName: string): number | undefined {
 	const match = /^v(\d+)$/.exec(directoryName);
+	// tslint:disable-next-line no-null-keyword
 	return match === null ? undefined : Number(match[1]);
 }
 
@@ -77,7 +78,7 @@ export function parseMajorVersionFromDirectoryName(directoryName: string): numbe
  * @param directory Full path to the directory for this package; e.g. "../DefinitelyTyped/foo/v3".
  * @param ls All file/directory names in `directory`.
  */
-async function getTypingData(packageName: string, directory: string, ls: string[], oldMajorVersion?: number
+async function getTypingData(packageName: string, directory: string, ls: ReadonlyArray<string>, oldMajorVersion?: number
 	): Promise<{ data: TypingsDataRaw, logs: Log }> {
 	const [log, logResult] = quietLogger();
 
@@ -163,7 +164,7 @@ async function entryFilesFromTsConfig(packageName: string, directory: string, ts
 		throw new Error(`${tsconfigPath}: Don't use "include", must use "files"`);
 	}
 
-	const files: string[] = tsconfig.files;
+	const files = tsconfig.files;
 	if (!files) {
 		throw new Error(`${tsconfigPath} needs to specify  "files"`);
 	}
@@ -181,7 +182,7 @@ async function entryFilesFromTsConfig(packageName: string, directory: string, ts
 		} else {
 			if (!file.startsWith("test/")) {
 				const expectedName = `${packageName}-tests.ts`;
-				if (file !== expectedName && file !== expectedName + "x") {
+				if (file !== expectedName && file !== `${expectedName}x`) {
 					throw new Error(`In ${directory}: Expected file '${file}' to be named ${expectedName}`);
 				}
 			}
@@ -193,8 +194,8 @@ async function entryFilesFromTsConfig(packageName: string, directory: string, ts
 }
 
 interface TsConfig {
-	include: string[];
-	files: string[];
+	include?: ReadonlyArray<string>;
+	files?: ReadonlyArray<string>;
 	compilerOptions: ts.CompilerOptions;
 }
 
@@ -225,7 +226,7 @@ async function calculateDependencies(packageName: string, tsconfig: TsConfig, de
 		// Path mapping may be for "@foo/bar" -> "foo__bar". Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
 		const mangledScopedPackageSeparator = "__";
 		if (pathMapping.indexOf(mangledScopedPackageSeparator) !== -1) {
-			const expected = "@" + pathMapping.replace(mangledScopedPackageSeparator, "/");
+			const expected = `@${pathMapping.replace(mangledScopedPackageSeparator, "/")}`;
 			if (dependencyName !== expected) {
 				throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
 			}
@@ -264,7 +265,7 @@ async function calculateDependencies(packageName: string, tsconfig: TsConfig, de
 
 // e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
 function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {
-	const versionString = withoutStart(dependencyPath, dependencyName + "/");
+	const versionString = withoutStart(dependencyPath, `${dependencyName}/`);
 	const version = versionString === undefined ? undefined : parseMajorVersionFromDirectoryName(versionString);
 	if (version === undefined) {
 		throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
@@ -286,8 +287,8 @@ function withoutEnd(s: string, end: string): string | undefined {
 	return undefined;
 }
 
-async function hash(directory: string, files: string[], tsconfigPaths: ts.MapLike<string[]> | undefined): Promise<string> {
-	const fileContents = await mapAsyncOrdered(files, async f => f + "**" + await readFileAndThrowOnBOM(directory, f));
+async function hash(directory: string, files: ReadonlyArray<string>, tsconfigPaths: ts.MapLike<ReadonlyArray<string>> | undefined): Promise<string> {
+	const fileContents = await mapAsyncOrdered(files, async f => `${f}**${await readFileAndThrowOnBOM(directory, f)}`);
 	let allContent = fileContents.join("||");
 	if (tsconfigPaths) {
 		allContent += JSON.stringify(tsconfigPaths);
@@ -311,7 +312,7 @@ export async function readFileAndThrowOnBOM(directory: string, fileName: string)
 
 const unusedFilesName = "UNUSED_FILES.txt";
 
-async function checkAllFilesUsed(directory: string, ls: string[], usedFiles: Set<string>): Promise<void> {
+async function checkAllFilesUsed(directory: string, ls: ReadonlyArray<string>, usedFiles: Set<string>): Promise<void> {
 	const lsSet = new Set(ls);
 	const unusedFiles = lsSet.delete(unusedFilesName)
 		? new Set((await readFile(joinPaths(directory, unusedFilesName))).split(/\r?\n/g))
@@ -341,10 +342,10 @@ async function checkAllUsedRecur(directory: string, ls: Iterable<string>, usedFi
 				throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
 			}
 
-			function takeSubdirectoryOutOfSet(originalSet: Set<string>) {
+			function takeSubdirectoryOutOfSet(originalSet: Set<string>): Set<string> {
 				const subdirSet = new Set<string>();
 				for (const file of originalSet) {
-					const sub = withoutStart(file, lsEntry + "/");
+					const sub = withoutStart(file, `${lsEntry}/`);
 					if (sub !== undefined) {
 						originalSet.delete(file);
 						subdirSet.add(sub);

@@ -18,7 +18,7 @@ if (!module.parent) {
 
 export default async function main(skipDownloads: boolean, full: boolean, options: Options): Promise<void> {
 	const packages = await AllPackages.readTypings();
-	console.log(`Generating search index...`);
+	console.log("Generating search index...");
 
 	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), {
 		name: "Indexing...",
@@ -28,9 +28,9 @@ export default async function main(skipDownloads: boolean, full: boolean, option
 	// Most downloads first
 	records.sort((a, b) => b.d - a.d);
 
-	console.log(`Done generating search index`);
+	console.log("Done generating search index");
 
-	console.log(`Writing out data files`);
+	console.log("Writing out data files");
 	await writeDataFile("search-index-min.json", records, false);
 	if (full) {
 		await writeDataFile("search-index-full.json", records.map(verboseRecord), true);

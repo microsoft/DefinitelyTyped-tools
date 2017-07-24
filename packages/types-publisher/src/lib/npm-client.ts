@@ -39,13 +39,11 @@ export default class NpmClient {
 
 			if (dry) {
 				resolve();
-			}
-			else {
+			} else {
 				this.client.publish(npmRegistry, params, err => {
 					if (err) {
 						reject(err);
-					}
-					else {
+					} else {
 						resolve();
 					}
 				});
@@ -53,13 +51,13 @@ export default class NpmClient {
 		});
 	}
 
-	tag(packageName: string, version: string, tag: string) {
+	tag(packageName: string, version: string, tag: string): Promise<void> {
 		const params = {
 			version,
 			tag,
 			auth: this.auth
 		};
-		return promisifyVoid(cb => this.client.tag(packageUrl(packageName), params, cb));
+		return promisifyVoid(cb => { this.client.tag(packageUrl(packageName), params, cb); });
 	}
 
 	deprecate(packageName: string, version: string, message: string): Promise<void> {
@@ -69,7 +67,7 @@ export default class NpmClient {
 			version,
 			auth: this.auth,
 		};
-		return promisifyVoid(cb => this.client.deprecate(url, params, cb));
+		return promisifyVoid(cb => { this.client.deprecate(url, params, cb); });
 	}
 }
 
@@ -78,8 +76,7 @@ function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => vo
 		callsBack(error => {
 			if (error) {
 				reject(error);
-			}
-			else {
+			} else {
 				resolve();
 			}
 		});

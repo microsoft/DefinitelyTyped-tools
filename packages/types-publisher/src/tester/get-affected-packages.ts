@@ -8,7 +8,7 @@ import { done, execAndThrowErrors, flatMap, join, map, mapDefined, sort } from "
 if (!module.parent) {
 	done(main(Options.defaults));
 }
-async function main(options: Options) {
+async function main(options: Options): Promise<void> {
 	const changes = await getAffectedPackages(await AllPackages.read(options), console.log, options);
 	console.log(join(map(changes, t => t.desc)));
 }
@@ -24,7 +24,7 @@ export default async function getAffectedPackages(allPackages: AllPackages, log:
 }
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(allPackages: AllPackages, packages: TypingsData[]): TypingsData[] {
+export function allDependencies(allPackages: AllPackages, packages: ReadonlyArray<TypingsData>): TypingsData[] {
 	return sortPackages(transitiveClosure(packages, pkg => allPackages.allDependencyTypings(pkg)));
 }
 
@@ -41,7 +41,7 @@ function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item:
 	const all = new Set<T>();
 	const workList: T[] = [];
 
-	function add(item: T) {
+	function add(item: T): void {
 		if (!all.has(item)) {
 			all.add(item);
 			workList.push(item);
@@ -132,7 +132,7 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 	return diff.split("\n");
 
 	async function run(cmd: string): Promise<string> {
-		log("Running: " + cmd);
+		log(`Running: ${cmd}`);
 		const stdout = await execAndThrowErrors(cmd, options.definitelyTypedPath);
 		log(stdout);
 		return stdout;

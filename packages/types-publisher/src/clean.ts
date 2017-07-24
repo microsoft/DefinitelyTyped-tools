@@ -8,7 +8,7 @@ if (!module.parent) {
 
 export default async function main(): Promise<void> {
 	for (const dir of ["data", "logs", "output"]) {
-		console.log("Clean " + dir);
+		console.log(`Clean ${dir}`);
 		await remove(dir);
 	}
 }

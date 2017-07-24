@@ -34,8 +34,8 @@ export class AllPackages {
 	}
 
 	private constructor(
-		private readonly data: Map<string, TypingsVersions>,
-		private readonly notNeeded: NotNeededPackage[]) {}
+		private readonly data: ReadonlyMap<string, TypingsVersions>,
+		private readonly notNeeded: ReadonlyArray<NotNeededPackage>) {}
 
 	getAnyPackage(id: PackageId): AnyPackage {
 		const pkg: AnyPackage | undefined = this.tryGetTypingsData(id) || this.notNeeded.find(p => p.name === id.name);
@@ -72,7 +72,7 @@ export class AllPackages {
 		return versions && versions.getLatest();
 	}
 
-	getTypingsData(id: PackageId) {
+	getTypingsData(id: PackageId): TypingsData {
 		const pkg = this.tryGetTypingsData(id);
 		if (!pkg) {
 			throw new Error(`No typings available for ${id}`);
@@ -85,15 +85,15 @@ export class AllPackages {
 		return versions && versions.tryGet(majorVersion);
 	}
 
-	allPackages(): AnyPackage[] {
-		return (this.allTypings() as AnyPackage[]).concat(this.allNotNeeded());
+	allPackages(): ReadonlyArray<AnyPackage> {
+		return [ ...this.allTypings(), ...this.allNotNeeded() ];
 	}
 
-	allTypings(): TypingsData[] {
+	allTypings(): ReadonlyArray<TypingsData> {
 		return Array.from(flattenData(this.data));
 	}
 
-	allNotNeeded(): NotNeededPackage[] {
+	allNotNeeded(): ReadonlyArray<NotNeededPackage> {
 		return this.notNeeded;
 	}
 
@@ -127,7 +127,7 @@ async function readData(): Promise<Map<string, TypingsVersions>> {
 	return mapValues(new Map(Object.entries(data)), raw => new TypingsVersions(raw));
 }
 
-function* flattenData(data: Map<string, TypingsVersions>): Iterable<TypingsData> {
+function* flattenData(data: ReadonlyMap<string, TypingsVersions>): Iterable<TypingsData> {
 	for (const versions of data.values()) {
 		yield* versions.getAll();
 	}
@@ -148,7 +148,7 @@ interface BaseRaw {
 
 /** Prefer to use `AnyPackage` instead of this. */
 export abstract class PackageBase {
-	static compare(a: PackageBase, b: PackageBase) { return a.name.localeCompare(b.name); }
+	static compare(a: PackageBase, b: PackageBase): number { return a.name.localeCompare(b.name); }
 
 	readonly name: string;
 	readonly libraryName: string;
@@ -172,8 +172,8 @@ export abstract class PackageBase {
 	abstract readonly isLatest: boolean;
 	abstract readonly isPrerelease: boolean;
 	abstract readonly projectName: string;
-	abstract readonly declaredModules: string[];
-	abstract readonly globals: string[];
+	abstract readonly declaredModules: ReadonlyArray<string>;
+	abstract readonly globals: ReadonlyArray<string>;
 	abstract readonly typeScriptVersion: TypeScriptVersion;
 
 	/** '@types/foo' for a package 'foo'. */
@@ -182,7 +182,7 @@ export abstract class PackageBase {
 	}
 
 	/** '@types%2ffoo' for a package 'foo'. */
-	get fullEscapedNpmName() {
+	get fullEscapedNpmName(): string {
 		return `@${scopeName}%2f${this.name}`;
 	}
 
@@ -192,12 +192,12 @@ export abstract class PackageBase {
 		return { name: this.name, majorVersion: this.major };
 	}
 
-	get outputDirectory() {
+	get outputDirectory(): string {
 		return joinPaths(outputDir, this.desc);
 	}
 }
 
-export function fullNpmName(packageName: string) {
+export function fullNpmName(packageName: string): string {
 	return `@${scopeName}/${packageName}`;
 }
 
@@ -232,11 +232,11 @@ export class NotNeededPackage extends PackageBase {
 	get minor(): number { return this.version.minor; }
 
 	// A not-needed package has no other versions. (TODO: allow that?)
-	get isLatest() { return true; }
-	get isPrerelease() { return false; }
+	get isLatest(): boolean { return true; }
+	get isPrerelease(): boolean { return false; }
 	get projectName(): string { return this.sourceRepoURL; }
-	get declaredModules(): string[] { return []; }
-	get globals(): string[] { return this.globals; }
+	get declaredModules(): ReadonlyArray<string> { return []; }
+	get globals(): ReadonlyArray<string> { return this.globals; }
 	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.Lowest; }
 
 	readme(useNewline = true): string {
@@ -276,11 +276,11 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly dependencies: DependenciesRaw;
 	// These are always the latest version.
 	// Will not include anything already in `dependencies`.
-	readonly testDependencies: string[];
+	readonly testDependencies: ReadonlyArray<string>;
 	readonly pathMappings: PathMappingsRaw;
 
 	// Parsed from "Definitions by:"
-	readonly contributors: Contributor[];
+	readonly contributors: ReadonlyArray<Contributor>;
 
 	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
 	readonly libraryMajorVersion: number;
@@ -291,10 +291,10 @@ export interface TypingsDataRaw extends BaseRaw {
 
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
 	// Does *not* include a partial `package.json` because that will not be copied directly.
-	readonly files: string[];
+	readonly files: ReadonlyArray<string>;
 
 	// List of all test files.
-	readonly testFiles: string[];
+	readonly testFiles: ReadonlyArray<string>;
 
 	// Whether a "package.json" exists
 	readonly hasPackageJson: boolean;
@@ -306,14 +306,14 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly projectName: string;
 
 	// Names introduced into the global scope by this definition set
-	readonly globals: string[];
+	readonly globals: ReadonlyArray<string>;
 
 	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
-	readonly declaredModules: string[];
+	readonly declaredModules: ReadonlyArray<string>;
 }
 
 class TypingsVersions {
-	private map: Map<number, TypingsData>;
+	private map: ReadonlyMap<number, TypingsData>;
 	private latest: number;
 
 	constructor(data: TypingsVersionsRaw) {
@@ -367,19 +367,19 @@ export class TypingsData extends PackageBase {
 		super(data);
 	}
 
-	get testDependencies(): string[] { return this.data.testDependencies; }
-	get contributors(): Contributor[] { return this.data.contributors; }
+	get testDependencies(): ReadonlyArray<string> { return this.data.testDependencies; }
+	get contributors(): ReadonlyArray<Contributor> { return this.data.contributors; }
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }
 	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }
 	get typeScriptVersion(): TypeScriptVersion { return this.data.typeScriptVersion; }
-	get files(): string[] { return this.data.files; }
-	get testFiles(): string[] { return this.data.testFiles; }
+	get files(): ReadonlyArray<string> { return this.data.files; }
+	get testFiles(): ReadonlyArray<string> { return this.data.testFiles; }
 	get hasPackageJson(): boolean { return this.data.hasPackageJson; }
 	get contentHash(): string { return this.data.contentHash; }
-	get declaredModules(): string[] { return this.data.declaredModules; }
+	get declaredModules(): ReadonlyArray<string> { return this.data.declaredModules; }
 	get projectName(): string { return this.data.projectName; }
-	get globals(): string[] { return this.data.globals; }
+	get globals(): ReadonlyArray<string> { return this.data.globals; }
 	get pathMappings(): Iterable<[string, number]> {
 		return Object.entries(this.data.pathMappings);
 	}
@@ -426,7 +426,7 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 	return readDataFile("parse-definitions", typesDataFilename);
 }
 
-function notNeededPackagesPath(options: Options) {
+function notNeededPackagesPath(options: Options): string {
 	return joinPaths(options.definitelyTypedPath, "notNeededPackages.json");
 }
 

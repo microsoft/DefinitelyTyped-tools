@@ -18,7 +18,7 @@ if (!module.parent) {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tagAll(dry: boolean) {
+async function tagAll(dry: boolean): Promise<void> {
 	const versions = await Versions.load();
 	const client = await NpmClient.create();
 
@@ -38,8 +38,8 @@ export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, 
 	const tags = TypeScriptVersion.tagsToUpdate(pkg.typeScriptVersion);
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
-		for (const tag of tags) {
-			await client.tag(pkg.fullEscapedNpmName, version, tag);
+		for (const tagName of tags) {
+			await tag(version, tagName);
 		}
 	}
 
@@ -52,7 +52,7 @@ export async function addNpmTagsForPackage(pkg: AnyPackage, versions: Versions, 
 		}
 	}
 
-	async function tag(versionString: string, tag: string) {
-		await client.tag(pkg.fullEscapedNpmName, versionString, tag);
+	function tag(versionString: string, tag: string): Promise<void> {
+		return client.tag(pkg.fullEscapedNpmName, versionString, tag);
 	}
 }

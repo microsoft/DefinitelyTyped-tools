@@ -77,11 +77,12 @@ function listenToGithub(
 		try {
 			work().then(() => rollingLogs.then(logs => writeLog(logs, logResult()))).catch(onError);
 		} catch (error) {
-			rollingLogs.then(logs => writeLog(logs, logResult())).then(() => onError(error)).catch(onError);
+			rollingLogs.then(logs => writeLog(logs, logResult())).then(() => { onError(error); }).catch(onError);
 		}
 
 		function onError(error: Error): void {
 			server.close();
+			// tslint:disable-next-line no-floating-promises
 			reopenIssue(githubAccessToken, timeStamp, error).catch(issueError => {
 				console.error(errorDetails(issueError));
 			}).then(() => {
@@ -103,8 +104,7 @@ function listenToGithub(
 			if (actualRef === expectedRef) {
 				respond("Thanks for the update! Running full.");
 				await onUpdate(log, timeStamp);
-			}
-			else {
+			} else {
 				const text = `Ignoring push to ${actualRef}, expected ${expectedRef}.`;
 				respond(text);
 				log.info(text);
@@ -129,17 +129,16 @@ function updateOneAtATime(doOnce: (log: LoggerWithErrors, timeStamp: string) => 
 	return (log, timeStamp) => {
 		if (working) {
 			anyUpdatesWhileWorking = true;
-			log.info(`Not starting update, because already performing one.`);
+			log.info("Not starting update, because already performing one.");
 			return undefined;
-		}
-		else {
+		} else {
 			working = false;
 			anyUpdatesWhileWorking = false;
 			return work();
 		}
 
 		async function work(): Promise<void> {
-			log.info(`Starting update`);
+			log.info("Starting update");
 			working = true;
 			anyUpdatesWhileWorking = false;
 			do {

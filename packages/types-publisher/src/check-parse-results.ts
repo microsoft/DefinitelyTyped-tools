@@ -2,7 +2,7 @@ import * as semver from "semver";
 import { Options } from "./lib/common";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { npmRegistry } from "./lib/settings";
-import { fetchJson} from "./util/io";
+import { fetchJson } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { best, done, multiMapAdd, nAtATime } from "./util/util";
 
@@ -31,7 +31,7 @@ export default async function main(includeNpmChecks: boolean, options: Options):
 	await writeLog("conflicts.md", logResult());
 }
 
-function checkForDuplicates(packages: AnyPackage[], func: (info: AnyPackage) => string | undefined, key: string, log: Logger): void {
+function checkForDuplicates(packages: ReadonlyArray<AnyPackage>, func: (info: AnyPackage) => string | undefined, key: string, log: Logger): void {
 	const lookup = new Map<string, TypingsData[]>();
 	for (const info of packages) {
 		const libraryOrProjectName = func(info);
@@ -50,7 +50,7 @@ function checkForDuplicates(packages: AnyPackage[], func: (info: AnyPackage) => 
 	}
 }
 
-function checkPathMappings(allPackages: AllPackages) {
+function checkPathMappings(allPackages: AllPackages): void {
 	for (const pkg of allPackages.allTypings()) {
 		const pathMappings = new Map(pkg.pathMappings);
 		const unusedPathMappings = new Set(pathMappings.keys());

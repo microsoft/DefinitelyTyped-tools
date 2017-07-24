@@ -7,7 +7,7 @@ if (!module.parent) {
 	done(main());
 }
 
-async function main() {
+async function main(): Promise<void> {
 	for (const secret of allSecrets) {
 		console.log(`Fetching secret '${Secret[secret]}'...`);
 		console.log(await getSecret(secret));

@@ -39,7 +39,7 @@ export default class Versions {
 		const data: VersionMap = {};
 
 		await nAtATime(25, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor, options });
-		async function getTypingsVersion(pkg: TypingsData) {
+		async function getTypingsVersion(pkg: TypingsData): Promise<void> {
 			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
 			const versionInfo = await fetchTypesPackageVersionInfo(pkg, isPrerelease, pkg.majorMinor);
 			if (!versionInfo) {
@@ -58,7 +58,7 @@ export default class Versions {
 		}
 
 		await nAtATime(25, allPackages.allNotNeeded(), getNotNeededVersion, { name: "Versions for not-needed packages...", flavor, options });
-		async function getNotNeededVersion(pkg: NotNeededPackage) {
+		async function getNotNeededVersion(pkg: NotNeededPackage): Promise<void> {
 			const isPrerelease = false; // Not-needed packages are never prerelease.
 			// tslint:disable-next-line:prefer-const
 			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
@@ -127,7 +127,7 @@ export class Semver {
 		return result;
 	}
 
-	static fromRaw({ major, minor, patch, isPrerelease }: Semver) {
+	static fromRaw({ major, minor, patch, isPrerelease }: Semver): Semver {
 		return new Semver(major, minor, patch, isPrerelease);
 	}
 
@@ -177,12 +177,10 @@ async function fetchVersionInfoFromNpm(
 
 	if (info.error) {
 		throw new Error(`Error getting version at ${uri}: ${info.error}`);
-	}
-	else if (!info["dist-tags"]) {
+	} else if (!info["dist-tags"]) {
 		// NPM returns `{}` for missing packages.
 		return undefined;
-	}
-	else {
+	} else {
 		const versions: { [key: string]: any } = info.versions;
 
 		const latestNonPrerelease = !isPrerelease ? undefined : best(Object.keys(versions).map(parseAnySemver), (a, b) => {

@@ -23,13 +23,11 @@ if (!module.parent) {
 	async function go(): Promise<void> {
 		if (shouldUnpublish) {
 			await unpublish(dry);
-		}
-		else {
+		} else {
 			const client = await NpmClient.create();
 			if (singleName) {
 				await single(client, singleName, Options.defaults, dry);
-			}
-			else {
+			} else {
 				await main(client, dry, Options.defaults);
 			}
 		}

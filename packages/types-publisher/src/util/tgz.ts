@@ -14,7 +14,7 @@ export function unGzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
 	return output;
 }
 
-export function writeTgz(inputDirectory: string, outFileName: string) {
+export function writeTgz(inputDirectory: string, outFileName: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
 		resolve(streamDone(createTgz(inputDirectory, reject).pipe(createWriteStream(outFileName))));
 	});

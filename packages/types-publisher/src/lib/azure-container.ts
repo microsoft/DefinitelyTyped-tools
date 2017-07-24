@@ -30,12 +30,13 @@ export default class BlobWriter {
 				]
 			}
 		};
-		return promisifyErrorOrResponse(cb => this.service.setServiceProperties(properties, cb));
+		return promisifyErrorOrResponse(cb => { this.service.setServiceProperties(properties, cb); });
 	}
 
 	ensureCreated(options: BlobService.CreateContainerOptions): Promise<void> {
-		return promisifyErrorOrResult<BlobService.ContainerResult>(cb =>
-			this.service.createContainerIfNotExists(azureContainer, options, cb)) as any as Promise<void>;
+		return promisifyErrorOrResult<BlobService.ContainerResult>(cb => {
+			this.service.createContainerIfNotExists(azureContainer, options, cb);
+		}) as any as Promise<void>;
 	}
 
 	createBlobFromFile(blobName: string, fileName: string): Promise<void> {
@@ -48,8 +49,9 @@ export default class BlobWriter {
 
 	async listBlobs(prefix: string): Promise<BlobService.BlobResult[]> {
 		const once = (token: common.ContinuationToken | undefined) =>
-			promisifyErrorOrResult<BlobService.ListBlobsResult>(cb =>
-				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token!, cb));
+			promisifyErrorOrResult<BlobService.ListBlobsResult>(cb => {
+				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token!, cb);
+			});
 
 		const out: BlobService.BlobResult[] = [];
 		let token: common.ContinuationToken | undefined;
@@ -63,8 +65,9 @@ export default class BlobWriter {
 	}
 
 	deleteBlob(blobName: string): Promise<void> {
-		return promisifyErrorOrResponse(cb =>
-			this.service.deleteBlob(azureContainer, blobName, cb));
+		return promisifyErrorOrResponse(cb => {
+			this.service.deleteBlob(azureContainer, blobName, cb);
+		});
 	}
 
 	private createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
@@ -82,13 +85,12 @@ export default class BlobWriter {
 export async function readBlob(blobName: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		const url = urlOfBlob(blobName);
-		const req = https.get(url, res => {
+		const req = https.get(url as any, res => {
 			switch (res.statusCode) {
 				case 200:
 					if (res.headers["content-encoding"] !== "GZIP") {
 						reject(new Error(`${url} is not gzipped`));
-					}
-					else {
+					} else {
 						resolve(stringOfStream(unGzip(res)));
 					}
 					break;
@@ -113,8 +115,7 @@ function promisifyErrorOrResult<A>(callsBack: (x: ErrorOrResult<A>) => void): Pr
 		callsBack((err, result) => {
 			if (err) {
 				reject(err);
-			}
-			else {
+			} else {
 				resolve(result);
 			}
 		});
@@ -126,8 +127,7 @@ function promisifyErrorOrResponse(callsBack: (x: ErrorOrResponse) => void): Prom
 		callsBack(err => {
 			if (err) {
 				reject(err);
-			}
-			else {
+			} else {
 				resolve();
 			}
 		});

@@ -1,25 +1,50 @@
 {
-	"extends": "tslint:latest",
+	"extends": "tslint:all",
 	"rules": {
-		"await-promise": true,
-
+		"arrow-parens": [true, "ban-single-arg-parens"],
+		"comment-format": [true, "check-space"],
 		"indent": [true, "tabs"],
 		"max-line-length": [true, 150],
+		"only-arrow-functions": [true, "allow-declarations"],
 
-		"arrow-parens": false,
+		"binary-expression-operand-order": false, //TODO: false positive
+		"cyclomatic-complexity": false, // TODO
+		"no-unsafe-any": false, //TODO
+		"strict-boolean-expressions": false, //TODO
+		"match-default-export-name": false, //TODO
+		"no-unbound-method": false, //TODO: false positives
+		"no-inferred-empty-object-type": false, //TODO: false positive
+		"no-shadowed-variable": false, //TODO
+		"no-unnecessary-type-assertion": false, //TODO: false positive
+
+		"no-this-assignment": [true, { "allow-destructuring": true }],
+		"typedef": [true, "call-signature"],
+
+		"completed-docs": false,
 		"forin": false,
 		"interface-name": false,
+		"linebreak-style": false,
 		"max-classes-per-file": false,
 		"member-access": false,
 		"member-ordering": false,
+		"newline-before-return": false,
+		"no-any": false,
 		"no-bitwise": false,
 		"no-console": false,
+		"no-default-export": false,
+		"no-unused-variable": false,
+		"no-magic-numbers": false,
 		"no-namespace": false,
+		"no-non-null-assertion": false,
+		"no-use-before-declare": false,
+		"no-parameter-properties": false,
+		"no-require-imports": false,
 		"no-var-requires": false,
 		"object-literal-sort-keys": false,
-		"one-line": false,
+		"promise-function-async": false,
 		"switch-default": false,
 		"trailing-comma": false,
+		"type-literal-delimiter": false,
 		"variable-name": false
 	}
 }

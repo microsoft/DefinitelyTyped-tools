@@ -46,12 +46,12 @@ export async function readFileAndWarn(generatedBy: string, filePath: string): Pr
 	}
 }
 
-export async function writeDataFile(filename: string, content: {}, formatted = true) {
+export async function writeDataFile(filename: string, content: {}, formatted = true): Promise<void> {
 	await ensureDir(dataDir);
 	await writeJson(dataFilePath(filename), content, formatted);
 }
 
 const dataDir = joinPaths(home, "data");
-function dataFilePath(filename: string) {
+function dataFilePath(filename: string): string {
 	return joinPaths(dataDir, filename);
 }

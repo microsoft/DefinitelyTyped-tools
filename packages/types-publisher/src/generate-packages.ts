@@ -29,7 +29,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 	await nAtATime(10, packages, async pkg => {
 		const logs = await generateAnyPackage(pkg, allPackages, versions, options);
 		if (tgz) {
-			await writeTgz(pkg.outputDirectory, pkg.outputDirectory + ".tgz");
+			await writeTgz(pkg.outputDirectory, `${pkg.outputDirectory}.tgz`);
 		}
 		log(` * ${pkg.libraryName}`);
 		moveLogs(log, logs, line => `   * ${line}`);

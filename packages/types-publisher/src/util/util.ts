@@ -17,8 +17,7 @@ import ProgressBar from "./progress";
 export function parseJson(text: string): any {
 	try {
 		return JSON.parse(text);
-	}
-	catch (err) {
+	} catch (err) {
 		throw new Error(`${err.message} due to JSON: ${text}`);
 	}
 }
@@ -36,7 +35,11 @@ interface ProgressOptions<T, U> {
 	options: Options;
 }
 
-export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Promise<U>, progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
+export async function nAtATime<T, U>(
+	n: number,
+	inputs: ReadonlyArray<T>,
+	use: (t: T) => Promise<U>,
+	progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
 	const progress = progressOptions && progressOptions.options.progress ? new ProgressBar({ name: progressOptions.name }) : undefined;
 
 	const results = new Array(inputs.length);
@@ -62,12 +65,12 @@ export async function nAtATime<T, U>(n: number, inputs: T[], use: (t: T) => Prom
 }
 
 export async function filterNAtATime<T>(
-	n: number, inputs: T[], shouldKeep: (input: T) => Promise<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
+	n: number, inputs: ReadonlyArray<T>, shouldKeep: (input: T) => Promise<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
 	const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
 	return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 
-export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<U>): Promise<U[]> {
+export async function mapAsyncOrdered<T, U>(arr: ReadonlyArray<T>, mapper: (t: T) => Promise<U>): Promise<U[]> {
 	const out = new Array(arr.length);
 	await Promise.all(arr.map(async (em, idx) => {
 		out[idx] = await mapper(em);
@@ -76,10 +79,10 @@ export async function mapAsyncOrdered<T, U>(arr: T[], mapper: (t: T) => Promise<
 }
 
 export function indent(str: string): string {
-	return "\t" + str.replace(/\n/g, "\n\t");
+	return `\t${str.replace(/\n/g, "\n\t")}`;
 }
 
-export function unique<T>(arr: T[]) {
+export function unique<T>(arr: ReadonlyArray<T>): T[] {
 	return [...new Set(arr)];
 }
 
@@ -99,7 +102,7 @@ function initArray<T>(length: number, makeElement: () => T): T[] {
 }
 
 /** Always use "/" for consistency. (This affects package content hash.) */
-export function joinPaths(...paths: string[]) {
+export function joinPaths(...paths: string[]): string {
 	return paths.join("/");
 }
 
@@ -116,7 +119,7 @@ export function hasOwnProperty(object: {}, propertyName: string): boolean {
 	return Object.prototype.hasOwnProperty.call(object, propertyName);
 }
 
-export function intOfString(str: string) {
+export function intOfString(str: string): number {
 	const n = Number.parseInt(str, 10);
 	if (Number.isNaN(n)) {
 		throw new Error(`Error in parseInt(${JSON.stringify(str)})`);
@@ -134,7 +137,7 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error?: Error, stdout: string, stderr: string }> {
-	return new Promise<{ error?: Error, stdout: string, stderr: string }>((resolve) => {
+	return new Promise<{ error?: Error, stdout: string, stderr: string }>(resolve => {
 		child_process.exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
 			stdout = stdout.trim();
 			stderr = stderr.trim();
@@ -160,7 +163,7 @@ export function errorDetails(error: Error): string {
  * Returns the input that is better than all others, or `undefined` if there are no inputs.
  * @param isBetter Returns true if `a` should be preferred over `b`.
  */
-export function best<T>(inputs: T[], isBetter: (a: T, b: T) => boolean): T | undefined {
+export function best<T>(inputs: ReadonlyArray<T>, isBetter: (a: T, b: T) => boolean): T | undefined {
 	if (!inputs.length) {
 		return undefined;
 	}
@@ -192,7 +195,7 @@ export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) =
 	return out;
 }
 
-export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V) {
+export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V): void {
 	const values = map.get(key);
 	if (values) {
 		values.push(value);
@@ -228,10 +231,10 @@ export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number):
 	return Array.from(values).sort(comparer);
 }
 
-export function join<T>(values: Iterable<T>, joiner = ", ") {
+export function join<T>(values: Iterable<T>, joiner = ", "): string {
 	let s = "";
 	for (const v of values) {
-		s += v + joiner;
+		s += `${v}${joiner}`;
 	}
 	return s.slice(0, s.length - joiner.length);
 }

@@ -19,13 +19,11 @@ if (!module.parent) {
 	if (all) {
 		console.log("Validating all packages");
 		done(doAll());
-	}
-	else if (packageNames.length) {
-		console.log("Validating: " + JSON.stringify(packageNames));
+	} else if (packageNames.length) {
+		console.log(`Validating: ${JSON.stringify(packageNames)}`);
 		done(doValidate(packageNames));
-	}
-	else {
-		main(Options.defaults);
+	} else {
+		done(main(Options.defaults));
 	}
 }
 
@@ -40,7 +38,7 @@ async function doAll(): Promise<void> {
 	await doValidate(packageNames);
 }
 
-async function doValidate(packageNames: string[]): Promise<void> {
+async function doValidate(packageNames: ReadonlyArray<string>): Promise<void> {
 	const [log, logResult] = loggerWithErrors();
 	await validatePackages(packageNames, validateOutputPath, log);
 	const {infos, errors} = logResult();
@@ -50,9 +48,9 @@ async function doValidate(packageNames: string[]): Promise<void> {
 	]);
 }
 
-async function validatePackages(packageNames: string[], outPath: string, log: LoggerWithErrors) {
+async function validatePackages(packageNames: ReadonlyArray<string>, outPath: string, log: LoggerWithErrors): Promise<void> {
 	log.info("");
-	log.info("Using output path: " + outPath);
+	log.info(`Using output path: ${outPath}`);
 	log.info("Running tests....");
 	log.info("");
 	const failed: string[] = [];
@@ -60,9 +58,8 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	try {
 		await remove(outPath);
 		await mkdirp(outPath);
-	}
-	catch (e) {
-		log.error("Could not recreate output directory. " + e);
+	} catch (e) {
+		log.error(`Could not recreate output directory. ${e}`);
 		return;
 	}
 
@@ -70,8 +67,7 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	await nAtATime(25, packageNames, async packageName => {
 		if (await validatePackage(packageName, outPath, log)) {
 			passed.push(packageName);
-		}
-		else {
+		} else {
 			failed.push(packageName);
 		}
 	});
@@ -89,13 +85,13 @@ async function validatePackages(packageNames: string[], outPath: string, log: Lo
 	}
 }
 
-async function validatePackage(packageName: string, outputDirecory: string, mainLog: LoggerWithErrors) {
+async function validatePackage(packageName: string, outputDirecory: string, mainLog: LoggerWithErrors): Promise<boolean> {
 	const [log, logResult] = quietLoggerWithErrors();
 	let passed = false;
 	try {
 		const packageDirectory = joinPaths(outputDirecory, packageName);
 		log.info("");
-		log.info("Processing `" + packageName + "`...");
+		log.info(`Processing \`${packageName}\`...`);
 		await mkdirp(packageDirectory);
 		await writePackage(packageDirectory, packageName);
 		if (await runCommand("npm", log, packageDirectory, "../../node_modules/npm/bin/npm-cli.js", "install") &&
@@ -104,9 +100,8 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 			log.info("Passed.");
 			passed = true;
 		}
-	}
-	catch (e) {
-		log.info("Error: " + e);
+	} catch (e) {
+		log.info(`Error: ${e}`);
 		log.info("Failed!");
 	}
 
@@ -117,7 +112,7 @@ async function validatePackage(packageName: string, outputDirecory: string, main
 	return passed;
 }
 
-async function writePackage(packageDirectory: string, packageName: string) {
+async function writePackage(packageDirectory: string, packageName: string): Promise<void> {
 	// Write package.json
 	await writeJson(joinPaths(packageDirectory, "package.json"), {
 		name: `${packageName}_test`,
@@ -156,8 +151,7 @@ async function runCommand(commandDescription: string, log: LoggerWithErrors, dir
 		log.error(`${commandDescription} failed: ${JSON.stringify(error)}`);
 		log.info(`${commandDescription} failed, refer to error log`);
 		return false;
-	}
-	else {
+	} else {
 		log.info(stdout);
 		return true;
 	}

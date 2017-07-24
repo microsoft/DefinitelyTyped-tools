@@ -6,9 +6,9 @@ export interface SearchRecord {
 	// types package name
 	t: string;
 	// globals
-	g: string[];
+	g: ReadonlyArray<string>;
 	// modules
-	m: string[];
+	m: ReadonlyArray<string>;
 	// project name
 	p: string;
 	// library name

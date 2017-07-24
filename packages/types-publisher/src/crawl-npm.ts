@@ -12,7 +12,7 @@ if (!module.parent) {
 }
 
 /** Prints out every package on NPM with 'types'. */
-async function main(options: Options) {
+async function main(options: Options): Promise<void> {
 	const all = await allNpmPackages();
 	await writeDataFile("all-npm-packages.json", all);
 	const allTyped = await filterNAtATime(10, all, packageHasTypes, {
@@ -29,7 +29,7 @@ function allNpmPackages(): Promise<string[]> {
 	const progress = new ProgressBar({ name: "Loading NPM packages..." });
 
 	// https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md
-	const url = npmRegistry + "-/all";
+	const url = `${npmRegistry}-/all`;
 	const all: string[] = [];
 	return new Promise<string[]>((resolve, reject) => {
 		oboe(url)
@@ -47,6 +47,6 @@ function allNpmPackages(): Promise<string[]> {
 			progress.done();
 			resolve(all);
 		})
-		.fail(err => reject(err.thrown));
+		.fail(err => { reject(err.thrown); });
 	});
 }
