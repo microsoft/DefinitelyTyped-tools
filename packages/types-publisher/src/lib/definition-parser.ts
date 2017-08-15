@@ -1,5 +1,5 @@
 import { parseHeaderOrFail } from "definitelytyped-header-parser";
-import { pathExists, readdir, readJSON } from "fs-extra";
+import { pathExists, readdir, readFileSync, readJSON } from "fs-extra";
 import * as ts from "typescript";
 
 import { isDirectory, readFile, readJson } from "../util/io";
@@ -10,7 +10,9 @@ import { Options } from "./common";
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
 import { PartialPackageJson } from "./package-generator";
-import { DependenciesRaw, packageRootPath, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+import { DependenciesRaw, packageRootPath, PackageJsonDependency, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+
+const dependenciesWhitelist = new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split("\n"));
 
 export async function getTypingInfo(packageName: string, options: Options): Promise<{ data: TypingsVersionsRaw, logs: Log }> {
 	if (packageName !== packageName.toLowerCase()) {
@@ -99,9 +101,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 
 	const packageJsonPath = joinPaths(directory, "package.json");
 	const hasPackageJson = await pathExists(packageJsonPath);
-	if (hasPackageJson) {
-		checkPackageJson(await readJson(packageJsonPath), packageJsonPath);
-	}
+	const packageJsonDependencies = hasPackageJson ? checkPackageJson(await readJson(packageJsonPath), packageJsonPath) : [];
 
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
@@ -133,28 +133,42 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 		declaredModules,
 		files: declFiles,
 		testFiles,
-		hasPackageJson,
+		packageJsonDependencies,
 		contentHash: await hash(directory, allContentHashFiles, tsconfig.compilerOptions.paths)
 	};
 	return { data, logs: logResult() };
 }
 
-function checkPackageJson(pkg: PartialPackageJson, path: string): void {
+function checkPackageJson(pkg: PartialPackageJson, path: string): ReadonlyArray<PackageJsonDependency> {
 	for (const key in pkg) {
-		if (key !== "dependencies" && key !== "peerDependencies") {
+		if (key !== "dependencies") {
 			throw new Error(`${path} should not specify ${key}`);
 		}
 	}
 
-	for (const key in pkg) {
-		const dependencies = (pkg as any)[key];
-		for (const dependencyName in dependencies) {
-			// TODO: don't specially allow @types/vue, it should use the real vue typings.
-			if (dependencyName.startsWith("@types/") && dependencyName !== "@types/vue") {
-				throw new Error(`In ${path}: Don't use a 'package.json' for @types dependencies.`);
-			}
-		}
+	const dependencies = pkg["dependencies"];
+	if (dependencies === null || typeof dependencies !== "object") {
+		throw new Error(`${path} should contain "dependencies" or not exist.`);
 	}
+
+	const deps: Array<PackageJsonDependency> = [];
+
+	for (const dependencyName in dependencies) {
+		if (!dependenciesWhitelist.has(dependencyName)) {
+			const msg = dependencyName.startsWith("@types/")
+				? "Don't use a 'package.json' for @types dependencies."
+				: `Dependency ${dependencyName} not in whitelist; please make a pull request to types-publisher adding it.`;
+			throw new Error(`In ${path}: ` + msg);
+		}
+
+		const version = dependencies[dependencyName];
+		if (typeof version !== "string") {
+			throw new Error(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
+		}
+		deps.push({ name: dependencyName, version });
+	}
+
+	return deps;
 }
 
 async function entryFilesFromTsConfig(packageName: string, directory: string, tsconfig: TsConfig

@@ -1,7 +1,7 @@
 import { copy, emptyDir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 
-import { readJson, writeFile } from "../util/io";
+import { writeFile } from "../util/io";
 import { Log, Logger, quietLogger } from "../util/logging";
 import { hasOwnProperty, joinPaths } from "../util/util";
 
@@ -20,7 +20,7 @@ const license = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8
 async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages, options);
+	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages);
 	log("Write metadata files to disk");
 	await writeCommonOutputs(typing, packageJson, createReadme(typing), log);
 	await Promise.all(typing.files.map(async file => {
@@ -80,14 +80,10 @@ export interface PartialPackageJson {
 	peerDependencies?: Dependencies;
 }
 
-async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages, options: Options): Promise<string> {
+async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
-	const pkgPath = typing.filePath("package.json", options);
-	const pkg: PartialPackageJson = typing.hasPackageJson ? await readJson(pkgPath) : {};
 
-	const dependencies = pkg.dependencies || {};
-	const peerDependencies = pkg.peerDependencies || {};
-	addInferredDependencies(dependencies, peerDependencies, typing, packages);
+	const dependencies = getDependencies(typing.packageJsonDependencies, typing, packages);
 
 	const description = `TypeScript definitions for ${typing.libraryName}`;
 
@@ -108,7 +104,6 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 		},
 		scripts: {},
 		dependencies,
-		peerDependencies,
 		typesPublisherContentHash: typing.contentHash,
 		typeScriptVersion: typing.typeScriptVersion
 	};
@@ -117,19 +112,25 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 }
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function addInferredDependencies(dependencies: Dependencies, peerDependencies: Dependencies, typing: TypingsData, allPackages: AllPackages): void {
+function getDependencies(packageJsonDependencies: ReadonlyArray<{ name: string, version: string }>, typing: TypingsData, allPackages: AllPackages): Dependencies {
+	const dependencies: Dependencies = {};
+	for (const { name, version } of packageJsonDependencies) {
+		dependencies[name] = version;
+	}
+
 	for (const dependency of typing.dependencies) {
 		const typesDependency = fullNpmName(dependency.name);
 
-		// A dependency "foo" is already handled if we already have a dependency/peerDependency on the package "foo" or "@types/foo".
+		// A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
 		function handlesDependency(deps: Dependencies): boolean {
 			return hasOwnProperty(deps, dependency.name) || hasOwnProperty(deps, typesDependency);
 		}
 
-		if (!handlesDependency(dependencies) && !handlesDependency(peerDependencies) && allPackages.hasTypingFor(dependency)) {
+		if (!handlesDependency(dependencies) && allPackages.hasTypingFor(dependency)) {
 			dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
 		}
 	}
+	return dependencies;
 }
 
 function dependencySemver(dependency: DependencyVersion): string {

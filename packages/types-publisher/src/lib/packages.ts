@@ -272,6 +272,11 @@ export interface PathMappingsRaw {
 /** If no version is specified, uses "*". */
 export type DependencyVersion = number | "*";
 
+export interface PackageJsonDependency {
+	readonly name: string;
+	readonly version: string;
+}
+
 export interface TypingsDataRaw extends BaseRaw {
 	readonly dependencies: DependenciesRaw;
 	// These are always the latest version.
@@ -297,7 +302,7 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly testFiles: ReadonlyArray<string>;
 
 	// Whether a "package.json" exists
-	readonly hasPackageJson: boolean;
+	readonly packageJsonDependencies: ReadonlyArray<PackageJsonDependency>;
 
 	// A hash computed from all files from this definition
 	readonly contentHash: string;
@@ -375,7 +380,7 @@ export class TypingsData extends PackageBase {
 	get typeScriptVersion(): TypeScriptVersion { return this.data.typeScriptVersion; }
 	get files(): ReadonlyArray<string> { return this.data.files; }
 	get testFiles(): ReadonlyArray<string> { return this.data.testFiles; }
-	get hasPackageJson(): boolean { return this.data.hasPackageJson; }
+	get packageJsonDependencies(): ReadonlyArray<PackageJsonDependency> { return this.data.packageJsonDependencies; }
 	get contentHash(): string { return this.data.contentHash; }
 	get declaredModules(): ReadonlyArray<string> { return this.data.declaredModules; }
 	get projectName(): string { return this.data.projectName; }
