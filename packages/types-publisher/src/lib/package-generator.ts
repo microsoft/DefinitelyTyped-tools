@@ -112,7 +112,10 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 }
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function getDependencies(packageJsonDependencies: ReadonlyArray<{ name: string, version: string }>, typing: TypingsData, allPackages: AllPackages): Dependencies {
+function getDependencies(
+	packageJsonDependencies: ReadonlyArray<{ name: string, version: string }>,
+	typing: TypingsData,
+	allPackages: AllPackages): Dependencies {
 	const dependencies: Dependencies = {};
 	for (const { name, version } of packageJsonDependencies) {
 		dependencies[name] = version;

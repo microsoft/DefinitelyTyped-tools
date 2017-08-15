@@ -10,7 +10,7 @@ import { Options } from "./common";
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
 import { PartialPackageJson } from "./package-generator";
-import { DependenciesRaw, packageRootPath, PackageJsonDependency, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+import { DependenciesRaw, PackageJsonDependency, packageRootPath, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
 
 const dependenciesWhitelist = new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split("\n"));
 
@@ -146,23 +146,23 @@ function checkPackageJson(pkg: PartialPackageJson, path: string): ReadonlyArray<
 		}
 	}
 
-	const dependencies = pkg["dependencies"];
-	if (dependencies === null || typeof dependencies !== "object") {
+	const dependencies = pkg.dependencies;
+	if (dependencies === null || typeof dependencies !== "object") { // tslint:disable-line strict-type-predicates
 		throw new Error(`${path} should contain "dependencies" or not exist.`);
 	}
 
-	const deps: Array<PackageJsonDependency> = [];
+	const deps: PackageJsonDependency[] = [];
 
 	for (const dependencyName in dependencies) {
 		if (!dependenciesWhitelist.has(dependencyName)) {
 			const msg = dependencyName.startsWith("@types/")
 				? "Don't use a 'package.json' for @types dependencies."
 				: `Dependency ${dependencyName} not in whitelist; please make a pull request to types-publisher adding it.`;
-			throw new Error(`In ${path}: ` + msg);
+			throw new Error(`In ${path}: ${msg}`);
 		}
 
 		const version = dependencies[dependencyName];
-		if (typeof version !== "string") {
+		if (typeof version !== "string") { // tslint:disable-line strict-type-predicates
 			throw new Error(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
 		}
 		deps.push({ name: dependencyName, version });
