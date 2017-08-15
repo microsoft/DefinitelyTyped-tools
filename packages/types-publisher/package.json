@@ -12,6 +12,7 @@
     "dtslint": "Microsoft/dtslint#production",
     "fs-extra": "4.0.0",
     "fstream": "^1.0.10",
+    "github-username-regex": "^1.0.0",
     "longjohn": "^0.2.11",
     "moment": "^2.18.1",
     "node-fetch": "^1.6.3",
@@ -57,7 +58,8 @@
     "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
     "make-production-server-run": "node bin/make-server-run.js --remote",
-    "test-tsNext": "node bin/tester/test.js --all --tsNext"
+    "test-tsNext": "node bin/tester/test.js --all --tsNext",
+    "code-owners": "node bin/code-owners.js"
   },
   "repository": {
     "type": "git",
