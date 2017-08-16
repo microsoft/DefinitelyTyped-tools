@@ -56,12 +56,17 @@ async function fetchWithRetries(url: string, init: RequestInit & { retries: numb
 		try {
 			return await fetch(url, init);
 		} catch (err) {
-			if (!/ETIMEDOUT|ECONNRESET/.test(err.message)) {
+			if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test(err.message)) {
 				throw err;
 			}
 		}
+		await sleep(1000);
 	}
-	return await fetch(url);
+	return await fetch(url, init);
+}
+
+async function sleep(millis: number): Promise<void> {
+	return new Promise<void>(resolve => setTimeout(resolve, millis));
 }
 
 export async function isDirectory(path: string): Promise<boolean> {
