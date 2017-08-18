@@ -16,7 +16,7 @@ async function main(options: Options): Promise<void> {
 	const maxPathLen = Math.max(...typings.map(t => t.subDirectoryPath.length));
 	const lines = mapDefined(typings, t => getEntry(t, maxPathLen));
 	const text = `${lines.join("\n")}\n`;
-	const path = joinPaths(options.definitelyTypedPath, ".github", "CODE_OWNERS");
+	const path = joinPaths(options.definitelyTypedPath, ".github", "CODEOWNERS");
 	await writeFile(path, text);
 }
 
@@ -26,7 +26,7 @@ function getEntry(pkg: TypingsData, maxPathLen: number): string | undefined {
 		return undefined;
 	}
 
-	const path = pkg.subDirectoryPath.padEnd(maxPathLen);
+	const path = `${pkg.subDirectoryPath}/`.padEnd(maxPathLen);
 	return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(", ")}`;
 }
 
