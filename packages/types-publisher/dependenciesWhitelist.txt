@@ -5,7 +5,6 @@ axios
 electron
 eventemitter2
 eventemitter3
-history
 immutable
 inversify
 localforage
@@ -20,6 +19,5 @@ protractor
 redux
 redux-persist
 redux-thunk
-sqs-producer
 vue
 @types/vue
