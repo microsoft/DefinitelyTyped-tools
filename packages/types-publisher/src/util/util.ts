@@ -51,7 +51,7 @@ export async function nAtATime<T, U>(
 			const index = nextIndex;
 			nextIndex++;
 			const input = inputs[index];
-			const output = await use(inputs[index]);
+			const output = await use(input);
 			results[index] = output;
 			if (progress) {
 				progress!.update(index / inputs.length, progressOptions!.flavor(input, output));
