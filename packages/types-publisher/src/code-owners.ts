@@ -27,7 +27,7 @@ function getEntry(pkg: TypingsData, maxPathLen: number): string | undefined {
 	}
 
 	const path = `${pkg.subDirectoryPath}/`.padEnd(maxPathLen);
-	return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(", ")}`;
+	return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(" ")}`;
 }
 
 function getGithubUsername(url: string): string | undefined {
