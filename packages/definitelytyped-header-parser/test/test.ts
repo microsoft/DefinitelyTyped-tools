@@ -70,7 +70,7 @@ describe("tagsToUpdate", () => {
 	});
 });
 
-function dedent(strings: TemplateStringsArray) {
+function dedent(strings: TemplateStringsArray): string {
 	assert.equal(strings.length, 1);
 	const x = strings[0].trim();
 	return x.replace(/\n\t\t\t/g, "\n");

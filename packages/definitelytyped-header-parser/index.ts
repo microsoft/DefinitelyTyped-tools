@@ -62,7 +62,7 @@ export function parseHeaderOrFail(mainFileContent: string): Header {
 	if (isParseError(header)) {
 		throw new Error(renderParseError(header));
 	}
-	return header as Header;
+	return header;
 }
 
 export function validate(mainFileContent: string): ParseError | undefined {
@@ -79,7 +79,8 @@ function renderParseError({ line, column, expected }: ParseError): string {
 }
 
 function isParseError(x: {}): x is ParseError {
-	return !!(x as ParseError).expected;
+	// tslint:disable-next-line strict-type-predicates
+	return (x as ParseError).expected !== undefined;
 }
 
 /** @param strict If true, we allow fewer things to be parsed. Turned on by linting. */
@@ -87,7 +88,7 @@ function parseHeader(text: string, strict: boolean): Header | ParseError {
 	const res = headerParser(strict).parse(text);
 	return res.status
 		? res.value
-		: { index: res.index!.offset, line: res.index!.line, column: res.index!.column, expected: res.expected };
+		: { index: res.index.offset, line: res.index.line, column: res.index.column, expected: res.expected };
 }
 
 function headerParser(strict: boolean): pm.Parser<Header> {
@@ -159,15 +160,15 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 		// Last digit is allowed to be "x", which acts like "0"
 		const rgx = /((\d+|x)\.(\d+)(\.\d+)?(v)? )?(.+)/;
 		const match = rgx.exec(reversed);
-		if (!match) {
+		if (match === null) {
 			return fail();
 		}
 		const [, version, a, b, c, v, nameReverse] = match;
 
 		let majorReverse: string;
 		let minorReverse: string;
-		if (version) {
-			if (c) {
+		if (version !== undefined) {
+			if (c !== undefined) {
 				// There is a patch version
 				majorReverse = c;
 				minorReverse = b;
@@ -178,7 +179,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 				majorReverse = b;
 				minorReverse = a;
 			}
-			if (v && strict) {
+			if (v !== undefined && strict) {
 				return fail("'v' not allowed");
 			}
 		} else {
@@ -193,7 +194,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 
 		function fail(msg?: string): pm.Result<Label> {
 			let expected = "foo MAJOR.MINOR";
-			if (msg) {
+			if (msg !== undefined) {
 				expected += ` (${msg})`;
 			}
 			return pm.makeFailure(index, expected);
@@ -241,13 +242,14 @@ function regexpIndexOf(s: string, rgx: RegExp, start: number): number {
 }
 
 declare module "parsimmon" {
+	// tslint:disable-next-line no-unnecessary-qualifier
 	type Pr<T> = pm.Parser<T>; // https://github.com/Microsoft/TypeScript/issues/14121
 	export function seqMap<T, U, V, W, X, Y, Z, A, B, C>(
 		p1: Pr<T>, p2: Pr<U>, p3: Pr<V>, p4: Pr<W>, p5: Pr<X>, p6: Pr<Y>, p7: Pr<Z>, p8: Pr<A>, p9: Pr<B>,
 		cb: (a1: T, a2: U, a3: V, a4: W, a5: X, a6: Y, a7: Z, a8: A, a9: B) => C): Pr<C>;
 }
 
-function intOfString(str: string) {
+function intOfString(str: string): number {
 	const n = Number.parseInt(str, 10);
 	if (Number.isNaN(n)) {
 		throw new Error(`Error in parseInt(${JSON.stringify(str)})`);
