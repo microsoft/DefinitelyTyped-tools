@@ -100,7 +100,8 @@ async function firstPackageVersionWithTypes(packageName: string): Promise<string
 
 function firstVersionWithTypes(versions: { [version: string]: any }): string | undefined {
 	const versionsWithTypings = Object.entries(versions).filter(([_version, info]) => hasTypes(info)).map(([version]) => version);
-	return best(versionsWithTypings, semver.lt);
+	// Type annotation needed because of https://github.com/Microsoft/TypeScript/issues/12915
+	return best<string>(versionsWithTypings, semver.lt);
 }
 
 function hasTypes(info: any): boolean {
