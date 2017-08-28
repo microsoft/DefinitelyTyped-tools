@@ -53,5 +53,5 @@ function addExecutePermissionsFromReadPermissions(mode: number): number {
 	// In other words, a component will have execute permissions if it has read permissions.
 	const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions;
 	// Add these additional execute permissions to the mode.
-	return mode |= readPermissionsAsExecutePermissions;
+	return mode | readPermissionsAsExecutePermissions;
 }

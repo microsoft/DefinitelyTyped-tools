@@ -139,9 +139,7 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 export function exec(cmd: string, cwd?: string): Promise<{ error?: Error, stdout: string, stderr: string }> {
 	return new Promise<{ error?: Error, stdout: string, stderr: string }>(resolve => {
 		child_process.exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
-			stdout = stdout.trim();
-			stderr = stderr.trim();
-			resolve({ error, stdout, stderr });
+			resolve({ error, stdout: stdout.trim(), stderr: stderr.trim() });
 		});
 	});
 }
@@ -180,10 +178,10 @@ export function best<T>(inputs: ReadonlyArray<T>, isBetter: (a: T, b: T) => bool
 
 export function computeHash(content: string): string {
 	// Normalize line endings
-	content = content.replace(/\r\n?/g, "\n");
+	const normalContent = content.replace(/\r\n?/g, "\n");
 
 	const h = crypto.createHash("sha256");
-	h.update(content, "utf8");
+	h.update(normalContent, "utf8");
 	return h.digest("hex");
 }
 
