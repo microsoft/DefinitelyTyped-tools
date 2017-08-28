@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { TypeScriptVersion } from "definitelytyped-header-parser";
+import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { readJson } from "../util/io";
 import { joinPaths, mapValues } from "../util/util";
@@ -237,7 +237,7 @@ export class NotNeededPackage extends PackageBase {
 	get projectName(): string { return this.sourceRepoURL; }
 	get declaredModules(): ReadonlyArray<string> { return []; }
 	get globals(): ReadonlyArray<string> { return this.globals; }
-	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.Lowest; }
+	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.lowest; }
 
 	readme(useNewline = true): string {
 		const { libraryName, sourceRepoURL, name } = this;
@@ -285,7 +285,7 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly pathMappings: PathMappingsRaw;
 
 	// Parsed from "Definitions by:"
-	readonly contributors: ReadonlyArray<Contributor>;
+	readonly contributors: ReadonlyArray<Author>;
 
 	// The major version of the library (e.g. "1" for 1.0, "2" for 2.0)
 	readonly libraryMajorVersion: number;
@@ -362,18 +362,13 @@ export interface MajorMinor {
 	readonly minor: number;
 }
 
-export interface Contributor {
-	name: string;
-	url: string;
-}
-
 export class TypingsData extends PackageBase {
 	constructor(private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
 		super(data);
 	}
 
 	get testDependencies(): ReadonlyArray<string> { return this.data.testDependencies; }
-	get contributors(): ReadonlyArray<Contributor> { return this.data.contributors; }
+	get contributors(): ReadonlyArray<Author> { return this.data.contributors; }
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }
 	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }

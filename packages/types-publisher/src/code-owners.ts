@@ -19,17 +19,11 @@ async function main(options: Options): Promise<void> {
 }
 
 function getEntry(pkg: TypingsData, maxPathLen: number): string | undefined {
-	const users = mapDefined(pkg.contributors, c => getGithubUsername(c.url));
+	const users = mapDefined(pkg.contributors, c => c.githubUsername);
 	if (!users.length) {
 		return undefined;
 	}
 
 	const path = `${pkg.subDirectoryPath}/`.padEnd(maxPathLen);
 	return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(" ")}`;
-}
-
-function getGithubUsername(url: string): string | undefined {
-	const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)$/;
-	const match = rgx.exec(url);
-	return match === null ? undefined : match[1];
 }
