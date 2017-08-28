@@ -11,13 +11,13 @@ Example:
 
 export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4";
 export namespace TypeScriptVersion {
-	export const All: TypeScriptVersion[] = ["2.0", "2.1", "2.2", "2.3", "2.4"];
-	export const Lowest = "2.0";
+	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4"];
+	export const lowest = "2.0";
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
-	export const Latest = "2.4";
+	export const latest = "2.4";
 
-	for (const v of All) {
-		if (v > Latest) {
+	for (const v of all) {
+		if (v > latest) {
 			throw new Error("'Latest' not properly set.");
 		}
 	}
@@ -27,10 +27,14 @@ export namespace TypeScriptVersion {
 		return false;
 	}
 
-	const allTags = ["ts2.0", "ts2.1", "ts2.2", "ts2.3", "ts2.4", "ts2.5", "ts2.6", "latest"];
+	export function range(min: TypeScriptVersion): ReadonlyArray<TypeScriptVersion> {
+		return all.filter(v => v >= min);
+	}
+
+	const allTags: ReadonlyArray<string> = ["ts2.0", "ts2.1", "ts2.2", "ts2.3", "ts2.4", "ts2.5", "latest"];
 
 	/** List of NPM tags that should be changed to point to the latest version. */
-	export function tagsToUpdate(typeScriptVersion: TypeScriptVersion): string[]  {
+	export function tagsToUpdate(typeScriptVersion: TypeScriptVersion): ReadonlyArray<string>  {
 		// A 2.0-compatible package is assumed compatible with TypeScript 2.1
 		// We want the "2.1" tag to always exist.
 		const idx = allTags.indexOf(`ts${typeScriptVersion}`);
@@ -40,21 +44,21 @@ export namespace TypeScriptVersion {
 }
 
 export interface Header {
-	libraryName: string;
-	libraryMajorVersion: number;
-	libraryMinorVersion: number;
-	typeScriptVersion: TypeScriptVersion;
-	projects: string[];
-	contributors: Author[];
+	readonly libraryName: string;
+	readonly libraryMajorVersion: number;
+	readonly libraryMinorVersion: number;
+	readonly typeScriptVersion: TypeScriptVersion;
+	readonly projects: ReadonlyArray<string>;
+	readonly contributors: ReadonlyArray<Author>;
 }
 
-export interface Author { name: string; url: string; }
+export interface Author { name: string; url: string; githubUsername: string | undefined; }
 
 export interface ParseError {
-	index: number;
-	line: number;
-	column: number;
-	expected: string[];
+	readonly index: number;
+	readonly line: number;
+	readonly column: number;
+	readonly expected: ReadonlyArray<string>;
 }
 
 export function parseHeaderOrFail(mainFileContent: string): Header {
@@ -70,7 +74,7 @@ export function validate(mainFileContent: string): ParseError | undefined {
 	return isParseError(h) ? h : undefined;
 }
 
-export function renderExpected(expected: string[]): string {
+export function renderExpected(expected: ReadonlyArray<string>): string {
 	return expected.length === 1 ? expected[0] : `one of\n\t${expected.join("\n\t")}`;
 }
 
@@ -111,7 +115,11 @@ function headerParser(strict: boolean): pm.Parser<Header> {
 		}));
 }
 
-interface Label { name: string; major: number; minor: number; }
+interface Label {
+	readonly name: string;
+	readonly major: number;
+	readonly minor: number;
+}
 
 /*
 Allow any of the following:
@@ -128,16 +136,22 @@ Use `\s\s+` to ensure at least 2 spaces, to  disambiguate from the next line bei
 */
 const separator: pm.Parser<string> = pm.regexp(/(, )|(,?\r?\n\/\/\s\s+)/);
 
-const projectParser: pm.Parser<string[]> = pm.sepBy1(pm.regexp(/[^,\r\n]+/), separator);
+const projectParser: pm.Parser<ReadonlyArray<string>> = pm.sepBy1(pm.regexp(/[^,\r\n]+/), separator);
 
-function contributorsParser(strict: boolean): pm.Parser<Author[]> {
-	const contributor = pm.seqMap(pm.regexp(/([^<]+) /, 1), pm.regexp(/<([^>]+)>/, 1), (name, url) => ({ name, url }));
-	const contributors = pm.sepBy1(contributor, separator);
-	if (!strict) {
-		// Allow trailing whitespace.
-		return pm.seqMap(contributors, pm.regexp(/ */), a => a);
-	}
-	return contributors;
+function contributorsParser(strict: boolean): pm.Parser<ReadonlyArray<Author>> {
+	const contributor: pm.Parser<Author> = strict
+		? pm.seqMap(
+			pm.regexp(/([^<]+) /, 1),
+			pm.regexp(/\<https\:\/\/github\.com\/([a-zA-Z\d\-]+)\>/, 1),
+			(name, githubUsername) => ({ name, url: `https://github.com/${githubUsername}`, githubUsername }))
+		// In non-strict mode, allows arbitrary URL, and trailing whitespace.
+		: pm.seqMap(pm.regexp(/([^<]+) /, 1), pm.regexp(/<([^>]+)> */, 1), (name, url) => {
+			const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)$/;
+			const match = rgx.exec(url);
+			// tslint:disable-next-line no-null-keyword
+			return ({ name, url, githubUsername: match === null ? undefined : match[1] });
+		});
+	return pm.sepBy1(contributor, separator);
 }
 
 // TODO: Should we do something with the URL?
@@ -160,15 +174,15 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 		// Last digit is allowed to be "x", which acts like "0"
 		const rgx = /((\d+|x)\.(\d+)(\.\d+)?(v)? )?(.+)/;
 		const match = rgx.exec(reversed);
-		if (match === null) {
+		if (match === null) { // tslint:disable-line no-null-keyword
 			return fail();
 		}
 		const [, version, a, b, c, v, nameReverse] = match;
 
 		let majorReverse: string;
 		let minorReverse: string;
-		if (version !== undefined) {
-			if (c !== undefined) {
+		if (version !== undefined) { // tslint:disable-line strict-type-predicates
+			if (c !== undefined) { // tslint:disable-line strict-type-predicates
 				// There is a patch version
 				majorReverse = c;
 				minorReverse = b;
@@ -179,7 +193,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 				majorReverse = b;
 				minorReverse = a;
 			}
-			if (v !== undefined && strict) {
+			if (v !== undefined && strict) { // tslint:disable-line strict-type-predicates
 				return fail("'v' not allowed");
 			}
 		} else {

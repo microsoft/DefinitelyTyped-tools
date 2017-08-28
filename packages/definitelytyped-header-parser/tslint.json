@@ -8,19 +8,19 @@
         "comment-format": [true, "check-space"],
         "indent": [true, "tab"],
         "interface-name": [true, "never-prefix"],
+        "no-magic-numbers": [true, -1, 0, 1, 2, 10],
+        "only-arrow-functions": [true, "allow-declarations"],
+        "typedef": [true, "call-signature"],
+
         "linebreak-style": false,
         "member-ordering": false,
         "newline-before-return": false,
-        "no-magic-numbers": [true, -1, 0, 1, 2, 10],
         "no-namespace": false,
-        "no-non-null-assertion": false,
         "no-require-imports": false,
         "no-unused-variable": false,
         "no-use-before-declare": false,
-        "only-arrow-functions": [true, "allow-declarations"],
         "object-literal-sort-keys": false,
         "switch-default": false,
-        "typedef": [true, "call-signature"],
         "variable-name": false
     }
 }

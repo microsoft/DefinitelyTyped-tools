@@ -18,8 +18,8 @@ describe("parse", () => {
 			typeScriptVersion: "2.2",
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
-				{ name: "My Self", url: "https://github.com/me" },
-				{ name: "Some Other Guy", url: "https://github.com/otherguy" },
+				{ name: "My Self", url: "https://github.com/me", githubUsername: "me" },
+				{ name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
 			],
 		});
 	});
@@ -42,10 +42,21 @@ describe("parse", () => {
 			typeScriptVersion: "2.0",
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
-				{ name: "My Self", url: "https://github.com/me" },
-				{ name: "Some Other Guy", url: "https://github.com/otherguy" },
+				{ name: "My Self", url: "https://github.com/me", githubUsername: "me" },
+				{ name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
 			],
 		});
+	});
+
+	it("works with bad url", () => {
+		const src = dedent`
+			// Type definitions for foo 1.2
+			// Project: https://github.com/foo/foo
+			// Definitions by: Bad Url <sptth://hubgit.moc/em>
+			// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped`;
+		assert.deepStrictEqual(parseHeaderOrFail(src).contributors, [
+			{ name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
+		]);
 	});
 });
 
