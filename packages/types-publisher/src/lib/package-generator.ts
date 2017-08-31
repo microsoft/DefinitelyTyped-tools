@@ -75,11 +75,6 @@ export async function clearOutputPath(outputPath: string, log: Logger): Promise<
 
 interface Dependencies { [name: string]: string; }
 
-export interface PartialPackageJson {
-	dependencies?: Dependencies;
-	peerDependencies?: Dependencies;
-}
-
 async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 

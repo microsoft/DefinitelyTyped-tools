@@ -9,7 +9,6 @@ import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from
 import { Options } from "./common";
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
-import { PartialPackageJson } from "./package-generator";
 import { DependenciesRaw, PackageJsonDependency, packageRootPath, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
 
 const dependenciesWhitelist = new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));
@@ -101,7 +100,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 
 	const packageJsonPath = joinPaths(directory, "package.json");
 	const hasPackageJson = await pathExists(packageJsonPath);
-	const packageJsonDependencies = hasPackageJson ? checkPackageJson(await readJson(packageJsonPath), packageJsonPath) : [];
+	const packageJsonDependencies = hasPackageJson ? checkDependencies((await readJson(packageJsonPath)).dependencies, packageJsonPath) : [];
 
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
@@ -139,14 +138,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 	return { data, logs: logResult() };
 }
 
-function checkPackageJson(pkg: PartialPackageJson, path: string): ReadonlyArray<PackageJsonDependency> {
-	for (const key in pkg) {
-		if (key !== "dependencies") {
-			throw new Error(`${path} should not specify ${key}`);
-		}
-	}
-
-	const dependencies = pkg.dependencies;
+function checkDependencies(dependencies: {} | null | undefined, path: string): ReadonlyArray<PackageJsonDependency> {
 	if (dependencies === null || typeof dependencies !== "object") { // tslint:disable-line strict-type-predicates
 		throw new Error(`${path} should contain "dependencies" or not exist.`);
 	}
@@ -161,7 +153,7 @@ function checkPackageJson(pkg: PartialPackageJson, path: string): ReadonlyArray<
 			throw new Error(`In ${path}: ${msg}`);
 		}
 
-		const version = dependencies[dependencyName];
+		const version = (dependencies as any)[dependencyName];
 		if (typeof version !== "string") { // tslint:disable-line strict-type-predicates
 			throw new Error(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
 		}
