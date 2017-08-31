@@ -62,8 +62,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 		// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
 		const cmd = "npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links";
 		console.log(`  ${cwd}: ${cmd}`);
-		let stdout = await execAndThrowErrors(cmd, cwd);
-		stdout = stdout.replace(/npm WARN \S+ No (description|repository field\.|license field\.)\n?/g, "");
+		const stdout = await execAndThrowErrors(cmd, cwd);
 		if (stdout) {
 			// Must specify what this is for since these run in parallel.
 			console.log(` from ${cwd}: ${stdout}`);
