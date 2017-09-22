@@ -148,7 +148,7 @@ export function exec(cmd: string, cwd?: string): Promise<{ error?: Error, stdout
 export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<string> {
 	const { error, stdout, stderr } = await exec(cmd, cwd);
 	if (error) {
-		throw new Error(stderr);
+		throw new Error(`${error.stack}\n${stderr}`);
 	}
 	return stdout + stderr;
 }
@@ -235,4 +235,17 @@ export function join<T>(values: Iterable<T>, joiner = ", "): string {
 		s += `${v}${joiner}`;
 	}
 	return s.slice(0, s.length - joiner.length);
+}
+
+export function setDifference<T>(left: Iterable<T>, right: Iterable<T>): { leftExclusive: Iterable<T>, rightExclusive: Iterable<T> } {
+	const leftExclusive: T[] = [];
+	const rightExclusive = new Set(right);
+	for (const l of left) {
+		if (rightExclusive.has(l)) {
+			rightExclusive.delete(l);
+		} else {
+			leftExclusive.push(l);
+		}
+	}
+	return { leftExclusive, rightExclusive };
 }

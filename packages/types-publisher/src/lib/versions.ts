@@ -11,7 +11,6 @@ import { npmRegistry } from "./settings";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
-const additionsFilename = "version-additions.json";
 
 export default class Versions {
 	static async load(): Promise<Versions> {
@@ -30,12 +29,10 @@ export default class Versions {
 
 	/**
 	 * Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry.
-	 * `additions` is a subset of `changes`.
 	 */
 	static async determineFromNpm(allPackages: AllPackages, log: Logger, forceUpdate: boolean, options: Options
-		): Promise<{changes: Changes, additions: Changes, versions: Versions}> {
+		): Promise<{changes: Changes, versions: Versions}> {
 		const changes: Changes = [];
-		const additions: Changes = [];
 		const data: VersionMap = {};
 
 		await nAtATime(25, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor, options });
@@ -44,7 +41,6 @@ export default class Versions {
 			const versionInfo = await fetchTypesPackageVersionInfo(pkg, isPrerelease, pkg.majorMinor);
 			if (!versionInfo) {
 				log(`Added: ${pkg.desc}`);
-				additions.push(pkg.id);
 			}
 			// tslint:disable-next-line:prefer-const
 			let { version, latestNonPrerelease, contentHash, deprecated } = versionInfo || defaultVersionInfo(isPrerelease);
@@ -73,7 +69,7 @@ export default class Versions {
 		function flavor(pkg: AnyPackage): string { return pkg.desc; }
 
 		// Sort keys so that versions.json is easy to read
-		return { changes, additions, versions: new Versions(sortObjectKeys(data)) };
+		return { changes, versions: new Versions(sortObjectKeys(data)) };
 
 		function defaultVersionInfo(isPrerelease: boolean): VersionInfo {
 			return { version: new Semver(-1, -1, -1, isPrerelease), latestNonPrerelease: undefined, contentHash: "", deprecated: false };
@@ -247,14 +243,8 @@ export function readChanges(): Promise<Changes> {
 	return readDataFile("calculate-versions", changesFilename);
 }
 
-/** Read only packages which are newly added. */
-export function readAdditions(): Promise<Changes> {
-	return readDataFile("calculate-versions", additionsFilename);
-}
-
-export async function writeChanges(changes: Changes, additions: Changes): Promise<void> {
+export async function writeChanges(changes: Changes): Promise<void> {
 	await writeDataFile(changesFilename, changes);
-	await writeDataFile(additionsFilename, additions);
 }
 
 /**
