@@ -136,10 +136,10 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 }
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
-export function exec(cmd: string, cwd?: string): Promise<{ error?: Error, stdout: string, stderr: string }> {
-	return new Promise<{ error?: Error, stdout: string, stderr: string }>(resolve => {
+export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined, stdout: string, stderr: string }> {
+	return new Promise<{ error: Error | undefined, stdout: string, stderr: string }>(resolve => {
 		child_process.exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
-			resolve({ error, stdout: stdout.trim(), stderr: stderr.trim() });
+			resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
 		});
 	});
 }
