@@ -15,8 +15,8 @@ export const home = joinPaths(__dirname, "..", "..");
 /** Settings that may be determined dynamically. */
 export class Options {
 	/** Options for running locally. */
-	static defaults = new Options("../DefinitelyTyped", true);
-	static azure = new Options("../DefinitelyTyped", false);
+	static defaults = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ false, /*progress*/ true);
+	static azure = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false);
 
 	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
 	readonly typesPath: string;
@@ -25,6 +25,7 @@ export class Options {
 		 * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
 		 */
 		readonly definitelyTypedPath: string,
+		readonly resetDefinitelyTyped: boolean,
 		/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
 		readonly progress: boolean) {
 

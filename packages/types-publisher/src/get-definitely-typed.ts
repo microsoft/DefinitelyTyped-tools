@@ -21,6 +21,12 @@ export default async function main(options: Options): Promise<void> {
 			throw new Error(`Please checkout branch '${sourceBranch}`);
 		}
 
+		if (options.resetDefinitelyTyped) {
+			exec("git reset --hard origin/master", dtPath);
+			exec("git checkout -- .", dtPath);
+			exec("git clean -f -d", dtPath);
+		}
+
 		const diff = exec("git diff --name-only", dtPath);
 		if (diff) {
 			throw new Error(`'git diff' should be empty. Following files changed:\n${diff}`);
