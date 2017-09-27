@@ -10,8 +10,7 @@ import getAffectedPackages, { allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
 	const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
-	const tsNext = !!yargs.argv.tsNext;
-	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), selection, tsNext));
+	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), selection));
 }
 
 const pathToDtsLint = require.resolve("dtslint");
@@ -36,7 +35,7 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	}
 }
 
-export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp, tsNext: boolean): Promise<void> {
+export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp): Promise<void> {
 	const allPackages = await AllPackages.read(options);
 	const typings = selection === "all"
 		? allPackages.allTypings()
@@ -75,7 +74,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
-		const err = await single(pkg, log, options, tsNext);
+		const err = await single(pkg, log, options);
 		console.log(`Testing ${pkg.desc}`);
 		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
 		if (err) {
@@ -98,16 +97,10 @@ export default async function main(options: Options, nProcesses: number, selecti
 	}
 }
 
-async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options, tsNext: boolean): Promise<TesterError | undefined> {
+async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
 	const cwd = pkg.directoryPath(options);
 	const shouldLint = await pathExists(joinPaths(cwd, "tslint.json"));
-	const args = [];
-	if (!shouldLint) {
-		args.push("--noLint");
-	}
-	if (tsNext) {
-		args.push("--tsNext");
-	}
+	const args = shouldLint ? [] : ["--noLint"];
 	return runCommand(log, cwd, pathToDtsLint, ...args);
 }
 
