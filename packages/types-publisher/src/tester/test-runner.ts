@@ -59,7 +59,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 		// Scripts may try to compile native code.
 		// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-		const cmd = "npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links";
+		const cmd = "npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
 		console.log(`  ${cwd}: ${cmd}`);
 		const stdout = await execAndThrowErrors(cmd, cwd);
 		if (stdout) {
