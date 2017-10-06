@@ -9,6 +9,7 @@ immutable
 inversify
 localforage
 meteor-typings
+mqtt
 moment
 monaco-editor
 parse5
