@@ -1,5 +1,7 @@
-import { readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
+import assert = require("assert");
+import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
 import fetch, { RequestInit, Response } from "node-fetch";
+import { join as joinPaths } from "path";
 import * as stream from "stream";
 
 import { parseJson } from "./util";
@@ -72,3 +74,27 @@ async function sleep(millis: number): Promise<void> {
 export async function isDirectory(path: string): Promise<boolean> {
 	return (await stat(path)).isDirectory();
 }
+
+export async function assertDirectoriesEqual(expected: string, actual: string, options: { ignore(fileName: string): boolean }): Promise<void> {
+	const expectedLs = await readdir(expected);
+	const actualLs = await readdir(actual);
+	assert.deepEqual(expectedLs, actualLs);
+	for (const name of expectedLs) {
+		if (options.ignore(name)) {
+			continue;
+		}
+
+		const expectedFile = joinPaths(expected, name);
+		const actualFile = joinPaths(actual, name);
+		const expectedStat = await stat(expectedFile);
+		const actualStat = await stat(actualFile);
+		assert.equal(expectedStat.isDirectory(), actualStat.isDirectory());
+		if (expectedStat.isDirectory()) {
+			await assertDirectoriesEqual(expectedFile, actualFile, options);
+		} else {
+			assert.equal(await readFile(expectedFile), await readFile(actualFile));
+		}
+	}
+}
+
+export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";

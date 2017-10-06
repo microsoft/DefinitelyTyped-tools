@@ -16,9 +16,9 @@ function packageUrl(packageName: string): string {
 }
 
 export default class NpmClient {
-	static async create(): Promise<NpmClient> {
+	static async create(config?: RegClient.Config): Promise<NpmClient> {
 		const token = await getSecret(Secret.NPM_TOKEN);
-		return new this(new RegClient({}), { token });
+		return new this(new RegClient(config), { token });
 	}
 
 	private constructor(private client: RegClient, private auth: RegClient.Credentials) {}
@@ -30,11 +30,11 @@ export default class NpmClient {
 			const body = createTgz(publishedDirectory, reject);
 			const metadata = { readme, ...packageJson };
 
-			const params = {
-				access: "public" as "public",
+			const params: RegClient.PublishParams = {
+				access: "public",
 				auth: this.auth,
 				metadata,
-				body
+				body,
 			};
 
 			if (dry) {

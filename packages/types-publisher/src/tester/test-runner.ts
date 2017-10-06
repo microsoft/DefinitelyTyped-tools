@@ -3,6 +3,7 @@ import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
+import { npmInstallFlags } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
 
@@ -59,7 +60,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 		// Scripts may try to compile native code.
 		// This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-		const cmd = "npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
+		const cmd = `npm install ${npmInstallFlags}`;
 		console.log(`  ${cwd}: ${cmd}`);
 		const stdout = await execAndThrowErrors(cmd, cwd);
 		if (stdout) {

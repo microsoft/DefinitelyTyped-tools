@@ -236,16 +236,3 @@ export function join<T>(values: Iterable<T>, joiner = ", "): string {
 	}
 	return s.slice(0, s.length - joiner.length);
 }
-
-export function setDifference<T>(left: Iterable<T>, right: Iterable<T>): { leftExclusive: Iterable<T>, rightExclusive: Iterable<T> } {
-	const leftExclusive: T[] = [];
-	const rightExclusive = new Set(right);
-	for (const l of left) {
-		if (rightExclusive.has(l)) {
-			rightExclusive.delete(l);
-		} else {
-			leftExclusive.push(l);
-		}
-	}
-	return { leftExclusive, rightExclusive };
-}

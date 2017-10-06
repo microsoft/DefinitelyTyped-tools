@@ -161,8 +161,9 @@ async function fetchTypesPackageVersionInfo(pkg: AnyPackage, isPrerelease: boole
 }
 
 /** For use by publish-registry only. */
-export async function fetchLastPatchNumber(packageName: string): Promise<number> {
-	return (await fetchVersionInfoFromNpm(packageName, /*isPrerelease*/ false))!.version.patch;
+export async function fetchNpmInfo(packageName: string): Promise<{ version: Semver, contentHash: string }> {
+	const v = (await fetchVersionInfoFromNpm(packageName, /*isPrerelease*/ false))!;
+	return { version: v.version, contentHash: v.contentHash };
 }
 
 async function fetchVersionInfoFromNpm(

@@ -1,9 +1,11 @@
+import { join as joinPaths } from "path";
+
 /** URL of the NPM registry to upload to. */
 export const npmRegistry = "https://registry.npmjs.org/";
 /** Note: this is 'types' and not '@types' */
 export const scopeName = "types";
 export const outputPath = "./output";
-export const validateOutputPath = "./validateOutput";
+export const validateOutputPath = joinPaths(__dirname, "..", "..", "validateOutput");
 /** Git location of the source repository. */
 export const sourceRepository = "https://github.com/DefinitelyTyped/DefinitelyTyped.git";
 /** The branch that DefinitelyTyped is sourced from. */
