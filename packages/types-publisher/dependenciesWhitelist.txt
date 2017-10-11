@@ -19,6 +19,7 @@ postcss
 protractor
 redux
 redux-persist
+redux-saga
 redux-thunk
 vue
 @types/vue
