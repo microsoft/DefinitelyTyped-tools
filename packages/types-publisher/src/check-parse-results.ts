@@ -70,7 +70,9 @@ function checkPathMappings(allPackages: AllPackages): void {
 		}
 
 		for (const unusedPathMapping of unusedPathMappings) {
-			throw new Error(`${pkg.desc} has unused path mapping for ${unusedPathMapping}`);
+			if (pkg.name !== unusedPathMapping) {
+				throw new Error(`${pkg.desc} has unused path mapping for ${unusedPathMapping}`);
+			}
 		}
 	}
 }

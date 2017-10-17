@@ -251,9 +251,9 @@ async function calculateDependencies(packageName: string, tsconfig: TsConfig, de
 			if (dependencyNames.has(dependencyName)) {
 				dependencies[dependencyName] = version;
 			}
-			// Else, the path mapping may be necessary if it is for a dependency-of-a-dependency. We will check this in check-parse-results.
-			pathMappings[dependencyName] = version;
 		}
+		// Else, the path mapping may be necessary if it is for a dependency-of-a-dependency. We will check this in check-parse-results.
+		pathMappings[dependencyName] = version;
 	}
 
 	if (oldMajorVersion !== undefined && !(paths && packageName in paths)) {
