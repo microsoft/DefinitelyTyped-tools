@@ -22,4 +22,5 @@ redux-persist
 redux-saga
 redux-thunk
 vue
+@types/js-data
 @types/vue
