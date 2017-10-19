@@ -21,6 +21,7 @@ redux
 redux-persist
 redux-saga
 redux-thunk
+typescript
 vue
 @types/js-data
 @types/vue
