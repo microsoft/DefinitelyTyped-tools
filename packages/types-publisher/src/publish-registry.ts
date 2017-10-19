@@ -7,7 +7,7 @@ import { clearOutputPath } from "./lib/package-generator";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { outputPath, validateOutputPath } from "./lib/settings";
 import { fetchNpmInfo } from "./lib/versions";
-import { assertDirectoriesEqual, npmInstallFlags, writeJson } from "./util/io";
+import { assertDirectoriesEqual, npmInstallFlags, writeFile, writeJson } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { computeHash, done, execAndThrowErrors, joinPaths } from "./util/util";
 
@@ -30,8 +30,8 @@ export default async function main(dry: boolean): Promise<void> {
 
 	// Don't include not-needed packages in the registry.
 	const typings = await AllPackages.readTypings();
-	const registry = generateRegistry(typings);
-	const newContentHash = computeHash(JSON.stringify(registry, undefined, 4));
+	const registry = JSON.stringify(generateRegistry(typings), undefined, 4);
+	const newContentHash = computeHash(registry);
 
 	assert.equal(oldVersion.major, 0);
 	assert.equal(oldVersion.minor, 1);
@@ -51,18 +51,22 @@ export default async function main(dry: boolean): Promise<void> {
 	await writeLog("publish-registry.md", logResult());
 }
 
-interface TypesRegistry {
-	entries: { [key: string]: 1 };
-}
-
-async function generate(registry: TypesRegistry, packageJson: {}, log: Logger): Promise<void> {
+async function generate(registry: string, packageJson: {}, log: Logger): Promise<void> {
 	await clearOutputPath(registryOutputPath, log);
-	await writeOutputFile("package.json", packageJson);
+	await writeOutputJson("package.json", packageJson);
 	await writeOutputFile("index.json", registry);
 	await writeOutputFile("README.md", readme);
 
-	function writeOutputFile(filename: string, content: {}): Promise<void> {
-		return writeJson(joinPaths(registryOutputPath, filename), content);
+	function writeOutputJson(filename: string, content: object): Promise<void> {
+		return writeJson(outputPath(filename), content);
+	}
+
+	function writeOutputFile(filename: string, content: string): Promise<void> {
+		return writeFile(outputPath(filename), content);
+	}
+
+	function outputPath(filename: string): string {
+		return joinPaths(registryOutputPath, filename);
 	}
 }
 
@@ -75,7 +79,6 @@ async function publish(packageJson: {}, version: string, dry: boolean): Promise<
 }
 
 async function validate(): Promise<void> {
-	console.log(validateOutputPath);
 	await emptyDir(validateOutputPath);
 	await writeJson(joinPaths(validateOutputPath, "package.json"), {
 		name: "validate",
@@ -87,7 +90,7 @@ async function validate(): Promise<void> {
 	});
 
 	const npmPath = joinPaths(__dirname, "..", "node_modules", "npm", "bin", "npm-cli.js");
-	const err = (await execAndThrowErrors(`node ${npmPath} install types-registry ${npmInstallFlags}`, validateOutputPath)).trim();
+	const err = (await execAndThrowErrors(`node ${npmPath} install types-registry@next ${npmInstallFlags}`, validateOutputPath)).trim();
 	if (err) {
 		console.error(err);
 	}
@@ -119,7 +122,7 @@ function generatePackageJson(version: string, typesPublisherContentHash: string)
 	};
 }
 
-function generateRegistry(typings: ReadonlyArray<TypingsData>): TypesRegistry {
+function generateRegistry(typings: ReadonlyArray<TypingsData>): {} {
 	const entries: { [packageName: string]: 1 } = {};
 	for (const { name } of typings) {
 		entries[name] = 1;
