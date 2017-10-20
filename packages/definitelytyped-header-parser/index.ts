@@ -12,15 +12,9 @@ Example:
 export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5";
 export namespace TypeScriptVersion {
 	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5"];
-	export const lowest = "2.0";
+	export const lowest = all[0];
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
-	export const latest = "2.4";
-
-	for (const v of all) {
-		if (v > latest) {
-			throw new Error("'Latest' not properly set.");
-		}
-	}
+	export const latest = all[all.length - 1];
 
 	/** True if a package with the given typescript version should be published as prerelease. */
 	export function isPrerelease(_version: TypeScriptVersion): boolean {
