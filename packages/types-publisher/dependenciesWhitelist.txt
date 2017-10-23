@@ -5,6 +5,7 @@ axios
 electron
 eventemitter2
 eventemitter3
+flatpickr
 immutable
 inversify
 localforage
