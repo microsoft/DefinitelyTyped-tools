@@ -2,6 +2,7 @@ activex-helpers
 anydb-sql
 aws-sdk
 axios
+chalk
 electron
 eventemitter2
 eventemitter3
