@@ -2,7 +2,7 @@ import assert = require("assert");
 
 import { readFileAndWarn } from "../lib/common";
 import Versions from "../lib/versions";
-import { addNpmTagsForPackage } from "../npmTags";
+import { updateLatestTag, updateTypeScriptVersionTags } from "../npmTags";
 import { consoleLogger, Log, LoggerWithErrors, quietLogger } from "../util/logging";
 import { exec, joinPaths } from "../util/util";
 
@@ -23,10 +23,13 @@ export default async function publishPackage(
 
 	const latestVersionString = versions.getVersion(latestVersion).versionString;
 
+	if (pkg.isLatest) {
+		await updateTypeScriptVersionTags(latestVersion, latestVersionString, client, log, dry);
+	}
 	// If this is an older version of the package, we still update tags for the *latest*.
 	// NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
 	// so we must undo that by re-tagging latest.
-	await addNpmTagsForPackage(latestVersion, versions, latestVersionString, client, log, dry);
+	await updateLatestTag(latestVersion, versions, client, log, dry);
 
 	if (pkg.isNotNeeded()) {
 		log(`Deprecating ${pkg.name}`);
