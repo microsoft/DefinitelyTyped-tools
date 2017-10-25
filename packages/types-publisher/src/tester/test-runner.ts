@@ -75,7 +75,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 	await nAtATime(nProcesses, typings, async pkg => {
 		const [log, logResult] = quietLoggerWithErrors();
-		const err = await single(pkg, log, options);
+		const err = await runCommand(log, pkg.directoryPath(options), pathToDtsLint);
 		console.log(`Testing ${pkg.desc}`);
 		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
 		if (err) {
@@ -96,13 +96,6 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 		throw new Error("There was a test failure.");
 	}
-}
-
-async function single(pkg: TypingsData, log: LoggerWithErrors, options: Options): Promise<TesterError | undefined> {
-	const cwd = pkg.directoryPath(options);
-	const shouldLint = await pathExists(joinPaths(cwd, "tslint.json"));
-	const args = shouldLint ? [] : ["--noLint"];
-	return runCommand(log, cwd, pathToDtsLint, ...args);
 }
 
 interface TesterError {
