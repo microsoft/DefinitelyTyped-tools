@@ -1,8 +1,9 @@
+import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
 import generateAnyPackage from "./lib/package-generator";
-import { AllPackages } from "./lib/packages";
+import { AllPackages, outputDir } from "./lib/packages";
 import Versions, { changedPackages } from "./lib/versions";
 import { logger, moveLogs, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
@@ -23,6 +24,8 @@ export default async function main(options: Options, all = false, tgz = false): 
 	log(`\n## Generating ${all ? "all" : "changed"} packages\n`);
 	const allPackages = await AllPackages.read(options);
 	const versions = await Versions.load();
+
+	await emptyDir(outputDir);
 
 	const packages = all ? allPackages.allPackages() : await changedPackages(allPackages);
 

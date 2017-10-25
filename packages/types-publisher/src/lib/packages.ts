@@ -201,7 +201,7 @@ export function fullNpmName(packageName: string): string {
 	return `@${scopeName}/${packageName}`;
 }
 
-const outputDir = joinPaths(home, outputPath);
+export const outputDir = joinPaths(home, outputPath);
 
 interface NotNeededPackageRaw extends BaseRaw {
 	/**

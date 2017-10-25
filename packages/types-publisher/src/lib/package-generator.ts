@@ -1,8 +1,8 @@
-import { copy, emptyDir, mkdirp, readFileSync } from "fs-extra";
+import { copy, mkdir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 
 import { writeFile } from "../util/io";
-import { Log, Logger, quietLogger } from "../util/logging";
+import { Log, quietLogger } from "../util/logging";
 import { hasOwnProperty, joinPaths } from "../util/util";
 
 import { Options } from "./common";
@@ -22,7 +22,7 @@ async function generatePackage(typing: TypingsData, packages: AllPackages, versi
 
 	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages);
 	log("Write metadata files to disk");
-	await writeCommonOutputs(typing, packageJson, createReadme(typing), log);
+	await writeCommonOutputs(typing, packageJson, createReadme(typing));
 	await Promise.all(typing.files.map(async file => {
 		log(`Copy ${file}`);
 		await copy(typing.filePath(file, options), await outputFilePath(typing, file));
@@ -36,13 +36,13 @@ async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Version
 
 	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg));
 	log("Write metadata files to disk");
-	await writeCommonOutputs(pkg, packageJson, pkg.readme(), log);
+	await writeCommonOutputs(pkg, packageJson, pkg.readme());
 
 	return logResult();
 }
 
-async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string, log: Logger): Promise<void> {
-	await clearOutputPath(pkg.outputDirectory, log);
+async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
+	await mkdir(pkg.outputDirectory);
 
 	await Promise.all([
 		writeOutputFile("package.json", packageJson),
@@ -63,14 +63,6 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 		await mkdirp(dir);
 	}
 	return full;
-}
-
-export async function clearOutputPath(outputPath: string, log: Logger): Promise<void> {
-	log(`Create output path ${outputPath}`);
-	await mkdirp(outputPath);
-
-	log("Clear out old files");
-	await emptyDir(outputPath);
 }
 
 interface Dependencies { [name: string]: string; }

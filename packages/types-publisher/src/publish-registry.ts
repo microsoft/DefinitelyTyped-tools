@@ -1,14 +1,13 @@
 import assert = require("assert");
-import { emptyDir } from "fs-extra";
+import { emptyDir, mkdir } from "fs-extra";
 import * as yargs from "yargs";
 
 import NpmClient from "./lib/npm-client";
-import { clearOutputPath } from "./lib/package-generator";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { outputPath, validateOutputPath } from "./lib/settings";
 import { fetchNpmInfo } from "./lib/versions";
 import { assertDirectoriesEqual, npmInstallFlags, writeFile, writeJson } from "./util/io";
-import { Logger, logger, writeLog } from "./util/logging";
+import { logger, writeLog } from "./util/logging";
 import { computeHash, done, execAndThrowErrors, joinPaths } from "./util/util";
 
 const packageName = "types-registry";
@@ -37,7 +36,7 @@ export default async function main(dry: boolean): Promise<void> {
 	assert.equal(oldVersion.minor, 1);
 	const newVersion = `0.1.${oldVersion.patch + 1}`;
 	const packageJson = generatePackageJson(newVersion, newContentHash);
-	await generate(registry, packageJson, log);
+	await generate(registry, packageJson);
 
 	if (oldContentHash !== newContentHash) {
 		log("New packages have been added, so publishing a new registry.");
@@ -51,8 +50,8 @@ export default async function main(dry: boolean): Promise<void> {
 	await writeLog("publish-registry.md", logResult());
 }
 
-async function generate(registry: string, packageJson: {}, log: Logger): Promise<void> {
-	await clearOutputPath(registryOutputPath, log);
+async function generate(registry: string, packageJson: {}): Promise<void> {
+	await mkdir(registryOutputPath);
 	await writeOutputJson("package.json", packageJson);
 	await writeOutputFile("index.json", registry);
 	await writeOutputFile("README.md", readme);
