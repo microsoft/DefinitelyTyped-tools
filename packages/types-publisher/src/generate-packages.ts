@@ -42,6 +42,7 @@ export default async function main(options: Options, all = false, tgz = false): 
 }
 
 async function single(singleName: string, options: Options): Promise<void> {
+	await emptyDir(outputDir);
 	const allPackages = await AllPackages.read(options);
 	const pkg = allPackages.getSingle(singleName);
 	const versions = await Versions.load();

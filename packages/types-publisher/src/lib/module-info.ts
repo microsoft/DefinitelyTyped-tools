@@ -8,10 +8,6 @@ import { hasWindowsSlashes, joinPaths, normalizeSlashes, sort } from "../util/ut
 import { readFileAndThrowOnBOM } from "./definition-parser";
 
 export default async function getModuleInfo(packageName: string, directory: string, allEntryFilenames: string[], log: Logger): Promise<ModuleInfo> {
-	let hasUmdDecl = false;
-	let hasGlobalDeclarations = false;
-	let ambientModuleCount = 0;
-
 	const dependencies = new Set<string>();
 	const declaredModules: string[] = [];
 	const globals = new Set<string>();
@@ -52,7 +48,6 @@ export default async function getModuleInfo(packageName: string, directory: stri
 					// since this is still a legal module-only declaration
 					globals.add(globalName);
 					hasAnyExport = true;
-					hasUmdDecl = true;
 					break;
 				}
 
@@ -70,12 +65,10 @@ export default async function getModuleInfo(packageName: string, directory: stri
 
 								declaredModules.push(name);
 								log(`Found ambient external module \`"${name}"\``);
-								ambientModuleCount++;
 							}
 						} else {
 							const moduleName = decl.name.text;
 							log(`Found global namespace declaration \`${moduleName}\``);
-							hasGlobalDeclarations = true;
 							if (isValueNamespace(decl)) {
 								globals.add(moduleName);
 							}
@@ -96,7 +89,6 @@ export default async function getModuleInfo(packageName: string, directory: stri
 								globals.add(declName);
 							}
 						}
-						hasGlobalDeclarations = true;
 					}
 					break;
 
@@ -118,7 +110,6 @@ export default async function getModuleInfo(packageName: string, directory: stri
 						if (!isType) {
 							globals.add(declName);
 						}
-						hasGlobalDeclarations = true;
 					}
 					break;
 				}
@@ -221,7 +212,10 @@ async function resolveModule(referencedFrom: string, directory: string, filename
 		const dts = `${filename}.d.ts`;
 		return { resolvedFilename: dts, content: await readFileAndThrowOnBOM(directory, dts) };
 	} catch (_) {
-		const index = joinPaths(filename, "index.d.ts");
+		let index = joinPaths(filename, "index.d.ts");
+		if (index === "./index.d.ts") {
+			index = "index.d.ts";
+		}
 		return { resolvedFilename: index, content: await readFileAndReportErrors(referencedFrom, directory, filename, index) };
 	}
 }
