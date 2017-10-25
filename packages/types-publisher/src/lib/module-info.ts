@@ -212,11 +212,9 @@ async function resolveModule(referencedFrom: string, directory: string, filename
 		const dts = `${filename}.d.ts`;
 		return { resolvedFilename: dts, content: await readFileAndThrowOnBOM(directory, dts) };
 	} catch (_) {
-		let index = joinPaths(filename, "index.d.ts");
-		if (index === "./index.d.ts") {
-			index = "index.d.ts";
-		}
-		return { resolvedFilename: index, content: await readFileAndReportErrors(referencedFrom, directory, filename, index) };
+		const index = joinPaths(filename.endsWith("/") ? filename.slice(0, filename.length - 1) : filename, "index.d.ts");
+		const resolvedFilename = index === "./index.d.ts" ?  "index.d.ts" : index;
+		return { resolvedFilename, content: await readFileAndReportErrors(referencedFrom, directory, filename, index) };
 	}
 }
 
@@ -231,8 +229,8 @@ async function readFileAndReportErrors(referencedFrom: string, directory: string
 
 interface Reference {
 	/** <reference path> includes exact filename, so true. import "foo" may reference "foo.d.ts" or "foo/index.d.ts", so false. */
-	exact: boolean;
-	text: string;
+	readonly exact: boolean;
+	readonly text: string;
 }
 
 /**
