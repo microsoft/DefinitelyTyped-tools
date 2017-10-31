@@ -26,5 +26,6 @@ redux-saga
 redux-thunk
 typescript
 vue
+vuex
 @types/js-data
 @types/vue
