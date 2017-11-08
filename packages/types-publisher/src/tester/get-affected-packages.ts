@@ -3,28 +3,33 @@ import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { Logger } from "../util/logging";
-import { done, execAndThrowErrors, flatMap, join, map, mapDefined, sort } from "../util/util";
+import { done, execAndThrowErrors, flatMap, map, mapDefined, sort } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 async function main(options: Options): Promise<void> {
 	const changes = await getAffectedPackages(await AllPackages.read(options), console.log, options);
-	console.log(join(map(changes, t => t.desc)));
+	console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependers: changes.dependentPackages.map(t => t.desc) });
+}
+
+export interface Affected {
+	readonly changedPackages: ReadonlyArray<TypingsData>;
+	readonly dependentPackages: ReadonlyArray<TypingsData>;
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
-export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, options: Options): Promise<TypingsData[]> {
+export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, options: Options): Promise<Affected> {
 	const changedPackageIds = await gitChanges(log, options);
 	// If a package doesn't exist, that's because it was deleted.
 	const changedPackages = mapDefined(changedPackageIds, (({ name, majorVersion }) =>
 		majorVersion === "latest" ? allPackages.tryGetLatestVersion(name) : allPackages.tryGetTypingsData({ name, majorVersion })));
-	const dependedOn = getReverseDependencies(allPackages);
-	return collectDependers(changedPackages, dependedOn);
+	const dependentPackages = collectDependers(changedPackages,  getReverseDependencies(allPackages)).filter(d => changedPackages.includes(d));
+	return { changedPackages, dependentPackages };
 }
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(allPackages: AllPackages, packages: ReadonlyArray<TypingsData>): TypingsData[] {
+export function allDependencies(allPackages: AllPackages, packages: Iterable<TypingsData>): TypingsData[] {
 	return sortPackages(transitiveClosure(packages, pkg => allPackages.allDependencyTypings(pkg)));
 }
 

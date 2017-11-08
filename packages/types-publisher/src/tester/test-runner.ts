@@ -5,9 +5,9 @@ import { Options } from "../lib/common";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
 import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
+import { concat, done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
 
-import getAffectedPackages, { allDependencies } from "./get-affected-packages";
+import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
 	const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
@@ -38,13 +38,14 @@ export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 
 export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp): Promise<void> {
 	const allPackages = await AllPackages.read(options);
-	const typings = selection === "all"
-		? allPackages.allTypings()
+	const { changedPackages, dependentPackages }: Affected = selection === "all"
+		? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
 		: selection === "affected"
 		? await getAffectedPackages(allPackages, console.log, options)
-		: allPackages.allTypings().filter(t => selection.test(t.name));
+		: { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
-	console.log(`Testing ${typings.length} packages: ${typings.map(t => t.desc)}`);
+	console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);
+	console.log(`Testing ${dependentPackages.length} dependent packages: ${dependentPackages.map(t => t.desc)}`);
 	console.log(`Running with ${nProcesses} processes.`);
 
 	const allErrors: Array<{ pkg: TypingsData, err: TesterError }> = [];
@@ -52,7 +53,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 	console.log("Installing NPM dependencies...");
 
 	// We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-	await nAtATime(nProcesses, allDependencies(allPackages, typings), async pkg => {
+	await nAtATime(nProcesses, allDependencies(allPackages, concat(changedPackages, dependentPackages)), async pkg => {
 		const cwd = pkg.directoryPath(options);
 		if (!await pathExists(joinPaths(cwd, "package.json"))) {
 			return;
@@ -69,19 +70,12 @@ export default async function main(options: Options, nProcesses: number, selecti
 		}
 	});
 
-	await runCommand(console, undefined, pathToDtsLint, "--installAll");
+	await runCommand(console, undefined, pathToDtsLint, ["--installAll"]);
 
 	console.log("Testing...");
 
-	await nAtATime(nProcesses, typings, async pkg => {
-		const [log, logResult] = quietLoggerWithErrors();
-		const err = await runCommand(log, pkg.directoryPath(options), pathToDtsLint);
-		console.log(`Testing ${pkg.desc}`);
-		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
-		if (err) {
-			allErrors.push({ err, pkg });
-		}
-	});
+	await runTests(changedPackages, false);
+	await runTests(dependentPackages, true);
 
 	if (allErrors.length) {
 		allErrors.sort(({ pkg: pkgA }, { pkg: pkgB}) => PackageBase.compare(pkgA, pkgB));
@@ -96,13 +90,27 @@ export default async function main(options: Options, nProcesses: number, selecti
 
 		throw new Error("There was a test failure.");
 	}
+
+	async function runTests(packages: ReadonlyArray<TypingsData>, isDepender: boolean): Promise<void> {
+		await nAtATime(nProcesses, packages, pkg => runTest(pkg, isDepender));
+	}
+
+	async function runTest(pkg: TypingsData, isDepender: boolean): Promise<void> {
+		const [log, logResult] = quietLoggerWithErrors();
+		const err = await runCommand(log, pkg.directoryPath(options), pathToDtsLint,  isDepender ? ["--onlyTestTsNext"] : []);
+		console.log(`Testing ${pkg.desc}`);
+		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
+		if (err) {
+			allErrors.push({ err, pkg });
+		}
+	}
 }
 
 interface TesterError {
 	message: string;
 }
 
-async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: string, ...args: string[]): Promise<TesterError | undefined> {
+async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: string, args: string[]): Promise<TesterError | undefined> {
 	const nodeCmd = `node ${cmd} ${args.join(" ")}`;
 	log.info(`Running: ${nodeCmd}`);
 	try {

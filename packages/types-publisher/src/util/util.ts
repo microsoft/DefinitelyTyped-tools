@@ -202,6 +202,11 @@ export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V): void {
 	}
 }
 
+export function* concat<T>(a: Iterable<T>, b: Iterable<T>): Iterable<T> {
+	yield* a;
+	yield* b;
+}
+
 export function mapDefined<T, U>(arr: Iterable<T>, mapper: (t: T) => U | undefined): U[] {
 	const out = [];
 	for (const a of arr) {

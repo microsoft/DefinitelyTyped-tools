@@ -14,6 +14,8 @@ export default async function main(includeNpmChecks: boolean, options: Options):
 	const allPackages = await AllPackages.read(options);
 	const [log, logResult] = logger();
 
+	checkTypeScriptVersions(allPackages);
+
 	checkPathMappings(allPackages);
 
 	const packages = allPackages.allPackages();
@@ -45,6 +47,16 @@ function checkForDuplicates(packages: ReadonlyArray<AnyPackage>, func: (info: An
 			log(` * Duplicate ${key} descriptions "${libName}"`);
 			for (const n of values) {
 				log(`   * ${n.desc}`);
+			}
+		}
+	}
+}
+
+function checkTypeScriptVersions(allPackages: AllPackages): void {
+	for (const pkg of allPackages.allTypings()) {
+		for (const dep of allPackages.allDependencyTypings(pkg)) {
+			if (dep.typeScriptVersion > pkg.typeScriptVersion) {
+				throw new Error(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version.`);
 			}
 		}
 	}
