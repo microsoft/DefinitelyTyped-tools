@@ -48,11 +48,9 @@ export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: stri
 export async function updateLatestTag(pkg: AnyPackage, versions: Versions, client: NpmClient, log: Logger, dry: boolean): Promise<void> {
 	// Prerelease packages should never be tagged latest
 	const latestNonPrerelease = versions.latestNonPrerelease(pkg);
-	if (latestNonPrerelease) {
-		log(`	but tag ${pkg.fullNpmName}@${latestNonPrerelease.versionString} as "latest"`);
-		if (!dry) {
-			await tag(latestNonPrerelease.versionString, "latest", client, pkg);
-		}
+	log(`	but tag ${pkg.fullNpmName}@${latestNonPrerelease.versionString} as "latest"`);
+	if (!dry) {
+		await tag(latestNonPrerelease.versionString, "latest", client, pkg);
 	}
 }
 

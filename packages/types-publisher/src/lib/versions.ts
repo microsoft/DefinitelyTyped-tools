@@ -3,7 +3,7 @@ import { TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { fetchJson } from "../util/io";
 import { Logger } from "../util/logging";
-import { best, intOfString, nAtATime, sortObjectKeys } from "../util/util";
+import { assertDefined, best, intOfString, nAtATime, sortObjectKeys } from "../util/util";
 
 import { Options, readDataFile, writeDataFile } from "./common";
 import { AllPackages, AnyPackage, MajorMinor, NotNeededPackage, PackageId, TypingsData } from "./packages";
@@ -95,8 +95,9 @@ export default class Versions {
 		return new Semver(pkg.major, pkg.minor, this.info(pkg.id).patch, pkg.isPrerelease);
 	}
 
-	latestNonPrerelease(pkg: AnyPackage): Semver | undefined {
-		return this.info(pkg.id).latestNonPrerelease;
+	latestNonPrerelease(pkg: AnyPackage): Semver {
+		const info = this.info(pkg.id);
+		return pkg.isLatest ? this.getVersion(pkg) : assertDefined(info.latestNonPrerelease);
 	}
 
 	private info({name, majorVersion}: PackageId): VersionData {
