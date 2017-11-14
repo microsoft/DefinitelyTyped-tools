@@ -15,6 +15,7 @@ meteor-typings
 mqtt
 moment
 monaco-editor
+mongodb
 parse5
 path-to-regexp
 pkcs11js
