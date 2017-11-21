@@ -64,7 +64,7 @@ async function fetchWithRetries(url: string, init: RequestInit & { retries: numb
 		}
 		await sleep(1000);
 	}
-	return await fetch(url, init);
+	return fetch(url, init);
 }
 
 async function sleep(millis: number): Promise<void> {

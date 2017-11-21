@@ -42,7 +42,7 @@ function logsUploadedLocation(timeStamp: string): string {
 
 async function uploadLogs(container: BlobWriter, timeStamp: string, log: Logger): Promise<string[]> {
 	await removeOldDirectories(container, logsPrefix, maxNumberOfOldLogsDirectories - 1, log);
-	return await uploadDirectory(container, logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
+	return uploadDirectory(container, logsUploadedLocation(timeStamp), logsDirectoryName, log, f => f !== "upload-blobs.md");
 }
 
 async function uploadDirectory(
@@ -53,7 +53,7 @@ async function uploadDirectory(
 	if (filter) {
 		files = files.filter(filter);
 	}
-	return await Promise.all(files.map(fileName => {
+	return Promise.all(files.map(fileName => {
 		const fullPath = joinPaths(dirPath, fileName);
 		const blobName = joinPaths(uploadedDirPath, fileName);
 		return logAndUploadFile(container, blobName, fullPath, log);
