@@ -1,6 +1,7 @@
 activex-helpers
 ajv
 anydb-sql
+apollo-client
 aws-sdk
 axios
 chalk
