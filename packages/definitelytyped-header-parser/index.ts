@@ -9,9 +9,9 @@ Example:
 // TypeScript Version: 2.1
 */
 
-export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5";
+export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6";
 export namespace TypeScriptVersion {
-	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5"];
+	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6"];
 	export const lowest = all[0];
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
 	export const latest = all[all.length - 1];
@@ -210,7 +210,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 		const [name, major, minor] = [reverse(nameReverse), reverse(majorReverse), reverse(minorReverse)];
 		return pm.makeSuccess<Label>(end, { name, major: intOfString(major), minor: minor === "x" ? 0 : intOfString(minor) });
 
-		function fail(msg?: string): pm.Result<Label> {
+		function fail(msg?: string): pm.Reply<Label> {
 			let expected = "foo MAJOR.MINOR";
 			if (msg !== undefined) {
 				expected += ` (${msg})`;
@@ -221,17 +221,10 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 }
 
 const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
-	pm.regexp(/\/\/ TypeScript Version: (2.(\d))/, 1).chain<TypeScriptVersion>(v => {
-		switch (v) {
-			case "2.1":
-			case "2.2":
-			case "2.3":
-			case "2.4":
-				return pm.succeed<TypeScriptVersion>(v);
-			default:
-				return pm.fail(`TypeScript ${v} is not yet supported.`);
-		}
-	});
+	pm.regexp(/\/\/ TypeScript Version: (2.(\d))/, 1).chain<TypeScriptVersion>(v =>
+		TypeScriptVersion.all.includes(v as TypeScriptVersion)
+			? pm.succeed(v as TypeScriptVersion)
+			: pm.fail(`TypeScript ${v} is not yet supported.`));
 
 const typeScriptVersionParser: pm.Parser<TypeScriptVersion> =
 	pm.regexp(/\r?\n/)

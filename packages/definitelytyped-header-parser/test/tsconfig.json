@@ -1,16 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
+        "target": "esnext",
         "declaration": true,
 
+        "strict": true,
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "strictNullChecks": true
+        "noUnusedParameters": true
     },
     "files": ["test.ts"]
 }
