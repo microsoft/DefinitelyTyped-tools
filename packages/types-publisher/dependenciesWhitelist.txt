@@ -30,3 +30,4 @@ vue
 vuex
 @types/js-data
 @types/vue
+parchment
