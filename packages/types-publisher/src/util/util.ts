@@ -70,6 +70,21 @@ export async function nAtATime<T, U>(
 	return results;
 }
 
+export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolean): IterableIterator<T> {
+	const iter = iterable[Symbol.iterator]();
+	return {
+		[Symbol.iterator](): IterableIterator<T> { return this; },
+		next(): IteratorResult<T> {
+			while (true) {
+				const res = iter.next();
+				if (res.done || predicate(res.value)) {
+					return res;
+				}
+			}
+		}
+	};
+}
+
 export async function filterNAtATime<T>(
 	n: number, inputs: ReadonlyArray<T>, shouldKeep: (input: T) => Promise<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
 	const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);

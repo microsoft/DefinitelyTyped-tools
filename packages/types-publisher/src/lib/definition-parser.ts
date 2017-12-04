@@ -4,7 +4,7 @@ import * as ts from "typescript";
 
 import { isDirectory, readFile, readJson } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
+import { computeHash, filter, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
 
 import { Options } from "./common";
 import getModuleInfo, { getTestDependencies } from "./module-info";
@@ -94,13 +94,18 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 
 	const tsconfig: TsConfig = await readJSON(joinPaths(directory, "tsconfig.json"));
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory, tsconfig);
-	const { dependencies: dependenciesSet, globals, declaredModules, declFiles } = await getModuleInfo(packageName, directory, typeFiles, log);
-	const testDependencies = await getTestDependencies(packageName, directory, testFiles, dependenciesSet);
+	const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules, declFiles } =
+		await getModuleInfo(packageName, directory, typeFiles, log);
+	const declaredModulesSet = new Set(declaredModules);
+	// Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
+	const removeDeclaredModules = (modules: Iterable<string>): Iterable<string> => filter(modules, m => !declaredModulesSet.has(m));
+	const dependenciesSet = new Set(removeDeclaredModules(dependenciesWithDeclaredModules));
+	const testDependencies = Array.from(removeDeclaredModules(await getTestDependencies(packageName, directory, testFiles, dependenciesSet)));
 	const { dependencies, pathMappings } = await calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
 
 	const packageJsonPath = joinPaths(directory, "package.json");
 	const hasPackageJson = await pathExists(packageJsonPath);
-	const packageJsonDependencies = hasPackageJson ? checkDependencies((await readJson(packageJsonPath)).dependencies, packageJsonPath) : [];
+	const packageJsonDependencies = hasPackageJson ? checkPackageJsonDependencies((await readJson(packageJsonPath)).dependencies, packageJsonPath) : [];
 
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
@@ -138,7 +143,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 	return { data, logs: logResult() };
 }
 
-function checkDependencies(dependencies: {} | null | undefined, path: string): ReadonlyArray<PackageJsonDependency> {
+function checkPackageJsonDependencies(dependencies: {} | null | undefined, path: string): ReadonlyArray<PackageJsonDependency> {
 	if (dependencies === null || typeof dependencies !== "object") { // tslint:disable-line strict-type-predicates
 		throw new Error(`${path} should contain "dependencies" or not exist.`);
 	}
@@ -206,8 +211,12 @@ interface TsConfig {
 }
 
 /** In addition to dependencies found oun source code, also get dependencies from tsconfig. */
-async function calculateDependencies(packageName: string, tsconfig: TsConfig, dependencyNames: Set<string>, oldMajorVersion: number | undefined
-	): Promise<{ dependencies: DependenciesRaw, pathMappings: PathMappingsRaw }> {
+async function calculateDependencies(
+	packageName: string,
+	tsconfig: TsConfig,
+	dependencyNames: ReadonlySet<string>,
+	oldMajorVersion: number | undefined,
+): Promise<{ dependencies: DependenciesRaw, pathMappings: PathMappingsRaw }> {
 	const paths = tsconfig.compilerOptions && tsconfig.compilerOptions.paths || {};
 
 	const dependencies: DependenciesRaw = {};

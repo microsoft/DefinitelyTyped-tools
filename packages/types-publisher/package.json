@@ -54,7 +54,7 @@
     "upload-blobs": "node bin/upload-blobs.js",
     "full": "node bin/full.js",
     "full-dry": "node bin/full.js --dry",
-    "lint": "node node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --type-check",
+    "lint": "node node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
     "webhook-dry": "node ./bin/webhook.js --dry",
     "make-server-run": "node bin/make-server-run.js",
     "make-production-server-run": "node bin/make-server-run.js --remote",

@@ -355,8 +355,13 @@ function noWindowsSlashes(packageName: string, fileName: string): void {
 	}
 }
 
-export async function getTestDependencies(pkgName: string, directory: string, testFiles: string[], dependencies: Set<string>): Promise<string[]> {
-	const testDependencies = new Set();
+export async function getTestDependencies(
+	pkgName: string,
+	directory: string,
+	testFiles: string[],
+	dependencies: ReadonlySet<string>,
+): Promise<Iterable<string>> {
+	const testDependencies = new Set<string>();
 
 	for (const filename of testFiles) {
 		const content = await readFileAndThrowOnBOM(directory, filename);
@@ -386,7 +391,7 @@ export async function getTestDependencies(pkgName: string, directory: string, te
 		}
 	}
 
-	return Array.from(testDependencies);
+	return testDependencies;
 }
 
 function createSourceFile(filename: string, content: string): ts.SourceFile {
