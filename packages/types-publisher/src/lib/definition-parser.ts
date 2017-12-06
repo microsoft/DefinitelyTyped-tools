@@ -154,7 +154,9 @@ function checkPackageJsonDependencies(dependencies: {} | null | undefined, path:
 		if (!dependenciesWhitelist.has(dependencyName)) {
 			const msg = dependencyName.startsWith("@types/")
 				? "Don't use a 'package.json' for @types dependencies."
-				: `Dependency ${dependencyName} not in whitelist; please make a pull request to types-publisher adding it.`;
+				: `Dependency ${dependencyName} not in whitelist.
+If you are depending on another \`@types\` package, do *not* add it to a \`package.json\`. Path mapping should make the import work.
+If this is an external library that provides typings,  please make a pull request to types-publisher adding it to \`dependenciesWhitelist.txt\`.`;
 			throw new Error(`In ${path}: ${msg}`);
 		}
 
