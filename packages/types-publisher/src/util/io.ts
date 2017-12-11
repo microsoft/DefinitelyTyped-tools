@@ -14,7 +14,7 @@ export async function readJson(path: string): Promise<any> {
 	return parseJson(await readFile(path));
 }
 
-export async function fetchJson(url: string, init?: RequestInit & { retries?: number | true }): Promise<any> {
+export async function fetchJson(url: string, init?: RequestInit & { retries?: number | true }): Promise<{}> {
 	// Cast needed: https://github.com/Microsoft/TypeScript/issues/10065
 	const response = await (init && init.retries ? fetchWithRetries(url, init as RequestInit & { retries: number | true }) : fetch(url, init));
 	return parseJson(await response.text());
@@ -62,13 +62,13 @@ async function fetchWithRetries(url: string, init: RequestInit & { retries: numb
 				throw err;
 			}
 		}
-		await sleep(1000);
+		await sleep(1);
 	}
 	return fetch(url, init);
 }
 
-async function sleep(millis: number): Promise<void> {
-	return new Promise<void>(resolve => setTimeout(resolve, millis));
+export async function sleep(seconds: number): Promise<void> {
+	return new Promise<void>(resolve => setTimeout(resolve, seconds * 1000));
 }
 
 export async function isDirectory(path: string): Promise<boolean> {
@@ -92,7 +92,7 @@ export async function assertDirectoriesEqual(expected: string, actual: string, o
 		if (expectedStat.isDirectory()) {
 			await assertDirectoriesEqual(expectedFile, actualFile, options);
 		} else {
-			assert.equal(await readFile(expectedFile), await readFile(actualFile));
+			assert.equal(await readFile(actualFile), await readFile(expectedFile));
 		}
 	}
 }

@@ -28,7 +28,7 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 async function doUpdate(accessToken: string, body: string): Promise<void> {
 	const url = `https://api.github.com/repos/${errorsIssue}?access_token=${accessToken}`;
 	const message = { body, state: "open" };
-	const responseBody = await fetchJson(url, { method: "PATCH", body: JSON.stringify(message) });
+	const responseBody = (await fetchJson(url, { method: "PATCH", body: JSON.stringify(message) })) as { body: string };
 	if (responseBody.body !== body) {
 		throw new Error(JSON.stringify(responseBody, undefined, 4));
 	}

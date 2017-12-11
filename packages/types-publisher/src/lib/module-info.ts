@@ -238,8 +238,6 @@ interface Reference {
  * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  */
 function* referencedFiles(src: ts.SourceFile, subDirectory: string, directory: string): Iterable<Reference> {
-	const out: Reference[] = [];
-
 	for (const ref of src.referencedFiles) {
 		// Any <reference path="foo"> is assumed to be local
 		yield addReference({ text: ref.fileName, exact: true });
@@ -250,8 +248,6 @@ function* referencedFiles(src: ts.SourceFile, subDirectory: string, directory: s
 			yield addReference({ text: ref, exact: false });
 		}
 	}
-
-	return out;
 
 	function addReference({ exact, text }: Reference): Reference {
 		noWindowsSlashes(src.fileName, text);

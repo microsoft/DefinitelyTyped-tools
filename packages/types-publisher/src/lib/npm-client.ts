@@ -2,7 +2,7 @@ import assert = require("assert");
 import RegClient = require("npm-registry-client");
 import * as url from "url";
 
-import { readFile } from "../util/io";
+import { fetchJson, readFile } from "../util/io";
 import { createTgz } from "../util/tgz";
 import { joinPaths } from "../util/util";
 
@@ -81,4 +81,27 @@ function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => vo
 			}
 		});
 	});
+}
+
+export interface NpmInfo {
+	readonly error?: string;
+	readonly version: string;
+	readonly "dist-tags": {
+		readonly [tag: string]: string;
+	};
+	readonly versions: NpmInfoVersions;
+}
+export interface NpmInfoVersions {
+	readonly [version: string]: {
+		readonly typesPublisherContentHash: string;
+		readonly deprecated?: string;
+	};
+}
+export async function fetchNpmInfo(escapedPackageName: string): Promise<NpmInfo> {
+	const uri = npmRegistry + escapedPackageName;
+	const info = (await fetchJson(uri, { retries: true })) as { readonly error: string } | NpmInfo;
+	if ("error" in info) {
+		throw new Error(`Error getting version at ${uri}: ${info.error}`);
+	}
+	return info;
 }

@@ -36,8 +36,7 @@ export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean
 			return -1;
 		} else {
 			const url = `https://api.npmjs.org/downloads/point/last-month/${pkg.name}`;
-			interface NpmResult { downloads: number; }
-			const json: NpmResult = await fetchJson(url, { retries: true });
+			const json = await fetchJson(url, { retries: true }) as { downloads: number };
 			// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.
 			return json.downloads || 0;
 		}

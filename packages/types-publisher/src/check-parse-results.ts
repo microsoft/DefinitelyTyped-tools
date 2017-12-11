@@ -1,8 +1,7 @@
 import * as semver from "semver";
 import { Options } from "./lib/common";
+import { fetchNpmInfo } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
-import { npmRegistry } from "./lib/settings";
-import { fetchJson } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { best, done, multiMapAdd, nAtATime } from "./util/util";
 
@@ -102,17 +101,12 @@ export async function packageHasTypes(packageName: string): Promise<boolean> {
 }
 
 async function firstPackageVersionWithTypes(packageName: string): Promise<string | undefined> {
-	const uri = npmRegistry + packageName;
-	const info = await fetchJson(uri, { retries: true });
+	const info = await fetchNpmInfo(packageName);
 	// Info may be empty if the package is not on NPM
-	if (!info.versions) {
-		return undefined;
-	}
-
-	return firstVersionWithTypes(info.versions);
+	return info.versions && firstVersionWithTypes(info.versions);
 }
 
-function firstVersionWithTypes(versions: { [version: string]: any }): string | undefined {
+function firstVersionWithTypes(versions: { [version: string]: {} }): string | undefined {
 	const versionsWithTypings = Object.entries(versions).filter(([_version, info]) => hasTypes(info)).map(([version]) => version);
 	// Type annotation needed because of https://github.com/Microsoft/TypeScript/issues/12915
 	return best<string>(versionsWithTypings, semver.lt);

@@ -11,7 +11,7 @@ import { Semver } from "./versions";
 export class AllPackages {
 	static async read(options: Options): Promise<AllPackages> {
 		const map = await readData();
-		const notNeeded = (await readNotNeededPackages(options)).map(raw => new NotNeededPackage(raw));
+		const notNeeded = await readNotNeededPackages(options);
 		return new AllPackages(map, notNeeded);
 	}
 
@@ -430,8 +430,9 @@ function notNeededPackagesPath(options: Options): string {
 	return joinPaths(options.definitelyTypedPath, "notNeededPackages.json");
 }
 
-async function readNotNeededPackages(options: Options): Promise<NotNeededPackageRaw[]> {
-	return (await readJson(notNeededPackagesPath(options))).packages;
+export async function readNotNeededPackages(options: Options): Promise<ReadonlyArray<NotNeededPackage>> {
+	const raw = await readJson(notNeededPackagesPath(options)) as { packages: ReadonlyArray<NotNeededPackageRaw> };
+	return raw.packages.map(raw => new NotNeededPackage(raw));
 }
 
 /** Path to the *root* for a given package. Path to a particular version may differ. */
