@@ -1,5 +1,5 @@
 import assert = require("assert");
-import * as child_process from "child_process";
+import { exec as node_exec, fork } from "child_process";
 import * as crypto from "crypto";
 import moment = require("moment");
 import * as os from "os";
@@ -32,7 +32,7 @@ export function currentTimeStamp(): string {
 	return moment().format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 }
 
-export const numberOfOsProcesses = process.env.TRAVIS === "true" ? 8 : os.cpus().length * 4;
+export const numberOfOsProcesses = process.env.TRAVIS === "true" ? 8 : os.cpus().length;
 
 /** Progress options needed for `nAtATime`. Other options will be inferred. */
 interface ProgressOptions<T, U> {
@@ -114,10 +114,10 @@ export function done(promise: Promise<void>): void {
 	});
 }
 
-function initArray<T>(length: number, makeElement: () => T): T[] {
+function initArray<T>(length: number, makeElement: (i: number) => T): T[] {
 	const arr = new Array(length);
 	for (let i = 0; i < length; i++) {
-		arr[i] = makeElement();
+		arr[i] = makeElement(i);
 	}
 	return arr;
 }
@@ -159,7 +159,7 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined, stdout: string, stderr: string }> {
 	return new Promise<{ error: Error | undefined, stdout: string, stderr: string }>(resolve => {
-		child_process.exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
+		node_exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
 			resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
 		});
 	});
@@ -261,4 +261,41 @@ export function join<T>(values: Iterable<T>, joiner = ", "): string {
 		s += `${v}${joiner}`;
 	}
 	return s.slice(0, s.length - joiner.length);
+}
+
+export interface RunWithChildProcessesOptions<In> {
+	readonly inputs: ReadonlyArray<In>;
+	readonly commandLineArgs: string[];
+	readonly workerFile: string;
+	readonly nProcesses: number;
+	handleOutput(output: {}): void;
+}
+export function runWithChildProcesses<In>(
+	{ inputs, commandLineArgs, workerFile, nProcesses, handleOutput }: RunWithChildProcessesOptions<In>,
+): Promise<void> {
+	return new Promise((resolve, reject) => {
+		const nPerProcess = Math.floor(inputs.length / nProcesses);
+		let processesLeft = nProcesses;
+		for (let i = 0; i < nProcesses; i++) {
+			const lo = nPerProcess * i;
+			const hi = i === nProcesses - 1 ? inputs.length : lo + nPerProcess;
+			const child = fork(workerFile, commandLineArgs);
+			let outputsLeft = hi - lo; // Expect one output per input
+			child.send(inputs.slice(lo, hi));
+			child.on("message", outputMessage => {
+				handleOutput(outputMessage);
+				assert(outputsLeft > 0);
+				outputsLeft--;
+				if (outputsLeft === 0) {
+					assert(processesLeft > 0);
+					processesLeft--;
+					if (processesLeft === 0) {
+						resolve();
+					}
+					child.kill();
+				}
+			});
+			child.on("error", reject);
+		}
+	});
 }

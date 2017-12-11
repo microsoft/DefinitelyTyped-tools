@@ -12,7 +12,7 @@ import parseDefinitions from "./parse-definitions";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
 import uploadBlobs from "./upload-blobs";
-import { currentTimeStamp, done } from "./util/util";
+import { currentTimeStamp, done, numberOfOsProcesses } from "./util/util";
 import validate from "./validate";
 
 if (!module.parent) {
@@ -24,7 +24,7 @@ if (!module.parent) {
 export default async function full(client: NpmClient, dry: boolean, timeStamp: string, options: Options): Promise<void> {
 	await clean();
 	await getDefinitelyTyped(options);
-	await parseDefinitions(options);
+	await parseDefinitions(options, /*nProcesses*/ numberOfOsProcesses);
 	await checkParseResults(/*includeNpmChecks*/ false, options);
 	await calculateVersions(/*forceUpdate*/ false, options);
 	await generatePackages(options);

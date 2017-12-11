@@ -434,8 +434,3 @@ export async function readNotNeededPackages(options: Options): Promise<ReadonlyA
 	const raw = await readJson(notNeededPackagesPath(options)) as { packages: ReadonlyArray<NotNeededPackageRaw> };
 	return raw.packages.map(raw => new NotNeededPackage(raw));
 }
-
-/** Path to the *root* for a given package. Path to a particular version may differ. */
-export function packageRootPath(packageName: string, options: Options): string {
-	return joinPaths(options.typesPath, packageName);
-}

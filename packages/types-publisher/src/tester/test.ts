@@ -16,7 +16,7 @@ if (!module.parent) {
 
 async function main(options: Options, nProcesses: number, all: boolean): Promise<void> {
 	await clean();
-	await parseDefinitions(options);
+	await parseDefinitions(options, nProcesses);
 	await checkParseResults(/*includeNpmChecks*/false, options);
 	await runTests(options, nProcesses, all ? "all" : "affected");
 }

@@ -6,18 +6,18 @@ import { isDirectory, readFile, readJson } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
 import { computeHash, filter, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
 
-import { Options } from "./common";
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
-import { DependenciesRaw, PackageJsonDependency, packageRootPath, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+import { DependenciesRaw, PackageJsonDependency, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
 
 const dependenciesWhitelist = new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));
 
-export async function getTypingInfo(packageName: string, options: Options): Promise<{ data: TypingsVersionsRaw, logs: Log }> {
+export interface TypingInfo { data: TypingsVersionsRaw; logs: Log; }
+export async function getTypingInfo(packageName: string, typesPath: string): Promise<TypingInfo> {
 	if (packageName !== packageName.toLowerCase()) {
 		throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
 	}
-	const rootDirectory = packageRootPath(packageName, options);
+	const rootDirectory = joinPaths(typesPath, packageName);
 	const { rootDirectoryLs, olderVersionDirectories } = await getOlderVersions(rootDirectory);
 
 	const { data: latestData, logs: latestLogs } = await getTypingData(packageName, rootDirectory, rootDirectoryLs);
