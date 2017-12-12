@@ -8,7 +8,7 @@ import { computeHash, filter, hasWindowsSlashes, join, joinPaths, mapAsyncOrdere
 
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
-import { DependenciesRaw, PackageJsonDependency, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+import { DependenciesRaw, getLicenseFromPackageJson, PackageJsonDependency, PathMappingsRaw, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
 
 const dependenciesWhitelist = new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));
 
@@ -105,7 +105,9 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 
 	const packageJsonPath = joinPaths(directory, "package.json");
 	const hasPackageJson = await pathExists(packageJsonPath);
-	const packageJsonDependencies = hasPackageJson ? checkPackageJsonDependencies((await readJson(packageJsonPath)).dependencies, packageJsonPath) : [];
+	const packageJson = hasPackageJson ? await readJson(packageJsonPath) as { readonly license?: {} | null, readonly dependencies?: {} | null } : {};
+	const license = getLicenseFromPackageJson(packageJson.license);
+	const packageJsonDependencies = checkPackageJsonDependencies(packageJson.dependencies, packageJsonPath);
 
 	const allContentHashFiles = hasPackageJson ? declFiles.concat(["package.json"]) : declFiles;
 
@@ -137,6 +139,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 		declaredModules,
 		files: declFiles,
 		testFiles,
+		license,
 		packageJsonDependencies,
 		contentHash: await hash(directory, allContentHashFiles, tsconfig.compilerOptions.paths)
 	};
@@ -144,6 +147,9 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 }
 
 function checkPackageJsonDependencies(dependencies: {} | null | undefined, path: string): ReadonlyArray<PackageJsonDependency> {
+	if (dependencies === undefined) {
+		return [];
+	}
 	if (dependencies === null || typeof dependencies !== "object") { // tslint:disable-line strict-type-predicates
 		throw new Error(`${path} should contain "dependencies" or not exist.`);
 	}

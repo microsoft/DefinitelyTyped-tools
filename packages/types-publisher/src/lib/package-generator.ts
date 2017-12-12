@@ -3,10 +3,10 @@ import * as path from "path";
 
 import { writeFile } from "../util/io";
 import { Log, quietLogger } from "../util/logging";
-import { hasOwnProperty, joinPaths } from "../util/util";
+import { assertNever, hasOwnProperty, joinPaths } from "../util/util";
 
 import { Options } from "./common";
-import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, NotNeededPackage, TypingsData } from "./packages";
+import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, License, NotNeededPackage, TypingsData } from "./packages";
 import { sourceBranch } from "./settings";
 import Versions, { Semver } from "./versions";
 
@@ -15,7 +15,7 @@ export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackage
 	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, options);
 }
 
-const license = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
+const mitLicense = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
 
 async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
 	const [log, logResult] = quietLogger();
@@ -47,7 +47,7 @@ async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: 
 	await Promise.all([
 		writeOutputFile("package.json", packageJson),
 		writeOutputFile("README.md", readme),
-		writeOutputFile("LICENSE", license),
+		writeOutputFile("LICENSE", getLicenseFileText(pkg)),
 	]);
 
 	async function writeOutputFile(filename: string, content: string): Promise<void> {
@@ -69,20 +69,17 @@ interface Dependencies { [name: string]: string; }
 
 async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
-
 	const dependencies = getDependencies(typing.packageJsonDependencies, typing, packages);
 
-	const description = `TypeScript definitions for ${typing.libraryName}`;
-
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
-	const out = {
+	const out: {} = {
 		name: typing.fullNpmName,
 		version: version.versionString,
-		description,
+		description: `TypeScript definitions for ${typing.libraryName}`,
 		// keywords,
 		// homepage,
 		// bugs,
-		license: "MIT",
+		license: typing.license,
 		contributors: typing.contributors,
 		main: "",
 		repository: {
@@ -127,7 +124,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 	return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-function createNotNeededPackageJSON({libraryName, name, fullNpmName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
+function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
 	return JSON.stringify(
 		{
 			name: fullNpmName,
@@ -138,7 +135,7 @@ function createNotNeededPackageJSON({libraryName, name, fullNpmName, sourceRepoU
 			scripts: {},
 			author: "",
 			repository: sourceRepoURL,
-			license: "MIT",
+			license,
 			// No `typings`, that's provided by the dependency.
 			dependencies: {
 				[name]: "*"
@@ -179,4 +176,28 @@ function createReadme(typing: TypingsData): string {
 	lines.push("");
 
 	return lines.join("\r\n");
+}
+
+function getLicenseFileText(typing: AnyPackage): string {
+	switch (typing.license) {
+		case License.MIT:
+			return mitLicense;
+		case License.Apache20:
+			return apacheLicense(typing);
+		default:
+			throw assertNever(typing);
+	}
+}
+
+function apacheLicense(typing: TypingsData): string {
+	const year = new Date().getFullYear();
+	const names = typing.contributors.map(c => c.name);
+	// tslint:disable max-line-length
+	return `Copyright ${year} ${names.join(", ")}
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.`;
+	// tslint:enable max-line-length
 }

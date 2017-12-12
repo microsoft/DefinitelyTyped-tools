@@ -215,6 +215,8 @@ interface NotNeededPackageRaw extends BaseRaw {
 export class NotNeededPackage extends PackageBase {
 	readonly version: Semver;
 
+	get license(): License.MIT { return License.MIT; }
+
 	constructor(raw: NotNeededPackageRaw) {
 		super(raw);
 
@@ -302,6 +304,7 @@ export interface TypingsDataRaw extends BaseRaw {
 	readonly testFiles: ReadonlyArray<string>;
 
 	// Whether a "package.json" exists
+	readonly license: License;
 	readonly packageJsonDependencies: ReadonlyArray<PackageJsonDependency>;
 
 	// A hash computed from all files from this definition
@@ -315,6 +318,22 @@ export interface TypingsDataRaw extends BaseRaw {
 
 	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
 	readonly declaredModules: ReadonlyArray<string>;
+}
+
+// TODO: support BSD -- but must choose a *particular* BSD license from the list at https://spdx.org/licenses/
+export const enum License { MIT = "MIT", Apache20 = "Apache-2.0" }
+const allLicenses = [License.MIT, License.Apache20];
+export function getLicenseFromPackageJson(packageJsonLicense: {} | null | undefined): License {
+	if (packageJsonLicense === undefined) {
+		return License.MIT;
+	}
+	if (packageJsonLicense === "MIT") {
+		throw new Error(`Specifying '"license": "MIT"' is redundant, this is the default.`);
+	}
+	if (allLicenses.includes(packageJsonLicense as License)) {
+		return packageJsonLicense as License;
+	}
+	throw new Error(`'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(allLicenses)}}`);
 }
 
 class TypingsVersions {
@@ -375,6 +394,7 @@ export class TypingsData extends PackageBase {
 	get typeScriptVersion(): TypeScriptVersion { return this.data.typeScriptVersion; }
 	get files(): ReadonlyArray<string> { return this.data.files; }
 	get testFiles(): ReadonlyArray<string> { return this.data.testFiles; }
+	get license(): License { return this.data.license; }
 	get packageJsonDependencies(): ReadonlyArray<PackageJsonDependency> { return this.data.packageJsonDependencies; }
 	get contentHash(): string { return this.data.contentHash; }
 	get declaredModules(): ReadonlyArray<string> { return this.data.declaredModules; }
