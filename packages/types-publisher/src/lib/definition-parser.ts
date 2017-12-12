@@ -95,7 +95,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 	const tsconfig: TsConfig = await readJSON(joinPaths(directory, "tsconfig.json"));
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, directory, tsconfig);
 	const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules, declFiles } =
-		await getModuleInfo(packageName, directory, typeFiles, log);
+		await getModuleInfo(packageName, directory, typeFiles);
 	const declaredModulesSet = new Set(declaredModules);
 	// Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
 	const removeDeclaredModules = (modules: Iterable<string>): Iterable<string> => filter(modules, m => !declaredModulesSet.has(m));

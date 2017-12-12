@@ -5,7 +5,7 @@ import NpmClient from "./lib/npm-client";
 import { AllPackages, AnyPackage } from "./lib/packages";
 import Versions from "./lib/versions";
 
-import { Logger } from "./util/logging";
+import { consoleLogger, Logger } from "./util/logging";
 import { done, nAtATime } from "./util/util";
 
 if (!module.parent) {
@@ -26,8 +26,8 @@ async function tagAll(dry: boolean): Promise<void> {
 		// Only update tags for the latest version of the package.
 		if (pkg.isLatest) {
 			const version = versions.getVersion(pkg).versionString;
-			await updateTypeScriptVersionTags(pkg, version, client, console.log, dry);
-			await updateLatestTag(pkg, versions, client, console.log, dry);
+			await updateTypeScriptVersionTags(pkg, version, client, consoleLogger.info, dry);
+			await updateLatestTag(pkg, versions, client, consoleLogger.info, dry);
 		}
 	});
 

@@ -4,7 +4,7 @@ import * as yargs from "yargs";
 import { Options } from "../lib/common";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
-import { LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
+import { consoleLogger, LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
 import { concat, done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
 
 import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
@@ -41,7 +41,7 @@ export default async function main(options: Options, nProcesses: number, selecti
 	const { changedPackages, dependentPackages }: Affected = selection === "all"
 		? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
 		: selection === "affected"
-		? await getAffectedPackages(allPackages, console.log, options)
+		? await getAffectedPackages(allPackages, consoleLogger.info, options)
 		: { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
 	console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);

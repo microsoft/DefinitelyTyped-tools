@@ -7,15 +7,13 @@
 		"max-line-length": [true, 150],
 		"only-arrow-functions": [true, "allow-declarations"],
 
-		"binary-expression-operand-order": false, //TODO: false positive
-		"cyclomatic-complexity": false, // TODO
-		"no-unsafe-any": false, //TODO
-		"strict-boolean-expressions": false, //TODO
-		"match-default-export-name": false, //TODO
-		"no-unbound-method": false, //TODO: false positives
-		"no-inferred-empty-object-type": false, //TODO: false positive
-		"no-shadowed-variable": false, //TODO
-		"no-unnecessary-type-assertion": false, //TODO: false positive
+		// TODO
+		"no-unsafe-any": false,
+		"strict-boolean-expressions": false,
+		"match-default-export-name": false,
+		"no-inferred-empty-object-type": false, // false positive
+		"no-shadowed-variable": false,
+		"no-unnecessary-type-assertion": false, // false positive
 
 		"no-this-assignment": [true, { "allow-destructuring": true }],
 		"typedef": [true, "call-signature"],

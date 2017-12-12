@@ -2,14 +2,14 @@ import { Options } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
-import { Logger } from "../util/logging";
+import { consoleLogger, Logger } from "../util/logging";
 import { done, execAndThrowErrors, flatMap, map, mapDefined, sort } from "../util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 async function main(options: Options): Promise<void> {
-	const changes = await getAffectedPackages(await AllPackages.read(options), console.log, options);
+	const changes = await getAffectedPackages(await AllPackages.read(options), consoleLogger.info, options);
 	console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependers: changes.dependentPackages.map(t => t.desc) });
 }
 
@@ -39,7 +39,7 @@ function collectDependers(changedPackages: Iterable<TypingsData>, reverseDepende
 }
 
 function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
-	return sort<TypingsData>(packages, PackageBase.compare);
+	return sort<TypingsData>(packages, PackageBase.compare); // tslint:disable-line no-unbound-method
 }
 
 function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item: T) => Iterable<T>): Set<T> {

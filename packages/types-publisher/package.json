@@ -35,7 +35,7 @@
     "@types/source-map-support": "^0.4.0",
     "@types/tar": "^1.0.27",
     "@types/yargs": "^8.0.1",
-    "tslint": "^5.5.0"
+    "tslint": "^5.8.0"
   },
   "scripts": {
     "build": "node node_modules/typescript/lib/tsc.js",
