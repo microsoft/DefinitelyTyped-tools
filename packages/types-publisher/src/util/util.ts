@@ -279,8 +279,13 @@ export function runWithChildProcesses<In>(
 		for (let i = 0; i < nProcesses; i++) {
 			const lo = nPerProcess * i;
 			const hi = i === nProcesses - 1 ? inputs.length : lo + nPerProcess;
-			const child = fork(workerFile, commandLineArgs);
 			let outputsLeft = hi - lo; // Expect one output per input
+			if (outputsLeft === 0) {
+				// No work for this process to do, so don't launch it
+				processesLeft--;
+				continue;
+			}
+			const child = fork(workerFile, commandLineArgs);
 			child.send(inputs.slice(lo, hi));
 			child.on("message", outputMessage => {
 				handleOutput(outputMessage);
@@ -295,6 +300,8 @@ export function runWithChildProcesses<In>(
 					child.kill();
 				}
 			});
+			child.on("disconnect", () => { assert(outputsLeft === 0); });
+			child.on("close", () => { assert(outputsLeft === 0); });
 			child.on("error", reject);
 		}
 	});
