@@ -24,7 +24,7 @@ export default async function getAffectedPackages(allPackages: AllPackages, log:
 	// If a package doesn't exist, that's because it was deleted.
 	const changedPackages = mapDefined(changedPackageIds, (({ name, majorVersion }) =>
 		majorVersion === "latest" ? allPackages.tryGetLatestVersion(name) : allPackages.tryGetTypingsData({ name, majorVersion })));
-	const dependentPackages = collectDependers(changedPackages,  getReverseDependencies(allPackages)).filter(d => changedPackages.includes(d));
+	const dependentPackages = collectDependers(changedPackages,  getReverseDependencies(allPackages));
 	return { changedPackages, dependentPackages };
 }
 
@@ -34,8 +34,13 @@ export function allDependencies(allPackages: AllPackages, packages: Iterable<Typ
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
-function collectDependers(changedPackages: Iterable<TypingsData>, reverseDependencies: Map<TypingsData, Set<TypingsData>>): TypingsData[] {
-	return sortPackages(transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []));
+function collectDependers(changedPackages: TypingsData[], reverseDependencies: Map<TypingsData, Set<TypingsData>>): TypingsData[] {
+	const dependers = transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []);
+	// Don't include the original changed packages, just their dependers
+	for (const original of changedPackages) {
+		dependers.delete(original);
+	}
+	return sortPackages(dependers);
 }
 
 function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
