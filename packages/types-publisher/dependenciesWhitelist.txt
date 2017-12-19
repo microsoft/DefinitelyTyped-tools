@@ -13,6 +13,7 @@ flatpickr
 immutable
 inversify
 jointjs
+levelup
 localforage
 meteor-typings
 mqtt
