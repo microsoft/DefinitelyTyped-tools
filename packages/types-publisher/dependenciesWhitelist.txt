@@ -37,6 +37,7 @@ source-map
 typescript
 vue
 vuex
+@types/firebase
 @types/js-data
 @types/vue
 @uirouter/angularjs
