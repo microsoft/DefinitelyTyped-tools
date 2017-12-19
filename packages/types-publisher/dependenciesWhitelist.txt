@@ -5,12 +5,14 @@ apollo-client
 aws-sdk
 axios
 chalk
+egg
 electron
 eventemitter2
 eventemitter3
 flatpickr
 immutable
 inversify
+jointjs
 localforage
 meteor-typings
 mqtt
