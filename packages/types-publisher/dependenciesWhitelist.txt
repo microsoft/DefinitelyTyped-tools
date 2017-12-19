@@ -38,4 +38,5 @@ vue
 vuex
 @types/js-data
 @types/vue
+@uirouter/angularjs
 parchment
