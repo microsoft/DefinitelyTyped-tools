@@ -33,6 +33,7 @@ redux-saga
 redux-thunk
 should
 smooth-scrollbar
+source-map
 typescript
 vue
 vuex
