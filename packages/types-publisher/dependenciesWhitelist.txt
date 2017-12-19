@@ -25,6 +25,7 @@ redux
 redux-persist
 redux-saga
 redux-thunk
+smooth-scrollbar
 typescript
 vue
 vuex
