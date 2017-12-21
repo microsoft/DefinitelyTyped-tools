@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { exec as node_exec, fork } from "child_process";
+import { ChildProcess, exec as node_exec, fork } from "child_process";
 import * as crypto from "crypto";
 import moment = require("moment");
 import * as os from "os";
@@ -276,6 +276,8 @@ export function runWithChildProcesses<In>(
 	return new Promise((resolve, reject) => {
 		const nPerProcess = Math.floor(inputs.length / nProcesses);
 		let processesLeft = nProcesses;
+		let rejected = false;
+		const allChildren: ChildProcess[] = [];
 		for (let i = 0; i < nProcesses; i++) {
 			const lo = nPerProcess * i;
 			const hi = i === nProcesses - 1 ? inputs.length : lo + nPerProcess;
@@ -286,6 +288,7 @@ export function runWithChildProcesses<In>(
 				continue;
 			}
 			const child = fork(workerFile, commandLineArgs);
+			allChildren.push(child);
 			child.send(inputs.slice(lo, hi));
 			child.on("message", outputMessage => {
 				handleOutput(outputMessage);
@@ -300,9 +303,21 @@ export function runWithChildProcesses<In>(
 					child.kill();
 				}
 			});
-			child.on("disconnect", () => { assert(outputsLeft === 0); });
-			child.on("close", () => { assert(outputsLeft === 0); });
-			child.on("error", reject);
+			child.on("disconnect", () => {
+				if (outputsLeft !== 0) {
+					fail();
+				}
+			});
+			child.on("close", () => { assert(rejected || outputsLeft === 0); });
+			child.on("error", fail);
+		}
+
+		function fail(): void {
+			rejected = true;
+			for (const child of allChildren) {
+				child.kill();
+			}
+			reject(new Error("Parsing failed."));
 		}
 	});
 }

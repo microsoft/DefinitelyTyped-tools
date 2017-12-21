@@ -149,6 +149,11 @@ export class Semver {
 		return isPrerelease ? `${major}.${minor}.0-next.${patch}` : `${major}.${minor}.${patch}`;
 	}
 
+	greaterThan(sem: Semver): boolean {
+		return this.major > sem.major || this.major === sem.major
+			&& (this.minor > sem.minor || this.minor === sem.minor && this.patch > sem.patch);
+	}
+
 	update({ major, minor }: MajorMinor, isPrerelease: boolean): Semver {
 		const patch = this.major === major && this.minor === minor && this.isPrerelease === isPrerelease ? this.patch + 1 : 0;
 		return new Semver(major, minor, patch, isPrerelease);
@@ -199,7 +204,7 @@ function getLatestVersion(versions: NpmInfoVersions): Semver {
 	return best(Object.keys(versions).map(parseAnySemver), (a, b) => {
 		if (a.isPrerelease && !b.isPrerelease) { return false; }
 		if (!a.isPrerelease && b.isPrerelease) { return true; }
-		return a.major >= b.major && a.minor >= b.minor && a.patch > b.patch;
+		return a.greaterThan(b);
 	})!;
 }
 

@@ -92,10 +92,11 @@ export interface NpmInfo {
 	readonly versions: NpmInfoVersions;
 }
 export interface NpmInfoVersions {
-	readonly [version: string]: {
-		readonly typesPublisherContentHash: string;
-		readonly deprecated?: string;
-	};
+	readonly [version: string]: NpmInfoVersion;
+}
+export interface NpmInfoVersion {
+	readonly typesPublisherContentHash: string;
+	readonly deprecated?: string;
 }
 export async function fetchNpmInfo(escapedPackageName: string): Promise<NpmInfo> {
 	const uri = npmRegistry + escapedPackageName;
