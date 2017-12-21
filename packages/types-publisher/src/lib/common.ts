@@ -15,8 +15,8 @@ export const home = joinPaths(__dirname, "..", "..");
 /** Settings that may be determined dynamically. */
 export class Options {
 	/** Options for running locally. */
-	static defaults = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ false, /*progress*/ true);
-	static azure = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false);
+	static defaults = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ false, /*progress*/ true, /*parseInParallel*/ true);
+	static azure = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false, /*parseInParallel*/ false);
 
 	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
 	readonly typesPath: string;
@@ -28,8 +28,10 @@ export class Options {
 		readonly definitelyTypedPath: string,
 		readonly resetDefinitelyTyped: boolean,
 		/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
-		readonly progress: boolean) {
-
+		readonly progress: boolean,
+		/** Disabled on azure since it has problems logging errors from other processes. */
+		readonly parseInParallel: boolean,
+	) {
 		this.typesPath = joinPaths(definitelyTypedPath, typesDirectoryName);
 	}
 }

@@ -30,7 +30,7 @@ export function parseNProcesses(): number {
 
 export function testerOptions(runFromDefinitelyTyped: boolean): Options {
 	if (runFromDefinitelyTyped) {
-		return new Options(process.cwd(), /*resetDefinitelyTyped*/ false, /*progress*/ false);
+		return new Options(process.cwd(), /*resetDefinitelyTyped*/ false, /*progress*/ false, /*parseInParallel*/ true);
 	} else {
 		return Options.defaults;
 	}

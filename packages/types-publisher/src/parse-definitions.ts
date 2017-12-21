@@ -29,18 +29,25 @@ export default async function main(options: Options, nProcesses: number): Promis
 
 	const typings: { [name: string]: TypingsVersionsRaw } = {};
 
-	await runWithChildProcesses({
-		inputs: packageNames,
-		commandLineArgs: [options.typesPath],
-		workerFile: definitionParserWorkerFilename,
-		nProcesses,
-		handleOutput(output): void {
-			const { data, logs, packageName } = output as TypingInfoWithPackageName;
-			typings[packageName] = data;
-			detailedLog(`# ${packageName}`);
-			moveLogs(detailedLog, logs);
+	if (options.parseInParallel) {
+		await runWithChildProcesses({
+			inputs: packageNames,
+			commandLineArgs: [options.typesPath],
+			workerFile: definitionParserWorkerFilename,
+			nProcesses,
+			handleOutput,
+		});
+	} else {
+		for (const packageName of packageNames) {
+			handleOutput({ ...await getTypingInfo(packageName, options.typesPath), packageName });
 		}
-	});
+	}
+
+	function handleOutput({ data, logs, packageName }: TypingInfoWithPackageName): void {
+		typings[packageName] = data;
+		detailedLog(`# ${packageName}`);
+		moveLogs(detailedLog, logs);
+	}
 
 	await Promise.all([
 		writeLog("parser-log-summary.md", summaryLogResult()),
