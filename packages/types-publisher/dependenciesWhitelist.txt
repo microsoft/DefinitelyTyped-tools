@@ -41,5 +41,7 @@ vuex
 @types/firebase
 @types/js-data
 @types/vue
+@types/wonder-commonlib
+@types/wonder-frp
 @uirouter/angularjs
 parchment
