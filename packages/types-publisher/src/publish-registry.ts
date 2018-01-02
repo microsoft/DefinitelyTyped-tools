@@ -41,10 +41,11 @@ export default async function main(options: Options, dry: boolean): Promise<void
 	const packageJson = generatePackageJson(newVersion, newContentHash);
 	await generate(registry, packageJson);
 
-	if (highestSemverVersion !== oldVersion) {
+	if (!highestSemverVersion.equals(oldVersion)) {
 		// There was an error in the last publish and types-registry wasn't validated.
 		// This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
 		// If so, we should just update it to "latest" now.
+		log("Old version of types-registry was never tagged latest, so updating");
 		await validateIsSubset(await readNotNeededPackages(options));
 		await client.tag(packageName, highestSemverVersion.versionString, "latest");
 	} else if (oldContentHash !== newContentHash) {

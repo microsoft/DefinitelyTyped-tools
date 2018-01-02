@@ -2,7 +2,7 @@ import * as yargs from "yargs";
 
 import { Options } from "./lib/common";
 import NpmClient from "./lib/npm-client";
-import publishPackage, { unpublishPackage } from "./lib/package-publisher";
+import publishPackage, { deprecateNotNeededPackage } from "./lib/package-publisher";
 import { AllPackages, AnyPackage } from "./lib/packages";
 import Versions, { changedPackages } from "./lib/versions";
 import { Log, logger, LogWithErrors, writeLog } from "./util/logging";
@@ -11,25 +11,24 @@ import { done } from "./util/util";
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;
 	const singleName = yargs.argv.single;
-	// For testing only. Do not use on real @types repo.
-	const shouldUnpublish = !!yargs.argv.unpublish;
+	const deprecateName = yargs.argv.deprecate;
 
-	if (singleName && shouldUnpublish) {
-		throw new Error("Select only one of --single=foo or --shouldUnpublish");
+	if (singleName !== undefined && deprecateName !== undefined) {
+		throw new Error("Select only one of --single=foo or --deprecate=foo or --shouldUnpublish");
 	}
 
 	done(go());
 
 	async function go(): Promise<void> {
-		if (shouldUnpublish) {
-			await unpublish(dry);
+		const client = await NpmClient.create();
+		if (deprecateName !== undefined) {
+			// A '--deprecate' command is available in case types-publisher got stuck *while* trying to deprecate a package.
+			// Normally this should not be needed.
+			await deprecateNotNeededPackage(client, await AllPackages.readSingleNotNeeded(deprecateName, Options.defaults));
+		} else if (singleName !== undefined) {
+			await single(client, singleName, Options.defaults, dry);
 		} else {
-			const client = await NpmClient.create();
-			if (singleName) {
-				await single(client, singleName, Options.defaults, dry);
-			} else {
-				await main(client, dry, Options.defaults);
-			}
+			await main(client, dry, Options.defaults);
 		}
 	}
 }
@@ -73,10 +72,4 @@ async function single(client: NpmClient, name: string, options: Options, dry: bo
 
 function publish(pkg: AnyPackage, client: NpmClient, allPackages: AllPackages, versions: Versions, dry: boolean): Promise<Log> {
 	return publishPackage(client, pkg, versions, allPackages.getLatest(pkg), dry);
-}
-
-async function unpublish(dry: boolean): Promise<void> {
-	for (const pkg of await AllPackages.readTypings()) {
-		await unpublishPackage(pkg, dry);
-	}
 }

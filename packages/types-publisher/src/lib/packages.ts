@@ -33,6 +33,15 @@ export class AllPackages {
 		return new TypingsData(raw[versions[0]], /*isLatest*/ true);
 	}
 
+	static async readSingleNotNeeded(name: string, options: Options): Promise<NotNeededPackage> {
+		const notNeeded = await readNotNeededPackages(options);
+		const pkg = notNeeded.find(p => p.name === name);
+		if (pkg === undefined) {
+			throw new Error(`Cannot find not-needed package ${name}`);
+		}
+		return pkg;
+	}
+
 	private constructor(
 		private readonly data: ReadonlyMap<string, TypingsVersions>,
 		private readonly notNeeded: ReadonlyArray<NotNeededPackage>) {}

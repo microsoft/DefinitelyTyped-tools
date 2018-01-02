@@ -3,11 +3,11 @@ import assert = require("assert");
 import { readFileAndWarn } from "../lib/common";
 import Versions from "../lib/versions";
 import { updateLatestTag, updateTypeScriptVersionTags } from "../npmTags";
-import { consoleLogger, Log, LoggerWithErrors, quietLogger } from "../util/logging";
-import { exec, joinPaths } from "../util/util";
+import { Log, quietLogger } from "../util/logging";
+import { joinPaths } from "../util/util";
 
 import NpmClient from "./npm-client";
-import { AnyPackage } from "./packages";
+import { AnyPackage, NotNeededPackage } from "./packages";
 
 export default async function publishPackage(
 	client: NpmClient, pkg: AnyPackage, versions: Versions, latestVersion: AnyPackage, dry: boolean): Promise<Log> {
@@ -33,38 +33,18 @@ export default async function publishPackage(
 
 	if (pkg.isNotNeeded()) {
 		log(`Deprecating ${pkg.name}`);
+		assert(latestVersionString === pkg.version.versionString);
 		// Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
-		const message = pkg.readme(/*useNewline*/ false);
-		if (!dry) {
-			await client.deprecate(pkg.fullNpmName, latestVersionString, message);
-		}
+		await deprecateNotNeededPackage(client, pkg, dry);
 	}
 
 	return logResult();
 }
 
-// Used for testing only.
-export async function unpublishPackage(pkg: AnyPackage, dry: boolean): Promise<void> {
-	const args: string[] = ["npm", "unpublish", pkg.fullNpmName, "--force"];
-	await runCommand("Unpublish", consoleLogger, dry, args);
-}
-
-async function runCommand(commandDescription: string, log: LoggerWithErrors, dry: boolean, args: ReadonlyArray<string>): Promise<void> {
-	const cmd = args.join(" ");
-	log.info(`Run ${cmd}`);
+export async function deprecateNotNeededPackage(client: NpmClient, pkg: NotNeededPackage, dry = false): Promise<void> {
+	// Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
+	const message = pkg.readme(/*useNewline*/ false);
 	if (!dry) {
-		const { error, stdout, stderr } = await exec(cmd);
-		if (error) {
-			log.error(`${commandDescription} failed: ${JSON.stringify(error)}`);
-			log.info(`${commandDescription} failed, refer to error log`);
-			log.error(stderr);
-			throw new Error(stderr);
-		} else {
-			log.info("Ran successfully");
-			log.info(stdout);
-		}
-	} else {
-		log.info("(dry run)");
-		return Promise.resolve();
+		await client.deprecate(pkg.fullNpmName, pkg.version.versionString, message);
 	}
 }

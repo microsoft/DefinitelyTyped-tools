@@ -149,6 +149,10 @@ export class Semver {
 		return isPrerelease ? `${major}.${minor}.0-next.${patch}` : `${major}.${minor}.${patch}`;
 	}
 
+	equals(sem: Semver): boolean {
+		return this.major === sem.major && this.minor === sem.minor && this.patch === sem.patch && this.isPrerelease === sem.isPrerelease;
+	}
+
 	greaterThan(sem: Semver): boolean {
 		return this.major > sem.major || this.major === sem.major
 			&& (this.minor > sem.minor || this.minor === sem.minor && this.patch > sem.patch);
