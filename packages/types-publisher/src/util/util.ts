@@ -322,6 +322,64 @@ export function runWithChildProcesses<In>(
 	});
 }
 
+interface RunWithListeningChildProcessesOptions<In> {
+	readonly inputs: ReadonlyArray<In>;
+	readonly commandLineArgs: string[];
+	readonly workerFile: string;
+	readonly nProcesses: number;
+	readonly cwd: string;
+	handleOutput(output: {}): void;
+}
+export function runWithListeningChildProcesses<In>(
+	{ inputs, commandLineArgs, workerFile, nProcesses, cwd, handleOutput }: RunWithListeningChildProcessesOptions<In>,
+): Promise<void> {
+	return new Promise((resolve, reject) => {
+		let inputIndex = 0;
+		let processesLeft = nProcesses;
+		let rejected = false;
+		const allChildren: ChildProcess[] = [];
+		for (let i = 0; i < nProcesses; i++) {
+			if (inputIndex === inputs.length) {
+				continue;
+			}
+
+			const child = fork(workerFile, commandLineArgs, { cwd });
+			allChildren.push(child);
+			child.send(inputs[inputIndex]);
+			inputIndex++;
+
+			child.on("message", outputMessage => {
+				handleOutput(outputMessage);
+				if (inputIndex === inputs.length) {
+					processesLeft--;
+					if (processesLeft === 0) {
+						resolve();
+					}
+					child.kill();
+				} else {
+					child.send(inputs[inputIndex]);
+					inputIndex++;
+				}
+			});
+			child.on("disconnect", () => {
+				if (inputIndex !== inputs.length) {
+					fail();
+				}
+			});
+			child.on("close", () => { assert(rejected || inputIndex === inputs.length); });
+			child.on("error", fail);
+		}
+
+		function fail(): void {
+			rejected = true;
+			for (const child of allChildren) {
+				child.kill();
+			}
+			reject(new Error(`Something went wrong in ${runWithListeningChildProcesses.name}`));
+		}
+	});
+}
+
 export function assertNever(_: never): never {
 	throw new Error();
 }

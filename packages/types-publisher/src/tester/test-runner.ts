@@ -2,10 +2,10 @@ import { pathExists } from "fs-extra";
 import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
-import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
+import { AllPackages, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
-import { consoleLogger, LoggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors } from "../util/logging";
-import { concat, done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses } from "../util/util";
+import { consoleLogger, LoggerWithErrors } from "../util/logging";
+import { concat, done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
 import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
 
@@ -48,12 +48,17 @@ export default async function main(options: Options, nProcesses: number, selecti
 	console.log(`Testing ${dependentPackages.length} dependent packages: ${dependentPackages.map(t => t.desc)}`);
 	console.log(`Running with ${nProcesses} processes.`);
 
-	const allErrors: Array<{ pkg: TypingsData, err: TesterError }> = [];
+	await doInstalls(allPackages, concat(changedPackages, dependentPackages), options, nProcesses);
 
+	console.log("Testing...");
+	await runTests([...changedPackages, ...dependentPackages], new Set(changedPackages), options, nProcesses);
+}
+
+async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, options: Options, nProcesses: number): Promise<void> {
 	console.log("Installing NPM dependencies...");
 
 	// We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-	await nAtATime(nProcesses, allDependencies(allPackages, concat(changedPackages, dependentPackages)), async pkg => {
+	await nAtATime(nProcesses, allDependencies(allPackages, packages), async pkg => {
 		const cwd = pkg.directoryPath(options);
 		if (!await pathExists(joinPaths(cwd, "package.json"))) {
 			return;
@@ -71,39 +76,50 @@ export default async function main(options: Options, nProcesses: number, selecti
 	});
 
 	await runCommand(console, undefined, pathToDtsLint, ["--installAll"]);
+}
 
-	console.log("Testing...");
-
-	await runTests(changedPackages, false);
-	await runTests(dependentPackages, true);
-
-	if (allErrors.length) {
-		allErrors.sort(({ pkg: pkgA }, { pkg: pkgB}) => PackageBase.compare(pkgA, pkgB));
-
-		console.log("\n\n=== ERRORS ===\n");
-		for (const { err, pkg } of allErrors) {
-			console.error(`\n\nError in ${pkg.desc}`);
-			console.error(err.message);
-		}
-
-		console.error(`The following packages had errors: ${allErrors.map(e => e.pkg.desc).join(", ")}`);
-
-		throw new Error("There was a test failure.");
+async function runTests(
+	packages: ReadonlyArray<TypingsData>,
+	changed: ReadonlySet<TypingsData>,
+	options: Options,
+	nProcesses: number,
+): Promise<void> {
+	if (packages.length < nProcesses) {
+		throw new Error("TODO");
 	}
 
-	async function runTests(packages: ReadonlyArray<TypingsData>, isDepender: boolean): Promise<void> {
-		await nAtATime(nProcesses, packages, pkg => runTest(pkg, isDepender));
+	const allFailures: Array<[string, string]> = [];
+
+	await runWithListeningChildProcesses({
+		inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p) })),
+		commandLineArgs: ["--listen"],
+		workerFile: pathToDtsLint,
+		nProcesses,
+		cwd: options.typesPath,
+		handleOutput(output): void {
+			const { path, status } = output as { path: string, status: string };
+			if (status === "OK") {
+				console.log(`${path} OK`);
+			} else {
+				console.error(`${path} failing:`);
+				console.error(status);
+				allFailures.push([path, status]);
+			}
+		},
+	});
+
+	if (allFailures.length === 0) {
+		return;
 	}
 
-	async function runTest(pkg: TypingsData, isDepender: boolean): Promise<void> {
-		const [log, logResult] = quietLoggerWithErrors();
-		const err = await runCommand(log, pkg.directoryPath(options), pathToDtsLint,  isDepender ? ["--onlyTestTsNext"] : []);
-		console.log(`Testing ${pkg.desc}`);
-		moveLogsWithErrors(console, logResult(), msg => `\t${msg}`);
-		if (err) {
-			allErrors.push({ err, pkg });
-		}
+	console.error("\n\n=== ERRORS ===\n");
+
+	for (const [path, error] of allFailures) {
+		console.error(`\n\nError in ${path}`);
+		console.error(error);
 	}
+
+	console.error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
 }
 
 interface TesterError {
