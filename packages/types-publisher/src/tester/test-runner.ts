@@ -84,10 +84,6 @@ async function runTests(
 	options: Options,
 	nProcesses: number,
 ): Promise<void> {
-	if (packages.length < nProcesses) {
-		throw new Error("TODO");
-	}
-
 	const allFailures: Array<[string, string]> = [];
 
 	await runWithListeningChildProcesses({
