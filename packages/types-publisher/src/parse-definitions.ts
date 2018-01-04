@@ -52,8 +52,16 @@ export default async function main(options: Options, nProcesses: number): Promis
 	await Promise.all([
 		writeLog("parser-log-summary.md", summaryLogResult()),
 		writeLog("parser-log-details.md", detailedLogResult()),
-		writeDataFile(typesDataFilename, typings)
+		writeDataFile(typesDataFilename, sorted(typings)),
 	]);
+}
+
+function sorted<T>(obj: { [name: string]: T }): { [name: string]: T } {
+	const out: { [name: string]: T } = {};
+	for (const key of Object.keys(obj).sort()) {
+		out[key] = obj[key];
+	}
+	return out;
 }
 
 async function single(singleName: string, options: Options): Promise<void> {
