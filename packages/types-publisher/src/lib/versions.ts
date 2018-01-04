@@ -43,7 +43,11 @@ export default class Versions {
 			}
 			// tslint:disable-next-line:prefer-const
 			let { version, latestNonPrerelease, contentHash, deprecated } = versionInfo || defaultVersionInfo(isPrerelease);
-			assert(!deprecated, `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
+			if (deprecated) {
+				// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
+				assert(pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
+					`Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
+			}
 			if (forceUpdate || !versionInfo || pkg.major !== version.major || pkg.minor !== version.minor || pkg.contentHash !== contentHash) {
 				log(`Changed: ${pkg.desc}`);
 				changes.push(pkg.id);
