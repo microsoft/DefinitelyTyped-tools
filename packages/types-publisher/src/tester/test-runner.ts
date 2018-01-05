@@ -115,7 +115,7 @@ async function runTests(
 		console.error(error);
 	}
 
-	console.error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
+	throw new Error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
 }
 
 interface TesterError {
