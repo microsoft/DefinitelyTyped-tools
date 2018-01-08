@@ -14,7 +14,7 @@ import { sourceBranch } from "./settings";
 
 export default async function server(key: string, githubAccessToken: string, dry: boolean, options: Options): Promise<Server> {
 	const client = await NpmClient.create();
-	return listenToGithub(key, githubAccessToken, dry, updateOneAtATime(async (log, timeStamp) => {
+	return listenToGithub(key, githubAccessToken, updateOneAtATime(async (log, timeStamp) => {
 		log.info(""); log.info("");
 		log.info(`# ${timeStamp}`);
 		log.info("");
@@ -27,41 +27,16 @@ function writeLog(rollingLogs: RollingLogs, logs: LogWithErrors): Promise<void> 
 	return rollingLogs.write(joinLogWithErrors(logs));
 }
 
-function webResult(dry: boolean, timeStamp: string): string {
-	// tslint:disable:max-line-length
-	return `
-<html>
-<head></head>
-<body>
-	This is the TypeScript types-publisher webhook server.<br/>
-	If you can read this, the webhook is running. (Dry mode: <strong>${dry}</strong>)<br/>
-	Latest deploy was on <strong>${timeStamp}</strong>.
-	You probably meant to see:
-	<ul>
-		<li><a href="https://typespublisher.blob.core.windows.net/typespublisher/index.html">Latest data</a></li>
-		<li><a href="https://github.com/Microsoft/types-publisher">GitHub</a></li>
-		<li><a href="https://github.com/Microsoft/types-publisher/issues/40">Server status issue</a></li>
-		<li><a href="https://ms.portal.azure.com/?resourceMenuPerf=true#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/Default-Web-WestUS/providers/Microsoft.Web/sites/types-publisher/App%20Services">Azure account (must have permission)</a></li>
-	</ul>
-</body>
-</html>
-`;
-	// tslint:enable:max-line-length
-}
-
 /** @param onUpdate: returns a promise in case it may error. Server will shut down on errors. */
 function listenToGithub(
-	key: string, githubAccessToken: string, dry: boolean,
-	onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined): Server {
+	key: string,
+	githubAccessToken: string,
+	onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined,
+): Server {
 
 	const rollingLogs = RollingLogs.create("webhook-logs.md", 1000);
-	const webText = webResult(dry, currentTimeStamp());
 	const server = createServer((req, resp) => {
 		switch (req.method) {
-			case "GET":
-				resp.write(webText);
-				resp.end();
-				break;
 			case "POST":
 				receiveUpdate(req, resp);
 				break;
