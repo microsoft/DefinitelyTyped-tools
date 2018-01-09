@@ -340,6 +340,7 @@ export function runWithListeningChildProcesses<In>(
 		const allChildren: ChildProcess[] = [];
 		for (let i = 0; i < nProcesses; i++) {
 			if (inputIndex === inputs.length) {
+				processesLeft--;
 				continue;
 			}
 
