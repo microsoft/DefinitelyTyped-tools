@@ -177,7 +177,7 @@ const notNeededExceptions: ReadonlySet<string> = new Set([
 	"node-mysql-wrapper",
 	// raspi packages bundle types, but can only be installed on a Raspberry Pi, so they are duplicated to DefinitelyTyped.
 	// See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/21618
-	"raspi", "raspi-board", "raspi-peripheral",
+	"raspi", "raspi-board", "raspi-gpio", "raspi-i2c", "raspi-led", "raspi-onewire", "raspi-peripheral", "raspi-pwm", "raspi-serial", "raspi-soft-pwm",
 	// Declare "typings" but don't actually have them yet (https://github.com/stampit-org/stampit/issues/245)
 	"stampit",
 ]);
