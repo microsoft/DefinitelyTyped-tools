@@ -47,3 +47,4 @@ vuex
 @types/wonder-frp
 @uirouter/angularjs
 parchment
+zipkin
