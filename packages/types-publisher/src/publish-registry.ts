@@ -32,7 +32,7 @@ export default async function main(options: Options, dry: boolean): Promise<void
 
 	// Don't include not-needed packages in the registry.
 	const typings = await AllPackages.readTypings();
-	const registry = JSON.stringify(await generateRegistry(typings), undefined, 4);
+	const registry = JSON.stringify(await generateRegistry(typings));
 	const newContentHash = computeHash(registry);
 
 	assert.equal(oldVersion.major, 0);
@@ -157,7 +157,21 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>): Promise<Re
 	const entries: { [packageName: string]: { [distTags: string]: string } } = {};
 	await nAtATime(25, typings, async typing => {
 		const info = await fetchNpmInfo(typing.fullEscapedNpmName);
-		entries[typing.name] = info["dist-tags"];
+		const tags = info["dist-tags"];
+		if (tags) {
+			entries[typing.name] = tags;
+			filterTags(entries[typing.name]);
+		}
 	});
 	return { entries };
+
+	function filterTags(tags: { [tag: string]: string }): void {
+		const latestTag = "latest";
+		const latestVersion = tags[latestTag];
+		for (const tag in tags) {
+			if (tag !== latestTag && tags[tag] === latestVersion) {
+				delete tags[tag];
+			}
+		}
+	}
 }
