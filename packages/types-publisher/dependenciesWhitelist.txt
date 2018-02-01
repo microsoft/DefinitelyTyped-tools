@@ -38,6 +38,7 @@ should
 smooth-scrollbar
 source-map
 typescript
+tweetnacl
 vue
 vuex
 @types/firebase
