@@ -8,6 +8,7 @@ chalk
 cordova-plugin-camera
 cordova-plugin-file
 cordova-plugin-file-transfer
+csstype
 egg
 electron
 eventemitter2
