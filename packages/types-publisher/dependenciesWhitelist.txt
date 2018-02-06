@@ -38,6 +38,7 @@ rollup
 should
 smooth-scrollbar
 source-map
+styled-components
 typescript
 tweetnacl
 vue
