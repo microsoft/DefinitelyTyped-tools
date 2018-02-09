@@ -346,8 +346,8 @@ export function getLicenseFromPackageJson(packageJsonLicense: {} | null | undefi
 }
 
 class TypingsVersions {
-	private map: ReadonlyMap<number, TypingsData>;
-	private latest: number;
+	private readonly map: ReadonlyMap<number, TypingsData>;
+	private readonly latest: number;
 
 	constructor(data: TypingsVersionsRaw) {
 		const versions = Object.keys(data).map(Number);

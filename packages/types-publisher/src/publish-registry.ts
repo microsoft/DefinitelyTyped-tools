@@ -159,19 +159,21 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>): Promise<Re
 		const info = await fetchNpmInfo(typing.fullEscapedNpmName);
 		const tags = info["dist-tags"];
 		if (tags) {
-			entries[typing.name] = tags;
-			filterTags(entries[typing.name]);
+			entries[typing.name] = filterTags(tags);
 		}
 	});
 	return { entries };
 
-	function filterTags(tags: { [tag: string]: string }): void {
+	interface Tags { [tag: string]: string; }
+	function filterTags(tags: Tags): Tags {
 		const latestTag = "latest";
 		const latestVersion = tags[latestTag];
+		const out: Tags = {};
 		for (const tag in tags) {
-			if (tag !== latestTag && tags[tag] === latestVersion) {
-				delete tags[tag];
+			if (tag === latestTag || tags[tag] !== latestVersion) {
+				out[tag] = tags[tag];
 			}
 		}
+		return out;
 	}
 }

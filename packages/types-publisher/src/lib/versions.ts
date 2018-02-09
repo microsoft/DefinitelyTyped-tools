@@ -89,7 +89,7 @@ export default class Versions {
 		}
 	}
 
-	private constructor(private data: VersionMap) {}
+	private constructor(private readonly data: VersionMap) {}
 
 	save(): Promise<void> {
 		return writeDataFile(versionsFilename, this.data);

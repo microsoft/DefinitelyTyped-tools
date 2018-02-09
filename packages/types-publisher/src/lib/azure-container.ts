@@ -14,7 +14,7 @@ export default class BlobWriter {
 		return new BlobWriter(createBlobService(azureStorageAccount, await getSecret(Secret.AZURE_STORAGE_ACCESS_KEY)));
 	}
 
-	private constructor(private service: BlobService) {}
+	private constructor(private readonly service: BlobService) {}
 
 	setCorsProperties(): Promise<void> {
 		const properties: common.models.ServicePropertiesResult.ServiceProperties = {

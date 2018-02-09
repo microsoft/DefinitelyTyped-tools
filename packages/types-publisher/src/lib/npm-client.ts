@@ -21,7 +21,7 @@ export default class NpmClient {
 		return new this(new RegClient(config), { token });
 	}
 
-	private constructor(private client: RegClient, private auth: RegClient.Credentials) {}
+	private constructor(private readonly client: RegClient, private readonly auth: RegClient.Credentials) {}
 
 	async publish(publishedDirectory: string, packageJson: {}, dry: boolean): Promise<void> {
 		const readme = await readFile(joinPaths(publishedDirectory, "README.md"));

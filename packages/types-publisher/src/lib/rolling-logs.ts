@@ -7,7 +7,7 @@ export default class RollingLogs {
 
 	private allLogs: string[] | undefined;
 
-	constructor(public name: string, public maxLines: number, private container: BlobWriter) {}
+	constructor(readonly name: string, readonly maxLines: number, private readonly container: BlobWriter) {}
 
 	async write(lines: string[]): Promise<void> {
 		const logs = this.allLogs || (this.allLogs = await this.readAllLogs());
