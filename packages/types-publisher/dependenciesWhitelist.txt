@@ -31,9 +31,11 @@ postcss
 protractor
 raven-js
 redux
+redux-observable
 redux-persist
 redux-saga
 redux-thunk
+rxjs
 rollup
 should
 smooth-scrollbar
