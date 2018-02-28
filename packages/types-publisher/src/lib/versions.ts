@@ -1,6 +1,7 @@
 import assert = require("assert");
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 
+import { Fetcher } from "../util/io";
 import { Logger } from "../util/logging";
 import { assertDefined, best, intOfString, nAtATime, sortObjectKeys } from "../util/util";
 
@@ -29,15 +30,20 @@ export default class Versions {
 	/**
 	 * Calculates versions and changed packages by comparing contentHash of parsed packages the NPM registry.
 	 */
-	static async determineFromNpm(allPackages: AllPackages, log: Logger, forceUpdate: boolean, options: Options
-		): Promise<{changes: Changes, versions: Versions}> {
+	static async determineFromNpm(
+		allPackages: AllPackages,
+		log: Logger,
+		forceUpdate: boolean,
+		fetcher: Fetcher,
+		options: Options,
+	): Promise<{changes: Changes, versions: Versions}> {
 		const changes: Changes = [];
 		const data: VersionMap = {};
 
-		await nAtATime(25, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor, options });
+		await nAtATime(options.fetchParallelism, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor, options });
 		async function getTypingsVersion(pkg: TypingsData): Promise<void> {
 			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
-			const versionInfo = await fetchTypesPackageVersionInfo(pkg, isPrerelease, pkg.majorMinor);
+			const versionInfo = await fetchTypesPackageVersionInfo(pkg, fetcher, isPrerelease, pkg.majorMinor);
 			if (!versionInfo) {
 				log(`Added: ${pkg.desc}`);
 			}
@@ -57,11 +63,15 @@ export default class Versions {
 			addToData(pkg.name, version, latestNonPrerelease);
 		}
 
-		await nAtATime(25, allPackages.allNotNeeded(), getNotNeededVersion, { name: "Versions for not-needed packages...", flavor, options });
+		await nAtATime(options.fetchParallelism, allPackages.allNotNeeded(), getNotNeededVersion, {
+			name: "Versions for not-needed packages...",
+			flavor,
+			options,
+		});
 		async function getNotNeededVersion(pkg: NotNeededPackage): Promise<void> {
 			const isPrerelease = false; // Not-needed packages are never prerelease.
 			// tslint:disable-next-line:prefer-const
-			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, isPrerelease) || defaultVersionInfo(isPrerelease);
+			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, fetcher, isPrerelease) || defaultVersionInfo(isPrerelease);
 			if (!deprecated) {
 				log(`Now deprecated: ${pkg.name}`);
 				changes.push({ name: pkg.name, majorVersion: version.major });
@@ -170,8 +180,13 @@ export class Semver {
 }
 
 /** Returns undefined if the package does not exist. */
-async function fetchTypesPackageVersionInfo(pkg: AnyPackage, isPrerelease: boolean, newMajorAndMinor?: MajorMinor): Promise<VersionInfo | undefined> {
-	return fetchVersionInfoFromNpm(pkg.fullEscapedNpmName, isPrerelease, newMajorAndMinor);
+async function fetchTypesPackageVersionInfo(
+	pkg: AnyPackage,
+	fetcher: Fetcher,
+	isPrerelease: boolean,
+	newMajorAndMinor?: MajorMinor,
+): Promise<VersionInfo | undefined> {
+	return fetchVersionInfoFromNpm(pkg.fullEscapedNpmName, fetcher, isPrerelease, newMajorAndMinor);
 }
 
 export interface ProcessedNpmInfo {
@@ -180,8 +195,8 @@ export interface ProcessedNpmInfo {
 	readonly contentHash: string;
 }
 /** For use by publish-registry only. */
-export async function fetchAndProcessNpmInfo(escapedPackageName: string): Promise<ProcessedNpmInfo> {
-	const info = await fetchNpmInfo(escapedPackageName);
+export async function fetchAndProcessNpmInfo(escapedPackageName: string, fetcher: Fetcher): Promise<ProcessedNpmInfo> {
+	const info = await fetchNpmInfo(escapedPackageName, fetcher);
 	const version = getVersionSemver(info, /*isPrerelease*/ false);
 	const { "dist-tags": distTags, versions } = info;
 	const highestSemverVersion = getLatestVersion(versions);
@@ -191,8 +206,12 @@ export async function fetchAndProcessNpmInfo(escapedPackageName: string): Promis
 }
 
 async function fetchVersionInfoFromNpm(
-	escapedPackageName: string, isPrerelease: boolean, newMajorAndMinor?: MajorMinor): Promise<VersionInfo | undefined> {
-	const info = await fetchNpmInfo(escapedPackageName);
+	escapedPackageName: string,
+	fetcher: Fetcher,
+	isPrerelease: boolean,
+	newMajorAndMinor?: MajorMinor,
+): Promise<VersionInfo | undefined> {
+	const info = await fetchNpmInfo(escapedPackageName, fetcher);
 
 	if (!info["dist-tags"]) {
 		// NPM returns `{}` for missing packages.

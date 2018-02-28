@@ -2,14 +2,15 @@ import { Options } from "./lib/common";
 import { fetchNpmInfo, NpmInfoVersion, NpmInfoVersions } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
+import { Fetcher } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main(true, Options.defaults));
+	done(main(true, Options.defaults, new Fetcher()));
 }
 
-export default async function main(includeNpmChecks: boolean, options: Options): Promise<void> {
+export default async function main(includeNpmChecks: boolean, options: Options, fetcher: Fetcher): Promise<void> {
 	const allPackages = await AllPackages.read(options);
 	const [log, logResult] = logger();
 
@@ -34,7 +35,7 @@ export default async function main(includeNpmChecks: boolean, options: Options):
 	}
 
 	if (includeNpmChecks) {
-		await nAtATime(10, allPackages.allTypings(), pkg => checkNpm(pkg, log, dependedOn), {
+		await nAtATime(10, allPackages.allTypings(), pkg => checkNpm(pkg, log, dependedOn, fetcher), {
 			name: "Checking for typed packages...",
 			flavor: pkg => pkg.desc,
 			options,
@@ -104,12 +105,13 @@ async function checkNpm(
 	{ major, minor, name, libraryName, projectName, contributors }: TypingsData,
 	log: Logger,
 	dependedOn: ReadonlySet<string>,
+	fetcher: Fetcher,
 ): Promise<void> {
 	if (notNeededExceptions.has(name)) {
 		return;
 	}
 
-	const info = await fetchNpmInfo(name);
+	const info = await fetchNpmInfo(name, fetcher);
 	const versions = getRegularVersions(info.versions);
 	const firstTypedVersion = best(mapDefined(versions, ({ hasTypes, version }) => hasTypes ? version : undefined), (a, b) => b.greaterThan(a));
 	// A package might have added types but removed them later, so check the latest version too
@@ -138,8 +140,8 @@ async function checkNpm(
 	}
 }
 
-export async function packageHasTypes(packageName: string): Promise<boolean> {
-	const info = await fetchNpmInfo(packageName);
+export async function packageHasTypes(packageName: string, fetcher: Fetcher): Promise<boolean> {
+	const info = await fetchNpmInfo(packageName, fetcher);
 	return hasTypes(info.versions[info.version]);
 }
 

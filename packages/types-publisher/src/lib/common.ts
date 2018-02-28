@@ -16,7 +16,7 @@ export const home = joinPaths(__dirname, "..", "..");
 export class Options {
 	/** Options for running locally. */
 	static defaults = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ false, /*progress*/ true, /*parseInParallel*/ true);
-	static azure = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false, /*parseInParallel*/ false);
+	static azure = new Options("./DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false, /*parseInParallel*/ false);
 
 	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
 	readonly typesPath: string;
@@ -34,6 +34,8 @@ export class Options {
 	) {
 		this.typesPath = joinPaths(definitelyTypedPath, typesDirectoryName);
 	}
+
+	get fetchParallelism(): number { return 25; }
 }
 
 export function readDataFile(generatedBy: string, fileName: string): Promise<any> {

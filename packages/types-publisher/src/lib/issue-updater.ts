@@ -1,14 +1,14 @@
-import { fetchJson } from "../util/io";
+import { Fetcher } from "../util/io";
 import { currentTimeStamp, errorDetails, indent } from "../util/util";
 
 import { azureContainer, errorsIssue } from "./settings";
 
-export async function setIssueOk(githubAccessToken: string): Promise<void> {
-	await doUpdate(githubAccessToken, `Server has been up as of **${currentTimeStamp()}**`);
+export async function setIssueOk(githubAccessToken: string, fetcher: Fetcher): Promise<void> {
+	await doUpdate(githubAccessToken, `Server has been up as of **${currentTimeStamp()}**`, fetcher);
 }
 
-export async function reopenIssue(githubAccessToken: string, timeStamp: string, error: Error): Promise<void> {
-	await doUpdate(githubAccessToken, createContent());
+export async function reopenIssue(githubAccessToken: string, timeStamp: string, error: Error, fetcher: Fetcher): Promise<void> {
+	await doUpdate(githubAccessToken, createContent(), fetcher);
 
 	function createContent(): string {
 		const lines: string[] = [];
@@ -25,10 +25,18 @@ export async function reopenIssue(githubAccessToken: string, timeStamp: string, 
 	}
 }
 
-async function doUpdate(accessToken: string, body: string): Promise<void> {
-	const url = `https://api.github.com/repos/${errorsIssue}?access_token=${accessToken}`;
+async function doUpdate(accessToken: string, body: string, fetcher: Fetcher): Promise<void> {
 	const message = { body, state: "open" };
-	const responseBody = (await fetchJson(url, { method: "PATCH", body: JSON.stringify(message) })) as { body: string };
+	const responseBody = await fetcher.fetchJson({
+		hostname: "api.github.com",
+		path: `repos/${errorsIssue}?access_token=${accessToken}`,
+		body: JSON.stringify(message),
+		method: "PATCH",
+		headers: {
+			// arbitrary string, but something must be provided
+			"User-Agent": "types-publisher"
+		},
+	}) as { body: string };
 	if (responseBody.body !== body) {
 		throw new Error(JSON.stringify(responseBody, undefined, 4));
 	}

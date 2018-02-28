@@ -1,7 +1,9 @@
 import { join as joinPaths } from "path";
 
 /** URL of the NPM registry to upload to. */
-export const npmRegistry = "https://registry.npmjs.org/";
+export const npmRegistryHostName = "registry.npmjs.org";
+export const npmRegistry = `https://${npmRegistryHostName}/`;
+export const npmApi = "api.npmjs.org";
 /** Note: this is 'types' and not '@types' */
 export const scopeName = "types";
 export const outputPath = "./output";

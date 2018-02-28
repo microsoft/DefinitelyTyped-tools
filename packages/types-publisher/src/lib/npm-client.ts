@@ -1,15 +1,12 @@
-import assert = require("assert");
 import RegClient = require("npm-registry-client");
 import * as url from "url";
 
-import { fetchJson, readFile } from "../util/io";
+import { Fetcher, readFile } from "../util/io";
 import { createTgz } from "../util/tgz";
 import { joinPaths } from "../util/util";
 
 import { getSecret, Secret } from "./secrets";
-import { npmRegistry } from "./settings";
-
-assert(npmRegistry.endsWith("/"));
+import { npmRegistry, npmRegistryHostName } from "./settings";
 
 function packageUrl(packageName: string): string {
 	return url.resolve(npmRegistry, packageName);
@@ -98,11 +95,14 @@ export interface NpmInfoVersion {
 	readonly typesPublisherContentHash: string;
 	readonly deprecated?: string;
 }
-export async function fetchNpmInfo(escapedPackageName: string): Promise<NpmInfo> {
-	const uri = npmRegistry + escapedPackageName;
-	const info = (await fetchJson(uri, { retries: true })) as { readonly error: string } | NpmInfo;
+export async function fetchNpmInfo(escapedPackageName: string, fetcher: Fetcher): Promise<NpmInfo> {
+	const info = await fetcher.fetchJson({
+		hostname: npmRegistryHostName,
+		path: escapedPackageName,
+		retries: true,
+	}) as { readonly error: string } | NpmInfo;
 	if ("error" in info) {
-		throw new Error(`Error getting version at ${uri}: ${info.error}`);
+		throw new Error(`Error getting version at ${escapedPackageName}: ${info.error}`);
 	}
 	return info;
 }

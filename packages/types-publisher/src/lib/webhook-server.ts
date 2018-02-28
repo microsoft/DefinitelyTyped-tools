@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 import full from "../full";
-import { stringOfStream } from "../util/io";
+import { Fetcher, stringOfStream } from "../util/io";
 import { joinLogWithErrors, LoggerWithErrors, loggerWithErrors, LogWithErrors } from "../util/logging";
 import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
 
@@ -12,14 +12,14 @@ import NpmClient from "./npm-client";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
 
-export default async function server(key: string, githubAccessToken: string, dry: boolean, options: Options): Promise<Server> {
+export default async function server(key: string, githubAccessToken: string, dry: boolean, fetcher: Fetcher, options: Options): Promise<Server> {
 	const client = await NpmClient.create();
-	return listenToGithub(key, githubAccessToken, updateOneAtATime(async (log, timeStamp) => {
+	return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
 		log.info(""); log.info("");
 		log.info(`# ${timeStamp}`);
 		log.info("");
 		log.info("Starting full...");
-		await full(client, dry, timeStamp, options);
+		await full(client, dry, timeStamp, options, fetcher);
 	}));
 }
 
@@ -31,6 +31,7 @@ function writeLog(rollingLogs: RollingLogs, logs: LogWithErrors): Promise<void> 
 function listenToGithub(
 	key: string,
 	githubAccessToken: string,
+	fetcher: Fetcher,
 	onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined,
 ): Server {
 
@@ -58,7 +59,7 @@ function listenToGithub(
 		function onError(error: Error): void {
 			server.close();
 			// tslint:disable-next-line no-floating-promises
-			reopenIssue(githubAccessToken, timeStamp, error).catch(issueError => {
+			reopenIssue(githubAccessToken, timeStamp, error, fetcher).catch(issueError => {
 				console.error(errorDetails(issueError));
 			}).then(() => {
 				console.error(errorDetails(error));

@@ -1,6 +1,7 @@
-import { fetchJson } from "../util/io";
+import { Fetcher } from "../util/io";
 
 import { AnyPackage } from "./packages";
+import { npmApi } from "./settings";
 
 export interface SearchRecord {
 	// types package name
@@ -19,7 +20,7 @@ export interface SearchRecord {
 	r: string | undefined;
 }
 
-export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean): Promise<SearchRecord> {
+export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean, fetcher: Fetcher): Promise<SearchRecord> {
 	return {
 		p: pkg.projectName,
 		l: pkg.libraryName,
@@ -35,8 +36,11 @@ export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean
 		if (skipDownloads) {
 			return -1;
 		} else {
-			const url = `https://api.npmjs.org/downloads/point/last-month/${pkg.name}`;
-			const json = await fetchJson(url, { retries: true }) as { downloads: number };
+			const json = await fetcher.fetchJson({
+				hostname: npmApi,
+				path: `/downloads/point/last-month/${pkg.name}`,
+				retries: true,
+			}) as { downloads: number };
 			// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.
 			return json.downloads || 0;
 		}

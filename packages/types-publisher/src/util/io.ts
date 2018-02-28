@@ -1,6 +1,6 @@
 import assert = require("assert");
 import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
-import fetch, { RequestInit, Response } from "node-fetch";
+import { Agent, request } from "https";
 import { join as joinPaths } from "path";
 import * as stream from "stream";
 
@@ -12,12 +12,6 @@ export function readFile(path: string): Promise<string> {
 
 export async function readJson(path: string): Promise<any> {
 	return parseJson(await readFile(path));
-}
-
-export async function fetchJson(url: string, init?: RequestInit & { retries?: number | true }): Promise<{}> {
-	// Cast needed: https://github.com/Microsoft/TypeScript/issues/10065
-	const response = await (init && init.retries ? fetchWithRetries(url, init as RequestInit & { retries: number | true }) : fetch(url, init));
-	return parseJson(await response.text());
 }
 
 export function writeFile(path: string, content: string): Promise<void> {
@@ -52,19 +46,65 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
 	});
 }
 
-async function fetchWithRetries(url: string, init: RequestInit & { retries: number | true }): Promise<Response> {
-	const maxRetries = init.retries === true ? 10 : init.retries;
-	for (let retries = maxRetries; retries > 1; retries--) {
+export interface FetchOptions {
+	readonly hostname: string;
+	readonly port?: number;
+	readonly path: string;
+	readonly retries?: true | number;
+	readonly body?: string;
+	readonly method?: "GET" | "PATCH" | "POST";
+	readonly headers?: {};
+}
+export class Fetcher {
+	private readonly agent = new Agent({ keepAlive: true });
+
+	async fetchJson(options: FetchOptions): Promise<{}> {
+		const text = await this.fetch(options);
 		try {
-			return await fetch(url, init);
-		} catch (err) {
-			if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test(err.message)) {
-				throw err;
-			}
+			return JSON.parse(text);
+		} catch (e) {
+			throw new Error(`Bad response from server:\n${text}`);
 		}
-		await sleep(1);
 	}
-	return fetch(url, init);
+
+	async fetch(options: FetchOptions): Promise<string> {
+		const maxRetries = options.retries === false || options.retries === undefined ? 0 : options.retries === true ? 10 : options.retries;
+		for (let retries = maxRetries; retries > 1; retries--) {
+			try {
+				return await this.fetchOnce(options);
+			} catch (err) {
+				if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test(err.message)) {
+					throw err;
+				}
+			}
+			await sleep(1);
+		}
+		return this.fetchOnce(options);
+	}
+
+	private fetchOnce(options: FetchOptions): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const req = request(
+				{
+					hostname: options.hostname,
+					port: options.port,
+					path: `/${options.path}`,
+					agent: this.agent,
+					method: options.method || "GET",
+					headers: options.headers,
+				},
+				res => {
+					let text = "";
+					res.on("data", (d: string) => { text += d; });
+					res.on("error", reject);
+					res.on("end", () => { resolve(text); });
+				});
+			if (options.body !== undefined) {
+				req.write(options.body);
+			}
+			req.end();
+		});
+	}
 }
 
 export async function sleep(seconds: number): Promise<void> {

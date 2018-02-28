@@ -3,24 +3,25 @@ import * as yargs from "yargs";
 import { Options, writeDataFile } from "./lib/common";
 import { AllPackages } from "./lib/packages";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
+import { Fetcher } from "./util/io";
 import { done, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const skipDownloads = yargs.argv.skipDownloads;
 	const single = yargs.argv.single;
 	if (single) {
-		done(doSingle(single, skipDownloads));
+		done(doSingle(single, skipDownloads, new Fetcher()));
 	} else {
 		const full = yargs.argv.full;
-		done(main(skipDownloads, full, Options.defaults));
+		done(main(skipDownloads, full, new Fetcher(), Options.defaults));
 	}
 }
 
-export default async function main(skipDownloads: boolean, full: boolean, options: Options): Promise<void> {
+export default async function main(skipDownloads: boolean, full: boolean, fetcher: Fetcher, options: Options): Promise<void> {
 	const packages = await AllPackages.readTypings();
 	console.log("Generating search index...");
 
-	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, skipDownloads), {
+	const records = await nAtATime(options.fetchParallelism, packages, pkg => createSearchRecord(pkg, skipDownloads, fetcher), {
 		name: "Indexing...",
 		flavor: pkg => pkg.desc,
 		options
@@ -37,9 +38,9 @@ export default async function main(skipDownloads: boolean, full: boolean, option
 	}
 }
 
-async function doSingle(name: string, skipDownloads: boolean): Promise<void> {
+async function doSingle(name: string, skipDownloads: boolean, fetcher: Fetcher): Promise<void> {
 	const pkg = await AllPackages.readSingle(name);
-	const record = await createSearchRecord(pkg, skipDownloads);
+	const record = await createSearchRecord(pkg, skipDownloads, fetcher);
 	console.log(verboseRecord(record));
 }
 
