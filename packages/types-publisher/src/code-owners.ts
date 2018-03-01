@@ -13,10 +13,15 @@ async function main(options: Options): Promise<void> {
 	const typings = allPackages.allTypings();
 	const maxPathLen = Math.max(...typings.map(t => t.subDirectoryPath.length));
 	const lines = mapDefined(typings, t => getEntry(t, maxPathLen));
-	const text = `${lines.join("\n")}\n`;
+	const text = `${header}\n\n${lines.join("\n")}\n`;
 	const path = joinPaths(options.definitelyTypedPath, ".github", "CODEOWNERS");
 	await writeFile(path, text);
 }
+
+const header =
+`# This file is generated.
+# Add yourself to the "Definitions by:" list instead.
+# See https://github.com/DefinitelyTyped/DefinitelyTyped#edit-an-existing-package`;
 
 function getEntry(pkg: TypingsData, maxPathLen: number): string | undefined {
 	const users = mapDefined(pkg.contributors, c => c.githubUsername);
