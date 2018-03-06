@@ -24,7 +24,7 @@ export default async function getAffectedPackages(allPackages: AllPackages, log:
 	// If a package doesn't exist, that's because it was deleted.
 	const changedPackages = mapDefined(changedPackageIds, (({ name, majorVersion }) =>
 		majorVersion === "latest" ? allPackages.tryGetLatestVersion(name) : allPackages.tryGetTypingsData({ name, majorVersion })));
-	const dependentPackages = collectDependers(changedPackages,  getReverseDependencies(allPackages));
+	const dependentPackages = collectDependers(changedPackages, getReverseDependencies(allPackages));
 	return { changedPackages, dependentPackages };
 }
 

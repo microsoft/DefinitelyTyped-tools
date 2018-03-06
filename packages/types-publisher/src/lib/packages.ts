@@ -109,7 +109,7 @@ export class AllPackages {
 	/** Returns all of the dependences *that have typings*, ignoring others. */
 	*dependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
 		for (const { name, majorVersion } of pkg.dependencies) {
-			const versions = this.data.get(name);
+			const versions = this.data.get(getMangledNameForScopedPackage(name));
 			if (versions) {
 				yield versions.get(majorVersion);
 			}
@@ -121,12 +121,23 @@ export class AllPackages {
 		yield* this.dependencyTypings(pkg);
 
 		for (const name of pkg.testDependencies) {
-			const versions = this.data.get(name);
+			const versions = this.data.get(getMangledNameForScopedPackage(name));
 			if (versions) {
 				yield versions.getLatest();
 			}
 		}
 	}
+}
+
+// Same as the function in moduleNameResolver.ts in typescript
+function getMangledNameForScopedPackage(packageName: string): string {
+	if (packageName.startsWith("@")) {
+		const replaceSlash = packageName.replace("/", "__");
+		if (replaceSlash !== packageName) {
+			return replaceSlash.slice(1); // Take off the "@"
+		}
+	}
+	return packageName;
 }
 
 export const typesDataFilename = "definitions.json";
