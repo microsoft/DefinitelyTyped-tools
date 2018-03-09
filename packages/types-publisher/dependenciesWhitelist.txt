@@ -28,6 +28,7 @@ opentracing
 parse5
 path-to-regexp
 pkcs11js
+popper.js
 postcss
 protractor
 raven-js
