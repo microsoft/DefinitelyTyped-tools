@@ -13,6 +13,7 @@ egg
 electron
 eventemitter2
 eventemitter3
+fast-glob
 flatpickr
 immutable
 inversify
