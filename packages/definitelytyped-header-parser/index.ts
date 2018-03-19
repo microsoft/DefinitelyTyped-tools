@@ -10,9 +10,9 @@ Example:
 */
 
 /** Parse-able TypeScript versions. Only add to this list if we will support this version on DefinitelyTyped. */
-export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6";
+export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7";
 export namespace TypeScriptVersion {
-	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6"];
+	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7"];
 	export const lowest = all[0];
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
 	export const latest = all[all.length - 1];
@@ -36,6 +36,7 @@ export namespace TypeScriptVersion {
 		"ts2.6",
 		"ts2.7",
 		"ts2.8",
+		"ts2.9",
 		"latest",
 	];
 

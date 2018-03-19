@@ -77,7 +77,7 @@ describe("parseTypeScriptVersionLine", () => {
 
 describe("tagsToUpdate", () => {
 	it("works", () => {
-		assert.deepEqual(TypeScriptVersion.tagsToUpdate("2.5"), ["ts2.5", "ts2.6", "ts2.7", "ts2.8", "latest"]);
+		assert.deepEqual(TypeScriptVersion.tagsToUpdate("2.5"), ["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9", "latest"]);
 	});
 });
 
