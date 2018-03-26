@@ -87,6 +87,9 @@ export interface NpmInfo {
 		readonly [tag: string]: string;
 	};
 	readonly versions: NpmInfoVersions;
+	readonly time: {
+		readonly modified: string;
+	};
 }
 export interface NpmInfoVersions {
 	readonly [version: string]: NpmInfoVersion;

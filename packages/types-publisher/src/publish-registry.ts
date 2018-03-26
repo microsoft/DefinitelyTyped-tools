@@ -26,7 +26,12 @@ export default async function main(options: Options, dry: boolean, fetcher: Fetc
 	const [log, logResult] = logger();
 	log("=== Publishing types-registry ===");
 
-	const { version: oldVersion, highestSemverVersion, contentHash: oldContentHash } = await fetchAndProcessNpmInfo(packageName, fetcher);
+	const { version: oldVersion, highestSemverVersion, contentHash: oldContentHash, lastModified } = await fetchAndProcessNpmInfo(packageName, fetcher);
+
+	if (!isAWeekAfter(lastModified)) {
+		log("Was modified less than a week ago, so do nothing.");
+		return;
+	}
 
 	const client = await NpmClient.create({ defaultTag: "next" });
 
@@ -58,6 +63,13 @@ export default async function main(options: Options, dry: boolean, fetcher: Fetc
 	}
 
 	await writeLog("publish-registry.md", logResult());
+}
+
+const millisecondsPerDay = 1000 * 60 * 60 * 24;
+function isAWeekAfter(time: Date): boolean {
+	const diff = Date.now() - time.getTime();
+	const days = diff / millisecondsPerDay;
+	return days > 7;
 }
 
 async function generate(registry: string, packageJson: {}): Promise<void> {
