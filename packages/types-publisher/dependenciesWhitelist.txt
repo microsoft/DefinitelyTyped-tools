@@ -17,6 +17,7 @@ eventemitter3
 fast-glob
 flatpickr
 immutable
+indefinite-observable
 inversify
 jointjs
 levelup
