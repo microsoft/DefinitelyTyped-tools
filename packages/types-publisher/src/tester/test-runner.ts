@@ -94,7 +94,9 @@ async function runTests(
 		cwd: options.typesPath,
 		handleOutput(output): void {
 			const { path, status } = output as { path: string, status: string };
-			if (status !== "OK") {
+			if (status === "OK") {
+				console.log(`${path} OK`);
+			} else {
 				console.error(`${path} failing:`);
 				console.error(status);
 				allFailures.push([path, status]);
