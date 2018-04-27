@@ -1,3 +1,5 @@
+import * as fold from "travis-fold";
+
 import { Options } from "./lib/common";
 import { fetchNpmInfo, NpmInfoVersion, NpmInfoVersions } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
@@ -18,9 +20,11 @@ export default async function main(includeNpmChecks: boolean, options: Options, 
 
 	checkPathMappings(allPackages);
 
+	if (fold.isTravis()) { console.log(fold.start("Duplicate packages")); }
 	const packages = allPackages.allPackages();
 	checkForDuplicates(packages, pkg => pkg.libraryName, "Library Name", log);
 	checkForDuplicates(packages, pkg => pkg.projectName, "Project Name", log);
+	if (fold.isTravis()) { console.log(fold.end("Duplicate packages")); }
 
 	const dependedOn = new Set<string>();
 	for (const pkg of packages) {

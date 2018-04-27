@@ -1,4 +1,5 @@
 import { pathExists } from "fs-extra";
+import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
 import { Options } from "../lib/common";
@@ -86,6 +87,7 @@ async function runTests(
 ): Promise<void> {
 	const allFailures: Array<[string, string]> = [];
 
+	if (fold.isTravis()) { console.log(fold.start("tests")); }
 	await runWithListeningChildProcesses({
 		inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p) })),
 		commandLineArgs: ["--listen"],
@@ -103,6 +105,7 @@ async function runTests(
 			}
 		},
 	});
+	if (fold.isTravis()) { console.log(fold.end("tests")); }
 
 	if (allFailures.length === 0) {
 		return;
