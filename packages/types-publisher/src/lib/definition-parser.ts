@@ -121,7 +121,7 @@ async function getTypingData(packageName: string, directory: string, ls: Readonl
 		}
 	}
 
-	const sourceRepoURL = "https://www.github.com/DefinitelyTyped/DefinitelyTyped";
+	const sourceRepoURL = "https://github.com/DefinitelyTyped/DefinitelyTyped.git";
 
 	const data: TypingsDataRaw = {
 		contributors,
