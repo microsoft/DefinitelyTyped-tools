@@ -46,6 +46,7 @@ should
 smooth-scrollbar
 source-map
 styled-components
+sw-toolbox
 typescript
 tweetnacl
 vue
