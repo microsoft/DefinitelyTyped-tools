@@ -3,6 +3,7 @@ ajv
 anydb-sql
 apollo-client
 aws-sdk
+axe-core
 axios
 chalk
 cordova-plugin-camera
