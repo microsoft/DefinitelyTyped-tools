@@ -37,6 +37,7 @@ export namespace TypeScriptVersion {
 		"ts2.7",
 		"ts2.8",
 		"ts2.9",
+		"ts3.0",
 		"latest",
 	];
 
