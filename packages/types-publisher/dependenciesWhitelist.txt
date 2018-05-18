@@ -51,6 +51,7 @@ sw-toolbox
 typescript
 tweetnacl
 vue
+vue-router
 vuex
 @types/firebase
 @types/js-data
