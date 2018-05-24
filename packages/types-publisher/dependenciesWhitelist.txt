@@ -36,6 +36,7 @@ popper.js
 postcss
 protractor
 raven-js
+react-native-svg
 redux
 redux-observable
 redux-persist
