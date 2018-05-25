@@ -28,6 +28,7 @@ meteor-typings
 mqtt
 moment
 monaco-editor
+objection
 opentracing
 parse5
 path-to-regexp
