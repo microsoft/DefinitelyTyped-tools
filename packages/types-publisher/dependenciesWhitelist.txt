@@ -51,6 +51,7 @@ smooth-scrollbar
 source-map
 styled-components
 sw-toolbox
+tslint
 typescript
 tweetnacl
 vue
