@@ -60,8 +60,10 @@ vuex
 @types/firebase
 @types/js-data
 @types/vue
+@types/winston
 @types/wonder-commonlib
 @types/wonder-frp
 @uirouter/angularjs
 parchment
+winston
 zipkin
