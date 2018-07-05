@@ -159,7 +159,11 @@ export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined, stdout: string, stderr: string }> {
 	return new Promise<{ error: Error | undefined, stdout: string, stderr: string }>(resolve => {
-		node_exec(cmd, { encoding: "utf8", cwd }, (error, stdout, stderr) => {
+		// Fix "stdout maxBuffer exceeded" error
+		// See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
+		const maxBuffer = 1024 * 1024 * 1; // Max = 1 MiB, default is 200 KiB
+
+		node_exec(cmd, { encoding: "utf8", cwd, maxBuffer }, (error, stdout, stderr) => {
 			resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
 		});
 	});
