@@ -60,6 +60,7 @@ tweetnacl
 vue
 vue-router
 vuex
+@babel/types
 @types/firebase
 @types/js-data
 @types/vue
