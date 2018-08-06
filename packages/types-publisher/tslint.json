@@ -19,6 +19,7 @@
 		"typedef": [true, "call-signature"],
 
 		"completed-docs": false,
+		"file-name-casing": false,
 		"forin": false,
 		"interface-name": false,
 		"linebreak-style": false,

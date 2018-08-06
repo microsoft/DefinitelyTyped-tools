@@ -98,13 +98,14 @@ export interface NpmInfoVersion {
 	readonly typesPublisherContentHash: string;
 	readonly deprecated?: string;
 }
-export async function fetchNpmInfo(escapedPackageName: string, fetcher: Fetcher): Promise<NpmInfo> {
+export async function fetchNpmInfo(escapedPackageName: string, fetcher: Fetcher): Promise<NpmInfo | undefined> {
 	const info = await fetcher.fetchJson({
 		hostname: npmRegistryHostName,
 		path: escapedPackageName,
 		retries: true,
 	}) as { readonly error: string } | NpmInfo;
 	if ("error" in info) {
+		if (info.error === "Not found") { return undefined; }
 		throw new Error(`Error getting version at ${escapedPackageName}: ${info.error}`);
 	}
 	return info;

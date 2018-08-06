@@ -6,7 +6,7 @@ import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
 import { Fetcher } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
-import { best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
+import { assertDefined, best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	done(main(true, Options.defaults, new Fetcher()));
@@ -115,7 +115,7 @@ async function checkNpm(
 		return;
 	}
 
-	const info = await fetchNpmInfo(name, fetcher);
+	const info = assertDefined(await fetchNpmInfo(name, fetcher));
 	const versions = getRegularVersions(info.versions);
 	const firstTypedVersion = best(mapDefined(versions, ({ hasTypes, version }) => hasTypes ? version : undefined), (a, b) => b.greaterThan(a));
 	// A package might have added types but removed them later, so check the latest version too
@@ -145,7 +145,7 @@ async function checkNpm(
 }
 
 export async function packageHasTypes(packageName: string, fetcher: Fetcher): Promise<boolean> {
-	const info = await fetchNpmInfo(packageName, fetcher);
+	const info = assertDefined(await fetchNpmInfo(packageName, fetcher));
 	return hasTypes(info.versions[info.version]);
 }
 

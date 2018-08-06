@@ -9,7 +9,7 @@ import { outputPath, validateOutputPath } from "./lib/settings";
 import { fetchAndProcessNpmInfo } from "./lib/versions";
 import { assertDirectoriesEqual, Fetcher, npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
 import { logger, writeLog } from "./util/logging";
-import { computeHash, done, execAndThrowErrors, joinPaths, nAtATime } from "./util/util";
+import { assertDefined, computeHash, done, execAndThrowErrors, joinPaths, nAtATime } from "./util/util";
 
 const packageName = "types-registry";
 const registryOutputPath = joinPaths(outputPath, packageName);
@@ -168,7 +168,7 @@ interface Registry { readonly entries: { readonly [packageName: string]: { reado
 async function generateRegistry(typings: ReadonlyArray<TypingsData>, fetcher: Fetcher, options: Options): Promise<Registry> {
 	const entries: { [packageName: string]: { [distTags: string]: string } } = {};
 	await nAtATime(options.fetchParallelism, typings, async typing => {
-		const info = await fetchNpmInfo(typing.fullEscapedNpmName, fetcher);
+		const info = assertDefined(await fetchNpmInfo(typing.fullEscapedNpmName, fetcher));
 		const tags = info["dist-tags"];
 		if (tags) {
 			entries[typing.name] = filterTags(tags);

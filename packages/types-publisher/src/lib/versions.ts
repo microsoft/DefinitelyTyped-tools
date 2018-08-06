@@ -1,13 +1,13 @@
 import assert = require("assert");
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 
-import { Fetcher } from "../util/io";
+import { Fetcher, sleep } from "../util/io";
 import { Logger } from "../util/logging";
 import { assertDefined, best, intOfString, nAtATime, sortObjectKeys } from "../util/util";
 
 import { Options, readDataFile, writeDataFile } from "./common";
 import { fetchNpmInfo, NpmInfo, NpmInfoVersions } from "./npm-client";
-import { AllPackages, AnyPackage, MajorMinor, NotNeededPackage, PackageId, TypingsData } from "./packages";
+import { AllPackages, AnyPackage, MajorMinor, NotNeededPackage, PackageId } from "./packages";
 
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
@@ -40,8 +40,7 @@ export default class Versions {
 		const changes: Changes = [];
 		const data: VersionMap = {};
 
-		await nAtATime(options.fetchParallelism, allPackages.allTypings(), getTypingsVersion, { name: "Versions for typings", flavor, options });
-		async function getTypingsVersion(pkg: TypingsData): Promise<void> {
+		for (const pkg of allPackages.allTypings()) {
 			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
 			const versionInfo = await fetchTypesPackageVersionInfo(pkg, fetcher, isPrerelease, pkg.majorMinor);
 			if (!versionInfo) {
@@ -61,6 +60,7 @@ export default class Versions {
 				version = version.update(pkg.majorMinor, isPrerelease);
 			}
 			addToData(pkg.name, version, latestNonPrerelease);
+			await sleep(0.1);
 		}
 
 		await nAtATime(options.fetchParallelism, allPackages.allNotNeeded(), getNotNeededVersion, {
@@ -197,7 +197,7 @@ export interface ProcessedNpmInfo {
 }
 /** For use by publish-registry only. */
 export async function fetchAndProcessNpmInfo(escapedPackageName: string, fetcher: Fetcher): Promise<ProcessedNpmInfo> {
-	const info = await fetchNpmInfo(escapedPackageName, fetcher);
+	const info = assertDefined(await fetchNpmInfo(escapedPackageName, fetcher));
 	const version = getVersionSemver(info, /*isPrerelease*/ false);
 	const { "dist-tags": distTags, versions, time } = info;
 	const highestSemverVersion = getLatestVersion(versions);
@@ -213,20 +213,16 @@ async function fetchVersionInfoFromNpm(
 	newMajorAndMinor?: MajorMinor,
 ): Promise<VersionInfo | undefined> {
 	const info = await fetchNpmInfo(escapedPackageName, fetcher);
+	if (info === undefined) { return undefined; }
 
-	if (!info["dist-tags"]) {
-		// NPM returns `{}` for missing packages.
-		return undefined;
-	} else {
-		const { versions } = info;
-		const latestNonPrerelease = !isPrerelease ? undefined : getLatestVersion(versions);
-		const version = getVersionSemver(info, isPrerelease, newMajorAndMinor);
-		const latestVersionInfo = versions[version.versionString];
-		assert(!!latestVersionInfo);
-		const contentHash = latestVersionInfo.typesPublisherContentHash || "";
-		const deprecated = !!latestVersionInfo.deprecated;
-		return { version, latestNonPrerelease, contentHash, deprecated };
-	}
+	const { versions } = info;
+	const latestNonPrerelease = !isPrerelease ? undefined : getLatestVersion(versions);
+	const version = getVersionSemver(info, isPrerelease, newMajorAndMinor);
+	const latestVersionInfo = versions[version.versionString];
+	assert(!!latestVersionInfo);
+	const contentHash = latestVersionInfo.typesPublisherContentHash || "";
+	const deprecated = !!latestVersionInfo.deprecated;
+	return { version, latestNonPrerelease, contentHash, deprecated };
 }
 
 function getLatestVersion(versions: NpmInfoVersions): Semver {
