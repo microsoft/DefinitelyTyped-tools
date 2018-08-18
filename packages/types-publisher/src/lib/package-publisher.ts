@@ -50,9 +50,7 @@ export default async function publishPackage(
 }
 
 export async function deprecateNotNeededPackage(client: NpmClient, pkg: NotNeededPackage, dry = false): Promise<void> {
-	// Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
-	const message = pkg.readme(/*useNewline*/ false);
 	if (!dry) {
-		await client.deprecate(pkg.fullNpmName, pkg.version.versionString, message);
+		await client.deprecate(pkg.fullNpmName, pkg.version.versionString, pkg.deprecatedMessage());
 	}
 }

@@ -261,13 +261,13 @@ export class NotNeededPackage extends PackageBase {
 	get globals(): ReadonlyArray<string> { return this.globals; }
 	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.lowest; }
 
-	readme(useNewline = true): string {
-		const { libraryName, sourceRepoURL, name } = this;
-		const lines = [
-			`This is a stub types definition for ${libraryName} (${sourceRepoURL}).`,
-			`${libraryName} provides its own type definitions, so you don't need ${fullNpmName(name)} installed!`
-		];
-		return lines.join(useNewline ? "\n" : " ");
+	readme(): string {
+		return `This is a stub types definition for ${this.libraryName} (${this.sourceRepoURL}).\n
+${this.libraryName} provides its own type definitions, so you don't need ${fullNpmName(this.name)} installed!`;
+	}
+
+	deprecatedMessage(): string {
+		return `This is a stub types definition. ${this.name} provides its own type definitions, so you don't need this installed.`;
 	}
 }
 

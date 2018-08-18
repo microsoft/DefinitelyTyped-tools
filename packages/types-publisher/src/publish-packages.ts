@@ -3,9 +3,9 @@ import * as yargs from "yargs";
 import { Options } from "./lib/common";
 import NpmClient from "./lib/npm-client";
 import publishPackage, { deprecateNotNeededPackage } from "./lib/package-publisher";
-import { AllPackages, AnyPackage } from "./lib/packages";
+import { AllPackages } from "./lib/packages";
 import Versions, { changedPackages } from "./lib/versions";
-import { Log, logger, LogWithErrors, writeLog } from "./util/logging";
+import { logger, LogWithErrors, writeLog } from "./util/logging";
 import { done } from "./util/util";
 
 if (!module.parent) {
