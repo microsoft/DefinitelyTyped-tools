@@ -10,7 +10,13 @@ import NpmClient from "./npm-client";
 import { AnyPackage, NotNeededPackage } from "./packages";
 
 export default async function publishPackage(
-	client: NpmClient, pkg: AnyPackage, versions: Versions, latestVersion: AnyPackage, dry: boolean): Promise<Log> {
+	client: NpmClient,
+	pkg: AnyPackage,
+	allPackagesBeingPublished: ReadonlyArray<AnyPackage>,
+	versions: Versions,
+	latestVersion: AnyPackage,
+	dry: boolean,
+): Promise<Log> {
 	assert(pkg.isLatest === (pkg === latestVersion));
 	const [log, logResult] = quietLogger();
 
@@ -26,10 +32,12 @@ export default async function publishPackage(
 	if (pkg.isLatest) {
 		await updateTypeScriptVersionTags(latestVersion, latestVersionString, client, log, dry);
 	}
-	// If this is an older version of the package, we still update tags for the *latest*.
-	// NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
-	// so we must undo that by re-tagging latest.
-	await updateLatestTag(latestVersion, versions, client, log, dry);
+	if (pkg.isLatest || !allPackagesBeingPublished.includes(latestVersion)) {
+		// If this is an older version of the package, we still update tags for the *latest*.
+		// NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
+		// so we must undo that by re-tagging latest.
+		await updateLatestTag(latestVersion, versions, client, log, dry);
+	}
 
 	if (pkg.isNotNeeded()) {
 		log(`Deprecating ${pkg.name}`);

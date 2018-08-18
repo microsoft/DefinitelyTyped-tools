@@ -63,7 +63,7 @@ export class Fetcher {
 		try {
 			return JSON.parse(text);
 		} catch (e) {
-			throw new Error(`Bad response from server:\n${text}`);
+			throw new Error(`Bad response from server:\noptions: ${options}\n\n${text}`);
 		}
 	}
 

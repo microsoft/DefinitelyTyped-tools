@@ -45,7 +45,7 @@ export default async function main(client: NpmClient, dry: boolean, options: Opt
 
 	for (const pkg of packagesShouldPublish) {
 		console.log(`Publishing ${pkg.desc}...`);
-		const publishLog = await publish(pkg, client, allPackages, versions, dry);
+		const publishLog = await publishPackage(client, pkg, packagesShouldPublish, versions, allPackages.getLatest(pkg), dry);
 		writeLogs({ infos: publishLog, errors: [] });
 	}
 
@@ -66,10 +66,6 @@ async function single(client: NpmClient, name: string, options: Options, dry: bo
 	const allPackages = await AllPackages.read(options);
 	const versions = await Versions.load();
 	const pkg = await AllPackages.readSingle(name);
-	const publishLog = await publish(pkg, client, allPackages, versions, dry);
+	const publishLog = await publishPackage(client, pkg, [], versions, allPackages.getLatest(pkg), dry);
 	console.log(publishLog);
-}
-
-function publish(pkg: AnyPackage, client: NpmClient, allPackages: AllPackages, versions: Versions, dry: boolean): Promise<Log> {
-	return publishPackage(client, pkg, versions, allPackages.getLatest(pkg), dry);
 }

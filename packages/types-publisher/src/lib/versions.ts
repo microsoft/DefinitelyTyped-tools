@@ -123,7 +123,7 @@ export default class Versions {
 	}
 }
 
-export async function changedPackages(allPackages: AllPackages): Promise<AnyPackage[]> {
+export async function changedPackages(allPackages: AllPackages): Promise<ReadonlyArray<AnyPackage>> {
 	const changes = await readChanges();
 	return changes.map(changedPackageName => allPackages.getAnyPackage(changedPackageName));
 }
