@@ -9,7 +9,7 @@ import { inspect } from "util";
 
 if (!Object.entries) {
 	Object.entries = (obj: any) =>
-		Object.getOwnPropertyNames(obj).map(key => [key, obj[key]] as [string, any]);
+		Object.getOwnPropertyNames(obj).map(key => [key, obj[key]] as [string, unknown]);
 }
 
 export function assertDefined<T>(x: T | undefined): T {
@@ -20,7 +20,7 @@ export function assertDefined<T>(x: T | undefined): T {
 import { Options } from "../lib/common";
 import ProgressBar from "./progress";
 
-export function parseJson(text: string): any {
+export function parseJson(text: string): object {
 	try {
 		return JSON.parse(text);
 	} catch (err) {
@@ -148,7 +148,7 @@ export function intOfString(str: string): number {
 	return n;
 }
 
-export function sortObjectKeys<T extends { [key: string]: any }>(data: T): T {
+export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
 	const out = {} as T; // tslint:disable-line no-object-literal-type-assertion
 	for (const key of Object.keys(data).sort()) {
 		out[key] = data[key];
@@ -186,16 +186,22 @@ export function errorDetails(error: Error): string {
  * Returns the input that is better than all others, or `undefined` if there are no inputs.
  * @param isBetter Returns true if `a` should be preferred over `b`.
  */
-export function best<T>(inputs: ReadonlyArray<T>, isBetter: (a: T, b: T) => boolean): T | undefined {
-	if (!inputs.length) {
+export function best<T>(inputs: Iterable<T>, isBetter: (a: T, b: T) => boolean): T | undefined {
+	const iter = inputs[Symbol.iterator]();
+
+	const first = iter.next();
+	if (first.done) {
 		return undefined;
 	}
+	let best = first.value;
 
-	let best = inputs[0];
-	for (let i = 1; i < inputs.length; i++) {
-		const candidate = inputs[i];
-		if (isBetter(candidate, best)) {
-			best = candidate;
+	while (true) {
+		const { value, done } = iter.next();
+		if (done) {
+			break;
+		}
+		if (isBetter(value, best)) {
+			best = value;
 		}
 	}
 	return best;
@@ -253,6 +259,15 @@ export function* flatMap<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U
 	for (const input of inputs) {
 		yield* mapper(input);
 	}
+}
+
+export function some<T>(iter: IterableIterator<T>, cb: (t: T) => boolean): boolean {
+	for (const x of iter) {
+		if (cb(x)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
@@ -388,3 +403,23 @@ export function runWithListeningChildProcesses<In>(
 export function assertNever(_: never): never {
 	throw new Error();
 }
+
+export function recordToMap<T>(record: Record<string, T>): Map<string, T>;
+export function recordToMap<T, U>(record: Record<string, T>, cb: (t: T) => U): Map<string, U>;
+export function recordToMap<T, U>(record: Record<string, T>, cb?: (t: T) => U): Map<string, T | U> {
+	const m = new Map<string, T | U>();
+	for (const key in record) {
+		m.set(key, cb ? cb(record[key]) : record[key]);
+	}
+	return m;
+}
+
+export function mapToRecord<T>(map: Map<string, T>): Record<string, T>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb: (t: T) => U): Record<string, U>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record<string, T | U> {
+	const o: Record<string, T | U> = {};
+	map.forEach((value, key) => { o[key] = cb ? cb(value) : value; });
+	return o;
+}
+
+export function identity<T>(t: T): T { return t; }

@@ -1,18 +1,17 @@
 import * as fold from "travis-fold";
 
 import { Options } from "./lib/common";
-import { fetchNpmInfo, NpmInfoVersion, NpmInfoVersions } from "./lib/npm-client";
+import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
-import { Fetcher } from "./util/io";
 import { Logger, logger, writeLog } from "./util/logging";
 import { assertDefined, best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main(true, Options.defaults, new Fetcher()));
+	done(main(true, Options.defaults, new UncachedNpmInfoClient()));
 }
 
-export default async function main(includeNpmChecks: boolean, options: Options, fetcher: Fetcher): Promise<void> {
+export default async function main(includeNpmChecks: boolean, options: Options, client: UncachedNpmInfoClient): Promise<void> {
 	const allPackages = await AllPackages.read(options);
 	const [log, logResult] = logger();
 
@@ -39,7 +38,7 @@ export default async function main(includeNpmChecks: boolean, options: Options, 
 	}
 
 	if (includeNpmChecks) {
-		await nAtATime(10, allPackages.allTypings(), pkg => checkNpm(pkg, log, dependedOn, fetcher), {
+		await nAtATime(10, allPackages.allTypings(), pkg => checkNpm(pkg, log, dependedOn, client), {
 			name: "Checking for typed packages...",
 			flavor: pkg => pkg.desc,
 			options,
@@ -109,13 +108,13 @@ async function checkNpm(
 	{ major, minor, name, libraryName, projectName, contributors }: TypingsData,
 	log: Logger,
 	dependedOn: ReadonlySet<string>,
-	fetcher: Fetcher,
+	client: UncachedNpmInfoClient,
 ): Promise<void> {
 	if (notNeededExceptions.has(name)) {
 		return;
 	}
 
-	const info = assertDefined(await fetchNpmInfo(name, fetcher));
+	const info = assertDefined(await client.fetchRawNpmInfo(name)); // Gets info for the real package, not the @types package
 	const versions = getRegularVersions(info.versions);
 	const firstTypedVersion = best(mapDefined(versions, ({ hasTypes, version }) => hasTypes ? version : undefined), (a, b) => b.greaterThan(a));
 	// A package might have added types but removed them later, so check the latest version too
@@ -144,14 +143,13 @@ async function checkNpm(
 	}
 }
 
-export async function packageHasTypes(packageName: string, fetcher: Fetcher): Promise<boolean> {
-	const info = assertDefined(await fetchNpmInfo(packageName, fetcher));
+export async function packageHasTypes(packageName: string, client: UncachedNpmInfoClient): Promise<boolean> {
+	const info = assertDefined(await client.fetchRawNpmInfo(packageName));
 	return hasTypes(info.versions[info.version]);
 }
 
-function getRegularVersions(versions: NpmInfoVersions | undefined): ReadonlyArray<{ readonly version: Semver; readonly hasTypes: boolean; }> {
-	// Versions can be undefined if an NPM package doesn't exist.
-	return versions === undefined ? [] : mapDefined(Object.entries(versions), ([versionString, info]) => {
+function getRegularVersions(versions: NpmInfoRawVersions): ReadonlyArray<{ readonly version: Semver; readonly hasTypes: boolean; }> {
+	return mapDefined(Object.entries(versions), ([versionString, info]) => {
 		const version = Semver.tryParse(versionString, /*isPrerelease*/ false);
 		return version === undefined ? undefined : { version, hasTypes: hasTypes(info) };
 	});

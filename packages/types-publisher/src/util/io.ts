@@ -10,7 +10,7 @@ export function readFile(path: string): Promise<string> {
 	return readFileWithEncoding(path, { encoding: "utf8" });
 }
 
-export async function readJson(path: string): Promise<any> {
+export async function readJson(path: string): Promise<object> {
 	return parseJson(await readFile(path));
 }
 
@@ -18,7 +18,7 @@ export function writeFile(path: string, content: string): Promise<void> {
 	return writeFileWithEncoding(path, content, { encoding: "utf8" });
 }
 
-export function writeJson(path: string, content: any, formatted = true): Promise<void> {
+export function writeJson(path: string, content: unknown, formatted = true): Promise<void> {
 	return writeJsonRaw(path, content, { spaces: formatted ? 4 : 0 });
 }
 

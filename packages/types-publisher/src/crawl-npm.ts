@@ -3,8 +3,8 @@ import oboe = require("oboe");
 
 import { packageHasTypes } from "./check-parse-results";
 import { Options, writeDataFile } from "./lib/common";
+import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { npmRegistry } from "./lib/settings";
-import { Fetcher } from "./util/io";
 import ProgressBar, { strProgress } from "./util/progress";
 import { done, filterNAtATime } from "./util/util";
 
@@ -16,8 +16,8 @@ if (!module.parent) {
 async function main(options: Options): Promise<void> {
 	const all = await allNpmPackages();
 	await writeDataFile("all-npm-packages.json", all);
-	const fetcher = new Fetcher();
-	const allTyped = await filterNAtATime(10, all, pkg => packageHasTypes(pkg, fetcher), {
+	const client = new UncachedNpmInfoClient();
+	const allTyped = await filterNAtATime(10, all, pkg => packageHasTypes(pkg, client), {
 		name: "Checking for types...",
 		flavor: (name, isTyped) => isTyped ? name : undefined,
 		options

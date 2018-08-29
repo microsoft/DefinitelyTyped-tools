@@ -1,15 +1,15 @@
 // Definitions transcribed from https://github.com/npm/npm-registry-client
 declare class RegClient {
 	constructor(config?: RegClient.Config);
-	request(uri: string, params: RegClient.RequestParams, cb: (error: Error, data: any, json: any, response: any) => void): void;
+	request(uri: string, params: RegClient.RequestParams, cb: (error: Error, data: unknown, json: unknown, response: unknown) => void): void;
 	publish(uri: string, params: RegClient.PublishParams, cb: (error: Error) => void): void;
 	tag(uri: string, params: RegClient.TagParams, cb: (error: Error) => void): void;
-	deprecate(uri: string, params: RegClient.DeprecateParams, cb: (error: Error, data: any, raw: string, response: any) => void): void;
+	deprecate(uri: string, params: RegClient.DeprecateParams, cb: (error: Error, data: unknown, raw: string, response: unknown) => void): void;
 }
 
 declare namespace RegClient {
 	interface Config {
-		defaultTag: string;
+		defaultTag?: string;
 	}
 	interface RequestParams {
 		method?: string;

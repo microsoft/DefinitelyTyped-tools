@@ -1,7 +1,5 @@
-import { Fetcher } from "../util/io";
-
+import { UncachedNpmInfoClient } from "./npm-client";
 import { AnyPackage } from "./packages";
-import { npmApi } from "./settings";
 
 export interface SearchRecord {
 	// types package name
@@ -20,29 +18,14 @@ export interface SearchRecord {
 	r: string | undefined;
 }
 
-export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean, fetcher: Fetcher): Promise<SearchRecord> {
+export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean, client: UncachedNpmInfoClient): Promise<SearchRecord> {
 	return {
 		p: pkg.projectName,
 		l: pkg.libraryName,
 		g: pkg.globals,
 		t: pkg.name,
 		m: pkg.declaredModules,
-		d: await getDownloads(),
+		d: skipDownloads ? -1 : await client.getDownloads(pkg.name),
 		r: pkg.isNotNeeded() ? pkg.sourceRepoURL : undefined
 	};
-
-	// See https://github.com/npm/download-counts
-	async function getDownloads(): Promise<number> {
-		if (skipDownloads) {
-			return -1;
-		} else {
-			const json = await fetcher.fetchJson({
-				hostname: npmApi,
-				path: `/downloads/point/last-month/${pkg.name}`,
-				retries: true,
-			}) as { downloads: number };
-			// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.
-			return json.downloads || 0;
-		}
-	}
 }

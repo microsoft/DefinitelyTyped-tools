@@ -6,11 +6,11 @@ import { updateLatestTag, updateTypeScriptVersionTags } from "../npmTags";
 import { Log, quietLogger } from "../util/logging";
 import { joinPaths } from "../util/util";
 
-import NpmClient from "./npm-client";
+import { NpmPublishClient } from "./npm-client";
 import { AnyPackage, NotNeededPackage } from "./packages";
 
 export default async function publishPackage(
-	client: NpmClient,
+	client: NpmPublishClient,
 	pkg: AnyPackage,
 	allPackagesBeingPublished: ReadonlyArray<AnyPackage>,
 	versions: Versions,
@@ -49,7 +49,7 @@ export default async function publishPackage(
 	return logResult();
 }
 
-export async function deprecateNotNeededPackage(client: NpmClient, pkg: NotNeededPackage, dry = false): Promise<void> {
+export async function deprecateNotNeededPackage(client: NpmPublishClient, pkg: NotNeededPackage, dry = false): Promise<void> {
 	if (!dry) {
 		await client.deprecate(pkg.fullNpmName, pkg.version.versionString, pkg.deprecatedMessage());
 	}

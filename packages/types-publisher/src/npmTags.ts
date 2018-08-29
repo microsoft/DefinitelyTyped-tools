@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 import * as yargs from "yargs";
 
-import NpmClient from "./lib/npm-client";
+import { NpmPublishClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage } from "./lib/packages";
 import Versions from "./lib/versions";
 
@@ -20,7 +20,7 @@ if (!module.parent) {
  */
 async function tagAll(dry: boolean): Promise<void> {
 	const versions = await Versions.load();
-	const client = await NpmClient.create();
+	const client = await NpmPublishClient.create();
 
 	await nAtATime(10, await AllPackages.readTypings(), async pkg => {
 		// Only update tags for the latest version of the package.
@@ -34,7 +34,7 @@ async function tagAll(dry: boolean): Promise<void> {
 	// Don't tag notNeeded packages
 }
 
-export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: string, client: NpmClient, log: Logger, dry: boolean
+export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean
 	): Promise<void> {
 	const tags = TypeScriptVersion.tagsToUpdate(pkg.typeScriptVersion);
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
@@ -45,7 +45,7 @@ export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: stri
 	}
 }
 
-export async function updateLatestTag(pkg: AnyPackage, versions: Versions, client: NpmClient, log: Logger, dry: boolean): Promise<void> {
+export async function updateLatestTag(pkg: AnyPackage, versions: Versions, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
 	// Prerelease packages should never be tagged latest
 	const latestNonPrerelease = versions.latestNonPrerelease(pkg);
 	log(`	but tag ${pkg.fullNpmName}@${latestNonPrerelease.versionString} as "latest"`);
@@ -54,6 +54,6 @@ export async function updateLatestTag(pkg: AnyPackage, versions: Versions, clien
 	}
 }
 
-function tag(versionString: string, tag: string, client: NpmClient, pkg: AnyPackage): Promise<void> {
+function tag(versionString: string, tag: string, client: NpmPublishClient, pkg: AnyPackage): Promise<void> {
 	return client.tag(pkg.fullEscapedNpmName, versionString, tag);
 }

@@ -1,4 +1,5 @@
 bin/
+cache/
 data/
 logs/
 node_modules/

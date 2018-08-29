@@ -463,7 +463,7 @@ interface TypesDataFile {
 	readonly [packageName: string]: TypingsVersionsRaw;
 }
 function readTypesDataFile(): Promise<TypesDataFile> {
-	return readDataFile("parse-definitions", typesDataFilename);
+	return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
 }
 
 function notNeededPackagesPath(options: Options): string {

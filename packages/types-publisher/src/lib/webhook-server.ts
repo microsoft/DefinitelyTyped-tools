@@ -8,18 +8,16 @@ import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
 
 import { Options } from "./common";
 import { reopenIssue } from "./issue-updater";
-import NpmClient from "./npm-client";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
 
 export default async function server(key: string, githubAccessToken: string, dry: boolean, fetcher: Fetcher, options: Options): Promise<Server> {
-	const client = await NpmClient.create();
 	return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
 		log.info(""); log.info("");
 		log.info(`# ${timeStamp}`);
 		log.info("");
 		log.info("Starting full...");
-		await full(client, dry, timeStamp, options, fetcher);
+		await full(dry, timeStamp, options);
 	}));
 }
 
@@ -76,7 +74,7 @@ function listenToGithub(
 			log.info(`Message from github: ${data}`);
 			const expectedRef = `refs/heads/${sourceBranch}`;
 
-			const actualRef = parseJson(data).ref;
+			const actualRef = (parseJson(data) as { readonly ref: string }).ref;
 			if (actualRef === expectedRef) {
 				respond("Thanks for the update! Running full.");
 				await onUpdate(log, timeStamp);
@@ -125,10 +123,10 @@ function updateOneAtATime(doOnce: (log: LoggerWithErrors, timeStamp: string) => 
 	};
 }
 
-function checkSignature(key: string, data: string, headers: any, log: LoggerWithErrors): boolean {
+function checkSignature(key: string, data: string, headers: { readonly [key: string]: unknown }, log: LoggerWithErrors): boolean {
 	const signature = headers["x-hub-signature"];
 	const expected = expectedSignature(key, data);
-	if (stringEqualsConstantTime(signature, expected)) {
+	if (typeof signature === "string" && stringEqualsConstantTime(signature, expected)) { // tslint:disable-line strict-type-predicates (TODO: tslint bug)
 		return true;
 	}
 

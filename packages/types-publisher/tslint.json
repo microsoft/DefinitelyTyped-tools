@@ -5,6 +5,7 @@
 		"comment-format": [true, "check-space"],
 		"indent": [true, "tabs"],
 		"max-line-length": [true, 150],
+		"object-literal-key-quotes": [true, "as-needed"],
 		"only-arrow-functions": [true, "allow-declarations"],
 
 		// TODO

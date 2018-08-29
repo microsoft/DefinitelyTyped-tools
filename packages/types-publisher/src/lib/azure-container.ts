@@ -36,7 +36,7 @@ export default class BlobWriter {
 	ensureCreated(options: BlobService.CreateContainerOptions): Promise<void> {
 		return promisifyErrorOrResult<BlobService.ContainerResult>(cb => {
 			this.service.createContainerIfNotExists(azureContainer, options, cb);
-		}) as any as Promise<void>;
+		}) as unknown as Promise<void>;
 	}
 
 	createBlobFromFile(blobName: string, fileName: string): Promise<void> {
@@ -85,7 +85,7 @@ export default class BlobWriter {
 export async function readBlob(blobName: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		const url = urlOfBlob(blobName);
-		const req = https.get(url as any, res => {
+		const req = https.get(url, res => {
 			switch (res.statusCode) {
 				case 200:
 					if (res.headers["content-encoding"] !== "GZIP") {
@@ -102,7 +102,7 @@ export async function readBlob(blobName: string): Promise<string> {
 	});
 }
 
-export async function readJsonBlob(blobName: string): Promise<any> {
+export async function readJsonBlob(blobName: string): Promise<object> {
 	return parseJson(await readBlob(blobName));
 }
 
