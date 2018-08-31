@@ -11,7 +11,6 @@ If there's functionality from the project you'd like to use, please file an issu
 If you've noticed a problem with the way a package is published, file an issue here.
 If you don't like the contents of a given definition, file an issue (or pull request) on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) instead.
 
-
 # Manually running
 
 Normally, types-publisher is run through its webhook, but to test it out you can do it yourself.
@@ -494,3 +493,14 @@ The most useful logs are in LogFiles/Application.
 Instead of waiting for someone to push to DefinitelyTyped,
 you should test out your new deployment by running `npm run make-production-server-run`,
 which will trigger a full build .
+
+# Updating CODEOWNERS
+
+1. Clone DefinitelyTyped and types-publisher into sibling directories
+2. Run `npm install` and `tsc` in types-publisher
+3. In the types-publisher directory, run:
+  * `del data\definitions.json`
+  * `node bin\parse-definitions.js`
+  * `node bin\code-owners.js`
+4. This will edit the file `.github/CODEOWNERS` in the DefinitelyTyped folder
+5. Commit that file and merge it with a PR on DefinitelyTyped
