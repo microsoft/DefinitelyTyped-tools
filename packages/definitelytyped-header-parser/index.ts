@@ -1,3 +1,4 @@
+import assert = require("assert");
 import pm = require("parsimmon");
 
 /*
@@ -10,14 +11,16 @@ Example:
 */
 
 /** Parse-able TypeScript versions. Only add to this list if we will support this version on DefinitelyTyped. */
-export type TypeScriptVersion = "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7" | "2.8" | "2.9";
+export type TypeScriptVersion =
+	"2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7" | "2.8" | "2.9" | "3.0" | "3.1";
 export namespace TypeScriptVersion {
-	export const all: ReadonlyArray<TypeScriptVersion> = ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9"];
+	export const all: ReadonlyArray<TypeScriptVersion> =
+		["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1"];
 	export const lowest = all[0];
 	/** Latest version that may be specified in a `// TypeScript Version:` header. */
 	export const latest = all[all.length - 1];
 
-	/** True if a package with the given typescript version should be published as prerelease. */
+	/** @deprecated */
 	export function isPrerelease(_version: TypeScriptVersion): boolean {
 		return false;
 	}
@@ -39,6 +42,7 @@ export namespace TypeScriptVersion {
 		"ts2.9",
 		"ts3.0",
 		"ts3.1",
+		"ts3.2",
 		"latest",
 	];
 
@@ -49,6 +53,16 @@ export namespace TypeScriptVersion {
 		const idx = allTags.indexOf(`ts${typeScriptVersion}`);
 		if (idx === -1) { throw new Error(); }
 		return allTags.slice(idx);
+	}
+
+	export function previous(v: TypeScriptVersion): TypeScriptVersion | undefined {
+		const index = all.indexOf(v);
+		assert(index !== -1);
+		return index === 0 ? undefined : all[index - 1];
+	}
+
+	export function isRedirectable(v: TypeScriptVersion): boolean {
+		return all.indexOf(v) >= all.indexOf("3.1");
 	}
 }
 
@@ -61,13 +75,31 @@ export interface Header {
 	readonly contributors: ReadonlyArray<Author>;
 }
 
-export interface Author { name: string; url: string; githubUsername: string | undefined; }
+export interface Author {
+	readonly name: string;
+	readonly url: string;
+	readonly githubUsername: string | undefined;
+}
 
 export interface ParseError {
 	readonly index: number;
 	readonly line: number;
 	readonly column: number;
 	readonly expected: ReadonlyArray<string>;
+}
+
+export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+	return TypeScriptVersion.all.includes(str as TypeScriptVersion);
+}
+
+export function makeTypesVersionsForPackageJson(typesVersions: ReadonlyArray<TypeScriptVersion>): unknown {
+	if (typesVersions.length === 0) { return undefined; }
+
+	const out: { [key: string]: { readonly "*": ReadonlyArray<string> } } = {};
+	for (const version of typesVersions) {
+		out[`>=${version}.0-0`] = { "*": [`ts${version}/*`] };
+	}
+	return out;
 }
 
 export function parseHeaderOrFail(mainFileContent: string): Header {
