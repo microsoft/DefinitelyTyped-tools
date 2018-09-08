@@ -2,7 +2,7 @@ import { ensureFile, pathExists } from "fs-extra";
 import RegClient = require("npm-registry-client");
 import * as url from "url";
 
-import { Fetcher, readFile, readJson, writeJson } from "../util/io";
+import { Fetcher, readFile, readJson, sleep, writeJson } from "../util/io";
 import { createTgz } from "../util/tgz";
 import { identity, joinPaths, mapToRecord, recordToMap, some } from "../util/util";
 
@@ -78,6 +78,7 @@ export class UncachedNpmInfoClient {
 
 	async fetchNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
 		const raw = await this.fetchRawNpmInfo(escapedPackageName);
+		await sleep(0.01); // If we don't do this, npm resets the connection?
 		return raw === undefined ? undefined : npmInfoFromJson(raw);
 	}
 

@@ -1,10 +1,9 @@
-import { execSync } from "child_process";
 import { pathExists } from "fs-extra";
-import { dirname } from "path";
+import { Clone, Ignore, Repository, Reset } from "nodegit";
 
 import { Options } from "./lib/common";
 import { sourceBranch, sourceRepository } from "./lib/settings";
-import { done } from "./util/util";
+import { done, filterNAtATime } from "./util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
@@ -14,35 +13,34 @@ export default async function main(options: Options): Promise<void> {
 	const dtPath = options.definitelyTypedPath;
 
 	if (await pathExists(options.definitelyTypedPath)) {
+		const repo = await Repository.open(options.definitelyTypedPath);
+		const actualBranch = (await repo.getCurrentBranch()).name();
+
+		if (actualBranch !== `refs/heads/${sourceBranch}`) {
+			throw new Error(`Please checkout branch '${sourceBranch}'`);
+		}
+
 		console.log(`Fetching changes from ${sourceBranch}`);
 
-		const actualBranch = exec("git rev-parse --abbrev-ref HEAD", dtPath);
-		if (actualBranch !== sourceBranch) {
-			throw new Error(`Please checkout branch '${sourceBranch}`);
-		}
-
 		if (options.resetDefinitelyTyped) {
-			exec("git reset --hard origin/master", dtPath);
-			exec("git checkout -- .", dtPath);
-			exec("git clean -f -d", dtPath);
+			const headCommit = await repo.getHeadCommit();
+			await Reset.reset(repo, headCommit as any, Reset.TYPE.HARD, undefined!);
 		}
 
-		const diff = exec("git diff --name-only", dtPath);
-		if (diff) {
-			throw new Error(`'git diff' should be empty. Following files changed:\n${diff}`);
-		}
-
-		exec("git pull", dtPath);
+		await checkStatus(repo);
+		await repo.fetch("origin");
+		await repo.mergeBranches(sourceBranch, `origin/${sourceBranch}`, undefined!, undefined!);
 	} else {
 		console.log(`Cloning ${sourceRepository} to ${dtPath}`);
-		exec(`git clone ${sourceRepository}`, dirname(dtPath));
-		exec(`git checkout ${sourceBranch}`, dtPath);
+		const repo = await Clone.clone(sourceRepository, dtPath);
+		await repo.checkoutBranch(sourceBranch);
 	}
 }
 
-function exec(cmd: string, cwd?: string): string {
-	console.log(`Exec${cwd ? ` at ${cwd}` : ""}: ${cmd}`);
-	const result = execSync(cmd, { cwd, encoding: "utf8" }).trim();
-	console.log(result);
-	return result.trim();
+async function checkStatus(repo: Repository): Promise<void> {
+	const statuses = await repo.getStatus();
+	const changedFiles = await filterNAtATime(1, statuses.map(s => s.path()), async path => !(await Ignore.pathIsIgnored(repo, path)));
+	if (changedFiles.length) {
+		throw new Error(`The following files are dirty: ${changedFiles}`);
+	}
 }

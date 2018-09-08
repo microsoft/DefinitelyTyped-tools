@@ -126,7 +126,8 @@ function updateOneAtATime(doOnce: (log: LoggerWithErrors, timeStamp: string) => 
 function checkSignature(key: string, data: string, headers: { readonly [key: string]: unknown }, log: LoggerWithErrors): boolean {
 	const signature = headers["x-hub-signature"];
 	const expected = expectedSignature(key, data);
-	if (typeof signature === "string" && stringEqualsConstantTime(signature, expected)) { // tslint:disable-line strict-type-predicates (TODO: tslint bug)
+	// tslint:disable-next-line strict-type-predicates (TODO: tslint bug)
+	if (typeof signature === "string" && stringEqualsConstantTime(signature, expected)) {
 		return true;
 	}
 
