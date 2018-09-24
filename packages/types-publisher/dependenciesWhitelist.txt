@@ -20,6 +20,7 @@ electron
 eventemitter2
 eventemitter3
 fast-glob
+fastify
 flatpickr
 immutable
 indefinite-observable
