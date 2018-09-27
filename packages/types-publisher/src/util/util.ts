@@ -423,3 +423,7 @@ export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record
 }
 
 export function identity<T>(t: T): T { return t; }
+
+export function withoutStart(s: string, start: string): string | undefined {
+	return s.startsWith(start) ? s.slice(start.length) : undefined;
+}

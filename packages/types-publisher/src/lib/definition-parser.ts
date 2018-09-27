@@ -4,7 +4,7 @@ import * as ts from "typescript";
 
 import { isDirectory, readFile, readJson } from "../util/io";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, filter, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered } from "../util/util";
+import { computeHash, filter, hasWindowsSlashes, join, joinPaths, mapAsyncOrdered, withoutStart } from "../util/util";
 
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
@@ -297,13 +297,6 @@ function parseDependencyVersionFromPath(packageName: string, dependencyName: str
 		throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
 	}
 	return version;
-}
-
-function withoutStart(s: string, start: string): string | undefined {
-	if (s.startsWith(start)) {
-		return s.slice(start.length);
-	}
-	return undefined;
 }
 
 function withoutEnd(s: string, end: string): string | undefined {

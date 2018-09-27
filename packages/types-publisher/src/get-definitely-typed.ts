@@ -1,23 +1,21 @@
-import fs = require("fs");
 import { ensureDir, remove } from "fs-extra";
 import https = require("https");
-import StreamZip = require("node-stream-zip");
+import tar = require("tar-fs");
+import * as zlib from "zlib";
 
 import { dataDir, Options } from "./lib/common";
 import { definitelyTypedZipUrl } from "./lib/settings";
-import { done, exec } from "./util/util";
+import { assertDefined, done, exec, withoutStart } from "./util/util";
 
 if (!module.parent) {
-	done(main(Options.defaults));
+	done(main(Options.azure));
 }
 
 export default async function main(options: Options): Promise<void> {
 	if (options.downloadDefinitelyTyped) {
 		await ensureDir(dataDir);
-		const zipPath = `${options.definitelyTypedPath}.zip`;
-		await downloadFile(definitelyTypedZipUrl, zipPath);
 		await remove(options.definitelyTypedPath);
-		await extract(zipPath, options.definitelyTypedPath);
+		await downloadAndExtractFile(definitelyTypedZipUrl, options.definitelyTypedPath);
 	} else {
 		const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
 		if (error) { throw error; }
@@ -26,29 +24,18 @@ export default async function main(options: Options): Promise<void> {
 	}
 }
 
-function downloadFile(url: string, outFilePath: string): Promise<void> {
-	const file = fs.createWriteStream(outFilePath);
-	return new Promise((resolve, reject) => {
+function downloadAndExtractFile(url: string, outDirectoryPath: string): Promise<void> {
+	return new Promise<void>((resolve, reject) => {
 		https.get(url, response => {
-			response.pipe(file);
-			file.on("finish", () => {
-				file.close();
+			const tarOut = tar.extract(outDirectoryPath, {
+				map: header =>
+					({ ...header, name: assertDefined(withoutStart(header.name, "DefinitelyTyped-master/")) }),
+			});
+			response.pipe(zlib.createGunzip()).pipe(tarOut);
+			tarOut.on("error", reject);
+			tarOut.on("finish", () => {
 				resolve();
 			});
 		}).on("error", reject);
-	});
-}
-
-function extract(zipFilePath: string, outDirectoryPath: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		const zip = new StreamZip({ file: zipFilePath });
-		zip.on("error", reject);
-		zip.on("ready", () => {
-			fs.mkdirSync(outDirectoryPath);
-			zip.extract(undefined, outDirectoryPath, err => {
-				zip.close();
-				if (err) { reject(err); } else { resolve(); }
-			});
-		});
 	});
 }

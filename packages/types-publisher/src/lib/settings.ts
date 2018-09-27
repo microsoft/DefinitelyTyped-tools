@@ -9,8 +9,8 @@ export const scopeName = "types";
 export const outputPath = "./output";
 export const validateOutputPath = joinPaths(__dirname, "..", "..", "validateOutput");
 
-/** URL to download the repository ZIP from. */
-export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/zip/master";
+/** URL to download the repository from. */
+export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/tar.gz/master";
 /** The branch that DefinitelyTyped is sourced from. */
 export const sourceBranch = "master";
 
