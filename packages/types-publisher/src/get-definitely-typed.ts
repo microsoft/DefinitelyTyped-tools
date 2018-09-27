@@ -1,9 +1,9 @@
 import fs = require("fs");
-import { remove } from "fs-extra";
+import { ensureDir, remove } from "fs-extra";
 import https = require("https");
 import StreamZip = require("node-stream-zip");
 
-import { Options } from "./lib/common";
+import { dataDir, Options } from "./lib/common";
 import { definitelyTypedZipUrl } from "./lib/settings";
 import { done, exec } from "./util/util";
 
@@ -13,6 +13,7 @@ if (!module.parent) {
 
 export default async function main(options: Options): Promise<void> {
 	if (options.downloadDefinitelyTyped) {
+		await ensureDir(dataDir);
 		const zipPath = `${options.definitelyTypedPath}.zip`;
 		await downloadFile(definitelyTypedZipUrl, zipPath);
 		await remove(options.definitelyTypedPath);

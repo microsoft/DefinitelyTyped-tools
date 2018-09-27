@@ -11,7 +11,7 @@ if (process.env.LONGJOHN) {
 }
 
 export const home = joinPaths(__dirname, "..", "..");
-const dataDir = joinPaths(home, "data");
+export const dataDir = joinPaths(home, "data");
 
 /** Settings that may be determined dynamically. */
 export class Options {
