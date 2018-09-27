@@ -11,12 +11,15 @@ if (process.env.LONGJOHN) {
 }
 
 export const home = joinPaths(__dirname, "..", "..");
+const dataDir = joinPaths(home, "data");
 
 /** Settings that may be determined dynamically. */
 export class Options {
 	/** Options for running locally. */
-	static defaults = new Options("../DefinitelyTyped", /*resetDefinitelyTyped*/ false, /*progress*/ true, /*parseInParallel*/ true);
-	static azure = new Options("./DefinitelyTyped", /*resetDefinitelyTyped*/ true, /*progress*/ false, /*parseInParallel*/ false);
+	static readonly defaults = new Options(
+		"../DefinitelyTyped", /*downloadDefinitelyTyped*/ false, /*progress*/ true, /*parseInParallel*/ true);
+	static readonly azure = new Options(
+		dataFilePath("DefinitelyTyped"), true, /*progress*/ false, /*parseInParallel*/ false);
 
 	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
 	readonly typesPath: string;
@@ -26,7 +29,11 @@ export class Options {
 		 * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
 		 */
 		readonly definitelyTypedPath: string,
-		readonly resetDefinitelyTyped: boolean,
+		/**
+		 * If true, downloads DefinitelyTyped from a zip and writes to definitelyTypedPath.
+		 * If false, definitelyTypedPath should be a repository, and will verify that there's no diff.
+		 */
+		readonly downloadDefinitelyTyped: boolean,
 		/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
 		readonly progress: boolean,
 		/** Disabled on azure since it has problems logging errors from other processes. */
@@ -57,7 +64,6 @@ export async function writeDataFile(filename: string, content: {}, formatted = t
 	await writeJson(dataFilePath(filename), content, formatted);
 }
 
-const dataDir = joinPaths(home, "data");
-function dataFilePath(filename: string): string {
+export function dataFilePath(filename: string): string {
 	return joinPaths(dataDir, filename);
 }

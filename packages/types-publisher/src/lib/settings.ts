@@ -8,8 +8,9 @@ export const npmApi = "api.npmjs.org";
 export const scopeName = "types";
 export const outputPath = "./output";
 export const validateOutputPath = joinPaths(__dirname, "..", "..", "validateOutput");
-/** Git location of the source repository. */
-export const sourceRepository = "https://github.com/DefinitelyTyped/DefinitelyTyped.git";
+
+/** URL to download the repository ZIP from. */
+export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/zip/master";
 /** The branch that DefinitelyTyped is sourced from. */
 export const sourceBranch = "master";
 

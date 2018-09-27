@@ -1,46 +1,53 @@
-import { pathExists } from "fs-extra";
-import { Clone, Ignore, Repository, Reset } from "nodegit";
+import fs = require("fs");
+import { remove } from "fs-extra";
+import https = require("https");
+import StreamZip = require("node-stream-zip");
 
 import { Options } from "./lib/common";
-import { sourceBranch, sourceRepository } from "./lib/settings";
-import { done, filterNAtATime } from "./util/util";
+import { definitelyTypedZipUrl } from "./lib/settings";
+import { done, exec } from "./util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 
 export default async function main(options: Options): Promise<void> {
-	const dtPath = options.definitelyTypedPath;
-
-	if (await pathExists(options.definitelyTypedPath)) {
-		const repo = await Repository.open(options.definitelyTypedPath);
-		const actualBranch = (await repo.getCurrentBranch()).name();
-
-		if (actualBranch !== `refs/heads/${sourceBranch}`) {
-			throw new Error(`Please checkout branch '${sourceBranch}'`);
-		}
-
-		console.log(`Fetching changes from ${sourceBranch}`);
-
-		if (options.resetDefinitelyTyped) {
-			const headCommit = await repo.getHeadCommit();
-			await Reset.reset(repo, headCommit as any, Reset.TYPE.HARD, undefined!);
-		}
-
-		await checkStatus(repo);
-		await repo.fetch("origin");
-		await repo.mergeBranches(sourceBranch, `origin/${sourceBranch}`, undefined!, undefined!);
+	if (options.downloadDefinitelyTyped) {
+		const zipPath = `${options.definitelyTypedPath}.zip`;
+		await downloadFile(definitelyTypedZipUrl, zipPath);
+		await remove(options.definitelyTypedPath);
+		await extract(zipPath, options.definitelyTypedPath);
 	} else {
-		console.log(`Cloning ${sourceRepository} to ${dtPath}`);
-		const repo = await Clone.clone(sourceRepository, dtPath);
-		await repo.checkoutBranch(sourceBranch);
+		const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
+		if (error) { throw error; }
+		if (stderr) { throw new Error(stderr); }
+		if (stdout) { throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`); }
 	}
 }
 
-async function checkStatus(repo: Repository): Promise<void> {
-	const statuses = await repo.getStatus();
-	const changedFiles = await filterNAtATime(1, statuses.map(s => s.path()), async path => !(await Ignore.pathIsIgnored(repo, path)));
-	if (changedFiles.length) {
-		throw new Error(`The following files are dirty: ${changedFiles}`);
-	}
+function downloadFile(url: string, outFilePath: string): Promise<void> {
+	const file = fs.createWriteStream(outFilePath);
+	return new Promise((resolve, reject) => {
+		https.get(url, response => {
+			response.pipe(file);
+			file.on("finish", () => {
+				file.close();
+				resolve();
+			});
+		}).on("error", reject);
+	});
+}
+
+function extract(zipFilePath: string, outDirectoryPath: string): Promise<void> {
+	return new Promise((resolve, reject) => {
+		const zip = new StreamZip({ file: zipFilePath });
+		zip.on("error", reject);
+		zip.on("ready", () => {
+			fs.mkdirSync(outDirectoryPath);
+			zip.extract(undefined, outDirectoryPath, err => {
+				zip.close();
+				if (err) { reject(err); } else { resolve(); }
+			});
+		});
+	});
 }
