@@ -11,17 +11,19 @@ import { sourceBranch } from "./settings";
 import Versions, { Semver } from "./versions";
 
 /** Generates the package to disk */
-export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, fs: FS): Promise<Log> {
-	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, fs);
+export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, dt: FS): Promise<Log> {
+	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions.getVersion(pkg), dt);
 }
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
 
-async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, fs: FS): Promise<Log> {
+async function generatePackage(typing: TypingsData, packages: AllPackages, version: Semver, dt: FS): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
-	const packageFS = fs.subDir("types").subDir(typing.name);
-	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages);
+	const typesDirectory = dt.subDir("types").subDir(typing.name);
+	const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${version.major}`);
+
+	const packageJson = await createPackageJSON(typing, version, packages);
 	log("Write metadata files to disk");
 	await writeCommonOutputs(typing, packageJson, createReadme(typing));
 	await Promise.all(typing.files.map(async file => {
