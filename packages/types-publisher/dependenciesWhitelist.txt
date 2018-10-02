@@ -28,6 +28,7 @@ inversify
 jointjs
 levelup
 localforage
+log4js
 magic-string
 meteor-typings
 mqtt
