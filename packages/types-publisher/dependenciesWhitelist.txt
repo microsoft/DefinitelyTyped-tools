@@ -62,6 +62,12 @@ tweetnacl
 vue
 vue-router
 vuex
+@babel/code-frame
+@babel/core
+@babel/generator
+@babel/parser
+@babel/template
+@babel/traverse
 @babel/types
 @types/firebase
 @types/js-data
