@@ -1,15 +1,16 @@
-import { Options } from "./lib/common";
+import { getDefinitelyTyped } from "./get-definitely-typed";
+import { Options, TesterOptions } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { typesDirectoryName } from "./lib/settings";
 import { writeFile } from "./util/io";
-import {  done, joinPaths, mapDefined } from "./util/util";
+import { done, joinPaths, mapDefined } from "./util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
 }
 
-async function main(options: Options): Promise<void> {
-	const allPackages = await AllPackages.read(options);
+async function main(options: TesterOptions): Promise<void> {
+	const allPackages = await AllPackages.read(await getDefinitelyTyped(options));
 	const typings = allPackages.allTypings();
 	const maxPathLen = Math.max(...typings.map(t => t.subDirectoryPath.length));
 	const lines = mapDefined(typings, t => getEntry(t, maxPathLen));

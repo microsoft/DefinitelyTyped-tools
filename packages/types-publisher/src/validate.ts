@@ -1,10 +1,11 @@
 import { mkdirp, remove } from "fs-extra";
 import * as yargs from "yargs";
 
+import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { AllPackages, fullNpmName } from "./lib/packages";
 import { validateOutputPath } from "./lib/settings";
-import { changedPackages } from "./lib/versions";
+import { changedPackages, readChanges } from "./lib/versions";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, loggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors, writeLog } from "./util/logging";
 import { done, exec, joinPaths, nAtATime } from "./util/util";
@@ -23,12 +24,12 @@ if (!module.parent) {
 		console.log(`Validating: ${JSON.stringify(packageNames)}`);
 		done(doValidate(packageNames));
 	} else {
-		done(main(Options.defaults));
+		done(getDefinitelyTyped(Options.defaults).then(main));
 	}
 }
 
-export default async function main(options: Options): Promise<void> {
-	const changed = await changedPackages(await AllPackages.read(options));
+export default async function main(dt: FS): Promise<void> {
+	const changed = await changedPackages(await AllPackages.read(dt), await readChanges());
 	await doValidate(changed.map(c => c.name));
 }
 

@@ -1,33 +1,33 @@
-import { copy, mkdir, mkdirp, readFileSync } from "fs-extra";
+import { mkdir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 
+import { FS } from "../get-definitely-typed";
 import { writeFile } from "../util/io";
 import { Log, quietLogger } from "../util/logging";
 import { assertNever, hasOwnProperty, joinPaths } from "../util/util";
 
-import { Options } from "./common";
 import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, License, NotNeededPackage, TypingsData } from "./packages";
 import { sourceBranch } from "./settings";
 import Versions, { Semver } from "./versions";
 
 /** Generates the package to disk */
-export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
-	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, options);
+export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, fs: FS): Promise<Log> {
+	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions, fs);
 }
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
 
-async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, options: Options): Promise<Log> {
+async function generatePackage(typing: TypingsData, packages: AllPackages, versions: Versions, fs: FS): Promise<Log> {
 	const [log, logResult] = quietLogger();
 
+	const packageFS = fs.subDir("types").subDir(typing.name);
 	const packageJson = await createPackageJSON(typing, versions.getVersion(typing), packages);
 	log("Write metadata files to disk");
 	await writeCommonOutputs(typing, packageJson, createReadme(typing));
 	await Promise.all(typing.files.map(async file => {
 		log(`Copy ${file}`);
-		await copy(typing.filePath(file, options), await outputFilePath(typing, file));
+		await writeFile(await outputFilePath(typing, file), await packageFS.readFile(file));
 	}));
-
 	return logResult();
 }
 
@@ -53,7 +53,6 @@ async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: 
 	async function writeOutputFile(filename: string, content: string): Promise<void> {
 		await writeFile(await outputFilePath(pkg, filename), content);
 	}
-
 }
 
 async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string> {

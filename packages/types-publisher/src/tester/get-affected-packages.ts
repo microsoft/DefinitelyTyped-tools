@@ -1,4 +1,5 @@
-import { Options } from "../lib/common";
+import { getDefinitelyTyped } from "../get-definitely-typed";
+import { Options, TesterOptions } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
@@ -8,8 +9,11 @@ import { done, execAndThrowErrors, flatMap, map, mapDefined, sort } from "../uti
 if (!module.parent) {
 	done(main(Options.defaults));
 }
-async function main(options: Options): Promise<void> {
-	const changes = await getAffectedPackages(await AllPackages.read(options), consoleLogger.info, options);
+async function main(options: TesterOptions): Promise<void> {
+	const changes = await getAffectedPackages(
+		await AllPackages.read(await getDefinitelyTyped(options)),
+		consoleLogger.info,
+		options.definitelyTypedPath);
 	console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependers: changes.dependentPackages.map(t => t.desc) });
 }
 
@@ -19,8 +23,8 @@ export interface Affected {
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
-export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, options: Options): Promise<Affected> {
-	const changedPackageIds = await gitChanges(log, options);
+export default async function getAffectedPackages(allPackages: AllPackages, log: Logger, definitelyTypedPath: string): Promise<Affected> {
+	const changedPackageIds = await gitChanges(log, definitelyTypedPath);
 	// If a package doesn't exist, that's because it was deleted.
 	const changedPackages = mapDefined(changedPackageIds, (({ name, majorVersion }) =>
 		majorVersion === "latest" ? allPackages.tryGetLatestVersion(name) : allPackages.tryGetTypingsData({ name, majorVersion })));
@@ -92,10 +96,10 @@ function getReverseDependencies(allPackages: AllPackages): Map<TypingsData, Set<
 interface PackageVersion { name: string; majorVersion: number | "latest"; }
 
 /** Returns all immediate subdirectories of the root directory that have changed. */
-async function gitChanges(log: Logger, options: Options): Promise<Iterable<PackageVersion>> {
+async function gitChanges(log: Logger, definitelyTypedPath: string): Promise<Iterable<PackageVersion>> {
 	const changedPackages = new Map<string, Set<number | "latest">>();
 
-	for (const fileName of await gitDiff(log, options)) {
+	for (const fileName of await gitDiff(log, definitelyTypedPath)) {
 		const dep = getDependencyFromFile(fileName);
 		if (dep) {
 			const versions = changedPackages.get(dep.name);
@@ -122,7 +126,7 @@ Travis runs:
 
 If editing this code, be sure to test on both full and shallow clones.
 */
-async function gitDiff(log: Logger, options: Options): Promise<string[]> {
+async function gitDiff(log: Logger, definitelyTypedPath: string): Promise<string[]> {
 	try {
 		await run(`git rev-parse --verify ${sourceBranch}`);
 		// If this succeeds, we got the full clone.
@@ -143,7 +147,7 @@ async function gitDiff(log: Logger, options: Options): Promise<string[]> {
 
 	async function run(cmd: string): Promise<string> {
 		log(`Running: ${cmd}`);
-		const stdout = await execAndThrowErrors(cmd, options.definitelyTypedPath);
+		const stdout = await execAndThrowErrors(cmd, definitelyTypedPath);
 		log(stdout);
 		return stdout;
 	}

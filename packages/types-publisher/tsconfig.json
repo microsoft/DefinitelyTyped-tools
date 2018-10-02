@@ -8,6 +8,8 @@
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
 		"outDir": "bin",
 		"sourceMap": true,
 		"target": "es6",

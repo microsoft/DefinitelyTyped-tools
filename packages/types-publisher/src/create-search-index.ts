@@ -2,26 +2,29 @@ import * as yargs from "yargs";
 
 import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
-import { AllPackages } from "./lib/packages";
+import { AllPackages, TypingsData } from "./lib/packages";
 import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
 import { done, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	const skipDownloads = yargs.argv.skipDownloads;
 	const single = yargs.argv.single;
 	if (single) {
-		done(doSingle(single, skipDownloads, new UncachedNpmInfoClient()));
+		done(doSingle(single, new UncachedNpmInfoClient()));
 	} else {
 		const full = yargs.argv.full;
-		done(main(skipDownloads, full, new UncachedNpmInfoClient(), Options.defaults));
+		done(async () => main(await AllPackages.readTypings(), full, new UncachedNpmInfoClient(), Options.defaults));
 	}
 }
 
-export default async function main(skipDownloads: boolean, full: boolean, client: UncachedNpmInfoClient, options: Options): Promise<void> {
-	const packages = await AllPackages.readTypings();
+export default async function main(
+	packages: ReadonlyArray<TypingsData>,
+	full: boolean,
+	client: UncachedNpmInfoClient,
+	options: Options,
+): Promise<void> {
 	console.log("Generating search index...");
 
-	const records = await nAtATime(options.fetchParallelism, packages, pkg => createSearchRecord(pkg, skipDownloads, client), {
+	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, client), {
 		name: "Indexing...",
 		flavor: pkg => pkg.desc,
 		options
@@ -38,9 +41,9 @@ export default async function main(skipDownloads: boolean, full: boolean, client
 	}
 }
 
-async function doSingle(name: string, skipDownloads: boolean, client: UncachedNpmInfoClient): Promise<void> {
+async function doSingle(name: string, client: UncachedNpmInfoClient): Promise<void> {
 	const pkg = await AllPackages.readSingle(name);
-	const record = await createSearchRecord(pkg, skipDownloads, client);
+	const record = await createSearchRecord(pkg, client);
 	console.log(verboseRecord(record));
 }
 

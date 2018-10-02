@@ -1,5 +1,6 @@
 import * as fold from "travis-fold";
 
+import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
@@ -8,11 +9,11 @@ import { Logger, logger, writeLog } from "./util/logging";
 import { assertDefined, best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(main(true, Options.defaults, new UncachedNpmInfoClient()));
+	done(async () => main(true, await getDefinitelyTyped(Options.defaults), Options.defaults, new UncachedNpmInfoClient()));
 }
 
-export default async function main(includeNpmChecks: boolean, options: Options, client: UncachedNpmInfoClient): Promise<void> {
-	const allPackages = await AllPackages.read(options);
+export default async function main(includeNpmChecks: boolean, dt: FS, options: Options, client: UncachedNpmInfoClient): Promise<void> {
+	const allPackages = await AllPackages.read(dt);
 	const [log, logResult] = logger();
 
 	checkTypeScriptVersions(allPackages);

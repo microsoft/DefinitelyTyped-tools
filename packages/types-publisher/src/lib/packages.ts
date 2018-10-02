@@ -1,22 +1,24 @@
 import assert = require("assert");
 import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
-import { readJson } from "../util/io";
+import { FS } from "../get-definitely-typed";
 import { joinPaths, mapValues } from "../util/util";
 
-import { home, Options, readDataFile } from "./common";
+import { home, readDataFile } from "./common";
 import { outputPath, scopeName } from "./settings";
 import { Semver } from "./versions";
 
 export class AllPackages {
-	static async read(options: Options): Promise<AllPackages> {
-		const map = await readData();
-		const notNeeded = await readNotNeededPackages(options);
-		return new AllPackages(map, notNeeded);
+	static async read(dt: FS): Promise<AllPackages> {
+		return AllPackages.from(await readTypesDataFile(), await readNotNeededPackages(dt));
 	}
 
-	static async readTypings(): Promise<TypingsData[]> {
-		return Array.from(flattenData(await readData()));
+	static from(data: TypesDataFile, notNeeded: ReadonlyArray<NotNeededPackage>): AllPackages {
+		return new AllPackages(mapValues(new Map(Object.entries(data)), raw => new TypingsVersions(raw)), notNeeded);
+	}
+
+	static async readTypings(): Promise<ReadonlyArray<TypingsData>> {
+		return AllPackages.from(await readTypesDataFile(), []).allTypings();
 	}
 
 	/** Use for `--single` tasks only. Do *not* call this in a loop! */
@@ -33,8 +35,8 @@ export class AllPackages {
 		return new TypingsData(raw[versions[0]], /*isLatest*/ true);
 	}
 
-	static async readSingleNotNeeded(name: string, options: Options): Promise<NotNeededPackage> {
-		const notNeeded = await readNotNeededPackages(options);
+	static async readSingleNotNeeded(name: string, dt: FS): Promise<NotNeededPackage> {
+		const notNeeded = await readNotNeededPackages(dt);
 		const pkg = notNeeded.find(p => p.name === name);
 		if (pkg === undefined) {
 			throw new Error(`Cannot find not-needed package ${name}`);
@@ -142,11 +144,6 @@ function getMangledNameForScopedPackage(packageName: string): string {
 
 export const typesDataFilename = "definitions.json";
 
-async function readData(): Promise<Map<string, TypingsVersions>> {
-	const data = await readTypesDataFile();
-	return mapValues(new Map(Object.entries(data)), raw => new TypingsVersions(raw));
-}
-
 function* flattenData(data: ReadonlyMap<string, TypingsVersions>): Iterable<TypingsData> {
 	for (const versions of data.values()) {
 		yield* versions.getAll();
@@ -170,6 +167,7 @@ interface BaseRaw {
 export abstract class PackageBase {
 	static compare(a: PackageBase, b: PackageBase): number { return a.name.localeCompare(b.name); }
 
+	/** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
 	readonly name: string;
 	readonly libraryName: string;
 	readonly sourceRepoURL: string;
@@ -443,14 +441,6 @@ export class TypingsData extends PackageBase {
 	get subDirectoryPath(): string {
 		return this.isLatest ? this.name : `${this.name}/v${this.data.libraryMajorVersion}`;
 	}
-
-	directoryPath(options: Options): string {
-		return joinPaths(options.typesPath, this.subDirectoryPath);
-	}
-
-	filePath(fileName: string, options: Options): string {
-		return joinPaths(this.directoryPath(options), fileName);
-	}
 }
 
 /** Uniquely identifies a package. */
@@ -466,11 +456,7 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 	return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
 }
 
-function notNeededPackagesPath(options: Options): string {
-	return joinPaths(options.definitelyTypedPath, "notNeededPackages.json");
-}
-
-export async function readNotNeededPackages(options: Options): Promise<ReadonlyArray<NotNeededPackage>> {
-	const raw = await readJson(notNeededPackagesPath(options)) as { packages: ReadonlyArray<NotNeededPackageRaw> };
-	return raw.packages.map(raw => new NotNeededPackage(raw));
+export async function readNotNeededPackages(dt: FS): Promise<ReadonlyArray<NotNeededPackage>> {
+	const rawJson = await dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
+	return (rawJson as { readonly packages: ReadonlyArray<NotNeededPackageRaw> }).packages.map(raw => new NotNeededPackage(raw));
 }

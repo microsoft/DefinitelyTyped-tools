@@ -2,12 +2,13 @@ import assert = require("assert");
 import * as path from "path";
 import * as ts from "typescript";
 
+import { FS } from "../get-definitely-typed";
 import { hasWindowsSlashes, joinPaths, normalizeSlashes, sort } from "../util/util";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
 
-export default async function getModuleInfo(packageName: string, directory: string, allEntryFilenames: ReadonlyArray<string>): Promise<ModuleInfo> {
-	const all = await allReferencedFiles(directory, allEntryFilenames);
+export default async function getModuleInfo(packageName: string, allEntryFilenames: ReadonlyArray<string>, fs: FS): Promise<ModuleInfo> {
+	const all = await allReferencedFiles(allEntryFilenames, fs);
 
 	const dependencies = new Set<string>();
 	const declaredModules: string[] = [];
@@ -130,47 +131,35 @@ function withoutExtension(str: string, ext: string): string {
 }
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
-async function allReferencedFiles(directory: string, entryFilenames: ReadonlyArray<string>): Promise<Map<string, ts.SourceFile>> {
+async function allReferencedFiles(entryFilenames: ReadonlyArray<string>, fs: FS): Promise<Map<string, ts.SourceFile>> {
 	const seenReferences = new Set<string>();
 	const all = new Map<string, ts.SourceFile>();
 
-	async function recur(referencedFrom: string, { text, exact }: Reference): Promise<void> {
+	async function recur({ text, exact }: Reference): Promise<void> {
 		if (seenReferences.has(text)) {
 			return;
 		}
 		seenReferences.add(text);
 
-		const { resolvedFilename, content } = exact
-			? { resolvedFilename: text, content: await readFileAndReportErrors(referencedFrom, directory, text, text) }
-			: await resolveModule(referencedFrom, directory, text);
-		const src = createSourceFile(resolvedFilename, content);
+		const resolvedFilename = exact ? text : await resolveModule(text, fs);
+		const src = createSourceFile(resolvedFilename, await readFileAndThrowOnBOM(resolvedFilename, fs));
 		all.set(resolvedFilename, src);
 
-		const refs = referencedFiles(src, path.dirname(resolvedFilename), directory);
-		await Promise.all(Array.from(refs).map(ref => recur(resolvedFilename, ref)));
+		const refs = referencedFiles(src, path.dirname(resolvedFilename));
+		await Promise.all(Array.from(refs).map(recur));
 	}
 
-	await Promise.all(entryFilenames.map(filename => recur("tsconfig.json", { text: filename, exact: true })));
+	await Promise.all(entryFilenames.map(filename => recur({ text: filename, exact: true })));
 	return all;
 }
 
-async function resolveModule(referencedFrom: string, directory: string, filename: string): Promise<{ resolvedFilename: string, content: string }> {
-	try {
-		const dts = `${filename}.d.ts`;
-		return { resolvedFilename: dts, content: await readFileAndThrowOnBOM(directory, dts) };
-	} catch (_) {
-		const index = joinPaths(filename.endsWith("/") ? filename.slice(0, filename.length - 1) : filename, "index.d.ts");
-		const resolvedFilename = index === "./index.d.ts" ?  "index.d.ts" : index;
-		return { resolvedFilename, content: await readFileAndReportErrors(referencedFrom, directory, filename, index) };
-	}
-}
-
-async function readFileAndReportErrors(referencedFrom: string, directory: string, referenceText: string, filename: string): Promise<string> {
-	try {
-		return await readFileAndThrowOnBOM(directory, filename);
-	} catch (err) {
-		console.error(`In ${directory}, ${referencedFrom} references ${referenceText}, which can't be read.`);
-		throw err;
+async function resolveModule(importSpecifier: string, fs: FS): Promise<string> {
+	const dts = `${importSpecifier}.d.ts`;
+	if (![".", "..", "./", "../"].includes(importSpecifier) && await fs.exists(dts)) {
+		return dts;
+	} else {
+		const index = joinPaths(importSpecifier.endsWith("/") ? importSpecifier.slice(0, importSpecifier.length - 1) : importSpecifier, "index.d.ts");
+		return index === "./index.d.ts" ?  "index.d.ts" : index;
 	}
 }
 
@@ -184,7 +173,7 @@ interface Reference {
  * @param subDirectory The specific directory within the DefinitelyTyped directory we are in.
  * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  */
-function* referencedFiles(src: ts.SourceFile, subDirectory: string, directory: string): Iterable<Reference> {
+function* referencedFiles(src: ts.SourceFile, subDirectory: string): Iterable<Reference> {
 	for (const ref of src.referencedFiles) {
 		// Any <reference path="foo"> is assumed to be local
 		yield addReference({ text: ref.fileName, exact: true });
@@ -201,7 +190,7 @@ function* referencedFiles(src: ts.SourceFile, subDirectory: string, directory: s
 		const full = normalizeSlashes(path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, text))));
 		if (full.startsWith("..")) {
 			throw new Error(
-				`In ${directory} ${src.fileName}: ` +
+				`${src.fileName}: ` +
 				'Definitions must use global references to other packages, not parent ("../xxx") references.' +
 				`(Based on reference '${text}')`);
 		}
@@ -290,14 +279,14 @@ function assertNoWindowsSlashes(packageName: string, fileName: string): string {
 
 export async function getTestDependencies(
 	pkgName: string,
-	directory: string,
 	testFiles: Iterable<string>,
 	dependencies: ReadonlySet<string>,
+	fs: FS,
 ): Promise<Iterable<string>> {
 	const testDependencies = new Set<string>();
 
 	for (const filename of testFiles) {
-		const content = await readFileAndThrowOnBOM(directory, filename);
+		const content = await readFileAndThrowOnBOM(filename, fs);
 		const sourceFile = createSourceFile(filename, content);
 		const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
 		const filePath = () => path.join(pkgName, fileName);

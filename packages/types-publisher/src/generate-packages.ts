@@ -1,10 +1,11 @@
 import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
+import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import generateAnyPackage from "./lib/package-generator";
 import { AllPackages, outputDir } from "./lib/packages";
-import Versions, { changedPackages } from "./lib/versions";
+import Versions, { changedPackages, readVersionsAndChanges, VersionsAndChanges } from "./lib/versions";
 import { logger, moveLogs, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
 import { done, nAtATime } from "./util/util";
@@ -16,21 +17,28 @@ if (!module.parent) {
 	if (all && singleName) {
 		throw new Error("Select only one of -single=foo or --all.");
 	}
-	done((singleName ? single(singleName, Options.defaults) : main(Options.defaults, all, tgz)));
+	done(async () => {
+		const dt = await getDefinitelyTyped(Options.defaults);
+		await (singleName ? single(singleName, dt) : main(dt, await AllPackages.read(dt), await readVersionsAndChanges(), all, tgz));
+	});
 }
 
-export default async function main(options: Options, all = false, tgz = false): Promise<void> {
+export default async function main(
+	dt: FS,
+	allPackages: AllPackages,
+	{ versions, changes }: VersionsAndChanges,
+	all = false,
+	tgz = false,
+): Promise<void> {
 	const [log, logResult] = logger();
 	log(`\n## Generating ${all ? "all" : "changed"} packages\n`);
-	const allPackages = await AllPackages.read(options);
-	const versions = await Versions.load();
 
 	await emptyDir(outputDir);
 
-	const packages = all ? allPackages.allPackages() : await changedPackages(allPackages);
+	const packages = all ? allPackages.allPackages() : await changedPackages(allPackages, changes);
 
 	await nAtATime(10, packages, async pkg => {
-		const logs = await generateAnyPackage(pkg, allPackages, versions, options);
+		const logs = await generateAnyPackage(pkg, allPackages, versions, dt);
 		if (tgz) {
 			await writeTgz(pkg.outputDirectory, `${pkg.outputDirectory}.tgz`);
 		}
@@ -41,11 +49,11 @@ export default async function main(options: Options, all = false, tgz = false): 
 	await writeLog("package-generator.md", logResult());
 }
 
-async function single(singleName: string, options: Options): Promise<void> {
+async function single(singleName: string, dt: FS): Promise<void> {
 	await emptyDir(outputDir);
-	const allPackages = await AllPackages.read(options);
+	const allPackages = await AllPackages.read(dt);
 	const pkg = allPackages.getSingle(singleName);
 	const versions = await Versions.load();
-	const logs = await generateAnyPackage(pkg, allPackages, versions, options);
+	const logs = await generateAnyPackage(pkg, allPackages, versions, dt);
 	console.log(logs.join("\n"));
 }

@@ -11,6 +11,11 @@ import { AllPackages, AnyPackage, MajorMinor, PackageId } from "./packages";
 const versionsFilename = "versions.json";
 const changesFilename = "version-changes.json";
 
+export interface VersionsAndChanges {
+	readonly versions: Versions;
+	readonly changes: Changes;
+}
+
 export default class Versions {
 	static async load(): Promise<Versions> {
 		const raw = await readDataFile("calculate-versions", versionsFilename) as VersionMap;
@@ -34,7 +39,7 @@ export default class Versions {
 		log: Logger,
 		forceUpdate: boolean,
 		client: CachedNpmInfoClient,
-	): Promise<{changes: Changes, versions: Versions}> {
+	): Promise<VersionsAndChanges> {
 		const changes: Changes = [];
 		const data: VersionMap = {};
 
@@ -73,7 +78,7 @@ export default class Versions {
 		}
 
 		// Sort keys so that versions.json is easy to read
-		return { changes, versions: new Versions(sortObjectKeys(data)) };
+		return { versions: new Versions(sortObjectKeys(data)), changes };
 
 		function defaultVersionInfo(isPrerelease: boolean): VersionInfo {
 			return { version: new Semver(-1, -1, -1, isPrerelease), latestNonPrerelease: undefined, contentHash: "", deprecated: false };
@@ -113,8 +118,7 @@ export default class Versions {
 	}
 }
 
-export async function changedPackages(allPackages: AllPackages): Promise<ReadonlyArray<AnyPackage>> {
-	const changes = await readChanges();
+export async function changedPackages(allPackages: AllPackages, changes: ReadonlyArray<PackageId>): Promise<ReadonlyArray<AnyPackage>> {
 	return changes.map(changedPackageName => allPackages.getAnyPackage(changedPackageName));
 }
 
@@ -260,6 +264,10 @@ function latestPatchMatchingMajorAndMinor(versions: Iterable<string>, newMajor: 
 		return major === newMajor && minor === newMinor ? patch : undefined;
 	});
 	return best(versionsWithTypings, (a, b) => a > b);
+}
+
+export async function readVersionsAndChanges(): Promise<VersionsAndChanges> {
+	return { versions: await Versions.load(), changes: await readChanges() };
 }
 
 // List of packages that have changed

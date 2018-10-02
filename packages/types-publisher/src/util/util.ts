@@ -36,15 +36,15 @@ export const numberOfOsProcesses = process.env.TRAVIS === "true" ? 2 : os.cpus()
 
 /** Progress options needed for `nAtATime`. Other options will be inferred. */
 interface ProgressOptions<T, U> {
-	name: string;
+	readonly name: string;
 	flavor(input: T, output: U): string | undefined;
-	options: Options;
+	readonly options: Options;
 }
 
 export async function nAtATime<T, U>(
 	n: number,
 	inputs: ReadonlyArray<T>,
-	use: (t: T) => Promise<U>,
+	use: (t: T) => Awaitable<U>,
 	progressOptions?: ProgressOptions<T, U>): Promise<U[]> {
 	const progress = progressOptions && progressOptions.options.progress ? new ProgressBar({ name: progressOptions.name }) : undefined;
 
@@ -85,8 +85,10 @@ export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolea
 	};
 }
 
+export type Awaitable<T> = T | Promise<T>;
+
 export async function filterNAtATime<T>(
-	n: number, inputs: ReadonlyArray<T>, shouldKeep: (input: T) => Promise<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
+	n: number, inputs: ReadonlyArray<T>, shouldKeep: (input: T) => Awaitable<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
 	const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
 	return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
@@ -107,8 +109,8 @@ export function unique<T>(arr: ReadonlyArray<T>): T[] {
 	return [...new Set(arr)];
 }
 
-export function done(promise: Promise<void>): void {
-	promise.catch(error => {
+export function done(promise: Promise<unknown> | (() => Promise<unknown>)): void {
+	(typeof promise === "function" ? promise() : promise).catch(error => {
 		console.error(error);
 		process.exit(1);
 	});

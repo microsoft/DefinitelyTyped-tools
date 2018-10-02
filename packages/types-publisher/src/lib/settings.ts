@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import { join as joinPaths } from "path";
 
 /** URL of the NPM registry to upload to. */
@@ -24,3 +25,6 @@ export const azureKeyvault = "https://types-publisher-keys.vault.azure.net";
 export const errorsIssue = "Microsoft/types-publisher/issues/40";
 
 export const typesDirectoryName = "types";
+
+export const dependenciesWhitelist: ReadonlySet<string> =
+	new Set(readFileSync(joinPaths(__dirname, "..", "..", "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));

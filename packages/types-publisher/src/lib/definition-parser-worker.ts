@@ -1,6 +1,7 @@
 import assert = require("assert");
 import process = require("process");
 
+import { getLocallyInstalledDefinitelyTyped } from "../get-definitely-typed";
 import { done } from "../util/util";
 
 import { getTypingInfo, TypingInfo } from "./definition-parser";
@@ -26,7 +27,7 @@ export interface TypingInfoWithPackageName extends TypingInfo {
 
 async function go(packageNames: ReadonlyArray<string>, typesPath: string): Promise<void> {
 	for (const packageName of packageNames) {
-		const info = await getTypingInfo(packageName, typesPath);
+		const info = await getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
 		const result: TypingInfoWithPackageName = { ...info, packageName };
 		process.send!(result);
 	}

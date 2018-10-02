@@ -1,6 +1,5 @@
 import { ensureDir } from "fs-extra";
 
-import { typesDirectoryName } from "../lib/settings";
 import { readJson, writeJson } from "../util/io";
 import { joinPaths } from "../util/util";
 
@@ -14,35 +13,26 @@ export const home = joinPaths(__dirname, "..", "..");
 export const dataDir = joinPaths(home, "data");
 
 /** Settings that may be determined dynamically. */
-export class Options {
+export interface Options {
+	/**
+	 * e.g. '../DefinitelyTyped'
+	 * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
+	 * If undefined, downloads instead.
+	 */
+	readonly definitelyTypedPath: string | undefined;
+	/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
+	readonly progress: boolean;
+	/** Disabled on azure since it has problems logging errors from other processes. */
+	readonly parseInParallel: boolean;
+}
+export namespace Options {
 	/** Options for running locally. */
-	static readonly defaults = new Options(
-		"../DefinitelyTyped", /*downloadDefinitelyTyped*/ false, /*progress*/ true, /*parseInParallel*/ true);
-	static readonly azure = new Options(
-		dataFilePath("DefinitelyTyped"), true, /*progress*/ false, /*parseInParallel*/ false);
-
-	/** Location of all types packages. This is a subdirectory of DefinitelyTyped. */
-	readonly typesPath: string;
-	constructor(
-		/**
-		 * e.g. '../DefinitelyTyped'
-		 * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
-		 */
-		readonly definitelyTypedPath: string,
-		/**
-		 * If true, downloads DefinitelyTyped from a zip and writes to definitelyTypedPath.
-		 * If false, definitelyTypedPath should be a repository, and will verify that there's no diff.
-		 */
-		readonly downloadDefinitelyTyped: boolean,
-		/** Whether to show progress bars. Good when running locally, bad when running on travis / azure. */
-		readonly progress: boolean,
-		/** Disabled on azure since it has problems logging errors from other processes. */
-		readonly parseInParallel: boolean,
-	) {
-		this.typesPath = joinPaths(definitelyTypedPath, typesDirectoryName);
-	}
-
-	get fetchParallelism(): number { return 25; }
+	export const defaults: TesterOptions = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
+	export const azure: Options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
+}
+export interface TesterOptions extends Options {
+	// Tester can only run on files stored on-disk.
+	readonly definitelyTypedPath: string;
 }
 
 export function readDataFile(generatedBy: string, fileName: string): Promise<object> {

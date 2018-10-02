@@ -18,14 +18,14 @@ export interface SearchRecord {
 	r: string | undefined;
 }
 
-export async function createSearchRecord(pkg: AnyPackage, skipDownloads: boolean, client: UncachedNpmInfoClient): Promise<SearchRecord> {
+export async function createSearchRecord(pkg: AnyPackage, client: UncachedNpmInfoClient): Promise<SearchRecord> {
 	return {
 		p: pkg.projectName,
 		l: pkg.libraryName,
 		g: pkg.globals,
 		t: pkg.name,
 		m: pkg.declaredModules,
-		d: skipDownloads ? -1 : await client.getDownloads(pkg.name),
+		d: await client.getDownloads(pkg.name),
 		r: pkg.isNotNeeded() ? pkg.sourceRepoURL : undefined
 	};
 }

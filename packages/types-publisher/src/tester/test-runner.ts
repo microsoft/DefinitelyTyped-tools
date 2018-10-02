@@ -2,7 +2,8 @@ import { pathExists } from "fs-extra";
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
-import { Options } from "../lib/common";
+import { FS, getDefinitelyTyped } from "../get-definitely-typed";
+import { Options, TesterOptions } from "../lib/common";
 import { AllPackages, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, LoggerWithErrors } from "../util/logging";
@@ -12,7 +13,8 @@ import getAffectedPackages, { Affected, allDependencies } from "./get-affected-p
 
 if (!module.parent) {
 	const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
-	done(main(testerOptions(!!yargs.argv.runFromDefinitelyTyped), parseNProcesses(), selection));
+	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
+	done(getDefinitelyTyped(options).then(dt => main(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
 }
 
 const pathToDtsLint = require.resolve("dtslint");
@@ -29,38 +31,37 @@ export function parseNProcesses(): number {
 	return nProcesses;
 }
 
-export function testerOptions(runFromDefinitelyTyped: boolean): Options {
-	if (runFromDefinitelyTyped) {
-		return new Options(process.cwd(), /*resetDefinitelyTyped*/ false, /*progress*/ false, /*parseInParallel*/ true);
-	} else {
-		return Options.defaults;
-	}
+export function testerOptions(runFromDefinitelyTyped: boolean): TesterOptions {
+	return runFromDefinitelyTyped
+		? { definitelyTypedPath: process.cwd(), progress: false, parseInParallel: true }
+		: Options.defaults;
 }
 
-export default async function main(options: Options, nProcesses: number, selection: "all" | "affected" | RegExp): Promise<void> {
-	const allPackages = await AllPackages.read(options);
+export default async function main(dt: FS, definitelyTypedPath: string, nProcesses: number, selection: "all" | "affected" | RegExp): Promise<void> {
+	const allPackages = await AllPackages.read(dt);
 	const { changedPackages, dependentPackages }: Affected = selection === "all"
 		? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
 		: selection === "affected"
-		? await getAffectedPackages(allPackages, consoleLogger.info, options)
+		? await getAffectedPackages(allPackages, consoleLogger.info, definitelyTypedPath)
 		: { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
 	console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);
 	console.log(`Testing ${dependentPackages.length} dependent packages: ${dependentPackages.map(t => t.desc)}`);
 	console.log(`Running with ${nProcesses} processes.`);
 
-	await doInstalls(allPackages, concat(changedPackages, dependentPackages), options, nProcesses);
+	const typesPath = `${definitelyTypedPath}/types`;
+	await doInstalls(allPackages, concat(changedPackages, dependentPackages), typesPath, nProcesses);
 
 	console.log("Testing...");
-	await runTests([...changedPackages, ...dependentPackages], new Set(changedPackages), options, nProcesses);
+	await runTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
 }
 
-async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, options: Options, nProcesses: number): Promise<void> {
+async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string, nProcesses: number): Promise<void> {
 	console.log("Installing NPM dependencies...");
 
 	// We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
 	await nAtATime(nProcesses, allDependencies(allPackages, packages), async pkg => {
-		const cwd = pkg.directoryPath(options);
+		const cwd = directoryPath(typesPath, pkg);
 		if (!await pathExists(joinPaths(cwd, "package.json"))) {
 			return;
 		}
@@ -79,10 +80,14 @@ async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsDa
 	await runCommand(console, undefined, pathToDtsLint, ["--installAll"]);
 }
 
+function directoryPath(typesPath: string, pkg: TypingsData): string {
+	return joinPaths(typesPath, pkg.subDirectoryPath);
+}
+
 async function runTests(
 	packages: ReadonlyArray<TypingsData>,
 	changed: ReadonlySet<TypingsData>,
-	options: Options,
+	typesPath: string,
 	nProcesses: number,
 ): Promise<void> {
 	const allFailures: Array<[string, string]> = [];
@@ -93,7 +98,7 @@ async function runTests(
 		commandLineArgs: ["--listen"],
 		workerFile: pathToDtsLint,
 		nProcesses,
-		cwd: options.typesPath,
+		cwd: typesPath,
 		handleOutput(output): void {
 			const { path, status } = output as { path: string, status: string };
 			if (status === "OK") {

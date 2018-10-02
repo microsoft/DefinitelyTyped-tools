@@ -32,7 +32,7 @@ export function streamOfString(text: string): NodeJS.ReadableStream {
 export function stringOfStream(stream: NodeJS.ReadableStream): Promise<string> {
 	let body = "";
 	stream.on("data", (data: Buffer) => {
-		body += data.toString("utf8");
+		body += data.toString();
 	});
 	return new Promise<string>((resolve, reject) => {
 		stream.on("error", reject);
