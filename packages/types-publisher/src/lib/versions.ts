@@ -204,7 +204,7 @@ export async function fetchAndProcessNpmInfo(escapedPackageName: string, client:
 	const version = getVersionSemver(info, /*isPrerelease*/ false);
 	const { distTags, versions, timeModified } = info;
 	const highestSemverVersion = getLatestVersion(versions.keys());
-	assert.equal(highestSemverVersion.versionString, distTags.get("next"));
+	assert.strictEqual(highestSemverVersion.versionString, distTags.get("next"));
 	const contentHash = versions.get(version.versionString)!.typesPublisherContentHash || "";
 	return { version, highestSemverVersion, contentHash, lastModified: new Date(timeModified) };
 }

@@ -37,8 +37,8 @@ export default async function main(dt: FS, dry: boolean, client: UncachedNpmInfo
 	const registry = JSON.stringify(registryJsonData);
 	const newContentHash = computeHash(registry);
 
-	assert.equal(oldVersion.major, 0);
-	assert.equal(oldVersion.minor, 1);
+	assert.strictEqual(oldVersion.major, 0);
+	assert.strictEqual(oldVersion.minor, 1);
 	const newVersion = `0.1.${oldVersion.patch + 1}`;
 	const packageJson = generatePackageJson(newVersion, newContentHash);
 	await generate(registry, packageJson);

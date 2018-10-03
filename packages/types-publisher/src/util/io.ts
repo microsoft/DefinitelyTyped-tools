@@ -128,7 +128,7 @@ export async function isDirectory(path: string): Promise<boolean> {
 export async function assertDirectoriesEqual(expected: string, actual: string, options: { ignore(fileName: string): boolean }): Promise<void> {
 	const expectedLs = await readdir(expected);
 	const actualLs = await readdir(actual);
-	assert.deepEqual(expectedLs, actualLs);
+	assert.deepStrictEqual(expectedLs, actualLs);
 	for (const name of expectedLs) {
 		if (options.ignore(name)) {
 			continue;
@@ -138,11 +138,11 @@ export async function assertDirectoriesEqual(expected: string, actual: string, o
 		const actualFile = joinPaths(actual, name);
 		const expectedStat = await stat(expectedFile);
 		const actualStat = await stat(actualFile);
-		assert.equal(expectedStat.isDirectory(), actualStat.isDirectory());
+		assert.strictEqual(expectedStat.isDirectory(), actualStat.isDirectory());
 		if (expectedStat.isDirectory()) {
 			await assertDirectoriesEqual(expectedFile, actualFile, options);
 		} else {
-			assert.equal(await readFile(actualFile), await readFile(expectedFile));
+			assert.strictEqual(await readFile(actualFile), await readFile(expectedFile));
 		}
 	}
 }

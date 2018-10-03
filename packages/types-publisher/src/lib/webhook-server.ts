@@ -141,9 +141,9 @@ function checkSignature(key: string, data: string, headers: { readonly [key: str
 // Use a constant-time compare to prevent timing attacks
 function stringEqualsConstantTime(actual: string, expected: string): boolean {
 	// `timingSafeEqual` throws if they don't have the same length.
-	const actualBuffer = new Buffer(expected.length);
+	const actualBuffer = Buffer.alloc(expected.length);
 	actualBuffer.write(actual);
-	return timingSafeEqual(actualBuffer, new Buffer(expected));
+	return timingSafeEqual(actualBuffer, Buffer.from(expected));
 }
 
 export function expectedSignature(key: string, data: string): string {
