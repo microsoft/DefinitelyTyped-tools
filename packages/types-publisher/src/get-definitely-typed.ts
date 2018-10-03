@@ -190,8 +190,8 @@ class DiskFS implements FS {
 		}
 	}
 
-	readdir(dirPath?: string): Promise<ReadonlyArray<string>> {
-		return readdir(this.getPath(dirPath));
+	async readdir(dirPath?: string): Promise<ReadonlyArray<string>> {
+		return (await readdir(this.getPath(dirPath))).filter(name => name !== ".DS_STORE");
 	}
 
 	async isDirectory(dirPath: string): Promise<boolean> {
