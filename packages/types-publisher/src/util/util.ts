@@ -429,3 +429,9 @@ export function identity<T>(t: T): T { return t; }
 export function withoutStart(s: string, start: string): string | undefined {
 	return s.startsWith(start) ? s.slice(start.length) : undefined;
 }
+
+// Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
+export function unmangleScopedPackage(packageName: string): string | undefined {
+	const separator = "__";
+	return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
+}

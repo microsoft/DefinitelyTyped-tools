@@ -3,7 +3,7 @@ import * as ts from "typescript";
 
 import { FS } from "../get-definitely-typed";
 import { Log, moveLogs, quietLogger } from "../util/logging";
-import { computeHash, filter, hasWindowsSlashes, join, mapAsyncOrdered, withoutStart } from "../util/util";
+import { computeHash, filter, hasWindowsSlashes, join, mapAsyncOrdered, unmangleScopedPackage, withoutStart } from "../util/util";
 
 import getModuleInfo, { getTestDependencies } from "./module-info";
 
@@ -249,11 +249,10 @@ async function calculateDependencies(
 		}
 		const pathMapping = pathMappingList[0];
 
-		// Path mapping may be for "@foo/bar" -> "foo__bar". Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
-		const mangledScopedPackageSeparator = "__";
-		if (pathMapping.indexOf(mangledScopedPackageSeparator) !== -1) {
-			const expected = `@${pathMapping.replace(mangledScopedPackageSeparator, "/")}`;
-			if (dependencyName !== expected) {
+		// Path mapping may be for "@foo/bar" -> "foo__bar".
+		const scopedPackageName = unmangleScopedPackage(pathMapping);
+		if (scopedPackageName !== undefined) {
+			if (dependencyName !== scopedPackageName) {
 				throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
 			}
 			continue;

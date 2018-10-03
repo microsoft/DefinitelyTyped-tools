@@ -28,7 +28,7 @@ export default async function full(dry: boolean, timeStamp: string, options: Opt
 			: undefined);
 	const versions = await calculateVersions(/*forceUpdate*/ false, dt, infoClient);
 	await generatePackages(dt, allPackages, versions);
-	await createSearchIndex(allPackages.allTypings(), /*full*/ false, infoClient, options);
+	await createSearchIndex(allPackages, infoClient);
 	await publishPackages(allPackages, versions, dry);
 	await publishRegistry(dt, dry, infoClient);
 	await validate(dt);

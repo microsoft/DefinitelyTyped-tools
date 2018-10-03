@@ -1,3 +1,4 @@
+import assert = require("assert");
 import { ensureFile, pathExists } from "fs-extra";
 import RegClient = require("npm-registry-client");
 import * as url from "url";
@@ -95,15 +96,34 @@ export class UncachedNpmInfoClient {
 	}
 
 	// See https://github.com/npm/download-counts
-	async getDownloads(packageName: string): Promise<number> {
-		const json = await this.fetcher.fetchJson({
-			hostname: npmApi,
-			path: `/downloads/point/last-month/${packageName}`,
-			retries: true,
-		}) as { downloads: number };
-		// Json may contain "error" instead of "downloads", because some packages aren't available on NPM.
-		return json.downloads || 0;
+	async getDownloads(packageNames: ReadonlyArray<string>): Promise<ReadonlyArray<number>> {
+		// NPM uses a different API if there's only a single name, so ensure there's at least 2.
+		const names = packageNames.length === 1 ? [...packageNames, "dummy"] : packageNames;
+		const nameGroups = Array.from(splitToFixedSizeGroups(names, 128)); // NPM has a limit of 128 packages at a time.
+
+		const out: number[] = [];
+		for (const nameGroup of nameGroups) {
+			const data = await this.fetcher.fetchJson({
+				hostname: npmApi,
+				path: `/downloads/point/last-month/${nameGroup.join(",")}`,
+				retries: true,
+			}) as { readonly error: string } | { readonly [key: string]: { readonly downloads: number } };
+			if ("error" in data) { throw new Error(data.error as string); }
+			for (const key in data) {
+				assert(key === names[out.length]);
+				out.push(data[key] ? data[key].downloads : 0);
+			}
+		}
+		return out;
 	}
+}
+
+function splitToFixedSizeGroups(names: ReadonlyArray<string>, chunkSize: number): ReadonlyArray<ReadonlyArray<string>> {
+	const out: string[][] = [];
+	for (let i = 0; i < names.length; i += chunkSize) {
+		out.push(names.slice(i, i + chunkSize));
+	}
+	return out;
 }
 
 export class NpmPublishClient {

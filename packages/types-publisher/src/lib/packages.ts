@@ -2,7 +2,7 @@ import assert = require("assert");
 import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
-import { joinPaths, mapValues } from "../util/util";
+import { joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
 import { home, readDataFile } from "./common";
 import { outputPath, scopeName } from "./settings";
@@ -104,6 +104,10 @@ export class AllPackages {
 		return Array.from(flattenData(this.data));
 	}
 
+	allLatestTypings(): ReadonlyArray<TypingsData> {
+		return Array.from(this.data.values()).map(versions => versions.getLatest());
+	}
+
 	allNotNeeded(): ReadonlyArray<NotNeededPackage> {
 		return this.notNeeded;
 	}
@@ -171,6 +175,10 @@ export abstract class PackageBase {
 	readonly name: string;
 	readonly libraryName: string;
 	readonly sourceRepoURL: string;
+
+	get unescapedName(): string {
+		return unmangleScopedPackage(this.name) || this.name;
+	}
 
 	/** Short description for debug output. */
 	get desc(): string {

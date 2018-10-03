@@ -1,68 +1,60 @@
 import * as yargs from "yargs";
 
+import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, TypingsData } from "./lib/packages";
-import { createSearchRecord, SearchRecord } from "./lib/search-index-generator";
-import { done, nAtATime } from "./util/util";
+import { done } from "./util/util";
 
 if (!module.parent) {
 	const single = yargs.argv.single;
 	if (single) {
 		done(doSingle(single, new UncachedNpmInfoClient()));
 	} else {
-		const full = yargs.argv.full;
-		done(async () => main(await AllPackages.readTypings(), full, new UncachedNpmInfoClient(), Options.defaults));
+		done(async () => main(await AllPackages.read(await getDefinitelyTyped(Options.defaults)), new UncachedNpmInfoClient()));
 	}
 }
 
-export default async function main(
-	packages: ReadonlyArray<TypingsData>,
-	full: boolean,
-	client: UncachedNpmInfoClient,
-	options: Options,
-): Promise<void> {
+export interface SearchRecord {
+	// types package name
+	readonly t: string;
+	// globals
+	readonly g: ReadonlyArray<string>;
+	// modules
+	readonly m: ReadonlyArray<string>;
+	// project name
+	readonly p: string;
+	// library name
+	readonly l: string;
+	// downloads in the last month from NPM
+	readonly d: number;
+	// redirect: In the case of a not-needed package, we link to their repository instead of the dummy @types package on npm.
+	readonly r: string | undefined;
+}
+
+export default async function main(packages: AllPackages, client: UncachedNpmInfoClient): Promise<void> {
 	console.log("Generating search index...");
-
-	const records = await nAtATime(25, packages, pkg => createSearchRecord(pkg, client), {
-		name: "Indexing...",
-		flavor: pkg => pkg.desc,
-		options
-	});
-	// Most downloads first
-	records.sort((a, b) => b.d - a.d);
-
-	console.log("Done generating search index");
-
-	console.log("Writing out data files");
+	const records = await createSearchRecords(packages.allLatestTypings(), client);
+	console.log("Done generating search index. Writing out data files...");
 	await writeDataFile("search-index-min.json", records, false);
-	if (full) {
-		await writeDataFile("search-index-full.json", records.map(verboseRecord), true);
-	}
 }
 
 async function doSingle(name: string, client: UncachedNpmInfoClient): Promise<void> {
 	const pkg = await AllPackages.readSingle(name);
-	const record = await createSearchRecord(pkg, client);
-	console.log(verboseRecord(record));
+	const record = (await createSearchRecords([pkg], client))[0];
+	console.log(record);
 }
 
-function verboseRecord(r: SearchRecord): {} {
-	return renameProperties(r, {
-		t: "typePackageName",
-		g: "globals",
-		m: "declaredExternalModules",
-		p: "projectName",
-		l: "libraryName",
-		d: "downloads",
-		r: "redirect"
-	});
-}
-
-function renameProperties(obj: { [name: string]: unknown }, replacers: { [name: string]: string }): {} {
-	const out: { [name: string]: unknown } = {};
-	for (const key of Object.getOwnPropertyNames(obj)) {
-		out[replacers[key]] = obj[key];
-	}
-	return out;
+async function createSearchRecords(packages: ReadonlyArray<TypingsData>, client: UncachedNpmInfoClient): Promise<ReadonlyArray<SearchRecord>> {
+	// TODO: Would like to just use pkg.unescapedName unconditionally, but npm doesn't allow scoped packages.
+	const dl = await client.getDownloads(packages.map((pkg, i) => pkg.name === pkg.unescapedName ? pkg.name : `dummy${i}`));
+	return packages.map((pkg, i): SearchRecord => ({
+		p: pkg.projectName,
+		l: pkg.libraryName,
+		g: pkg.globals,
+		t: pkg.name,
+		m: pkg.declaredModules,
+		d: dl[i],
+		r: pkg.isNotNeeded() ? pkg.sourceRepoURL : undefined
+	})).sort((a, b) => b.d - a.d);
 }
