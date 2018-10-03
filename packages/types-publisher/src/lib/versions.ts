@@ -180,7 +180,16 @@ async function fetchTypesPackageVersionInfo(
 	isPrerelease: boolean,
 	newMajorAndMinor?: MajorMinor,
 ): Promise<VersionInfo | undefined> {
-	return fetchVersionInfoFromNpm(pkg.fullEscapedNpmName, pkg.isNotNeeded() ? undefined : pkg.contentHash, client, isPrerelease, newMajorAndMinor);
+	const info = await client.getNpmInfo(pkg.fullEscapedNpmName, pkg.isNotNeeded() ? undefined : pkg.contentHash);
+	if (info === undefined) { return undefined; }
+
+	const { versions } = info;
+	const latestNonPrerelease = !isPrerelease ? undefined : getLatestVersion(versions.keys());
+	const version = getVersionSemver(info, isPrerelease, newMajorAndMinor);
+	const latestVersionInfo = assertDefined(versions.get(version.versionString));
+	const contentHash = latestVersionInfo.typesPublisherContentHash || "";
+	const deprecated = !!latestVersionInfo.deprecated;
+	return { version, latestNonPrerelease, contentHash, deprecated };
 }
 
 export interface ProcessedNpmInfo {
@@ -198,25 +207,6 @@ export async function fetchAndProcessNpmInfo(escapedPackageName: string, client:
 	assert.equal(highestSemverVersion.versionString, distTags.get("next"));
 	const contentHash = versions.get(version.versionString)!.typesPublisherContentHash || "";
 	return { version, highestSemverVersion, contentHash, lastModified: new Date(timeModified) };
-}
-
-async function fetchVersionInfoFromNpm(
-	escapedPackageName: string,
-	parsedContentHash: string | undefined,
-	client: CachedNpmInfoClient,
-	isPrerelease: boolean,
-	newMajorAndMinor?: MajorMinor,
-): Promise<VersionInfo | undefined> {
-	const info = await client.getNpmInfo(escapedPackageName, parsedContentHash);
-	if (info === undefined) { return undefined; }
-
-	const { versions } = info;
-	const latestNonPrerelease = !isPrerelease ? undefined : getLatestVersion(versions.keys());
-	const version = getVersionSemver(info, isPrerelease, newMajorAndMinor);
-	const latestVersionInfo = assertDefined(versions.get(version.versionString));
-	const contentHash = latestVersionInfo.typesPublisherContentHash || "";
-	const deprecated = !!latestVersionInfo.deprecated;
-	return { version, latestNonPrerelease, contentHash, deprecated };
 }
 
 function getLatestVersion(versions: Iterable<string>): Semver {

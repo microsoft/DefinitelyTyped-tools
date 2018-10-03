@@ -4,7 +4,7 @@ import * as url from "url";
 
 import { Fetcher, readFile, readJson, sleep, writeJson } from "../util/io";
 import { createTgz } from "../util/tgz";
-import { identity, joinPaths, mapToRecord, recordToMap, some } from "../util/util";
+import { identity, joinPaths, mapToRecord, recordToMap } from "../util/util";
 
 import { getSecret, Secret } from "./secrets";
 import { npmApi, npmRegistry, npmRegistryHostName } from "./settings";
@@ -19,7 +19,6 @@ const cacheFile = joinPaths(cacheDir, "npmInfo.json");
 export type NpmInfoCache = ReadonlyMap<string, NpmInfo>;
 
 export interface NpmInfoRaw {
-	readonly version: string;
 	readonly "dist-tags": {
 		readonly [tag: string]: string;
 	};
@@ -32,7 +31,6 @@ export interface NpmInfoRawVersions {
 
 // Processed npm info. Intentially kept small so it can be cached.
 export interface NpmInfo {
-	readonly version: string;
 	readonly distTags: Map<string, string>;
 	readonly versions: Map<string, NpmInfoVersion>;
 	readonly timeModified: string;
@@ -56,7 +54,8 @@ export class CachedNpmInfoClient {
 
 	async getNpmInfo(escapedPackageName: string, contentHash: string | undefined): Promise<NpmInfo | undefined> {
 		const cached = this.cache.get(escapedPackageName);
-		if (cached !== undefined && contentHash !== undefined && some(cached.versions.values(), v => v.typesPublisherContentHash === contentHash)) {
+		if (cached !== undefined && contentHash !== undefined &&
+			cached.versions.get(cached.distTags.get("latest")!)!.typesPublisherContentHash === contentHash) {
 			return cached;
 		}
 
@@ -121,35 +120,14 @@ export class NpmPublishClient {
 		return new Promise<void>((resolve, reject) => {
 			const body = createTgz(publishedDirectory, reject);
 			const metadata = { readme, ...packageJson };
-
-			const params: RegClient.PublishParams = {
-				access: "public",
-				auth: this.auth,
-				metadata,
-				body,
-			};
-
-			if (dry) {
-				resolve();
-			} else {
-				this.client.publish(npmRegistry, params, err => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-			}
+			resolve(dry ? undefined : promisifyVoid(cb => {
+				this.client.publish(npmRegistry, { access: "public", auth: this.auth, metadata, body }, cb);
+			}));
 		});
 	}
 
 	tag(packageName: string, version: string, tag: string): Promise<void> {
-		const params = {
-			version,
-			tag,
-			auth: this.auth
-		};
-		return promisifyVoid(cb => { this.client.tag(packageUrl(packageName), params, cb); });
+		return promisifyVoid(cb => { this.client.tag(packageUrl(packageName), { version, tag, auth: this.auth }, cb); });
 	}
 
 	deprecate(packageName: string, version: string, message: string): Promise<void> {
@@ -165,7 +143,6 @@ export class NpmPublishClient {
 
 function npmInfoFromJson(n: NpmInfoRaw): NpmInfo {
 	return {
-		version: n.version,
 		distTags: recordToMap(n["dist-tags"], identity),
 		// Callback ensures we remove any other properties
 		versions: recordToMap(n.versions, ({ typesPublisherContentHash, deprecated }) => ({ typesPublisherContentHash, deprecated })),
@@ -175,7 +152,6 @@ function npmInfoFromJson(n: NpmInfoRaw): NpmInfo {
 
 function jsonFromNpmInfo(n: NpmInfo): NpmInfoRaw {
 	return {
-		version: n.version,
 		"dist-tags": mapToRecord(n.distTags),
 		versions: mapToRecord(n.versions),
 		time: { modified: n.timeModified },

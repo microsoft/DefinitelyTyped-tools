@@ -146,7 +146,7 @@ async function checkNpm(
 
 export async function packageHasTypes(packageName: string, client: UncachedNpmInfoClient): Promise<boolean> {
 	const info = assertDefined(await client.fetchRawNpmInfo(packageName));
-	return hasTypes(info.versions[info.version]);
+	return hasTypes(info.versions[info["dist-tags"].latest]);
 }
 
 function getRegularVersions(versions: NpmInfoRawVersions): ReadonlyArray<{ readonly version: Semver; readonly hasTypes: boolean; }> {
