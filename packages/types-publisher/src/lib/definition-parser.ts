@@ -281,13 +281,20 @@ async function calculateDependencies(
 	}
 
 	for (const dependency of dependencyNames) {
-		if (!(dependency in dependencies)) {
+		if (!(dependency in dependencies) && !nodeBuiltins.has(dependency)) {
 			dependencies[dependency] = "*";
 		}
 	}
 
 	return { dependencies, pathMappings };
 }
+
+const nodeBuiltins: ReadonlySet<string> = new Set([
+	"assert", "async_hooks", "buffer", "child_process", "cluster", "console", "constants", "crypto",
+	"dgram", "dns", "domain", "events", "fs", "http", "http2", "https", "module", "net", "os",
+	"path", "perf_hooks", "process", "punycode", "querystring", "readline", "repl", "stream",
+	"string_decoder", "timers", "tls", "tty", "url", "util", "v8", "vm", "zlib",
+]);
 
 // e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
 function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {

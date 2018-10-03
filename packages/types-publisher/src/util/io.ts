@@ -3,11 +3,16 @@ import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFile
 import { Agent, request } from "https";
 import { join as joinPaths } from "path";
 import * as stream from "stream";
+import { StringDecoder } from "string_decoder";
 
 import { parseJson } from "./util";
 
-export function readFile(path: string): Promise<string> {
-	return readFileWithEncoding(path, { encoding: "utf8" });
+export async function readFile(path: string): Promise<string> {
+	const res = await readFileWithEncoding(path, { encoding: "utf8" });
+	if (res.includes("�")) {
+		throw new Error(`Bad character in ${path}`);
+	}
+	return res;
 }
 
 export async function readJson(path: string): Promise<object> {
@@ -29,14 +34,19 @@ export function streamOfString(text: string): NodeJS.ReadableStream {
 	return s;
 }
 
-export function stringOfStream(stream: NodeJS.ReadableStream): Promise<string> {
+export function stringOfStream(stream: NodeJS.ReadableStream, description?: string): Promise<string> {
+	const decoder = new StringDecoder("utf8");
 	let body = "";
 	stream.on("data", (data: Buffer) => {
-		body += data.toString();
+		body += decoder.write(data);
 	});
 	return new Promise<string>((resolve, reject) => {
 		stream.on("error", reject);
-		stream.on("end", () => { resolve(body); });
+		stream.on("end", () => {
+			body += decoder.end();
+			if (body.includes("�")) { throw new Error(`Bad character decode in ${description}`); }
+			resolve(body);
+		});
 	});
 }
 
