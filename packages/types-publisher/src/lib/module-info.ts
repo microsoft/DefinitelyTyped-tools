@@ -224,7 +224,7 @@ function* imports({ statements }: ts.SourceFile | ts.ModuleBlock): Iterable<stri
 
 			case ts.SyntaxKind.ModuleDeclaration: {
 				const { name, body } = node as ts.ModuleDeclaration;
-				if (name.kind === ts.SyntaxKind.StringLiteral) {
+				if (name.kind === ts.SyntaxKind.StringLiteral && body) {
 					yield* imports(body as ts.ModuleBlock);
 				}
 			}
