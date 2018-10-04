@@ -66,7 +66,7 @@ function listenToGithub(
 		}
 
 		async function work(): Promise<void> {
-			const data = await stringOfStream(req);
+			const data = await stringOfStream(req, "Request to webhook");
 			if (!checkSignature(key, data, req.headers, log)) {
 				return;
 			}

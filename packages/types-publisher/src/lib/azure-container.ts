@@ -91,7 +91,7 @@ export async function readBlob(blobName: string): Promise<string> {
 					if (res.headers["content-encoding"] !== "GZIP") {
 						reject(new Error(`${url} is not gzipped`));
 					} else {
-						resolve(stringOfStream(unGzip(res)));
+						resolve(stringOfStream(unGzip(res), blobName));
 					}
 					break;
 				default:

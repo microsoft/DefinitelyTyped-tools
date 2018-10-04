@@ -1,7 +1,7 @@
 import assert = require("assert");
 import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
-import { Agent, request } from "https";
 import { request as httpRequest } from "http";
+import { Agent, request } from "https";
 import { join as joinPaths } from "path";
 import * as stream from "stream";
 import { StringDecoder } from "string_decoder";
@@ -35,7 +35,7 @@ export function streamOfString(text: string): NodeJS.ReadableStream {
 	return s;
 }
 
-export function stringOfStream(stream: NodeJS.ReadableStream, description?: string): Promise<string> {
+export function stringOfStream(stream: NodeJS.ReadableStream, description: string): Promise<string> {
 	const decoder = new StringDecoder("utf8");
 	let body = "";
 	stream.on("data", (data: Buffer) => {
