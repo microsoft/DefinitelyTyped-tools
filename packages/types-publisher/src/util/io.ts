@@ -1,6 +1,7 @@
 import assert = require("assert");
 import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
 import { Agent, request } from "https";
+import { request as httpRequest } from "http";
 import { join as joinPaths } from "path";
 import * as stream from "stream";
 import { StringDecoder } from "string_decoder";
@@ -93,28 +94,37 @@ export class Fetcher {
 	}
 
 	private fetchOnce(options: FetchOptions): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const req = request(
-				{
-					hostname: options.hostname,
-					port: options.port,
-					path: `/${options.path}`,
-					agent: this.agent,
-					method: options.method || "GET",
-					headers: options.headers,
-				},
-				res => {
-					let text = "";
-					res.on("data", (d: string) => { text += d; });
-					res.on("error", reject);
-					res.on("end", () => { resolve(text); });
-				});
-			if (options.body !== undefined) {
-				req.write(options.body);
-			}
-			req.end();
-		});
+		return doRequest(options, request, this.agent);
 	}
+}
+
+/** Only used for testing. */
+export function makeHttpRequest(options: FetchOptions): Promise<string> {
+	return doRequest(options, httpRequest);
+}
+
+function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: Agent): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const req = makeRequest(
+			{
+				hostname: options.hostname,
+				port: options.port,
+				path: `/${options.path}`,
+				agent,
+				method: options.method || "GET",
+				headers: options.headers,
+			},
+			res => {
+				let text = "";
+				res.on("data", (d: string) => { text += d; });
+				res.on("error", reject);
+				res.on("end", () => { resolve(text); });
+			});
+		if (options.body !== undefined) {
+			req.write(options.body);
+		}
+		req.end();
+	});
 }
 
 export async function sleep(seconds: number): Promise<void> {

@@ -3,7 +3,7 @@ import * as yargs from "yargs";
 import { getSecret, Secret } from "./lib/secrets";
 import { sourceBranch } from "./lib/settings";
 import { expectedSignature } from "./lib/webhook-server";
-import { Fetcher } from "./util/io";
+import { makeHttpRequest } from "./util/io";
 import { done } from "./util/util";
 
 if (!module.parent) {
@@ -22,7 +22,7 @@ function getPort(): number {
 async function main(options: { hostname: string, port?: number }): Promise<void> {
 	const key = await getSecret(Secret.GITHUB_SECRET);
 	const body = JSON.stringify({ ref: `refs/heads/${sourceBranch}` });
-	console.log(await new Fetcher().fetch({
+	console.log(await makeHttpRequest({
 		hostname: options.hostname,
 		port: options.port,
 		path: "",
