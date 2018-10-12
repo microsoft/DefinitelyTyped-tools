@@ -1,8 +1,7 @@
 import assert = require("assert");
-import { TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { Logger } from "../util/logging";
-import { assertDefined, best, intOfString, map,  mapDefined, sortObjectKeys } from "../util/util";
+import { assertDefined, best, intOfString, mapDefined, sortObjectKeys } from "../util/util";
 
 import { readDataFile, writeDataFile } from "./common";
 import { CachedNpmInfoClient, NpmInfo, UncachedNpmInfoClient } from "./npm-client";
@@ -44,13 +43,12 @@ export default class Versions {
 		const data: VersionMap = {};
 
 		for (const pkg of allPackages.allTypings()) {
-			const isPrerelease = TypeScriptVersion.isPrerelease(pkg.typeScriptVersion);
-			const versionInfo = await fetchTypesPackageVersionInfo(pkg, client, isPrerelease, pkg.majorMinor);
+			const versionInfo = await fetchTypesPackageVersionInfo(pkg, client, pkg.majorMinor);
 			if (!versionInfo) {
 				log(`Added: ${pkg.desc}`);
 			}
 			// tslint:disable-next-line:prefer-const
-			let { version, latestNonPrerelease, contentHash, deprecated } = versionInfo || defaultVersionInfo(isPrerelease);
+			let { version, contentHash, deprecated } = versionInfo || defaultVersionInfo;
 			if (deprecated) {
 				// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
 				assert(
@@ -60,15 +58,14 @@ export default class Versions {
 			if (forceUpdate || !versionInfo || pkg.major !== version.major || pkg.minor !== version.minor || pkg.contentHash !== contentHash) {
 				log(`Changed: ${pkg.desc}`);
 				changes.push(pkg.id);
-				version = version.update(pkg.majorMinor, isPrerelease);
+				version = version.update(pkg.majorMinor);
 			}
-			addToData(pkg.name, version, latestNonPrerelease);
+			addToData(pkg.name, version);
 		}
 
 		for (const pkg of allPackages.allNotNeeded()) {
-			const isPrerelease = false; // Not-needed packages are never prerelease.
 			// tslint:disable-next-line:prefer-const
-			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, client, isPrerelease) || defaultVersionInfo(isPrerelease);
+			let { version, deprecated } = await fetchTypesPackageVersionInfo(pkg, client) || defaultVersionInfo;
 			if (!deprecated) {
 				log(`Now deprecated: ${pkg.name}`);
 				changes.push({ name: pkg.name, majorVersion: version.major });
@@ -79,10 +76,6 @@ export default class Versions {
 
 		// Sort keys so that versions.json is easy to read
 		return { versions: new Versions(sortObjectKeys(data)), changes };
-
-		function defaultVersionInfo(isPrerelease: boolean): VersionInfo {
-			return { version: new Semver(-1, -1, -1, isPrerelease), latestNonPrerelease: undefined, contentHash: "", deprecated: false };
-		}
 
 		function addToData(packageName: string, { major, patch }: Semver, latestNonPrerelease?: Semver): void {
 			let majorVersions = data[packageName];
@@ -101,7 +94,7 @@ export default class Versions {
 	}
 
 	getVersion(pkg: AnyPackage): Semver {
-		return new Semver(pkg.major, pkg.minor, this.info(pkg.id).patch, pkg.isPrerelease);
+		return new Semver(pkg.major, pkg.minor, this.info(pkg.id).patch);
 	}
 
 	latestNonPrerelease(pkg: AnyPackage): Semver {
@@ -124,42 +117,36 @@ export async function changedPackages(allPackages: AllPackages, changes: Readonl
 
 /** Version of a package published to NPM. */
 export class Semver {
-	static parse(semver: string, isPrerelease: boolean): Semver {
-		const result = Semver.tryParse(semver, isPrerelease);
+	static parse(semver: string): Semver {
+		const result = Semver.tryParse(semver);
 		if (!result) {
-			throw new Error(`Unexpected semver: ${semver} (isPrerelease: ${isPrerelease})`);
+			throw new Error(`Unexpected semver: ${semver}`);
 		}
 		return result;
 	}
 
-	static fromRaw({ major, minor, patch, isPrerelease }: Semver): Semver {
-		return new Semver(major, minor, patch, isPrerelease);
+	static fromRaw({ major, minor, patch }: Semver): Semver {
+		return new Semver(major, minor, patch);
 	}
 
 	// This must parse the output of `versionString`.
-	static tryParse(semver: string, isPrerelease: boolean): Semver | undefined {
+	static tryParse(semver: string): Semver | undefined {
 		// Per the semver spec <http://semver.org/#spec-item-2>:
 		// "A normal version number MUST take the form X.Y.Z where X, Y, and Z are non-negative integers, and MUST NOT contain leading zeroes."
-		const rgx = isPrerelease ? /^(\d+)\.(\d+)\.0-next.(\d+)$/ : /^(\d+)\.(\d+)\.(\d+)$/;
+		const rgx = /^(\d+)\.(\d+)\.(\d+)$/;
 		const match = rgx.exec(semver);
-		return match ? new Semver(intOfString(match[1]), intOfString(match[2]), intOfString(match[3]), isPrerelease) : undefined;
+		return match ? new Semver(intOfString(match[1]), intOfString(match[2]), intOfString(match[3])) : undefined;
 	}
 
-	constructor(
-		readonly major: number, readonly minor: number, readonly patch: number,
-		/**
-		 * If true, this is `major.minor.0-next.patch`.
-		 * If false, this is `major.minor.patch`.
-		 */
-		readonly isPrerelease: boolean) {}
+	constructor(readonly major: number, readonly minor: number, readonly patch: number) {}
 
 	get versionString(): string {
-		const { isPrerelease, major, minor, patch } = this;
-		return isPrerelease ? `${major}.${minor}.0-next.${patch}` : `${major}.${minor}.${patch}`;
+		const { major, minor, patch } = this;
+		return `${major}.${minor}.${patch}`;
 	}
 
 	equals(sem: Semver): boolean {
-		return this.major === sem.major && this.minor === sem.minor && this.patch === sem.patch && this.isPrerelease === sem.isPrerelease;
+		return this.major === sem.major && this.minor === sem.minor && this.patch === sem.patch;
 	}
 
 	greaterThan(sem: Semver): boolean {
@@ -167,29 +154,29 @@ export class Semver {
 			&& (this.minor > sem.minor || this.minor === sem.minor && this.patch > sem.patch);
 	}
 
-	update({ major, minor }: MajorMinor, isPrerelease: boolean): Semver {
-		const patch = this.major === major && this.minor === minor && this.isPrerelease === isPrerelease ? this.patch + 1 : 0;
-		return new Semver(major, minor, patch, isPrerelease);
+	update({ major, minor }: MajorMinor): Semver {
+		const patch = this.major === major && this.minor === minor ? this.patch + 1 : 0;
+		return new Semver(major, minor, patch);
 	}
 }
+
+const defaultVersionInfo: VersionInfo = { version: new Semver(-1, -1, -1), contentHash: "", deprecated: false };
 
 /** Returns undefined if the package does not exist. */
 async function fetchTypesPackageVersionInfo(
 	pkg: AnyPackage,
 	client: CachedNpmInfoClient,
-	isPrerelease: boolean,
 	newMajorAndMinor?: MajorMinor,
 ): Promise<VersionInfo | undefined> {
 	const info = await client.getNpmInfo(pkg.fullEscapedNpmName, pkg.isNotNeeded() ? undefined : pkg.contentHash);
 	if (info === undefined) { return undefined; }
 
 	const { versions } = info;
-	const latestNonPrerelease = !isPrerelease ? undefined : getLatestVersion(versions.keys());
-	const version = getVersionSemver(info, isPrerelease, newMajorAndMinor);
+	const version = getVersionSemver(info, newMajorAndMinor);
 	const latestVersionInfo = assertDefined(versions.get(version.versionString));
 	const contentHash = latestVersionInfo.typesPublisherContentHash || "";
 	const deprecated = !!latestVersionInfo.deprecated;
-	return { version, latestNonPrerelease, contentHash, deprecated };
+	return { version, contentHash, deprecated };
 }
 
 export interface ProcessedNpmInfo {
@@ -201,7 +188,7 @@ export interface ProcessedNpmInfo {
 /** For use by publish-registry only. */
 export async function fetchAndProcessNpmInfo(escapedPackageName: string, client: UncachedNpmInfoClient): Promise<ProcessedNpmInfo> {
 	const info = assertDefined(await client.fetchNpmInfo(escapedPackageName));
-	const version = getVersionSemver(info, /*isPrerelease*/ false);
+	const version = getVersionSemver(info);
 	const { distTags, versions, timeModified } = info;
 	const highestSemverVersion = getLatestVersion(versions.keys());
 	assert.strictEqual(highestSemverVersion.versionString, distTags.get("next"));
@@ -210,43 +197,25 @@ export async function fetchAndProcessNpmInfo(escapedPackageName: string, client:
 }
 
 function getLatestVersion(versions: Iterable<string>): Semver {
-	return best(map(versions, parseAnySemver), (a, b) => {
-		if (a.isPrerelease && !b.isPrerelease) { return false; }
-		if (!a.isPrerelease && b.isPrerelease) { return true; }
-		return a.greaterThan(b);
-	})!;
+	return best(mapDefined(versions, v => Semver.tryParse(v)), (a, b) => a.greaterThan(b))!;
 }
 
-function getVersionSemver(info: NpmInfo, isPrerelease: boolean, newMajorAndMinor?: MajorMinor): Semver {
+function getVersionSemver(info: NpmInfo, newMajorAndMinor?: MajorMinor): Semver {
 	// If there's already a published package with this version, look for that first.
 	if (newMajorAndMinor) {
 		const { major, minor } = newMajorAndMinor;
-		const patch = latestPatchMatchingMajorAndMinor(info.versions.keys(), major, minor, isPrerelease);
+		const patch = latestPatchMatchingMajorAndMinor(info.versions.keys(), major, minor);
 		if (patch !== undefined) {
-			return new Semver(major, minor, patch, isPrerelease);
+			return new Semver(major, minor, patch);
 		}
 	}
-	// Usually latest version should never be a prerelease, but it may if we've only ever published prerelease versions.
-	return parseAnySemver(assertDefined(info.distTags.get("latest")));
-}
-
-/** Parse a semver that may not follow X.Y.Z format perfectly. */
-function parseAnySemver(s: string): Semver {
-	// Once upon a time we published -alpha versions.
-	const alpha = /^(.*)-alpha/.exec(s);
-	if (alpha) {
-		return Semver.parse(alpha[1], /*isPrerelase*/false);
-	} else if (/^(.*)-next.\d+/.test(s)) {
-		return Semver.parse(s, /*isPrerelease*/ true);
-	} else {
-		return Semver.parse(s, /*isPrerelease*/false);
-	}
+	return Semver.parse(assertDefined(info.distTags.get("latest")));
 }
 
 /** Finds the version with matching major/minor with the latest patch version. */
-function latestPatchMatchingMajorAndMinor(versions: Iterable<string>, newMajor: number, newMinor: number, isPrerelease: boolean): number | undefined {
+function latestPatchMatchingMajorAndMinor(versions: Iterable<string>, newMajor: number, newMinor: number): number | undefined {
 	const versionsWithTypings = mapDefined(versions, v => {
-		const semver = Semver.tryParse(v, isPrerelease);
+		const semver = Semver.tryParse(v);
 		if (!semver) {
 			return undefined;
 		}
@@ -282,9 +251,6 @@ interface VersionInfo {
 	 * If this package has not changed, the last version.
 	 */
 	readonly version: Semver;
-
-	/** Latest version that was not a prerelease. Omitted if this is not itself a prerelease. */
-	readonly latestNonPrerelease?: Semver;
 
 	/** Hash of content from DefinitelyTyped. Also stored in "typesPublisherContentHash" on NPM. */
 	readonly contentHash: string;

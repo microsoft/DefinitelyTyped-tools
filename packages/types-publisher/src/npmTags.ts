@@ -36,7 +36,7 @@ async function tagAll(dry: boolean): Promise<void> {
 
 export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean
 	): Promise<void> {
-	const tags = TypeScriptVersion.tagsToUpdate(pkg.typeScriptVersion);
+	const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
 		for (const tagName of tags) {

@@ -28,8 +28,6 @@ export interface SearchRecord {
 	readonly l: string;
 	// downloads in the last month from NPM
 	readonly d: number;
-	// redirect: In the case of a not-needed package, we link to their repository instead of the dummy @types package on npm.
-	readonly r: string | undefined;
 }
 
 export default async function main(packages: AllPackages, client: UncachedNpmInfoClient): Promise<void> {
@@ -55,6 +53,5 @@ async function createSearchRecords(packages: ReadonlyArray<TypingsData>, client:
 		t: pkg.name,
 		m: pkg.declaredModules,
 		d: dl[i],
-		r: pkg.isNotNeeded() ? pkg.sourceRepoURL : undefined
 	})).sort((a, b) => b.d - a.d);
 }

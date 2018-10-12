@@ -162,9 +162,6 @@ interface BaseRaw {
 
 	// The NPM name to publish this under, e.g. "jquery". Does not include "@types".
 	readonly typingsPackageName: string;
-
-	// e.g. https://github.com/DefinitelyTyped
-	readonly sourceRepoURL: string;
 }
 
 /** Prefer to use `AnyPackage` instead of this. */
@@ -174,7 +171,6 @@ export abstract class PackageBase {
 	/** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
 	readonly name: string;
 	readonly libraryName: string;
-	readonly sourceRepoURL: string;
 
 	get unescapedName(): string {
 		return unmangleScopedPackage(this.name) || this.name;
@@ -188,7 +184,6 @@ export abstract class PackageBase {
 	constructor(data: BaseRaw) {
 		this.name = data.typingsPackageName;
 		this.libraryName = data.libraryName;
-		this.sourceRepoURL = data.sourceRepoURL;
 	}
 
 	isNotNeeded(): this is NotNeededPackage {
@@ -196,11 +191,10 @@ export abstract class PackageBase {
 	}
 
 	abstract readonly isLatest: boolean;
-	abstract readonly isPrerelease: boolean;
 	abstract readonly projectName: string;
 	abstract readonly declaredModules: ReadonlyArray<string>;
 	abstract readonly globals: ReadonlyArray<string>;
-	abstract readonly typeScriptVersion: TypeScriptVersion;
+	abstract readonly minTypeScriptVersion: TypeScriptVersion;
 
 	/** '@types/foo' for a package 'foo'. */
 	get fullNpmName(): string {
@@ -236,6 +230,8 @@ interface NotNeededPackageRaw extends BaseRaw {
 	 */
 	// This must be "major.minor.patch"
 	readonly asOfVersion: string;
+	/** The package's own url, *not* DefinitelyTyped's. */
+	readonly sourceRepoURL: string;
 }
 
 export class NotNeededPackage extends PackageBase {
@@ -243,8 +239,11 @@ export class NotNeededPackage extends PackageBase {
 
 	get license(): License.MIT { return License.MIT; }
 
+	readonly sourceRepoURL: string;
+
 	constructor(raw: NotNeededPackageRaw) {
 		super(raw);
+		this.sourceRepoURL = raw.sourceRepoURL;
 
 		for (const key in raw) {
 			if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
@@ -253,7 +252,7 @@ export class NotNeededPackage extends PackageBase {
 		}
 		assert(raw.libraryName && raw.typingsPackageName && raw.sourceRepoURL && raw.asOfVersion);
 
-		this.version = Semver.parse(raw.asOfVersion, /*isPrerelease*/ false);
+		this.version = Semver.parse(raw.asOfVersion);
 	}
 
 	get major(): number { return this.version.major; }
@@ -261,11 +260,10 @@ export class NotNeededPackage extends PackageBase {
 
 	// A not-needed package has no other versions. (TODO: allow that?)
 	get isLatest(): boolean { return true; }
-	get isPrerelease(): boolean { return false; }
 	get projectName(): string { return this.sourceRepoURL; }
 	get declaredModules(): ReadonlyArray<string> { return []; }
 	get globals(): ReadonlyArray<string> { return this.globals; }
-	get typeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.lowest; }
+	get minTypeScriptVersion(): TypeScriptVersion { return TypeScriptVersion.lowest; }
 
 	readme(): string {
 		return `This is a stub types definition for ${this.libraryName} (${this.sourceRepoURL}).\n
@@ -281,22 +279,6 @@ export interface TypingsVersionsRaw {
 	[version: string]: TypingsDataRaw;
 }
 
-/**
- * Maps The name of a package to the major version number.
- * Does not include `@types` in the package name. It may also be a dependency on a non-@types package.
- */
-export interface DependenciesRaw {
-	[packageName: string]: DependencyVersion;
-}
-/**
- * Maps that name of a package to a major version number from a path mapping.
- * Not all path mappings are direct dependencies: They may be necessary for dependencies-of-dependencies.
- * But, where dependencies and pathMappings share a key, they must share the same value.
- */
-export interface PathMappingsRaw {
-	[packageName: string]: number;
-}
-
 /** If no version is specified, uses "*". */
 export type DependencyVersion = number | "*";
 
@@ -306,11 +288,11 @@ export interface PackageJsonDependency {
 }
 
 export interface TypingsDataRaw extends BaseRaw {
-	readonly dependencies: DependenciesRaw;
+	readonly dependencies: ReadonlyArray<PackageId>;
 	// These are always the latest version.
 	// Will not include anything already in `dependencies`.
 	readonly testDependencies: ReadonlyArray<string>;
-	readonly pathMappings: PathMappingsRaw;
+	readonly pathMappings: ReadonlyArray<PathMapping>;
 
 	// Parsed from "Definitions by:"
 	readonly contributors: ReadonlyArray<Author>;
@@ -320,14 +302,16 @@ export interface TypingsDataRaw extends BaseRaw {
 	// The minor version of the library
 	readonly libraryMinorVersion: number;
 
-	readonly typeScriptVersion: TypeScriptVersion;
+	readonly minTsVersion: TypeScriptVersion;
+	/**
+	 * List of TS versions that have their own directoreies, and corresponding "typesVersions" in package.json.
+	 * Usually empty.
+	 */
+	readonly typesVersions: ReadonlyArray<TypeScriptVersion>;
 
 	// Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
 	// Does *not* include a partial `package.json` because that will not be copied directly.
 	readonly files: ReadonlyArray<string>;
-
-	// List of all test files.
-	readonly testFiles: ReadonlyArray<string>;
 
 	// Whether a "package.json" exists
 	readonly license: License;
@@ -344,6 +328,16 @@ export interface TypingsDataRaw extends BaseRaw {
 
 	// External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module)
 	readonly declaredModules: ReadonlyArray<string>;
+}
+
+/**
+ * Represents that there was a path mapping to a package.
+ * Not all path mappings are direct dependencies: They may be necessary for dependencies-of-dependencies.
+ * But, where dependencies and pathMappings share a key, they must share the same value
+ */
+export interface PathMapping {
+	readonly packageName: string;
+	readonly majorVersion: number;
 }
 
 // TODO: support BSD -- but must choose a *particular* BSD license from the list at https://spdx.org/licenses/
@@ -417,32 +411,21 @@ export class TypingsData extends PackageBase {
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }
 	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }
-	get typeScriptVersion(): TypeScriptVersion { return this.data.typeScriptVersion; }
+
+	get minTypeScriptVersion(): TypeScriptVersion { return this.data.minTsVersion; }
+	get typesVersions(): ReadonlyArray<TypeScriptVersion> { return this.data.typesVersions; }
+
 	get files(): ReadonlyArray<string> { return this.data.files; }
-	get testFiles(): ReadonlyArray<string> { return this.data.testFiles; }
 	get license(): License { return this.data.license; }
 	get packageJsonDependencies(): ReadonlyArray<PackageJsonDependency> { return this.data.packageJsonDependencies; }
 	get contentHash(): string { return this.data.contentHash; }
 	get declaredModules(): ReadonlyArray<string> { return this.data.declaredModules; }
 	get projectName(): string { return this.data.projectName; }
 	get globals(): ReadonlyArray<string> { return this.data.globals; }
-	get pathMappings(): Iterable<[string, number]> {
-		return Object.entries(this.data.pathMappings);
-	}
+	get pathMappings(): ReadonlyArray<PathMapping> { return this.data.pathMappings; }
 
-	get isPrerelease(): boolean {
-		return TypeScriptVersion.isPrerelease(this.typeScriptVersion);
-	}
-
-	get dependencies(): Iterable<PackageId> {
-		return this.deps();
-	}
-
-	private *deps(): Iterable<PackageId> {
-		const raw = this.data.dependencies;
-		for (const name in raw) {
-			yield { name, majorVersion: raw[name] };
-		}
+	get dependencies(): ReadonlyArray<PackageId> {
+		return this.data.dependencies;
 	}
 
 	/** Path to this package, *relative* to the DefinitelyTyped directory. */

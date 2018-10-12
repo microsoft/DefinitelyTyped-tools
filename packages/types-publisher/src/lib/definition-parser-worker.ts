@@ -4,7 +4,8 @@ import process = require("process");
 import { getLocallyInstalledDefinitelyTyped } from "../get-definitely-typed";
 import { done } from "../util/util";
 
-import { getTypingInfo, TypingInfo } from "./definition-parser";
+import { getTypingInfo } from "./definition-parser";
+import { TypingsVersionsRaw } from "./packages";
 
 if (!module.parent) {
 	process.on("message", message => {
@@ -17,18 +18,19 @@ if (!module.parent) {
 export const definitionParserWorkerFilename = __filename;
 
 export interface DefinitionParserWorkerArgs {
-	packageName: string;
-	typesPath: string;
+	readonly packageName: string;
+	readonly typesPath: string;
 }
 
-export interface TypingInfoWithPackageName extends TypingInfo {
-	packageName: string;
+export interface TypingInfoWithPackageName {
+	readonly data: TypingsVersionsRaw;
+	readonly packageName: string;
 }
 
 async function go(packageNames: ReadonlyArray<string>, typesPath: string): Promise<void> {
 	for (const packageName of packageNames) {
-		const info = await getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
-		const result: TypingInfoWithPackageName = { ...info, packageName };
+		const data = await getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
+		const result: TypingInfoWithPackageName = { data, packageName };
 		process.send!(result);
 	}
 }

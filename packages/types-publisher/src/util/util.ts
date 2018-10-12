@@ -105,7 +105,7 @@ export function indent(str: string): string {
 	return `\t${str.replace(/\n/g, "\n\t")}`;
 }
 
-export function unique<T>(arr: ReadonlyArray<T>): T[] {
+export function unique<T>(arr: Iterable<T>): T[] {
 	return [...new Set(arr)];
 }
 
@@ -434,4 +434,15 @@ export function withoutStart(s: string, start: string): string | undefined {
 export function unmangleScopedPackage(packageName: string): string | undefined {
 	const separator = "__";
 	return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
+}
+
+/** Returns [values that cb returned undefined for, defined results of cb]. */
+export function split<T, U>(inputs: ReadonlyArray<T>, cb: (t: T) => U | undefined): [ReadonlyArray<T>, ReadonlyArray<U>] {
+	const keep: T[] = [];
+	const splitOut: U[] = [];
+	for (const input of inputs) {
+		const res = cb(input);
+		if (res === undefined) { keep.push(input); } else { splitOut.push(res); }
+	}
+	return [keep, splitOut];
 }

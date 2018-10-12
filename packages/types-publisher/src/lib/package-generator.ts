@@ -1,3 +1,4 @@
+import { makeTypesVersionsForPackageJson } from "definitelytyped-header-parser";
 import { mkdir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 
@@ -83,18 +84,22 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 		license: typing.license,
 		contributors: typing.contributors,
 		main: "",
+		types: "",
+		typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
 		repository: {
 			type: "git",
-			url: `${typing.sourceRepoURL}.git`
+			url: `${definitelyTypedURL}.git`
 		},
 		scripts: {},
 		dependencies,
 		typesPublisherContentHash: typing.contentHash,
-		typeScriptVersion: typing.typeScriptVersion
+		typeScriptVersion: typing.minTypeScriptVersion
 	};
 
 	return JSON.stringify(out, undefined, 4);
 }
+
+const definitelyTypedURL = "https://github.com/DefinitelyTyped/DefinitelyTyped";
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
 function getDependencies(
@@ -125,7 +130,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 	return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL}: NotNeededPackage, version: Semver): string {
+function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL }: NotNeededPackage, version: Semver): string {
 	return JSON.stringify(
 		{
 			name: fullNpmName,
@@ -161,7 +166,7 @@ function createReadme(typing: TypingsData): string {
 	lines.push("");
 
 	lines.push("# Details");
-	lines.push(`Files were exported from ${typing.sourceRepoURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}`);
+	lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}`);
 
 	lines.push("");
 	lines.push("Additional Details");

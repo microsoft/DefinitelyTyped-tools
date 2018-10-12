@@ -215,7 +215,7 @@ class DiskFS implements FS {
 	}
 
 	debugPath(): string {
-		return this.rootPrefix;
+		return this.rootPrefix.slice(0, this.rootPrefix.length - 1); // remove trailing '/'
 	}
 }
 

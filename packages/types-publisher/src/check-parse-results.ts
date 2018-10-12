@@ -71,7 +71,7 @@ function checkForDuplicates(packages: ReadonlyArray<AnyPackage>, func: (info: An
 function checkTypeScriptVersions(allPackages: AllPackages): void {
 	for (const pkg of allPackages.allTypings()) {
 		for (const dep of allPackages.allDependencyTypings(pkg)) {
-			if (dep.typeScriptVersion > pkg.typeScriptVersion) {
+			if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion) {
 				throw new Error(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version.`);
 			}
 		}
@@ -80,18 +80,18 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
 
 function checkPathMappings(allPackages: AllPackages): void {
 	for (const pkg of allPackages.allTypings()) {
-		const pathMappings = new Map(pkg.pathMappings);
+		const pathMappings = new Map(pkg.pathMappings.map((p): [string, number] => [p.packageName, p.majorVersion]));
 		const unusedPathMappings = new Set(pathMappings.keys());
 
 		// If A depends on B, and B has path mappings, A must have the same mappings.
 		for (const dependency of allPackages.allDependencyTypings(pkg)) {
-			for (const [name, dependencyMappingVersion] of dependency.pathMappings) {
-				if (pathMappings.get(name) !== dependencyMappingVersion) {
+			for (const { packageName, majorVersion } of dependency.pathMappings) {
+				if (pathMappings.get(packageName) !== majorVersion) {
 					throw new Error(
-						`${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${name} v${dependencyMappingVersion}. ` +
+						`${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${packageName} v${majorVersion}. ` +
 						`${pkg.desc} must have the same path mappings as its dependencies.`);
 				}
-				unusedPathMappings.delete(name);
+				unusedPathMappings.delete(packageName);
 			}
 
 			unusedPathMappings.delete(dependency.name);
@@ -136,7 +136,7 @@ async function checkNpm(
 	log(`  yarn not-needed ${name} ${firstTypedVersion.versionString} ${projectName}${libraryName !== name ? ` ${JSON.stringify(libraryName)}` : ""}`);
 	log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
 	log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
-	if (new Semver(major, minor, 0, /*isPrerelease*/ false).greaterThan(firstTypedVersion)) {
+	if (new Semver(major, minor, 0).greaterThan(firstTypedVersion)) {
 		log("  WARNING: our version is greater!");
 	}
 	if (dependedOn.has(name)) {
@@ -151,7 +151,7 @@ export async function packageHasTypes(packageName: string, client: UncachedNpmIn
 
 function getRegularVersions(versions: NpmInfoRawVersions): ReadonlyArray<{ readonly version: Semver; readonly hasTypes: boolean; }> {
 	return mapDefined(Object.entries(versions), ([versionString, info]) => {
-		const version = Semver.tryParse(versionString, /*isPrerelease*/ false);
+		const version = Semver.tryParse(versionString);
 		return version === undefined ? undefined : { version, hasTypes: hasTypes(info) };
 	});
 }
