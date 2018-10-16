@@ -79,7 +79,7 @@ export class AllPackages {
 	}
 
 	tryGetLatestVersion(packageName: string): TypingsData | undefined {
-		const versions = this.data.get(getMangledNameForScopedPackage(packageName));
+		const versions = this.data.get(packageName);
 		return versions && versions.getLatest();
 	}
 
@@ -92,7 +92,7 @@ export class AllPackages {
 	}
 
 	tryGetTypingsData({ name, majorVersion }: PackageId): TypingsData | undefined {
-		const versions = this.data.get(getMangledNameForScopedPackage(name));
+		const versions = this.data.get(name);
 		return versions && versions.tryGet(majorVersion);
 	}
 

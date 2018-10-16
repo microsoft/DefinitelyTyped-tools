@@ -123,11 +123,7 @@ function getDependencies(
 			dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
 		}
 	}
-	const orderedDependencies: Dependencies = {};
-	for (const name of Object.keys(dependencies).sort()) {
-		orderedDependencies[name] = dependencies[name];
-	}
-	return orderedDependencies;
+	return dependencies;
 }
 
 function dependencySemver(dependency: DependencyVersion): string {
