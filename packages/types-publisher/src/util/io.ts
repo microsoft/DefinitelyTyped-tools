@@ -45,8 +45,11 @@ export function stringOfStream(stream: NodeJS.ReadableStream, description: strin
 		stream.on("error", reject);
 		stream.on("end", () => {
 			body += decoder.end();
-			if (body.includes("�")) { throw new Error(`Bad character decode in ${description}`); }
-			resolve(body);
+			if (body.includes("�")) {
+				reject(`Bad character decode in ${description}`);
+			} else {
+				resolve(body);
+			}
 		});
 	});
 }
