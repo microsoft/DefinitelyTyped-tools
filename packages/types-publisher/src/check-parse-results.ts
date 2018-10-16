@@ -115,7 +115,9 @@ async function checkNpm(
 		return;
 	}
 
-	const info = assertDefined(await client.fetchRawNpmInfo(name)); // Gets info for the real package, not the @types package
+	const info = await client.fetchRawNpmInfo(name); // Gets info for the real package, not the @types package
+	if (!info) { return; }
+
 	const versions = getRegularVersions(info.versions);
 	const firstTypedVersion = best(mapDefined(versions, ({ hasTypes, version }) => hasTypes ? version : undefined), (a, b) => b.greaterThan(a));
 	// A package might have added types but removed them later, so check the latest version too
