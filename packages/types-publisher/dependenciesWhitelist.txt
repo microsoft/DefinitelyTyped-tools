@@ -22,6 +22,7 @@ eventemitter3
 fast-glob
 fastify
 flatpickr
+graphql-tools
 immutable
 indefinite-observable
 inversify
