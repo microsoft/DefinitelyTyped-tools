@@ -258,7 +258,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 }
 
 const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
-	pm.regexp(/\/\/ TypeScript Version: (2.(\d))/, 1).chain<TypeScriptVersion>(v =>
+	pm.regexp(/\/\/ TypeScript Version: (\d.(\d))/, 1).chain<TypeScriptVersion>(v =>
 		TypeScriptVersion.all.includes(v as TypeScriptVersion)
 			? pm.succeed(v as TypeScriptVersion)
 			: pm.fail(`TypeScript ${v} is not yet supported.`));

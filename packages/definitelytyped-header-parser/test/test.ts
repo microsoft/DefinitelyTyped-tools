@@ -73,6 +73,16 @@ describe("parseTypeScriptVersionLine", () => {
 		const src = "// TypeScript Version: 2.3";
 		assert.equal(parseTypeScriptVersionLine(src), "2.3");
 	});
+	
+	it("allows post 3 version tags", () => {
+		const src = "// TypeScript Version: 3.0";
+		assert.equal(parseTypeScriptVersionLine(src), "3.0")
+	})
+
+	it("does not allow unallowed version tags", () => {
+		const src = "// TypeScript Version: 3.7";
+		assert.throws(() => parseTypeScriptVersionLine(src), `Could not parse version: line is ${src}`);
+	})
 });
 
 describe("tagsToUpdate", () => {
