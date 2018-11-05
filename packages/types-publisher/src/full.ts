@@ -30,7 +30,7 @@ export default async function full(dry: boolean, timeStamp: string, options: Opt
 	await generatePackages(dt, allPackages, versions);
 	await createSearchIndex(allPackages, infoClient);
 	await publishPackages(allPackages, versions, dry);
-	await publishRegistry(dt, dry, infoClient);
+	await publishRegistry(dt, allPackages, dry, infoClient);
 	await validate(dt);
 	if (!dry) {
 		await uploadBlobs(timeStamp);
