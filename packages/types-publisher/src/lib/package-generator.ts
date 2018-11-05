@@ -84,7 +84,7 @@ async function createPackageJSON(typing: TypingsData, version: Semver, packages:
 		license: typing.license,
 		contributors: typing.contributors,
 		main: "",
-		types: "",
+		types: "index",
 		typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
 		repository: {
 			type: "git",
