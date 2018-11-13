@@ -167,7 +167,8 @@ interface Registry { readonly entries: { readonly [packageName: string]: { reado
 async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: CachedNpmInfoClient): Promise<Registry> {
 	const entries: { [packageName: string]: { [distTags: string]: string } } = {};
 	for (const typing of typings) {
-		const info = assertDefined(await client.getNpmInfo(typing.fullEscapedNpmName, typing.contentHash));
+		// Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
+		const info = assertDefined(client.getNpmInfoFromCache(typing.fullEscapedNpmName));
 		entries[typing.name] = filterTags(info.distTags);
 	}
 	return { entries };

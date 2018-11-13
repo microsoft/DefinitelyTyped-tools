@@ -26,10 +26,10 @@ export default async function full(dry: boolean, timeStamp: string, options: Opt
 	const allPackages = await parseDefinitions(dt, options.parseInParallel
 			? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
 			: undefined);
-	const versions = await calculateVersions(/*forceUpdate*/ false, dt, infoClient);
-	await generatePackages(dt, allPackages, versions);
+	const changedPackages = await calculateVersions(dt, infoClient);
+	await generatePackages(dt, allPackages, changedPackages);
 	await createSearchIndex(allPackages, infoClient);
-	await publishPackages(allPackages, versions, dry);
+	await publishPackages(changedPackages, dry);
 	await publishRegistry(dt, allPackages, dry, infoClient);
 	await validate(dt);
 	if (!dry) {

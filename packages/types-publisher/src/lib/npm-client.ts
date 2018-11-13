@@ -37,7 +37,7 @@ export interface NpmInfo {
 	readonly timeModified: string;
 }
 export interface NpmInfoVersion {
-	readonly typesPublisherContentHash: string;
+	readonly typesPublisherContentHash?: string;
 	readonly deprecated?: string;
 }
 
@@ -53,17 +53,15 @@ export class CachedNpmInfoClient {
 
 	private constructor(private readonly uncachedClient: UncachedNpmInfoClient, private readonly cache: Map<string, NpmInfo>) {}
 
-	async getNpmInfo(escapedPackageName: string, contentHash: string | undefined): Promise<NpmInfo | undefined> {
-		const cached = this.cache.get(escapedPackageName);
-		if (cached !== undefined && contentHash !== undefined &&
-			cached.versions.get(cached.distTags.get("latest")!)!.typesPublisherContentHash === contentHash) {
-			return cached;
-		}
+	/** May return old info -- caller should check that this looks up-to-date. */
+	getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined {
+		return this.cache.get(escapedPackageName);
+	}
 
+	/** Call this when the result of getNpmInfoFromCache looks potentially out-of-date. */
+	async fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
 		const info = await this.uncachedClient.fetchNpmInfo(escapedPackageName);
-		if (info !== undefined && contentHash !== undefined) {
-			this.cache.set(escapedPackageName, info);
-		}
+		if (info) { this.cache.set(escapedPackageName, info); }
 		return info;
 	}
 

@@ -2,7 +2,7 @@ import assert = require("assert");
 import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
-import { joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
+import { assertDefined, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
 import { home, readDataFile } from "./common";
 import { outputPath, scopeName } from "./settings";
@@ -19,6 +19,9 @@ export class AllPackages {
 
 	static async readTypings(): Promise<ReadonlyArray<TypingsData>> {
 		return AllPackages.from(await readTypesDataFile(), []).allTypings();
+	}
+	static async readLatestTypings(): Promise<ReadonlyArray<TypingsData>> {
+		return AllPackages.from(await readTypesDataFile(), []).allLatestTypings();
 	}
 
 	/** Use for `--single` tasks only. Do *not* call this in a loop! */
@@ -48,26 +51,17 @@ export class AllPackages {
 		private readonly data: ReadonlyMap<string, TypingsVersions>,
 		private readonly notNeeded: ReadonlyArray<NotNeededPackage>) {}
 
-	getAnyPackage(id: PackageId): AnyPackage {
-		const pkg: AnyPackage | undefined = this.tryGetTypingsData(id) || this.notNeeded.find(p => p.name === id.name);
-		if (!pkg) {
-			throw new Error(`Expected to find a package named ${id.name}`);
-		}
-		return pkg;
+	getNotNeededPackage(name: string): NotNeededPackage {
+		return assertDefined(this.notNeeded.find(p => p.name === name));
 	}
 
 	hasTypingFor(dep: PackageId): boolean {
 		return this.tryGetTypingsData(dep) !== undefined;
 	}
 
-	/** Gets the latest version of a package. E.g. getLatest(node v6) = node v7. */
-	getLatest(pkg: AnyPackage): AnyPackage {
-		return pkg.isNotNeeded() ? pkg : this.getLatestVersion(pkg.name);
-	}
-
-	/** Use only with `--single` tasks. */
-	getSingle(packageName: string): TypingsData {
-		return this.getLatestVersion(packageName);
+	/** Gets the latest version of a package. E.g. getLatest(node v6) was node v10 (before node v11 came out). */
+	getLatest(pkg: TypingsData): TypingsData {
+		return pkg.isLatest ? pkg : this.getLatestVersion(pkg.name);
 	}
 
 	private getLatestVersion(packageName: string): TypingsData {
@@ -100,6 +94,7 @@ export class AllPackages {
 		return [ ...this.allTypings(), ...this.allNotNeeded() ];
 	}
 
+	/** Note: this includes older version directories (`foo/v0`) */
 	allTypings(): ReadonlyArray<TypingsData> {
 		return Array.from(flattenData(this.data));
 	}
@@ -396,11 +391,6 @@ class TypingsVersions {
 	}
 }
 
-export interface MajorMinor {
-	readonly major: number;
-	readonly minor: number;
-}
-
 export class TypingsData extends PackageBase {
 	constructor(private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
 		super(data);
@@ -410,7 +400,6 @@ export class TypingsData extends PackageBase {
 	get contributors(): ReadonlyArray<Author> { return this.data.contributors; }
 	get major(): number { return this.data.libraryMajorVersion; }
 	get minor(): number { return this.data.libraryMinorVersion; }
-	get majorMinor(): MajorMinor { return { major: this.major, minor: this.minor }; }
 
 	get minTypeScriptVersion(): TypeScriptVersion { return this.data.minTsVersion; }
 	get typesVersions(): ReadonlyArray<TypeScriptVersion> { return this.data.typesVersions; }

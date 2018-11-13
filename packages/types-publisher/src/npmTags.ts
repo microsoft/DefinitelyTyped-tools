@@ -1,9 +1,9 @@
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 import * as yargs from "yargs";
 
-import { NpmPublishClient } from "./lib/npm-client";
+import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage } from "./lib/packages";
-import Versions from "./lib/versions";
+import { getLatestTypingVersion } from "./lib/versions";
 
 import { consoleLogger, Logger } from "./util/logging";
 import { done, nAtATime } from "./util/util";
@@ -19,18 +19,15 @@ if (!module.parent) {
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
 async function tagAll(dry: boolean): Promise<void> {
-	const versions = await Versions.load();
-	const client = await NpmPublishClient.create();
-
-	await nAtATime(10, await AllPackages.readTypings(), async pkg => {
-		// Only update tags for the latest version of the package.
-		if (pkg.isLatest) {
-			const version = versions.getVersion(pkg).versionString;
-			await updateTypeScriptVersionTags(pkg, version, client, consoleLogger.info, dry);
-			await updateLatestTag(pkg, versions, client, consoleLogger.info, dry);
-		}
+	const publishClient = await NpmPublishClient.create();
+	await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
+		await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
+			// Only update tags for the latest version of the package.
+			const version = await getLatestTypingVersion(pkg, infoClient);
+			await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+			await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
+		});
 	});
-
 	// Don't tag notNeeded packages
 }
 
@@ -40,20 +37,15 @@ export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: stri
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {
 		for (const tagName of tags) {
-			await tag(version, tagName, client, pkg);
+			await client.tag(pkg.fullEscapedNpmName, version, tagName);
 		}
 	}
 }
 
-export async function updateLatestTag(pkg: AnyPackage, versions: Versions, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
-	// Prerelease packages should never be tagged latest
-	const latestNonPrerelease = versions.latestNonPrerelease(pkg);
-	log(`	but tag ${pkg.fullNpmName}@${latestNonPrerelease.versionString} as "latest"`);
+export async function updateLatestTag(
+	fullEscapedNpmName: string, version: string, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
+	log(`	but tag ${fullEscapedNpmName}@${version} as "latest"`);
 	if (!dry) {
-		await tag(latestNonPrerelease.versionString, "latest", client, pkg);
+		await client.tag(fullEscapedNpmName, version, "latest");
 	}
-}
-
-function tag(versionString: string, tag: string, client: NpmPublishClient, pkg: AnyPackage): Promise<void> {
-	return client.tag(pkg.fullEscapedNpmName, versionString, tag);
 }

@@ -4,44 +4,25 @@ import * as path from "path";
 
 import { FS } from "../get-definitely-typed";
 import { writeFile } from "../util/io";
-import { Log, quietLogger } from "../util/logging";
 import { assertNever, hasOwnProperty, joinPaths } from "../util/util";
 
 import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, License, NotNeededPackage, TypingsData } from "./packages";
 import { sourceBranch } from "./settings";
-import Versions, { Semver } from "./versions";
-
-/** Generates the package to disk */
-export default function generateAnyPackage(pkg: AnyPackage, packages: AllPackages, versions: Versions, dt: FS): Promise<Log> {
-	return pkg.isNotNeeded() ? generateNotNeededPackage(pkg, versions) : generatePackage(pkg, packages, versions.getVersion(pkg), dt);
-}
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
 
-async function generatePackage(typing: TypingsData, packages: AllPackages, version: Semver, dt: FS): Promise<Log> {
-	const [log, logResult] = quietLogger();
-
+export async function generateTypingPackage(typing: TypingsData, packages: AllPackages, version: string, dt: FS): Promise<void> {
 	const typesDirectory = dt.subDir("types").subDir(typing.name);
-	const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${version.major}`);
+	const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${typing.major}`);
 
 	const packageJson = await createPackageJSON(typing, version, packages);
-	log("Write metadata files to disk");
 	await writeCommonOutputs(typing, packageJson, createReadme(typing));
-	await Promise.all(typing.files.map(async file => {
-		log(`Copy ${file}`);
-		await writeFile(await outputFilePath(typing, file), await packageFS.readFile(file));
-	}));
-	return logResult();
+	await Promise.all(typing.files.map(async file => writeFile(await outputFilePath(typing, file), await packageFS.readFile(file))));
 }
 
-async function generateNotNeededPackage(pkg: NotNeededPackage, versions: Versions): Promise<string[]> {
-	const [log, logResult] = quietLogger();
-
-	const packageJson = createNotNeededPackageJSON(pkg, versions.getVersion(pkg));
-	log("Write metadata files to disk");
+export async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<void> {
+	const packageJson = createNotNeededPackageJSON(pkg);
 	await writeCommonOutputs(pkg, packageJson, pkg.readme());
-
-	return logResult();
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
@@ -69,14 +50,14 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 
 interface Dependencies { [name: string]: string; }
 
-async function createPackageJSON(typing: TypingsData, version: Semver, packages: AllPackages): Promise<string> {
+async function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): Promise<string> {
 	// typing may provide a partial `package.json` for us to complete
 	const dependencies = getDependencies(typing.packageJsonDependencies, typing, packages);
 
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out: {} = {
 		name: typing.fullNpmName,
-		version: version.versionString,
+		version,
 		description: `TypeScript definitions for ${typing.libraryName}`,
 		// keywords,
 		// homepage,
@@ -130,11 +111,11 @@ function dependencySemver(dependency: DependencyVersion): string {
 	return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL }: NotNeededPackage, version: Semver): string {
+function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage): string {
 	return JSON.stringify(
 		{
 			name: fullNpmName,
-			version: version.versionString,
+			version,
 			typings: null, // tslint:disable-line no-null-keyword
 			description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 			main: "",
