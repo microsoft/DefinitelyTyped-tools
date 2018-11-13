@@ -87,7 +87,7 @@ export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolea
 
 export type Awaitable<T> = T | Promise<T>;
 
-export async function filterNAtATime<T>(
+export async function filterNAtATimeOrdered<T>(
 	n: number, inputs: ReadonlyArray<T>, shouldKeep: (input: T) => Awaitable<boolean>, progress?: ProgressOptions<T, boolean>): Promise<T[]> {
 	const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
 	return inputs.filter((_, idx) => shouldKeeps[idx]);
@@ -448,4 +448,13 @@ export function split<T, U>(inputs: ReadonlyArray<T>, cb: (t: T) => U | undefine
 		if (res === undefined) { keep.push(input); } else { splitOut.push(res); }
 	}
 	return [keep, splitOut];
+}
+
+export function assertSorted(a: ReadonlyArray<string>): ReadonlyArray<string> {
+	let prev = "";
+	for (const x of a) {
+		assert(x >= prev, `${x} >= ${prev}`);
+		prev = x;
+	}
+	return a;
 }

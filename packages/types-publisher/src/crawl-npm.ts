@@ -6,7 +6,7 @@ import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { npmRegistry } from "./lib/settings";
 import ProgressBar, { strProgress } from "./util/progress";
-import { done, filterNAtATime } from "./util/util";
+import { done, filterNAtATimeOrdered } from "./util/util";
 
 if (!module.parent) {
 	done(main(Options.defaults));
@@ -17,7 +17,7 @@ async function main(options: Options): Promise<void> {
 	const all = await allNpmPackages();
 	await writeDataFile("all-npm-packages.json", all);
 	const client = new UncachedNpmInfoClient();
-	const allTyped = await filterNAtATime(10, all, pkg => packageHasTypes(pkg, client), {
+	const allTyped = await filterNAtATimeOrdered(10, all, pkg => packageHasTypes(pkg, client), {
 		name: "Checking for types...",
 		flavor: (name, isTyped) => isTyped ? name : undefined,
 		options

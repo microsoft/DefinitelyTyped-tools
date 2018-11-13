@@ -7,14 +7,17 @@ import * as zlib from "zlib";
 import { dataDir, Options } from "./lib/common";
 import { definitelyTypedZipUrl } from "./lib/settings";
 import { readFile, readJson, stringOfStream } from "./util/io";
-import { assertDefined, Awaitable, exec, joinPaths, withoutStart } from "./util/util";
+import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart } from "./util/util";
 
 /**
  * Readonly filesystem.
  * Paths provided to these methods should be relative to the FS object's root but not start with '/' or './'.
  */
 export interface FS {
-	/** If dirPath is missing, reads the root. */
+	/**
+	 * Alphabetically sorted list of files and subdirectories.
+	 * If dirPath is missing, reads the root.
+	 */
 	readdir(dirPath?: string): Awaitable<ReadonlyArray<string>>;
 	readJson(path: string): Awaitable<unknown>;
 	readFile(path: string): Awaitable<string>;
@@ -80,7 +83,7 @@ function downloadAndExtractFile(url: string): Promise<FS> {
 				}
 			});
 			extract.on("error", reject);
-			extract.on("finish", () => { resolve(new InMemoryDT(root, "")); });
+			extract.on("finish", () => { resolve(new InMemoryDT(root.finish(), "")); });
 		});
 	});
 }
@@ -104,6 +107,15 @@ class Dir extends Map<string, Dir | string> implements ReadonlyDir {
 		const res = new Dir(this);
 		this.set(name, res);
 		return res;
+	}
+
+	finish(): Dir {
+		const out = new Dir(this.parent);
+		for (const key of Array.from(this.keys()).sort()) {
+			const subDirOrFile = this.get(key)!;
+			out.set(key, typeof subDirOrFile === "string" ? subDirOrFile : subDirOrFile.finish());
+		}
+		return out;
 	}
 }
 
@@ -191,7 +203,7 @@ class DiskFS implements FS {
 	}
 
 	async readdir(dirPath?: string): Promise<ReadonlyArray<string>> {
-		return (await readdir(this.getPath(dirPath))).filter(name => name !== ".DS_STORE");
+		return assertSorted((await readdir(this.getPath(dirPath))).filter(name => name !== ".DS_STORE"));
 	}
 
 	async isDirectory(dirPath: string): Promise<boolean> {
