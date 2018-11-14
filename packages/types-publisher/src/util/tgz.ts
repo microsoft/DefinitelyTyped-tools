@@ -51,7 +51,7 @@ function addExecutePermissionsFromReadPermissions(mode: number): number {
 	const allExecutePermissions = 0o111;
 	// Moves the bits for read permissions into the place for execute permissions.
 	// In other words, a component will have execute permissions if it has read permissions.
-	const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions;
+	const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions; // tslint:disable-line no-bitwise
 	// Add these additional execute permissions to the mode.
-	return mode | readPermissionsAsExecutePermissions;
+	return mode | readPermissionsAsExecutePermissions; // tslint:disable-line no-bitwise
 }

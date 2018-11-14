@@ -4,16 +4,13 @@
 		"arrow-parens": [true, "ban-single-arg-parens"],
 		"comment-format": [true, "check-space"],
 		"indent": [true, "tabs"],
+		"interface-name": [true, "never-prefix"],
 		"max-line-length": [true, 150],
 		"object-literal-key-quotes": [true, "as-needed"],
 		"only-arrow-functions": [true, "allow-declarations"],
 
 		// TODO
-		"no-unsafe-any": false,
 		"strict-boolean-expressions": false,
-		"match-default-export-name": false,
-		"no-inferred-empty-object-type": false, // false positive
-		"no-shadowed-variable": false,
 		"no-unnecessary-type-assertion": false, // false positive
 
 		"no-this-assignment": [true, { "allow-destructuring": true }],
@@ -22,15 +19,12 @@
 		"completed-docs": false,
 		"file-name-casing": false,
 		"forin": false,
-		"interface-name": false,
 		"linebreak-style": false,
 		"max-classes-per-file": false,
 		"member-access": false,
 		"member-ordering": false,
 		"newline-before-return": false,
 		"newline-per-chained-call": false,
-		"no-any": false,
-		"no-bitwise": false,
 		"no-console": false,
 		"no-default-export": false,
 		"no-unused-variable": false,
@@ -40,12 +34,8 @@
 		"no-use-before-declare": false,
 		"no-parameter-properties": false,
 		"no-require-imports": false,
-		"no-var-requires": false,
 		"object-literal-sort-keys": false,
 		"promise-function-async": false,
-		"switch-default": false,
-		"trailing-comma": false,
-		"type-literal-delimiter": false,
-		"variable-name": false
+		"type-literal-delimiter": false
 	}
 }

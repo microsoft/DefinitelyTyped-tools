@@ -6,11 +6,11 @@ import { AllPackages, AnyPackage } from "./lib/packages";
 import { getLatestTypingVersion } from "./lib/versions";
 
 import { consoleLogger, Logger } from "./util/logging";
-import { done, nAtATime } from "./util/util";
+import { logUncaughtErrors, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const dry = !!yargs.argv.dry;
-	done(tagAll(dry));
+	logUncaughtErrors(tagAll(dry));
 }
 
 /**
@@ -31,8 +31,9 @@ async function tagAll(dry: boolean): Promise<void> {
 	// Don't tag notNeeded packages
 }
 
-export async function updateTypeScriptVersionTags(pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean
-	): Promise<void> {
+export async function updateTypeScriptVersionTags(
+	pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean,
+): Promise<void> {
 	const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
 	log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
 	if (!dry) {

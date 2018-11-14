@@ -2,7 +2,7 @@ import assert = require("assert");
 import process = require("process");
 
 import { getLocallyInstalledDefinitelyTyped } from "../get-definitely-typed";
-import { done } from "../util/util";
+import { logUncaughtErrors } from "../util/util";
 
 import { getTypingInfo } from "./definition-parser";
 import { TypingsVersionsRaw } from "./packages";
@@ -11,7 +11,7 @@ if (!module.parent) {
 	process.on("message", message => {
 		assert(process.argv.length === 3);
 		const typesPath = process.argv[2];
-		done(go(message as ReadonlyArray<string>, typesPath));
+		logUncaughtErrors(go(message as ReadonlyArray<string>, typesPath));
 	});
 }
 

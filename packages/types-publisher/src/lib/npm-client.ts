@@ -1,7 +1,7 @@
 import assert = require("assert");
 import { ensureFile, pathExists } from "fs-extra";
 import RegClient = require("npm-registry-client");
-import * as url from "url";
+import { resolve as resolveUrl } from "url";
 
 import { Fetcher, readFile, readJson, sleep, writeJson } from "../util/io";
 import { createTgz } from "../util/tgz";
@@ -11,7 +11,7 @@ import { getSecret, Secret } from "./secrets";
 import { npmApi, npmRegistry, npmRegistryHostName } from "./settings";
 
 function packageUrl(packageName: string): string {
-	return url.resolve(npmRegistry, packageName);
+	return resolveUrl(npmRegistry, packageName);
 }
 
 const cacheDir = joinPaths(__dirname, "..", "..", "cache");

@@ -4,8 +4,8 @@ import https = require("https");
 import tarStream = require("tar-stream");
 import * as zlib from "zlib";
 
-import { dataDir, Options } from "./lib/common";
-import { definitelyTypedZipUrl } from "./lib/settings";
+import { Options } from "./lib/common";
+import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { readFile, readJson, stringOfStream } from "./util/io";
 import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart } from "./util/util";
 
@@ -31,7 +31,7 @@ export interface FS {
 
 export async function getDefinitelyTyped(options: Options): Promise<FS> {
 	if (options.definitelyTypedPath === undefined) {
-		await ensureDir(dataDir);
+		await ensureDir(dataDirPath);
 		return downloadAndExtractFile(definitelyTypedZipUrl);
 	} else {
 		const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
@@ -168,7 +168,7 @@ class InMemoryDT implements FS {
 	}
 
 	readJson(path: string): unknown {
-		return JSON.parse(this.readFile(path));
+		return JSON.parse(this.readFile(path)) as unknown;
 	}
 
 	isDirectory(path: string): boolean {

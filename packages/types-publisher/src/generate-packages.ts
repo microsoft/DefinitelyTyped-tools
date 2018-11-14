@@ -4,26 +4,27 @@ import * as yargs from "yargs";
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { generateNotNeededPackage, generateTypingPackage } from "./lib/package-generator";
-import { AllPackages, outputDir } from "./lib/packages";
+import { AllPackages } from "./lib/packages";
+import { outputDirPath } from "./lib/settings";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
 import { logger, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
-import { done } from "./util/util";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
 	const tgz = !!yargs.argv.tgz;
-	done(async () => {
+	logUncaughtErrors(async () => {
 		const dt = await getDefinitelyTyped(Options.defaults);
 		const allPackages = await AllPackages.read(dt);
-		await main(dt, allPackages, await readChangedPackages(allPackages), tgz);
+		await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
 	});
 }
 
-export default async function main(dt: FS, allPackages: AllPackages, changedPackages: ChangedPackages, tgz = false): Promise<void> {
+export default async function generatePackages(dt: FS, allPackages: AllPackages, changedPackages: ChangedPackages, tgz = false): Promise<void> {
 	const [log, logResult] = logger();
 	log("\n## Generating packages\n");
 
-	await emptyDir(outputDir);
+	await emptyDir(outputDirPath);
 
 	for (const { pkg, version } of changedPackages.changedTypings) {
 		await generateTypingPackage(pkg, allPackages, version, dt);

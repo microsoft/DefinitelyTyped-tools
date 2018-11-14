@@ -40,16 +40,16 @@ export default class ProgressBar {
 
 	private doUpdate(current: number): void {
 		const nCellsFilled = Math.ceil(this.width * Math.min(1, Math.max(0, current)));
-		this.console.update(charm => {
-			charm.write(this.name);
-			charm.write(" [");
-			charm.write("█".repeat(nCellsFilled));
+		this.console.update(c => {
+			c.write(this.name);
+			c.write(" [");
+			c.write("█".repeat(nCellsFilled));
 			if (nCellsFilled < this.width) {
-				charm.right(this.width - nCellsFilled);
+				c.right(this.width - nCellsFilled);
 			}
-			charm.write("]");
+			c.write("]");
 			if (this.flavor.length) {
-				charm.write(` ${this.flavor}`);
+				c.write(` ${this.flavor}`);
 			}
 		});
 	}

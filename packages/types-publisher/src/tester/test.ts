@@ -6,14 +6,14 @@ import { getDefinitelyTyped } from "../get-definitely-typed";
 import { TesterOptions } from "../lib/common";
 import { UncachedNpmInfoClient } from "../lib/npm-client";
 import parseDefinitions from "../parse-definitions";
-import { done } from "../util/util";
+import { logUncaughtErrors } from "../util/util";
 
 import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
 	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
 	const all = !!yargs.argv.all;
-	done(main(options, parseNProcesses(), all));
+	logUncaughtErrors(main(options, parseNProcesses(), all));
 }
 
 async function main(options: TesterOptions, nProcesses: number, all: boolean): Promise<void> {

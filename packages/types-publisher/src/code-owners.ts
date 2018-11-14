@@ -3,10 +3,10 @@ import { Options, TesterOptions } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { typesDirectoryName } from "./lib/settings";
 import { writeFile } from "./util/io";
-import { done, joinPaths, mapDefined } from "./util/util";
+import { joinPaths, logUncaughtErrors, mapDefined } from "./util/util";
 
 if (!module.parent) {
-	done(main(Options.defaults));
+	logUncaughtErrors(main(Options.defaults));
 }
 
 async function main(options: TesterOptions): Promise<void> {

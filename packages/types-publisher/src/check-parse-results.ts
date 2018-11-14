@@ -6,13 +6,13 @@ import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
 import { Logger, logger, writeLog } from "./util/logging";
-import { assertDefined, best, done, mapDefined, multiMapAdd, nAtATime } from "./util/util";
+import { assertDefined, best, logUncaughtErrors, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-	done(async () => main(true, await getDefinitelyTyped(Options.defaults), Options.defaults, new UncachedNpmInfoClient()));
+	logUncaughtErrors(async () => checkParseResults(true, await getDefinitelyTyped(Options.defaults), Options.defaults, new UncachedNpmInfoClient()));
 }
 
-export default async function main(includeNpmChecks: boolean, dt: FS, options: Options, client: UncachedNpmInfoClient): Promise<void> {
+export default async function checkParseResults(includeNpmChecks: boolean, dt: FS, options: Options, client: UncachedNpmInfoClient): Promise<void> {
 	const allPackages = await AllPackages.read(dt);
 	const [log, logResult] = logger();
 
@@ -148,17 +148,17 @@ async function checkNpm(
 
 export async function packageHasTypes(packageName: string, client: UncachedNpmInfoClient): Promise<boolean> {
 	const info = assertDefined(await client.fetchRawNpmInfo(packageName));
-	return hasTypes(info.versions[info["dist-tags"].latest]);
+	return versionHasTypes(info.versions[info["dist-tags"].latest]);
 }
 
 function getRegularVersions(versions: NpmInfoRawVersions): ReadonlyArray<{ readonly version: Semver; readonly hasTypes: boolean; }> {
 	return mapDefined(Object.entries(versions), ([versionString, info]) => {
 		const version = Semver.tryParse(versionString);
-		return version === undefined ? undefined : { version, hasTypes: hasTypes(info) };
+		return version === undefined ? undefined : { version, hasTypes: versionHasTypes(info) };
 	});
 }
 
-function hasTypes(info: NpmInfoVersion): boolean {
+function versionHasTypes(info: NpmInfoVersion): boolean {
 	return "types" in info || "typings" in info;
 }
 

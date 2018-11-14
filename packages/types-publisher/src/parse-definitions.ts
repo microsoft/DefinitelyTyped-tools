@@ -6,24 +6,25 @@ import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename, TypingInfoWithPackageName } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
 import { parseNProcesses } from "./tester/test-runner";
-import { assertDefined, done, filterNAtATimeOrdered, runWithChildProcesses } from "./util/util";
+import { assertDefined, filterNAtATimeOrdered, logUncaughtErrors, runWithChildProcesses } from "./util/util";
 
 if (!module.parent) {
-	const singleName = yargs.argv.single;
+	const singleName = yargs.argv.single as string | undefined;
 	const options = Options.defaults;
-	done(async () => {
+	logUncaughtErrors(async () => {
 		const dt = await getDefinitelyTyped(options);
 		if (singleName)  {
 			await single(singleName, dt);
 		} else {
-			await main(dt, options.parseInParallel
+			await parseDefinitions(dt, options.parseInParallel
 				? { nProcesses: parseNProcesses(), definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
 				: undefined);
 		}
 	});
 }
 
-export default async function main(dt: FS, parallel?: { readonly nProcesses: number; readonly definitelyTypedPath: string }): Promise<AllPackages> {
+export interface ParallelOptions { readonly nProcesses: number; readonly definitelyTypedPath: string; }
+export default async function parseDefinitions(dt: FS, parallel: ParallelOptions | undefined): Promise<AllPackages> {
 	const typesFS = dt.subDir("types");
 	const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, await typesFS.readdir(), name => typesFS.isDirectory(name));
 

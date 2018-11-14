@@ -1,8 +1,8 @@
-import uploadBlobs from "./lib/blob-uploader";
-import { currentTimeStamp, done } from "./util/util";
+import uploadBlobsAndUpdateIssue from "./lib/blob-uploader";
+import { currentTimeStamp, logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	done(uploadBlobs(currentTimeStamp()));
+	logUncaughtErrors(uploadBlobsAndUpdateIssue(currentTimeStamp()));
 }
 
-export default uploadBlobs;
+export default uploadBlobsAndUpdateIssue;

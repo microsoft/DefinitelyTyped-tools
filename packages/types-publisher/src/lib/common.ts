@@ -2,15 +2,13 @@ import { ensureDir } from "fs-extra";
 
 import { readJson, writeJson } from "../util/io";
 import { joinPaths } from "../util/util";
+import { dataDirPath } from "./settings";
 
 if (process.env.LONGJOHN) {
 	console.log("=== USING LONGJOHN ===");
-	const longjohn = require("longjohn");
+	const longjohn = require("longjohn") as { async_trace_limit: number }; // tslint:disable-line no-var-requires
 	longjohn.async_trace_limit = -1; // unlimited
 }
-
-export const home = joinPaths(__dirname, "..", "..");
-export const dataDir = joinPaths(home, "data");
 
 /** Settings that may be determined dynamically. */
 export interface Options {
@@ -50,10 +48,10 @@ export async function readFileAndWarn(generatedBy: string, filePath: string): Pr
 }
 
 export async function writeDataFile(filename: string, content: {}, formatted = true): Promise<void> {
-	await ensureDir(dataDir);
+	await ensureDir(dataDirPath);
 	await writeJson(dataFilePath(filename), content, formatted);
 }
 
 export function dataFilePath(filename: string): string {
-	return joinPaths(dataDir, filename);
+	return joinPaths(dataDirPath, filename);
 }

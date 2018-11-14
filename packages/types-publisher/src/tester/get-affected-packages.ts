@@ -4,10 +4,10 @@ import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { consoleLogger, Logger } from "../util/logging";
-import { done, execAndThrowErrors, flatMap, map, mapDefined, sort } from "../util/util";
+import { execAndThrowErrors, flatMap, logUncaughtErrors, mapDefined, mapIter, sort } from "../util/util";
 
 if (!module.parent) {
-	done(main(Options.defaults));
+	logUncaughtErrors(main(Options.defaults));
 }
 async function main(options: TesterOptions): Promise<void> {
 	const changes = await getAffectedPackages(
@@ -112,7 +112,7 @@ async function gitChanges(log: Logger, definitelyTypedPath: string): Promise<Ite
 	}
 
 	return flatMap(changedPackages, ([name, versions]) =>
-		map(versions, majorVersion => ({ name, majorVersion })));
+		mapIter(versions, majorVersion => ({ name, majorVersion })));
 }
 
 /*

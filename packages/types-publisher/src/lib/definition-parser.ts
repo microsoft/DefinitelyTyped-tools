@@ -39,12 +39,12 @@ export async function getTypingInfo(packageName: string, fs: FS): Promise<Typing
 		return data;
 	});
 
-	const data: TypingsVersionsRaw = {};
-	data[latestVersion] = latestData;
+	const res: TypingsVersionsRaw = {};
+	res[latestVersion] = latestData;
 	for (const o of older) {
-		data[o.libraryMajorVersion] = o;
+		res[o.libraryMajorVersion] = o;
 	}
-	return data;
+	return res;
 }
 
 const packageJsonName = "package.json";
@@ -94,7 +94,7 @@ async function combineDataForAllTypesVersions(
 	const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
 	// tslint:disable-next-line await-promise (tslint bug)
-	const packageJson = hasPackageJson ? await fs.readJson(packageJsonName) as { readonly license?: {} | null, readonly dependencies?: {} | null } : {};
+	const packageJson = hasPackageJson ? await fs.readJson(packageJsonName) as { readonly license?: unknown, readonly dependencies?: unknown } : {};
 	const license = getLicenseFromPackageJson(packageJson.license);
 	const packageJsonDependencies = checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
 
@@ -178,8 +178,8 @@ async function getTypingDataForSingleTypesVersion(
 	return { typescriptVersion, dependencies, testDependencies, pathMappings, globals, declaredModules, declFiles, tsconfigPathsForHash };
 }
 
-function checkPackageJsonDependencies(dependencies: {} | null | undefined, path: string): ReadonlyArray<PackageJsonDependency> {
-	if (dependencies === undefined) {
+function checkPackageJsonDependencies(dependencies: unknown, path: string): ReadonlyArray<PackageJsonDependency> {
+	if (dependencies === undefined) { // tslint:disable-line strict-type-predicates (false positive)
 		return [];
 	}
 	if (dependencies === null || typeof dependencies !== "object") { // tslint:disable-line strict-type-predicates
@@ -198,7 +198,7 @@ If this is an external library that provides typings,  please make a pull reques
 			throw new Error(`In ${path}: ${msg}`);
 		}
 
-		const version = (dependencies as any)[dependencyName];
+		const version = (dependencies as { [key: string]: unknown })[dependencyName];
 		if (typeof version !== "string") { // tslint:disable-line strict-type-predicates
 			throw new Error(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
 		}
@@ -360,7 +360,7 @@ export async function readFileAndThrowOnBOM(fileName: string, fs: FS): Promise<s
 		const commands = [
 			"npm install -g strip-bom-cli",
 			`strip-bom ${fileName} > fix`,
-			`mv fix ${fileName}`
+			`mv fix ${fileName}`,
 		];
 		throw new Error(`File '${fileName}' has a BOM. Try using:\n${commands.join("\n")}`);
 	}

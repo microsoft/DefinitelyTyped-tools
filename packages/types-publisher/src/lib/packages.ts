@@ -4,8 +4,8 @@ import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 import { FS } from "../get-definitely-typed";
 import { assertDefined, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
-import { home, readDataFile } from "./common";
-import { outputPath, scopeName } from "./settings";
+import { readDataFile } from "./common";
+import { outputDirPath, scopeName } from "./settings";
 import { Semver } from "./versions";
 
 export class AllPackages {
@@ -193,7 +193,7 @@ export abstract class PackageBase {
 
 	/** '@types/foo' for a package 'foo'. */
 	get fullNpmName(): string {
-		return fullNpmName(this.name);
+		return getFullNpmName(this.name);
 	}
 
 	/** '@types%2ffoo' for a package 'foo'. */
@@ -208,15 +208,13 @@ export abstract class PackageBase {
 	}
 
 	get outputDirectory(): string {
-		return joinPaths(outputDir, this.desc);
+		return joinPaths(outputDirPath, this.desc);
 	}
 }
 
-export function fullNpmName(packageName: string): string {
+export function getFullNpmName(packageName: string): string {
 	return `@${scopeName}/${packageName}`;
 }
-
-export const outputDir = joinPaths(home, outputPath);
 
 interface NotNeededPackageRaw extends BaseRaw {
 	/**
@@ -262,7 +260,7 @@ export class NotNeededPackage extends PackageBase {
 
 	readme(): string {
 		return `This is a stub types definition for ${this.libraryName} (${this.sourceRepoURL}).\n
-${this.libraryName} provides its own type definitions, so you don't need ${fullNpmName(this.name)} installed!`;
+${this.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(this.name)} installed!`;
 	}
 
 	deprecatedMessage(): string {
@@ -338,8 +336,8 @@ export interface PathMapping {
 // TODO: support BSD -- but must choose a *particular* BSD license from the list at https://spdx.org/licenses/
 export const enum License { MIT = "MIT", Apache20 = "Apache-2.0" }
 const allLicenses = [License.MIT, License.Apache20];
-export function getLicenseFromPackageJson(packageJsonLicense: {} | null | undefined): License {
-	if (packageJsonLicense === undefined) {
+export function getLicenseFromPackageJson(packageJsonLicense: unknown): License {
+	if (packageJsonLicense === undefined) { // tslint:disable-line strict-type-predicates (false positive)
 		return License.MIT;
 	}
 	if (packageJsonLicense === "MIT") {

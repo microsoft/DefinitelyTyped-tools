@@ -22,7 +22,7 @@ async function uploadBlobs(container: BlobWriter, timeStamp: string): Promise<[s
 	const [log, logResult] = logger();
 	const [dataUrls, logUrls] = await Promise.all([
 		await uploadDirectory(container, "data", "data", log),
-		await uploadLogs(container, timeStamp, log)
+		await uploadLogs(container, timeStamp, log),
 	]);
 
 	// Finally, output blob logs and upload them.

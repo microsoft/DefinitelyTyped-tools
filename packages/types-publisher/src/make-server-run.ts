@@ -4,11 +4,11 @@ import { getSecret, Secret } from "./lib/secrets";
 import { sourceBranch } from "./lib/settings";
 import { expectedSignature } from "./lib/webhook-server";
 import { makeHttpRequest } from "./util/io";
-import { done } from "./util/util";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
 	const remote = yargs.argv.remote;
-	done(main(remote ? { hostname: "typespublisher.azurewebsites.net" }  : { hostname: "localhost", port: getPort() }));
+	logUncaughtErrors(main(remote ? { hostname: "typespublisher.azurewebsites.net" }  : { hostname: "localhost", port: getPort() }));
 }
 
 function getPort(): number {

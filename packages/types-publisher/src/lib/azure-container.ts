@@ -25,10 +25,10 @@ export default class BlobWriter {
 						AllowedMethods: ["GET"],
 						AllowedHeaders: [],
 						ExposedHeaders: [],
-						MaxAgeInSeconds: 60 * 60 * 24 // 1 day
-					}
-				]
-			}
+						MaxAgeInSeconds: 60 * 60 * 24, // 1 day
+					},
+				],
+			},
 		};
 		return promisifyErrorOrResponse(cb => { this.service.setServiceProperties(properties, cb); });
 	}
@@ -48,9 +48,9 @@ export default class BlobWriter {
 	}
 
 	async listBlobs(prefix: string): Promise<BlobService.BlobResult[]> {
-		const once = (token: common.ContinuationToken | undefined) =>
+		const once = (tkn: common.ContinuationToken | undefined) =>
 			promisifyErrorOrResult<BlobService.ListBlobsResult>(cb => {
-				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, token!, cb);
+				this.service.listBlobsSegmentedWithPrefix(azureContainer, prefix, tkn!, cb);
 			});
 
 		const out: BlobService.BlobResult[] = [];
@@ -74,8 +74,8 @@ export default class BlobWriter {
 		const options: BlobService.CreateBlobRequestOptions =  {
 			contentSettings: {
 				contentEncoding: "GZIP",
-				contentType: "application/json; charset=utf-8"
-			}
+				contentType: "application/json; charset=utf-8",
+			},
 		};
 		// Remove `undefined!` once https://github.com/Azure/azure-storage-node/pull/267 is in
 		return streamDone(gzip(stream).pipe(this.service.createWriteStreamToBlockBlob(azureContainer, blobName, options, undefined!)));

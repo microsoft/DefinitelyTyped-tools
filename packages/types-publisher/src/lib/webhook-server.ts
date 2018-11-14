@@ -11,7 +11,13 @@ import { reopenIssue } from "./issue-updater";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
 
-export default async function server(key: string, githubAccessToken: string, dry: boolean, fetcher: Fetcher, options: Options): Promise<Server> {
+export default async function webhookServer(
+	key: string,
+	githubAccessToken: string,
+	dry: boolean,
+	fetcher: Fetcher,
+	options: Options,
+): Promise<Server> {
 	return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
 		log.info(""); log.info("");
 		log.info(`# ${timeStamp}`);
@@ -51,14 +57,17 @@ function listenToGithub(
 		try {
 			work().then(() => rollingLogs.then(logs => writeLog(logs, logResult()))).catch(onError);
 		} catch (error) {
-			rollingLogs.then(logs => writeLog(logs, logResult())).then(() => { onError(error); }).catch(onError);
+			rollingLogs
+				.then(logs => writeLog(logs, logResult()))
+				.then(() => { onError(error as Error); })
+				.catch(onError);
 		}
 
 		function onError(error: Error): void {
 			server.close();
 			// tslint:disable-next-line no-floating-promises
 			reopenIssue(githubAccessToken, timeStamp, error, fetcher).catch(issueError => {
-				console.error(errorDetails(issueError));
+				console.error(errorDetails(issueError as Error));
 			}).then(() => {
 				console.error(errorDetails(error));
 				process.exit(1);
@@ -94,9 +103,9 @@ function listenToGithub(
 }
 
 // Even if there are many changes to DefinitelyTyped in a row, we only perform one update at a time.
-function updateOneAtATime(doOnce: (log: LoggerWithErrors, timeStamp: string) => Promise<void>
-	): (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined {
-
+function updateOneAtATime(
+	doOnce: (log: LoggerWithErrors, timeStamp: string) => Promise<void>,
+): (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined {
 	let working = false;
 	let anyUpdatesWhileWorking = false;
 

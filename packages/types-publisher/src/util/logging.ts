@@ -1,6 +1,6 @@
 import { ensureDir } from "fs-extra";
 
-import { home } from "../lib/common";
+import { logDir } from "../lib/settings";
 import { joinPaths } from "../util/util";
 
 import { writeFile } from "./io";
@@ -43,7 +43,7 @@ function alsoConsoleLogger(consoleLog: Logger): [Logger, () => Log] {
 			consoleLog(message);
 			log(message);
 		},
-		logResult
+		logResult,
 	];
 }
 
@@ -53,12 +53,12 @@ export function logger(): [Logger, () => Log]  {
 }
 
 /** Helper for creating `info` and `error` loggers together. */
-function loggerWithErrorsHelper(logger: () => [Logger, () => Log]): [LoggerWithErrors, () => LogWithErrors] {
-	const [info, infoResult] = logger();
-	const [error, errorResult] = logger();
+function loggerWithErrorsHelper(loggerOrQuietLogger: () => [Logger, () => Log]): [LoggerWithErrors, () => LogWithErrors] {
+	const [info, infoResult] = loggerOrQuietLogger();
+	const [error, errorResult] = loggerOrQuietLogger();
 	return [
 		{ info, error },
-		() => ({ infos: infoResult(), errors: errorResult() })
+		() => ({ infos: infoResult(), errors: errorResult() }),
 	];
 }
 
@@ -87,8 +87,6 @@ export function moveLogsWithErrors(dest: LoggerWithErrors, {infos, errors}: LogW
 	moveLogs(dest.info, infos, mapper);
 	moveLogs(dest.error, errors, mapper);
 }
-
-const logDir = joinPaths(home, "logs");
 
 export function logPath(logName: string): string {
 	return joinPaths(logDir, logName);

@@ -4,14 +4,14 @@ import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, TypingsData } from "./lib/packages";
-import { done } from "./util/util";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	const single = yargs.argv.single;
+	const single = yargs.argv.single as string | undefined;
 	if (single) {
-		done(doSingle(single, new UncachedNpmInfoClient()));
+		logUncaughtErrors(doSingle(single, new UncachedNpmInfoClient()));
 	} else {
-		done(async () => main(await AllPackages.read(await getDefinitelyTyped(Options.defaults)), new UncachedNpmInfoClient()));
+		logUncaughtErrors(async () => createSearchIndex(await AllPackages.read(await getDefinitelyTyped(Options.defaults)), new UncachedNpmInfoClient()));
 	}
 }
 
@@ -30,7 +30,7 @@ export interface SearchRecord {
 	readonly d: number;
 }
 
-export default async function main(packages: AllPackages, client: UncachedNpmInfoClient): Promise<void> {
+export default async function createSearchIndex(packages: AllPackages, client: UncachedNpmInfoClient): Promise<void> {
 	console.log("Generating search index...");
 	const records = await createSearchRecords(packages.allLatestTypings(), client);
 	console.log("Done generating search index. Writing out data files...");

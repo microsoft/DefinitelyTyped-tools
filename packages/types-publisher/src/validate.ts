@@ -3,12 +3,12 @@ import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { AllPackages, fullNpmName } from "./lib/packages";
+import { AllPackages, getFullNpmName } from "./lib/packages";
 import { validateOutputPath } from "./lib/settings";
 import { readChangedPackages } from "./lib/versions";
 import { writeFile, writeJson } from "./util/io";
 import { LoggerWithErrors, loggerWithErrors, moveLogsWithErrors, quietLoggerWithErrors, writeLog } from "./util/logging";
-import { done, exec, joinPaths, nAtATime } from "./util/util";
+import { exec, joinPaths, logUncaughtErrors, nAtATime } from "./util/util";
 
 if (!module.parent) {
 	const all = !!yargs.argv.all;
@@ -19,16 +19,16 @@ if (!module.parent) {
 
 	if (all) {
 		console.log("Validating all packages");
-		done(doAll());
+		logUncaughtErrors(doAll());
 	} else if (packageNames.length) {
 		console.log(`Validating: ${JSON.stringify(packageNames)}`);
-		done(doValidate(packageNames));
+		logUncaughtErrors(doValidate(packageNames));
 	} else {
-		done(getDefinitelyTyped(Options.defaults).then(main));
+		logUncaughtErrors(getDefinitelyTyped(Options.defaults).then(validate));
 	}
 }
 
-export default async function main(dt: FS): Promise<void> {
+export default async function validate(dt: FS): Promise<void> {
 	await doValidate((await readChangedPackages(await AllPackages.read(dt))).changedTypings.map(c => c.pkg.name));
 }
 
@@ -44,7 +44,7 @@ async function doValidate(packageNames: ReadonlyArray<string>): Promise<void> {
 	const {infos, errors} = logResult();
 	await Promise.all([
 		writeLog("validate.md", infos),
-		writeLog("validate-errors.md", errors)
+		writeLog("validate-errors.md", errors),
 	]);
 }
 
@@ -121,7 +121,7 @@ async function writePackage(packageDirectory: string, packageName: string): Prom
 		author: "",
 		license: "ISC",
 		repository: "https://github.com/Microsoft/types-publisher",
-		dependencies: { [fullNpmName(packageName)]: "latest" }
+		dependencies: { [getFullNpmName(packageName)]: "latest" },
 	});
 
 	// Write tsconfig.json
@@ -132,8 +132,8 @@ async function writePackage(packageDirectory: string, packageName: string): Prom
 			noImplicitAny: false,
 			strictNullChecks: false,
 			noEmit: true,
-			lib: ["es5", "es2015.promise", "dom"]
-		}
+			lib: ["es5", "es2015.promise", "dom"],
+		},
 	});
 
 	// Write index.ts

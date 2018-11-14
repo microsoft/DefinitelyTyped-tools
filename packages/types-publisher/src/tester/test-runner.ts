@@ -7,24 +7,24 @@ import { Options, TesterOptions } from "../lib/common";
 import { AllPackages, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, LoggerWithErrors } from "../util/logging";
-import { concat, done, exec, execAndThrowErrors, joinPaths, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
+import { exec, execAndThrowErrors, joinPaths, logUncaughtErrors, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
 import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
 	const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
 	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-	done(getDefinitelyTyped(options).then(dt => main(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
+	logUncaughtErrors(getDefinitelyTyped(options).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
 }
 
 const pathToDtsLint = require.resolve("dtslint");
 
 export function parseNProcesses(): number {
-	const str = yargs.argv.nProcesses;
+	const str = yargs.argv.nProcesses as string | undefined;
 	if (!str) {
 		return numberOfOsProcesses;
 	}
-	const nProcesses = Number.parseInt(yargs.argv.nProcesses, 10);
+	const nProcesses = Number.parseInt(str, 10);
 	if (Number.isNaN(nProcesses)) {
 		throw new Error("Expected nProcesses to be a number.");
 	}
@@ -37,7 +37,12 @@ export function testerOptions(runFromDefinitelyTyped: boolean): TesterOptions {
 		: Options.defaults;
 }
 
-export default async function main(dt: FS, definitelyTypedPath: string, nProcesses: number, selection: "all" | "affected" | RegExp): Promise<void> {
+export default async function runTests(
+	dt: FS,
+	definitelyTypedPath: string,
+	nProcesses: number,
+	selection: "all" | "affected" | RegExp,
+): Promise<void> {
 	const allPackages = await AllPackages.read(dt);
 	const { changedPackages, dependentPackages }: Affected = selection === "all"
 		? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
@@ -50,10 +55,10 @@ export default async function main(dt: FS, definitelyTypedPath: string, nProcess
 	console.log(`Running with ${nProcesses} processes.`);
 
 	const typesPath = `${definitelyTypedPath}/types`;
-	await doInstalls(allPackages, concat(changedPackages, dependentPackages), typesPath, nProcesses);
+	await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath, nProcesses);
 
 	console.log("Testing...");
-	await runTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
+	await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
 }
 
 async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string, nProcesses: number): Promise<void> {
@@ -84,7 +89,7 @@ function directoryPath(typesPath: string, pkg: TypingsData): string {
 	return joinPaths(typesPath, pkg.subDirectoryPath);
 }
 
-async function runTests(
+async function doRunTests(
 	packages: ReadonlyArray<TypingsData>,
 	changed: ReadonlySet<TypingsData>,
 	typesPath: string,
@@ -144,6 +149,6 @@ async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: s
 
 		return error && { message: `${error.message}\n${stdout}\n${stderr}` };
 	} catch (e) {
-		return e;
+		return e as TesterError;
 	}
 }

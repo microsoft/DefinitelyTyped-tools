@@ -1,12 +1,12 @@
 import { remove } from "fs-extra";
 
-import { done } from "./util/util";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	done(main());
+	logUncaughtErrors(clean());
 }
 
-export default async function main(): Promise<void> {
+export default async function clean(): Promise<void> {
 	for (const dir of ["data", "logs", "output"]) {
 		console.log(`Clean ${dir}`);
 		await remove(dir);

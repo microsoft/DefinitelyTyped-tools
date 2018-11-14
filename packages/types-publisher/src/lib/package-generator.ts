@@ -4,9 +4,11 @@ import * as path from "path";
 
 import { FS } from "../get-definitely-typed";
 import { writeFile } from "../util/io";
-import { assertNever, hasOwnProperty, joinPaths } from "../util/util";
+import { assertNever, joinPaths } from "../util/util";
 
-import { AllPackages, AnyPackage, DependencyVersion, fullNpmName, License, NotNeededPackage, TypingsData } from "./packages";
+import {
+	AllPackages, AnyPackage, DependencyVersion, getFullNpmName, License, NotNeededPackage, PackageJsonDependency, TypingsData,
+} from "./packages";
 import { sourceBranch } from "./settings";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "..", "LICENSE"), "utf-8");
@@ -51,9 +53,6 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 interface Dependencies { [name: string]: string; }
 
 async function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): Promise<string> {
-	// typing may provide a partial `package.json` for us to complete
-	const dependencies = getDependencies(typing.packageJsonDependencies, typing, packages);
-
 	// Use the ordering of fields from https://docs.npmjs.com/files/package.json
 	const out: {} = {
 		name: typing.fullNpmName,
@@ -69,12 +68,12 @@ async function createPackageJSON(typing: TypingsData, version: string, packages:
 		typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
 		repository: {
 			type: "git",
-			url: `${definitelyTypedURL}.git`
+			url: `${definitelyTypedURL}.git`,
 		},
 		scripts: {},
-		dependencies,
+		dependencies: getDependencies(typing.packageJsonDependencies, typing, packages),
 		typesPublisherContentHash: typing.contentHash,
-		typeScriptVersion: typing.minTypeScriptVersion
+		typeScriptVersion: typing.minTypeScriptVersion,
 	};
 
 	return JSON.stringify(out, undefined, 4);
@@ -83,24 +82,16 @@ async function createPackageJSON(typing: TypingsData, version: string, packages:
 const definitelyTypedURL = "https://github.com/DefinitelyTyped/DefinitelyTyped";
 
 /** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function getDependencies(
-	packageJsonDependencies: ReadonlyArray<{ name: string, version: string }>,
-	typing: TypingsData,
-	allPackages: AllPackages): Dependencies {
+function getDependencies(packageJsonDependencies: ReadonlyArray<PackageJsonDependency>, typing: TypingsData, allPackages: AllPackages): Dependencies {
 	const dependencies: Dependencies = {};
 	for (const { name, version } of packageJsonDependencies) {
 		dependencies[name] = version;
 	}
 
 	for (const dependency of typing.dependencies) {
-		const typesDependency = fullNpmName(dependency.name);
-
+		const typesDependency = getFullNpmName(dependency.name);
 		// A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
-		function handlesDependency(deps: Dependencies): boolean {
-			return hasOwnProperty(deps, dependency.name) || hasOwnProperty(deps, typesDependency);
-		}
-
-		if (!handlesDependency(dependencies) && allPackages.hasTypingFor(dependency)) {
+		if (!packageJsonDependencies.some(d => d.name === dependency.name || d.name === typesDependency) && allPackages.hasTypingFor(dependency)) {
 			dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
 		}
 	}
@@ -111,7 +102,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 	return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage): string {
+function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage): string {
 	return JSON.stringify(
 		{
 			name: fullNpmName,
@@ -125,8 +116,8 @@ function createNotNeededPackageJSON({libraryName, license, name, fullNpmName, so
 			license,
 			// No `typings`, that's provided by the dependency.
 			dependencies: {
-				[name]: "*"
-			}
+				[name]: "*",
+			},
 		},
 		undefined,
 		4);

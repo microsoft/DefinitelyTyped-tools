@@ -1,10 +1,10 @@
 // Run `node ./bin/test-get-secrets.js` to test that we can fetch secrets from Azure Keyvault
 
 import { allSecrets, getSecret, Secret } from "./lib/secrets";
-import { done } from "./util/util";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	done(main());
+	logUncaughtErrors(main());
 }
 
 async function main(): Promise<void> {

@@ -1,5 +1,6 @@
 import { AuthenticationContext } from "adal-node";
 import { KeyVaultClient, KeyVaultCredentials } from "azure-keyvault";
+import { mapDefined } from "../util/util";
 import { azureKeyvault } from "./settings";
 
 export enum Secret {
@@ -30,13 +31,13 @@ export enum Secret {
 	 *
 	 * We only need one token in existence, so delete old tokens at: https://www.npmjs.com/settings/tokens
 	 */
-	NPM_TOKEN
+	NPM_TOKEN,
 }
 
-export const allSecrets: Secret[] =
-	Object.keys(Secret)
-		.map(key => (Secret as any)[key])
-		.filter(x => typeof x === "number");
+export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), key => {
+	const value = (Secret as { [key: string]: unknown })[key];
+	return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
+});
 
 /**
  * Convert `AZURE_STORAGE_ACCESS_KEY` to `azure-storage-access-key`.

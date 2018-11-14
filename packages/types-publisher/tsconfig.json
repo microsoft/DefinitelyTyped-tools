@@ -2,10 +2,9 @@
 	"include": ["src"],
 	"compilerOptions": {
 		"module": "commonjs",
-		"noImplicitAny": true,
-		"noImplicitThis": true,
-		"strictNullChecks": true,
+		"strict": true,
 		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"allowUnreachableCode": false,
@@ -13,7 +12,6 @@
 		"outDir": "bin",
 		"sourceMap": true,
 		"target": "esnext",
-		"lib": ["es2017"],
 
 		"baseUrl": ".",
 		"paths": {

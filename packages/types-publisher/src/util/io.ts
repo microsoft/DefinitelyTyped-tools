@@ -3,7 +3,7 @@ import { readdir, readFile as readFileWithEncoding, stat, writeFile as writeFile
 import { request as httpRequest } from "http";
 import { Agent, request } from "https";
 import { join as joinPaths } from "path";
-import * as stream from "stream";
+import { Readable as ReadableStream } from "stream";
 import { StringDecoder } from "string_decoder";
 
 import { parseJson } from "./util";
@@ -29,7 +29,7 @@ export function writeJson(path: string, content: unknown, formatted = true): Pro
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {
-	const s = new stream.Readable();
+	const s = new ReadableStream();
 	s.push(text);
 	s.push(null); // tslint:disable-line no-null-keyword
 	return s;
@@ -72,10 +72,10 @@ export interface FetchOptions {
 export class Fetcher {
 	private readonly agent = new Agent({ keepAlive: true });
 
-	async fetchJson(options: FetchOptions): Promise<{}> {
+	async fetchJson(options: FetchOptions): Promise<unknown> {
 		const text = await this.fetch(options);
 		try {
-			return JSON.parse(text);
+			return JSON.parse(text) as unknown;
 		} catch (e) {
 			throw new Error(`Bad response from server:\noptions: ${options}\n\n${text}`);
 		}
@@ -87,7 +87,7 @@ export class Fetcher {
 			try {
 				return await this.fetchOnce(options);
 			} catch (err) {
-				if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test(err.message)) {
+				if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test((err as Error).message)) {
 					throw err;
 				}
 			}

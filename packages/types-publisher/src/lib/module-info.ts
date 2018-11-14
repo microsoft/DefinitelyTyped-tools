@@ -68,7 +68,14 @@ export default async function getModuleInfo(packageName: string, allEntryFilenam
 						if (nameNode) {
 							globals.add(nameNode.text);
 						}
+						break;
 					}
+					case ts.SyntaxKind.ImportEqualsDeclaration:
+					case ts.SyntaxKind.InterfaceDeclaration:
+					case ts.SyntaxKind.TypeAliasDeclaration:
+						break;
+					default:
+						throw new Error(`Unexpected node kind ${ts.SyntaxKind[node.kind]}`);
 				}
 			}
 		}
@@ -145,7 +152,7 @@ async function allReferencedFiles(entryFilenames: ReadonlyArray<string>, fs: FS)
 		const src = createSourceFile(resolvedFilename, await readFileAndThrowOnBOM(resolvedFilename, fs));
 		all.set(resolvedFilename, src);
 
-		const refs = referencedFiles(src, path.dirname(resolvedFilename));
+		const refs = findReferencedFiles(src, path.dirname(resolvedFilename));
 		await Promise.all(Array.from(refs).map(recur));
 	}
 
@@ -173,7 +180,7 @@ interface Reference {
  * @param subDirectory The specific directory within the DefinitelyTyped directory we are in.
  * For example, `directory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  */
-function* referencedFiles(src: ts.SourceFile, subDirectory: string): Iterable<Reference> {
+function* findReferencedFiles(src: ts.SourceFile, subDirectory: string): Iterable<Reference> {
 	for (const ref of src.referencedFiles) {
 		// Any <reference path="foo"> is assumed to be local
 		yield addReference({ text: ref.fileName, exact: true });
@@ -227,7 +234,10 @@ function* imports({ statements }: ts.SourceFile | ts.ModuleBlock): Iterable<stri
 				if (name.kind === ts.SyntaxKind.StringLiteral && body) {
 					yield* imports(body as ts.ModuleBlock);
 				}
+				break;
 			}
+
+			default:
 		}
 	}
 }

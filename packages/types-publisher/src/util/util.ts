@@ -7,11 +7,6 @@ import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
 import { inspect } from "util";
 
-if (!Object.entries) {
-	Object.entries = (obj: any) =>
-		Object.getOwnPropertyNames(obj).map(key => [key, obj[key]] as [string, unknown]);
-}
-
 export function assertDefined<T>(x: T | undefined): T {
 	assert(x !== undefined);
 	return x!;
@@ -22,9 +17,9 @@ import ProgressBar from "./progress";
 
 export function parseJson(text: string): object {
 	try {
-		return JSON.parse(text);
+		return JSON.parse(text) as object;
 	} catch (err) {
-		throw new Error(`${err.message} due to JSON: ${text}`);
+		throw new Error(`${(err as Error).message} due to JSON: ${text}`);
 	}
 }
 
@@ -81,7 +76,7 @@ export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolea
 					return res;
 				}
 			}
-		}
+		},
 	};
 }
 
@@ -109,7 +104,7 @@ export function unique<T>(arr: Iterable<T>): T[] {
 	return [...new Set(arr)];
 }
 
-export function done(promise: Promise<unknown> | (() => Promise<unknown>)): void {
+export function logUncaughtErrors(promise: Promise<unknown> | (() => Promise<unknown>)): void {
 	(typeof promise === "function" ? promise() : promise).catch(error => {
 		console.error(error);
 		process.exit(1);
@@ -136,10 +131,6 @@ export function normalizeSlashes(path: string): string {
 
 export function hasWindowsSlashes(path: string): boolean {
 	return path.includes("\\");
-}
-
-export function hasOwnProperty(object: {}, propertyName: string): boolean {
-	return Object.prototype.hasOwnProperty.call(object, propertyName);
 }
 
 export function intOfString(str: string): number {
@@ -187,18 +178,18 @@ export function best<T>(inputs: Iterable<T>, isBetter: (a: T, b: T) => boolean):
 	if (first.done) {
 		return undefined;
 	}
-	let best = first.value;
 
+	let res = first.value;
 	while (true) {
 		const { value, done } = iter.next();
 		if (done) {
 			break;
 		}
-		if (isBetter(value, best)) {
-			best = value;
+		if (isBetter(value, res)) {
+			res = value;
 		}
 	}
-	return best;
+	return res;
 }
 
 export function computeHash(content: string): string {
@@ -227,11 +218,6 @@ export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V): void {
 	}
 }
 
-export function* concat<T>(a: Iterable<T>, b: Iterable<T>): Iterable<T> {
-	yield* a;
-	yield* b;
-}
-
 export function mapDefined<T, U>(arr: Iterable<T>, mapper: (t: T) => U | undefined): U[] {
 	const out = [];
 	for (const a of arr) {
@@ -254,7 +240,7 @@ export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => 
 	return out;
 }
 
-export function* map<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
+export function* mapIter<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
 	for (const input of inputs) {
 		yield mapper(input);
 	}
@@ -292,7 +278,7 @@ export interface RunWithChildProcessesOptions<In> {
 	readonly commandLineArgs: string[];
 	readonly workerFile: string;
 	readonly nProcesses: number;
-	handleOutput(output: {}): void;
+	handleOutput(output: unknown): void;
 }
 export function runWithChildProcesses<In>(
 	{ inputs, commandLineArgs, workerFile, nProcesses, handleOutput }: RunWithChildProcessesOptions<In>,
@@ -315,7 +301,7 @@ export function runWithChildProcesses<In>(
 			allChildren.push(child);
 			child.send(inputs.slice(lo, hi));
 			child.on("message", outputMessage => {
-				handleOutput(outputMessage);
+				handleOutput(outputMessage as unknown);
 				assert(outputsLeft > 0);
 				outputsLeft--;
 				if (outputsLeft === 0) {
@@ -352,7 +338,7 @@ interface RunWithListeningChildProcessesOptions<In> {
 	readonly workerFile: string;
 	readonly nProcesses: number;
 	readonly cwd: string;
-	handleOutput(output: {}): void;
+	handleOutput(output: unknown): void;
 }
 export function runWithListeningChildProcesses<In>(
 	{ inputs, commandLineArgs, workerFile, nProcesses, cwd, handleOutput }: RunWithListeningChildProcessesOptions<In>,
@@ -374,7 +360,7 @@ export function runWithListeningChildProcesses<In>(
 			inputIndex++;
 
 			child.on("message", outputMessage => {
-				handleOutput(outputMessage);
+				handleOutput(outputMessage as unknown);
 				if (inputIndex === inputs.length) {
 					processesLeft--;
 					if (processesLeft === 0) {
