@@ -106,7 +106,7 @@ function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, s
 	return JSON.stringify(
 		{
 			name: fullNpmName,
-			version,
+			version: version.versionString,
 			typings: null, // tslint:disable-line no-null-keyword
 			description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
 			main: "",
