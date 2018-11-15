@@ -2,7 +2,7 @@ import assert = require("assert");
 import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
-import { assertDefined, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
+import { assertDefined, assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
 import { readDataFile } from "./common";
 import { outputDirPath, scopeName } from "./settings";
@@ -96,11 +96,11 @@ export class AllPackages {
 
 	/** Note: this includes older version directories (`foo/v0`) */
 	allTypings(): ReadonlyArray<TypingsData> {
-		return Array.from(flattenData(this.data));
+		return assertSorted(Array.from(flattenData(this.data)), t => t.name);
 	}
 
 	allLatestTypings(): ReadonlyArray<TypingsData> {
-		return Array.from(this.data.values()).map(versions => versions.getLatest());
+		return assertSorted(Array.from(this.data.values()).map(versions => versions.getLatest()), t => t.name);
 	}
 
 	allNotNeeded(): ReadonlyArray<NotNeededPackage> {

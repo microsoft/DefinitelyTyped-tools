@@ -436,10 +436,13 @@ export function split<T, U>(inputs: ReadonlyArray<T>, cb: (t: T) => U | undefine
 	return [keep, splitOut];
 }
 
-export function assertSorted(a: ReadonlyArray<string>): ReadonlyArray<string> {
-	let prev = "";
-	for (const x of a) {
-		assert(x >= prev, `${x} >= ${prev}`);
+export function assertSorted(a: ReadonlyArray<string>): ReadonlyArray<string>;
+export function assertSorted<T>(a: ReadonlyArray<T>, cb: (t: T) => string): ReadonlyArray<T>;
+export function assertSorted<T>(a: ReadonlyArray<T>, cb: (t: T) => string = (t: T) => t as unknown as string): ReadonlyArray<T> {
+	let prev = a[0];
+	for (let i = 1; i < a.length; i++) {
+		const x = a[i];
+		assert(cb(x) >= cb(prev), `${x} >= ${prev}`);
 		prev = x;
 	}
 	return a;
