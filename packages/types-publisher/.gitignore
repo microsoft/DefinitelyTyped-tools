@@ -5,3 +5,5 @@ logs/
 node_modules/
 output/
 validateOutput/
+\#*
+.\#*
