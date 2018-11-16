@@ -168,7 +168,7 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: Cac
 	const entries: { [packageName: string]: { [distTags: string]: string } } = {};
 	for (const typing of typings) {
 		// Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-		const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName)
+		const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName);
 		if (!info) {
 			const missings = typings.filter(t => !client.getNpmInfoFromCache(t.fullEscapedNpmName)).map(t => t.fullEscapedNpmName);
 			throw new Error(`${missings} not found in ${Array.from(client.formatKeys())}`);
