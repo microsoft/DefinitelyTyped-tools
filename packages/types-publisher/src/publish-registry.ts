@@ -10,7 +10,7 @@ import { outputDirPath, validateOutputPath } from "./lib/settings";
 import { fetchAndProcessNpmInfo } from "./lib/versions";
 import { assertDirectoriesEqual, npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
 import { logger, writeLog } from "./util/logging";
-import { assertDefined, computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
+import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
 
 const packageName = "types-registry";
 const registryOutputPath = joinPaths(outputDirPath, packageName);
@@ -168,7 +168,11 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: Cac
 	const entries: { [packageName: string]: { [distTags: string]: string } } = {};
 	for (const typing of typings) {
 		// Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-		const info = assertDefined(client.getNpmInfoFromCache(typing.fullEscapedNpmName));
+		const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName)
+		if (!info) {
+			const missings = typings.filter(t => !client.getNpmInfoFromCache(t.fullEscapedNpmName)).map(t => t.fullEscapedNpmName);
+			throw new Error(`${missings} not found in ${Array.from(client.formatKeys())}`);
+		}
 		entries[typing.name] = filterTags(info.distTags);
 	}
 	return { entries };

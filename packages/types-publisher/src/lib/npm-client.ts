@@ -69,6 +69,10 @@ export class CachedNpmInfoClient {
 		await ensureFile(cacheFile);
 		await writeJson(cacheFile, mapToRecord(this.cache, jsonFromNpmInfo));
 	}
+
+	formatKeys(): string {
+		return Array.from(this.cache.keys()).join(", ");
+	}
 }
 
 export class UncachedNpmInfoClient {
