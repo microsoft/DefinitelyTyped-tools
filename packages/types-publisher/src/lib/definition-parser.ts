@@ -86,10 +86,10 @@ async function combineDataForAllTypesVersions(
 	const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion: minTsVersion, libraryName, projects } =
 		parseHeaderOrFail(await readFileAndThrowOnBOM("index.d.ts", fs));
 
-	const dataForRoot = await getTypingDataForSingleTypesVersion(undefined, typingsPackageName, remainingLs, fs, oldMajorVersion);
+	const dataForRoot = await getTypingDataForSingleTypesVersion(undefined, typingsPackageName, fs.debugPath(), remainingLs, fs, oldMajorVersion);
 	const dataForOtherTypesVersions = await mapAsyncOrdered(typesVersions, async tsVersion => {
 		const subFs = fs.subDir(`ts${tsVersion}`);
-		return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, await subFs.readdir(), subFs, oldMajorVersion);
+		return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, fs.debugPath(), await subFs.readdir(), subFs, oldMajorVersion);
 	});
 	const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
@@ -149,6 +149,7 @@ interface TypingDataFromIndividualTypeScriptVersion {
 async function getTypingDataForSingleTypesVersion(
 	typescriptVersion: TypeScriptVersion | undefined,
 	packageName: string,
+	packageDirectory: string,
 	ls: ReadonlyArray<string>,
 	fs: FS,
 	oldMajorVersion: number | undefined,
@@ -156,7 +157,7 @@ async function getTypingDataForSingleTypesVersion(
 	const tsconfig = await fs.readJson("tsconfig.json") as TsConfig; // tslint:disable-line await-promise (tslint bug)
 	const { typeFiles, testFiles } = await entryFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
 	const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules, declFiles } =
-		await getModuleInfo(packageName, typeFiles, fs);
+		await getModuleInfo(packageName, packageDirectory, typeFiles, fs);
 	const declaredModulesSet = new Set(declaredModules);
 	// Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
 	const removeDeclaredModules = (modules: Iterable<string>): Iterable<string> => filter(modules, m => !declaredModulesSet.has(m));
