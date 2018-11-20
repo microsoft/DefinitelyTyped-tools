@@ -22,6 +22,7 @@ eventemitter3
 fast-glob
 fastify
 flatpickr
+gprc
 graphql-tools
 immutable
 indefinite-observable
@@ -31,6 +32,7 @@ levelup
 localforage
 log4js
 magic-string
+mali
 meteor-typings
 mqtt
 moment
@@ -42,6 +44,7 @@ path-to-regexp
 pkcs11js
 popper.js
 postcss
+protobufjs
 protractor
 raven-js
 react-dnd
