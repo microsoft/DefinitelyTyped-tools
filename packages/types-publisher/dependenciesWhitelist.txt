@@ -22,7 +22,7 @@ eventemitter3
 fast-glob
 fastify
 flatpickr
-gprc
+grpc
 graphql-tools
 immutable
 indefinite-observable
