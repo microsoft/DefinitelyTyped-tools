@@ -30,4 +30,4 @@ export const errorsIssue = "Microsoft/types-publisher/issues/40";
 export const typesDirectoryName = "types";
 
 export const dependenciesWhitelist: ReadonlySet<string> =
-	new Set(readFileSync(joinPaths(root, "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));
+    new Set(readFileSync(joinPaths(root, "dependenciesWhitelist.txt"), "utf-8").split(/\r?\n/));

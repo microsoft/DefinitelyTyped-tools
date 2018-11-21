@@ -15,24 +15,24 @@ import { assertDefined, currentTimeStamp, logUncaughtErrors, numberOfOsProcesses
 import validate from "./validate";
 
 if (!module.parent) {
-	const dry = !!yargs.argv.dry;
-	logUncaughtErrors(full(dry, currentTimeStamp(), Options.defaults));
+    const dry = !!yargs.argv.dry;
+    logUncaughtErrors(full(dry, currentTimeStamp(), Options.defaults));
 }
 
 export default async function full(dry: boolean, timeStamp: string, options: Options): Promise<void> {
-	const infoClient = new UncachedNpmInfoClient();
-	await clean();
-	const dt = await getDefinitelyTyped(options);
-	const allPackages = await parseDefinitions(dt, options.parseInParallel
-			? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
-			: undefined);
-	const changedPackages = await calculateVersions(dt, infoClient);
-	await generatePackages(dt, allPackages, changedPackages);
-	await createSearchIndex(allPackages, infoClient);
-	await publishPackages(changedPackages, dry);
-	await publishRegistry(dt, allPackages, dry, infoClient);
-	await validate(dt);
-	if (!dry) {
-		await uploadBlobsAndUpdateIssue(timeStamp);
-	}
+    const infoClient = new UncachedNpmInfoClient();
+    await clean();
+    const dt = await getDefinitelyTyped(options);
+    const allPackages = await parseDefinitions(dt, options.parseInParallel
+            ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
+            : undefined);
+    const changedPackages = await calculateVersions(dt, infoClient);
+    await generatePackages(dt, allPackages, changedPackages);
+    await createSearchIndex(allPackages, infoClient);
+    await publishPackages(changedPackages, dry);
+    await publishRegistry(dt, allPackages, dry, infoClient);
+    await validate(dt);
+    if (!dry) {
+        await uploadBlobsAndUpdateIssue(timeStamp);
+    }
 }

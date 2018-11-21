@@ -11,15 +11,15 @@ import { logUncaughtErrors } from "../util/util";
 import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
-	const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-	const all = !!yargs.argv.all;
-	logUncaughtErrors(main(options, parseNProcesses(), all));
+    const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
+    const all = !!yargs.argv.all;
+    logUncaughtErrors(main(options, parseNProcesses(), all));
 }
 
 async function main(options: TesterOptions, nProcesses: number, all: boolean): Promise<void> {
-	await clean();
-	const dt = await getDefinitelyTyped(options);
-	await parseDefinitions(dt, { nProcesses, definitelyTypedPath: options.definitelyTypedPath });
-	await checkParseResults(/*includeNpmChecks*/false, dt, options, new UncachedNpmInfoClient());
-	await runTests(dt, options.definitelyTypedPath, nProcesses, all ? "all" : "affected");
+    await clean();
+    const dt = await getDefinitelyTyped(options);
+    await parseDefinitions(dt, { nProcesses, definitelyTypedPath: options.definitelyTypedPath });
+    await checkParseResults(/*includeNpmChecks*/false, dt, options, new UncachedNpmInfoClient());
+    await runTests(dt, options.definitelyTypedPath, nProcesses, all ? "all" : "affected");
 }

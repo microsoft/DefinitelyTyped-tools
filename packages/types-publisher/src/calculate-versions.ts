@@ -7,11 +7,11 @@ import { consoleLogger } from "./util/logging";
 import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	logUncaughtErrors(async () => calculateVersions(await getDefinitelyTyped(Options.defaults), new UncachedNpmInfoClient()));
+    logUncaughtErrors(async () => calculateVersions(await getDefinitelyTyped(Options.defaults), new UncachedNpmInfoClient()));
 }
 
 export default async function calculateVersions(dt: FS, uncachedClient: UncachedNpmInfoClient): Promise<ChangedPackages> {
-	console.log("=== Calculating versions ===");
-	return CachedNpmInfoClient.with(uncachedClient, async client =>
-		computeAndSaveChangedPackages(await AllPackages.read(dt), consoleLogger.info, client));
+    console.log("=== Calculating versions ===");
+    return CachedNpmInfoClient.with(uncachedClient, async client =>
+        computeAndSaveChangedPackages(await AllPackages.read(dt), consoleLogger.info, client));
 }

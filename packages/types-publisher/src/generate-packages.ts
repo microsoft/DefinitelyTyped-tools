@@ -12,30 +12,30 @@ import { writeTgz } from "./util/tgz";
 import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
-	const tgz = !!yargs.argv.tgz;
-	logUncaughtErrors(async () => {
-		const dt = await getDefinitelyTyped(Options.defaults);
-		const allPackages = await AllPackages.read(dt);
-		await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
-	});
+    const tgz = !!yargs.argv.tgz;
+    logUncaughtErrors(async () => {
+        const dt = await getDefinitelyTyped(Options.defaults);
+        const allPackages = await AllPackages.read(dt);
+        await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
+    });
 }
 
 export default async function generatePackages(dt: FS, allPackages: AllPackages, changedPackages: ChangedPackages, tgz = false): Promise<void> {
-	const [log, logResult] = logger();
-	log("\n## Generating packages\n");
+    const [log, logResult] = logger();
+    log("\n## Generating packages\n");
 
-	await emptyDir(outputDirPath);
+    await emptyDir(outputDirPath);
 
-	for (const { pkg, version } of changedPackages.changedTypings) {
-		await generateTypingPackage(pkg, allPackages, version, dt);
-		if (tgz) {
-			await writeTgz(pkg.outputDirectory, `${pkg.outputDirectory}.tgz`);
-		}
-		log(` * ${pkg.libraryName}`);
-	}
-	for (const pkg of changedPackages.changedNotNeededPackages) {
-		await generateNotNeededPackage(pkg);
-	}
+    for (const { pkg, version } of changedPackages.changedTypings) {
+        await generateTypingPackage(pkg, allPackages, version, dt);
+        if (tgz) {
+            await writeTgz(pkg.outputDirectory, `${pkg.outputDirectory}.tgz`);
+        }
+        log(` * ${pkg.libraryName}`);
+    }
+    for (const pkg of changedPackages.changedNotNeededPackages) {
+        await generateNotNeededPackage(pkg);
+    }
 
-	await writeLog("package-generator.md", logResult());
+    await writeLog("package-generator.md", logResult());
 }

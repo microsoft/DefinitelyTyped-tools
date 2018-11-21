@@ -6,17 +6,17 @@ import { writeFile } from "./util/io";
 import { joinPaths, logUncaughtErrors, mapDefined } from "./util/util";
 
 if (!module.parent) {
-	logUncaughtErrors(main(Options.defaults));
+    logUncaughtErrors(main(Options.defaults));
 }
 
 async function main(options: TesterOptions): Promise<void> {
-	const allPackages = await AllPackages.read(await getDefinitelyTyped(options));
-	const typings = allPackages.allTypings();
-	const maxPathLen = Math.max(...typings.map(t => t.subDirectoryPath.length));
-	const lines = mapDefined(typings, t => getEntry(t, maxPathLen));
-	const text = `${header}\n\n${lines.join("\n")}\n`;
-	const path = joinPaths(options.definitelyTypedPath, ".github", "CODEOWNERS");
-	await writeFile(path, text);
+    const allPackages = await AllPackages.read(await getDefinitelyTyped(options));
+    const typings = allPackages.allTypings();
+    const maxPathLen = Math.max(...typings.map(t => t.subDirectoryPath.length));
+    const lines = mapDefined(typings, t => getEntry(t, maxPathLen));
+    const text = `${header}\n\n${lines.join("\n")}\n`;
+    const path = joinPaths(options.definitelyTypedPath, ".github", "CODEOWNERS");
+    await writeFile(path, text);
 }
 
 const header =
@@ -25,11 +25,11 @@ const header =
 # See https://github.com/DefinitelyTyped/DefinitelyTyped#edit-an-existing-package`;
 
 function getEntry(pkg: TypingsData, maxPathLen: number): string | undefined {
-	const users = mapDefined(pkg.contributors, c => c.githubUsername);
-	if (!users.length) {
-		return undefined;
-	}
+    const users = mapDefined(pkg.contributors, c => c.githubUsername);
+    if (!users.length) {
+        return undefined;
+    }
 
-	const path = `${pkg.subDirectoryPath}/`.padEnd(maxPathLen);
-	return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(" ")}`;
+    const path = `${pkg.subDirectoryPath}/`.padEnd(maxPathLen);
+    return `/${typesDirectoryName}/${path} ${users.map(u => `@${u}`).join(" ")}`;
 }
