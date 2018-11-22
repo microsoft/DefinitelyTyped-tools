@@ -2,12 +2,13 @@ import assert = require("assert");
 import { ensureDir, pathExists, readdir, stat } from "fs-extra";
 import https = require("https");
 import tarStream = require("tar-stream");
+import * as yargs from "yargs";
 import * as zlib from "zlib";
 
 import { Options } from "./lib/common";
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { readFile, readJson, stringOfStream } from "./util/io";
-import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart } from "./util/util";
+import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart, logUncaughtErrors } from "./util/util";
 
 /**
  * Readonly filesystem.
@@ -27,6 +28,16 @@ export interface FS {
     subDir(path: string): FS;
     /** Representation of current location, for debugging. */
     debugPath(): string;
+}
+
+if (!module.parent) {
+    const dry = !!yargs.argv.dry;
+    console.log("gettingDefinitelyTyped: " + (dry ? "from github" : "locally"));
+    logUncaughtErrors(async () => {
+        const dt = await getDefinitelyTyped(dry ? Options.azure : Options.defaults);
+        assert(await dt.exists("types"));
+        assert(!(await dt.exists("buncho")));
+    });
 }
 
 export async function getDefinitelyTyped(options: Options): Promise<FS> {

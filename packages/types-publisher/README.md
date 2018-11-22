@@ -30,7 +30,6 @@ npm run full
 ```
 npm run build
 npm run clean
-npm run get-definitely-typed
 npm run parse
 npm run check
 npm run calculate-versions
@@ -44,7 +43,6 @@ npm run upload-blobs
 
 To update the types packages, the following steps must be performed:
 
-	* Update the local DefinitelyTyped repo
 	* Parse the definitions
 	* Check for conflicts
 	* Calculate versions
@@ -56,12 +54,17 @@ To update the types packages, the following steps must be performed:
 Importantly, each of these steps is *idempotent*.
 Running the entire sequence twice should not have any different results unless one of the inputs has changed.
 
-# Update the local DefinitelyTyped repo
-
-This is not handled automatically.
-This step needs to be handled as part of any automatic update script.
-
 # Parse the definitions
+
+First, obtain a local copy of the DefinitelyTyped repo. For running
+locally, the script assumes that it is at `../DefinitelyTyped` and
+checks to make sure that it has no outstanding changes. It does *not*
+check that it has master checked. For running in the cloud, the script
+downloads a gzipped copy and unzips it into memory. This saves a lot
+of time if the filesystem is very slow.
+
+You can manually run this step locally with `npm run get-definitely-typed`.
+Pass `--dry` to download the DefinitelyTyped copy and unzip it into memory.
 
 > `node bin/parse-definitions.js`
 
