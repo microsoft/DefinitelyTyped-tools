@@ -104,7 +104,7 @@ interface ReadonlyDir extends ReadonlyMap<string, ReadonlyDir | string> {
 }
 
 // Map entries are Dir for directory and string for file.
-class Dir extends Map<string, Dir | string> implements ReadonlyDir {
+export class Dir extends Map<string, Dir | string> implements ReadonlyDir {
     constructor(readonly parent: Dir | undefined) { super(); }
 
     subdir(name: string): Dir {
@@ -130,7 +130,7 @@ class Dir extends Map<string, Dir | string> implements ReadonlyDir {
     }
 }
 
-class InMemoryDT implements FS {
+export class InMemoryDT implements FS {
     /** pathToRoot is just for debugging */
     constructor(readonly curDir: ReadonlyDir, readonly pathToRoot: string) {}
 

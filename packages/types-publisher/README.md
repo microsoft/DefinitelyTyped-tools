@@ -39,6 +39,12 @@ npm run publish
 npm run upload-blobs
 ```
 
+You can run tests with
+
+```
+npm run test
+```
+
 # Overview
 
 To update the types packages, the following steps must be performed:
