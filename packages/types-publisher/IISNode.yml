@@ -2,4 +2,5 @@
 loggingEnabled: true
 devErrorsEnabled: false
 maxLogFileSizeInKB: 2048
-maxTotalLogFileSizeInKB: 16384
+maxTotalLogFileSizeInKB: 65536
+maxLogFiles: 16384
