@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 import full from "../full";
+import appInsights = require("applicationinsights");
 import { Fetcher, stringOfStream } from "../util/io";
 import { joinLogWithErrors, LoggerWithErrors, loggerWithErrors, LogWithErrors } from "../util/logging";
 import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
@@ -18,6 +19,8 @@ export default async function webhookServer(
     fetcher: Fetcher,
     options: Options,
 ): Promise<Server> {
+    appInsights.setup();
+    appInsights.start();
     return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
         log.info(""); log.info("");
         log.info(`# ${timeStamp}`);
