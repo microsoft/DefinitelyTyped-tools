@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import appInsights = require("applicationinsights");
+// import appInsights = require("applicationinsights");
 import { Options } from "./lib/common";
 import { setIssueOk } from "./lib/issue-updater";
 import { getSecret, Secret } from "./lib/secrets";
@@ -22,7 +22,7 @@ export default async function main(): Promise<void> {
         console.log("The environment variables GITHUB_SECRET and GITHUB_ACCESS_TOKEN and PORT must be set.");
     } else {
         console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
-        appInsights.setup(process.env["APPINSIGHTS_INSTRUMENTATIONKEY"]).start();
+        // appInsights.setup(process.env["APPINSIGHTS_INSTRUMENTATIONKEY"]).start();
         console.log("Done initialising App Insights");
         const fetcher = new Fetcher();
 
