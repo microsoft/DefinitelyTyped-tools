@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import appInsights = require("applicationinsights");
+// import appInsights = require("applicationinsights");
 import Github = require("@octokit/rest");
 import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
