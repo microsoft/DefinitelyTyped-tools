@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-import appInsights = require("applicationinsights");
+// import appInsights = require("applicationinsights");
 import { Fetcher } from "./util/io";
 import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
@@ -49,17 +49,17 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             },
         }) as any[];
         if (commits.length > 0) {
-            console.log("Found related commits, logging event and metric");
             const latency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
-            appInsights.defaultClient.trackEvent({
-                name: "publish package",
-                properties: {
-                    name: cp.pkg.desc,
-                    latency: latency.toString()
-                }
-            });
-            appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-            console.log("Done logging");
+            console.log("Found related commits, logging event and metric:" + latency);
+        //     appInsights.defaultClient.trackEvent({
+        //         name: "publish package",
+        //         properties: {
+        //             name: cp.pkg.desc,
+        //             latency: latency.toString()
+        //         }
+        //     });
+        //     appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
+        //     console.log("Done logging");
         }
     }
     for (const n of changedPackages.changedNotNeededPackages) {
