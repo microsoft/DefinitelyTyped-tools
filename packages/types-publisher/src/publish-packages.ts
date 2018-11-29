@@ -49,15 +49,15 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             per_page: 1
         })).data;
         if (commits.length > 0) {
-            const latency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
-            appInsights.defaultClient.trackEvent({
-                name: "publish package",
-                properties: {
-                    name: cp.pkg.desc,
-                    latency: latency.toString()
-                }
-            });
-            appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
+            // const latency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
+            // appInsights.defaultClient.trackEvent({
+            //     name: "publish package",
+            //     properties: {
+            //         name: cp.pkg.desc,
+            //         latency: latency.toString()
+            //     }
+            // });
+            // appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
         }
     }
     for (const n of changedPackages.changedNotNeededPackages) {
