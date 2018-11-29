@@ -47,7 +47,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
                 "User-Agent": "types-publisher",
             },
         }) as { body: string };
-
+        console.log(responseBody.body);
         const commits = JSON.parse(responseBody.body);
         if (commits.length > 0) {
             const latency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
