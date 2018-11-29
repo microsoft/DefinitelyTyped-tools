@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
+import Github = require("@octokit/rest");
 import full from "../full";
 import { Fetcher, stringOfStream } from "../util/io";
 import { joinLogWithErrors, LoggerWithErrors, loggerWithErrors, LogWithErrors } from "../util/logging";
@@ -19,11 +20,16 @@ export default async function webhookServer(
     options: Options,
 ): Promise<Server> {
     return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
+        const github = new Github();
+        github.authenticate({
+            type: "token",
+            token: githubAccessToken
+        });
         log.info(""); log.info("");
         log.info(`# ${timeStamp}`);
         log.info("");
         log.info("Starting full...");
-        await full(dry, timeStamp, options);
+        await full(dry, timeStamp, github, options);
     }));
 }
 

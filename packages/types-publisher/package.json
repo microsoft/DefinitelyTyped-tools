@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
+    "@octokit/rest": "^16.1.0",
     "@types/tar-stream": "^1.6.0",
     "adal-node": "^0.1.22",
     "applicationinsights": "^1.0.7",
