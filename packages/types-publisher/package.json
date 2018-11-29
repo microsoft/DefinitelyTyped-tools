@@ -11,7 +11,7 @@
     "azure-keyvault": "^1.0.0",
     "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
-    "definitelytyped-header-parser": "Microsoft/definitelytyped-header-parser#production",
+    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
     "dtslint": "Microsoft/dtslint#production",
     "fs-extra": "4.0.0",
     "fstream": "^1.0.10",
