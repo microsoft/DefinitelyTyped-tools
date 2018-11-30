@@ -52,10 +52,10 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             if (latestPr === 0) {
                 continue;
             }
-            const pr = await queryGithub(`repos/pulls/DefinitelyTyped/DefinitelyTyped/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
+            const pr = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
             const latency = Date.now() - new Date(pr.merged_at).valueOf();
             log("Current date is " + new Date(Date.now()));
-            log(" Commit date is " + new Date(pr.merged_at));
+            log("  Merge date is " + new Date(pr.merged_at));
             appInsights.defaultClient.trackEvent({
                 name: "publish package",
                 properties: {
