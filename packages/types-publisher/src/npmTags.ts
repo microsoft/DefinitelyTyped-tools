@@ -23,6 +23,7 @@ async function tagAll(dry: boolean): Promise<void> {
     await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
         await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
             // Only update tags for the latest version of the package.
+            if (pkg.fullEscapedNpmName === "@types%2foffice-js") return;
             const version = await getLatestTypingVersion(pkg, infoClient);
             await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
             await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
