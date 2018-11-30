@@ -141,6 +141,14 @@ export function intOfString(str: string): number {
     return n;
 }
 
+export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
+    const out = {} as T; // tslint:disable-line no-object-literal-type-assertion
+    for (const key of Object.keys(data).sort()) {
+        out[key] = data[key];
+    }
+    return out;
+}
+
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined, stdout: string, stderr: string }> {
     return new Promise<{ error: Error | undefined, stdout: string, stderr: string }>(resolve => {

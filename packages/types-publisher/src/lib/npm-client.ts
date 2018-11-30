@@ -94,6 +94,10 @@ export class UncachedNpmInfoClient {
             if (info.error === "Not found") { return undefined; }
             throw new Error(`Error getting version at ${escapedPackageName}: ${info.error}`);
         }
+        if (!info["dist-tags"] && !info.versions) {
+            // Unpublished
+            return undefined;
+        }
         return info;
     }
 

@@ -4,7 +4,7 @@ import * as path from "path";
 
 import { FS } from "../get-definitely-typed";
 import { writeFile } from "../util/io";
-import { assertNever, joinPaths } from "../util/util";
+import { assertNever, joinPaths, sortObjectKeys } from "../util/util";
 
 import {
     AllPackages, AnyPackage, DependencyVersion, getFullNpmName, License, NotNeededPackage, PackageJsonDependency, TypingsData,
@@ -95,7 +95,7 @@ function getDependencies(packageJsonDependencies: ReadonlyArray<PackageJsonDepen
             dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
         }
     }
-    return dependencies;
+    return sortObjectKeys(dependencies);
 }
 
 function dependencySemver(dependency: DependencyVersion): string {
@@ -143,7 +143,7 @@ function createReadme(typing: TypingsData): string {
     lines.push("");
     lines.push("Additional Details");
     lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
-    const dependencies = Array.from(typing.dependencies).map(d => d.name);
+    const dependencies = Array.from(typing.dependencies).map(d => getFullNpmName(d.name));
     lines.push(` * Dependencies: ${dependencies.length ? dependencies.join(", ") : "none"}`);
     lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
     lines.push("");

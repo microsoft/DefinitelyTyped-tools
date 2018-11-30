@@ -62,8 +62,8 @@ function sorted<T>(obj: { [name: string]: T }): { [name: string]: T } {
 }
 
 async function single(singleName: string, dt: FS): Promise<void> {
-    const result = await getTypingInfo(singleName, dt.subDir("types").subDir(singleName));
-    const typings = { [singleName]: result.data };
+    const data = await getTypingInfo(singleName, dt.subDir("types").subDir(singleName));
+    const typings = { [singleName]: data };
     await writeDataFile(typesDataFilename, typings);
-    console.log(JSON.stringify(result, undefined, 4));
+    console.log(JSON.stringify(data, undefined, 4));
 }
