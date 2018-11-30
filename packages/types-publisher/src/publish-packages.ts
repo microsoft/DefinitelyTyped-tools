@@ -38,23 +38,24 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         log(`Publishing ${cp.pkg.desc}...`);
         await publishTypingsPackage(client, cp, dry, log);
 
-        const path = `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.desc}&access_token=${githubAccessToken}`;
-        log("Requesting from github: " + path);
-        const commits = await fetcher.fetchJson({
-            hostname: "api.github.com",
-            path,
-            method: "GET",
-            headers: {
-                // arbitrary string, but something must be provided
-                "User-Agent": "types-publisher",
-            },
-        }) as any[];
+        const commits = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.desc}`, githubAccessToken, fetcher) as { sha: string }[];
         if (commits.length > 0) {
-            const latency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
-            log("Found related commits, logging event and metric:" + latency);
+            log("Found related commits; hash: " + commits[0].sha);
+            const prs = await queryGithub(`search/issues?q=is:pr%20is:merged%20${commits[0].sha}`, githubAccessToken, fetcher) as { items: { number: number }[] };
+            let latestPr = 0
+            for (const pr of prs.items) {
+                if (pr.number > latestPr) {
+                    latestPr = pr.number;
+                }
+            }
+            log("Latest PR: " + latestPr);
+            if (latestPr === 0) {
+                continue;
+            }
+            const pr = await queryGithub(`repos/pulls/DefinitelyTyped/DefinitelyTyped/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
+            const latency = Date.now() - new Date(pr.merged_at).valueOf();
             log("Current date is " + new Date(Date.now()));
-            log(" Commit date is " + new Date(commits[0].commit.author.date));
-            log(" Commit hash is " + commits[0].sha);
+            log(" Commit date is " + new Date(pr.merged_at));
             appInsights.defaultClient.trackEvent({
                 name: "publish package",
                 properties: {
@@ -72,4 +73,18 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
 
     await writeLog("publishing.md", logResult());
     console.log("Done!");
+}
+
+async function queryGithub(path: string, githubToken: string, fetcher: Fetcher) {
+    const [log] = logger();
+    log("Requesting from github: " + path);
+    return await fetcher.fetchJson({
+        hostname: "api.github.com",
+        path: path + "&access_token=" + githubToken,
+        method: "GET",
+        headers: {
+            // arbitrary string, but something must be provided
+            "User-Agent": "types-publisher",
+        },
+    });
 }
