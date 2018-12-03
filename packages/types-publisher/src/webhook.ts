@@ -25,10 +25,20 @@ export default async function main(): Promise<void> {
         appInsights.setup(process.env["APPINSIGHTS_INSTRUMENTATIONKEY"]).start();
         console.log("Done initialising App Insights");
         const fetcher = new Fetcher();
-
-        const s = await webhookServer(key, githubAccessToken, dry, fetcher, Options.azure);
-        await setIssueOk(githubAccessToken, fetcher);
-        console.log(`Listening on port ${port}`);
-        s.listen(port);
+        try {
+            const s = await webhookServer(key, githubAccessToken, dry, fetcher, Options.azure);
+            await setIssueOk(githubAccessToken, fetcher);
+            console.log(`Listening on port ${port}`);
+            s.listen(port);
+        }
+        catch (e) {
+            appInsights.defaultClient.trackEvent({
+                name: "crash",
+                properties: {
+                    error: e.toString()
+                },
+            })
+            throw e;
+        }
     }
 }
