@@ -12,7 +12,7 @@
     "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
     "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
-    "dtslint": "Microsoft/dtslint#production",
+    "dtslint": "github:Microsoft/dtslint#production",
     "fs-extra": "4.0.0",
     "fstream": "^1.0.10",
     "longjohn": "^0.2.11",
