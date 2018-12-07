@@ -53,10 +53,10 @@ export async function computeAndSaveChangedPackages(allPackages: AllPackages, lo
 
 async function computeChangedPackages(allPackages: AllPackages, log: Logger, client: CachedNpmInfoClient): Promise<ChangedPackages> {
     const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
-        const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, log);
+        const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ true, log);
         if (needsPublish) {
             log(`Changed: ${pkg.desc}`);
-            const latestVersion = pkg.isLatest ? undefined : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), client)).version;
+            const latestVersion = pkg.isLatest ? undefined : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), client, /*publish*/ true)).version;
             return { pkg, version, latestVersion };
         }
         return undefined;
@@ -72,7 +72,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: Logger, cli
 }
 
 export async function getLatestTypingVersion(pkg: TypingsData, client: CachedNpmInfoClient): Promise<string> {
-    return (await fetchTypesPackageVersionInfo(pkg, client)).version;
+    return (await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ false)).version;
 }
 
 /** Version of a package published to NPM. */
@@ -120,7 +120,7 @@ interface TypesPackageVersionInfo {
     readonly version: string;
     readonly needsPublish: boolean;
 }
-async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmInfoClient, log?: Logger): Promise<TypesPackageVersionInfo> {
+async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmInfoClient, canPublish: boolean, log?: Logger): Promise<TypesPackageVersionInfo> {
     let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
     let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
     let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
@@ -138,7 +138,7 @@ async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmI
             pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
             `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`);
     }
-    const needsPublish = pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
+    const needsPublish = canPublish && pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
     const patch = needsPublish ? (latestVersion!.minor === pkg.minor ? latestVersion!.patch + 1 : 0) : latestVersion!.patch;
     return { version: versionString(pkg, patch), needsPublish };
 }

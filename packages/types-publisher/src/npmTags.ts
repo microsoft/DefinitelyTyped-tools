@@ -10,7 +10,7 @@ import { logUncaughtErrors, nAtATime } from "./util/util";
 
 if (!module.parent) {
     const dry = !!yargs.argv.dry;
-    logUncaughtErrors(tagAll(dry));
+    logUncaughtErrors(tag(dry, yargs.argv.name as string | undefined));
 }
 
 /**
@@ -18,15 +18,27 @@ if (!module.parent) {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tagAll(dry: boolean): Promise<void> {
+async function tag(dry: boolean, name?: string): Promise<void> {
     const publishClient = await NpmPublishClient.create();
     await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
-        await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
-            // Only update tags for the latest version of the package.
+        if (name) {
+            const pkgs = await AllPackages.readLatestTypings();
+            const pkg = pkgs.find(pkg => pkg.fullNpmName === "@types/" + name)
+            if (!pkg) {
+                throw new Error(`couldn't find ${name}; ${pkgs[0].fullNpmName}`);
+            }
             const version = await getLatestTypingVersion(pkg, infoClient);
             await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
             await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
-        });
+        }
+        else {
+            await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
+                // Only update tags for the latest version of the package.
+                const version = await getLatestTypingVersion(pkg, infoClient);
+                await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+                await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
+            });
+        }
     });
     // Don't tag notNeeded packages
 }
