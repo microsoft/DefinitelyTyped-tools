@@ -1,4 +1,3 @@
-import assert = require("assert");
 import { readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
 import { request as httpRequest } from "http";
 import { Agent, request } from "https";
