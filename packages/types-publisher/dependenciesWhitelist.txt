@@ -44,6 +44,7 @@ path-to-regexp
 pkcs11js
 popper.js
 postcss
+probot
 protobufjs
 protractor
 raven-js
