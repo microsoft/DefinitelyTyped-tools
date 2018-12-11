@@ -22,11 +22,7 @@ async function tag(dry: boolean, name?: string): Promise<void> {
     const publishClient = await NpmPublishClient.create();
     await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
         if (name) {
-            const pkgs = await AllPackages.readLatestTypings();
-            const pkg = pkgs.find(pkg => pkg.fullNpmName === "@types/" + name)
-            if (!pkg) {
-                throw new Error(`couldn't find ${name}; ${pkgs[0].fullNpmName}`);
-            }
+            const pkg = await AllPackages.readSingle(name);
             const version = await getLatestTypingVersion(pkg, infoClient);
             await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
             await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);

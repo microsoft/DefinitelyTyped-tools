@@ -8,7 +8,7 @@ import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./
 import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } from "./lib/packages";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 import { fetchAndProcessNpmInfo } from "./lib/versions";
-import { assertDirectoriesEqual, npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
+import { npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
 import { logger, writeLog } from "./util/logging";
 import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
 
@@ -121,22 +121,31 @@ const validateTypesRegistryPath = joinPaths(validateOutputPath, "node_modules", 
 
 async function validate(): Promise<void> {
     await installForValidate();
-    await assertDirectoriesEqual(registryOutputPath, validateTypesRegistryPath, {
-        ignore: f => f === "package.json",
-    });
+    assertJsonSuperset(
+        await readJson(joinPaths(registryOutputPath, "index.json")),
+        await readJson(joinPaths(validateTypesRegistryPath, "index.json")));
 }
 
 async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>): Promise<void> {
     await installForValidate();
     const indexJson = "index.json";
-    await assertDirectoriesEqual(registryOutputPath, validateTypesRegistryPath, {
-        ignore: f => f === "package.json" || f === indexJson,
-    });
     const actual = await readJson(joinPaths(validateTypesRegistryPath, indexJson)) as Registry;
     const expected = await readJson(joinPaths(registryOutputPath, indexJson)) as Registry;
     for (const key in actual.entries) {
         if (!(key in expected.entries) && !notNeeded.some(p => p.name === key)) {
             throw new Error(`Actual types-registry has unexpected key ${key}`);
+        }
+    }
+}
+
+function assertJsonSuperset(superset: { [s: string]: any }, subset: { [s: string]: any }, parent = "") {
+    for (const key of Object.keys(subset)) {
+        assert(superset.hasOwnProperty(key), `${key} in ${parent} was not found in superset`);
+        if (typeof superset[key] === "string" || typeof superset[key] === "number" || typeof superset[key] === "boolean") {
+            assert(superset[key] === subset[key], `${key} in ${parent} did not match: superset[key] (${superset[key]} !== subset[key] (${subset[key]})`);
+        }
+        else {
+            assertJsonSuperset(superset[key], subset[key], key);
         }
     }
 }
@@ -163,7 +172,13 @@ function generatePackageJson(version: string, typesPublisherContentHash: string)
     };
 }
 
-interface Registry { readonly entries: { readonly [packageName: string]: { readonly [distTags: string]: string } }; }
+interface Registry {
+    readonly entries: {
+        readonly [packageName: string]: {
+            readonly [distTags: string]: string
+        }
+    };
+}
 async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: CachedNpmInfoClient): Promise<Registry> {
     const entries: { [packageName: string]: { [distTags: string]: string } } = {};
     for (const typing of typings) {
@@ -171,7 +186,7 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: Cac
         const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName);
         if (!info) {
             const missings = typings.filter(t => !client.getNpmInfoFromCache(t.fullEscapedNpmName)).map(t => t.fullEscapedNpmName);
-            throw new Error(`${missings} not found in ${Array.from(client.formatKeys())}`);
+            throw new Error(`${missings} not found in ${client.formatKeys()}`);
         }
         entries[typing.name] = filterTags(info.distTags);
     }
