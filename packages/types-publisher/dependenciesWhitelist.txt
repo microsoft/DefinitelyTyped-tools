@@ -22,6 +22,8 @@ eventemitter3
 fast-glob
 fastify
 flatpickr
+google-auth-library
+google-gax
 grpc
 graphql-tools
 immutable
