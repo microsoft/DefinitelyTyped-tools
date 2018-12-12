@@ -175,7 +175,7 @@ async function resolveModule(importSpecifier: string, fs: FS): Promise<string> {
 interface Reference {
     /** <reference path> includes exact filename, so true. import "foo" may reference "foo.d.ts" or "foo/index.d.ts", so false. */
     readonly exact: boolean;
-    readonly text: string;
+    text: string;
 }
 
 /**
@@ -194,17 +194,18 @@ function* findReferencedFiles(src: ts.SourceFile, subDirectory: string, baseDire
         }
     }
 
-    function addReference({ exact, text }: Reference): Reference {
+    function addReference(ref: Reference): Reference {
         // `path.normalize` may add windows slashes
-        const full = normalizeSlashes(path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, text))));
+        const full = normalizeSlashes(path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text))));
         // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
-        if (full.startsWith("..") && (baseDirectory === "." || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))) {
+        if (full.startsWith("..") && (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))) {
             throw new Error(
                 `${src.fileName}: ` +
                 'Definitions must use global references to other packages, not parent ("../xxx") references.' +
-                `(Based on reference '${text}')`);
+                `(Based on reference '${ref.text}')`);
         }
-        return { exact, text: full };
+        ref.text = full;
+        return ref;
     }
 }
 
