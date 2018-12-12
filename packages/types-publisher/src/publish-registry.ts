@@ -138,14 +138,14 @@ async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>): Pro
     }
 }
 
-function assertJsonSuperset(superset: { [s: string]: any }, subset: { [s: string]: any }, parent = "") {
-    for (const key of Object.keys(subset)) {
-        assert(superset.hasOwnProperty(key), `${key} in ${parent} was not found in superset`);
-        if (typeof superset[key] === "string" || typeof superset[key] === "number" || typeof superset[key] === "boolean") {
-            assert(superset[key] === subset[key], `${key} in ${parent} did not match: superset[key] (${superset[key]} !== subset[key] (${subset[key]})`);
+function assertJsonSuperset(newer: { [s: string]: any }, older: { [s: string]: any }, parent = "") {
+    for (const key of Object.keys(older)) {
+        assert(newer.hasOwnProperty(key), `${key} in ${parent} was not found in newer`);
+        if (typeof newer[key] === "string" || typeof newer[key] === "number" || typeof newer[key] === "boolean") {
+            assert(newer[key] >= older[key], `${key} in ${parent} did not match: newer[key] (${newer[key]} < older[key] (${older[key]})`);
         }
         else {
-            assertJsonSuperset(superset[key], subset[key], key);
+            assertJsonSuperset(newer[key], older[key], key);
         }
     }
 }
