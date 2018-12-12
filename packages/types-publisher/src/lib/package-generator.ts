@@ -17,9 +17,11 @@ export async function generateTypingPackage(typing: TypingsData, packages: AllPa
     const typesDirectory = dt.subDir("types").subDir(typing.name);
     const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${typing.major}`);
 
-    const packageJson = await createPackageJSON(typing, version, packages);
+    const packageJson = createPackageJSON(typing, version, packages);
     await writeCommonOutputs(typing, packageJson, createReadme(typing));
-    await Promise.all(typing.files.map(async file => writeFile(await outputFilePath(typing, file), await packageFS.readFile(file))));
+    await Promise.all(typing.files.
+                      filter(file => !file.startsWith("..")).
+                      map(async file => writeFile(await outputFilePath(typing, file), await packageFS.readFile(file))));
 }
 
 export async function generateNotNeededPackage(pkg: NotNeededPackage): Promise<void> {
@@ -52,7 +54,7 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 
 interface Dependencies { [name: string]: string; }
 
-async function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): Promise<string> {
+function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): string {
     // Use the ordering of fields from https://docs.npmjs.com/files/package.json
     const out: {} = {
         name: typing.fullNpmName,
