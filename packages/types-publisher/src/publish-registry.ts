@@ -7,7 +7,7 @@ import { Options } from "./lib/common";
 import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } from "./lib/packages";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
-import { fetchAndProcessNpmInfo } from "./lib/versions";
+import { fetchAndProcessNpmInfo, Semver } from "./lib/versions";
 import { npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
 import { logger, writeLog } from "./util/logging";
 import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
@@ -121,7 +121,7 @@ const validateTypesRegistryPath = joinPaths(validateOutputPath, "node_modules", 
 
 async function validate(): Promise<void> {
     await installForValidate();
-    assertJsonSuperset(
+    assertJsonNewer(
         await readJson(joinPaths(registryOutputPath, "index.json")),
         await readJson(joinPaths(validateTypesRegistryPath, "index.json")));
 }
@@ -138,14 +138,26 @@ async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>): Pro
     }
 }
 
-function assertJsonSuperset(newer: { [s: string]: any }, older: { [s: string]: any }, parent = "") {
+function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any }, parent = "") {
     for (const key of Object.keys(older)) {
         assert(newer.hasOwnProperty(key), `${key} in ${parent} was not found in newer`);
-        if (typeof newer[key] === "string" || typeof newer[key] === "number" || typeof newer[key] === "boolean") {
-            assert(newer[key] >= older[key], `${key} in ${parent} did not match: newer[key] (${newer[key]} < older[key] (${older[key]})`);
-        }
-        else {
-            assertJsonSuperset(newer[key], older[key], key);
+        switch (typeof newer[key]) {
+            case "string":
+                const newerver = Semver.tryParse(newer[key])
+                const olderver = Semver.tryParse(older[key])
+                const condition = newerver && olderver ?
+                    newerver.greaterThan(olderver) || newerver.equals(olderver) :
+                    newer[key] >= older[key]
+                assert(condition, `${key} in ${parent} did not match: newer[key] (${newer[key]}) < older[key] (${older[key]})`);
+                break;
+            case "number":
+                assert(newer[key] >= older[key], `${key} in ${parent} did not match: newer[key] (${newer[key]}) < older[key] (${older[key]})`);
+                break;
+            case "boolean":
+                assert(newer[key] === older[key], `${key} in ${parent} did not match: newer[key] (${newer[key]}) !== older[key] (${older[key]})`);
+                break;
+            default:
+                assertJsonNewer(newer[key], older[key], key);
         }
     }
 }
