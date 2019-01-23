@@ -19,6 +19,7 @@ anydb-sql
 apollo-client
 apollo-link
 apollo-link-http-common
+ast-types
 aws-sdk
 axe-core
 axios
@@ -70,6 +71,7 @@ raven-js
 react-dnd
 react-native-maps
 react-native-svg
+recast
 redux
 redux-observable
 redux-persist
