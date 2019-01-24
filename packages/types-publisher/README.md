@@ -467,15 +467,10 @@ Azure is set up to listen to the `production` branch, which is like `master` but
 ## Update production branch
 
 ```sh
-git checkout production
-git merge master
-npm run build
-git status # Should see changes to bin/
-git add --all
-git commit -m "Update bin/"
-git push
+npm run push-production
 ```
 
+This script merges changes from master into production and updates the `bin/` directory.
 Azure is listening for changes to `production` and should restart itself.
 The server also serves a simple web page [here](http://types-publisher.azurewebsites.net).
 

@@ -3,7 +3,7 @@
 	"rules": {
 		"arrow-parens": [true, "ban-single-arg-parens"],
 		"comment-format": [true, "check-space"],
-		"indent": [true, "tabs"],
+		"indent": [true, "spaces"],
 		"interface-name": [true, "never-prefix"],
 		"max-line-length": [true, 150],
 		"object-literal-key-quotes": [true, "as-needed"],
