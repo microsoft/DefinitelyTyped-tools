@@ -9,6 +9,7 @@
 @types/firebase
 @types/js-data
 @types/vue
+@types/webdriverio
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
