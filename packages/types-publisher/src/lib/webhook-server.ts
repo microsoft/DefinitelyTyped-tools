@@ -4,10 +4,9 @@ import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import full from "../full";
 import { Fetcher, stringOfStream } from "../util/io";
 import { joinLogWithErrors, LoggerWithErrors, loggerWithErrors, LogWithErrors } from "../util/logging";
-import { currentTimeStamp, errorDetails, parseJson } from "../util/util";
+import { currentTimeStamp, parseJson } from "../util/util";
 
 import { Options } from "./common";
-import { reopenIssue } from "./issue-updater";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
 
@@ -18,7 +17,7 @@ export default async function webhookServer(
     fetcher: Fetcher,
     options: Options,
 ): Promise<Server> {
-    return listenToGithub(key, githubAccessToken, fetcher, updateOneAtATime(async (log, timeStamp) => {
+    return listenToGithub(key, updateOneAtATime(async (log, timeStamp) => {
         log.info(""); log.info("");
         log.info(`# ${timeStamp}`);
         log.info("");
@@ -34,8 +33,6 @@ function writeLog(rollingLogs: RollingLogs, logs: LogWithErrors): Promise<void> 
 /** @param onUpdate: returns a promise in case it may error. Server will shut down on errors. */
 function listenToGithub(
     key: string,
-    githubAccessToken: string,
-    fetcher: Fetcher,
     onUpdate: (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined,
 ): Server {
 
@@ -61,19 +58,12 @@ function listenToGithub(
         } catch (error) {
             rollingLogs
                 .then(logs => writeLog(logs, logResult()))
-                .then(() => { onError(error as Error); })
+                .then(onError)
                 .catch(onError);
         }
 
-        function onError(error: Error): void {
+        function onError(): void {
             server.close();
-            // tslint:disable-next-line no-floating-promises
-            reopenIssue(githubAccessToken, timeStamp, error, fetcher).catch(issueError => {
-                console.error(errorDetails(issueError as Error));
-            }).then(() => {
-                console.error(errorDetails(error));
-                process.exit(1);
-            });
         }
 
         async function work(): Promise<void> {

@@ -2,7 +2,6 @@ import * as yargs from "yargs";
 
 import appInsights = require("applicationinsights");
 import { Options } from "./lib/common";
-import { setIssueOk } from "./lib/issue-updater";
 import { getSecret, Secret } from "./lib/secrets";
 import webhookServer from "./lib/webhook-server";
 import { Fetcher } from "./util/io";
@@ -27,7 +26,6 @@ export default async function main(): Promise<void> {
         const fetcher = new Fetcher();
         try {
             const s = await webhookServer(key, githubAccessToken, dry, fetcher, Options.azure);
-            await setIssueOk(githubAccessToken, fetcher);
             console.log(`Listening on port ${port}`);
             s.listen(port);
         }
