@@ -1,4 +1,5 @@
 # For all options see https://github.com/tjanczuk/iisnode/blob/master/src/samples/configuration/iisnode.yml
+nodeProcessCommandLine: node.exe --stack-trace-limit=1000
 loggingEnabled: true
 devErrorsEnabled: false
 maxLogFileSizeInKB: 2048
