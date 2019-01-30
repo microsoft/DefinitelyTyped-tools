@@ -9,6 +9,9 @@ import { consoleLogger, Logger } from "./util/logging";
 import { logUncaughtErrors, nAtATime } from "./util/util";
 
 if (!module.parent) {
+    // TODO: package-publisher.ts doesn't have a main block so probably should just merge this here
+    //  (although npmTags is run in yet a THIRD case, unrelated to npm or to the azure app. It updates for a release.)
+    //  this is the most overloaded piece of software ever
     const dry = !!yargs.argv.dry;
     logUncaughtErrors(tag(dry, yargs.argv.name as string | undefined));
 }
@@ -44,7 +47,10 @@ export async function updateTypeScriptVersionTags(
 ): Promise<void> {
     const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
     log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
-    if (!dry) {
+    if (dry) {
+        log("(dry) Skip tag");
+    }
+    else {
         for (const tagName of tags) {
             await client.tag(pkg.fullEscapedNpmName, version, tagName);
         }
@@ -54,7 +60,10 @@ export async function updateTypeScriptVersionTags(
 export async function updateLatestTag(
     fullEscapedNpmName: string, version: string, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
     log(`   but tag ${fullEscapedNpmName}@${version} as "latest"`);
-    if (!dry) {
+    if (dry) {
+        log("   (dry) Skip move \"latest\" back to newest version");
+    }
+    else {
         await client.tag(fullEscapedNpmName, version, "latest");
     }
 }

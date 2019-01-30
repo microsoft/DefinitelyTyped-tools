@@ -19,7 +19,7 @@ if (!module.parent) {
         if (deprecateName !== undefined) {
             // A '--deprecate' command is available in case types-publisher got stuck *while* trying to deprecate a package.
             // Normally this should not be needed.
-            await deprecateNotNeededPackage(await NpmPublishClient.create(), await AllPackages.readSingleNotNeeded(deprecateName, dt));
+            await deprecateNotNeededPackage(await NpmPublishClient.create(), await AllPackages.readSingleNotNeeded(deprecateName, dt), /*dry*/ false, logger()[0]);
         } else {
             await publishPackages(await readChangedPackages(await AllPackages.read(dt)), dry, process.env["GH_API_TOKEN"] || "", new Fetcher());
         }
@@ -38,7 +38,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         log(`Publishing ${cp.pkg.desc}...`);
         await publishTypingsPackage(client, cp, dry, log);
 
-        const commits = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.desc}`, githubAccessToken, fetcher) as {
+        const commits = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`, githubAccessToken, fetcher) as {
             sha: string,
             commit: {
                 author: {
@@ -64,19 +64,24 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
             log("Current date is " + new Date(Date.now()));
             log("  Merge date is " + new Date(pr.merged_at));
-            appInsights.defaultClient.trackEvent({
-                name: "publish package",
-                properties: {
-                    name: cp.pkg.desc,
-                    latency: latency.toString(),
-                    commitLatency: commitlatency.toString(),
-                    authorCommit: commits[0].sha,
-                    pr: latestPr.toString(),
-                }
-            });
-            appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-            appInsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
-            log("Done logging latency");
+            if(dry) {
+                log("(dry) Not logging latency");
+            }
+            else {
+                appInsights.defaultClient.trackEvent({
+                    name: "publish package",
+                    properties: {
+                        name: cp.pkg.desc,
+                        latency: latency.toString(),
+                        commitLatency: commitlatency.toString(),
+                        authorCommit: commits[0].sha,
+                        pr: latestPr.toString(),
+                    }
+                });
+                appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
+                appInsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
+                log("Done logging latency");
+            }
         }
     }
     for (const n of changedPackages.changedNotNeededPackages) {

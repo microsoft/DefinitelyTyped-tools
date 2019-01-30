@@ -9,7 +9,7 @@ import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } fro
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 import { fetchAndProcessNpmInfo, Semver } from "./lib/versions";
 import { npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
-import { logger, writeLog } from "./util/logging";
+import { logger, writeLog, Logger } from "./util/logging";
 import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
 
 const packageName = "types-registry";
@@ -53,7 +53,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
         await (await publishClient()).tag(packageName, highestSemverVersion.versionString, "latest");
     } else if (oldContentHash !== newContentHash && isAWeekAfter(lastModified)) {
         log("New packages have been added, so publishing a new registry.");
-        await publish(await publishClient(), packageJson, newVersion, dry);
+        await publish(await publishClient(), packageJson, newVersion, dry, log);
     } else {
         const reason = oldContentHash === newContentHash ? "Was modified less than a week ago" : "No new packages published";
         log(`${reason}, so no need to publish new registry.`);
@@ -90,8 +90,8 @@ async function generate(registry: string, packageJson: {}): Promise<void> {
     }
 }
 
-async function publish(client: NpmPublishClient, packageJson: {}, version: string, dry: boolean): Promise<void> {
-    await client.publish(registryOutputPath, packageJson, dry);
+async function publish(client: NpmPublishClient, packageJson: {}, version: string, dry: boolean, log: Logger): Promise<void> {
+    await client.publish(registryOutputPath, packageJson, dry, log);
     // Sleep for 60 seconds to let NPM update.
     await sleep(60);
     // Don't set it as "latest" until *after* it's been validated.

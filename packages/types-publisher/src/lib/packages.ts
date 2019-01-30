@@ -360,8 +360,12 @@ class TypingsVersions {
             [version, new TypingsData(data[version], version === this.latest)]));
     }
 
+    /**
+     * Values are reversed so that we publish the current version first.
+     * This is important because older versions repeatedly reset the "latest" tag to the current version.
+     */
     getAll(): Iterable<TypingsData> {
-        return this.map.values();
+        return Array.from(this.map.values()).reverse();
     }
 
     get(majorVersion: DependencyVersion): TypingsData {
