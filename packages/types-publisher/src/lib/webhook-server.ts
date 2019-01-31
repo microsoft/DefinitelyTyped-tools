@@ -9,6 +9,7 @@ import { currentTimeStamp, parseJson } from "../util/util";
 import { Options } from "./common";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
+import { setTimeout } from "timers";
 
 export default async function webhookServer(
     key: string,
@@ -17,6 +18,7 @@ export default async function webhookServer(
     fetcher: Fetcher,
     options: Options,
 ): Promise<Server> {
+    setTimeout(timedUpdate(githubAccessToken, dry, fetcher, options), 200_000, loggerWithErrors()[0]);
     return listenToGithub(key, updateOneAtATime(async (log, timeStamp) => {
         log.info(""); log.info("");
         log.info(`# ${timeStamp}`);
@@ -24,6 +26,23 @@ export default async function webhookServer(
         log.info("Starting full...");
         await full(dry, timeStamp, githubAccessToken, fetcher, options);
     }));
+}
+
+function timedUpdate(
+    githubAccessToken: string,
+    dry: boolean,
+    fetcher: Fetcher,
+    options: Options,
+) {
+    return updateOneAtATime(async (log) => {
+        const timeStamp = currentTimeStamp();
+        log.info(""); log.info("");
+        log.info(`# ${timeStamp}`);
+        log.info("");
+        log.info("Starting full from timed update...");
+        await full(dry, timeStamp, githubAccessToken, fetcher, options);
+        setTimeout(timedUpdate(githubAccessToken, dry, fetcher, options), 1_000_000, log);
+    });
 }
 
 function writeLog(rollingLogs: RollingLogs, logs: LogWithErrors): Promise<void> {
@@ -72,7 +91,7 @@ function listenToGithub(
                 return;
             }
 
-            log.info(`Message from github: ${data}`);
+            log.info(`Message from github: ${data.slice(0, 200)}...`);
             const expectedRef = `refs/heads/${sourceBranch}`;
 
             const actualRef = (parseJson(data) as { readonly ref: string }).ref;
