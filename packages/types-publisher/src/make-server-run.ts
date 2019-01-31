@@ -1,8 +1,8 @@
 import * as yargs from "yargs";
 
-import { createHmac } from "crypto";
 import { getSecret, Secret } from "./lib/secrets";
 import { sourceBranch } from "./lib/settings";
+import { expectedSignature } from "./lib/webhook-server";
 import { makeHttpRequest } from "./util/io";
 import { logUncaughtErrors } from "./util/util";
 
@@ -17,13 +17,6 @@ function getPort(): number {
         throw new Error("Must provide PORT");
     }
     return port;
-}
-
-function expectedSignature(key: string, data: string): string {
-    const hmac = createHmac("sha1", key);
-    hmac.write(data);
-    const digest = hmac.digest("hex");
-    return `sha1=${digest}`;
 }
 
 async function main(options: { hostname: string, port?: number }): Promise<void> {
