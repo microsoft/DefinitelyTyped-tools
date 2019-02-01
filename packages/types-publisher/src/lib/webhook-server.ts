@@ -25,7 +25,7 @@ export default async function webhookServer(
         log.info("Starting full...");
         await full(dry, timeStamp, githubAccessToken, fetcher, options, log);
     });
-    setInterval(fullOne, 300_000, loggerWithErrors()[0], currentTimeStamp());
+    setInterval(fullOne, 500_000, loggerWithErrors()[0], currentTimeStamp());
     return listenToGithub(key, fullOne);
 }
 
@@ -125,7 +125,7 @@ function updateOneAtATime(
                 }
                 catch (e) {
                     log.info("Error: ");
-                    log.info(e.toString);
+                    log.info(e.toString());
                 }
                 finally {
                     working = false;
