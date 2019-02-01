@@ -38,7 +38,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         log(`Publishing ${cp.pkg.desc}...`);
         await publishTypingsPackage(client, cp, dry, log);
 
-        const commits = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`, githubAccessToken, fetcher) as {
+        const commits = await github(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`, githubAccessToken, fetcher) as {
             sha: string,
             commit: {
                 author: {
@@ -48,7 +48,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         }[];
         if (commits.length > 0) {
             log("Found related commits; hash: " + commits[0].sha);
-            const prs = await queryGithub(`search/issues?q=is:pr%20is:merged%20${commits[0].sha}`, githubAccessToken, fetcher) as { items: { number: number }[] };
+            const prs = await github(`search/issues?q=is:pr%20is:merged%20${commits[0].sha}`, githubAccessToken, fetcher) as { items: { number: number }[] };
             let latestPr = 0
             for (const pr of prs.items) {
                 if (pr.number > latestPr) {
@@ -59,12 +59,18 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             if (latestPr === 0) {
                 continue;
             }
-            const pr = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
+            const pr = await github(`repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
             const latency = Date.now() - new Date(pr.merged_at).valueOf();
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
             log("Current date is " + new Date(Date.now()));
             log("  Merge date is " + new Date(pr.merged_at));
-            if(dry) {
+            if (dry) {
+                log("(dry) Not posting published-comment to Definitely Typed.");
+            }
+            else {
+                await github(`repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments?body=${cp.pkg.fullNpmName}@${cp.latestVersion} is now published.`, githubAccessToken, fetcher, "POST");
+            }
+            if (dry) {
                 log("(dry) Not logging latency");
             }
             else {
@@ -92,13 +98,18 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
     console.log("Done!");
 }
 
-async function queryGithub(path: string, githubToken: string, fetcher: Fetcher) {
+async function github(path: string, githubToken: string, fetcher: Fetcher, method: "GET" | "PATCH" | "POST" = "GET") {
     const [log] = logger();
-    log("Requesting from github: " + path);
+    if (method === "GET") {
+        log("Requesting from github: " + path);
+    }
+    else if (method === "POST") {
+        log("Posting to github: " + path);
+    }
     return await fetcher.fetchJson({
         hostname: "api.github.com",
         path: path + "&access_token=" + githubToken,
-        method: "GET",
+        method,
         headers: {
             // arbitrary string, but something must be provided
             "User-Agent": "types-publisher",
