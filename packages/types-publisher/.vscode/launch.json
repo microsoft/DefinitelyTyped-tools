@@ -7,6 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "parse-definitions.js",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/parse-definitions.js",
+            "args": [],
+            "sourceMaps": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "calculate-versions.js",
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/calculate-versions.js",

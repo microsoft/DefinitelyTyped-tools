@@ -124,7 +124,6 @@ function updateOneAtATime(
                     await doOnce(log, timeStamp);
                 }
                 catch (e) {
-                    log.info("Error: ");
                     log.info(e.toString());
                 }
                 finally {

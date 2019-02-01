@@ -36,6 +36,7 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
     const typings: { [name: string]: TypingsVersionsRaw } = {};
 
     if (parallel) {
+        log.info("Parsing in parallel...");
         await runWithChildProcesses({
             inputs: packageNames,
             commandLineArgs: [`${parallel.definitelyTypedPath}/types`],
@@ -44,6 +45,7 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
             handleOutput,
         });
     } else {
+        log.info("Parsing non-parallel...");
         for (const packageName of packageNames) {
             handleOutput({ data: await getTypingInfo(packageName, typesFS.subDir(packageName)), packageName });
         }
