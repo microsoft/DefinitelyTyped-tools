@@ -25,7 +25,7 @@ export default async function webhookServer(
         log.info("Starting full...");
         await full(dry, timeStamp, githubAccessToken, fetcher, options, log);
     });
-    setInterval(fullOne, 500_000, loggerWithErrors()[0], currentTimeStamp());
+    setInterval(fullOne, 1_000_000, loggerWithErrors()[0], currentTimeStamp());
     return listenToGithub(key, fullOne);
 }
 
@@ -102,34 +102,27 @@ function updateOneAtATime(
     doOnce: (log: LoggerWithErrors, timeStamp: string) => Promise<void>,
 ): (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined {
     let working = false;
-    let anyUpdatesWhileWorking = false;
 
     return (log, timeStamp) => {
         if (working) {
-            anyUpdatesWhileWorking = true;
             log.info("Not starting update, because already performing one.");
             return undefined;
         } else {
-            working = false;
-            anyUpdatesWhileWorking = false;
             return work();
         }
 
         async function work(): Promise<void> {
             log.info("Starting update");
             working = true;
-            anyUpdatesWhileWorking = false;
-            do {
-                try {
-                    await doOnce(log, timeStamp);
-                }
-                catch (e) {
-                    log.info(e.toString());
-                }
-                finally {
-                    working = false;
-                }
-            } while (anyUpdatesWhileWorking);
+            try {
+                await doOnce(log, timeStamp);
+            }
+            catch (e) {
+                log.info(e.toString());
+            }
+            finally {
+                working = false;
+            }
         }
     };
 }
