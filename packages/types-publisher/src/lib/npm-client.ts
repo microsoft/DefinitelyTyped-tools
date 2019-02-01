@@ -15,8 +15,7 @@ function packageUrl(packageName: string): string {
     return resolveUrl(npmRegistry, packageName);
 }
 
-const cacheDir = joinPaths(__dirname, "..", "..", "cache");
-const cacheFile = joinPaths(cacheDir, "npmInfo.json");
+const cacheFile = joinPaths(__dirname, "..", "..", "cache", "npmInfo.json");
 
 export type NpmInfoCache = ReadonlyMap<string, NpmInfo>;
 
@@ -46,16 +45,16 @@ export class CachedNpmInfoClient {
     static async with<T>(uncachedClient: UncachedNpmInfoClient, cb: (client: CachedNpmInfoClient) => Promise<T>): Promise<T> {
         const log = loggerWithErrors()[0];
         let unroll: Map<string, NpmInfo>;
-        log.info("Checking for cache file...");
+        log.info(`Checking for cache file at ${cacheFile}...`);
         const cacheFileExists = await pathExists(cacheFile);
         if (cacheFileExists) {
             log.info("Reading cache file...");
             const cache = await readJson(cacheFile) as Record<string, NpmInfoRaw>;
-            log.info(`Cache file ${cacheFile} existed, copying to map...`)
+            log.info(`Cache file ${cacheFile} exists, copying to map...`)
             unroll = recordToMap(cache, npmInfoFromJson);
         }
         else {
-            log.info("Cache file didn't exist, using empty map.");
+            log.info("Cache file doesn't exist, using empty map.");
             unroll = new Map();
         }
         const client = new this(uncachedClient, unroll);
