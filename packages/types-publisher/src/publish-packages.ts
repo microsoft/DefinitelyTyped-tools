@@ -68,7 +68,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
                 log("(dry) Not posting published-comment to Definitely Typed.");
             }
             else {
-                await github(`repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments?body=${cp.pkg.fullNpmName}@${cp.latestVersion} is now published.`, githubAccessToken, fetcher, "POST");
+                await github(`repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments?body=${cp.pkg.fullEscapedNpmName}@${cp.pkg.major}%20is%20now%20published.`, githubAccessToken, fetcher, "POST");
             }
             if (dry) {
                 log("(dry) Not logging latency");
