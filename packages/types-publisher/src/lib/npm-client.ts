@@ -9,7 +9,7 @@ import { identity, joinPaths, mapToRecord, recordToMap } from "../util/util";
 
 import { getSecret, Secret } from "./secrets";
 import { npmApi, npmRegistry, npmRegistryHostName } from "./settings";
-import { Logger } from "../util/logging";
+import { Logger, loggerWithErrors } from "../util/logging";
 
 function packageUrl(packageName: string): string {
     return resolveUrl(npmRegistry, packageName);
@@ -44,9 +44,21 @@ export interface NpmInfoVersion {
 
 export class CachedNpmInfoClient {
     static async with<T>(uncachedClient: UncachedNpmInfoClient, cb: (client: CachedNpmInfoClient) => Promise<T>): Promise<T> {
-        const client = new this(uncachedClient, await pathExists(cacheFile)
-            ? recordToMap(await readJson(cacheFile) as Record<string, NpmInfoRaw>, npmInfoFromJson)
-            : new Map());
+        const log = loggerWithErrors()[0];
+        let unroll: Map<string, NpmInfo>;
+        log.info("Checking for cache file...");
+        const cacheFileExists = await pathExists(cacheFile);
+        if (cacheFileExists) {
+            log.info("Reading cache file...");
+            const cache = await readJson(cacheFile) as Record<string, NpmInfoRaw>;
+            log.info(`Cache file ${cacheFile} existed, copying to map...`)
+            unroll = recordToMap(cache, npmInfoFromJson);
+        }
+        else {
+            log.info("Cache file didn't exist, using empty map.");
+            unroll = new Map();
+        }
+        const client = new this(uncachedClient, unroll);
         const res = await cb(client);
         await client.writeCache();
         return res;
