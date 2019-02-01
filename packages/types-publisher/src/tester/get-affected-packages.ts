@@ -3,7 +3,7 @@ import { Options, TesterOptions } from "../lib/common";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { AllPackages, PackageBase, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
-import { consoleLogger, Logger } from "../util/logging";
+import { consoleLogger, Logger, loggerWithErrors } from "../util/logging";
 import { execAndThrowErrors, flatMap, logUncaughtErrors, mapDefined, mapIter, sort } from "../util/util";
 
 if (!module.parent) {
@@ -11,7 +11,7 @@ if (!module.parent) {
 }
 async function main(options: TesterOptions): Promise<void> {
     const changes = await getAffectedPackages(
-        await AllPackages.read(await getDefinitelyTyped(options)),
+        await AllPackages.read(await getDefinitelyTyped(options, loggerWithErrors()[0])),
         consoleLogger.info,
         options.definitelyTypedPath);
     console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependers: changes.dependentPackages.map(t => t.desc) });

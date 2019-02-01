@@ -1,5 +1,6 @@
 import { Options } from "./lib/common";
 import { getDefinitelyTyped, FS, Dir, InMemoryDT } from "./get-definitely-typed";
+import { loggerWithErrors } from "./util/logging";
 
 function testo(o: { [s: string]: () => void }) {
     for (const k in o) {
@@ -8,7 +9,7 @@ function testo(o: { [s: string]: () => void }) {
 }
 testo({
     async downloadDefinitelyTyped() {
-        const dt = await getDefinitelyTyped(Options.azure);
+        const dt = await getDefinitelyTyped(Options.azure, loggerWithErrors()[0]);
         expect(await dt.exists("types")).toBe(true);
         expect(await dt.exists("buncho")).toBe(false);
     },

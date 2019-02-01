@@ -23,7 +23,7 @@ export default async function webhookServer(
         log.info(`# ${timeStamp}`);
         log.info("");
         log.info("Starting full...");
-        await full(dry, timeStamp, githubAccessToken, fetcher, options);
+        await full(dry, timeStamp, githubAccessToken, fetcher, options, log);
     });
     setInterval(fullOne, 300_000, loggerWithErrors()[0], currentTimeStamp());
     return listenToGithub(key, fullOne);

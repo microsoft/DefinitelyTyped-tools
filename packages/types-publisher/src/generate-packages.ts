@@ -7,14 +7,15 @@ import { generateNotNeededPackage, generateTypingPackage } from "./lib/package-g
 import { AllPackages } from "./lib/packages";
 import { outputDirPath } from "./lib/settings";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
-import { logger, writeLog } from "./util/logging";
+import { logger, writeLog, loggerWithErrors } from "./util/logging";
 import { writeTgz } from "./util/tgz";
 import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
     const tgz = !!yargs.argv.tgz;
     logUncaughtErrors(async () => {
-        const dt = await getDefinitelyTyped(Options.defaults);
+        const log = loggerWithErrors()[0];
+        const dt = await getDefinitelyTyped(Options.defaults, log);
         const allPackages = await AllPackages.read(dt);
         await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
     });

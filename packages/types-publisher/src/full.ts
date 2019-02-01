@@ -15,22 +15,24 @@ import publishRegistry from "./publish-registry";
 import uploadBlobsAndUpdateIssue from "./upload-blobs";
 import { assertDefined, currentTimeStamp, logUncaughtErrors, numberOfOsProcesses } from "./util/util";
 import validate from "./validate";
+import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
 
 if (!module.parent) {
     appInsights.setup();
     appInsights.start();
     const dry = !!yargs.argv.dry;
-    logUncaughtErrors(full(dry, currentTimeStamp(), process.env["GH_API_TOKEN"] || "", new Fetcher(), Options.defaults));
+    logUncaughtErrors(full(dry, currentTimeStamp(), process.env["GH_API_TOKEN"] || "", new Fetcher(), Options.defaults, loggerWithErrors()[0]));
 }
 
-export default async function full(dry: boolean, timeStamp: string, githubAccessToken: string, fetcher: Fetcher, options: Options): Promise<void> {
+export default async function full(dry: boolean, timeStamp: string, githubAccessToken: string, fetcher: Fetcher, options: Options, log: LoggerWithErrors): Promise<void> {
     const infoClient = new UncachedNpmInfoClient();
     await clean();
-    const dt = await getDefinitelyTyped(options);
+    const dt = await getDefinitelyTyped(options, log);
     const allPackages = await parseDefinitions(dt, options.parseInParallel
             ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
-            : undefined);
-    const changedPackages = await calculateVersions(dt, infoClient);
+            : undefined,
+        log);
+    const changedPackages = await calculateVersions(dt, infoClient, log);
     await generatePackages(dt, allPackages, changedPackages);
     await createSearchIndex(allPackages, infoClient);
     await publishPackages(changedPackages, dry, githubAccessToken, fetcher);

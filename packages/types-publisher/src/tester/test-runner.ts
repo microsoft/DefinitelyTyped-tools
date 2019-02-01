@@ -6,7 +6,7 @@ import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
 import { AllPackages, TypingsData } from "../lib/packages";
 import { npmInstallFlags } from "../util/io";
-import { consoleLogger, LoggerWithErrors } from "../util/logging";
+import { consoleLogger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
 import { exec, execAndThrowErrors, joinPaths, logUncaughtErrors, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
 import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
@@ -14,7 +14,7 @@ import getAffectedPackages, { Affected, allDependencies } from "./get-affected-p
 if (!module.parent) {
     const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
     const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-    logUncaughtErrors(getDefinitelyTyped(options).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
+    logUncaughtErrors(getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
 }
 
 export function parseNProcesses(): number {

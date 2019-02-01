@@ -5,13 +5,15 @@ import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { logUncaughtErrors } from "./util/util";
+import { loggerWithErrors } from "./util/logging";
 
 if (!module.parent) {
+    const log = loggerWithErrors()[0];
     const single = yargs.argv.single as string | undefined;
     if (single) {
         logUncaughtErrors(doSingle(single, new UncachedNpmInfoClient()));
     } else {
-        logUncaughtErrors(async () => createSearchIndex(await AllPackages.read(await getDefinitelyTyped(Options.defaults)), new UncachedNpmInfoClient()));
+        logUncaughtErrors(async () => createSearchIndex(await AllPackages.read(await getDefinitelyTyped(Options.defaults, log)), new UncachedNpmInfoClient()));
     }
 }
 

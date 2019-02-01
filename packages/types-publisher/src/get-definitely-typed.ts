@@ -10,6 +10,7 @@ import { Options } from "./lib/common";
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { readFile, readJson, stringOfStream } from "./util/io";
 import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart, logUncaughtErrors } from "./util/util";
+import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
 
 /**
  * Readonly filesystem.
@@ -37,14 +38,15 @@ if (!module.parent) {
     const dry = !!yargs.argv.dry;
     console.log("gettingDefinitelyTyped: " + (dry ? "from github" : "locally"));
     logUncaughtErrors(async () => {
-        const dt = await getDefinitelyTyped(dry ? Options.azure : Options.defaults);
+        const dt = await getDefinitelyTyped(dry ? Options.azure : Options.defaults, loggerWithErrors()[0]);
         assert(await dt.exists("types"));
         assert(!(await dt.exists("buncho")));
     });
 }
 
-export async function getDefinitelyTyped(options: Options): Promise<FS> {
+export async function getDefinitelyTyped(options: Options, log: LoggerWithErrors): Promise<FS> {
     if (options.definitelyTypedPath === undefined) {
+        log.info("Downloading Definitely Typed ...");
         await ensureDir(dataDirPath);
         return downloadAndExtractFile(definitelyTypedZipUrl);
     } else {
@@ -52,6 +54,7 @@ export async function getDefinitelyTyped(options: Options): Promise<FS> {
         if (error) { throw error; }
         if (stderr) { throw new Error(stderr); }
         if (stdout) { throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`); }
+        log.info(`Using local Definitely Typed at ${options.definitelyTypedPath}.`);
         return new DiskFS(`${options.definitelyTypedPath}/`);
     }
 }

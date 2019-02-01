@@ -8,14 +8,14 @@ import { NpmPublishClient } from "./lib/npm-client";
 import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { AllPackages } from "./lib/packages";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
-import { logger, writeLog } from "./util/logging";
+import { logger, writeLog, loggerWithErrors } from "./util/logging";
 import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
     const dry = !!yargs.argv.dry;
     const deprecateName = yargs.argv.deprecate as string | undefined;
     logUncaughtErrors(async () => {
-        const dt = await getDefinitelyTyped(Options.defaults);
+        const dt = await getDefinitelyTyped(Options.defaults, loggerWithErrors()[0]);
         if (deprecateName !== undefined) {
             // A '--deprecate' command is available in case types-publisher got stuck *while* trying to deprecate a package.
             // Normally this should not be needed.

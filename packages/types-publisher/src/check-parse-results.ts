@@ -5,11 +5,12 @@ import { Options } from "./lib/common";
 import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
-import { Logger, logger, writeLog } from "./util/logging";
+import { Logger, logger, writeLog, loggerWithErrors } from "./util/logging";
 import { assertDefined, best, logUncaughtErrors, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
-    logUncaughtErrors(async () => checkParseResults(true, await getDefinitelyTyped(Options.defaults), Options.defaults, new UncachedNpmInfoClient()));
+    const log = loggerWithErrors()[0];
+    logUncaughtErrors(async () => checkParseResults(true, await getDefinitelyTyped(Options.defaults, log), Options.defaults, new UncachedNpmInfoClient()));
 }
 
 export default async function checkParseResults(includeNpmChecks: boolean, dt: FS, options: Options, client: UncachedNpmInfoClient): Promise<void> {

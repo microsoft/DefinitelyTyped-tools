@@ -1,6 +1,6 @@
 import assert = require("assert");
 
-import { Logger } from "../util/logging";
+import { LoggerWithErrors } from "../util/logging";
 import { assertDefined, best, intOfString, mapDefined, mapDefinedAsync } from "../util/util";
 
 import { readDataFile, writeDataFile } from "./common";
@@ -41,7 +41,8 @@ export interface ChangedPackages {
     readonly changedNotNeededPackages: ReadonlyArray<NotNeededPackage>;
 }
 
-export async function computeAndSaveChangedPackages(allPackages: AllPackages, log: Logger, client: CachedNpmInfoClient): Promise<ChangedPackages> {
+export async function computeAndSaveChangedPackages(allPackages: AllPackages, log: LoggerWithErrors, client: CachedNpmInfoClient): Promise<ChangedPackages> {
+    log.info("Computing changed packages...");
     const cp = await computeChangedPackages(allPackages, log, client);
     const json: ChangedPackagesJson = {
         changedTypings: cp.changedTypings.map(({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })),
@@ -51,11 +52,11 @@ export async function computeAndSaveChangedPackages(allPackages: AllPackages, lo
     return cp;
 }
 
-async function computeChangedPackages(allPackages: AllPackages, log: Logger, client: CachedNpmInfoClient): Promise<ChangedPackages> {
+async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors, client: CachedNpmInfoClient): Promise<ChangedPackages> {
     const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
         const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ true, log);
         if (needsPublish) {
-            log(`Changed: ${pkg.desc}`);
+            log.info(`Changed: ${pkg.desc}`);
             const latestVersion = pkg.isLatest ? undefined : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), client, /*publish*/ true)).version;
             return { pkg, version, latestVersion };
         }
@@ -63,7 +64,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: Logger, cli
     });
     const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async pkg => {
         if (!await isNotNeededPackageAlreadyDeprecated(pkg, client, log)) {
-            log(`Now deprecated: ${pkg.name}`);
+            log.info(`Now deprecated: ${pkg.name}`);
             return pkg;
         }
         return undefined;
@@ -120,12 +121,12 @@ interface TypesPackageVersionInfo {
     readonly version: string;
     readonly needsPublish: boolean;
 }
-async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmInfoClient, canPublish: boolean, log?: Logger): Promise<TypesPackageVersionInfo> {
+async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmInfoClient, canPublish: boolean, log?: LoggerWithErrors): Promise<TypesPackageVersionInfo> {
     let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
     let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
     let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
     if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
-        if (log) { log(`Version info not cached for ${pkg.desc}`); }
+        if (log) { log.info(`Version info not cached for ${pkg.desc}`); }
         info = await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName);
         latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
         latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
@@ -147,12 +148,12 @@ function versionString(pkg: TypingsData, patch: number): string {
     return new Semver(pkg.major, pkg.minor, patch).versionString;
 }
 
-async function isNotNeededPackageAlreadyDeprecated(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger): Promise<boolean> {
+async function isNotNeededPackageAlreadyDeprecated(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: LoggerWithErrors): Promise<boolean> {
     const cachedInfo = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
     let latestVersion = cachedInfo && assertDefined(cachedInfo.distTags.get("latest"));
     let latestVersionInfo = cachedInfo && latestVersion && assertDefined(cachedInfo.versions.get(latestVersion));
     if (!latestVersionInfo || !latestVersionInfo.deprecated) {
-        log(`Version info not cached for ${pkg.desc}`);
+        log.info(`Version info not cached for ${pkg.desc}`);
         // Since we're deprecating this package, it should have been published at least once before, so assertDefined.
         const info = assertDefined(await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName));
         latestVersion = assertDefined(info.distTags.get("latest"));

@@ -24,7 +24,8 @@ if (!module.parent) {
         console.log(`Validating: ${JSON.stringify(packageNames)}`);
         logUncaughtErrors(doValidate(packageNames));
     } else {
-        logUncaughtErrors(getDefinitelyTyped(Options.defaults).then(validate));
+        const log = loggerWithErrors()[0];
+        logUncaughtErrors(getDefinitelyTyped(Options.defaults, log).then(validate));
     }
 }
 
