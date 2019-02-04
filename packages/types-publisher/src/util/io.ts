@@ -83,7 +83,7 @@ export class Fetcher {
         const maxRetries = options.retries === false || options.retries === undefined ? 0 : options.retries === true ? 10 : options.retries;
         for (let retries = maxRetries; retries > 1; retries--) {
             try {
-                return await this.fetchOnce(options);
+                return await doRequest(options, request, this.agent);
             } catch (err) {
                 if (!/EAI_AGAIN|ETIMEDOUT|ECONNRESET/.test((err as Error).message)) {
                     throw err;
@@ -91,10 +91,6 @@ export class Fetcher {
             }
             await sleep(1);
         }
-        return this.fetchOnce(options);
-    }
-
-    private fetchOnce(options: FetchOptions): Promise<string> {
         return doRequest(options, request, this.agent);
     }
 }
