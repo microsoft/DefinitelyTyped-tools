@@ -69,7 +69,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             }
             else {
                 const commented = await postGithub(
-                    `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments&access_token=${githubAccessToken}`,
+                    `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments`,
                     `body=${cp.pkg.fullEscapedNpmName}@${cp.pkg.major}.${cp.pkg.minor}%20is%20now%20published.`,
                     githubAccessToken,
                     fetcher);
@@ -103,10 +103,9 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
     console.log("Done!");
 }
 
-async function postGithub(path: string, data: string, githubToken: string, fetcher: Fetcher) {
+async function postGithub(path: string, body: string, githubToken: string, fetcher: Fetcher) {
     const [log] = logger();
     log("Posting to github: " + path);
-    const body = data + "&access_token=" + githubToken;
     return fetcher.fetchJson({
         hostname: "api.github.com",
         method: "POST",
@@ -116,6 +115,7 @@ async function postGithub(path: string, data: string, githubToken: string, fetch
             // arbitrary string, but something must be provided
             "User-Agent": "types-publisher",
             "Content-Type": "application/x-www-form-urlencoded",
+            "authToken": githubToken,
             "Content-Length": Buffer.byteLength(body),
         },
     });
