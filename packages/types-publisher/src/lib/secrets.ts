@@ -63,6 +63,7 @@ export async function getSecret(secret: Secret): Promise<string> {
     const azureSecretName = Secret[secret].toLowerCase().replace(/_/g, "-");
     console.log("Getting versions for: " + azureSecretName);
     const versions = await client.getSecretVersions(azureKeyvault, azureSecretName);
+    versions.sort((a, b) => a.attributes.created < b.attributes.created ? 1 : -1);
     console.log(versions);
     const urlParts = versions[0].id.split("/");
     const latest = urlParts[urlParts.length - 1];
