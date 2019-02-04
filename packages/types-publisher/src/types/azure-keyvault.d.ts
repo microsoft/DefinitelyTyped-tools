@@ -10,7 +10,7 @@ interface Challenge {
 export class KeyVaultClient {
     constructor(credentials: KeyVaultCredentials);
     getSecret(baseUrl: string, name: string, version: string): Promise<SecretBundle>;
-    getSecretVersions(url: string, name: string): Promise<{ value: { id: string }[] }>;
+    getSecretVersions(url: string, name: string): Promise<{ id: string }[]>;
 }
 
 interface SecretBundle {
