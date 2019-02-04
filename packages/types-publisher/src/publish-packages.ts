@@ -38,7 +38,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         log(`Publishing ${cp.pkg.desc}...`);
         await publishTypingsPackage(client, cp, dry, log);
 
-        const commits = await github(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`, githubAccessToken, fetcher) as {
+        const commits = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`, githubAccessToken, fetcher) as {
             sha: string,
             commit: {
                 author: {
@@ -48,7 +48,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
         }[];
         if (commits.length > 0) {
             log("Found related commits; hash: " + commits[0].sha);
-            const prs = await github(`search/issues?q=is:pr%20is:merged%20${commits[0].sha}`, githubAccessToken, fetcher) as { items: { number: number }[] };
+            const prs = await queryGithub(`search/issues?q=is:pr%20is:merged%20${commits[0].sha}`, githubAccessToken, fetcher) as { items: { number: number }[] };
             let latestPr = 0
             for (const pr of prs.items) {
                 if (pr.number > latestPr) {
@@ -59,7 +59,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             if (latestPr === 0) {
                 continue;
             }
-            const pr = await github(`repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
+            const pr = await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
             const latency = Date.now() - new Date(pr.merged_at).valueOf();
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
             log("Current date is " + new Date(Date.now()));
@@ -68,7 +68,11 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
                 log("(dry) Not posting published-comment to Definitely Typed.");
             }
             else {
-                const commented = await github(`repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments?body=${cp.pkg.fullEscapedNpmName}@${cp.pkg.major}.${cp.pkg.minor}%20is%20now%20published.`, githubAccessToken, fetcher, "POST");
+                const commented = await postGithub(
+                    "repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments",
+                    `body=${cp.pkg.fullEscapedNpmName}@${cp.pkg.major}.${cp.pkg.minor}%20is%20now%20published.`,
+                    githubAccessToken,
+                    fetcher);
                 log("From github: " + JSON.stringify(commented));
             }
             if (dry) {
@@ -99,18 +103,31 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
     console.log("Done!");
 }
 
-async function github(path: string, githubToken: string, fetcher: Fetcher, method: "GET" | "PATCH" | "POST" = "GET") {
+async function postGithub(path: string, data: string, githubToken: string, fetcher: Fetcher) {
     const [log] = logger();
-    if (method === "GET") {
-        log("Requesting from github: " + path);
-    }
-    else if (method === "POST") {
-        log("Posting to github: " + path);
-    }
+    log("Posting to github: " + path);
+    const body = data + "&access_token=" + githubToken;
+    return fetcher.fetchJson({
+        hostname: "api.github.com",
+        method: "POST",
+        path,
+        body,
+        headers: {
+            // arbitrary string, but something must be provided
+            "User-Agent": "types-publisher",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": Buffer.byteLength(body),
+        },
+    });
+}
+
+async function queryGithub(path: string, githubToken: string, fetcher: Fetcher) {
+    const [log] = logger();
+    log("Requesting from github: " + path);
     return await fetcher.fetchJson({
         hostname: "api.github.com",
+        method: "GET",
         path: path + "&access_token=" + githubToken,
-        method,
         headers: {
             // arbitrary string, but something must be provided
             "User-Agent": "types-publisher",
