@@ -69,7 +69,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             }
             else {
                 const commented = await postGithub(
-                    `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments`,
+                    `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments&access_token=${githubAccessToken}`,
                     `body=${cp.pkg.fullEscapedNpmName}@${cp.pkg.major}.${cp.pkg.minor}%20is%20now%20published.`,
                     githubAccessToken,
                     fetcher);
