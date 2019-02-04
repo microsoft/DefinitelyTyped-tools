@@ -9,7 +9,7 @@ interface Challenge {
 
 export class KeyVaultClient {
     constructor(credentials: KeyVaultCredentials);
-    getSecret(vaultBaseUrl: string, secretName: string, secretVersion: string, callback: (error: Error | null | undefined, secretBundle: SecretBundle | null | undefined) => void): Promise<SecretBundle>;
+    getSecret(url: string, callback: (error: Error | null | undefined, secretBundle: SecretBundle | null | undefined) => void): Promise<SecretBundle>;
 }
 
 interface SecretBundle {
