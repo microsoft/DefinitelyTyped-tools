@@ -39,30 +39,7 @@ export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), key => {
     return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
 });
 
-/**
- * Convert `AZURE_STORAGE_ACCESS_KEY` to `azure-storage-access-key`.
- * For some reason Azure wouldn't allow secret names with underscores.
- */
-function azureSecretName(secret: Secret): string {
-    return Secret[secret].toLowerCase().replace(/_/g, "-");
-}
-
-export function getSecret(secret: Secret): Promise<string> {
-    const client = getClient();
-    const secretUrl = `${azureKeyvault}/secrets/${azureSecretName(secret)}`;
-
-    return new Promise<string>((resolve, reject) => {
-        client.getSecret(secretUrl, (error, bundle) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(bundle!.value);
-            }
-        });
-    });
-}
-
-function getClient(): KeyVaultClient {
+export async function getSecret(secret: Secret): Promise<string> {
     const clientId = process.env.TYPES_PUBLISHER_CLIENT_ID;
     const clientSecret = process.env.TYPES_PUBLISHER_CLIENT_SECRET;
     if (!(clientId && clientSecret)) {
@@ -80,5 +57,12 @@ function getClient(): KeyVaultClient {
         });
     });
 
-    return new KeyVaultClient(credentials);
+    const client = new KeyVaultClient(credentials);
+
+    // Convert `AZURE_STORAGE_ACCESS_KEY` to `azure-storage-access-key` -- for some reason, Azure wouldn't allow secret names with underscores.
+    const azureSecretName = Secret[secret].toLowerCase().replace(/_/g, "-");
+    const versions = await client.getSecretVersions(azureKeyvault, azureSecretName);
+    const urlParts = versions.value[0].id.split("/");
+    const latest = urlParts[urlParts.length - 1];
+    return (await client.getSecret(azureKeyvault, azureSecretName, latest)).value;
 }
