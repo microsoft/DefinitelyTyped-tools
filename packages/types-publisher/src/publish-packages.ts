@@ -65,8 +65,9 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             log("Current date is " + new Date(Date.now()));
             log("  Merge date is " + new Date(pr.merged_at));
             const publishNotification = "I just published `" + cp.pkg.fullNpmName + "@" + cp.pkg.major + "." + cp.pkg.minor + "` to npm.";
+            log(publishNotification);
             if (dry) {
-                log(`(dry) ${publishNotification} (Not posted to Definitely Typed.)`);
+                log(`(dry) Skip publishing notification to github.`);
             }
             else {
                 const commented = await postGithub(
@@ -107,7 +108,7 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
 async function postGithub(path: string, data: any, githubToken: string, fetcher: Fetcher) {
     const [log] = logger();
     const body = JSON.stringify(data);
-    log("Posting to github at ${path}: ${body}");
+    log(`Posting to github at ${path}: ${body}`);
     return fetcher.fetchJson({
         hostname: "api.github.com",
         method: "POST",
