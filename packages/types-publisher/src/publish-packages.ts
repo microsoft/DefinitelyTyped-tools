@@ -64,16 +64,17 @@ export default async function publishPackages(changedPackages: ChangedPackages, 
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
             log("Current date is " + new Date(Date.now()));
             log("  Merge date is " + new Date(pr.merged_at));
+            const publishNotification = "I just published `" + cp.pkg.fullNpmName + "@" + cp.pkg.major + "." + cp.pkg.minor + "` to npm.";
             if (dry) {
-                log("(dry) Not posting published-comment to Definitely Typed.");
+                log(`(dry) ${publishNotification} (Not posted to Definitely Typed.)`);
             }
             else {
                 const commented = await postGithub(
                     `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments`,
-                    { body: "`" + cp.pkg.fullNpmName + "@" + cp.pkg.major + "." + cp.pkg.minor + "` is now published." },
+                    { body: publishNotification },
                     githubAccessToken,
                     fetcher);
-                log("From github: " + JSON.stringify(commented));
+                log("From github: " + JSON.stringify(commented).slice(0, 200));
             }
             if (dry) {
                 log("(dry) Not logging latency");
