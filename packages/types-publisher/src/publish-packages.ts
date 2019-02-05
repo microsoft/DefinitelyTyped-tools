@@ -76,7 +76,10 @@ export default async function publishPackages(
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
             log("Current date is " + new Date(Date.now()));
             log("  Merge date is " + new Date(latest.merged_at));
-            const publishNotification = "I just published `" + cp.pkg.fullNpmName + "@" + cp.pkg.major + "." + cp.pkg.minor + "` to npm.";
+
+            const published = cp.pkg.fullNpmName + "@" + cp.pkg.major + "." + cp.pkg.minor + "." + cp.version;
+            const publishNotification =
+                "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.fullNpmName + ").";
             log(publishNotification);
             if (dry) {
                 log("(dry) Skip publishing notification to github.");
