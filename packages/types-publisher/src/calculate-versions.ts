@@ -16,6 +16,6 @@ export default async function calculateVersions(dt: FS, uncachedClient: Uncached
     return CachedNpmInfoClient.with(uncachedClient, async client => {
         log.info("Reading packages...");
         const packages = await AllPackages.read(dt);
-        return computeAndSaveChangedPackages(packages, log, client)
+        return computeAndSaveChangedPackages(packages, log, client);
     });
 }

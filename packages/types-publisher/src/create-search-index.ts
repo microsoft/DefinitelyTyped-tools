@@ -4,8 +4,8 @@ import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
 import { UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, TypingsData } from "./lib/packages";
-import { logUncaughtErrors } from "./util/util";
 import { loggerWithErrors } from "./util/logging";
+import { logUncaughtErrors } from "./util/util";
 
 if (!module.parent) {
     const log = loggerWithErrors()[0];
@@ -13,7 +13,8 @@ if (!module.parent) {
     if (single) {
         logUncaughtErrors(doSingle(single, new UncachedNpmInfoClient()));
     } else {
-        logUncaughtErrors(async () => createSearchIndex(await AllPackages.read(await getDefinitelyTyped(Options.defaults, log)), new UncachedNpmInfoClient()));
+        logUncaughtErrors(
+            async () => createSearchIndex(await AllPackages.read(await getDefinitelyTyped(Options.defaults, log)), new UncachedNpmInfoClient()));
     }
 }
 

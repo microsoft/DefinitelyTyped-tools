@@ -6,8 +6,8 @@ import { getDefinitelyTyped } from "../get-definitely-typed";
 import { TesterOptions } from "../lib/common";
 import { UncachedNpmInfoClient } from "../lib/npm-client";
 import parseDefinitions from "../parse-definitions";
-import { logUncaughtErrors } from "../util/util";
 import { loggerWithErrors } from "../util/logging";
+import { logUncaughtErrors } from "../util/util";
 
 import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
@@ -18,7 +18,7 @@ if (!module.parent) {
 }
 
 async function main(options: TesterOptions, nProcesses: number, all: boolean): Promise<void> {
-    await clean();
+    clean();
     const log = loggerWithErrors()[0];
     const dt = await getDefinitelyTyped(options, log);
     await parseDefinitions(dt, { nProcesses, definitelyTypedPath: options.definitelyTypedPath }, log);

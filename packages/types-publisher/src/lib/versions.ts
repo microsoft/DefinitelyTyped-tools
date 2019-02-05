@@ -41,7 +41,10 @@ export interface ChangedPackages {
     readonly changedNotNeededPackages: ReadonlyArray<NotNeededPackage>;
 }
 
-export async function computeAndSaveChangedPackages(allPackages: AllPackages, log: LoggerWithErrors, client: CachedNpmInfoClient): Promise<ChangedPackages> {
+export async function computeAndSaveChangedPackages(
+    allPackages: AllPackages,
+    log: LoggerWithErrors,
+    client: CachedNpmInfoClient): Promise<ChangedPackages> {
     log.info("Computing changed packages...");
     const cp = await computeChangedPackages(allPackages, log, client);
     const json: ChangedPackagesJson = {
@@ -52,12 +55,17 @@ export async function computeAndSaveChangedPackages(allPackages: AllPackages, lo
     return cp;
 }
 
-async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors, client: CachedNpmInfoClient): Promise<ChangedPackages> {
+async function computeChangedPackages(
+    allPackages: AllPackages,
+    log: LoggerWithErrors,
+    client: CachedNpmInfoClient): Promise<ChangedPackages> {
     const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
         const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ true, log);
         if (needsPublish) {
             log.info(`Changed: ${pkg.desc}`);
-            const latestVersion = pkg.isLatest ? undefined : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), client, /*publish*/ true)).version;
+            const latestVersion = pkg.isLatest ?
+                undefined :
+                (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), client, /*publish*/ true)).version;
             return { pkg, version, latestVersion };
         }
         return undefined;
@@ -121,7 +129,11 @@ interface TypesPackageVersionInfo {
     readonly version: string;
     readonly needsPublish: boolean;
 }
-async function fetchTypesPackageVersionInfo(pkg: TypingsData, client: CachedNpmInfoClient, canPublish: boolean, log?: LoggerWithErrors): Promise<TypesPackageVersionInfo> {
+async function fetchTypesPackageVersionInfo(
+    pkg: TypingsData,
+    client: CachedNpmInfoClient,
+    canPublish: boolean,
+    log?: LoggerWithErrors): Promise<TypesPackageVersionInfo> {
     let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
     let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
     let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));

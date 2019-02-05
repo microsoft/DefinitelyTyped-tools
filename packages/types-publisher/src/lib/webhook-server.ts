@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
+import { setInterval } from "timers";
 
 import full from "../full";
 import { Fetcher, stringOfStream } from "../util/io";
@@ -9,7 +10,6 @@ import { currentTimeStamp, parseJson } from "../util/util";
 import { Options } from "./common";
 import RollingLogs from "./rolling-logs";
 import { sourceBranch } from "./settings";
-import { setInterval } from "timers";
 
 export default async function webhookServer(
     key: string,
@@ -116,11 +116,9 @@ function updateOneAtATime(
             working = true;
             try {
                 await doOnce(log, timeStamp);
-            }
-            catch (e) {
+            } catch (e) {
                 log.info(e.toString());
-            }
-            finally {
+            } finally {
                 working = false;
             }
         }

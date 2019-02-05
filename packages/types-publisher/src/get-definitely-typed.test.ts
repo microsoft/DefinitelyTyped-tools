@@ -1,5 +1,5 @@
+import { Dir, FS, getDefinitelyTyped, InMemoryDT } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { getDefinitelyTyped, FS, Dir, InMemoryDT } from "./get-definitely-typed";
 import { loggerWithErrors } from "./util/logging";
 
 function testo(o: { [s: string]: () => void }) {
@@ -29,4 +29,4 @@ testo({
         expect(fs.readFile("file1.txt")).toBe("ok");
         expect(fs.readFile("sub1/file2.txt")).toBe("x");
     },
-})
+});

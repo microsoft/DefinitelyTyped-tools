@@ -1,7 +1,6 @@
 import * as yargs from "yargs";
 
 import appInsights = require("applicationinsights");
-import { Fetcher } from "./util/io";
 import calculateVersions from "./calculate-versions";
 import clean from "./clean";
 import createSearchIndex from "./create-search-index";
@@ -13,22 +12,31 @@ import parseDefinitions from "./parse-definitions";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
 import uploadBlobsAndUpdateIssue from "./upload-blobs";
+import { Fetcher } from "./util/io";
+import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
 import { assertDefined, currentTimeStamp, logUncaughtErrors, numberOfOsProcesses } from "./util/util";
 import validate from "./validate";
-import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
 
 if (!module.parent) {
     appInsights.setup();
     appInsights.start();
     const dry = !!yargs.argv.dry;
-    logUncaughtErrors(full(dry, currentTimeStamp(), process.env["GH_API_TOKEN"] || "", new Fetcher(), Options.defaults, loggerWithErrors()[0]));
+    logUncaughtErrors(full(dry, currentTimeStamp(), process.env.GH_API_TOKEN || "", new Fetcher(), Options.defaults, loggerWithErrors()[0]));
 }
 
-export default async function full(dry: boolean, timeStamp: string, githubAccessToken: string, fetcher: Fetcher, options: Options, log: LoggerWithErrors): Promise<void> {
+export default async function full(
+    dry: boolean,
+    timeStamp: string,
+    githubAccessToken: string,
+    fetcher: Fetcher,
+    options: Options,
+    log: LoggerWithErrors): Promise<void> {
     const infoClient = new UncachedNpmInfoClient();
-    await clean();
+    clean();
     const dt = await getDefinitelyTyped(options, log);
-    const allPackages = await parseDefinitions(dt, options.parseInParallel
+    const allPackages = await parseDefinitions(
+        dt,
+        options.parseInParallel
             ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
             : undefined,
         log);

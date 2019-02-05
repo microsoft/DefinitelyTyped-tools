@@ -3,8 +3,8 @@ import { Options, TesterOptions } from "./lib/common";
 import { AllPackages, TypingsData } from "./lib/packages";
 import { typesDirectoryName } from "./lib/settings";
 import { writeFile } from "./util/io";
-import { joinPaths, logUncaughtErrors, mapDefined } from "./util/util";
 import { loggerWithErrors } from "./util/logging";
+import { joinPaths, logUncaughtErrors, mapDefined } from "./util/util";
 
 if (!module.parent) {
     logUncaughtErrors(main(Options.defaults));

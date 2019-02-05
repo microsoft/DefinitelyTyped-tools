@@ -5,12 +5,13 @@ import { Options } from "./lib/common";
 import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
-import { Logger, logger, writeLog, loggerWithErrors } from "./util/logging";
+import { Logger, logger, loggerWithErrors, writeLog } from "./util/logging";
 import { assertDefined, best, logUncaughtErrors, mapDefined, multiMapAdd, nAtATime } from "./util/util";
 
 if (!module.parent) {
     const log = loggerWithErrors()[0];
-    logUncaughtErrors(async () => checkParseResults(true, await getDefinitelyTyped(Options.defaults, log), Options.defaults, new UncachedNpmInfoClient()));
+    logUncaughtErrors(
+        async () => checkParseResults(true, await getDefinitelyTyped(Options.defaults, log), Options.defaults, new UncachedNpmInfoClient()));
 }
 
 export default async function checkParseResults(includeNpmChecks: boolean, dt: FS, options: Options, client: UncachedNpmInfoClient): Promise<void> {
@@ -136,7 +137,11 @@ async function checkNpm(
     }).join(", ");
     log("  To fix this:");
     log(`  git checkout -b not-needed-${name}`);
-    log(`  yarn not-needed ${name} ${firstTypedVersion.versionString} ${projectName}${libraryName !== name ? ` ${JSON.stringify(libraryName)}` : ""}`);
+    const yarnargs = [name, firstTypedVersion.versionString, projectName];
+    if (libraryName !== name) {
+        yarnargs.push(JSON.stringify(libraryName));
+    }
+    log("  yarn not-needed " + yarnargs.join(" "));
     log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
     log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
     if (new Semver(major, minor, 0).greaterThan(firstTypedVersion)) {
@@ -185,7 +190,8 @@ const notNeededExceptions: ReadonlySet<string> = new Set([
     "node-mysql-wrapper",
     // raspi packages bundle types, but can only be installed on a Raspberry Pi, so they are duplicated to DefinitelyTyped.
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/21618
-    "raspi", "raspi-board", "raspi-gpio", "raspi-i2c", "raspi-led", "raspi-onewire", "raspi-peripheral", "raspi-pwm", "raspi-serial", "raspi-soft-pwm",
+    "raspi", "raspi-board", "raspi-gpio", "raspi-i2c", "raspi-led", "raspi-onewire",
+    "raspi-peripheral", "raspi-pwm", "raspi-serial", "raspi-soft-pwm",
     // Declare "typings" but don't actually have them yet (https://github.com/stampit-org/stampit/issues/245)
     "stampit",
 ]);

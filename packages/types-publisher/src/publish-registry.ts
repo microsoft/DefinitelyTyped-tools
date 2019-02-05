@@ -9,7 +9,7 @@ import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } fro
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 import { fetchAndProcessNpmInfo, Semver } from "./lib/versions";
 import { npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
-import { logger, writeLog, Logger, loggerWithErrors } from "./util/logging";
+import { logger, Logger, loggerWithErrors, writeLog } from "./util/logging";
 import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
 
 const packageName = "types-registry";
@@ -30,7 +30,8 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
     const [log, logResult] = logger();
     log("=== Publishing types-registry ===");
 
-    const { version: oldVersion, highestSemverVersion, contentHash: oldContentHash, lastModified } = await fetchAndProcessNpmInfo(packageName, client);
+    const { version: oldVersion, highestSemverVersion, contentHash: oldContentHash, lastModified } =
+        await fetchAndProcessNpmInfo(packageName, client);
 
     // Don't include not-needed packages in the registry.
     const registryJsonData = await CachedNpmInfoClient.with(client, cachedClient => generateRegistry(allPackages.allLatestTypings(), cachedClient));
@@ -143,11 +144,11 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
         assert(newer.hasOwnProperty(key), `${key} in ${parent} was not found in newer`);
         switch (typeof newer[key]) {
             case "string":
-                const newerver = Semver.tryParse(newer[key])
-                const olderver = Semver.tryParse(older[key])
+                const newerver = Semver.tryParse(newer[key]);
+                const olderver = Semver.tryParse(older[key]);
                 const condition = newerver && olderver ?
                     newerver.greaterThan(olderver) || newerver.equals(olderver) :
-                    newer[key] >= older[key]
+                    newer[key] >= older[key];
                 assert(condition, `${key} in ${parent} did not match: newer[key] (${newer[key]}) < older[key] (${older[key]})`);
                 break;
             case "number":
@@ -187,8 +188,8 @@ function generatePackageJson(version: string, typesPublisherContentHash: string)
 interface Registry {
     readonly entries: {
         readonly [packageName: string]: {
-            readonly [distTags: string]: string
-        }
+            readonly [distTags: string]: string,
+        },
     };
 }
 async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: CachedNpmInfoClient): Promise<Registry> {

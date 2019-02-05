@@ -311,7 +311,8 @@ export async function getTestDependencies(
 
         for (const { fileName: referencedPackage } of typeReferenceDirectives) {
             if (dependencies.has(referencedPackage)) {
-                throw new Error(`'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`);
+                throw new Error(
+                    `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`);
             }
             if (referencedPackage === pkgName) {
                 throw new Error(`'${filePath()}' unnecessarily references the package. This can be removed.`);

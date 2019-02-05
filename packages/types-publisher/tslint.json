@@ -1,41 +1,45 @@
 {
-	"extends": "tslint:all",
-	"rules": {
-		"arrow-parens": [true, "ban-single-arg-parens"],
-		"comment-format": [true, "check-space"],
-		"indent": [true, "spaces"],
-		"interface-name": [true, "never-prefix"],
-		"max-line-length": [true, 150],
-		"object-literal-key-quotes": [true, "as-needed"],
-		"only-arrow-functions": [true, "allow-declarations"],
+    "extends": "tslint:all",
+    "rules": {
+        "arrow-parens": [true, "ban-single-arg-parens"],
+        "comment-format": [true, "check-space"],
+        "indent": [true, "spaces"],
+        "interface-name": [true, "never-prefix"],
+        "max-line-length": [true, 150],
+        "object-literal-key-quotes": [true, "as-needed"],
+        "only-arrow-functions": [true, "allow-declarations"],
 
-		// TODO
-		"strict-boolean-expressions": false,
-		"no-unnecessary-type-assertion": false, // false positive
+        // TODO
+        "strict-boolean-expressions": false,
+        "no-unnecessary-type-assertion": false, // false positive
 
-		"no-this-assignment": [true, { "allow-destructuring": true }],
-		"typedef": [true, "call-signature"],
+        "no-this-assignment": [true, { "allow-destructuring": true }],
+        "typedef": false,
+        "no-any": false,
+        "no-unsafe-any": false,
+        "prefer-template": false,
+        "restrict-plus-operands": false,
 
-		"completed-docs": false,
-		"file-name-casing": false,
-		"forin": false,
-		"linebreak-style": false,
-		"max-classes-per-file": false,
-		"member-access": false,
-		"member-ordering": false,
-		"newline-before-return": false,
-		"newline-per-chained-call": false,
-		"no-console": false,
-		"no-default-export": false,
-		"no-unused-variable": false,
-		"no-magic-numbers": false,
-		"no-namespace": false,
-		"no-non-null-assertion": false,
-		"no-use-before-declare": false,
-		"no-parameter-properties": false,
-		"no-require-imports": false,
-		"object-literal-sort-keys": false,
-		"promise-function-async": false,
-		"type-literal-delimiter": false
-	}
+        "completed-docs": false,
+        "file-name-casing": false,
+        "forin": false,
+        "linebreak-style": false,
+        "max-classes-per-file": false,
+        "member-access": false,
+        "member-ordering": false,
+        "newline-before-return": false,
+        "newline-per-chained-call": false,
+        "no-console": false,
+        "no-default-export": false,
+        "no-unused-variable": false,
+        "no-magic-numbers": false,
+        "no-namespace": false,
+        "no-non-null-assertion": false,
+        "no-use-before-declare": false,
+        "no-parameter-properties": false,
+        "no-require-imports": false,
+        "object-literal-sort-keys": false,
+        "promise-function-async": false,
+        "type-literal-delimiter": false
+    }
 }

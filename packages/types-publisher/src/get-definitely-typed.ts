@@ -9,8 +9,8 @@ import * as zlib from "zlib";
 import { Options } from "./lib/common";
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { readFile, readJson, stringOfStream } from "./util/io";
-import { assertDefined, assertSorted, Awaitable, exec, joinPaths, withoutStart, logUncaughtErrors } from "./util/util";
 import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
+import { assertDefined, assertSorted, Awaitable, exec, joinPaths, logUncaughtErrors, withoutStart } from "./util/util";
 
 /**
  * Readonly filesystem.

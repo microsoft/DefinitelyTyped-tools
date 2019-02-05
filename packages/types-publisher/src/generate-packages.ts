@@ -7,7 +7,7 @@ import { generateNotNeededPackage, generateTypingPackage } from "./lib/package-g
 import { AllPackages } from "./lib/packages";
 import { outputDirPath } from "./lib/settings";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
-import { logger, writeLog, loggerWithErrors } from "./util/logging";
+import { logger, loggerWithErrors, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
 import { logUncaughtErrors } from "./util/util";
 

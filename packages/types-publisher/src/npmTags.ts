@@ -29,8 +29,7 @@ async function tag(dry: boolean, name?: string): Promise<void> {
             const version = await getLatestTypingVersion(pkg, infoClient);
             await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
             await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
-        }
-        else {
+        } else {
             await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
                 // Only update tags for the latest version of the package.
                 const version = await getLatestTypingVersion(pkg, infoClient);
@@ -49,8 +48,7 @@ export async function updateTypeScriptVersionTags(
     log(`Tag ${pkg.fullNpmName}@${version} as ${JSON.stringify(tags)}`);
     if (dry) {
         log("(dry) Skip tag");
-    }
-    else {
+    } else {
         for (const tagName of tags) {
             await client.tag(pkg.fullEscapedNpmName, version, tagName);
         }
@@ -62,8 +60,7 @@ export async function updateLatestTag(
     log(`   but tag ${fullEscapedNpmName}@${version} as "latest"`);
     if (dry) {
         log("   (dry) Skip move \"latest\" back to newest version");
-    }
-    else {
+    } else {
         await client.tag(fullEscapedNpmName, version, "latest");
     }
 }

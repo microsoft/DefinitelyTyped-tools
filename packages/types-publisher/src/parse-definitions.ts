@@ -6,8 +6,8 @@ import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename, TypingInfoWithPackageName } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
 import { parseNProcesses } from "./tester/test-runner";
-import { assertDefined, filterNAtATimeOrdered, logUncaughtErrors, runWithChildProcesses } from "./util/util";
 import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
+import { assertDefined, filterNAtATimeOrdered, logUncaughtErrors, runWithChildProcesses } from "./util/util";
 
 if (!module.parent) {
     const singleName = yargs.argv.single as string | undefined;
@@ -18,10 +18,12 @@ if (!module.parent) {
         if (singleName)  {
             await single(singleName, dt);
         } else {
-            await parseDefinitions(dt, options.parseInParallel
-                ? { nProcesses: parseNProcesses(), definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
-                : undefined,
-            log);
+            await parseDefinitions(
+                dt,
+                options.parseInParallel
+                    ? { nProcesses: parseNProcesses(), definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
+                    : undefined,
+                log);
         }
     });
 }

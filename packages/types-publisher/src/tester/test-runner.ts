@@ -14,7 +14,8 @@ import getAffectedPackages, { Affected, allDependencies } from "./get-affected-p
 if (!module.parent) {
     const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
     const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-    logUncaughtErrors(getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
+    logUncaughtErrors(
+        getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
 }
 
 export function parseNProcesses(): number {

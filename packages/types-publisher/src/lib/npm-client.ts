@@ -4,12 +4,12 @@ import RegClient = require("npm-registry-client");
 import { resolve as resolveUrl } from "url";
 
 import { Fetcher, readFile, readJson, sleep, writeJson } from "../util/io";
+import { Logger, loggerWithErrors } from "../util/logging";
 import { createTgz } from "../util/tgz";
 import { identity, joinPaths, mapToRecord, recordToMap } from "../util/util";
 
 import { getSecret, Secret } from "./secrets";
 import { npmApi, npmRegistry, npmRegistryHostName } from "./settings";
-import { Logger, loggerWithErrors } from "../util/logging";
 
 function packageUrl(packageName: string): string {
     return resolveUrl(npmRegistry, packageName);
@@ -50,10 +50,9 @@ export class CachedNpmInfoClient {
         if (cacheFileExists) {
             log.info("Reading cache file...");
             const cache = await readJson(cacheFile) as Record<string, NpmInfoRaw>;
-            log.info(`Cache file ${cacheFile} exists, copying to map...`)
+            log.info(`Cache file ${cacheFile} exists, copying to map...`);
             unroll = recordToMap(cache, npmInfoFromJson);
-        }
-        else {
+        } else {
             log.info("Cache file doesn't exist, using empty map.");
             unroll = new Map();
         }
