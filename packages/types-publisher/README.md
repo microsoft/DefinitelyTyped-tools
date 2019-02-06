@@ -497,14 +497,3 @@ The most useful logs are in LogFiles/Application.
 Instead of waiting for someone to push to DefinitelyTyped,
 you should test out your new deployment by running `npm run make-production-server-run`,
 which will trigger a full build .
-
-# Updating CODEOWNERS
-
-1. Clone DefinitelyTyped and types-publisher into sibling directories
-2. Run `npm install` and `tsc` in types-publisher
-3. In the types-publisher directory, run:
-  * `del data\definitions.json`
-  * `node bin\parse-definitions.js`
-  * `node bin\code-owners.js`
-4. This will edit the file `.github/CODEOWNERS` in the DefinitelyTyped folder
-5. Commit that file and merge it with a PR on DefinitelyTyped
