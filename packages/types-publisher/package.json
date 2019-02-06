@@ -2,6 +2,8 @@
   "private": true,
   "name": "types-publisher",
   "version": "0.0.0",
+  "main": "./bin/index.js",
+  "types": "./bin/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
     "@octokit/rest": "^16.1.0",

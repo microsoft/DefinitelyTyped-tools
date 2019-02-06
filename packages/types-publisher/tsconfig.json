@@ -1,21 +1,22 @@
 {
-	"include": ["src"],
-	"compilerOptions": {
-		"module": "commonjs",
-		"strict": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"allowUnreachableCode": false,
-		"allowUnusedLabels": false,
-		"outDir": "bin",
-		"sourceMap": true,
-		"target": "esnext",
+    "include": ["src"],
+    "compilerOptions": {
+        "module": "commonjs",
+        "strict": true,
+        "declaration": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "outDir": "bin",
+        "sourceMap": true,
+        "target": "esnext",
 
-		"baseUrl": ".",
-		"paths": {
-			"*": ["src/types/*"]
-		}
-	}
+        "baseUrl": ".",
+        "paths": {
+            "*": ["src/types/*"]
+        }
+    }
 }
