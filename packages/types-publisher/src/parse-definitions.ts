@@ -3,7 +3,7 @@ import * as yargs from "yargs";
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
 import { getTypingInfo } from "./lib/definition-parser";
-import { definitionParserWorkerFilename, TypingInfoWithPackageName } from "./lib/definition-parser-worker";
+import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
 import { parseNProcesses } from "./tester/test-runner";
 import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
@@ -44,21 +44,17 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
             commandLineArgs: [`${parallel.definitelyTypedPath}/types`],
             workerFile: definitionParserWorkerFilename,
             nProcesses: parallel.nProcesses,
-            handleOutput,
+            handleOutput({ data, packageName} : { data: TypingsVersionsRaw, packageName: string }) {
+                typings[packageName] = data;
+            },
         });
     } else {
         log.info("Parsing non-parallel...");
         for (const packageName of packageNames) {
-            handleOutput({ data: await getTypingInfo(packageName, typesFS.subDir(packageName)), packageName });
+            typings[packageName] = await getTypingInfo(packageName, typesFS.subDir(packageName));
         }
     }
-
-    function handleOutput({ data, packageName }: TypingInfoWithPackageName): void {
-        typings[packageName] = data;
-    }
-
     await writeDataFile(typesDataFilename, sorted(typings));
-
     return AllPackages.from(typings, await readNotNeededPackages(dt));
 }
 
