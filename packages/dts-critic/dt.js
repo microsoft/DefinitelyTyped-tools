@@ -12,7 +12,7 @@ async function main() {
             }
             else {
                 console.log('*** ERROR for ' + item + ' ***')
-                console.log(JSON.stringify(e).slice(0,80))
+                console.log(e)
             }
         }
     }

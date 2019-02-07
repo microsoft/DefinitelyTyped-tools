@@ -17,7 +17,7 @@ async function dtsCritic(dtsPath, sourcePath) {
     catch(e) {
         header = undefined;
     }
-    return findNames(dtsPath, sourcePath, header);
+    check(await findNames(dtsPath, sourcePath), header);
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
