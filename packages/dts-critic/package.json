@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
   "dependencies": {
-    "yargs": "^12.0.5",
-    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production"
+    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
+    "request-promise-native": "^1.0.5",
+    "yargs": "^12.0.5"
   },
   "main": "index.js",
   "scripts": {
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.0",
     "@types/node": "^10.12.21",
+    "@types/request-promise-native": "^1.0.15",
     "@types/yargs": "^12.0.8",
     "jest": "^24.1.0"
   }
