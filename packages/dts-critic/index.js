@@ -21,13 +21,22 @@ async function dtsCritic(dtsPath, sourcePath) {
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
-dtsCritic.checkOnNpm = checkOnNpm;
+dtsCritic.retrieveNpmHomepageOrFail = retrieveNpmHomepageOrFail;
+dtsCritic.check = check;
 
 module.exports = dtsCritic;
 // @ts-ignore
 if (!module.parent) {
     main();
 }
+
+/** @typedef {{
+ *    dts: string,
+ *    src: string,
+ *    homepage?: string
+ * }}
+ * Names
+ */
 
 async function main() {
     const argv = yargs.
@@ -48,33 +57,28 @@ async function main() {
     }
     console.log(JSON.stringify(header));
 
-    const names = await findNames(argv._[0], argv._[1], header);
-    firstCheck(...names);
+    const names = await findNames(argv._[0], argv._[1]);
+    check(names, header);
 }
 
 /**
  * @param {string} dtsPath
  * @param {string} [sourcePath]
  * @param {headerParser.Header=} header
- * @return {Promise<{ dts: string, src: string, headerProject?: string, npmProject?: string}>}
+ * @return {Promise<Names>}
  */
 async function findNames(dtsPath, sourcePath, header) {
-    const dtsName = findDtsName(dtsPath);
-    let sourceName;
-    let x;
+    const dts = findDtsName(dtsPath);
+    let src;
+    let homepage;
     if (sourcePath) {
-        sourceName = findSourceName(sourcePath);
+        src = findSourceName(sourcePath);
     }
     else {
-        x = await checkOnNpm(dtsName);
-        sourceName = dtsName;
+        homepage = await retrieveNpmHomepageOrFail(dts);
+        src = dts;
     }
-    return {
-        dts: dtsName,
-        src: sourceName,
-        header: undefined,
-        npm: x
-    };
+    return { dts, src, homepage };
 }
 
 /**
@@ -98,30 +102,23 @@ function findSourceName(sourcePath) {
 }
 
 /**
+ * This function makes it an ERROR not to have a npm package that matches the base name.
  * @param {string} baseName
  * @return {Promise<string>}
  */
-async function checkOnNpm(baseName) {
-    const s = await request("https://registry.npmjs.org" + baseName);
-    const result = JSON.parse(s);
-    if (result.error) {
-        throw new Error(baseName + "does not exist on NPM.");
-    }
-    else {
-        return result.toString();
-    }
+async function retrieveNpmHomepageOrFail(baseName) {
+    return JSON.parse(await request("https://registry.npmjs.org/" + baseName)).homepage;
 }
 
 /**
- * We are interested in 3 names for the first check:
- * 1. d.ts file (or folder) name
- * 2. package (or source folder) name
- * 3. header-declared source folder name
- * Also, if (2) is a package from npm, and (3) has a source path, (2)'s source path should agree with (3)'s source path
- *
- * @param {string} dtsName
- * @param {string} sourceName
- * @param {string} [headerSourceName]
+ * @param {Names} names
+ * @param {headerParser.Header} [header]
  */
-function firstCheck(dtsName, sourceName, headerSourceName) {
+function check(names, header) {
+    if (names.dts !== names.src) {
+        throw new Error(`d.ts name is '${names.dts}' but source name is '${names.src}'.`);
+    }
+    if (names.homepage && header && !header.projects.some(p => names.homepage === p)) {
+        throw new Error(`None of the project urls listed in the header match the homepage listed by npm, '${names.homepage}'.`);
+    }
 }
