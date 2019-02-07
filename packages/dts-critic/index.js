@@ -27,7 +27,7 @@ dtsCritic.check = check;
 module.exports = dtsCritic;
 // @ts-ignore
 if (!module.parent) {
-    main();
+    main().catch(e => { console.log(e); process.exit(1) });
 }
 
 /** @typedef {{
@@ -47,18 +47,16 @@ async function main() {
         console.log('Please provide a path to a d.ts file for me to critique.');
         process.exit(1);
     }
-    const dts = fs.readFileSync(argv._[0], "utf-8");
     let header;
+    const dts = fs.readFileSync(argv._[0], "utf-8");
     try {
         header = headerParser.parseHeaderOrFail(dts);
     }
     catch(e) {
         header = undefined;
     }
-    console.log(JSON.stringify(header));
 
-    const names = await findNames(argv._[0], argv._[1]);
-    check(names, header);
+    check(await findNames(argv._[0], argv._[1]), header);
 }
 
 /**
