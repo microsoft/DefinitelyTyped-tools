@@ -1,38 +1,39 @@
 {
-  "name": "dts-critic",
-  "version": "1.0.0",
-  "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
-  "dependencies": {
-    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
-    "request-promise-native": "^1.0.5",
-    "yargs": "^12.0.5"
-  },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sandersn/dts-critic.git"
-  },
-  "keywords": [
-    "definitely",
-    "typed",
-    "refresh",
-    "npm",
-    "tag"
-  ],
-  "author": "Nathan Shively-Sanders",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sandersn/dts-critic/issues"
-  },
-  "homepage": "https://github.com/sandersn/dts-critic#readme",
-  "devDependencies": {
-    "@types/jest": "^24.0.0",
-    "@types/node": "^10.12.21",
-    "@types/request-promise-native": "^1.0.15",
-    "@types/yargs": "^12.0.8",
-    "jest": "^24.1.0"
-  }
+    "name": "dts-critic",
+    "version": "1.0.0",
+    "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
+    "dependencies": {
+        "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
+        "request-promise-native": "^1.0.5",
+        "yargs": "^12.0.5"
+    },
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "dt": "node dt.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sandersn/dts-critic.git"
+    },
+    "keywords": [
+        "definitely",
+        "typed",
+        "refresh",
+        "npm",
+        "tag"
+    ],
+    "author": "Nathan Shively-Sanders",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sandersn/dts-critic/issues"
+    },
+    "homepage": "https://github.com/sandersn/dts-critic#readme",
+    "devDependencies": {
+        "@types/jest": "^24.0.0",
+        "@types/node": "^10.12.21",
+        "@types/request-promise-native": "^1.0.15",
+        "@types/yargs": "^12.0.8",
+        "jest": "^24.1.0"
+    }
 }
