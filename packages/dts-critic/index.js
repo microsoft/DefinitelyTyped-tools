@@ -105,6 +105,7 @@ function findSourceName(sourcePath) {
  * @return {Promise<string>}
  */
 async function retrieveNpmHomepageOrFail(baseName) {
+    // TODO: Need to mangle scoped package basenames
     return JSON.parse(await request("https://registry.npmjs.org/" + baseName)).homepage;
 }
 
@@ -116,7 +117,22 @@ function check(names, header) {
     if (names.dts !== names.src) {
         throw new Error(`d.ts name is '${names.dts}' but source name is '${names.src}'.`);
     }
-    if (names.homepage && header && !header.projects.some(p => names.homepage === p)) {
-        throw new Error(`None of the project urls listed in the header match the homepage listed by npm, '${names.homepage}'.`);
+    // TODO: Need to skip #readme at end of homepage
+    if (names.homepage && header) {
+        const homepage = skipEnd(names.homepage, '#readme');
+        if (!header.projects.some(p => homepage === p)) {
+            throw new Error(`None of the project urls listed in the header match the homepage listed by npm, '${homepage}'.`);
+        }
     }
+}
+
+/**
+ * @param {string} s
+ * @param {string} suffix
+ */
+function skipEnd(s, suffix) {
+    if (s.endsWith(suffix)) {
+        return s.slice(0, s.length - suffix.length);
+    }
+    return s;
 }
