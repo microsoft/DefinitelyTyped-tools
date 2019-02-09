@@ -87,6 +87,7 @@ smooth-scrollbar
 source-map
 styled-components
 sw-toolbox
+terser
 tslint
 tweetnacl
 typescript
