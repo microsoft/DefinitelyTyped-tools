@@ -55,7 +55,6 @@ async function main() {
     catch(e) {
         header = undefined;
     }
-
     check(await findNames(argv._[0], argv._[1]), header);
 }
 
@@ -117,10 +116,10 @@ function check(names, header) {
     if (names.dts !== names.src) {
         throw new Error(`d.ts name is '${names.dts}' but source name is '${names.src}'.`);
     }
-    // TODO: Need to skip #readme at end of homepage
+    // TODO: skip packages with tslint.json's dt-header: false
     if (names.homepage && header) {
         const homepage = skipEnd(names.homepage, '#readme');
-        if (!header.projects.some(p => homepage === p)) {
+        if (!header.projects.some(p => homepage === skipEnd(p.toLowerCase(), "#readme"))) {
             throw new Error(`None of the project urls listed in the header match the homepage listed by npm, '${homepage}'.`);
         }
     }
