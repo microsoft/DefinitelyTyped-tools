@@ -104,8 +104,15 @@ function findSourceName(sourcePath) {
  * @return {Promise<string>}
  */
 async function retrieveNpmHomepageOrFail(baseName) {
-    // TODO: Need to mangle scoped package basenames
-    return JSON.parse(await request("https://registry.npmjs.org/" + baseName)).homepage;
+    return JSON.parse(await request("https://registry.npmjs.org/" + mangleScoped(baseName))).homepage;
+}
+
+/** @param {string} baseName */
+function mangleScoped(baseName) {
+    if (/__/.test(baseName)) {
+        return "@" + baseName.replace("__", "/");
+    }
+    return baseName;
 }
 
 /**
