@@ -69,6 +69,7 @@ export namespace TypeScriptVersion {
 }
 
 export interface Header {
+	readonly nonNpm: boolean;
 	readonly libraryName: string;
 	readonly libraryMajorVersion: number;
 	readonly libraryMinorVersion: number;
@@ -140,7 +141,7 @@ function parseHeader(text: string, strict: boolean): Header | ParseError {
 
 function headerParser(strict: boolean): pm.Parser<Header> {
 	return pm.seqMap(
-		pm.string("// Type definitions for "),
+		pm.regex(/\/\/ Type definitions for (non-npm package )?/),
 		parseLabel(strict),
 		pm.string("// Project: "),
 		projectParser,
@@ -150,10 +151,11 @@ function headerParser(strict: boolean): pm.Parser<Header> {
 		typeScriptVersionParser,
 		pm.all, // Don't care about the rest of the file
 		// tslint:disable-next-line:variable-name
-		(_str, label, _project, projects, _defsBy, contributors, _definitions, typeScriptVersion) => ({
+		(str, label, _project, projects, _defsBy, contributors, _definitions, typeScriptVersion) => ({
 			libraryName: label.name,
 			libraryMajorVersion: label.major,
 			libraryMinorVersion: label.minor,
+			nonNpm: str.endsWith("non-npm package "),
 			projects, contributors, typeScriptVersion,
 		}));
 }

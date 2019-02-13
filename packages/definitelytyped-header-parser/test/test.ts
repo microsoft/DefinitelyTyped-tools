@@ -16,6 +16,7 @@ describe("parse", () => {
 			libraryMajorVersion: 1,
 			libraryMinorVersion: 2,
 			typeScriptVersion: "2.2",
+			nonNpm: false,
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
 				{ name: "My Self", url: "https://github.com/me", githubUsername: "me" },
@@ -40,6 +41,7 @@ describe("parse", () => {
 			libraryMajorVersion: 1,
 			libraryMinorVersion: 2,
 			typeScriptVersion: "2.0",
+			nonNpm: false,
 			projects: ["https://github.com/foo/foo", "https://foo.com"],
 			contributors: [
 				{ name: "My Self", url: "https://github.com/me", githubUsername: "me" },
@@ -57,6 +59,19 @@ describe("parse", () => {
 		assert.deepStrictEqual(parseHeaderOrFail(src).contributors, [
 			{ name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
 		]);
+	});
+
+	it("allows 'non-npm' on Type definitions line", () => {
+		const src = dedent`
+			// Type definitions for non-npm package foo 1.2
+			// Project: https://github.com/foo/foo, https://foo.com
+			// Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
+			// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+			// TypeScript Version: 2.2
+
+			...file content...`;
+		console.log(parseHeaderOrFail(src))
+			assert.equal(parseHeaderOrFail(src).nonNpm, true);
 	});
 });
 
@@ -80,7 +95,7 @@ describe("parseTypeScriptVersionLine", () => {
 	})
 
 	it("does not allow unallowed version tags", () => {
-		const src = "// TypeScript Version: 3.7";
+		const src = "// TypeScript Version: 4.7";
 		assert.throws(() => parseTypeScriptVersionLine(src), `Could not parse version: line is ${src}`);
 	})
 });
@@ -89,7 +104,7 @@ describe("tagsToUpdate", () => {
 	it("works", () => {
 		assert.deepEqual(
 			TypeScriptVersion.tagsToUpdate("2.5"),
-			["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9", "ts3.0", "ts3.1", "ts3.2", "latest"]);
+			["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9", "ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "latest"]);
 	});
 });
 
