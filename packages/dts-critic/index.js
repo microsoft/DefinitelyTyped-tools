@@ -17,7 +17,7 @@ async function dtsCritic(dtsPath, sourcePath) {
     catch(e) {
         header = undefined;
     }
-    check(await findNames(dtsPath, sourcePath), header);
+    check(await findNames(dtsPath, sourcePath, header), header);
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
@@ -55,13 +55,13 @@ async function main() {
     catch(e) {
         header = undefined;
     }
-    check(await findNames(argv._[0], argv._[1]), header);
+    check(await findNames(argv._[0], argv._[1], header), header);
 }
 
 /**
  * @param {string} dtsPath
  * @param {string} [sourcePath]
- * @param {headerParser.Header=} header
+ * @param {headerParser.Header | undefined} header
  * @return {Promise<Names>}
  */
 async function findNames(dtsPath, sourcePath, header) {
@@ -72,8 +72,23 @@ async function findNames(dtsPath, sourcePath, header) {
         src = findSourceName(sourcePath);
     }
     else {
-        homepage = await retrieveNpmHomepageOrFail(dts);
         src = dts;
+        try {
+            homepage = await retrieveNpmHomepageOrFail(dts);
+            if (header && header.nonNpm) {
+                throw new Error(`Non-npm packages must not use names that conflict with existing npm packages.`);
+            }
+        }
+        catch (e) {
+            if (!header || !header.nonNpm) {
+                throw new Error(`d.ts file must have a matching npm package.
+To resolve this error, either:
+Add a Definitely Typed header with "// Type definitions for non-npm package ${dts}" as the first line.
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
+- OR -
+Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`);
+            }
+        }
     }
     return { dts, src, homepage };
 }
@@ -117,16 +132,16 @@ function mangleScoped(baseName) {
 
 /**
  * @param {Names} names
- * @param {headerParser.Header} [header]
+ * @param {headerParser.Header | undefined} header
  */
 function check(names, header) {
     if (names.dts !== names.src) {
-        throw new Error(`d.ts name is '${names.dts}' but source name is '${names.src}'.`);
+        throw new Error(`d.ts name '${names.dts}' must match source name '${names.src}'.`);
     }
     if (names.homepage && header) {
         const homepage = normalise(names.homepage);
         if (!header.projects.some(p => homepage === normalise(p))) {
-            const e = new Error(`None of the project urls listed in the header, ${JSON.stringify(header.projects)} , match the homepage listed by npm, '${homepage}'.`);
+            const e = new Error(`At least one of the project urls listed in the header, ${JSON.stringify(header.projects)}, must match the homepage listed by npm, '${homepage}'.`);
             /** @type {*} */(e).homepage = homepage;
             throw e;
         }
