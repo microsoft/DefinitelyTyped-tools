@@ -72,25 +72,46 @@ async function findNames(dtsPath, sourcePath, header) {
         src = findSourceName(sourcePath);
     }
     else {
+        let nonNpmHasMatchingPackage = false;
         src = dts;
         try {
             homepage = await retrieveNpmHomepageOrFail(dts);
-            if (header && header.nonNpm) {
-                throw new Error(`Non-npm packages must not use names that conflict with existing npm packages.`);
-            }
+            nonNpmHasMatchingPackage = !!header && header.nonNpm && !isExistingSquatter(dts);
         }
         catch (e) {
             if (!header || !header.nonNpm) {
                 throw new Error(`d.ts file must have a matching npm package.
 To resolve this error, either:
-Add a Definitely Typed header with "// Type definitions for non-npm package ${dts}" as the first line.
+Add a Definitely Typed header with the first line
+
+    // Type definitions for non-npm package ${dts}-browser
+
 Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
+
 - OR -
+
 Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`);
             }
         }
+        if (nonNpmHasMatchingPackage) {
+            throw new Error(`Non-npm packages must not use names that conflict with existing npm packages.
+Try adding -browser to the end of the name to get
+
+    ${dts}-browser`);
+
+        }
     }
     return { dts, src, homepage };
+}
+
+/** @param {string} dts */
+function isExistingSquatter(dts) {
+    return dts === "atom" ||
+        dts === "ember__string" ||
+        dts === "fancybox" ||
+        dts === "jsqrcode" ||
+        dts === "node" ||
+        dts === "titanium";
 }
 
 /**
@@ -140,8 +161,13 @@ function check(names, header) {
     }
     if (names.homepage && header) {
         const homepage = normalise(names.homepage);
-        if (!header.projects.some(p => homepage === normalise(p))) {
-            const e = new Error(`At least one of the project urls listed in the header, ${JSON.stringify(header.projects)}, must match the homepage listed by npm, '${homepage}'.`);
+        if (!header.projects.some(p => homepage === normalise(p)) && !isExistingSquatter(names.dts)) {
+            const e = new Error(`At least one of the project urls listed in the header, ${JSON.stringify(header.projects)}, must match the homepage listed by npm, '${homepage}'.
+If your d.ts file is not for the npm package with ${homepage},
+change the name by adding -browser to the end and change the first line
+of the Definitely Typed header to
+
+    // Type definitions for npn-npm package ${names.dts}-browser`);
             /** @type {*} */(e).homepage = homepage;
             throw e;
         }

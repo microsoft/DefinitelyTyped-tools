@@ -27,6 +27,9 @@ same name as the d.ts must exist.
 *and* npm is used to obtain the path to the source, the `homepage`
 property of npm must be one of the entries in the `Project` field of
 the DT header.
+4. If the d.ts has a DT header and npm is used *and* the header
+specifies that the d.ts is for a non-npm package, the name of the d.ts
+must not conflict with an existing npm package.
 
 # Planned work
 
