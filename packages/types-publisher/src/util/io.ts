@@ -75,7 +75,7 @@ export class Fetcher {
         try {
             return JSON.parse(text) as unknown;
         } catch (e) {
-            throw new Error(`Bad response from server:\noptions: ${options}\n\n${text}`);
+            throw new Error(`Bad response from server:\noptions: ${JSON.stringify(options)}\n\n${text}`);
         }
     }
 
