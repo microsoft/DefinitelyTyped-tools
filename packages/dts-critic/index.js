@@ -60,7 +60,7 @@ async function main() {
 
 /**
  * @param {string} dtsPath
- * @param {string} [sourcePath]
+ * @param {string | undefined} sourcePath
  * @param {headerParser.Header | undefined} header
  * @return {Promise<Names>}
  */

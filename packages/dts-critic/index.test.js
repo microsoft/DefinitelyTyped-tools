@@ -29,7 +29,7 @@ suite("findParent", {
 })
 suite("findNames", {
     async absolutePathsBoth() {
-        expect(await findNames("jquery/index.d.ts", "~/dts-critic")).toEqual({
+        expect(await findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toEqual({
             dts: "jquery",
             src: "dts-critic",
             homepage: undefined,
@@ -37,7 +37,7 @@ suite("findNames", {
         })
     },
     async currentDirectorySource() {
-        expect(await findNames("jquery/index.d.ts", ".")).toEqual({
+        expect(await findNames("jquery/index.d.ts", ".", undefined)).toEqual({
             dts: "jquery",
             src: "dts-critic",
             homepage: undefined,
@@ -45,7 +45,7 @@ suite("findNames", {
         })
     },
     async mistakenFileNameSource() {
-        expect(await findNames("jquery/index.d.ts", "/home/lol/oops.index.js")).toEqual({
+        expect(await findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toEqual({
             dts: "jquery",
             src: "lol",
             homepage: undefined,
@@ -53,38 +53,108 @@ suite("findNames", {
         })
     },
     async trailingSlashSource() {
-        expect(await findNames("jquery/index.d.ts", "/home/lol/")).toEqual({
+        expect(await findNames("jquery/index.d.ts", "/home/lol/", undefined)).toEqual({
             dts: "jquery",
             src: "lol",
             homepage: undefined,
             project: undefined
         })
+    },
+    async mismatchPackageFailNoHeader() {
+        // surely parseltongue will never exist
+        expect.assertions(1)
+        try {
+            await findNames("parseltongue.d.ts", undefined, undefined)
+        }
+        catch (e) {
+            expect(e.message).toEqual(`d.ts file must have a matching npm package.
+To resolve this error, either:
+Add a Definitely Typed header with the first line
+
+    // Type definitions for non-npm package parseltongue-browser
+
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
+
+- OR -
+
+Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`)
+        }
+    },
+    async mismatchPackageFailNpmHeader() {
+        // surely parseltongue will never exist
+        expect.assertions(1)
+        try {
+            await findNames("parseltongue.d.ts", undefined, {
+                nonNpm: false,
+                libraryName: "a",
+                libraryMajorVersion: 1,
+                libraryMinorVersion: 2,
+                typeScriptVersion: "3.2",
+                contributors: [],
+                projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
+            })
+        }
+        catch (e) {
+            expect(e.message).toEqual(`d.ts file must have a matching npm package.
+To resolve this error, either:
+Add a Definitely Typed header with the first line
+
+    // Type definitions for non-npm package parseltongue-browser
+
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
+
+- OR -
+
+Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`)
+        }
+    },
+    async mismatchPackageFailNonNpmHeader() {
+        // surely parseltongue will never exist
+        expect.assertions(1)
+        try {
+            await findNames("jquery.d.ts", undefined, {
+                nonNpm: true,
+                libraryName: "a",
+                libraryMajorVersion: 1,
+                libraryMinorVersion: 2,
+                typeScriptVersion: "3.2",
+                contributors: [],
+                projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
+            })
+        }
+        catch (e) {
+            expect(e.message).toEqual(`Non-npm packages must not use names that conflict with existing npm packages.
+Try adding -browser to the end of the name to get
+
+    jquery-browser`)
+        }
     }
 })
 suite("retrieveNpmHomepageOrFail", {
     async retrieveFailure() {
-        expect.assertions(1);
+        expect.assertions(1)
         try {
             // surely parseltongue will never exist
-            await retrieveNpmHomepageOrFail("parseltongue");
+            await retrieveNpmHomepageOrFail("parseltongue")
         }
         catch (e) {
-            expect(e.message).toEqual(`404 - "{\\"error\\":\\"Not found\\"}"`);
+            expect(e.message).toEqual(`404 - "{\\"error\\":\\"Not found\\"}"`)
         }
     },
     async retrieveShelljs() {
-        expect(await retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs");
+        expect(await retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs")
     }
 })
 suite("check", {
     standaloneFail() {
-        expect(() => check({ dts: "a", src: "b" })).toThrow("d.ts name is 'a' but source name is 'b'.")
+        expect(() => check({ dts: "a", src: "b" }, undefined)).toThrow("d.ts name 'a' must match source name 'b'.")
     },
     okWithJustHomepage() {
-        expect(check({ dts: "a", src: "a", homepage: "zombo.com" })).toBeUndefined()
+        expect(check({ dts: "a", src: "a", homepage: "zombo.com" }, undefined)).toBeUndefined()
     },
     okWithJustHeader() {
         expect(check({ dts: "a", src: "a" }, {
+            nonNpm: false,
             libraryName: "a",
             libraryMajorVersion: 1,
             libraryMinorVersion: 2,
@@ -95,12 +165,18 @@ suite("check", {
     },
     homepageFail() {
         expect(() => check({ dts: "a", src: "a", homepage: "zombo.com" }, {
+            nonNpm: false,
             libraryName: "a",
             libraryMajorVersion: 1,
             libraryMinorVersion: 2,
             typeScriptVersion: "3.2",
             contributors: [],
             projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-        })).toThrow("None of the project urls listed in the header match the homepage listed by npm, 'zombo.com'.")
+        })).toThrow(`At least one of the project urls listed in the header, ["welcome-to-zombo.com","this-is-zombo.com"], must match the homepage listed by npm, 'zombo.com'.
+If your d.ts file is not for the npm package with zombo.com,
+change the name by adding -browser to the end and change the first line
+of the Definitely Typed header to
+
+    // Type definitions for npn-npm package a-browser`)
     }
 });
