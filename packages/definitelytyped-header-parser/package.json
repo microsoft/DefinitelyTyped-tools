@@ -1,6 +1,7 @@
 {
   "name": "definitelytyped-header-parser",
-  "version": "0.0.0",
+  "author": "Nathan Shively-Sanders <nathansa@microsoft.com> (http://github.com/Microsoft/definitelytyped-header-parser)",
+  "version": "1.0.0",
   "description": "",
   "files": [
     "index.d.ts",
