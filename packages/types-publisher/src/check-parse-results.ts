@@ -1,12 +1,10 @@
-import * as fold from "travis-fold";
-
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
-import { AllPackages, AnyPackage, TypingsData } from "./lib/packages";
+import { AllPackages, TypingsData } from "./lib/packages";
 import { Semver } from "./lib/versions";
 import { Logger, logger, loggerWithErrors, writeLog } from "./util/logging";
-import { assertDefined, best, logUncaughtErrors, mapDefined, multiMapAdd, nAtATime } from "./util/util";
+import { assertDefined, best, logUncaughtErrors, mapDefined, nAtATime } from "./util/util";
 
 if (!module.parent) {
     const log = loggerWithErrors()[0];
@@ -22,13 +20,8 @@ export default async function checkParseResults(includeNpmChecks: boolean, dt: F
 
     checkPathMappings(allPackages);
 
-    if (fold.isTravis()) { console.log(fold.start("Duplicate packages")); }
-    const packages = allPackages.allPackages();
-    checkForDuplicates(packages, pkg => pkg.libraryName, "Library Name", log);
-    checkForDuplicates(packages, pkg => pkg.projectName, "Project Name", log);
-    if (fold.isTravis()) { console.log(fold.end("Duplicate packages")); }
-
     const dependedOn = new Set<string>();
+    const packages = allPackages.allPackages();
     for (const pkg of packages) {
         if (pkg instanceof TypingsData) {
             for (const dep of pkg.dependencies) {
@@ -49,25 +42,6 @@ export default async function checkParseResults(includeNpmChecks: boolean, dt: F
     }
 
     await writeLog("conflicts.md", logResult());
-}
-
-function checkForDuplicates(packages: ReadonlyArray<AnyPackage>, func: (info: AnyPackage) => string | undefined, key: string, log: Logger): void {
-    const lookup = new Map<string, TypingsData[]>();
-    for (const info of packages) {
-        const libraryOrProjectName = func(info);
-        if (libraryOrProjectName !== undefined) {
-            multiMapAdd(lookup, libraryOrProjectName, info);
-        }
-    }
-
-    for (const [libName, values] of lookup) {
-        if (values.length > 1) {
-            log(` * Duplicate ${key} descriptions "${libName}"`);
-            for (const n of values) {
-                log(`   * ${n.desc}`);
-            }
-        }
-    }
 }
 
 function checkTypeScriptVersions(allPackages: AllPackages): void {
