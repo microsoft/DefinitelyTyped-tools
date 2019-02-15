@@ -1,10 +1,10 @@
 {
     "name": "dts-critic",
     "version": "1.0.2",
-    "author": "Nathan Shively-Sandersn <nathansa@microsoft.com> (https://github.com/Microsoft/TypeScript)",
+    "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
     "dependencies": {
-        "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
+        "definitelytyped-header-parser": "^1.0.0",
         "request-promise-native": "^1.0.5",
         "yargs": "^12.0.5"
     },
@@ -25,7 +25,6 @@
         "npm",
         "tag"
     ],
-    "author": "Nathan Shively-Sanders",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/sandersn/dts-critic/issues"
