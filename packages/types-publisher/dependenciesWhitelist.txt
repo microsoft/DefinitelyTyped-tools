@@ -44,6 +44,7 @@ google-auth-library
 google-gax
 graphql-tools
 grpc
+handlebars
 immutable
 indefinite-observable
 inversify
