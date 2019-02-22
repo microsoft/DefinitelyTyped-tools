@@ -70,6 +70,7 @@ function createPackageJSON(typing: TypingsData, version: string, packages: AllPa
         repository: {
             type: "git",
             url: `${definitelyTypedURL}.git`,
+            directory: `types/${typing.name}`,
         },
         scripts: {},
         dependencies: getDependencies(typing.packageJsonDependencies, typing, packages),
