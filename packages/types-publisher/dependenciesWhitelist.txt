@@ -83,6 +83,7 @@ redux-saga
 redux-thunk
 rollup
 rxjs
+safe-buffer
 should
 smooth-scrollbar
 scroll-into-view-if-needed
