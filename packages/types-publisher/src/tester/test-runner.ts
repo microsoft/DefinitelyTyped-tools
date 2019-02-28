@@ -98,7 +98,7 @@ async function doRunTests(
 
     if (fold.isTravis()) { console.log(fold.start("tests")); }
     await runWithListeningChildProcesses({
-        inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p) })),
+        inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p), expectOnly: !changed.has(p) })),
         commandLineArgs: ["--listen"],
         workerFile: require.resolve("dtslint"),
         nProcesses,
