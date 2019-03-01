@@ -58,6 +58,7 @@ meteor-typings
 moment
 monaco-editor
 mqtt
+normalize-url
 objection
 opentracing
 parchment
