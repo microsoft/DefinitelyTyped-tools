@@ -1,12 +1,8 @@
 import { Dir, FS, getDefinitelyTyped, InMemoryDT } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { loggerWithErrors } from "./util/logging";
+import { testo } from "./util/util";
 
-function testo(o: { [s: string]: () => void }) {
-    for (const k in o) {
-        test(k, o[k], 10_000);
-    }
-}
 testo({
     async downloadDefinitelyTyped() {
         const dt = await getDefinitelyTyped(Options.azure, loggerWithErrors()[0]);

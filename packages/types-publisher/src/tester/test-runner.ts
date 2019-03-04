@@ -9,7 +9,7 @@ import { npmInstallFlags } from "../util/io";
 import { consoleLogger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
 import { exec, execAndThrowErrors, joinPaths, logUncaughtErrors, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
-import getAffectedPackages, { Affected, allDependencies } from "./get-affected-packages";
+import getAffectedPackages, { Affected, gitChanges, allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
     const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
@@ -43,10 +43,9 @@ export default async function runTests(
     selection: "all" | "affected" | RegExp,
 ): Promise<void> {
     const allPackages = await AllPackages.read(dt);
-    const { changedPackages, dependentPackages }: Affected = selection === "all"
-        ? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
-        : selection === "affected"
-        ? await getAffectedPackages(allPackages, consoleLogger.info, definitelyTypedPath)
+    const { changedPackages, dependentPackages }: Affected =
+        selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [] } :
+        selection === "affected" ? await getAffectedPackages(allPackages, await gitChanges(consoleLogger.info, definitelyTypedPath))
         : { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
     console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);
