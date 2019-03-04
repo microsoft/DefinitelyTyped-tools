@@ -1,7 +1,7 @@
 import yargs = require("yargs");
 
 import checkParseResults from "../check-parse-results";
-import clean from "../clean";
+import { clean } from "../clean";
 import { getDefinitelyTyped } from "../get-definitely-typed";
 import { TesterOptions } from "../lib/common";
 import { UncachedNpmInfoClient } from "../lib/npm-client";

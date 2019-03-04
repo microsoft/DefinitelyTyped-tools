@@ -1,6 +1,7 @@
 export { getDefinitelyTyped } from "./get-definitely-typed";
 export { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 export { AllPackages } from "./lib/packages";
+export { clean } from "./clean";
 export { getLatestTypingVersion } from "./lib/versions";
 export { default as parseDefinitions } from "./parse-definitions";
 

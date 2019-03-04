@@ -2,7 +2,7 @@ import * as yargs from "yargs";
 
 import appInsights = require("applicationinsights");
 import calculateVersions from "./calculate-versions";
-import clean from "./clean";
+import { clean } from "./clean";
 import createSearchIndex from "./create-search-index";
 import generatePackages from "./generate-packages";
 import { getDefinitelyTyped } from "./get-definitely-typed";
