@@ -33,6 +33,7 @@ cordova-plugin-file
 cordova-plugin-file-transfer
 csstype
 decimal.js
+del
 dnd-core
 egg
 electron
