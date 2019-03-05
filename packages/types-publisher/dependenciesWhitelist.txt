@@ -92,6 +92,7 @@ source-map
 styled-components
 sw-toolbox
 terser
+three
 tslint
 tweetnacl
 typescript
