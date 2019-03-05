@@ -8,6 +8,7 @@
 @sentry/browser
 @types/firebase
 @types/js-data
+@types/three
 @types/vue
 @types/webdriverio
 @types/winston
