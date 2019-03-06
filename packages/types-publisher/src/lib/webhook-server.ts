@@ -18,14 +18,18 @@ export default async function webhookServer(
     fetcher: Fetcher,
     options: Options,
 ): Promise<Server> {
-    const fullOne = updateOneAtATime(async (log, timeStamp) => {
+    const fullOne = updateOneAtATime(async (log, timestamp) => {
         log.info(""); log.info("");
-        log.info(`# ${timeStamp}`);
+        log.info(`# ${timestamp}`);
         log.info("");
         log.info("Starting full...");
-        await full(dry, timeStamp, githubAccessToken, fetcher, options, log);
+        await full(dry, timestamp, githubAccessToken, fetcher, options, log);
     });
-    setInterval(fullOne, 2_000_000, loggerWithErrors()[0], currentTimeStamp());
+    setInterval((log, timestamp) => {
+        const result = fullOne(log, timestamp);
+        if (!result) return; // already working, so do nothing.
+        result.catch(e => { log.info(e.toString()); console.error(e); });
+    }, 2_000_000, loggerWithErrors()[0], currentTimeStamp());
     return listenToGithub(key, fullOne);
 }
 
