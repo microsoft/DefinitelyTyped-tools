@@ -5,7 +5,6 @@ import moment = require("moment");
 import * as os from "os";
 import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
-import { inspect } from "util";
 
 export function assertDefined<T>(x: T | undefined): T {
     assert(x !== undefined);
@@ -96,10 +95,6 @@ export async function mapAsyncOrdered<T, U>(arr: ReadonlyArray<T>, mapper: (t: T
     return out;
 }
 
-export function indent(str: string): string {
-    return `\t${str.replace(/\n/g, "\n\t")}`;
-}
-
 export function unique<T>(arr: Iterable<T>): T[] {
     return [...new Set(arr)];
 }
@@ -171,10 +166,6 @@ export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<str
     return stdout + stderr;
 }
 
-export function errorDetails(error: Error): string {
-    return error.stack || error.message || `Non-Error error: ${inspect(error)}`;
-}
-
 /**
  * Returns the input that is better than all others, or `undefined` if there are no inputs.
  * @param isBetter Returns true if `a` should be preferred over `b`.
@@ -217,15 +208,6 @@ export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) =
     return out;
 }
 
-export function multiMapAdd<K, V>(map: Map<K, V[]>, key: K, value: V): void {
-    const values = map.get(key);
-    if (values) {
-        values.push(value);
-    } else {
-        map.set(key, [value]);
-    }
-}
-
 export function mapDefined<T, U>(arr: Iterable<T>, mapper: (t: T) => U | undefined): U[] {
     const out = [];
     for (const a of arr) {
@@ -258,15 +240,6 @@ export function* flatMap<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U
     for (const input of inputs) {
         yield* mapper(input);
     }
-}
-
-export function some<T>(iter: IterableIterator<T>, cb: (t: T) => boolean): boolean {
-    for (const x of iter) {
-        if (cb(x)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
@@ -454,10 +427,4 @@ export function assertSorted<T>(a: ReadonlyArray<T>, cb: (t: T) => string = (t: 
         prev = x;
     }
     return a;
-}
-
-export function testo(o: { [s: string]: () => void }) {
-    for (const k in o) {
-        test(k, o[k], 100_000);
-    }
 }

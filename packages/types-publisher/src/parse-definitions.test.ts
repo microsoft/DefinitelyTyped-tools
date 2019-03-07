@@ -1,7 +1,7 @@
 import parseDefinitions from "./parse-definitions";
 import { Dir, InMemoryDT } from "./get-definitely-typed";
 import { loggerWithErrors } from "./util/logging";
-import { testo } from "./util/util";
+import { testo } from "./util/test";
 
 function createMockDT() {
     const root = new Dir(undefined);

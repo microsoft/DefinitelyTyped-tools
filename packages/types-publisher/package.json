@@ -40,7 +40,7 @@
     "@types/tar": "^1.0.27",
     "@types/travis-fold": "^0.1.0",
     "@types/yargs": "^8.0.1",
-    "jest": "^23.6.0",
+    "jest": "^24.3.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.13.0"
   },

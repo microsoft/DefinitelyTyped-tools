@@ -2,20 +2,40 @@ import { pathExists } from "fs-extra";
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
+import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
+import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
-import { AllPackages, TypingsData } from "../lib/packages";
+import { AllPackages, DependencyVersion, PackageId, TypingsData } from "../lib/packages";
+// import { CachedNpmInfoClient, NpmInfoVersion, UncachedNpmInfoClient } from "../lib/npm-client";
 import { npmInstallFlags } from "../util/io";
-import { consoleLogger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
-import { exec, execAndThrowErrors, joinPaths, logUncaughtErrors, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
+import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
+import { exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
-import getAffectedPackages, { Affected, gitChanges, allDependencies } from "./get-affected-packages";
+import { getAffectedPackages, Affected, allDependencies } from "./get-affected-packages";
 
 if (!module.parent) {
-    const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
-    const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-    logUncaughtErrors(
-        getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
+    if (yargs.argv.affected) {
+        logUncaughtErrors(testAffectedOnly(Options.defaults));
+    }
+    else {
+        const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
+        const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
+        logUncaughtErrors(
+            getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
+    }
+}
+
+export interface GitDiff {
+    status: "A" | "D" | "M";
+    file: string
+}
+
+async function testAffectedOnly(options: TesterOptions): Promise<void> {
+    const changes = getAffectedPackages(
+        await AllPackages.read(await getDefinitelyTyped(options, loggerWithErrors()[0])),
+        gitChanges(await gitDiff(consoleLogger.info, options.definitelyTypedPath)));
+    console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependersLength: changes.dependentPackages.map(t => t.desc).length });
 }
 
 export function parseNProcesses(): number {
@@ -43,9 +63,13 @@ export default async function runTests(
     selection: "all" | "affected" | RegExp,
 ): Promise<void> {
     const allPackages = await AllPackages.read(dt);
+    const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+    if (diffs.map(d => d.file).includes("notNeededPackages.json")) {
+        checkDeletedFiles(allPackages, diffs);
+    }
     const { changedPackages, dependentPackages }: Affected =
         selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [] } :
-        selection === "affected" ? await getAffectedPackages(allPackages, await gitChanges(consoleLogger.info, definitelyTypedPath))
+        selection === "affected" ? getAffectedPackages(allPackages, gitChanges(diffs))
         : { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
     console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);
@@ -57,6 +81,31 @@ export default async function runTests(
 
     console.log("Testing...");
     await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
+}
+
+/**
+ * 1. find all the deleted files and group by toplevel
+ * 2. Make sure that there are no packages left with deleted entries
+ * 3. make sure that each toplevel deleted has a matching entry in notNeededPackages
+ */
+export function checkDeletedFiles(allPackages: AllPackages, diffs: GitDiff[]) {
+    const deletedPackages = new Set(diffs.filter(d => d.status === "D").map(d => {
+        const id = getDependencyFromFile(d.file)
+        if (!id) {
+            throw new Error(`Unexpected file deleted: ${d.file}
+When removing packages, you should only delete files that are a part of removed packages.`);
+        }
+        return id.name;
+    }));
+    for (const p of deletedPackages) {
+        if (allPackages.hasTypingFor({ name: p, majorVersion: "*" })) {
+            throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
+        }
+        if (!allPackages.getNotNeededPackage(p)) {
+            throw new Error(`Deleted package ${p} is not in notNeededPackages.json.`);
+        }
+    }
+    return deletedPackages;
 }
 
 async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string, nProcesses: number): Promise<void> {
@@ -149,4 +198,93 @@ async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: s
     } catch (e) {
         return e as TesterError;
     }
+}
+
+
+/** Returns all immediate subdirectories of the root directory that have changed. */
+export function gitChanges(diffs: GitDiff[]): PackageId[] {
+    const changedPackages = new Map<string, Set<DependencyVersion>>();
+
+    for (const diff of diffs) {
+        const dep = getDependencyFromFile(diff.file);
+        if (dep) {
+            const versions = changedPackages.get(dep.name);
+            if (!versions) {
+                changedPackages.set(dep.name, new Set([dep.majorVersion]));
+            } else {
+                versions.add(dep.majorVersion);
+            }
+        }
+    }
+
+    return Array.from(flatMap(changedPackages, ([name, versions]) =>
+        mapIter(versions, majorVersion => ({ name, majorVersion }))));
+}
+
+/*
+We have to be careful about how we get the diff because travis uses a shallow clone.
+
+Travis runs:
+    git clone --depth=50 https://github.com/DefinitelyTyped/DefinitelyTyped.git DefinitelyTyped
+    cd DefinitelyTyped
+    git fetch origin +refs/pull/123/merge
+    git checkout -qf FETCH_HEAD
+
+If editing this code, be sure to test on both full and shallow clones.
+*/
+export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise<GitDiff[]> {
+    try {
+        await run(`git rev-parse --verify ${sourceBranch}`);
+        // If this succeeds, we got the full clone.
+    } catch (_) {
+        // This is a shallow clone.
+        await run(`git fetch origin ${sourceBranch}`);
+        await run(`git branch ${sourceBranch} FETCH_HEAD`);
+    }
+
+    let diff = (await run(`git diff ${sourceBranch} --name-status`)).trim();
+    if (diff === "") {
+        // We are probably already on master, so compare to the last commit.
+        diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
+    }
+    return diff.split("\n").map(line => {
+        var [status, file] = line.split(/\s+/, 2);
+        return { status: status.trim(), file: file.trim() } as GitDiff;
+    });
+
+    async function run(cmd: string): Promise<string> {
+        log(`Running: ${cmd}`);
+        const stdout = await execAndThrowErrors(cmd, definitelyTypedPath);
+        log(stdout);
+        return stdout;
+    }
+}
+
+/**
+ * For "types/a/b/c", returns { name: "a", version: "*" }.
+ * For "types/a/v3/c", returns { name: "a", version: 3 }.
+ * For "x", returns undefined.
+ */
+function getDependencyFromFile(file: string): PackageId | undefined {
+    const parts = file.split("/");
+    if (parts.length <= 2) {
+        // It's not in a typings directory at all.
+        return undefined;
+    }
+
+    const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+
+    if (typesDirName !== typesDirectoryName) {
+        return undefined;
+    }
+
+    if (subDirName) {
+        // Looks like "types/a/v3/c"
+        const majorVersion = parseMajorVersionFromDirectoryName(subDirName);
+        if (majorVersion !== undefined) {
+            return { name,  majorVersion };
+        }
+    }
+
+    return { name, majorVersion: "*" };
 }

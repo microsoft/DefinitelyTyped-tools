@@ -1,7 +1,7 @@
 import { Dir, FS, getDefinitelyTyped, InMemoryDT } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { loggerWithErrors } from "./util/logging";
-import { testo } from "./util/util";
+import { testo } from "./util/test";
 
 testo({
     async downloadDefinitelyTyped() {

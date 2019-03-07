@@ -1,32 +1,6 @@
-import { testo } from "../util/util";
-import { AllPackages, License, NotNeededPackage, TypesDataFile, TypingsVersionsRaw, PackageId } from "../lib/packages";
-import getAffectedPackages from "./get-affected-packages";
-
-function createTypingsVersionRaw(
-    name: string, dependencies: PackageId[], testDependencies: string[]
-): TypingsVersionsRaw {
-    return {
-        "1": {
-            libraryName: name,
-            typingsPackageName: name,
-            dependencies,
-            testDependencies,
-            files: ["index.d.ts"],
-            libraryMajorVersion: 1,
-            libraryMinorVersion: 0,
-            pathMappings: [],
-            contributors: [{ name: "Bender", url: "futurama.com", githubUsername: "bender" },],
-            minTsVersion: "2.3",
-            typesVersions: [],
-            license: License.MIT,
-            packageJsonDependencies: [],
-            contentHash: "11111111111111",
-            projectName: "zombo.com",
-            globals: [],
-            declaredModules: [],
-        },
-    }
-}
+import { testo, createTypingsVersionRaw } from "../util/test";
+import { AllPackages, NotNeededPackage, TypesDataFile } from "../lib/packages";
+import { getAffectedPackages } from "./get-affected-packages";
 const typesData: TypesDataFile = {
     jquery: createTypingsVersionRaw("jquery", [], []),
     known: createTypingsVersionRaw("known", [{ name: "jquery", majorVersion: 1 }], []),

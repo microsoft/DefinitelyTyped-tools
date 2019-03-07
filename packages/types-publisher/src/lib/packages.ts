@@ -2,7 +2,7 @@ import assert = require("assert");
 import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
-import { assertDefined, assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
+import { assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
 import { readDataFile } from "./common";
 import { outputDirPath, scopeName } from "./settings";
@@ -51,8 +51,8 @@ export class AllPackages {
         private readonly data: ReadonlyMap<string, TypingsVersions>,
         private readonly notNeeded: ReadonlyArray<NotNeededPackage>) {}
 
-    getNotNeededPackage(name: string): NotNeededPackage {
-        return assertDefined(this.notNeeded.find(p => p.name === name));
+    getNotNeededPackage(name: string): NotNeededPackage | undefined {
+        return this.notNeeded.find(p => p.name === name);
     }
 
     hasTypingFor(dep: PackageId): boolean {

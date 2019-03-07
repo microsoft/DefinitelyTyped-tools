@@ -32,7 +32,7 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
     return {
         changedTypings: json.changedTypings.map(({ id, version, latestVersion }): ChangedTyping =>
             ({ pkg: allPackages.getTypingsData(id), version, latestVersion })),
-        changedNotNeededPackages: json.changedNotNeededPackages.map(id => allPackages.getNotNeededPackage(id)),
+        changedNotNeededPackages: json.changedNotNeededPackages.map(id => assertDefined(allPackages.getNotNeededPackage(id))),
     };
 }
 
