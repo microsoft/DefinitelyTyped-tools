@@ -1,6 +1,7 @@
 import { testo, createTypingsVersionRaw } from "../util/test";
 import { AllPackages, NotNeededPackage, TypesDataFile } from "../lib/packages";
-import { checkDeletedFiles, GitDiff } from "./test-runner";
+import { checkNotNeededPackage, getNotNeededPackages, GitDiff } from "./test-runner";
+import { NpmInfo } from "../lib/npm-client";
 
 const typesData: TypesDataFile = {
     jquery: createTypingsVersionRaw("jquery", [], []),
@@ -25,38 +26,85 @@ const deleteJestDiffs: GitDiff[] = [
 
 testo({
     ok() {
-        checkDeletedFiles(allPackages, deleteJestDiffs);
+        expect(Array.from(getNotNeededPackages(allPackages, deleteJestDiffs))).toEqual(jestNotNeeded);
     },
     forgotToDeleteFiles() {
         expect(() =>
-        checkDeletedFiles(
-            AllPackages.from({ jest: createTypingsVersionRaw("jest", [], []) }, jestNotNeeded),
-            deleteJestDiffs)).toThrow('Please delete all files in jest');
+            Array.from(getNotNeededPackages(
+                AllPackages.from({ jest: createTypingsVersionRaw("jest", [], []) }, jestNotNeeded),
+                deleteJestDiffs))).toThrow('Please delete all files in jest');
 
     },
     tooManyDeletes() {
-        expect(() => checkDeletedFiles(allPackages, [{ status: "D", file: "oops.txt" }])).toThrow(
+        expect(() => Array.from(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }]))).toThrow(
             "Unexpected file deleted: oops.txt");
     },
     extraneousFile() {
-        checkDeletedFiles(allPackages, [
+        Array.from(getNotNeededPackages(allPackages, [
             { status: "A", file: "oooooooooooops.txt" },
             { status: "M", file: "notNeededPackages.json" },
             { status: "D", file: "types/jest/index.d.ts" },
             { status: "D", file: "types/jest/jest-tests.d.ts" },
-        ]);
+        ]));
     },
     forgotToUpdateNotNeededJson() {
-        expect(() => checkDeletedFiles(AllPackages.from(typesData, []), [{status: "D", file: "types/jest/index.d.ts" }])).toThrow(
+        expect(() => Array.from(getNotNeededPackages(AllPackages.from(typesData, []), [{status: "D", file: "types/jest/index.d.ts" }]))).toThrow(
             "Deleted package jest is not in notNeededPackages.json.");
     },
     scoped() {
-        checkDeletedFiles(
+        Array.from(getNotNeededPackages(
             AllPackages.from(
                 typesData,
                 [new NotNeededPackage({ typingsPackageName: "ember__object", libraryName: "@ember/object", asOfVersion: "1.0.0", sourceRepoURL: "ember.js" })]),
-            [{ status: "D", file: "types/ember__object/index.d.ts" }]);
+            [{ status: "D", file: "types/ember__object/index.d.ts" }]));
     },
     // TODO: Test npm info (and with scoped names)
     // TODO: Test with dependents, etc etc
+});
+
+const empty: NpmInfo = {
+    distTags: new Map(),
+    versions: new Map(),
+    timeModified: ""
+};
+testo({
+    missingSource() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], undefined, empty))
+            .toThrow("The entry for @types/jest in notNeededPackages.json");
+    },
+    missingTypings() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, undefined))
+            .toThrow("@types package not found for @types/jest");
+    },
+    missingTypingsLatest() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, empty))
+            .toThrow("@types/jest is missing the \"latest\" tag");
+    },
+    deprecatedSameVersion() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, { distTags: new Map([["latest", "100.0.0"]]), versions: new Map(), timeModified: "" }))
+            .toThrow(`The specified version 100.0.0 of jest must be newer than the version
+it is supposed to replace, 100.0.0 of @types/jest.`);
+    },
+    deprecatedOlderVersion() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, { distTags: new Map([["latest", "999.0.0"]]), versions: new Map(), timeModified: "" }))
+            .toThrow(`The specified version 100.0.0 of jest must be newer than the version
+it is supposed to replace, 999.0.0 of @types/jest.`);
+    },
+    missingNpmVersion() {
+        expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), timeModified: "" }))
+            .toThrow(`The specified version 100.0.0 of jest is not on npm.`);
+    },
+    olderNpmVersion() {
+        expect(() => checkNotNeededPackage(
+            jestNotNeeded[0],
+            { distTags: new Map(), versions: new Map([["50.0.0", {}]]), timeModified: "" },
+            { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), timeModified: "" }))
+            .toThrow(`The specified version 100.0.0 of jest is not on npm.`);
+    },
+    ok() {
+        checkNotNeededPackage(
+            jestNotNeeded[0],
+            { distTags: new Map(), versions: new Map([["100.0.0", {}]]), timeModified: "" },
+            { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), timeModified: "" })
+    },
 });

@@ -1,16 +1,18 @@
+import assert = require("assert");
 import { pathExists } from "fs-extra";
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
+import { Semver } from "../lib/versions";
 import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
-import { AllPackages, DependencyVersion, PackageId, TypingsData } from "../lib/packages";
-// import { CachedNpmInfoClient, NpmInfoVersion, UncachedNpmInfoClient } from "../lib/npm-client";
+import { AllPackages, DependencyVersion, PackageId, TypingsData, NotNeededPackage } from "../lib/packages";
+import { CachedNpmInfoClient, UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
-import { exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
+import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
 import { getAffectedPackages, Affected, allDependencies } from "./get-affected-packages";
 
@@ -64,8 +66,15 @@ export default async function runTests(
 ): Promise<void> {
     const allPackages = await AllPackages.read(dt);
     const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
-    if (diffs.map(d => d.file).includes("notNeededPackages.json")) {
-        checkDeletedFiles(allPackages, diffs);
+    if (diffs.find(d => d.file === "notNeededPackages.json")) {
+        const uncached = new UncachedNpmInfoClient()
+        await CachedNpmInfoClient.with(uncached, async client => {
+            for (const deleted of getNotNeededPackages(allPackages, diffs)) {
+                const source = await client.fetchAndCacheNpmInfo(deleted.libraryName) // eg @babel/parser
+                const typings = await client.fetchAndCacheNpmInfo(deleted.fullNpmName) // eg @types/babel__parser
+                checkNotNeededPackage(deleted, source, typings);
+            }
+        });
     }
     const { changedPackages, dependentPackages }: Affected =
         selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [] } :
@@ -88,24 +97,37 @@ export default async function runTests(
  * 2. Make sure that there are no packages left with deleted entries
  * 3. make sure that each toplevel deleted has a matching entry in notNeededPackages
  */
-export function checkDeletedFiles(allPackages: AllPackages, diffs: GitDiff[]) {
-    const deletedPackages = new Set(diffs.filter(d => d.status === "D").map(d => {
-        const id = getDependencyFromFile(d.file)
-        if (!id) {
-            throw new Error(`Unexpected file deleted: ${d.file}
-When removing packages, you should only delete files that are a part of removed packages.`);
-        }
-        return id.name;
-    }));
-    for (const p of deletedPackages) {
+export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]): Iterable<NotNeededPackage> {
+    const deletedPackages = new Set(diffs.filter(d => d.status === "D").map(d =>
+        assertDefined(getDependencyFromFile(d.file),
+            `Unexpected file deleted: ${d.file}
+When removing packages, you should only delete files that are a part of removed packages.`)
+        .name));
+    return mapIter(deletedPackages, p => {
         if (allPackages.hasTypingFor({ name: p, majorVersion: "*" })) {
             throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
         }
-        if (!allPackages.getNotNeededPackage(p)) {
-            throw new Error(`Deleted package ${p} is not in notNeededPackages.json.`);
-        }
-    }
-    return deletedPackages;
+        return assertDefined(allPackages.getNotNeededPackage(p), `Deleted package ${p} is not in notNeededPackages.json.`);
+    });
+}
+
+/**
+ * 1. libraryName must exist on npm (SKIPPED and preferably/optionally have been the libraryName in just-deleted header)
+ * (SKIPPED 2.) sourceRepoURL must exist and be the npm homepage
+ * 3. asOfVersion must be newer than `@types/name@latest` on npm
+ * 4. `name@asOfVersion` must exist on npm
+ *
+ * I skipped (2) because the cached npm info doesn't include it. I might add it later.
+ */
+export function checkNotNeededPackage(unneeded: NotNeededPackage, source: NpmInfo | undefined, typings: NpmInfo | undefined) {
+    source = assertDefined(source, `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
+"libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
+Unneeded packages have to be replaced with a package on npm.`);
+    typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
+    const latestTypings = Semver.parse(assertDefined(typings.distTags.get("latest"), `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`));
+    assert(unneeded.version.greaterThan(latestTypings), `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
+it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`);
+    assert(source.versions.has(unneeded.version.versionString), `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`);
 }
 
 async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string, nProcesses: number): Promise<void> {

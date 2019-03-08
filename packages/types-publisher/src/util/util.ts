@@ -6,8 +6,8 @@ import * as os from "os";
 import * as sourceMapSupport from "source-map-support";
 sourceMapSupport.install();
 
-export function assertDefined<T>(x: T | undefined): T {
-    assert(x !== undefined);
+export function assertDefined<T>(x: T | undefined, message?: string | Error | undefined): T {
+    assert(x !== undefined, message);
     return x!;
 }
 
