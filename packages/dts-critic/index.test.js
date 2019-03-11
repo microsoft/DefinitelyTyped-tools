@@ -1,4 +1,4 @@
-const { findDtsName, findNames, retrieveNpmHomepageOrFail, check } = require("./index");
+const { findDtsName, findNames, retrieveNpmHomepageOrFail, checkNames, checkSource } = require("./index");
 /**
  * @param {string} description
  * @param {{ [s: string]: () => void }} tests
@@ -28,46 +28,42 @@ suite("findParent", {
     },
 })
 suite("findNames", {
-    async absolutePathsBoth() {
-        expect(await findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toEqual({
+    absolutePathsBoth() {
+        expect(findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toEqual({
             dts: "jquery",
             src: "dts-critic",
             homepage: undefined,
             project: undefined
         })
     },
-    async currentDirectorySource() {
-        expect(await findNames("jquery/index.d.ts", ".", undefined)).toEqual({
+    currentDirectorySource() {
+        expect(findNames("jquery/index.d.ts", ".", undefined)).toEqual({
             dts: "jquery",
             src: "dts-critic",
             homepage: undefined,
             project: undefined
         })
     },
-    async mistakenFileNameSource() {
-        expect(await findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toEqual({
+    mistakenFileNameSource() {
+        expect(findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toEqual({
             dts: "jquery",
             src: "lol",
             homepage: undefined,
             project: undefined
         })
     },
-    async trailingSlashSource() {
-        expect(await findNames("jquery/index.d.ts", "/home/lol/", undefined)).toEqual({
+    trailingSlashSource() {
+        expect(findNames("jquery/index.d.ts", "/home/lol/", undefined)).toEqual({
             dts: "jquery",
             src: "lol",
             homepage: undefined,
             project: undefined
         })
     },
-    async mismatchPackageFailNoHeader() {
+    mismatchPackageFailNoHeader() {
         // surely parseltongue will never exist
-        expect.assertions(1)
-        try {
-            await findNames("parseltongue.d.ts", undefined, undefined)
-        }
-        catch (e) {
-            expect(e.message).toEqual(`d.ts file must have a matching npm package.
+        expect(() => findNames("parseltongue.d.ts", undefined, undefined)).toThrow(
+            `d.ts file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
 2. Add a Definitely Typed header with the first line
@@ -81,13 +77,10 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 
 3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
 `)
-        }
     },
-    async mismatchPackageFailNpmHeader() {
+    mismatchPackageFailNpmHeader() {
         // surely parseltongue will never exist
-        expect.assertions(1)
-        try {
-            await findNames("parseltongue.d.ts", undefined, {
+        expect(() => findNames("parseltongue.d.ts", undefined, {
                 nonNpm: false,
                 libraryName: "a",
                 libraryMajorVersion: 1,
@@ -95,10 +88,8 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
                 typeScriptVersion: "3.2",
                 contributors: [],
                 projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-            })
-        }
-        catch (e) {
-            expect(e.message).toEqual(`d.ts file must have a matching npm package.
+        })).toThrow(
+            `d.ts file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
 2. Add a Definitely Typed header with the first line
@@ -112,13 +103,10 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 
 3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
 `)
-        }
     },
-    async mismatchPackageFailNonNpmHeader() {
+    mismatchPackageFailNonNpmHeader() {
         // surely parseltongue will never exist
-        expect.assertions(1)
-        try {
-            await findNames("jquery.d.ts", undefined, {
+        expect(() => findNames("jquery.d.ts", undefined, {
                 nonNpm: true,
                 libraryName: "a",
                 libraryMajorVersion: 1,
@@ -126,41 +114,32 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
                 typeScriptVersion: "3.2",
                 contributors: [],
                 projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-            })
-        }
-        catch (e) {
-            expect(e.message).toEqual(`The non-npm package 'jquery' conflicts with the existing npm package 'jquery'.
+        })).toThrow(
+            `The non-npm package 'jquery' conflicts with the existing npm package 'jquery'.
 Try adding -browser to the end of the name to get
 
     jquery-browser
 `)
-        }
     }
 })
 suite("retrieveNpmHomepageOrFail", {
-    async retrieveFailure() {
-        expect.assertions(1)
-        try {
-            // surely parseltongue will never exist
-            await retrieveNpmHomepageOrFail("parseltongue")
-        }
-        catch (e) {
-            expect(e.message).toEqual(`404 - "{\\"error\\":\\"Not found\\"}"`)
-        }
+    retrieveFailure() {
+        // surely parseltongue will never exist
+        expect(() => retrieveNpmHomepageOrFail("parseltongue")).toThrow(`parseltongue Not found`);
     },
-    async retrieveShelljs() {
-        expect(await retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs")
+    retrieveShelljs() {
+        expect(retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs")
     }
 })
-suite("check", {
+suite("checkNames", {
     standaloneFail() {
-        expect(() => check({ dts: "a", src: "b" }, undefined)).toThrow("d.ts name 'a' must match source name 'b'.")
+        expect(() => checkNames({ dts: "a", src: "b" }, undefined)).toThrow("d.ts name 'a' must match source name 'b'.")
     },
     okWithJustHomepage() {
-        expect(check({ dts: "a", src: "a", homepage: "zombo.com" }, undefined)).toBeUndefined()
+        expect(checkNames({ dts: "a", src: "a", homepage: "zombo.com" }, undefined)).toBeUndefined()
     },
     okWithJustHeader() {
-        expect(check({ dts: "a", src: "a" }, {
+        expect(checkNames({ dts: "a", src: "a" }, {
             nonNpm: false,
             libraryName: "a",
             libraryMajorVersion: 1,
@@ -171,7 +150,7 @@ suite("check", {
         })).toBeUndefined()
     },
     homepageFail() {
-        expect(() => check({ dts: "a", src: "a", homepage: "zombo.com" }, {
+        expect(() => checkNames({ dts: "a", src: "a", homepage: "zombo.com" }, {
             nonNpm: false,
             libraryName: "a",
             libraryMajorVersion: 1,
@@ -186,4 +165,14 @@ of the Definitely Typed header to
 
     // Type definitions for non-npm package a-browser`)
     }
+});
+
+suite("checkSource", {
+    badExportDefault() {
+        expect(() => checkSource(
+            "foo",
+            `function f() {}; export default f;`,
+            `module.exports = function () {};`)).toThrow(
+                "The types for foo specify 'export default' but the source does not mention 'default' anywhere.");
+    },
 });

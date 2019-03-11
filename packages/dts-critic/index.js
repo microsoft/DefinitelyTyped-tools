@@ -23,11 +23,13 @@ function dtsCritic(dtsPath, sourcePath) {
         fs.readFileSync(require.resolve(sourcePath), "utf-8") :
         download("https://unpkg.com/" + names.src);
     checkNames(names, header);
+    checkSource(names.dts, dts, src);
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
 dtsCritic.retrieveNpmHomepageOrFail = retrieveNpmHomepageOrFail;
-dtsCritic.check = checkNames;
+dtsCritic.checkNames = checkNames;
+dtsCritic.checkSource = checkSource;
 
 module.exports = dtsCritic;
 // @ts-ignore
@@ -142,7 +144,11 @@ function findSourceName(sourcePath) {
  * @return {string}
  */
 function retrieveNpmHomepageOrFail(baseName) {
-    return JSON.parse(download("https://registry.npmjs.org/" + mangleScoped(baseName))).homepage;
+    const npm = JSON.parse(download("https://registry.npmjs.org/" + mangleScoped(baseName)));
+    if ("error" in npm) {
+        throw new Error(baseName + " " + npm.error);
+    }
+    return npm.homepage;
 }
 
 /** @param {string} baseName */
@@ -174,6 +180,17 @@ of the Definitely Typed header to
             /** @type {*} */(e).homepage = homepage;
             throw e;
         }
+    }
+}
+
+/**
+ * @param {string} name
+ * @param {string} dts
+ * @param {string} src
+ */
+function checkSource(name, dts, src) {
+    if (dts.indexOf("export default") > -1 && src.indexOf("default") === -1 && src.indexOf("esModuleInterop") === -1) {
+        throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.`);
     }
 }
 
