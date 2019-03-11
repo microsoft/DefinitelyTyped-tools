@@ -3,12 +3,13 @@ const headerParser = require("definitelytyped-header-parser");
 const fs = require("fs");
 const path = require("path");
 const request = require("request-promise-native");
+const download = require("download-file-sync");
 
 /**
  * @param {string} dtsPath
  * @param {string} [sourcePath]
  */
-async function dtsCritic(dtsPath, sourcePath) {
+function dtsCritic(dtsPath, sourcePath) {
     const dts = fs.readFileSync(dtsPath, "utf-8");
     let header;
     try {
@@ -17,17 +18,21 @@ async function dtsCritic(dtsPath, sourcePath) {
     catch(e) {
         header = undefined;
     }
-    check(await findNames(dtsPath, sourcePath, header), header);
+    const names = findNames(dtsPath, sourcePath, header)
+    const src = sourcePath ?
+        fs.readFileSync(require.resolve(sourcePath), "utf-8") :
+        download("https://unpkg.com/" + names.src);
+    checkNames(names, header);
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
 dtsCritic.retrieveNpmHomepageOrFail = retrieveNpmHomepageOrFail;
-dtsCritic.check = check;
+dtsCritic.check = checkNames;
 
 module.exports = dtsCritic;
 // @ts-ignore
 if (!module.parent) {
-    main().catch(e => { console.log(e); process.exit(1) });
+    main();
 }
 
 /** @typedef {{
@@ -38,33 +43,26 @@ if (!module.parent) {
  * Names
  */
 
-async function main() {
+function main() {
     const argv = yargs.
         usage("$0 name.d.ts [source-folder]\n\nIf source-folder is not provided, I will look for a matching package on npm.", ).
         help().
         argv;
     if (argv._.length === 0) {
-        console.log('Please provide a path to a d.ts file for me to critique.');
+        console.log("Please provide a path to a d.ts file for me to critique.");
         process.exit(1);
     }
-    let header;
-    const dts = fs.readFileSync(argv._[0], "utf-8");
-    try {
-        header = headerParser.parseHeaderOrFail(dts);
-    }
-    catch(e) {
-        header = undefined;
-    }
-    check(await findNames(argv._[0], argv._[1], header), header);
+    return dtsCritic(argv._[0], argv._[1]);
 }
 
 /**
+ * Find package names of dts and source. Also finds the homepage from the DT header, if present.
  * @param {string} dtsPath
  * @param {string | undefined} sourcePath
  * @param {headerParser.Header | undefined} header
- * @return {Promise<Names>}
+ * @return {Names}
  */
-async function findNames(dtsPath, sourcePath, header) {
+function findNames(dtsPath, sourcePath, header) {
     const dts = findDtsName(dtsPath);
     let src;
     let homepage;
@@ -75,7 +73,7 @@ async function findNames(dtsPath, sourcePath, header) {
         let nonNpmHasMatchingPackage = false;
         src = dts;
         try {
-            homepage = await retrieveNpmHomepageOrFail(dts);
+            homepage = retrieveNpmHomepageOrFail(dts);
             nonNpmHasMatchingPackage = !!header && header.nonNpm && !isExistingSquatter(dts);
         }
         catch (e) {
@@ -141,10 +139,10 @@ function findSourceName(sourcePath) {
 /**
  * This function makes it an ERROR not to have a npm package that matches the base name.
  * @param {string} baseName
- * @return {Promise<string>}
+ * @return {string}
  */
-async function retrieveNpmHomepageOrFail(baseName) {
-    return JSON.parse(await request("https://registry.npmjs.org/" + mangleScoped(baseName))).homepage;
+function retrieveNpmHomepageOrFail(baseName) {
+    return JSON.parse(download("https://registry.npmjs.org/" + mangleScoped(baseName))).homepage;
 }
 
 /** @param {string} baseName */
@@ -159,7 +157,7 @@ function mangleScoped(baseName) {
  * @param {Names} names
  * @param {headerParser.Header | undefined} header
  */
-function check(names, header) {
+function checkNames(names, header) {
     if (names.dts !== names.src) {
         throw new Error(`d.ts name '${names.dts}' must match source name '${names.src}'.`);
     }
