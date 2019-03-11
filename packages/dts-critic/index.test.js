@@ -69,7 +69,9 @@ suite("findNames", {
         catch (e) {
             expect(e.message).toEqual(`d.ts file must have a matching npm package.
 To resolve this error, either:
-Add a Definitely Typed header with the first line
+1. Change the name to match an npm package.
+2. Add a Definitely Typed header with the first line
+
 
     // Type definitions for non-npm package parseltongue-browser
 
@@ -77,7 +79,8 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 
 - OR -
 
-Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`)
+3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
+`)
         }
     },
     async mismatchPackageFailNpmHeader() {
@@ -97,7 +100,9 @@ Explicitly provide dts-critic with a source file. This is not allowed for submis
         catch (e) {
             expect(e.message).toEqual(`d.ts file must have a matching npm package.
 To resolve this error, either:
-Add a Definitely Typed header with the first line
+1. Change the name to match an npm package.
+2. Add a Definitely Typed header with the first line
+
 
     // Type definitions for non-npm package parseltongue-browser
 
@@ -105,7 +110,8 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 
 - OR -
 
-Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.`)
+3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
+`)
         }
     },
     async mismatchPackageFailNonNpmHeader() {
@@ -123,10 +129,11 @@ Explicitly provide dts-critic with a source file. This is not allowed for submis
             })
         }
         catch (e) {
-            expect(e.message).toEqual(`Non-npm packages must not use names that conflict with existing npm packages.
+            expect(e.message).toEqual(`The non-npm package 'jquery' conflicts with the existing npm package 'jquery'.
 Try adding -browser to the end of the name to get
 
-    jquery-browser`)
+    jquery-browser
+`)
         }
     }
 })
@@ -173,10 +180,10 @@ suite("check", {
             contributors: [],
             projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
         })).toThrow(`At least one of the project urls listed in the header, ["welcome-to-zombo.com","this-is-zombo.com"], must match the homepage listed by npm, 'zombo.com'.
-If your d.ts file is not for the npm package with zombo.com,
+If your d.ts file is not for the npm package with URL zombo.com,
 change the name by adding -browser to the end and change the first line
 of the Definitely Typed header to
 
-    // Type definitions for npn-npm package a-browser`)
+    // Type definitions for non-npm package a-browser`)
     }
 });
