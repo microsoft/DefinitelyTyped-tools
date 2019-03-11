@@ -2,7 +2,6 @@ const yargs = require("yargs");
 const headerParser = require("definitelytyped-header-parser");
 const fs = require("fs");
 const path = require("path");
-const request = require("request-promise-native");
 const download = require("download-file-sync");
 
 /**
