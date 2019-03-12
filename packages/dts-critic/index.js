@@ -20,9 +20,11 @@ function dtsCritic(dtsPath, sourcePath) {
     const names = findNames(dtsPath, sourcePath, header)
     const src = sourcePath ?
         fs.readFileSync(require.resolve(sourcePath), "utf-8") :
-        download("https://unpkg.com/" + names.src);
+        download("https://unpkg.com/" + mangleScoped(names.src));
     checkNames(names, header);
-    checkSource(names.dts, dts, src);
+    if (header && !header.nonNpm) {
+        checkSource(names.dts, dts, src);
+    }
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
@@ -183,12 +185,18 @@ of the Definitely Typed header to
 }
 
 /**
+ * A d.ts with 'export default' and no ambient modules should have source that contains
+ * either 'default' or '__esModule' or 'react-side-effect' or '@flow' somewhere.
+ *
+ * Note that this function doesn't follow requires, but just tries to detect
+ * 'module.exports = require'
  * @param {string} name
  * @param {string} dts
  * @param {string} src
  */
 function checkSource(name, dts, src) {
-    if (dts.indexOf("export default") > -1 && src.indexOf("default") === -1 && src.indexOf("esModuleInterop") === -1) {
+    if (dts.indexOf("export default") > -1 && !/declare module ['"]/.test(dts) &&
+        src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
         throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.`);
     }
 }

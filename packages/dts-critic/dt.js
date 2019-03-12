@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const stripJsonComments = require('strip-json-comments')
 /** @param {string} tslintPath */
-async function hasDtHeaderLintRule(tslintPath) {
+function hasDtHeaderLintRule(tslintPath) {
     if (fs.existsSync(tslintPath)) {
         const tslint = JSON.parse(stripJsonComments(fs.readFileSync(tslintPath, 'utf-8')))
         if(tslint.rules && tslint.rules["dt-header"] !== undefined) {
@@ -14,13 +14,12 @@ async function hasDtHeaderLintRule(tslintPath) {
     return false;
 }
 
-
-async function main() {
+function main() {
     for (const item of fs.readdirSync('../DefinitelyTyped/types')) {
         const entry = '../DefinitelyTyped/types/' + item
         try {
-            if (await hasDtHeaderLintRule(entry + '/tslint.json')) {
-                await critic(entry + '/index.d.ts')
+            if (hasDtHeaderLintRule(entry + '/tslint.json')) {
+                critic(entry + '/index.d.ts')
             }
         }
         catch (e) {
@@ -32,9 +31,20 @@ async function main() {
             }
             else if (/At least one of the project urls listed in the header/.test(e.message)) {
                 console.log('trying to add ' + e.homepage + '...')
-                // const re = /\/\/ Project: (.+)/;
-                // const s = fs.readFileSync(entry + '/index.d.ts', 'utf-8')
-                // fs.writeFileSync(entry + '/index.d.ts', s.replace(re, '// Project: $1, ' + e.homepage), 'utf-8')
+                const re = /\/\/ Project: (.+)/;
+                const s = fs.readFileSync(entry + '/index.d.ts', 'utf-8')
+                fs.writeFileSync(entry + '/index.d.ts', s.replace(re, '// Project: $1, ' + e.homepage), 'utf-8')
+            }
+            else if (/but the source does not mention 'default'/.test(e.message)) {
+                console.log('converting', item, 'to export = ...')
+                const named = /export default function\s+(\w+\s*)\(/;
+                const anon = /export default function\s*\(/;
+                const id = /export default(\s+\w+);/;
+                let s = fs.readFileSync(entry + '/index.d.ts', 'utf-8')
+                s = s.replace(named, 'export = $1;\ndeclare function $1(')
+                s = s.replace(anon, 'export = _default;\ndeclare function _default(')
+                s = s.replace(id, 'export =$1;')
+                fs.writeFileSync(entry + '/index.d.ts', s, 'utf-8')
             }
             else {
                 console.log('*** ERROR for ' + item + ' ***')
