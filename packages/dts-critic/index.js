@@ -109,14 +109,21 @@ Try adding -browser to the end of the name to get
     return { dts, src, homepage };
 }
 
-/** @param {string} dts */
-function isExistingSquatter(dts) {
-    return dts === "atom" ||
-        dts === "ember__string" ||
-        dts === "fancybox" ||
-        dts === "jsqrcode" ||
-        dts === "node" ||
-        dts === "titanium";
+/** @param {string} name */
+function isExistingSquatter(name) {
+    return name === "atom" ||
+        name === "ember__string" ||
+        name === "fancybox" ||
+        name === "jsqrcode" ||
+        name === "node" ||
+        name === "titanium";
+}
+
+/** @param {string} name */
+function isRealExportDefault(name) {
+    return name.indexOf("react-native") > -1 ||
+        name === "ember-feature-flags" ||
+        name === "material-ui-datatables";
 }
 
 /**
@@ -187,6 +194,7 @@ of the Definitely Typed header to
 /**
  * A d.ts with 'export default' and no ambient modules should have source that contains
  * either 'default' or '__esModule' or 'react-side-effect' or '@flow' somewhere.
+ * This function also skips any package named 'react-native'.
  *
  * Note that this function doesn't follow requires, but just tries to detect
  * 'module.exports = require'
@@ -196,7 +204,7 @@ of the Definitely Typed header to
  */
 function checkSource(name, dts, src) {
     if (dts.indexOf("export default") > -1 && !/declare module ['"]/.test(dts) &&
-        src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
+        !isRealExportDefault(name) && src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
         throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.`);
     }
 }
