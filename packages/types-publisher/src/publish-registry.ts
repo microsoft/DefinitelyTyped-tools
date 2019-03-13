@@ -7,10 +7,10 @@ import { Options } from "./lib/common";
 import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } from "./lib/packages";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
-import { fetchAndProcessNpmInfo, Semver } from "./lib/versions";
+import { Semver } from "./lib/versions";
 import { npmInstallFlags, readJson, sleep, writeFile, writeJson } from "./util/io";
 import { logger, Logger, loggerWithErrors, writeLog } from "./util/logging";
-import { computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors } from "./util/util";
+import { assertDefined, best, computeHash, execAndThrowErrors, joinPaths, logUncaughtErrors, mapDefined } from "./util/util";
 
 const packageName = "types-registry";
 const registryOutputPath = joinPaths(outputDirPath, packageName);
@@ -217,3 +217,25 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: Cac
         return out;
     }
 }
+
+interface ProcessedNpmInfo {
+    readonly version: Semver;
+    readonly highestSemverVersion: Semver;
+    readonly contentHash: string;
+    readonly lastModified: Date;
+}
+
+async function fetchAndProcessNpmInfo(escapedPackageName: string, client: UncachedNpmInfoClient): Promise<ProcessedNpmInfo> {
+    const info = assertDefined(await client.fetchNpmInfo(escapedPackageName));
+    const version = Semver.parse(assertDefined(info.distTags.get("latest")));
+    const { distTags, versions, time } = info;
+    const highestSemverVersion = getLatestVersion(versions.keys());
+    assert.strictEqual(highestSemverVersion.versionString, distTags.get("next"));
+    const contentHash = versions.get(version.versionString)!.typesPublisherContentHash || "";
+    return { version, highestSemverVersion, contentHash, lastModified: new Date(time.get("modified")!) };
+}
+
+function getLatestVersion(versions: Iterable<string>): Semver {
+    return best(mapDefined(versions, v => Semver.tryParse(v)), (a, b) => a.greaterThan(b))!;
+}
+

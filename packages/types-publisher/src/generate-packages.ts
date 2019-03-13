@@ -3,13 +3,21 @@ import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { generateNotNeededPackage, generateTypingPackage } from "./lib/package-generator";
-import { AllPackages } from "./lib/packages";
-import { outputDirPath } from "./lib/settings";
-import { ChangedPackages, readChangedPackages } from "./lib/versions";
-import { logger, loggerWithErrors, writeLog } from "./util/logging";
+import {
+    AllPackages, AnyPackage, DependencyVersion, getFullNpmName, License, NotNeededPackage, PackageJsonDependency, TypingsData,
+} from "./lib/packages";
+import { sourceBranch, outputDirPath } from "./lib/settings";
+import { ChangedPackages, Semver, readChangedPackages } from "./lib/versions";
+import { writeFile } from "./util/io";
+import { logger, loggerWithErrors, writeLog, Logger } from "./util/logging";
 import { writeTgz } from "./util/tgz";
-import { logUncaughtErrors } from "./util/util";
+import { assertDefined, assertNever, best, joinPaths, logUncaughtErrors, sortObjectKeys } from "./util/util";
+import { makeTypesVersionsForPackageJson } from "definitelytyped-header-parser";
+import { mkdir, mkdirp, readFileSync } from "fs-extra";
+import * as path from "path";
+import { CachedNpmInfoClient, UncachedNpmInfoClient } from "./lib/npm-client";
+
+const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (!module.parent) {
     const tgz = !!yargs.argv.tgz;
@@ -23,7 +31,7 @@ if (!module.parent) {
 
 export default async function generatePackages(dt: FS, allPackages: AllPackages, changedPackages: ChangedPackages, tgz = false): Promise<void> {
     const [log, logResult] = logger();
-    log("\n## Generating packages\n");
+    log("\n## Generating packages");
 
     await emptyDir(outputDirPath);
 
@@ -34,9 +42,212 @@ export default async function generatePackages(dt: FS, allPackages: AllPackages,
         }
         log(` * ${pkg.libraryName}`);
     }
-    for (const pkg of changedPackages.changedNotNeededPackages) {
-        await generateNotNeededPackage(pkg);
+    log("## Generating deprecated packages");
+    CachedNpmInfoClient.with(new UncachedNpmInfoClient(), async client => {
+        for (const pkg of changedPackages.changedNotNeededPackages) {
+            log(` * ${pkg.libraryName}`);
+            await generateNotNeededPackage(pkg, client, log);
+        }
+    });
+    await writeLog("package-generator.md", logResult());
+}
+async function generateTypingPackage(typing: TypingsData, packages: AllPackages, version: string, dt: FS): Promise<void> {
+    const typesDirectory = dt.subDir("types").subDir(typing.name);
+    const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${typing.major}`);
+
+    const packageJson = createPackageJSON(typing, version, packages);
+    await writeCommonOutputs(typing, packageJson, createReadme(typing));
+    await Promise.all(typing.files.
+                      map(async file => writeFile(await outputFilePath(typing, file), await packageFS.readFile(file))));
+}
+
+async function generateNotNeededPackage(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger): Promise<void> {
+    const packageJson = createNotNeededPackageJSON(skipBadPublishes(pkg, client, log));
+    await writeCommonOutputs(pkg, packageJson, pkg.readme());
+}
+
+/**
+ * When we fail to publish a deprecated package, it leaves behind an entry in the time property.
+ * So the keys of 'time' give the actual 'latest'.
+ * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
+ */
+function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger) {
+    // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
+    const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
+    const latest = assertDefined(info.distTags.get("latest"));
+    const ver = Semver.parse(findActualLatest(info.time));
+    const modifiedTime = assertDefined(info.time.get("modified"));
+    if (ver.versionString !== latest) {
+        log(`Previous deprecation failed at ${modifiedTime} ... Bumping from version ${ver.versionString}.`);
+        return new NotNeededPackage({
+            asOfVersion: new Semver(ver.major, ver.minor, ver.patch + 1).versionString,
+            libraryName: pkg.libraryName,
+            sourceRepoURL: pkg.sourceRepoURL,
+            typingsPackageName: pkg.name,
+        });
+    }
+    return pkg;
+}
+
+function findActualLatest(times: Map<string,string>) {
+    const actual = best(
+        times, ([_,v], [bestK,bestV]) => (bestK === "modified") ? true : new Date(v) > new Date(bestV));
+    if (!actual) {
+        throw new Error("failed to find actual latest");
+    }
+    return actual[0];
+}
+
+async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
+    await mkdir(pkg.outputDirectory);
+
+    await Promise.all([
+        writeOutputFile("package.json", packageJson),
+        writeOutputFile("README.md", readme),
+        writeOutputFile("LICENSE", getLicenseFileText(pkg)),
+    ]);
+
+    async function writeOutputFile(filename: string, content: string): Promise<void> {
+        await writeFile(await outputFilePath(pkg, filename), content);
+    }
+}
+
+async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string> {
+    const full = joinPaths(pkg.outputDirectory, filename);
+    const dir = path.dirname(full);
+    if (dir !== pkg.outputDirectory) {
+        await mkdirp(dir);
+    }
+    return full;
+}
+
+interface Dependencies { [name: string]: string; }
+
+function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): string {
+    // Use the ordering of fields from https://docs.npmjs.com/files/package.json
+    const out: {} = {
+        name: typing.fullNpmName,
+        version,
+        description: `TypeScript definitions for ${typing.libraryName}`,
+        // keywords,
+        // homepage,
+        // bugs,
+        license: typing.license,
+        contributors: typing.contributors,
+        main: "",
+        types: "index",
+        typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
+        repository: {
+            type: "git",
+            url: `${definitelyTypedURL}.git`,
+            directory: `types/${typing.name}`,
+        },
+        scripts: {},
+        dependencies: getDependencies(typing.packageJsonDependencies, typing, packages),
+        typesPublisherContentHash: typing.contentHash,
+        typeScriptVersion: typing.minTypeScriptVersion,
+    };
+
+    return JSON.stringify(out, undefined, 4);
+}
+
+const definitelyTypedURL = "https://github.com/DefinitelyTyped/DefinitelyTyped";
+
+/** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
+function getDependencies(packageJsonDependencies: ReadonlyArray<PackageJsonDependency>, typing: TypingsData, allPackages: AllPackages): Dependencies {
+    const dependencies: Dependencies = {};
+    for (const { name, version } of packageJsonDependencies) {
+        dependencies[name] = version;
     }
 
-    await writeLog("package-generator.md", logResult());
+    for (const dependency of typing.dependencies) {
+        const typesDependency = getFullNpmName(dependency.name);
+        // A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
+        if (!packageJsonDependencies.some(d => d.name === dependency.name || d.name === typesDependency) && allPackages.hasTypingFor(dependency)) {
+            dependencies[typesDependency] = dependencySemver(dependency.majorVersion);
+        }
+    }
+    return sortObjectKeys(dependencies);
+}
+
+function dependencySemver(dependency: DependencyVersion): string {
+    return dependency === "*" ? dependency : `^${dependency}`;
+}
+
+function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage): string {
+    return JSON.stringify(
+        {
+            name: fullNpmName,
+            version: version.versionString,
+            typings: null, // tslint:disable-line no-null-keyword
+            description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
+            main: "",
+            scripts: {},
+            author: "",
+            repository: sourceRepoURL,
+            license,
+            // No `typings`, that's provided by the dependency.
+            dependencies: {
+                [name]: "*",
+            },
+        },
+        undefined,
+        4);
+}
+
+function createReadme(typing: TypingsData): string {
+    const lines: string[] = [];
+    lines.push("# Installation");
+    lines.push(`> \`npm install --save ${typing.fullNpmName}\``);
+    lines.push("");
+
+    lines.push("# Summary");
+    if (typing.projectName) {
+        lines.push(`This package contains type definitions for ${typing.libraryName} ( ${typing.projectName} ).`);
+    } else {
+        lines.push(`This package contains type definitions for ${typing.libraryName}.`);
+    }
+    lines.push("");
+
+    lines.push("# Details");
+    lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}`);
+
+    lines.push("");
+    lines.push("Additional Details");
+    lines.push(` * Last updated: ${(new Date()).toUTCString()}`);
+    const dependencies = Array.from(typing.dependencies).map(d => getFullNpmName(d.name));
+    lines.push(` * Dependencies: ${dependencies.length ? dependencies.join(", ") : "none"}`);
+    lines.push(` * Global values: ${typing.globals.length ? typing.globals.join(", ") : "none"}`);
+    lines.push("");
+
+    lines.push("# Credits");
+    const contributors = typing.contributors.map(({ name, url }) => `${name} <${url}>`).join(", ");
+    lines.push(`These definitions were written by ${contributors}.`);
+    lines.push("");
+
+    return lines.join("\r\n");
+}
+
+function getLicenseFileText(typing: AnyPackage): string {
+    switch (typing.license) {
+        case License.MIT:
+            return mitLicense;
+        case License.Apache20:
+            return apacheLicense(typing);
+        default:
+            throw assertNever(typing);
+    }
+}
+
+function apacheLicense(typing: TypingsData): string {
+    const year = new Date().getFullYear();
+    const names = typing.contributors.map(c => c.name);
+    // tslint:disable max-line-length
+    return `Copyright ${year} ${names.join(", ")}
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.`;
+    // tslint:enable max-line-length
 }

@@ -24,7 +24,9 @@ export interface NpmInfoRaw {
         readonly [tag: string]: string;
     };
     readonly versions: NpmInfoRawVersions;
-    readonly time: { readonly modified: string; };
+    readonly time: {
+        readonly [s: string]: string;
+    };
 }
 export interface NpmInfoRawVersions {
     readonly [version: string]: NpmInfoVersion;
@@ -34,7 +36,7 @@ export interface NpmInfoRawVersions {
 export interface NpmInfo {
     readonly distTags: Map<string, string>;
     readonly versions: Map<string, NpmInfoVersion>;
-    readonly timeModified: string;
+    readonly time: Map<string, string>;
 }
 export interface NpmInfoVersion {
     readonly typesPublisherContentHash?: string;
@@ -186,7 +188,7 @@ function npmInfoFromJson(n: NpmInfoRaw): NpmInfo {
         distTags: recordToMap(n["dist-tags"], identity),
         // Callback ensures we remove any other properties
         versions: recordToMap(n.versions, ({ typesPublisherContentHash, deprecated }) => ({ typesPublisherContentHash, deprecated })),
-        timeModified: n.time.modified,
+        time: recordToMap(n.time),
     };
 }
 
@@ -194,7 +196,7 @@ function jsonFromNpmInfo(n: NpmInfo): NpmInfoRaw {
     return {
         "dist-tags": mapToRecord(n.distTags),
         versions: mapToRecord(n.versions),
-        time: { modified: n.timeModified },
+        time: mapToRecord(n.time),
     };
 }
 
