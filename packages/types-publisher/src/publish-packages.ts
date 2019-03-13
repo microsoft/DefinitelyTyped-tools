@@ -3,10 +3,10 @@ import * as yargs from "yargs";
 import appInsights = require("applicationinsights");
 import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { NpmPublishClient } from "./lib/npm-client";
+import { NpmPublishClient, UncachedNpmInfoClient, CachedNpmInfoClient } from "./lib/npm-client";
 import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { AllPackages } from "./lib/packages";
-import { ChangedPackages, readChangedPackages } from "./lib/versions";
+import { ChangedPackages, readChangedPackages, skipBadPublishes } from "./lib/versions";
 import { Fetcher } from "./util/io";
 import { logger, loggerWithErrors, writeLog } from "./util/logging";
 import { logUncaughtErrors } from "./util/util";
@@ -110,9 +110,13 @@ export default async function publishPackages(
             }
         }
     }
-    for (const n of changedPackages.changedNotNeededPackages) {
-        await publishNotNeededPackage(client, n, dry, log);
-    }
+
+    CachedNpmInfoClient.with(new UncachedNpmInfoClient(), async infoClient => {
+        for (const n of changedPackages.changedNotNeededPackages) {
+            await publishNotNeededPackage(client, skipBadPublishes(n, infoClient, log), dry, log);
+        }
+    });
+
 
     await writeLog("publishing.md", logResult());
     console.log("Done!");

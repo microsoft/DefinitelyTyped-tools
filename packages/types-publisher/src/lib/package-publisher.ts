@@ -39,7 +39,7 @@ async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dr
 
 export async function deprecateNotNeededPackage(client: NpmPublishClient, pkg: NotNeededPackage, dry = false, log: Logger): Promise<void> {
     if (dry) {
-        log("(dry) Skip deprecate not needed package " + pkg.fullNpmName);
+        log("(dry) Skip deprecate not needed package " + pkg.fullNpmName + " at " + pkg.version.versionString);
     } else {
         log(`Deprecating ${pkg.fullNpmName} at ${pkg.version.versionString} with message: ${pkg.deprecatedMessage()}.`);
         await client.deprecate(pkg.fullNpmName, pkg.version.versionString, pkg.deprecatedMessage());

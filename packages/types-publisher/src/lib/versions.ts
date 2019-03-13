@@ -1,7 +1,9 @@
-import { assertDefined, intOfString } from "../util/util";
+import { assertDefined, best, intOfString } from "../util/util";
+import { Logger } from "../util/logging";
 
 import { readDataFile } from "./common";
 import { AllPackages, NotNeededPackage, PackageId, TypingsData } from "./packages";
+import { CachedNpmInfoClient } from "./npm-client";
 
 export const versionsFilename = "versions.json";
 
@@ -36,6 +38,38 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
             ({ pkg: allPackages.getTypingsData(id), version, latestVersion })),
         changedNotNeededPackages: json.changedNotNeededPackages.map(id => assertDefined(allPackages.getNotNeededPackage(id))),
     };
+}
+
+/**
+ * When we fail to publish a deprecated package, it leaves behind an entry in the time property.
+ * So the keys of 'time' give the actual 'latest'.
+ * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
+ */
+export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger) {
+    // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
+    const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
+    const latest = assertDefined(info.distTags.get("latest"));
+    const ver = Semver.parse(findActualLatest(info.time));
+    const modifiedTime = assertDefined(info.time.get("modified"));
+    if (ver.versionString !== latest) {
+        log(`Previous deprecation failed at ${modifiedTime} ... Bumping from version ${ver.versionString}.`);
+        return new NotNeededPackage({
+            asOfVersion: new Semver(ver.major, ver.minor, ver.patch + 1).versionString,
+            libraryName: pkg.libraryName,
+            sourceRepoURL: pkg.sourceRepoURL,
+            typingsPackageName: pkg.name,
+        });
+    }
+    return pkg;
+}
+
+function findActualLatest(times: Map<string,string>) {
+    const actual = best(
+        times, ([_,v], [bestK,bestV]) => (bestK === "modified") ? true : new Date(v) > new Date(bestV));
+    if (!actual) {
+        throw new Error("failed to find actual latest");
+    }
+    return actual[0];
 }
 
 /** Version of a package published to NPM. */
