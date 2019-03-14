@@ -50,11 +50,11 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
     const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
     const latest = assertDefined(info.distTags.get("latest"));
     const ver = Semver.parse(findActualLatest(info.time));
-    const modifiedTime = assertDefined(info.time.get("modified"));
-    if (ver.versionString !== latest) {
-        log(`Previous deprecation failed at ${modifiedTime} ... Bumping from version ${ver.versionString}.`);
+    if (ver.versionString !== latest || !assertDefined(info.versions.get(ver.versionString)).deprecated) {
+        const plusOne = new Semver(ver.major, ver.minor, ver.patch + 1);
+        log(`Previous deprecation ${ver.versionString} failed, instead using ${plusOne.versionString}.`);
         return new NotNeededPackage({
-            asOfVersion: new Semver(ver.major, ver.minor, ver.patch + 1).versionString,
+            asOfVersion: plusOne.versionString,
             libraryName: pkg.libraryName,
             sourceRepoURL: pkg.sourceRepoURL,
             typingsPackageName: pkg.name,

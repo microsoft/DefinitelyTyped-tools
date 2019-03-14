@@ -36,6 +36,9 @@ export default async function publishPackages(
     if (dry) {
         log("=== DRY RUN ===");
     }
+    else {
+        log("=== Publishing packages ===");
+    }
 
     const client = await NpmPublishClient.create();
 
