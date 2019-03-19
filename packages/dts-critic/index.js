@@ -116,6 +116,7 @@ function isExistingSquatter(name) {
         name === "fancybox" ||
         name === "jsqrcode" ||
         name === "node" ||
+        name === "geojson" ||
         name === "titanium";
 }
 
