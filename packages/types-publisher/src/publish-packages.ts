@@ -3,7 +3,7 @@ import * as yargs from "yargs";
 import appInsights = require("applicationinsights");
 import { getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { NpmPublishClient, UncachedNpmInfoClient, CachedNpmInfoClient } from "./lib/npm-client";
+import { withNpmCache, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { AllPackages } from "./lib/packages";
 import { ChangedPackages, readChangedPackages, skipBadPublishes } from "./lib/versions";
@@ -114,7 +114,7 @@ export default async function publishPackages(
         }
     }
 
-    CachedNpmInfoClient.with(new UncachedNpmInfoClient(), async infoClient => {
+    withNpmCache(new UncachedNpmInfoClient(), async infoClient => {
         for (const n of changedPackages.changedNotNeededPackages) {
             await publishNotNeededPackage(client, skipBadPublishes(n, infoClient, log), dry, log);
         }

@@ -4,7 +4,7 @@ import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
-import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
+import { withNpmCache, CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } from "./lib/packages";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 import { Semver } from "./lib/versions";
@@ -34,7 +34,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
         await fetchAndProcessNpmInfo(packageName, client);
 
     // Don't include not-needed packages in the registry.
-    const registryJsonData = await CachedNpmInfoClient.with(client, cachedClient => generateRegistry(allPackages.allLatestTypings(), cachedClient));
+    const registryJsonData = await withNpmCache(client, cachedClient => generateRegistry(allPackages.allLatestTypings(), cachedClient));
     const registry = JSON.stringify(registryJsonData);
     const newContentHash = computeHash(registry);
 
@@ -199,7 +199,7 @@ async function generateRegistry(typings: ReadonlyArray<TypingsData>, client: Cac
         const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName);
         if (!info) {
             const missings = typings.filter(t => !client.getNpmInfoFromCache(t.fullEscapedNpmName)).map(t => t.fullEscapedNpmName);
-            throw new Error(`${missings} not found in ${client.formatKeys()}`);
+            throw new Error(`${missings} not found in cached npm info.`);
         }
         entries[typing.name] = filterTags(info.distTags);
     }

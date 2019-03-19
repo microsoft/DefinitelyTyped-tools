@@ -9,7 +9,7 @@ import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
 import { AllPackages, DependencyVersion, PackageId, TypingsData, NotNeededPackage } from "../lib/packages";
-import { CachedNpmInfoClient, UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
+import { UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
 import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
@@ -68,13 +68,11 @@ export default async function runTests(
     const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
     if (diffs.find(d => d.file === "notNeededPackages.json")) {
         const uncached = new UncachedNpmInfoClient()
-        await CachedNpmInfoClient.with(uncached, async client => {
-            for (const deleted of getNotNeededPackages(allPackages, diffs)) {
-                const source = await client.fetchAndCacheNpmInfo(deleted.libraryName) // eg @babel/parser
-                const typings = await client.fetchAndCacheNpmInfo(deleted.fullNpmName) // eg @types/babel__parser
-                checkNotNeededPackage(deleted, source, typings);
-            }
-        });
+        for (const deleted of getNotNeededPackages(allPackages, diffs)) {
+            const source = await uncached.fetchNpmInfo(deleted.libraryName) // eg @babel/parser
+            const typings = await uncached.fetchNpmInfo(deleted.fullNpmName) // eg @types/babel__parser
+            checkNotNeededPackage(deleted, source, typings);
+        }
     }
     const { changedPackages, dependentPackages }: Affected =
         selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [] } :

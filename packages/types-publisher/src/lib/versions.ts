@@ -65,7 +65,10 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
 
 function findActualLatest(times: Map<string,string>) {
     const actual = best(
-        times, ([_,v], [bestK,bestV]) => (bestK === "modified") ? true : new Date(v) > new Date(bestV));
+        times, ([k,v], [bestK,bestV]) =>
+            (bestK === "modified" || bestK === "created") ? true :
+            (k === "modified" || k === "created") ? false :
+            new Date(v) > new Date(bestV));
     if (!actual) {
         throw new Error("failed to find actual latest");
     }

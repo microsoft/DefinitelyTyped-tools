@@ -2,7 +2,7 @@ import assert = require("assert");
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
-import { CachedNpmInfoClient, UncachedNpmInfoClient, NpmInfoVersion } from "./lib/npm-client";
+import { withNpmCache, CachedNpmInfoClient, UncachedNpmInfoClient, NpmInfoVersion } from "./lib/npm-client";
 import { AllPackages, TypingsData, NotNeededPackage } from "./lib/packages";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, Semver, versionsFilename } from "./lib/versions";
 import { loggerWithErrors, LoggerWithErrors } from "./util/logging";
@@ -18,7 +18,7 @@ export default async function calculateVersions(
     log: LoggerWithErrors
 ): Promise<ChangedPackages> {
     log.info("=== Calculating versions ===");
-    return CachedNpmInfoClient.with(uncachedClient, async client => {
+    return withNpmCache(uncachedClient, async client => {
         log.info("* Reading packages...");
         const packages = await AllPackages.read(dt);
         return computeAndSaveChangedPackages(packages, log, client);

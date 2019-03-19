@@ -43,49 +43,44 @@ export interface NpmInfoVersion {
     readonly deprecated?: string;
 }
 
-export class CachedNpmInfoClient {
-    static async with<T>(uncachedClient: UncachedNpmInfoClient, cb: (client: CachedNpmInfoClient) => Promise<T>): Promise<T> {
-        const log = loggerWithErrors()[0];
-        let unroll: Map<string, NpmInfo>;
-        log.info(`Checking for cache file at ${cacheFile}...`);
-        const cacheFileExists = await pathExists(cacheFile);
-        if (cacheFileExists) {
-            log.info("Reading cache file...");
-            const cache = await readJson(cacheFile) as Record<string, NpmInfoRaw>;
-            log.info(`Cache file ${cacheFile} exists, copying to map...`);
-            unroll = recordToMap(cache, npmInfoFromJson);
-        } else {
-            log.info("Cache file doesn't exist, using empty map.");
-            unroll = new Map();
-        }
-        const client = new this(uncachedClient, unroll);
-        const res = await cb(client);
-        await client.writeCache();
-        return res;
+export interface CachedNpmInfoClient {
+    getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined;
+    fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined>;
+}
+
+export async function withNpmCache<T>(uncachedClient: UncachedNpmInfoClient, cb: (client: CachedNpmInfoClient) => Promise<T>): Promise<T> {
+    const log = loggerWithErrors()[0];
+    let unroll: Map<string, NpmInfo>;
+    log.info(`Checking for cache file at ${cacheFile}...`);
+    const cacheFileExists = await pathExists(cacheFile);
+    if (cacheFileExists) {
+        log.info("Reading cache file...");
+        const cachedJson = await readJson(cacheFile) as Record<string, NpmInfoRaw>;
+        log.info(`Cache file ${cacheFile} exists, copying to map...`);
+        unroll = recordToMap(cachedJson, npmInfoFromJson);
+    } else {
+        log.info("Cache file doesn't exist, using empty map.");
+        unroll = new Map();
     }
 
-    private constructor(private readonly uncachedClient: UncachedNpmInfoClient, private readonly cache: Map<string, NpmInfo>) {}
+    const res = await cb({ getNpmInfoFromCache, fetchAndCacheNpmInfo });
+    log.info("Writing npm cache.");
+    await ensureFile(cacheFile);
+    await writeJson(cacheFile, mapToRecord(unroll, jsonFromNpmInfo));
+    return res;
 
     /** May return old info -- caller should check that this looks up-to-date. */
-    getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined {
-        return this.cache.get(escapedPackageName);
+    function getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined {
+        return unroll.get(escapedPackageName);
     }
 
     /** Call this when the result of getNpmInfoFromCache looks potentially out-of-date. */
-    async fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
-        const info = await this.uncachedClient.fetchNpmInfo(escapedPackageName);
-        if (info) { this.cache.set(escapedPackageName, info); }
+    async function fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
+        const info = await uncachedClient.fetchNpmInfo(escapedPackageName);
+        if (info) { unroll.set(escapedPackageName, info); }
         return info;
     }
 
-    private async writeCache(): Promise<void> {
-        await ensureFile(cacheFile);
-        await writeJson(cacheFile, mapToRecord(this.cache, jsonFromNpmInfo));
-    }
-
-    formatKeys(): string {
-        return Array.from(this.cache.keys()).join(", ");
-    }
 }
 
 export class UncachedNpmInfoClient {
