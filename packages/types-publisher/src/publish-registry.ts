@@ -50,7 +50,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
         // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
         // If so, we should just update it to "latest" now.
         log("Old version of types-registry was never tagged latest, so updating");
-        await validateIsSubset(await readNotNeededPackages(dt));
+        await validateIsSubset(await readNotNeededPackages(dt), log);
         await (await publishClient()).tag(packageName, highestSemverVersion.versionString, "latest");
     } else if (oldContentHash !== newContentHash && isAWeekAfter(lastModified)) {
         log("New packages have been added, so publishing a new registry.");
@@ -59,7 +59,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
         const reason = oldContentHash === newContentHash ? "Was modified less than a week ago" : "No new packages published";
         log(`${reason}, so no need to publish new registry.`);
         // Just making sure...
-        await validate();
+        await validate(log);
     }
 
     await writeLog("publish-registry.md", logResult());
@@ -96,11 +96,11 @@ async function publish(client: NpmPublishClient, packageJson: {}, version: strin
     // Sleep for 60 seconds to let NPM update.
     await sleep(60);
     // Don't set it as "latest" until *after* it's been validated.
-    await validate();
+    await validate(log);
     await client.tag(packageName, version, "latest");
 }
 
-async function installForValidate(): Promise<void> {
+async function installForValidate(log: Logger): Promise<void> {
     await emptyDir(validateOutputPath);
     await writeJson(joinPaths(validateOutputPath, "package.json"), {
         name: "validate",
@@ -112,7 +112,9 @@ async function installForValidate(): Promise<void> {
     });
 
     const npmPath = joinPaths(__dirname, "..", "node_modules", "npm", "bin", "npm-cli.js");
-    const err = (await execAndThrowErrors(`node ${npmPath} install types-registry@next ${npmInstallFlags}`, validateOutputPath)).trim();
+    const cmd = `node ${npmPath} install types-registry@next ${npmInstallFlags}`
+    log(cmd);
+    const err = (await execAndThrowErrors(cmd, validateOutputPath)).trim();
     if (err) {
         console.error(err);
     }
@@ -120,15 +122,16 @@ async function installForValidate(): Promise<void> {
 
 const validateTypesRegistryPath = joinPaths(validateOutputPath, "node_modules", "types-registry");
 
-async function validate(): Promise<void> {
-    await installForValidate();
-    assertJsonNewer(
-        await readJson(joinPaths(registryOutputPath, "index.json")),
-        await readJson(joinPaths(validateTypesRegistryPath, "index.json")));
+async function validate(log: Logger): Promise<void> {
+    await installForValidate(log);
+    const output = joinPaths(registryOutputPath, "index.json");
+    const node_modules = joinPaths(validateTypesRegistryPath, "index.json");
+    log(`Checking that ${output} is newer than ${node_modules}`);
+    assertJsonNewer(await readJson(output), await readJson(node_modules), log);
 }
 
-async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>): Promise<void> {
-    await installForValidate();
+async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>, log: Logger): Promise<void> {
+    await installForValidate(log);
     const indexJson = "index.json";
     const actual = await readJson(joinPaths(validateTypesRegistryPath, indexJson)) as Registry;
     const expected = await readJson(joinPaths(registryOutputPath, indexJson)) as Registry;
@@ -139,9 +142,12 @@ async function validateIsSubset(notNeeded: ReadonlyArray<NotNeededPackage>): Pro
     }
 }
 
-function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any }, parent = "") {
+function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any }, log: Logger, parent = "") {
     for (const key of Object.keys(older)) {
-        assert(newer.hasOwnProperty(key), `${key} in ${parent} was not found in newer`);
+        if (!newer.hasOwnProperty(key)) {
+            log(`${key} in ${parent} was not found in newer -- assumed to be deprecated.`);
+            continue;
+        }
         switch (typeof newer[key]) {
             case "string":
                 const newerver = Semver.tryParse(newer[key]);
@@ -158,7 +164,7 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
                 assert(newer[key] === older[key], `${key} in ${parent} did not match: newer[key] (${newer[key]}) !== older[key] (${older[key]})`);
                 break;
             default:
-                assertJsonNewer(newer[key], older[key], key);
+                assertJsonNewer(newer[key], older[key], log, key);
         }
     }
 }
