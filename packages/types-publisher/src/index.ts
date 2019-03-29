@@ -1,5 +1,5 @@
 export { getDefinitelyTyped } from "./get-definitely-typed";
-export { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
+export { withNpmCache, CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 export { AllPackages } from "./lib/packages";
 export { clean } from "./clean";
 export { getLatestTypingVersion } from "./calculate-versions";
