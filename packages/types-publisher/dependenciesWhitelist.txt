@@ -50,6 +50,7 @@ google-gax
 graphql-tools
 grpc
 handlebars
+hoist-non-react-statics
 immutable
 indefinite-observable
 inversify
