@@ -109,24 +109,6 @@ Try adding -browser to the end of the name to get
     return { dts, src, homepage };
 }
 
-/** @param {string} name */
-function isExistingSquatter(name) {
-    return name === "atom" ||
-        name === "ember__string" ||
-        name === "fancybox" ||
-        name === "jsqrcode" ||
-        name === "node" ||
-        name === "geojson" ||
-        name === "titanium";
-}
-
-/** @param {string} name */
-function isRealExportDefault(name) {
-    return name.indexOf("react-native") > -1 ||
-        name === "ember-feature-flags" ||
-        name === "material-ui-datatables";
-}
-
 /**
  * If dtsName is 'index' (as with DT) then look to the parent directory for the name.
  * @param {string} dtsPath
@@ -206,7 +188,9 @@ of the Definitely Typed header to
 function checkSource(name, dts, src) {
     if (dts.indexOf("export default") > -1 && !/declare module ['"]/.test(dts) &&
         !isRealExportDefault(name) && src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
-        throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.`);
+        throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.
+Here is the source:
+${src}`);
     }
 }
 
@@ -227,4 +211,22 @@ function skipEnd(s, suffix) {
         return s.slice(0, s.length - suffix.length);
     }
     return s;
+}
+
+/** @param {string} name */
+function isExistingSquatter(name) {
+    return name === "atom" ||
+        name === "ember__string" ||
+        name === "fancybox" ||
+        name === "jsqrcode" ||
+        name === "node" ||
+        name === "geojson" ||
+        name === "titanium";
+}
+
+/** @param {string} name */
+function isRealExportDefault(name) {
+    return name.indexOf("react-native") > -1 ||
+        name === "ember-feature-flags" ||
+        name === "material-ui-datatables";
 }
