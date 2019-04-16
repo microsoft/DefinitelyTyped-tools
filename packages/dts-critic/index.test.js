@@ -175,4 +175,16 @@ suite("checkSource", {
             `module.exports = function () {};`)).toThrow(
                 "The types for foo specify 'export default' but the source does not mention 'default' anywhere.");
     },
+    serverError500() {
+        expect(checkSource(
+            "foo",
+            `function f() {}; export default f;`,
+            `<title>500 Server Error</title>`)).toBeUndefined();
+    },
+    serverError524() {
+        expect(checkSource(
+            "foo",
+            `function f() {}; export default f;`,
+            `<title>unpkg.com | 524: A timeout occurred</title>`)).toBeUndefined();
+    },
 });
