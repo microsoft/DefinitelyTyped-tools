@@ -1,5 +1,7 @@
 import assert = require("assert");
 import { pathExists } from "fs-extra";
+import os = require("os");
+import { existsSync, readFileSync } from "fs";
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
@@ -15,6 +17,8 @@ import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../ut
 import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
 
 import { getAffectedPackages, Affected, allDependencies } from "./get-affected-packages";
+
+const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 
 if (!module.parent) {
     if (yargs.argv.affected) {
@@ -163,7 +167,6 @@ async function doRunTests(
     nProcesses: number,
 ): Promise<void> {
     const allFailures: Array<[string, string]> = [];
-
     if (fold.isTravis()) { console.log(fold.start("tests")); }
     await runWithListeningChildProcesses({
         inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p), expectOnly: !changed.has(p) })),
@@ -183,6 +186,17 @@ async function doRunTests(
         },
     });
     if (fold.isTravis()) { console.log(fold.end("tests")); }
+
+    console.log("\n\n=== PERFORMANCE ===\n");
+    console.log("{");
+    for (const change of changed) {
+        const path = joinPaths(perfDir, change.name + ".json");
+        if (existsSync(path)) {
+            const perf = JSON.parse(readFileSync(path, "utf8")) as { [name: string]: { typeCount: number } };
+            console.log(`  "${change.name}": ${perf[change.name].typeCount},`);
+        }
+    }
+    console.log("}");
 
     if (allFailures.length === 0) {
         return;
