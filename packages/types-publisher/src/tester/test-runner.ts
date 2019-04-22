@@ -14,7 +14,7 @@ import { AllPackages, DependencyVersion, PackageId, TypingsData, NotNeededPackag
 import { UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
-import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses } from "../util/util";
+import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses, CrashRecoveryState } from "../util/util";
 
 import { getAffectedPackages, Affected, allDependencies } from "./get-affected-packages";
 
@@ -173,6 +173,8 @@ async function doRunTests(
         commandLineArgs: ["--listen"],
         workerFile: require.resolve("dtslint"),
         nProcesses,
+        crashRecovery: true,
+        crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
         cwd: typesPath,
         handleOutput(output): void {
             const { path, status } = output as { path: string, status: string };
@@ -182,6 +184,17 @@ async function doRunTests(
                 console.error(`${path} failing:`);
                 console.error(status);
                 allFailures.push([path, status]);
+            }
+        },
+        handleCrash(input, state) {
+            switch (state) {
+                case CrashRecoveryState.Retry:
+                    console.log(`${input.path} Out of memory: retrying`);
+                    break;
+                case CrashRecoveryState.RetryWithMoreMemory:
+                    console.log(`${input.path} Out of memory: retrying with increased memory (4096M)`);
+                    break;
+                default:
             }
         },
     });

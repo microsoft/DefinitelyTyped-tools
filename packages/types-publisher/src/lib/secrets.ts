@@ -35,7 +35,7 @@ export enum Secret {
 }
 
 export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), key => {
-    const value = (Secret as { [key: string]: unknown })[key];
+    const value = (Secret as unknown as { [key: string]: unknown })[key];
     return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
 });
 
