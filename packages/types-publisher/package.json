@@ -68,7 +68,7 @@
     "make-production-server-run": "node bin/make-server-run.js --remote",
     "test-tsNext": "node bin/tester/test.js --all --tsNext",
     "code-owners": "node bin/code-owners.js",
-    "push-production": "npm run build && git checkout production && git merge master && npm run build && git add bin/* && git commit -m 'Update bin/' && git push -u origin production"
+    "push-production": "npm run build && git checkout production && git merge master && npm run build && git add bin && git commit -m \"Update bin\" && git push -u origin production"
   },
   "repository": {
     "type": "git",

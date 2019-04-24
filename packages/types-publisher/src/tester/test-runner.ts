@@ -176,23 +176,33 @@ async function doRunTests(
         crashRecovery: true,
         crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
         cwd: typesPath,
-        handleOutput(output): void {
+        handleStart(input, processIndex): void {
+            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
+            console.log(`${prefix}${input.path} START`);
+        },
+        handleOutput(output, processIndex): void {
+            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
             const { path, status } = output as { path: string, status: string };
             if (status === "OK") {
-                console.log(`${path} OK`);
+                console.log(`${prefix}${path} OK`);
             } else {
-                console.error(`${path} failing:`);
-                console.error(status);
+                console.error(`${prefix}${path} failing:`);
+                console.error(prefix ? status.split(/\r?\n/).map(line => `${prefix}${line}`).join("\n") : status);
                 allFailures.push([path, status]);
             }
         },
-        handleCrash(input, state) {
+        handleCrash(input, state, processIndex) {
+            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
             switch (state) {
                 case CrashRecoveryState.Retry:
-                    console.log(`${input.path} Out of memory: retrying`);
+                    console.warn(`${prefix}${input.path} Out of memory: retrying`);
                     break;
                 case CrashRecoveryState.RetryWithMoreMemory:
-                    console.log(`${input.path} Out of memory: retrying with increased memory (4096M)`);
+                    console.warn(`${prefix}${input.path} Out of memory: retrying with increased memory (4096M)`);
+                    break;
+                case CrashRecoveryState.Crashed:
+                    console.error(`${prefix}${input.path} Out of memory: failed`);
+                    allFailures.push([input.path, "Out of memory"]);
                     break;
                 default:
             }
