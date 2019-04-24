@@ -48,7 +48,7 @@ if (!module.parent) {
 
 function main() {
     const argv = yargs.
-        usage("$0 name.d.ts [source-folder]\n\nIf source-folder is not provided, I will look for a matching package on npm.", ).
+        usage("$0 name.d.ts [source-folder]\n\nIf source-folder is not provided, I will look for a matching package on npm.").
         help().
         argv;
     if (argv._.length === 0) {
