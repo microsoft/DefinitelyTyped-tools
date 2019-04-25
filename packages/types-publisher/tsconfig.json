@@ -12,7 +12,7 @@
         "allowUnusedLabels": false,
         "outDir": "bin",
         "sourceMap": true,
-        "target": "esnext",
+        "target": "es2017",
 
         "baseUrl": ".",
         "paths": {
