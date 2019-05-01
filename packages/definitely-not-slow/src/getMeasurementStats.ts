@@ -1,7 +1,7 @@
-import { CompletionMeasurement } from './types';
+import { LanguageServiceMeasurement } from './types';
 import { max, mean, median } from './utils';
 
-export function getCompletionStats(measurements: CompletionMeasurement[]) {
+export function getMeasurementStats(measurements: LanguageServiceMeasurement[]) {
   const durations = measurements.map(m => m.duration);
   const worst = max(measurements, m => m.duration);
   return {

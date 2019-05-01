@@ -5,13 +5,13 @@ export interface PackageMeasurement {
       identity: number;
       subtype: number;
   };
-  completions: CompletionMeasurement[];
+  completions: LanguageServiceMeasurement[];
+  quickInfo: LanguageServiceMeasurement[];
 }
 
-export interface CompletionMeasurement {
+export interface LanguageServiceMeasurement {
   fileName: string;
   identifierText: string;
-  completionsCount: number;
   line: number;
   offset: number;
   start: number;
