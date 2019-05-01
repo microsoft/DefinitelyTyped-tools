@@ -29,13 +29,10 @@ export function measurePerf({
       testPath,
       ts.sys.readFile(testPath)!,
       compilerOptions.target || ts.ScriptTarget.Latest);
-    console.log('Measuring completions');
-    const newCompletions = measureAtEachIdentifier(sourceFile, iterations, getCompletionsAtPosition);
-    console.log('Measuring quick info');
-    const newQuickInfo = measureAtEachIdentifier(sourceFile, iterations, getQuickInfoAtPosition);
+    console.log(` - ${path.relative(definitelyTypedRootPath, testPath)}`);
     return {
-      completions: completions.concat(newCompletions),
-      quickInfo: quickInfo.concat(newQuickInfo),
+      completions: completions.concat(measureAtEachIdentifier(sourceFile, iterations, 'completions', getCompletionsAtPosition)),
+      quickInfo: quickInfo.concat(measureAtEachIdentifier(sourceFile, iterations, 'quick info', getQuickInfoAtPosition)),
     };
   }, {
     completions: [] as LanguageServiceMeasurement[],
@@ -72,7 +69,7 @@ export function measurePerf({
     };
   }
 
-  function measureAtEachIdentifier(sourceFile: SourceFile, iterations: number, fn: (fileName: string, pos: number, host: LanguageServiceHost) => boolean | undefined) {
+  function measureAtEachIdentifier(sourceFile: SourceFile, iterations: number, progressTitle: string, fn: (fileName: string, pos: number, host: LanguageServiceHost) => boolean | undefined) {
     const identifiers = getIdentifiers(sourceFile);
 
     // Warm-up
@@ -80,7 +77,7 @@ export function measurePerf({
 
     const measurements: LanguageServiceMeasurement[] = [];
     identifiers.forEach((identifier, index) => {
-      updateFileProgress(path.relative(definitelyTypedRootPath, sourceFile.fileName), index, identifiers.length);
+      updateProgress(progressTitle, index, identifiers.length);
       const start = identifier.getStart(sourceFile);
       const lineAndCharacter = ts.getLineAndCharacterOfPosition(sourceFile, start);
       const durations: number[] = [];
@@ -172,21 +169,21 @@ export function measurePerf({
   }
 }
 
-function updateFileProgress(fileName: string, done: number, total: number) {
+function updateProgress(title: string, done: number, total: number) {
   const padDigits = total.toString().length - done.toString().length;
   if (done === total - 1) {
     if (process.stdout.clearLine && process.stdout.cursorTo) {
       process.stdout.clearLine();
       process.stdout.cursorTo(0);
-      process.stdout.write(` - ${fileName}`);
+      process.stdout.write(`   - ${title} (✔)`);
     }
     process.stdout.write(os.EOL);
   } else if (!done) {
-    process.stdout.write(` - ${fileName}`);
+    process.stdout.write(`   - ${title}`);
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(` - ${fileName} ${' '.repeat(padDigits)}(${done}/${total} positions)`);
+    process.stdout.write(`   - ${title} ${' '.repeat(padDigits)}(${done}/${total} positions)`);
   }
 }
 
