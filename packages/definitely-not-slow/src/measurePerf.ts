@@ -1,7 +1,7 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
-import { LanguageServiceHost, CompilerOptions, Node, SourceFile } from 'typescript';
+import { LanguageServiceHost, CompilerOptions, Node, SourceFile, LanguageService } from 'typescript';
 import { performance, PerformanceObserver } from 'perf_hooks';
 import { LanguageServiceMeasurement, PackageMeasurement } from './types';
 import { stdDev, mean } from './utils';
@@ -24,6 +24,7 @@ export function measurePerf({
   const testPaths = getTestFileNames(packagePath);
   const compilerOptions = getCompilerOptionsForPackage(packagePath);
   const host = createLanguageServiceHostForTestFiles(compilerOptions, testPaths);
+  const languageService = ts.createLanguageService(host);
   const measurements = testPaths.reduce(({ completions, quickInfo }, testPath) => {
     const sourceFile = ts.createSourceFile(
       testPath,
@@ -55,6 +56,7 @@ export function measurePerf({
     compilerOptions: CompilerOptions,
     testPaths: string[],
   ): LanguageServiceHost {
+    let version = 0;
     return {
       directoryExists: ts.sys.directoryExists,
       getCompilationSettings: () => compilerOptions,
@@ -65,15 +67,15 @@ export function measurePerf({
       fileExists: ts.sys.fileExists,
       getDirectories: ts.sys.getDirectories,
       getScriptSnapshot: fileName => ts.ScriptSnapshot.fromString(ts.sys.readFile(ensureExists(fileName))!),
-      getScriptVersion: () => '0',
+      getScriptVersion: () => (version++).toString(),
     };
   }
 
-  function measureAtEachIdentifier(sourceFile: SourceFile, iterations: number, progressTitle: string, fn: (fileName: string, pos: number, host: LanguageServiceHost) => boolean | undefined) {
+  function measureAtEachIdentifier(sourceFile: SourceFile, iterations: number, progressTitle: string, fn: (languageService: LanguageService, fileName: string, pos: number) => boolean | undefined) {
     const identifiers = getIdentifiers(sourceFile);
 
     // Warm-up
-    fn(sourceFile.fileName, 0, host);
+    fn(languageService, sourceFile.fileName, 0);
 
     const measurements: LanguageServiceMeasurement[] = [];
     identifiers.forEach((identifier, index) => {
@@ -101,7 +103,7 @@ export function measurePerf({
 
       for (let i = 0; i < iterations; i++) {
         observer.observe({ entryTypes: ['measure'] });
-        fn(sourceFile.fileName, start, host);
+        fn(languageService, sourceFile.fileName, start);
       }
 
       measurement.duration = mean(durations);
@@ -125,8 +127,7 @@ export function measurePerf({
     return identifiers;
   }
 
-  function getCompletionsAtPosition(fileName: string, pos: number, host: LanguageServiceHost): boolean {
-    const languageService = ts.createLanguageService(host);
+  function getCompletionsAtPosition(languageService: LanguageService, fileName: string, pos: number): boolean {
     performance.mark('beforeCompletions');
     const completions = languageService.getCompletionsAtPosition(fileName, pos, undefined);
     performance.mark('afterCompletions');
@@ -134,8 +135,7 @@ export function measurePerf({
     return !!completions && completions.entries.length > 0;
   }
 
-  function getQuickInfoAtPosition(fileName: string, pos: number, host: LanguageServiceHost): boolean {
-    const languageService = ts.createLanguageService(host);
+  function getQuickInfoAtPosition(languageService: LanguageService, fileName: string, pos: number): boolean {
     performance.mark('beforeQuickInfo');
     const quickInfo = languageService.getQuickInfoAtPosition(fileName, pos);
     performance.mark('afterQuickInfo');
