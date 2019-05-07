@@ -3,20 +3,21 @@ import * as path from 'path';
 import { FS } from 'types-publisher/bin/get-definitely-typed';
 import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
-import { LanguageServiceHost, CompilerOptions, Node, SourceFile, LanguageService, FormatDiagnosticsHost, ParsedCommandLine, Extension } from 'typescript';
+import { LanguageServiceHost, CompilerOptions, Node, SourceFile, LanguageService, FormatDiagnosticsHost, ParsedCommandLine, Extension, Identifier } from 'typescript';
 import { performance, PerformanceObserver } from 'perf_hooks';
 import { LanguageServiceMeasurement, PackageBenchmark, ensureExists } from '../common';
 import { stdDev, mean } from './utils';
 import { installDependencies } from './installDependencies';
-const basePath = path.resolve(__dirname, '../..');
+const basePath = path.resolve(__dirname, '../../..');
 
 export interface MeasurePerfOptions {
   packageName: string;
   typeScriptVersion: string;
   definitelyTypedRootPath: string;
   definitelyTypedFS: FS;
+  maxLanguageServiceTestPositions?: number;
+  iterations?: number;
   allPackages: AllPackages;
-  iterations: number;
   ts: typeof import('typescript');
 }
 
@@ -26,7 +27,8 @@ export async function measurePerf({
   definitelyTypedRootPath,
   definitelyTypedFS,
   allPackages,
-  iterations,
+  maxLanguageServiceTestPositions = 250,
+  iterations = 10,
   ts,
 }: MeasurePerfOptions) {
   const typesPath = path.join(definitelyTypedRootPath, 'types');
@@ -47,7 +49,7 @@ export async function measurePerf({
     const commandLine = getCompilerOptionsForPackage(path.join(typesPath, typings.subDirectoryPath));
     const testPaths = getTestFileNames(commandLine.fileNames);
 
-    const program = ts.createProgram({ rootNames: testPaths, options: commandLine.options });
+    const program = ts.createProgram({ rootNames: commandLine.fileNames, options: commandLine.options });
     const diagnostics = program.getSemanticDiagnostics();
     if (diagnostics.length) {
       console.log(ts.formatDiagnostics(diagnostics, formatDiagnosticsHost));
@@ -106,13 +108,14 @@ export async function measurePerf({
 
   function measureAtEachIdentifier(sourceFile: SourceFile, iterations: number, progressTitle: string, fn: (languageService: LanguageService, fileName: string, pos: number) => boolean | undefined) {
     const identifiers = getIdentifiers(sourceFile);
+    const testedIdentifiers = sampleIdentifiers(identifiers, maxLanguageServiceTestPositions);
 
     // Warm-up
     fn(languageService, sourceFile.fileName, 0);
 
     const measurements: LanguageServiceMeasurement[] = [];
-    identifiers.forEach((identifier, index) => {
-      updateProgress(progressTitle, index, identifiers.length);
+    testedIdentifiers.forEach((identifier, index) => {
+      updateProgress(progressTitle, index, testedIdentifiers.length, identifiers.length);
       const start = identifier.getStart(sourceFile);
       const lineAndCharacter = ts.getLineAndCharacterOfPosition(sourceFile, start);
       const durations: number[] = [];
@@ -205,9 +208,10 @@ export async function measurePerf({
 }
 
 
-function updateProgress(title: string, done: number, total: number) {
-  const padDigits = total.toString().length - done.toString().length;
-  if (done === total - 1) {
+function updateProgress(title: string, done: number, sampleTotal: number, total: number) {
+  const padDigits = sampleTotal.toString().length - done.toString().length;
+  const sampleText = sampleTotal !== total ? ` - sampled from ${total}` : '';
+  if (done === sampleTotal - 1) {
     if (process.stdout.clearLine && process.stdout.cursorTo) {
       process.stdout.clearLine();
       process.stdout.cursorTo(0);
@@ -219,6 +223,28 @@ function updateProgress(title: string, done: number, total: number) {
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(`   - ${title} ${' '.repeat(padDigits)}(${done}/${total} positions)`);
+    process.stdout.write(`   - ${title} ${' '.repeat(padDigits)}(${done}/${sampleTotal} positions${sampleText})`);
   }
+}
+
+function sampleIdentifiers<T>(identifiers: T[], maxLanguageServiceTestPositions: number): T[] {
+  if (identifiers.length <= maxLanguageServiceTestPositions) {
+    return identifiers;
+  }
+
+  // 5% at beginning, 20% at end, 75% evenly distributed through middle
+  const beginningIdentifiersCount = Math.round(.05 * maxLanguageServiceTestPositions);
+  const endIdentifiersCount = Math.round(0.2 * maxLanguageServiceTestPositions);
+  const middleIdentifiersCount = Math.round(
+    maxLanguageServiceTestPositions
+    - beginningIdentifiersCount
+    - endIdentifiersCount);
+  const middleStartIndex = beginningIdentifiersCount;
+  const middleEndIndex = identifiers.length - endIdentifiersCount - 1;
+  const middleInterval = Math.ceil((middleEndIndex - middleStartIndex) / middleIdentifiersCount);
+  return [
+    ...identifiers.slice(0, beginningIdentifiersCount),
+    ...identifiers.slice(middleStartIndex, middleEndIndex + 1).filter((_, i) => i % middleInterval === 0),
+    ...identifiers.slice(middleEndIndex + 1),
+  ];
 }

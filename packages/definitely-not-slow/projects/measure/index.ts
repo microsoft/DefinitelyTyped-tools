@@ -11,7 +11,7 @@ import { consoleLogger } from 'types-publisher/bin/util/logging';
 if (!module.parent) {
   (async () => {
     const packageName = process.argv[2];
-    const definitelyTypedRootPath = path.resolve(__dirname, '../../../DefinitelyTyped');
+    const definitelyTypedRootPath = path.resolve(__dirname, '../../../../DefinitelyTyped');
     const definitelyTypedFS = getLocallyInstalledDefinitelyTyped(definitelyTypedRootPath);
     const isDebugging = process.execArgv.some(arg => arg.startsWith('--inspect'));
     await parseDefinitions(definitelyTypedFS, isDebugging ? undefined : {
