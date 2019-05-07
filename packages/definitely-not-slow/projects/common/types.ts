@@ -1,4 +1,7 @@
-export interface PackageMeasurement {
+export interface PackageBenchmark {
+  packageName: string;
+  packageVersion: string;
+  typeScriptVersion: string;
   typeCount: number;
   relationCacheSizes: {
       assignable: number;

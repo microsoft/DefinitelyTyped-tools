@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p .",
+    "postinstall": "pushd node_modules/types-publisher && npm i && npx tsc -p . && popd",
+    "build": "tsc -b .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,6 +15,8 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "dtslint": "0.7.1"
+    "@azure/cosmos": "^2.1.5",
+    "dtslint": "0.7.1",
+    "types-publisher": "github:Microsoft/types-publisher"
   }
 }

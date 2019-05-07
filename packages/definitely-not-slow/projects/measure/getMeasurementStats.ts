@@ -1,4 +1,4 @@
-import { LanguageServiceMeasurement } from './types';
+import { LanguageServiceMeasurement } from '../common';
 import { max, mean, median } from './utils';
 
 export function getMeasurementStats(measurements: LanguageServiceMeasurement[]) {
