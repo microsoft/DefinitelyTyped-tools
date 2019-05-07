@@ -3,6 +3,7 @@ import * as path from 'path';
 import { FS } from 'types-publisher/bin/get-definitely-typed';
 import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
+import { Semver } from 'types-publisher/bin/lib/versions';
 import { LanguageServiceHost, CompilerOptions, Node, SourceFile, LanguageService, FormatDiagnosticsHost, ParsedCommandLine, Extension, Identifier } from 'typescript';
 import { performance, PerformanceObserver } from 'perf_hooks';
 import { LanguageServiceMeasurement, PackageBenchmark, ensureExists } from '../common';
@@ -12,6 +13,7 @@ const basePath = path.resolve(__dirname, '../../..');
 
 export interface MeasurePerfOptions {
   packageName: string;
+  packageVersion?: string;
   typeScriptVersion: string;
   definitelyTypedRootPath: string;
   definitelyTypedFS: FS;
@@ -23,6 +25,7 @@ export interface MeasurePerfOptions {
 
 export async function measurePerf({
   packageName,
+  packageVersion,
   typeScriptVersion,
   definitelyTypedRootPath,
   definitelyTypedFS,
@@ -43,10 +46,16 @@ export async function measurePerf({
   };
 
   for (const version in typingsInfo) {
+    if (packageVersion && version !== packageVersion) {
+      continue;
+    }
     const typings = allPackages.getTypingsData({ name: packageName, majorVersion: parseInt(version, 10) || '*'  });
+    const packagePath = path.join(typesPath, typings.subDirectoryPath);
+    const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
+    const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : '.');
     await installDependencies(allPackages, typings.id, typesPath);
     
-    const commandLine = getCompilerOptionsForPackage(path.join(typesPath, typings.subDirectoryPath));
+    const commandLine = getCompilerOptionsForPackage(latestTSTypesDir);
     const testPaths = getTestFileNames(commandLine.fileNames);
 
     const program = ts.createProgram({ rootNames: commandLine.fileNames, options: commandLine.options });
@@ -247,4 +256,14 @@ function sampleIdentifiers<T>(identifiers: T[], maxLanguageServiceTestPositions:
     ...identifiers.slice(middleStartIndex, middleEndIndex + 1).filter((_, i) => i % middleInterval === 0),
     ...identifiers.slice(middleEndIndex + 1),
   ];
+}
+
+function getLatestTypesVersionForTypeScriptVersion(typesVersions: readonly string[], typeScriptVersion: string): string | undefined {
+  const tsVersion = Semver.parse(typeScriptVersion);
+  for (let i = typesVersions.length - 1; i > 0; i--) {
+    const typesVersion = Semver.parse(typesVersions[i]);
+    if (tsVersion.greaterThan(typesVersion)) {
+      return typesVersions[i];
+    }
+  }
 }

@@ -10,7 +10,7 @@ import { consoleLogger } from 'types-publisher/bin/util/logging';
 
 if (!module.parent) {
   (async () => {
-    const packageName = process.argv[2];
+    const [packageName, packageVersion] = process.argv[2].split('/');
     const definitelyTypedRootPath = path.resolve(__dirname, '../../../../DefinitelyTyped');
     const definitelyTypedFS = getLocallyInstalledDefinitelyTyped(definitelyTypedRootPath);
     const isDebugging = process.execArgv.some(arg => arg.startsWith('--inspect'));
@@ -24,6 +24,7 @@ if (!module.parent) {
     const measurements = await measurePerf({
       typeScriptVersion: ts.version,
       packageName,
+      packageVersion: packageVersion ? packageVersion.replace(/^v/, '') : undefined,
       iterations: 1,
       allPackages,
       definitelyTypedRootPath,
