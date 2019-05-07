@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "rootDir": ".",
     "outDir": "dist",
     "inlineSourceMap": true,
     "target": "es2015",
@@ -8,5 +8,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["projects"],
+  "references": [
+    { "path": "projects/common" },
+    { "path": "projects/measure" },
+    { "path": "projects/write" }
+  ]
 }
