@@ -12,14 +12,21 @@ export interface PackageBenchmark {
   quickInfo: LanguageServiceMeasurement[];
 }
 
+export enum LanguageServiceMeasurementTarget {
+  QuickInfo = 1 << 0,
+  Completions = 1 << 1,
+  All = LanguageServiceMeasurementTarget.QuickInfo | LanguageServiceMeasurementTarget.Completions,
+}
+
 export interface LanguageServiceMeasurement {
+  kind: LanguageServiceMeasurementTarget;
   fileName: string;
   identifierText: string;
   line: number;
   offset: number;
   start: number;
   end: number;
-  duration: number;
-  iterations: number;
-  standardDeviation: number;
+  durations: number[];
 }
+
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

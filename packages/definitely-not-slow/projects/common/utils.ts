@@ -29,3 +29,26 @@ export function run(cwd: string | undefined, cmd: string): Promise<string | unde
     });
   });
 }
+
+export type Args = { [key: string]: string | true | number };
+
+export function deserializeArgs(args: string[]): Args {
+  const obj: Args = {};
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg.startsWith('--')) {
+      const nextArg = args[i + 1];
+      if (!nextArg || nextArg.startsWith('--')) {
+        obj[arg.slice(2)] = true;
+      } else {
+        obj[arg.slice(2)] = parseFloat(nextArg) || nextArg;
+        i++;
+      }
+    }
+  }
+  return obj;
+}
+
+export function serializeArgs(args: Args): string {
+  return Object.keys(args).map(arg => `--${arg}` + (args[arg] === true ? '' : args[arg].toString())).join(' ');
+}
