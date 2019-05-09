@@ -5,7 +5,7 @@ import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { Semver } from 'types-publisher/bin/lib/versions';
 import { Node, SourceFile, Extension, CompilerOptions } from 'typescript';
-import { LanguageServiceMeasurement, PackageBenchmark, LanguageServiceMeasurementTarget } from '../common';
+import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceMeasurementTarget, LanguageServiceSingleMeasurement } from '../common';
 import { installDependencies } from './installDependencies';
 import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
 import { formatDiagnosticsHost } from './formatDiagnosticsHost';
@@ -60,32 +60,19 @@ export async function measurePerf({
     const testPaths = getTestFileNames(commandLine.fileNames);
 
     let done = 0;
-    const completions: LanguageServiceMeasurement[] = [];
-    const quickInfo: LanguageServiceMeasurement[] = [];
-    const inputs = getLanguageServiceTestMatrix(testPaths, latestTSTypesDir, measure, commandLine.options, iterations);
-    updateProgress(`Testing language service over ${nProcesses} processes`, 0, inputs.length);
+    const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, measure, commandLine.options, iterations);
+    updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
     await runWithChildProcesses({
-      inputs,
+      inputs: testMatrix.inputs,
       commandLineArgs: [],
       workerFile: measureLanguageServiceWorkerFilename,
       nProcesses,
-      handleOutput: (positionMeasurements: LanguageServiceMeasurement[]) => {
-        for (const measurement of positionMeasurements) {
-          switch (measurement.kind) {
-            case LanguageServiceMeasurementTarget.Completions:
-              completions.push(measurement);
-              break;
-            case LanguageServiceMeasurementTarget.QuickInfo:
-              quickInfo.push(measurement);
-              break;
-            default:
-              throw new Error(`Measurement kind must be exactly one LanguageServiceMeasurementTarget`);
-          }
-        }
+      handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
+        testMatrix.addMeasurement(measurement);
         updateProgress(
           `Testing language service over ${nProcesses} processes`,
           ++done,
-          inputs.length);
+          testMatrix.inputs.length);
       },
     });
 
@@ -102,8 +89,7 @@ export async function measurePerf({
       typeScriptVersion,
       typeCount: (program as any).getTypeCount(),
       relationCacheSizes: (program as any).getRelationCacheSizes(),
-      completions,
-      quickInfo,
+      languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
     };
 
     benchmarks.push(measurement);
@@ -130,38 +116,63 @@ export async function measurePerf({
     });
   }
 
-  function getLanguageServiceTestMatrix(
+  function createLanguageServiceTestMatrix(
     testPaths: string[],
     packageDirectory: string,
     measure: LanguageServiceMeasurementTarget,
     compilerOptions: CompilerOptions,
     iterations: number
-  ): MeasureLanguageServiceChildProcessArgs[] {
-    const args: MeasureLanguageServiceChildProcessArgs[] = [];
+  ) {
+    const fileMap = new Map<string, Map<number, LanguageServiceBenchmark>>();
+    const inputs: MeasureLanguageServiceChildProcessArgs[] = [];
     for (const testPath of testPaths) {
+      const positionMap = new Map<number, LanguageServiceBenchmark>();
+      fileMap.set(testPath, positionMap);
       const sourceFile = ts.createSourceFile(
         testPath,
         ts.sys.readFile(testPath)!,
         compilerOptions.target || ts.ScriptTarget.Latest);
       const identifiers = sampleIdentifiers(getIdentifiers(sourceFile), maxLanguageServiceTestPositions);
-      for (const identifier of identifiers) {
-        const start = identifier.getStart(sourceFile);
-        const lineAndCharacter = ts.getLineAndCharacterOfPosition(sourceFile, start);
-        args.push({
-          kind: measure,
-          fileName: testPath,
-          start,
-          end: identifier.getEnd(),
-          identifierText: identifier.getText(sourceFile),
-          line: lineAndCharacter.line + 1,
-          offset: lineAndCharacter.character + 1,
-          packageDirectory,
-          iterations,
-          tsPath,
-        });
+      // Do the loops in this order so that a single child process doesn’t
+      // run iterations of the same exact measurement back-to-back to avoid
+      // v8 optimizing a significant chunk of the work away.
+      for (let i = 0; i < iterations; i++) {
+        for (const identifier of identifiers) {
+          const start = identifier.getStart(sourceFile);
+          if (i === 0) {
+            const lineAndCharacter = ts.getLineAndCharacterOfPosition(sourceFile, start);
+            const benchmark: LanguageServiceBenchmark = {
+              fileName: testPath,
+              start,
+              end: identifier.getEnd(),
+              identifierText: identifier.getText(sourceFile),
+              line: lineAndCharacter.line + 1,
+              offset: lineAndCharacter.character + 1,
+              completionsDurations: [],
+              quickInfoDurations: [],
+            };
+            positionMap.set(start, benchmark);
+          }
+          inputs.push({
+            fileName: testPath,
+            start,
+            packageDirectory,
+            tsPath,
+          });
+        }
       }
     }
-    return args;
+    return {
+      inputs,
+      addMeasurement: (measurement: LanguageServiceSingleMeasurement) => {
+        const benchmark = fileMap.get(measurement.fileName)!.get(measurement.start)!;
+        benchmark.completionsDurations.push(measurement.completionsDuration);
+        benchmark.quickInfoDurations.push(measurement.quickInfoDuration);
+      },
+      getAllBenchmarks: () => {
+        return Array.prototype.concat.apply([], Array.from(fileMap.values()).map(map => Array.from(map.values())));
+      },
+    };
   }
 }
 
@@ -212,6 +223,6 @@ function updateProgress(text: string, done: number, total: number) {
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(`${text} ${' '.repeat(padDigits)}(${done}/${total} positions)`);
+    process.stdout.write(`${text} ${' '.repeat(padDigits)}(${done}/${total} trials)`);
   }
 }

@@ -8,8 +8,7 @@ export interface PackageBenchmark {
       identity: number;
       subtype: number;
   };
-  completions: LanguageServiceMeasurement[];
-  quickInfo: LanguageServiceMeasurement[];
+  languageServiceBenchmarks: LanguageServiceBenchmark[];
 }
 
 export enum LanguageServiceMeasurementTarget {
@@ -18,15 +17,22 @@ export enum LanguageServiceMeasurementTarget {
   All = LanguageServiceMeasurementTarget.QuickInfo | LanguageServiceMeasurementTarget.Completions,
 }
 
-export interface LanguageServiceMeasurement {
-  kind: LanguageServiceMeasurementTarget;
+export interface LanguageServiceBenchmark {
   fileName: string;
   identifierText: string;
   line: number;
   offset: number;
   start: number;
   end: number;
-  durations: number[];
+  quickInfoDurations: number[];
+  completionsDurations: number[];
+}
+
+export interface LanguageServiceSingleMeasurement {
+  fileName: string;
+  start: number;
+  quickInfoDuration: number;
+  completionsDuration: number;
 }
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

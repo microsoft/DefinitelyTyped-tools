@@ -41,10 +41,9 @@ if (!module.parent) {
     });
 
     for (const measurement of measurements) {
-      const completionStats = getMeasurementStats(measurement.completions);
-      const quickInfoStats = getMeasurementStats(measurement.quickInfo);
-      const { worst: worstCompletion } = completionStats;
-      const { worst: worstQuickInfo } = quickInfoStats;
+      const { quickInfo, completions } = getMeasurementStats(measurement.languageServiceBenchmarks);
+      const { worst: worstCompletion } = completions;
+      const { worst: worstQuickInfo } = quickInfo;
       const versionString = `Version ${measurement.packageVersion}`;
       console.log(os.EOL);
       console.log(versionString);
@@ -55,19 +54,19 @@ if (!module.parent) {
       console.log('    Identity:      ', measurement.relationCacheSizes.identity);
       console.log('    Subtype:       ', measurement.relationCacheSizes.subtype);
       console.log('  Completions');
-      console.log('    Mean (ms):   ', completionStats.mean.toPrecision(6));
-      console.log('    Median (ms): ', completionStats.median.toPrecision(6));
+      console.log('    Mean (ms):   ', completions.mean.toPrecision(6));
+      console.log('    Median (ms): ', completions.median.toPrecision(6));
       console.log('    Worst');
-      console.log('      Duration (ms):  ', mean(worstCompletion.durations).toPrecision(6));
-      console.log('      Std. deviation: ', stdDev(worstCompletion.durations).toPrecision(6));
+      console.log('      Duration (ms):  ', mean(worstCompletion.completionsDurations).toPrecision(6));
+      console.log('      Std. deviation: ', stdDev(worstCompletion.completionsDurations).toPrecision(6));
       console.log('      Identifier:     ', worstCompletion.identifierText);
       console.log('      Location:       ', `${worstCompletion.fileName}(${worstCompletion.line},${worstCompletion.offset})`);
       console.log('  Quick Info');
-      console.log('    Mean (ms):   ', quickInfoStats.mean.toPrecision(6));
-      console.log('    Median (ms): ', quickInfoStats.median.toPrecision(6));
+      console.log('    Mean (ms):   ', quickInfo.mean.toPrecision(6));
+      console.log('    Median (ms): ', quickInfo.median.toPrecision(6));
       console.log('    Worst');
-      console.log('      Duration (ms):  ', mean(worstQuickInfo.durations).toPrecision(6));
-      console.log('      Std. deviation: ', stdDev(worstQuickInfo.durations).toPrecision(6));
+      console.log('      Duration (ms):  ', mean(worstQuickInfo.quickInfoDurations).toPrecision(6));
+      console.log('      Std. deviation: ', stdDev(worstQuickInfo.quickInfoDurations).toPrecision(6));
       console.log('      Identifier:     ', worstQuickInfo.identifierText);
       console.log('      Location:       ', `${worstQuickInfo.fileName}(${worstQuickInfo.line},${worstQuickInfo.offset})`);
     }
