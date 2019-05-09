@@ -1,20 +1,27 @@
 import { CosmosClient } from '@azure/cosmos';
 import { config } from './config';
+import { assertNever } from 'types-publisher/bin/util/util';
 
 export const enum DatabaseAccessLevel {
-  Read,
-  Write
+  Read = 'read',
+  Write = 'write',
 }
 
-const keys: { [K in DatabaseAccessLevel]: string | undefined } = {
-  [DatabaseAccessLevel.Read]: config.database.readKey,
-  [DatabaseAccessLevel.Write]: config.database.writeKey,
+function getKey(accessLevel: DatabaseAccessLevel) {
+  switch (accessLevel) {
+    case DatabaseAccessLevel.Read:
+      return config.database.readKey;
+    case DatabaseAccessLevel.Write:
+      return config.database.writeKey;
+    default:
+      assertNever(accessLevel);
+  }
 };
 
 export async function getDatabase(accessLevel: DatabaseAccessLevel) {
   const client = new CosmosClient({
     endpoint: config.database.endpoint,
-    key: keys[accessLevel],
+    key: getKey(accessLevel),
   });
 
   const { database } = await client.databases.createIfNotExists({

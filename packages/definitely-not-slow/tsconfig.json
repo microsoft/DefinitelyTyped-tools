@@ -11,6 +11,7 @@
   },
   "include": ["projects"],
   "references": [
+    { "path": "projects/cli" },
     { "path": "projects/common" },
     { "path": "projects/measure" },
     { "path": "projects/write" }
