@@ -5,7 +5,7 @@ import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { Semver } from 'types-publisher/bin/lib/versions';
 import { Node, SourceFile, Extension, CompilerOptions } from 'typescript';
-import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceMeasurementTarget, LanguageServiceSingleMeasurement } from '../common';
+import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement } from '../common';
 import { installDependencies } from './installDependencies';
 import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
 import { formatDiagnosticsHost } from './formatDiagnosticsHost';
@@ -21,7 +21,6 @@ export interface MeasurePerfOptions {
   maxLanguageServiceTestPositions?: number;
   nProcesses?: number;
   iterations?: number;
-  measure?: LanguageServiceMeasurementTarget;
   allPackages: AllPackages;
   tsPath: string;
   ts: typeof import('typescript');
@@ -37,7 +36,6 @@ export async function measurePerf({
   maxLanguageServiceTestPositions,
   nProcesses = os.cpus().length - 1,
   iterations = 10,
-  measure = LanguageServiceMeasurementTarget.All,
   tsPath,
   ts,
 }: MeasurePerfOptions) {
@@ -60,7 +58,7 @@ export async function measurePerf({
     const testPaths = getTestFileNames(commandLine.fileNames);
 
     let done = 0;
-    const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, measure, commandLine.options, iterations);
+    const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
     updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
     await runWithChildProcesses({
       inputs: testMatrix.inputs,
@@ -119,7 +117,6 @@ export async function measurePerf({
   function createLanguageServiceTestMatrix(
     testPaths: string[],
     packageDirectory: string,
-    measure: LanguageServiceMeasurementTarget,
     compilerOptions: CompilerOptions,
     iterations: number
   ) {

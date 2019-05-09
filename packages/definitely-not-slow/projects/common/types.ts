@@ -11,12 +11,6 @@ export interface PackageBenchmark {
   languageServiceBenchmarks: LanguageServiceBenchmark[];
 }
 
-export enum LanguageServiceMeasurementTarget {
-  QuickInfo = 1 << 0,
-  Completions = 1 << 1,
-  All = LanguageServiceMeasurementTarget.QuickInfo | LanguageServiceMeasurementTarget.Completions,
-}
-
 export interface LanguageServiceBenchmark {
   fileName: string;
   identifierText: string;
