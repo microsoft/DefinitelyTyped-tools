@@ -30,6 +30,10 @@ export async function getDatabase(accessLevel: DatabaseAccessLevel) {
 
   const { container } = await database.containers.createIfNotExists({
     id: config.database.packageBenchmarksContainerId,
+    partitionKey: {
+      kind: 'Hash',
+      paths: ['/body/packageName']
+    }
   });
 
   return { database, container };

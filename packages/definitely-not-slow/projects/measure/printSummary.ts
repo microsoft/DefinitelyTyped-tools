@@ -1,18 +1,18 @@
 import * as os from 'os';
-import { PackageBenchmark } from '../common';
-import { getMeasurementStats } from './getMeasurementStats';
+import { PackageBenchmarkSummary } from '../common';
 import { mean, stdDev } from './utils';
 
-export function printSummary(benchmarks: PackageBenchmark[]) {
-  for (const benchmark of benchmarks) {
-    const { quickInfo, completions } = getMeasurementStats(benchmark.languageServiceBenchmarks);
+export function printSummary(summaries: PackageBenchmarkSummary[]) {
+  for (const benchmark of summaries) {
+    const { quickInfo, completions } = benchmark;
     const { worst: worstCompletion } = completions;
     const { worst: worstQuickInfo } = quickInfo;
     const versionString = `Version ${benchmark.packageVersion}`;
     console.log(os.EOL);
     console.log(versionString);
     console.log('='.repeat(versionString.length));
-    console.log('  Type count: ', benchmark.typeCount);
+    console.log('  Total duration (ms): ', benchmark.benchmarkDuration)
+    console.log('  Type count:          ', benchmark.typeCount);
     console.log('  Cache sizes');
     console.log('    Assignability: ', benchmark.relationCacheSizes.assignable);
     console.log('    Identity:      ', benchmark.relationCacheSizes.identity);

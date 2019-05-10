@@ -1,5 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
+import { execSync } from 'child_process';
+import { PerformanceObserver, performance } from 'perf_hooks';
 import { FS } from 'types-publisher/bin/get-definitely-typed';
 import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
@@ -39,6 +41,15 @@ export async function measurePerf({
   tsPath,
   ts,
 }: MeasurePerfOptions) {
+  let duration = NaN;
+  const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' });
+  const observer = new PerformanceObserver(list => {
+    const totalMeasurement = list.getEntriesByName('benchmark')[0];
+    duration = totalMeasurement.duration;
+  });
+
+  observer.observe({ entryTypes: ['measure'] });
+  performance.mark('benchmarkStart');
   const typesPath = path.join(definitelyTypedRootPath, 'types');
   const packageFS = definitelyTypedFS.subDir(`types/${packageName}`);
   const typingsInfo = await getTypingInfo(packageName, packageFS);
@@ -82,6 +93,8 @@ export async function measurePerf({
     }
 
     const measurement: PackageBenchmark = {
+      benchmarkDuration: duration,
+      sourceVersion,
       packageName,
       packageVersion: version,
       typeScriptVersion,
@@ -92,6 +105,10 @@ export async function measurePerf({
 
     benchmarks.push(measurement);
   }
+
+  performance.mark('benchmarkEnd');
+  performance.measure('benchmark', 'benchmarkStart', 'benchmarkEnd');
+  benchmarks.forEach(benchmark => benchmark.benchmarkDuration = duration);
   return benchmarks;
 
   function getIdentifiers(sourceFile: SourceFile) {

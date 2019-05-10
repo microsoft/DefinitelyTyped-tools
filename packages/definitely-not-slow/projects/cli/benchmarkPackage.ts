@@ -1,15 +1,15 @@
 import * as os from 'os';
 import * as path from 'path';
-import { pathExists, getDatabase, DatabaseAccessLevel } from '../common';
+import { pathExists, getDatabase, DatabaseAccessLevel, config } from '../common';
 import { getLocallyInstalledDefinitelyTyped } from 'types-publisher/bin/get-definitely-typed';
 import { dataFilePath } from 'types-publisher/bin/lib/common';
 import { typesDataFilename, AllPackages } from 'types-publisher/bin/lib/packages';
 import parseDefinitions from 'types-publisher/bin/parse-definitions';
 import { consoleLogger } from 'types-publisher/bin/util/logging';
 import { getTypeScript } from '../measure/getTypeScript';
-import { insertBenchmark } from '../write';
-import { printSummary, measurePerf } from '../measure';
-import { Args } from "../common";
+import { insertPackageBenchmark } from '../write';
+import { summarize, printSummary, measurePerf } from '../measure';
+import { Args } from '../common';
 import { cliArgumentError } from './utils';
 
 export async function benchmarkPackage(args: Args) {
@@ -58,12 +58,19 @@ export async function benchmarkPackage(args: Args) {
     ts,
   });
 
+  const summaries = benchmarks.map(summarize);
+
   if (shouldPrintSummary) {
-    printSummary(benchmarks);
+    printSummary(summaries);
   }
 
   if (upload) {
     const { container } = await getDatabase(DatabaseAccessLevel.Write);
-    await Promise.all(benchmarks.map(benchmark => insertBenchmark(benchmark, container)));
+    return Promise.all(summaries.map(summary => {
+      return insertPackageBenchmark(
+        summary,
+        config.database.packageBenchmarksDocumentSchemaVersion,
+        container);
+    }));
   }
 }

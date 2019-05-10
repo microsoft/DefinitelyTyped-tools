@@ -11,8 +11,13 @@ if (!module.parent) {
           return benchmarkPackage(args);
       }
     } catch (err) {
-      console.error(err);
+      console.error(err.stack);
       process.exit(1);
     }
   })();
+
+  process.on('unhandledRejection', err => {
+    console.error(err);
+    process.exit(1);
+  });
 }
