@@ -1,12 +1,11 @@
 {
-  "name": "definitelynotslow",
+  "name": "definitely-not-slow",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "postinstall": "pushd node_modules/types-publisher && npm i && npx tsc -p . && popd",
-    "build": "tsc -b .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -b ."
   },
   "author": "",
   "license": "UNLICENSED",
