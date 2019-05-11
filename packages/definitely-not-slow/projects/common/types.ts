@@ -13,7 +13,7 @@ export interface PackageBenchmark {
   typeScriptVersion: string;
   typeCount: number;
   benchmarkDuration: number;
-  relationCacheSizes: RelationCacheSizes;
+  relationCacheSizes?: RelationCacheSizes;
   languageServiceBenchmarks: LanguageServiceBenchmark[];
 }
 
@@ -24,7 +24,7 @@ export interface PackageBenchmarkSummary {
   sourceVersion: string;
   typeCount: number;
   benchmarkDuration: number;
-  relationCacheSizes: RelationCacheSizes;
+  relationCacheSizes?: RelationCacheSizes;
   completions: StatSummary<LanguageServiceBenchmark>;
   quickInfo: StatSummary<LanguageServiceBenchmark>;
 }

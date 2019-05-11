@@ -13,10 +13,12 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log('='.repeat(versionString.length));
     console.log('  Total duration (ms): ', benchmark.benchmarkDuration)
     console.log('  Type count:          ', benchmark.typeCount);
-    console.log('  Cache sizes');
-    console.log('    Assignability: ', benchmark.relationCacheSizes.assignable);
-    console.log('    Identity:      ', benchmark.relationCacheSizes.identity);
-    console.log('    Subtype:       ', benchmark.relationCacheSizes.subtype);
+    if (benchmark.relationCacheSizes) {
+      console.log('  Cache sizes');
+      console.log('    Assignability: ', benchmark.relationCacheSizes.assignable);
+      console.log('    Identity:      ', benchmark.relationCacheSizes.identity);
+      console.log('    Subtype:       ', benchmark.relationCacheSizes.subtype);
+    }
     console.log('  Completions');
     console.log('    Mean (ms):   ', completions.mean.toPrecision(6));
     console.log('    Median (ms): ', completions.median.toPrecision(6));

@@ -19,6 +19,8 @@ export async function benchmarkPackage(args: Args) {
     tsVersion = 'next',
     progress = true,
     iterations = 5,
+    nProcesses = os.cpus().length - 1,
+    maxLanguageServiceTestPositions,
     printSummary: shouldPrintSummary = true,
     definitelyTypedPath = path.resolve(__dirname, '../../../../DefinitelyTyped'),
     ...extraArgs
@@ -33,6 +35,15 @@ export async function benchmarkPackage(args: Args) {
   if (typeof iterations !== 'number') {
     return cliArgumentError('iterations', 'number', iterations);
   }
+  if (typeof maxLanguageServiceTestPositions !== 'number' && typeof maxLanguageServiceTestPositions !== 'undefined') {
+    return cliArgumentError('maxLanguageServiceTestPositions', 'number', maxLanguageServiceTestPositions);
+  }
+  if (typeof nProcesses !== 'number') {
+    return cliArgumentError('nProcesses', 'number', nProcesses);
+  }
+  if (typeof progress !== 'boolean') {
+    return cliArgumentError('progress', 'boolean', progress);
+  }
 
   const [packageName, packageVersion] = packageStr.split('/');
   const definitelyTypedFS = getLocallyInstalledDefinitelyTyped(definitelyTypedPath);
@@ -43,17 +54,20 @@ export async function benchmarkPackage(args: Args) {
       nProcesses: os.cpus().length,
     }, consoleLogger);
   }
-  const { ts, tsPath } = await getTypeScript('next');
+  const { ts, tsPath } = await getTypeScript(tsVersion.toString());
   const allPackages = await AllPackages.read(definitelyTypedFS);
   const benchmarks = await measurePerf({
     ...extraArgs,
     packageName,
-    packageVersion,
+    packageVersion: packageVersion ? packageVersion.replace(/^v/, '') : undefined,
     allPackages,
     iterations,
+    progress,
     definitelyTypedFS,
     definitelyTypedRootPath: definitelyTypedPath,
     typeScriptVersion: ts.version,
+    maxLanguageServiceTestPositions,
+    nProcesses,
     tsPath,
     ts,
   });

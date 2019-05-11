@@ -16,6 +16,6 @@
   "dependencies": {
     "@azure/cosmos": "^2.1.5",
     "dtslint": "0.7.1",
-    "types-publisher": "github:Microsoft/types-publisher"
+    "types-publisher": "github:microsoft/types-publisher"
   }
 }

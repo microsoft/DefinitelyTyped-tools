@@ -21,8 +21,9 @@ export interface MeasurePerfOptions {
   definitelyTypedRootPath: string;
   definitelyTypedFS: FS;
   maxLanguageServiceTestPositions?: number;
-  nProcesses?: number;
-  iterations?: number;
+  progress?: boolean;
+  nProcesses: number;
+  iterations: number;
   allPackages: AllPackages;
   tsPath: string;
   ts: typeof import('typescript');
@@ -36,8 +37,9 @@ export async function measurePerf({
   definitelyTypedFS,
   allPackages,
   maxLanguageServiceTestPositions,
-  nProcesses = os.cpus().length - 1,
-  iterations = 10,
+  progress,
+  nProcesses,
+  iterations,
   tsPath,
   ts,
 }: MeasurePerfOptions) {
@@ -70,7 +72,9 @@ export async function measurePerf({
 
     let done = 0;
     const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
-    updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
+    if (progress) {
+      updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
+    }
     await runWithChildProcesses({
       inputs: testMatrix.inputs,
       commandLineArgs: [],
@@ -78,15 +82,19 @@ export async function measurePerf({
       nProcesses,
       handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
         testMatrix.addMeasurement(measurement);
-        updateProgress(
-          `Testing language service over ${nProcesses} processes`,
-          ++done,
-          testMatrix.inputs.length);
+        if (progress) {
+          updateProgress(
+            `v${version}: benchmarking over ${nProcesses} processes`,
+            ++done,
+            testMatrix.inputs.length);
+        }
       },
     });
 
     const program = ts.createProgram({ rootNames: commandLine.fileNames, options: commandLine.options });
-    const diagnostics = program.getSemanticDiagnostics();
+    const diagnostics = program.getSemanticDiagnostics().filter(diagnostic => {
+      return diagnostic.code === 2307; // Cannot find module
+    });
     if (diagnostics.length) {
       console.log(ts.formatDiagnostics(diagnostics, formatDiagnosticsHost));
       throw new Error('Compilation had errors');
@@ -99,7 +107,7 @@ export async function measurePerf({
       packageVersion: version,
       typeScriptVersion,
       typeCount: (program as any).getTypeCount(),
-      relationCacheSizes: (program as any).getRelationCacheSizes(),
+      relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
       languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
     };
 
@@ -109,6 +117,10 @@ export async function measurePerf({
   performance.mark('benchmarkEnd');
   performance.measure('benchmark', 'benchmarkStart', 'benchmarkEnd');
   benchmarks.forEach(benchmark => benchmark.benchmarkDuration = duration);
+
+  if (!benchmarks.length) {
+    throw new Error(`No v${packageVersion} found for package ${packageName}.`);
+  }
   return benchmarks;
 
   function getIdentifiers(sourceFile: SourceFile) {
