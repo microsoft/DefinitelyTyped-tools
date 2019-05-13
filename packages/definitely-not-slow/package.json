@@ -2,7 +2,7 @@
   "name": "definitely-not-slow",
   "version": "1.0.0",
   "description": "",
-  "bin": "dist/src/cli/index.js",
+  "bin": "index.js",
   "scripts": {
     "postinstall": "pushd node_modules/types-publisher && npm i && tsc -p . && popd",
     "build": "tsc -b .",
