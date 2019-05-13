@@ -5,6 +5,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@material-ui/core
 @sentry/browser
 @types/firebase
 @types/hoist-non-react-statics
