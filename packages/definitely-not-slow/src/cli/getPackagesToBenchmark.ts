@@ -1,13 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
-import { getDatabase, getParsedPackages, DatabaseAccessLevel, config, Document, PackageBenchmarkSummary, compact, Args, assertNumber, assertString } from '../common';
+import { getDatabase, getParsedPackages, DatabaseAccessLevel, config, Document, PackageBenchmarkSummary, compact, Args, assertNumber, assertString, getSystemInfo } from '../common';
 import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { PackageId } from 'types-publisher/bin/lib/packages';
 import { BenchmarkPackageOptions } from './benchmark';
 const writeFile = promisify(fs.writeFile);
+const currentSystem = getSystemInfo();
 
 export interface GetPackagesToBenchmarkOptions {
   definitelyTypedPath: string;
@@ -17,17 +18,17 @@ export interface GetPackagesToBenchmarkOptions {
 }
 
 function convertArgs(args: Args): GetPackagesToBenchmarkOptions {
-  const tsVersion = args.typeScriptVersion.toString();
+  const tsVersion = (args.typeScriptVersion || '').toString();
   if (tsVersion.split('.').length !== 2) {
     throw new Error(`Argument 'typeScriptVersion' must be in format 'major.minor' (e.g. '3.1')`);
   }
-  const dtPath = assertString(args.definitelyTypedPath || process.cwd());
+  const dtPath = assertString(args.definitelyTypedPath || process.cwd(), 'definitelyTypedPath');
   const definitelyTypedPath = path.isAbsolute(dtPath) ? dtPath : path.resolve(process.cwd(), dtPath);
   return {
     definitelyTypedPath,
-    agentCount: assertNumber(args.agentCount),
+    agentCount: assertNumber(args.agentCount, 'agentCount'),
     typeScriptVersionMajorMinor: tsVersion,
-    outFile: assertString(args.outFile),
+    outFile: assertString(args.outFile, 'outFile'),
   };
 }
 
@@ -61,6 +62,13 @@ export async function getPackagesToBenchmark(args: Args) {
     }
 
     const result: Document<PackageBenchmarkSummary> = response.result;
+    
+    // System specs are different; run it
+    if (result.system.hash !== currentSystem.hash) {
+      console.log(`Queueing ${typingsData.id.name}/${typingsData.id.majorVersion} due to system change`);
+      return typingsData.id;
+    }
+
     const diff = await execAndThrowErrors(`git diff --name-status ${result.body.sourceVersion}`, definitelyTypedPath);
     if (!diff) {
       return undefined;
@@ -100,6 +108,7 @@ export async function getPackagesToBenchmark(args: Args) {
     changedPackageCount: affectedPackages.changedPackages.length,
     dependentPackageCount: affectedPackages.dependentPackages.length,
     totalPackageCount: packagesToBenchmark.length,
+    system: currentSystem,
     options: benchmarkOptions,
     groups,
   }, undefined, 2), 'utf8');

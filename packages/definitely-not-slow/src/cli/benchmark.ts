@@ -1,11 +1,12 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getParsedPackages, assertString, assertBoolean, withDefault, assertNumber } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getParsedPackages, assertString, assertBoolean, withDefault, assertNumber, getSystemInfo } from '../common';
 import { getTypeScript } from '../measure/getTypeScript';
 import { insertPackageBenchmark } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
 import { PackageId } from 'types-publisher/bin/lib/packages';
+const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
   groups?: PackageId[][];
@@ -24,6 +25,13 @@ export interface BenchmarkPackageOptions {
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
   if (file) {
     const fileContents = require(path.resolve(assertString(file, 'file')));
+    if (fileContents.system.hash !== currentSystem.hash) {
+      console.error('Systems mismatch; needed:');
+      console.error(JSON.stringify(fileContents.system, undefined, 2) + os.EOL);
+      console.error('Current:');
+      console.error(JSON.stringify(currentSystem, undefined, 2) + os.EOL);
+      throw new Error('Systems mismatch; see logs for details');
+    }
     return {
       groups: fileContents.groups,
       ...convertArgs({ ...fileContents.options, ...args }),

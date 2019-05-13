@@ -60,15 +60,18 @@ export interface LanguageServiceSingleMeasurement {
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
+export interface SystemInfo {
+  cpus: Omit<CpuInfo, 'times'>[];
+  arch: string;
+  platform: string;
+  release: string;
+  totalmem: number;
+  hash: string;
+}
+
 export interface Document<T> {
   version: number;
   createdAt: Date;
-  system: {
-    cpus: Omit<CpuInfo, 'times'>[];
-    arch: string;
-    platform: string;
-    release: string;
-    totalmem: number;
-  };
+  system: SystemInfo;
   body: T;
 }

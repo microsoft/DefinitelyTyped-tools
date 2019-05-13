@@ -1,6 +1,9 @@
+import * as os from 'os';
 import * as fs from 'fs';
+import { createHash } from 'crypto';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { SystemInfo } from './types';
 
 export const pathExists = promisify(fs.exists);
 
@@ -81,4 +84,19 @@ export function assertBoolean(input: any, name?: string): boolean {
 
 export function withDefault<T>(input: T, defaultValue: T): T {
   return typeof input === 'undefined' ? defaultValue : input;
+}
+
+export function getSystemInfo(): SystemInfo {
+  const info = {
+    cpus: os.cpus().map(({ times, ...cpu }) => cpu),
+    arch: os.arch(),
+    platform: os.platform(),
+    release: os.release(),
+    totalmem: os.totalmem()
+  };
+
+  return {
+    ...info,
+    hash: createHash('md5').update(JSON.stringify(info)).digest('hex'),
+  };
 }
