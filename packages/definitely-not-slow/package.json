@@ -4,9 +4,9 @@
   "description": "",
   "bin": "index.js",
   "scripts": {
-    "postinstall": "pushd node_modules/types-publisher && npm i && tsc -p . && popd",
     "build": "tsc -b .",
-    "cli": "node dist/src/cli/index.js"
+    "cli": "node dist/src/cli/index.js",
+    "push-production": "npm run build && git checkout production && git merge master && npm run build && git add dist && git commit -m \"Update dist\" && git push -u origin production"
   },
   "author": "",
   "license": "UNLICENSED",
@@ -17,6 +17,6 @@
   "dependencies": {
     "@azure/cosmos": "^2.1.5",
     "dtslint": "0.7.1",
-    "types-publisher": "github:microsoft/types-publisher"
+    "types-publisher": "github:microsoft/types-publisher#production"
   }
 }
