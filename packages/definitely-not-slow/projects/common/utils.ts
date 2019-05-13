@@ -41,7 +41,8 @@ export function deserializeArgs(args: string[]): Args {
       if (!nextArg || nextArg.startsWith('--')) {
         obj[arg.slice(2)] = true;
       } else {
-        obj[arg.slice(2)] = parseFloat(nextArg) || nextArg;
+        const numberArg = parseFloat(nextArg);
+        obj[arg.slice(2)] = isNaN(numberArg) ? nextArg : numberArg;
         i++;
       }
     }
