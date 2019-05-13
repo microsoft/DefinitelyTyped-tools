@@ -10,7 +10,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     const versionString = `Version ${benchmark.packageVersion}`;
     console.log(os.EOL);
     console.log(versionString);
-    console.log('='.repeat(versionString.length));
+    console.log('-'.repeat(versionString.length));
     console.log('  Total duration (ms): ', benchmark.benchmarkDuration)
     console.log('  Type count:          ', benchmark.typeCount);
     if (benchmark.relationCacheSizes) {

@@ -27,6 +27,7 @@ export interface MeasurePerfOptions {
   allPackages: AllPackages;
   tsPath: string;
   ts: typeof import('typescript');
+  batchRunStart: Date;
 }
 
 export async function measurePerf({
@@ -42,6 +43,7 @@ export async function measurePerf({
   iterations,
   tsPath,
   ts,
+  batchRunStart,
 }: MeasurePerfOptions) {
   let duration = NaN;
   const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' });
@@ -110,6 +112,7 @@ export async function measurePerf({
       typeCount: (program as any).getTypeCount(),
       relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
       languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
+      batchRunStart,
     };
 
     benchmarks.push(measurement);

@@ -6,7 +6,7 @@ import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { PackageId } from 'types-publisher/bin/lib/packages';
-import { BenchmarkPackageOptions } from './benchmarkPackage';
+import { BenchmarkPackageOptions } from './benchmark';
 const writeFile = promisify(fs.writeFile);
 
 export interface GetPackagesToBenchmarkOptions {

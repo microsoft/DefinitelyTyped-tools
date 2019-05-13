@@ -1,5 +1,5 @@
 import { deserializeArgs } from '../common';
-import { benchmark } from './benchmarkPackage';
+import { benchmark } from './benchmark';
 import { getPackagesToBenchmark } from './getPackagesToBenchmark';
 
 if (!module.parent) {

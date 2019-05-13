@@ -11,6 +11,7 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     typeCount: benchmark.typeCount,
     relationCacheSizes: benchmark.relationCacheSizes,
     benchmarkDuration: benchmark.benchmarkDuration,
+    batchRunStart: benchmark.batchRunStart,
     ...summarizeStats(benchmark.languageServiceBenchmarks),
   }
 }

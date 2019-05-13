@@ -46,18 +46,23 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
 
 export async function benchmark(args: Args) {
   const options = convertArgs(args);
+  const time = new Date();
   if (options.groups) {
     const group = options.groups[assertNumber(options.agentIndex, 'agentIndex')];
-    for (const packageId of group) {
-      await benchmarkPackage(packageId.name, packageId.majorVersion.toString(), options);
+    for (let i = 0; i < group.length; i++) {
+      const packageId = group[i];
+      const logString = `Benchmarking ${packageId.name}/${packageId.majorVersion} (${i + 1} of ${group.length})`;
+      console.log(logString);
+      console.log('='.repeat(logString.length) + os.EOL);
+      await benchmarkPackage(packageId.name, packageId.majorVersion.toString(), time, options);
     }
   } else {
     const [packageName, packageVersion] = assertString(options.package, 'package').split('/');
-    await benchmarkPackage(packageName, packageVersion, options);
+    await benchmarkPackage(packageName, packageVersion, time, options);
   }
 }
 
-async function benchmarkPackage(packageName: string, packageVersion: string, options: BenchmarkPackageOptions) {
+async function benchmarkPackage(packageName: string, packageVersion: string, batchRunStart: Date, options: BenchmarkPackageOptions) {
   const {
     upload,
     progress,
@@ -83,6 +88,7 @@ async function benchmarkPackage(packageName: string, packageVersion: string, opt
     nProcesses,
     tsPath,
     ts,
+    batchRunStart,
   });
 
   const summaries = benchmarks.map(summarize);
