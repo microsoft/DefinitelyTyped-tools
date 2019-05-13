@@ -17,6 +17,7 @@
 @types/wonder-commonlib
 @types/wonder-frp
 @uirouter/angularjs
+abort-controller
 activex-helpers
 ajv
 anydb-sql
