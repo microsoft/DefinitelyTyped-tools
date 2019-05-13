@@ -1,5 +1,5 @@
 import { deserializeArgs } from '../common';
-import { benchmarkPackage } from './benchmarkPackage';
+import { benchmark } from './benchmarkPackage';
 import { getPackagesToBenchmark } from './getPackagesToBenchmark';
 
 if (!module.parent) {
@@ -8,8 +8,8 @@ if (!module.parent) {
   (async () => {
     try {
       switch (entry) {
-        case 'benchmarkPackage':
-          return benchmarkPackage(args);
+        case 'benchmark':
+          return benchmark(args);
         case 'getPackagesToBenchmark':
           return getPackagesToBenchmark(args);
         default:

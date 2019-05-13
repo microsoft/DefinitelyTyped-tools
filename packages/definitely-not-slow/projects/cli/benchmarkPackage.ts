@@ -1,50 +1,76 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getParsedPackages } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getParsedPackages, assertString, assertBoolean, withDefault, assertNumber } from '../common';
 import { getTypeScript } from '../measure/getTypeScript';
 import { insertPackageBenchmark } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
-import { cliArgumentError } from './utils';
+import { PackageId } from 'types-publisher/bin/lib/packages';
 
-export async function benchmarkPackage(args: Args) {
+export interface BenchmarkPackageOptions {
+  groups?: PackageId[][];
+  agentIndex?: number;
+  package?: string;
+  upload: boolean;
+  tsVersion: string;
+  progress: boolean;
+  iterations: number;
+  nProcesses: number;
+  maxLanguageServiceTestPositions?: number;
+  printSummary: boolean;
+  definitelyTypedPath: string;
+}
+
+function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
+  if (file) {
+    const fileContents = require(path.resolve(assertString(file, 'file')));
+    return {
+      groups: fileContents.groups,
+      ...convertArgs({ ...fileContents.options, ...args }),
+    };
+  }
+
+  return {
+    package: args.package ? assertString(args.package) : undefined,
+    agentIndex: typeof args.agentIndex !== 'undefined' ? assertNumber(args.agentIndex) : undefined,
+    upload: assertBoolean(withDefault(args.upload, true), 'upload'),
+    tsVersion: assertString(withDefault(args.tsVersion, 'next')),
+    progress: assertBoolean(withDefault(args.progress, true), 'progress'),
+    iterations: assertNumber(withDefault(args.iterations, 5), 'iterations'),
+    nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length - 1), 'nProcesses'),
+    maxLanguageServiceTestPositions: args.maxLanguageServiceTestPositions ? assertNumber(args.maxLanguageServiceTestPositions) : undefined,
+    printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
+    definitelyTypedPath: assertString(withDefault(args.definitelyTypedPath, path.resolve(__dirname, '../../../../DefinitelyTyped')), 'definitelyTypedPath'),
+  };
+}
+
+export async function benchmark(args: Args) {
+  const options = convertArgs(args);
+  if (options.groups) {
+    const group = options.groups[assertNumber(options.agentIndex, 'agentIndex')];
+    for (const packageId of group) {
+      await benchmarkPackage(packageId.name, packageId.majorVersion.toString(), options);
+    }
+  } else {
+    const [packageName, packageVersion] = assertString(options.package, 'package').split('/');
+    await benchmarkPackage(packageName, packageVersion, options);
+  }
+}
+
+async function benchmarkPackage(packageName: string, packageVersion: string, options: BenchmarkPackageOptions) {
   const {
-    package: packageStr,
     upload,
-    tsVersion = 'next',
-    progress = true,
-    iterations = 5,
-    nProcesses = os.cpus().length - 1,
+    progress,
+    iterations,
+    nProcesses,
+    tsVersion,
     maxLanguageServiceTestPositions,
-    printSummary: shouldPrintSummary = true,
-    definitelyTypedPath = path.resolve(__dirname, '../../../../DefinitelyTyped'),
-    ...extraArgs
-  } = args;
-
-  if (typeof packageStr !== 'string') {
-    return cliArgumentError('package', 'string', packageStr, true);
-  }
-  if (typeof definitelyTypedPath !== 'string') {
-    return cliArgumentError('definitelyTypedPath', 'string', definitelyTypedPath);
-  }
-  if (typeof iterations !== 'number') {
-    return cliArgumentError('iterations', 'number', iterations);
-  }
-  if (typeof maxLanguageServiceTestPositions !== 'number' && typeof maxLanguageServiceTestPositions !== 'undefined') {
-    return cliArgumentError('maxLanguageServiceTestPositions', 'number', maxLanguageServiceTestPositions);
-  }
-  if (typeof nProcesses !== 'number') {
-    return cliArgumentError('nProcesses', 'number', nProcesses);
-  }
-  if (typeof progress !== 'boolean') {
-    return cliArgumentError('progress', 'boolean', progress);
-  }
-
-  const [packageName, packageVersion] = packageStr.split('/');
+    printSummary: shouldPrintSummary,
+    definitelyTypedPath,
+  } = options;
   const { ts, tsPath } = await getTypeScript(tsVersion.toString());
   const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
   const benchmarks = await measurePerf({
-    ...extraArgs,
     packageName,
     packageVersion: packageVersion ? packageVersion.replace(/^v/, '') : undefined,
     allPackages,

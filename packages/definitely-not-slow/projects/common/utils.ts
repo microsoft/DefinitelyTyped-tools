@@ -70,3 +70,14 @@ export function assertNumber(input: any, name?: string): number {
   }
   return input;
 }
+
+export function assertBoolean(input: any, name?: string): boolean {
+  if (typeof input !== 'boolean') {
+    throw new Error(`Expected a boolean for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+  }
+  return input;
+}
+
+export function withDefault<T>(input: T, defaultValue: T): T {
+  return typeof input === 'undefined' ? defaultValue : input;
+}

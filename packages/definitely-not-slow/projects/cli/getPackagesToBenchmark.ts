@@ -6,6 +6,7 @@ import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { PackageId } from 'types-publisher/bin/lib/packages';
+import { BenchmarkPackageOptions } from './benchmarkPackage';
 const writeFile = promisify(fs.writeFile);
 
 export interface GetPackagesToBenchmarkOptions {
@@ -89,10 +90,17 @@ export async function getPackagesToBenchmark(args: Args) {
     return groups;
   }, []);
 
+  const benchmarkOptions: Partial<BenchmarkPackageOptions> = {
+    definitelyTypedPath,
+    tsVersion: typeScriptVersionMajorMinor,
+    upload: true,
+  }
+
   await writeFile(outFile, JSON.stringify({
     changedPackageCount: affectedPackages.changedPackages.length,
     dependentPackageCount: affectedPackages.dependentPackages.length,
     totalPackageCount: packagesToBenchmark.length,
+    options: benchmarkOptions,
     groups,
   }, undefined, 2), 'utf8');
 }
