@@ -2,11 +2,11 @@
   "name": "definitely-not-slow",
   "version": "1.0.0",
   "description": "",
-  "bin": "dist/projects/cli/index.js",
+  "bin": "dist/src/cli/index.js",
   "scripts": {
     "postinstall": "pushd node_modules/types-publisher && npm i && npx tsc -p . && popd",
     "build": "tsc -b .",
-    "cli": "node dist/projects/cli/index.js"
+    "cli": "node dist/src/cli/index.js"
   },
   "author": "",
   "license": "UNLICENSED",
