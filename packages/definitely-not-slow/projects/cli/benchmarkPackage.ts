@@ -1,11 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import { pathExists, getDatabase, DatabaseAccessLevel, config } from '../common';
-import { getLocallyInstalledDefinitelyTyped } from 'types-publisher/bin/get-definitely-typed';
-import { dataFilePath } from 'types-publisher/bin/lib/common';
-import { typesDataFilename, AllPackages } from 'types-publisher/bin/lib/packages';
-import parseDefinitions from 'types-publisher/bin/parse-definitions';
-import { consoleLogger } from 'types-publisher/bin/util/logging';
+import { getDatabase, DatabaseAccessLevel, config, getParsedPackages } from '../common';
 import { getTypeScript } from '../measure/getTypeScript';
 import { insertPackageBenchmark } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
@@ -46,16 +41,8 @@ export async function benchmarkPackage(args: Args) {
   }
 
   const [packageName, packageVersion] = packageStr.split('/');
-  const definitelyTypedFS = getLocallyInstalledDefinitelyTyped(definitelyTypedPath);
-  const isDebugging = process.execArgv.some(arg => arg.startsWith('--inspect'));
-  if (process.env.NODE_ENV === 'production' || !(await pathExists(dataFilePath(typesDataFilename)))) {
-    await parseDefinitions(definitelyTypedFS, isDebugging ? undefined : {
-      definitelyTypedPath,
-      nProcesses: os.cpus().length,
-    }, consoleLogger);
-  }
   const { ts, tsPath } = await getTypeScript(tsVersion.toString());
-  const allPackages = await AllPackages.read(definitelyTypedFS);
+  const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
   const benchmarks = await measurePerf({
     ...extraArgs,
     packageName,

@@ -5,7 +5,7 @@ import { Document, PackageBenchmarkSummary } from '../common';
 function createDocument<T>(body: T, version: number): Document<T> {
   return {
     version,
-    createdAt: new Date().toUTCString(),
+    createdAt: new Date(),
     system: {
       cpus: os.cpus().map(({ times, ...cpu }) => cpu),
       arch: os.arch(),

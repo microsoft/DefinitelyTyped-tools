@@ -11,6 +11,7 @@ export interface PackageBenchmark {
   packageVersion: string;
   sourceVersion: string;
   typeScriptVersion: string;
+  typeScriptVersionMajorMinor: string;
   typeCount: number;
   benchmarkDuration: number;
   relationCacheSizes?: RelationCacheSizes;
@@ -21,6 +22,7 @@ export interface PackageBenchmarkSummary {
   packageName: string;
   packageVersion: string;
   typeScriptVersion: string;
+  typeScriptVersionMajorMinor: string;
   sourceVersion: string;
   typeCount: number;
   benchmarkDuration: number;
@@ -58,7 +60,7 @@ export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface Document<T> {
   version: number;
-  createdAt: string;
+  createdAt: Date;
   system: {
     cpus: Omit<CpuInfo, 'times'>[];
     arch: string;

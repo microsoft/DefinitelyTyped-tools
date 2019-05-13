@@ -52,3 +52,21 @@ export function deserializeArgs(args: string[]): Args {
 export function serializeArgs(args: Args): string {
   return Object.keys(args).map(arg => `--${arg}` + (args[arg] === true ? '' : args[arg].toString())).join(' ');
 }
+
+export function compact<T>(arr: (T | null | undefined)[]): T[] {
+  return arr.filter((elem): elem is T => elem != undefined);
+}
+
+export function assertString(input: any, name?: string): string {
+  if (typeof input !== 'string') {
+    throw new Error(`Expected a string for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+  }
+  return input;
+}
+
+export function assertNumber(input: any, name?: string): number {
+  if (typeof input !== 'number') {
+    throw new Error(`Expected a number for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+  }
+  return input;
+}

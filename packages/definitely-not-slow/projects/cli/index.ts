@@ -1,5 +1,6 @@
 import { deserializeArgs } from '../common';
 import { benchmarkPackage } from './benchmarkPackage';
+import { getPackagesToBenchmark } from './getPackagesToBenchmark';
 
 if (!module.parent) {
   const entry = process.argv[2];
@@ -9,9 +10,13 @@ if (!module.parent) {
       switch (entry) {
         case 'benchmarkPackage':
           return benchmarkPackage(args);
+        case 'getPackagesToBenchmark':
+          return getPackagesToBenchmark(args);
+        default:
+          console.error(`Unrecognized entry '${entry}'`);
       }
     } catch (err) {
-      console.error(err.stack);
+      console.error(err);
       process.exit(1);
     }
   })();

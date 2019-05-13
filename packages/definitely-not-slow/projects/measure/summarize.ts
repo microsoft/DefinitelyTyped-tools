@@ -6,6 +6,7 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     packageName: benchmark.packageName,
     packageVersion: benchmark.packageVersion,
     typeScriptVersion: benchmark.typeScriptVersion,
+    typeScriptVersionMajorMinor: benchmark.typeScriptVersionMajorMinor,
     sourceVersion: benchmark.sourceVersion,
     typeCount: benchmark.typeCount,
     relationCacheSizes: benchmark.relationCacheSizes,
