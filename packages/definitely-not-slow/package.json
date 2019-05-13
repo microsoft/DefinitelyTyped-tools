@@ -4,7 +4,7 @@
   "description": "",
   "bin": "dist/src/cli/index.js",
   "scripts": {
-    "postinstall": "pushd node_modules/types-publisher && npm i && npx tsc -p . && popd",
+    "postinstall": "pushd node_modules/types-publisher && npm i && tsc -p . && popd",
     "build": "tsc -b .",
     "cli": "node dist/src/cli/index.js"
   },
