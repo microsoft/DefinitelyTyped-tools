@@ -62,7 +62,7 @@ export interface FetchOptions {
     readonly hostname: string;
     readonly port?: number;
     readonly path: string;
-    readonly retries?: true | number;
+    readonly retries?: boolean | number;
     readonly body?: string;
     readonly method?: "GET" | "PATCH" | "POST";
     readonly headers?: {};
