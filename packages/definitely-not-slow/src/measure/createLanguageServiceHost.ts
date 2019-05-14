@@ -13,7 +13,7 @@ export function createLanguageServiceHost(
     directoryExists: ts.sys.directoryExists,
     getCompilationSettings: () => compilerOptions,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
-    getDefaultLibFileName: () => path.resolve(basePath, 'node_modules/typescript/lib/lib.d.ts'),
+    getDefaultLibFileName: () => require.resolve('typescript/lib/lib.d.ts'),
     getNewLine: () => ts.sys.newLine,
     getScriptFileNames: () => testPaths,
     fileExists: ts.sys.fileExists,
