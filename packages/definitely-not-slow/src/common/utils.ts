@@ -1,6 +1,5 @@
 import * as os from 'os';
 import * as fs from 'fs';
-import { fork } from 'child_process';
 import { createHash } from 'crypto';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -100,92 +99,4 @@ export function getSystemInfo(): SystemInfo {
     ...info,
     hash: createHash('md5').update(JSON.stringify(info)).digest('hex'),
   };
-}
-
-let port = 9230;
-function getExecArgv(execArgv: string[]) {
-  const allExecArgv = process.execArgv.concat(execArgv);
-  if (allExecArgv.some(arg => arg.startsWith('--inspect-brk'))) {
-    return execArgv.concat(`--inspect-brk=${port++}`);
-  }
-  if (allExecArgv.some(arg => arg.startsWith('--inspect'))) {
-    return execArgv.concat(`--inspect=${port++}`);
-  }
-  return execArgv;
-}
-
-export interface RunInChildProcessesOptions<T> {
-  workerFile: string;
-  inputs: T[];
-  maxRetries?: number;
-  nParallel: number;
-  args?: string[] | ((input: T, index: number) => string[]);
-  execArgv?: string[] | ((input: T, index: number) => string[]);
-  handleOutput?: (message: any, input: T, index: number) => void;
-}
-
-export async function runInChildProcesses<T>({
-  workerFile,
-  args,
-  inputs,
-  nParallel,
-  maxRetries = 0,
-  execArgv,
-  handleOutput,
-}: RunInChildProcessesOptions<T>) {
-  let runningProcesses: Promise<void>[] = [];
-
-  for (let i = 0; i < inputs.length; i++) {
-    await openSlot();
-    startChild(i);
-  }
-
-  return Promise.all(runningProcesses);
-
-  async function openSlot(): Promise<void> {
-    if (runningProcesses.length < nParallel) {
-      return;
-    }
-
-    await Promise.race(runningProcesses);
-    return openSlot();
-  }
-
-  function startChild(index: number, attempt = 0): Promise<void> {
-    const input = inputs[index];
-    const childArgs = typeof args === 'function' ? args(input, index) : args;
-    const childExecArgs = getExecArgv(typeof execArgv === 'function' ? execArgv(input, index) : execArgv || []);
-    const promise = new Promise<void>((resolve, reject) => {
-      const child = fork(workerFile, childArgs, { execArgv: childExecArgs });
-      if (handleOutput) {
-        child.on('message', message => {
-          handleOutput(message, input, index);
-        });
-      }
-      child.on('exit', onExit);
-      child.on('error', err => {
-        child.removeListener('exit', onExit);
-        reject(err);
-      });
-      child.send(input);
-
-      function onExit(exitCode: number | null, signal: string | null) {
-        if (exitCode === 0) {
-          resolve();
-        } else if (attempt < maxRetries) {
-          startChild(index, attempt + 1).then(resolve, reject);
-        } else {
-          if (exitCode !== null) {
-            reject(new Error(`Child process exited with code ${exitCode} on input index ${index}`));
-          } else {
-            reject(new Error(`Child process was killed with ${signal} on input index ${index}`));
-          }
-        }
-      }
-    });
-    runningProcesses.push(promise);
-    return promise.then(() => {
-      runningProcesses.splice(runningProcesses.indexOf(promise), 1);
-    });
-  }
 }

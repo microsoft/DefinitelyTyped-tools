@@ -7,10 +7,11 @@ import { getTypingInfo } from 'types-publisher/bin/lib/definition-parser';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { Semver } from 'types-publisher/bin/lib/versions';
 import { Node, SourceFile, Extension, CompilerOptions } from 'typescript';
-import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement, runInChildProcesses } from '../common';
+import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement } from '../common';
 import { installDependencies } from './installDependencies';
 import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
 import { formatDiagnosticsHost } from './formatDiagnosticsHost';
+import { runWithChildProcesses } from 'types-publisher/bin/util/util';
 import { measureLanguageServiceWorkerFilename, MeasureLanguageServiceChildProcessArgs } from './measureLanguageServiceWorker';
 
 export interface MeasurePerfOptions {
@@ -76,12 +77,12 @@ export async function measurePerf({
     if (progress) {
       updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
     }
-    await runInChildProcesses({
+    await runWithChildProcesses({
       inputs: testMatrix.inputs,
+      commandLineArgs: [],
       workerFile: measureLanguageServiceWorkerFilename,
-      nParallel: nProcesses,
-      execArgv: (_, index) => process.execArgv.concat(['--prof', `--logfile=logs/v8-prof-${index}.log`, '--no-logfile-per-isolate']),
-      handleOutput: (measurement: LanguageServiceSingleMeasurement, _, index) => {
+      nProcesses,
+      handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
         testMatrix.addMeasurement(measurement);
         if (progress) {
           updateProgress(
