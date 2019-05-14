@@ -8,7 +8,7 @@ import { pathExists, run } from '../common';
 export async function installDependencies(allPackages: AllPackages, packageId: PackageId, typesPath: string): Promise<void> {
   const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [packageId]);
   const dependencies = allDependencies(allPackages, [...changedPackages, ...dependentPackages]);
-  await nAtATime(Math.min(os.cpus().length - 1, 6), dependencies, async typingsData => {
+  await nAtATime(Math.min(os.cpus().length, 6), dependencies, async typingsData => {
       const packagePath = path.join(typesPath, typingsData.name);
       if (!await pathExists(path.join(packagePath, 'package.json'))) {
           return;

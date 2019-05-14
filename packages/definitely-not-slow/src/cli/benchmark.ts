@@ -44,7 +44,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     tsVersion: assertString(withDefault(args.tsVersion, 'next')),
     progress: assertBoolean(withDefault(args.progress, true), 'progress'),
     iterations: assertNumber(withDefault(args.iterations, 5), 'iterations'),
-    nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length - 1), 'nProcesses'),
+    nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length), 'nProcesses'),
     maxLanguageServiceTestPositions: args.maxLanguageServiceTestPositions ? assertNumber(args.maxLanguageServiceTestPositions) : undefined,
     printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
     definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath')),
