@@ -26,11 +26,10 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
   if (file) {
     const fileContents = require(path.resolve(assertString(file, 'file')));
     if (fileContents.system.hash !== currentSystem.hash) {
-      console.error('Systems mismatch; needed:');
-      console.error(JSON.stringify(fileContents.system, undefined, 2) + os.EOL);
-      console.error('Current:');
-      console.error(JSON.stringify(currentSystem, undefined, 2) + os.EOL);
-      throw new Error('Systems mismatch; see logs for details');
+      console.warn('Systems mismatch; requested:');
+      console.warn(JSON.stringify(fileContents.system, undefined, 2) + os.EOL);
+      console.warn('Current:');
+      console.warn(JSON.stringify(currentSystem, undefined, 2) + os.EOL);
     }
     return {
       groups: fileContents.groups,
