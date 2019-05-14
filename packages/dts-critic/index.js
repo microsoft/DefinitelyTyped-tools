@@ -18,12 +18,9 @@ function dtsCritic(dtsPath, sourcePath) {
         header = undefined;
     }
     const names = findNames(dtsPath, sourcePath, header)
-    const src = sourcePath ?
-        fs.readFileSync(require.resolve(sourcePath), "utf-8") :
-        download("https://unpkg.com/" + mangleScoped(names.src));
     checkNames(names, header);
     if (header && !header.nonNpm) {
-        checkSource(names.dts, dts, src);
+        checkSource(names.dts, dts, readSource(sourcePath, names.src, header));
     }
 }
 dtsCritic.findDtsName = findDtsName;
@@ -56,6 +53,22 @@ function main() {
         process.exit(1);
     }
     return dtsCritic(argv._[0], argv._[1]);
+}
+
+/**
+ * @param {string | undefined} sourcePath
+ * @param {string} name
+ * @param {headerParser.Header | undefined} header
+ */
+function readSource(sourcePath, name, header) {
+    if (sourcePath) {
+        return fs.readFileSync(require.resolve(sourcePath), "utf-8");
+    }
+    let fullName = mangleScoped(name);
+    if (header) {
+        fullName += `@${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
+    }
+    return download("https://unpkg.com/" + fullName);
 }
 
 /**
