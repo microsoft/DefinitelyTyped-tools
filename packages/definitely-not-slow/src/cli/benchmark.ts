@@ -48,7 +48,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length - 1), 'nProcesses'),
     maxLanguageServiceTestPositions: args.maxLanguageServiceTestPositions ? assertNumber(args.maxLanguageServiceTestPositions) : undefined,
     printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
-    definitelyTypedPath: assertString(withDefault(args.definitelyTypedPath, path.resolve(__dirname, '../../../../DefinitelyTyped')), 'definitelyTypedPath'),
+    definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd())), 'definitelyTypedPath'),
   };
 }
 
