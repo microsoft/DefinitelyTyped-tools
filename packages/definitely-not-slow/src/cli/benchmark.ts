@@ -69,7 +69,7 @@ export async function benchmark(args: Args) {
   }
 }
 
-async function benchmarkPackage(packageName: string, packageVersion: string, batchRunStart: Date, options: BenchmarkPackageOptions) {
+export async function benchmarkPackage(packageName: string, packageVersion: string, batchRunStart: Date, options: BenchmarkPackageOptions) {
   const {
     upload,
     progress,
@@ -106,11 +106,13 @@ async function benchmarkPackage(packageName: string, packageVersion: string, bat
 
   if (upload) {
     const { container } = await getDatabase(DatabaseAccessLevel.Write);
-    return Promise.all(summaries.map(summary => {
+    await Promise.all(summaries.map(summary => {
       return insertPackageBenchmark(
         summary,
         config.database.packageBenchmarksDocumentSchemaVersion,
         container);
     }));
   }
+  
+  return benchmarks;
 }

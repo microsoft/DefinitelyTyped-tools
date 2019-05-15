@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
-import { getDatabase, getParsedPackages, DatabaseAccessLevel, config, Document, PackageBenchmarkSummary, compact, Args, assertNumber, assertString, getSystemInfo } from '../common';
+import { getDatabase, getParsedPackages, DatabaseAccessLevel, config, Document, PackageBenchmarkSummary, compact, Args, assertNumber, assertString, getSystemInfo, getChangedPackages, packageIdsAreEqual } from '../common';
 import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { PackageId } from 'types-publisher/bin/lib/packages';
 import { BenchmarkPackageOptions } from './benchmark';
+import { getLatestBenchmark } from '../query';
 const writeFile = promisify(fs.writeFile);
 const currentSystem = getSystemInfo();
 
@@ -42,26 +43,17 @@ export async function getPackagesToBenchmark(args: Args) {
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const { container } = await getDatabase(DatabaseAccessLevel.Read);
   const changedPackages = await nAtATime(10, allPackages.allTypings(), async typingsData => {
-    const response = await container.items.query({
-      query:
-        `SELECT TOP 1 * FROM ${config.database.packageBenchmarksContainerId} b` +
-        `  WHERE b.body.packageName = @packageName` +
-        `  AND b.body.packageVersion = @packageVersion` +
-        `  AND b.body.typeScriptVersionMajorMinor = @tsVersion` +
-        `  ORDER BY b.createdAt DESC`,
-      parameters: [
-        { name: '@packageName', value: typingsData.id.name },
-        { name: '@packageVersion', value: typingsData.id.majorVersion.toString() },
-        { name: '@tsVersion', value: typeScriptVersionMajorMinor },
-      ],
-    }, { enableCrossPartitionQuery: true }).current();
+    const result = await getLatestBenchmark({
+      container,
+      typeScriptVersionMajorMinor,
+      packageName: typingsData.id.name,
+      packageVersion: typingsData.id.majorVersion,
+    });
 
     // No previous run exists; run one
-    if (!response.result) {
+    if (!result) {
       return typingsData.id;
     }
-
-    const result: Document<PackageBenchmarkSummary> = response.result;
     
     // System specs are different; run it
     if (result.system.hash !== currentSystem.hash) {
@@ -69,18 +61,12 @@ export async function getPackagesToBenchmark(args: Args) {
       return typingsData.id;
     }
 
-    const diff = await execAndThrowErrors(`git diff --name-status ${result.body.sourceVersion}`, definitelyTypedPath);
-    if (!diff) {
+    const changedPackages = await getChangedPackages({ diffTo: result.body.sourceVersion, definitelyTypedPath });
+    if (!changedPackages) {
       return undefined;
     }
 
-    const changes = diff.split('\n').map(line => {
-      const [status, file] = line.split(/\s+/, 2);
-      return { status: status.trim() as 'A' | 'D' | 'M', file: file.trim() };
-    });
-
-    const changedPackages = await gitChanges(changes);
-    if (changedPackages.some(changedPackage => changedPackage.name === typingsData.id.name && changedPackage.majorVersion === typingsData.id.majorVersion)) {
+    if (changedPackages.some(packageIdsAreEqual(typingsData.id))) {
       // Package has changed; run it
       return typingsData.id;
     }

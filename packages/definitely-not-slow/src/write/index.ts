@@ -1,4 +1,3 @@
-import * as os from 'os';
 import { Container } from '@azure/cosmos';
 import { Document, PackageBenchmarkSummary, getSystemInfo } from '../common';
 

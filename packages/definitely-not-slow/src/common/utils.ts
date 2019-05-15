@@ -4,6 +4,9 @@ import { createHash } from 'crypto';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { SystemInfo } from './types';
+import { AllPackages, PackageId } from 'types-publisher/bin/lib/packages';
+import { execAndThrowErrors } from 'types-publisher/bin/util/util';
+import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 
 export const pathExists = promisify(fs.exists);
 
@@ -99,4 +102,37 @@ export function getSystemInfo(): SystemInfo {
     ...info,
     hash: createHash('md5').update(JSON.stringify(info)).digest('hex'),
   };
+}
+
+export interface GetChangedPackagesOptions {
+  diffFrom?: string;
+  diffTo: string;
+  definitelyTypedPath: string;
+}
+
+export async function getChangedPackages({
+  diffFrom = 'HEAD',
+  diffTo,
+  definitelyTypedPath
+}: GetChangedPackagesOptions) {
+  const diff = await execAndThrowErrors(`git diff --name-status ${diffFrom} ${diffTo}`, definitelyTypedPath);
+  if (!diff) {
+    return undefined;
+  }
+
+  const changes = diff.split('\n').map(line => {
+    const [status, file] = line.split(/\s+/, 2);
+    return { status: status.trim() as 'A' | 'D' | 'M', file: file.trim() };
+  });
+
+  return gitChanges(changes);
+}
+
+export function packageIdsAreEqual(a: PackageId): (b: PackageId) => boolean;
+export function packageIdsAreEqual(a: PackageId, b: PackageId): boolean;
+export function packageIdsAreEqual(a: PackageId, b?: PackageId): boolean | ((b: PackageId) => boolean) {
+  return typeof b === 'undefined' ? equalsA : equalsA(b);
+  function equalsA(b: PackageId) {
+    return a.name === b.name && a.majorVersion === b.majorVersion;
+  }
 }

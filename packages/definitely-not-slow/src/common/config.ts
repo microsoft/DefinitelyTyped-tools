@@ -1,6 +1,9 @@
 import { assertDefined } from 'types-publisher/bin/util/util';
 
 export const config = {
+  benchmarks: {
+    languageServiceIterations: 5,
+  },
   database: {
     benchmarksDatabaseId: 'benchmarks',
     packageBenchmarksContainerId: 'packageBenchmarks',
