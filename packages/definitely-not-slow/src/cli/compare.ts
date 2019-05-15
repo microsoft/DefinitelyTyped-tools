@@ -26,15 +26,25 @@ export async function compare(args: Args) {
   }
 
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
-  for (const affectedPackage of [...affectedPackages.changedPackages, ...affectedPackages.dependentPackages]) {
-    console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major}...\n\n`);
+  for (const affectedPackage of affectedPackages.changedPackages) {
+    console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
     await compareBenchmarks({
       allPackages,
       definitelyTypedPath,
       typeScriptVersionMajorMinor,
       packageName: affectedPackage.id.name,
       packageVersion: affectedPackage.major,
-    })
+    });
+  }
+  for (const affectedPackage of affectedPackages.dependentPackages) {
+    console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`);
+    await compareBenchmarks({
+      allPackages,
+      definitelyTypedPath,
+      typeScriptVersionMajorMinor,
+      packageName: affectedPackage.id.name,
+      packageVersion: affectedPackage.major,
+    });
   }
 }
 
@@ -76,12 +86,13 @@ export async function compareBenchmarks({
     const needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
     if (needsRerun) {
       const head = await execAndThrowErrors('git rev-parse HEAD');
+      console.log(`No previous benchmark for ${packageName}/${packageVersion}. Checking out master and running one...`);
       await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
       latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: false,
         iterations: config.benchmarks.languageServiceIterations,
-        progress: true,
+        progress: false,
         upload: true,
         tsVersion: typeScriptVersionMajorMinor,
         nProcesses: os.cpus().length,
@@ -94,7 +105,7 @@ export async function compareBenchmarks({
     definitelyTypedPath,
     printSummary: false,
     iterations: config.benchmarks.languageServiceIterations,
-    progress: true,
+    progress: false,
     upload: false,
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,

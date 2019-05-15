@@ -249,7 +249,7 @@ function updateProgress(text: string, done: number, total: number) {
       process.stdout.write(os.EOL);
     }
   } else if (!done) {
-    process.stdout.write(`${text}`);
+    process.stdout.write(`${text}` + os.EOL.repeat(2));
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
