@@ -20,7 +20,7 @@ export async function compare(args: Args) {
   const definitelyTypedPath = path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath'));
   const typeScriptVersionMajorMinor = assertString(args.typeScriptVersion ? args.typeScriptVersion.toString() : undefined);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
-  const changedPackages = await getChangedPackages({ diffTo: 'master', definitelyTypedPath });
+  const changedPackages = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
   if (!changedPackages) {
     return;
   }
@@ -59,13 +59,13 @@ export async function compareBenchmarks({
 
   let latestBenchmark: PackageBenchmark | PackageBenchmarkSummary = latestBenchmarkDocument.body;
   const packageId = { name: packageName, majorVersion: packageVersion };
-  const changedPackagesInPR = await getChangedPackages({ diffTo: 'master', definitelyTypedPath });
+  const changedPackagesInPR = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
   if (!changedPackagesInPR) {
     return; // Nothing to do?
   }
 
   const changedPackagesBetweenLastRunAndMaster = await getChangedPackages({
-    diffFrom: 'master',
+    diffFrom: 'origin/master',
     diffTo: latestBenchmarkDocument.body.sourceVersion,
     definitelyTypedPath,
   });
@@ -76,7 +76,7 @@ export async function compareBenchmarks({
     const needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
     if (needsRerun) {
       const head = await execAndThrowErrors('git rev-parse HEAD');
-      await execAndThrowErrors('git checkout master', definitelyTypedPath);
+      await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
       latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: false,
