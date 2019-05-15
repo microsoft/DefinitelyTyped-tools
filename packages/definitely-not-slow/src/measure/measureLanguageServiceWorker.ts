@@ -30,25 +30,24 @@ if (!module.parent) {
   let languageService: LanguageService | undefined;
 
   process.on('message', async (message: unknown[]) => {
-    throw new Error('blah');
-    // for (const args of message) {
-    //   if (isMeasureLanguageServiceArgs(args)) {
-    //     if (!ts || !commandLine || !languageServiceHost || !languageService) {
-    //       ts = await import(args.tsPath) as typeof import('typescript');
-    //       commandLine = getParsedCommandLineForPackage(ts, args.packageDirectory);
-    //       languageServiceHost = createLanguageServiceHost(ts, commandLine.options, commandLine.fileNames);
-    //       languageService = ts.createLanguageService(languageServiceHost);
-    //       // Warm up - make sure functions are compiled
-    //       getCompletionsAtPosition(languageService, args.fileName, args.start);
-    //       getQuickInfoAtPosition(languageService, args.fileName, args.start);
-    //     }
+    for (const args of message) {
+      if (isMeasureLanguageServiceArgs(args)) {
+        if (!ts || !commandLine || !languageServiceHost || !languageService) {
+          ts = await import(args.tsPath) as typeof import('typescript');
+          commandLine = getParsedCommandLineForPackage(ts, args.packageDirectory);
+          languageServiceHost = createLanguageServiceHost(ts, commandLine.options, commandLine.fileNames);
+          languageService = ts.createLanguageService(languageServiceHost);
+          // Warm up - make sure functions are compiled
+          getCompletionsAtPosition(languageService, args.fileName, args.start);
+          getQuickInfoAtPosition(languageService, args.fileName, args.start);
+        }
 
-    //     const positionMeasurement = await measureLanguageService(languageService, args);
-    //     process.send!(positionMeasurement);
-    //   } else {
-    //     throw new Error('Invalid command-line arguments');
-    //   }
-    // }
+        const positionMeasurement = await measureLanguageService(languageService, args);
+        process.send!(positionMeasurement);
+      } else {
+        throw new Error('Invalid command-line arguments');
+      }
+    }
   });
 
   process.on('unhandledRejection', (err) => {
