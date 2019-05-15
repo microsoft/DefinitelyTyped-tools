@@ -2,8 +2,8 @@ import * as os from 'os';
 import * as path from 'path';
 import { allDependencies, getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { AllPackages, PackageId } from 'types-publisher/bin/lib/packages';
-import { nAtATime } from 'types-publisher/bin/util/util';
-import { pathExists, run } from '../common';
+import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
+import { pathExists } from '../common';
 
 export async function installDependencies(allPackages: AllPackages, packageId: PackageId, typesPath: string): Promise<void> {
   const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [packageId]);
@@ -15,6 +15,6 @@ export async function installDependencies(allPackages: AllPackages, packageId: P
       }
 
       const cmd = 'npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links';
-      return run(packagePath, cmd);
+      return execAndThrowErrors(cmd, packagePath);
   });
 }

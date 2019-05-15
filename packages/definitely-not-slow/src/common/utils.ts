@@ -20,22 +20,6 @@ export function ensureExists(...pathNames: string[]): string {
   throw new Error(`File or directory does not exist: ${pathNamesPrint}`);
 }
 
-export function run(cwd: string | undefined, cmd: string): Promise<string | undefined> {
-  return new Promise<string | undefined>((resolve, reject) => {
-    exec(cmd, { encoding: 'utf8', cwd }, (error, stdoutUntrimmed, stderrUntrimmed) => {
-      const stdout = stdoutUntrimmed.trim();
-      const stderr = stderrUntrimmed.trim();
-      if (stderr !== "") {
-        reject(new Error(stderr));
-      } else if (error) {
-        reject(error);
-      } else {
-        resolve(stdout);
-      }
-    });
-  });
-}
-
 export type Args = { [key: string]: string | true | number };
 
 export function deserializeArgs(args: string[]): Args {
