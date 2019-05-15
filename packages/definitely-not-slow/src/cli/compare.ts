@@ -63,27 +63,26 @@ export async function compareBenchmarks({
     packageVersion,
   });
 
-  if (!latestBenchmarkDocument) {
-    return //something
-  }
-
-  let latestBenchmark: PackageBenchmark | PackageBenchmarkSummary = latestBenchmarkDocument.body;
+  let latestBenchmark: PackageBenchmark | PackageBenchmarkSummary | undefined = latestBenchmarkDocument && latestBenchmarkDocument.body;
   const packageId = { name: packageName, majorVersion: packageVersion };
   const changedPackagesInPR = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
   if (!changedPackagesInPR) {
     return; // Nothing to do?
   }
 
-  const changedPackagesBetweenLastRunAndMaster = await getChangedPackages({
+  const changedPackagesBetweenLastRunAndMaster = latestBenchmark && await getChangedPackages({
     diffFrom: 'origin/master',
-    diffTo: latestBenchmarkDocument.body.sourceVersion,
+    diffTo: latestBenchmark.sourceVersion,
     definitelyTypedPath,
   });
 
-  if (changedPackagesBetweenLastRunAndMaster) {
-    const affectedPackages = getAffectedPackages(allPackages, changedPackagesBetweenLastRunAndMaster);
-    const affected = [...affectedPackages.changedPackages, ...affectedPackages.dependentPackages];
-    const needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
+  if (changedPackagesBetweenLastRunAndMaster || !latestBenchmark) {
+    let needsRerun = !latestBenchmark;
+    if (changedPackagesBetweenLastRunAndMaster) {
+      const affectedPackages = getAffectedPackages(allPackages, changedPackagesBetweenLastRunAndMaster);
+      const affected = [...affectedPackages.changedPackages, ...affectedPackages.dependentPackages];
+      needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
+    }
     if (needsRerun) {
       const head = await execAndThrowErrors('git rev-parse HEAD');
       console.log(`No previous benchmark for ${packageName}/${packageVersion}. Checking out master and running one...`);
@@ -110,6 +109,10 @@ export async function compareBenchmarks({
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,
   }))[0];
+
+  if (!latestBenchmark) {
+    throw new Error('Failed to get a benchmark for master. This error should be impossible.');
+  }
 
   console.log('master');
   console.log('======\n');
