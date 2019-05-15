@@ -95,6 +95,7 @@ export async function compareBenchmarks({
         upload: true,
         tsVersion: typeScriptVersionMajorMinor,
         nProcesses: os.cpus().length,
+        failOnErrors: true,
       }))[0];
       await execAndThrowErrors(`git checkout ${head}`);
     }
@@ -108,6 +109,7 @@ export async function compareBenchmarks({
     upload: false,
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,
+    failOnErrors: true,
   }))[0];
 
   if (!latestBenchmark) {

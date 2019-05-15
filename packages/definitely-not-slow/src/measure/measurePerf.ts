@@ -11,7 +11,7 @@ import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasur
 import { installDependencies } from './installDependencies';
 import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
 import { formatDiagnosticsHost } from './formatDiagnosticsHost';
-import { runWithChildProcesses } from 'types-publisher/bin/util/util';
+import { runWithListeningChildProcesses } from 'types-publisher/bin/util/util';
 import { measureLanguageServiceWorkerFilename, MeasureLanguageServiceChildProcessArgs } from './measureLanguageServiceWorker';
 
 export interface MeasurePerfOptions {
@@ -77,11 +77,16 @@ export async function measurePerf({
     if (progress) {
       updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
     }
-    await runWithChildProcesses({
+    await runWithListeningChildProcesses({
       inputs: testMatrix.inputs,
       commandLineArgs: [],
       workerFile: measureLanguageServiceWorkerFilename,
       nProcesses,
+      crashRecovery: true,
+      cwd: process.cwd(),
+      handleCrash: input => {
+        console.error('Failed measurement on request:', JSON.stringify(input, undefined, 2));
+      },
       handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
         testMatrix.addMeasurement(measurement);
         if (progress) {

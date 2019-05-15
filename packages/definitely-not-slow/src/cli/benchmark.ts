@@ -6,6 +6,7 @@ import { insertPackageBenchmark } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
 import { PackageId } from 'types-publisher/bin/lib/packages';
+import { validateBenchmark } from '../measure/validate';
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
@@ -20,6 +21,7 @@ export interface BenchmarkPackageOptions {
   maxLanguageServiceTestPositions?: number;
   printSummary: boolean;
   definitelyTypedPath: string;
+  failOnErrors?: boolean;
 }
 
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
@@ -34,6 +36,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     return {
       groups: fileContents.groups,
       ...convertArgs({ ...fileContents.options, ...args }),
+      failOnErrors: false,
     };
   }
 
@@ -48,6 +51,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     maxLanguageServiceTestPositions: args.maxLanguageServiceTestPositions ? assertNumber(args.maxLanguageServiceTestPositions) : undefined,
     printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
     definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath')),
+    failOnErrors: true,
   };
 }
 
@@ -79,6 +83,7 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     maxLanguageServiceTestPositions,
     printSummary: shouldPrintSummary,
     definitelyTypedPath,
+    failOnErrors,
   } = options;
   const { ts, tsPath } = await getTypeScript(tsVersion.toString());
   const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
@@ -98,7 +103,19 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     batchRunStart,
   });
 
-  const summaries = benchmarks.map(summarize);
+  const summaries = benchmarks
+    .filter(benchmark => {
+      if (!validateBenchmark(benchmark, iterations)) {
+        const errorMessage = `Benchmark ${benchmark.packageName}/${benchmark.packageVersion} had errors.`
+          + upload ? ' It will not be uploaded.' : '';
+        if (failOnErrors) {
+          throw new Error(errorMessage);
+        }
+        return false;
+      }
+      return true;
+    })
+    .map(summarize);
 
   if (shouldPrintSummary) {
     printSummary(summaries);
