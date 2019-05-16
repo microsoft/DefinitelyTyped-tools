@@ -7,7 +7,7 @@ export const config = {
   database: {
     benchmarksDatabaseId: 'benchmarks',
     packageBenchmarksContainerId: 'packageBenchmarks',
-    packageBenchmarksDocumentSchemaVersion: 0,
+    packageBenchmarksDocumentSchemaVersion: 1,
     endpoint: 'https://dt-perf.documents.azure.com:443/',
     get writeKey() {
       return assertDefined(

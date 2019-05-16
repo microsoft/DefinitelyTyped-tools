@@ -50,21 +50,21 @@ export function compact<T>(arr: (T | null | undefined)[]): T[] {
 
 export function assertString(input: any, name?: string): string {
   if (typeof input !== 'string') {
-    throw new Error(`Expected a string for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+    throw new Error(`Expected a string for input${name ? ` '${name}'` : ''} but received ${typeof input}`);
   }
   return input;
 }
 
 export function assertNumber(input: any, name?: string): number {
   if (typeof input !== 'number') {
-    throw new Error(`Expected a number for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+    throw new Error(`Expected a number for input${name ? ` '${name}'` : ''} but received ${typeof input}`);
   }
   return input;
 }
 
 export function assertBoolean(input: any, name?: string): boolean {
   if (typeof input !== 'boolean') {
-    throw new Error(`Expected a boolean for input${name ? ` '${name}'` : ''} but received a ${typeof input}`);
+    throw new Error(`Expected a boolean for input${name ? ` '${name}'` : ''} but received ${typeof input}`);
   }
   return input;
 }

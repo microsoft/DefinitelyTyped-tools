@@ -1,5 +1,5 @@
 import { PackageBenchmark, PackageBenchmarkSummary, StatSummary, LanguageServiceBenchmark } from '../common';
-import { max, mean, median } from './utils';
+import { max, mean, median, stdDev } from './utils';
 
 export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary {
   return {
@@ -12,6 +12,8 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     relationCacheSizes: benchmark.relationCacheSizes,
     benchmarkDuration: benchmark.benchmarkDuration,
     batchRunStart: benchmark.batchRunStart,
+    testIdentifierCount: benchmark.testIdentifierCount,
+    requestedLanguageServiceTestIterations: benchmark.requestedLanguageServiceTestIterations,
     ...summarizeStats(benchmark.languageServiceBenchmarks),
   }
 }
@@ -26,13 +28,17 @@ export function summarizeStats(benchmarks: LanguageServiceBenchmark[]): {
   ].reduce((acc, [key, getDurations]) => {
     const durations = Array.prototype.concat.apply([], benchmarks.map(getDurations));
     const worst = max(benchmarks, m => mean(getDurations(m)));
+    const stats: StatSummary<LanguageServiceBenchmark> = {
+      mean: mean(durations),
+      median: median(durations),
+      standardDeviation: stdDev(durations),
+      trials: durations.length,
+      worst,
+    };
+
     return {
       ...acc,
-      [key]: {
-        mean: mean(durations),
-        median: median(durations),
-        worst,
-      },
+      [key]: stats,
     };
   }, {} as Record<'completions' | 'quickInfo', StatSummary<LanguageServiceBenchmark>>);
 }

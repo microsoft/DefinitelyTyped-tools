@@ -20,7 +20,7 @@ export interface MeasurePerfOptions {
   typeScriptVersion: string;
   definitelyTypedRootPath: string;
   definitelyTypedFS: FS;
-  maxLanguageServiceTestPositions?: number;
+  maxRunSeconds?: number;
   progress?: boolean;
   nProcesses: number;
   iterations: number;
@@ -37,7 +37,7 @@ export async function measurePerf({
   definitelyTypedRootPath,
   definitelyTypedFS,
   allPackages,
-  maxLanguageServiceTestPositions,
+  maxRunSeconds = Infinity,
   progress,
   nProcesses,
   iterations,
@@ -75,8 +75,9 @@ export async function measurePerf({
     let done = 0;
     const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
     if (progress) {
-      updateProgress(`v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
+      updateProgress(`${packageName}/v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
     }
+
     await runWithListeningChildProcesses({
       inputs: testMatrix.inputs,
       commandLineArgs: [],
@@ -84,6 +85,7 @@ export async function measurePerf({
       nProcesses,
       crashRecovery: true,
       cwd: process.cwd(),
+      softTimeoutMs: maxRunSeconds * 1000,
       handleCrash: input => {
         console.error('Failed measurement on request:', JSON.stringify(input, undefined, 2));
       },
@@ -91,12 +93,17 @@ export async function measurePerf({
         testMatrix.addMeasurement(measurement);
         if (progress) {
           updateProgress(
-            `v${version}: benchmarking over ${nProcesses} processes`,
+            `${packageName}/v${version}: benchmarking over ${nProcesses} processes`,
             ++done,
             testMatrix.inputs.length);
         }
       },
     });
+
+    if (progress && done !== testMatrix.inputs.length) {
+      updateProgress(`${packageName}/v${version}: timed out`, done, testMatrix.inputs.length);
+      process.stdout.write(os.EOL);
+    }
 
     const program = ts.createProgram({ rootNames: commandLine.fileNames, options: commandLine.options });
     const diagnostics = program.getSemanticDiagnostics().filter(diagnostic => {
@@ -117,6 +124,8 @@ export async function measurePerf({
       typeCount: (program as any).getTypeCount(),
       relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
       languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
+      requestedLanguageServiceTestIterations: iterations,
+      testIdentifierCount: testMatrix.uniquePositionCount,
       batchRunStart,
     };
 
@@ -160,6 +169,7 @@ export async function measurePerf({
   ) {
     const fileMap = new Map<string, Map<number, LanguageServiceBenchmark>>();
     const inputs: MeasureLanguageServiceChildProcessArgs[] = [];
+    let uniquePositionCount = 0;
     for (const testPath of testPaths) {
       const positionMap = new Map<number, LanguageServiceBenchmark>();
       fileMap.set(testPath, positionMap);
@@ -167,7 +177,10 @@ export async function measurePerf({
         testPath,
         ts.sys.readFile(testPath)!,
         compilerOptions.target || ts.ScriptTarget.Latest);
-      const identifiers = sampleIdentifiers(getIdentifiers(sourceFile), maxLanguageServiceTestPositions);
+      // Reverse: more complex examples are usually near the end of test files,
+      // so prioritize those.
+      const identifiers = getIdentifiers(sourceFile).reverse();
+      uniquePositionCount += identifiers.length;
       // Do the loops in this order so that a single child process doesn’t
       // run iterations of the same exact measurement back-to-back to avoid
       // v8 optimizing a significant chunk of the work away.
@@ -199,39 +212,21 @@ export async function measurePerf({
     }
     return {
       inputs,
+      uniquePositionCount,
       addMeasurement: (measurement: LanguageServiceSingleMeasurement) => {
         const benchmark = fileMap.get(measurement.fileName)!.get(measurement.start)!;
         benchmark.completionsDurations.push(measurement.completionsDuration);
         benchmark.quickInfoDurations.push(measurement.quickInfoDuration);
       },
       getAllBenchmarks: () => {
-        return Array.prototype.concat.apply([], Array.from(fileMap.values()).map(map => Array.from(map.values())));
+        return Array.prototype.concat
+          .apply([], Array.from(fileMap.values()).map(map => Array.from(map.values())))
+          .filter((benchmark: LanguageServiceBenchmark) =>
+            benchmark.completionsDurations.length > 0 ||
+            benchmark.quickInfoDurations.length > 0);
       },
     };
   }
-}
-
-
-function sampleIdentifiers<T>(identifiers: T[], maxLanguageServiceTestPositions?: number): T[] {
-  if (!maxLanguageServiceTestPositions || identifiers.length <= maxLanguageServiceTestPositions) {
-    return identifiers;
-  }
-
-  // 5% at beginning, 20% at end, 75% evenly distributed through middle
-  const beginningIdentifiersCount = Math.round(.05 * maxLanguageServiceTestPositions);
-  const endIdentifiersCount = Math.round(0.2 * maxLanguageServiceTestPositions);
-  const middleIdentifiersCount = Math.round(
-    maxLanguageServiceTestPositions
-    - beginningIdentifiersCount
-    - endIdentifiersCount);
-  const middleStartIndex = beginningIdentifiersCount;
-  const middleEndIndex = identifiers.length - endIdentifiersCount - 1;
-  const middleInterval = Math.ceil((middleEndIndex - middleStartIndex) / middleIdentifiersCount);
-  return [
-    ...identifiers.slice(0, beginningIdentifiersCount),
-    ...identifiers.slice(middleStartIndex, middleEndIndex + 1).filter((_, i) => i % middleInterval === 0),
-    ...identifiers.slice(middleEndIndex + 1),
-  ];
 }
 
 function getLatestTypesVersionForTypeScriptVersion(typesVersions: readonly string[], typeScriptVersion: string): string | undefined {
@@ -254,7 +249,7 @@ function updateProgress(text: string, done: number, total: number) {
       process.stdout.write(os.EOL);
     }
   } else if (!done) {
-    process.stdout.write(`${text}` + os.EOL.repeat(2));
+    process.stdout.write(`${text}`);
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);

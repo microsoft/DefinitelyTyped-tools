@@ -6,7 +6,6 @@ import { insertPackageBenchmark } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
 import { PackageId } from 'types-publisher/bin/lib/packages';
-import { validateBenchmark } from '../measure/validate';
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
@@ -18,7 +17,7 @@ export interface BenchmarkPackageOptions {
   progress: boolean;
   iterations: number;
   nProcesses: number;
-  maxLanguageServiceTestPositions?: number;
+  maxRunSeconds?: number;
   printSummary: boolean;
   definitelyTypedPath: string;
   failOnErrors?: boolean;
@@ -48,7 +47,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     progress: assertBoolean(withDefault(args.progress, true), 'progress'),
     iterations: assertNumber(withDefault(args.iterations, 5), 'iterations'),
     nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length), 'nProcesses'),
-    maxLanguageServiceTestPositions: args.maxLanguageServiceTestPositions ? assertNumber(args.maxLanguageServiceTestPositions) : undefined,
+    maxRunSeconds: args.maxRunSeconds ? assertNumber(args.maxRunSeconds, 'maxRunSeconds') : undefined,
     printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
     definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath')),
     failOnErrors: true,
@@ -80,7 +79,7 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     iterations,
     nProcesses,
     tsVersion,
-    maxLanguageServiceTestPositions,
+    maxRunSeconds,
     printSummary: shouldPrintSummary,
     definitelyTypedPath,
     failOnErrors,
@@ -96,26 +95,14 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     definitelyTypedFS,
     definitelyTypedRootPath: definitelyTypedPath,
     typeScriptVersion: ts.version,
-    maxLanguageServiceTestPositions,
+    maxRunSeconds,
     nProcesses,
     tsPath,
     ts,
     batchRunStart,
   });
 
-  const summaries = benchmarks
-    .filter(benchmark => {
-      if (!validateBenchmark(benchmark, iterations)) {
-        const errorMessage = `Benchmark ${benchmark.packageName}/${benchmark.packageVersion} had errors.`
-          + upload ? ' It will not be uploaded.' : '';
-        if (failOnErrors) {
-          throw new Error(errorMessage);
-        }
-        return false;
-      }
-      return true;
-    })
-    .map(summarize);
+  const summaries = benchmarks.map(summarize);
 
   if (shouldPrintSummary) {
     printSummary(summaries);
