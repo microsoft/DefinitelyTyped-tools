@@ -12,6 +12,7 @@
   "include": ["src"],
   "references": [
     { "path": "src/cli" },
+    { "path": "src/github" },
     { "path": "src/common" },
     { "path": "src/measure" },
     { "path": "src/query" },
