@@ -20,4 +20,16 @@ export const config = {
         `Required environment variable 'DATABASE_READ_KEY' was not set`);
     }
   },
+  github: {
+    userAgent: 'definitely-not-slow',
+    get typeScriptBotAuthToken() {
+      return assertDefined(
+        process.env.TYPESCRIPT_BOT_GITHUB_TOKEN,
+        `Required environment variable 'TYPESCRIPT_BOT_GITHUB_TOKEN' was not set`);
+    },
+    commonParams: {
+      owner: 'Microsoft',
+      repo: 'DefinitelyTyped',
+    }
+  },
 };
