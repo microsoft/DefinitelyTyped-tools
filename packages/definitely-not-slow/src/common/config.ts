@@ -30,6 +30,11 @@ export const config = {
     commonParams: {
       owner: 'Microsoft',
       repo: 'DefinitelyTyped',
-    }
+    },
+  },
+  comparison: {
+    percentDiffWarningThreshold: 0.1,
+    percentDiffSevereThreshold: 0.5,
+    percentDiffGoldStarThreshold: -0.25,
   },
 };
