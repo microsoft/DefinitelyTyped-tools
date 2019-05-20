@@ -4,6 +4,8 @@ import { PackageBenchmarkSummary, Document } from '../common';
 export interface Metric {
   columnName: string;
   sentenceName: string;
+  isUninteresting?: boolean;
+  higherIsBetter?: boolean;
   getValue: (x: Document<PackageBenchmarkSummary>) => number | undefined;
 }
 
@@ -48,11 +50,15 @@ export const metrics: { [K in MetricName]: Metric } = {
   samplesTaken: {
     columnName: 'Samples taken',
     sentenceName: 'number of samples taken',
+    isUninteresting: true,
+    higherIsBetter: true,
     getValue: x => Math.max(x.body.completions.trials, x.body.quickInfo.trials),
   },
   identifierCount: {
     columnName: 'Identifiers in tests',
     sentenceName: 'number of identifiers present in test files',
+    isUninteresting: true,
+    higherIsBetter: true,
     getValue: x => x.body.testIdentifierCount,
   },
   completionsMean: {

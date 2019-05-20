@@ -190,7 +190,7 @@ export async function measurePerf({
           if (i === 0) {
             const lineAndCharacter = ts.getLineAndCharacterOfPosition(sourceFile, start);
             const benchmark: LanguageServiceBenchmark = {
-              fileName: testPath,
+              fileName: path.relative(definitelyTypedRootPath, testPath),
               start,
               end: identifier.getEnd(),
               identifierText: identifier.getText(sourceFile),
