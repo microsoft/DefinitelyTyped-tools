@@ -330,6 +330,7 @@ interface RunWithListeningChildProcessesOptions<In> {
     readonly cwd: string;
     readonly crashRecovery?: boolean;
     readonly crashRecoveryMaxOldSpaceSize?: number;
+    readonly softTimeoutMs?: number;
     handleOutput(output: unknown, processIndex: number | undefined): void;
     handleStart?(input: In, processIndex: number | undefined): void;
     handleCrash?(input: In, state: CrashRecoveryState, processIndex: number | undefined): void;
@@ -337,7 +338,7 @@ interface RunWithListeningChildProcessesOptions<In> {
 export function runWithListeningChildProcesses<In>(
     { inputs, commandLineArgs, workerFile, nProcesses, cwd, handleOutput, crashRecovery,
       crashRecoveryMaxOldSpaceSize = DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE,
-      handleStart, handleCrash }: RunWithListeningChildProcessesOptions<In>,
+      handleStart, handleCrash, softTimeoutMs = Infinity }: RunWithListeningChildProcessesOptions<In>,
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         let inputIndex = 0;
@@ -345,6 +346,7 @@ export function runWithListeningChildProcesses<In>(
         let rejected = false;
         const runningChildren = new Set<ChildProcess>();
         const maxOldSpaceSize = getMaxOldSpaceSize(process.execArgv) || 0;
+        const startTime = Date.now();
         for (let i = 0; i < nProcesses; i++) {
             if (inputIndex === inputs.length) {
                 processesLeft--;
@@ -361,7 +363,7 @@ export function runWithListeningChildProcesses<In>(
                     const oldCrashRecoveryState = crashRecoveryState;
                     crashRecoveryState = CrashRecoveryState.Normal;
                     handleOutput(outputMessage as {}, processIndex);
-                    if (inputIndex === inputs.length) {
+                    if (inputIndex === inputs.length || Date.now() - startTime > softTimeoutMs) {
                         stopChild(/*done*/ true);
                     } else {
                         if (oldCrashRecoveryState !== CrashRecoveryState.Normal) {
@@ -419,7 +421,7 @@ export function runWithListeningChildProcesses<In>(
                             break;
                         case CrashRecoveryState.Crashed:
                             crashRecoveryState = CrashRecoveryState.Normal;
-                            if (inputIndex === inputs.length) {
+                            if (inputIndex === inputs.length || Date.now() - startTime > softTimeoutMs) {
                                 stopChild(/*done*/ true);
                             } else {
                                 restartChild(nextTask, process.execArgv);
