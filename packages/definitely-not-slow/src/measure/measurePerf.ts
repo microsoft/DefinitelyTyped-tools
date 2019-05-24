@@ -28,6 +28,7 @@ export interface MeasurePerfOptions {
   tsPath: string;
   ts: typeof import('typescript');
   batchRunStart: Date;
+  failOnErrors?: boolean;
 }
 
 export async function measurePerf({
@@ -44,6 +45,7 @@ export async function measurePerf({
   tsPath,
   ts,
   batchRunStart,
+  failOnErrors,
 }: MeasurePerfOptions) {
   let duration = NaN;
   const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' });
@@ -83,7 +85,7 @@ export async function measurePerf({
       commandLineArgs: [],
       workerFile: measureLanguageServiceWorkerFilename,
       nProcesses,
-      crashRecovery: true,
+      crashRecovery: !failOnErrors,
       cwd: process.cwd(),
       softTimeoutMs: maxRunSeconds * 1000,
       handleCrash: input => {

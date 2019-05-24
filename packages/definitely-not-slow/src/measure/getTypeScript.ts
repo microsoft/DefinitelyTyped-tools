@@ -6,13 +6,16 @@ const exists = promisify(fs.exists);
 export async function getTypeScript(
   version: string,
   localTypeScriptPath?: string,
+  install = true,
 ): Promise<{ ts: typeof import('typescript'), tsPath: string }> {
   const path = typeScriptPath(version, localTypeScriptPath);
-  if (version === 'next') {
-    await cleanInstalls();
-    await installNext();
-  } else if (!await exists(path)) {
-    await installAll();
+  if (install) {
+    if (version === 'next') {
+      await cleanInstalls();
+      await installNext();
+    } else if (!await exists(path)) {
+      await installAll();
+    }
   }
   if (!await exists(path)) {
     throw new Error(`Version ${version} is not available`);

@@ -21,6 +21,7 @@ export interface BenchmarkPackageOptions {
   printSummary: boolean;
   definitelyTypedPath: string;
   failOnErrors?: boolean;
+  installTypeScript?: boolean;
 }
 
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
@@ -51,6 +52,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     printSummary: assertBoolean(withDefault(args.printSummary, true), 'printSummary'),
     definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath')),
     failOnErrors: true,
+    installTypeScript: true,
   };
 }
 
@@ -83,8 +85,9 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     printSummary: shouldPrintSummary,
     definitelyTypedPath,
     failOnErrors,
+    installTypeScript,
   } = options;
-  const { ts, tsPath } = await getTypeScript(tsVersion.toString());
+  const { ts, tsPath } = await getTypeScript(tsVersion.toString(), undefined, installTypeScript);
   const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
   const benchmarks = await measurePerf({
     packageName,
@@ -100,6 +103,7 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     tsPath,
     ts,
     batchRunStart,
+    failOnErrors,
   });
 
   const summaries = benchmarks.map(summarize);
@@ -117,6 +121,6 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
         container);
     }));
   }
-  
+
   return benchmarks;
 }

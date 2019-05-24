@@ -12,8 +12,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     const { worst: worstCompletion } = completions;
     const { worst: worstQuickInfo } = quickInfo;
     const versionString = `Version ${benchmark.packageVersion}`;
-    console.log(os.EOL);
-    console.log(versionString);
+    console.log(os.EOL + versionString);
     console.log('-'.repeat(versionString.length));
     console.log('  Total duration (ms): ', benchmark.benchmarkDuration);
     console.log('  Type count:          ', benchmark.typeCount);
@@ -24,7 +23,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
       console.log('    Subtype:       ', benchmark.relationCacheSizes.subtype);
     }
     console.log('  Completions');
-    console.log('    Trials       ', `${completions.trials} (sampled from ${benchmark.testIdentifierCount})`);
+    console.log('    Trials       ', `${completions.trials} (sampled from ${benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations})`);
     console.log('    Mean (ms):   ', toPrecision(completions.mean, 6));
     console.log('    Median (ms): ', toPrecision(completions.median, 6));
     console.log('    Worst');
@@ -34,7 +33,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log('      Identifier:     ', worstCompletion.identifierText);
     console.log('      Location:       ', `${worstCompletion.fileName}(${worstCompletion.line},${worstCompletion.offset})`);
     console.log('  Quick Info');
-    console.log('    Trials       ', `${quickInfo.trials} (sampled from ${benchmark.testIdentifierCount})`);
+    console.log('    Trials       ', `${quickInfo.trials} (sampled from ${benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations})`);
     console.log('    Mean (ms):   ', toPrecision(quickInfo.mean, 6));
     console.log('    Median (ms): ', toPrecision(quickInfo.median, 6));
     console.log('    Worst');

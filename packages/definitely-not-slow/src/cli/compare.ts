@@ -7,6 +7,7 @@ import { benchmarkPackage } from './benchmark';
 import { execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { printSummary, summarize } from '../measure';
+import { getTypeScript } from '../measure/getTypeScript';
 
 export interface CompareOptions {
   allPackages: AllPackages;
@@ -25,6 +26,7 @@ export async function compare(args: Args) {
     return;
   }
 
+  getTypeScript(typeScriptVersionMajorMinor);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
   for (const affectedPackage of affectedPackages.changedPackages) {
     console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
@@ -84,43 +86,43 @@ export async function compareBenchmarks({
       needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
     }
     if (needsRerun) {
-      const head = await execAndThrowErrors('git rev-parse HEAD');
       console.log(`No previous benchmark for ${packageName}/${packageVersion}. Checking out master and running one...`);
       await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
       latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
-        printSummary: false,
+        printSummary: true,
         iterations: config.benchmarks.languageServiceIterations,
-        progress: false,
+        progress: true,
         upload: true,
         tsVersion: typeScriptVersionMajorMinor,
         nProcesses: os.cpus().length,
         failOnErrors: true,
+        installTypeScript: false,
       }))[0];
-      await execAndThrowErrors(`git checkout ${head}`);
+      await execAndThrowErrors(`git checkout -`);
     }
   }
 
   const currentBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
     definitelyTypedPath,
-    printSummary: false,
+    printSummary: true,
     iterations: config.benchmarks.languageServiceIterations,
-    progress: false,
+    progress: true,
     upload: false,
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,
     failOnErrors: true,
+    installTypeScript: false,
   }))[0];
 
   if (!latestBenchmark) {
     throw new Error('Failed to get a benchmark for master. This error should be impossible.');
   }
 
-  console.log('master');
-  console.log('======\n');
+  console.log('\nmaster');
+  console.log('======');
   console.log(printSummary('quickInfo' in latestBenchmark ? [latestBenchmark] : [summarize(latestBenchmark)]));
-  console.log('\n');
-  console.log('HEAD');
-  console.log('====\n');
+  console.log('\nHEAD');
+  console.log('====');
   console.log(printSummary([summarize(currentBenchmark)]));
 }
