@@ -43,8 +43,13 @@ export async function compare(args: Args) {
     }));
   }
 
-  if (shouldComment && comparisons.length) {
-    await postInitialComparisonResults(comparisons, affectedPackages.dependentPackages.length);
+  if (comparisons.length) {
+    const message = await postInitialComparisonResults({
+      comparisons,
+      dependentCount: affectedPackages.dependentPackages.length,
+      dryRun: !shouldComment,
+    });
+    console.log('\n' + message + '\n');
   }
 
   const dependentComparisons: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][] = [];
@@ -59,8 +64,9 @@ export async function compare(args: Args) {
     }));
   }
 
-  if (shouldComment && dependentComparisons.length) {
-    await postDependentsComparisonResult(dependentComparisons);
+  if (dependentComparisons.length) {
+    const message = await postDependentsComparisonResult({ comparisons: dependentComparisons, dryRun: !shouldComment });
+    console.log('\n' + message + '\n');
   }
 }
 
