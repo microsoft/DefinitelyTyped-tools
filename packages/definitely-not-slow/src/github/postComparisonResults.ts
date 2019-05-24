@@ -2,6 +2,7 @@ import { PackageBenchmarkSummary, Document, config, compact, systemsAreCloseEnou
 import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { metrics, Metric } from './metrics';
+import { createTable } from './createTable';
 
 export async function postComparisonResults(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
   const prNumber = parseInt(assertDefined(
