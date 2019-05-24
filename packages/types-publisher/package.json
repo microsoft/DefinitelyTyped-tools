@@ -13,7 +13,7 @@
     "azure-keyvault": "^3.0.4",
     "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
-    "definitelytyped-header-parser": "^1.1.0",
+    "definitelytyped-header-parser": "^1.2.0",
     "dtslint": "latest",
     "fs-extra": "4.0.0",
     "fstream": "^1.0.10",
