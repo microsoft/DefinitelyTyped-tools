@@ -44,7 +44,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     package: args.package ? assertString(args.package) : undefined,
     agentIndex: typeof args.agentIndex !== 'undefined' ? assertNumber(args.agentIndex, 'agentIndex') : undefined,
     upload: assertBoolean(withDefault(args.upload, true), 'upload'),
-    tsVersion: assertString(withDefault(args.tsVersion, 'next')),
+    tsVersion: withDefault(args.tsVersion, 'next').toString(),
     progress: assertBoolean(withDefault(args.progress, true), 'progress'),
     iterations: assertNumber(withDefault(args.iterations, 5), 'iterations'),
     nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length), 'nProcesses'),
