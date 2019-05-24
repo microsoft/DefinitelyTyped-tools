@@ -121,8 +121,12 @@ export function packageIdsAreEqual(a: PackageId, b?: PackageId): boolean | ((b: 
   }
 }
 
-export function isWithin(actual: number, expected: number, tolerance: number) {
-  return Math.abs((actual - expected) / expected) <= tolerance;
+export function getPercentDiff(actual: number, expected: number): number {
+  return (expected - actual) / expected;
+}
+
+export function isWithin(actual: number, expected: number, tolerance: number): boolean {
+  return Math.abs(getPercentDiff(actual, expected)) <= tolerance;
 }
 
 export function systemsAreCloseEnough(a: SystemInfo, b: SystemInfo, cpuSpeedTolerance = 0.1): boolean {
