@@ -29,7 +29,7 @@ export async function compare(args: Args) {
     return;
   }
 
-  getTypeScript(typeScriptVersionMajorMinor);
+  await getTypeScript(typeScriptVersionMajorMinor);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
   const comparisons: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][] = [];
   for (const affectedPackage of affectedPackages.changedPackages) {
