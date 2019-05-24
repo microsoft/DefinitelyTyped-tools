@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
-import { getDatabase, getParsedPackages, DatabaseAccessLevel, config, Document, PackageBenchmarkSummary, compact, Args, assertNumber, assertString, getSystemInfo, getChangedPackages, packageIdsAreEqual } from '../common';
-import { nAtATime, execAndThrowErrors } from 'types-publisher/bin/util/util';
-import { gitChanges } from 'types-publisher/bin/tester/test-runner';
+import { getDatabase, getParsedPackages, DatabaseAccessLevel, compact, Args, assertNumber, assertString, getSystemInfo, getChangedPackages, packageIdsAreEqual, systemsAreCloseEnough } from '../common';
+import { nAtATime } from 'types-publisher/bin/util/util';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
 import { PackageId } from 'types-publisher/bin/lib/packages';
 import { BenchmarkPackageOptions } from './benchmark';
@@ -56,7 +55,7 @@ export async function getPackagesToBenchmark(args: Args) {
     }
     
     // System specs are different; run it
-    if (result.system.hash !== currentSystem.hash) {
+    if (!systemsAreCloseEnough(result.system, currentSystem)) {
       console.log(`Queueing ${typingsData.id.name}/${typingsData.id.majorVersion} due to system change`);
       return typingsData.id;
     }

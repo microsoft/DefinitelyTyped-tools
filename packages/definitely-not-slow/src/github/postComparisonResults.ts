@@ -1,5 +1,5 @@
 import table from 'markdown-table';
-import { PackageBenchmarkSummary, Document, config, compact } from '../common';
+import { PackageBenchmarkSummary, Document, config, compact, systemsAreCloseEnough } from '../common';
 import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { metrics, Metric } from './metrics';
@@ -30,7 +30,7 @@ export async function postComparisonResults(a: Document<PackageBenchmarkSummary>
 }
 
 function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  return a.system.hash !== b.system.hash
+  return !systemsAreCloseEnough(a.system, b.system)
     ? `First off, note that the system varied slightly between these two runs, so you’ll have to take these measurements with a grain of salt.`
     : undefined;
 }

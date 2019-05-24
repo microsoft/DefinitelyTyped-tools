@@ -120,3 +120,21 @@ export function packageIdsAreEqual(a: PackageId, b?: PackageId): boolean | ((b: 
     return a.name === b.name && a.majorVersion === b.majorVersion;
   }
 }
+
+export function isWithin(actual: number, expected: number, tolerance: number) {
+  return Math.abs((actual - expected) / expected) <= tolerance;
+}
+
+export function systemsAreCloseEnough(a: SystemInfo, b: SystemInfo, cpuSpeedTolerance = 0.1): boolean {
+  if (a.hash === b.hash) {
+    return true;
+  }
+  return a.arch === b.arch
+    && a.platform === b.platform
+    && a.cpus.length === b.cpus.length
+    && a.cpus.every((cpu, index) => {
+      const otherCPU = b.cpus[index];
+      return cpu.model === otherCPU.model
+        && isWithin(cpu.speed, otherCPU.speed, cpuSpeedTolerance);
+    });
+}
