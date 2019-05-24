@@ -1,20 +1,17 @@
 import { createTable } from './createTable';
-import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document } from '../common';
+import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document, compact } from '../common';
 import { metrics, Metric } from './metrics';
 
-export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][], prNumber: number) {
-  if (pairs.length === 1) {
-    return createTable(pairs[0][0], pairs[0][1], prNumber);
-  }
-  return pairs.map(([before, after]) => [
-    `### ${before.body.packageName}/v${before.body.packageVersion}`,
+export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
+  return pairs.map(([before, after]) => compact([
+    pairs.length > 1 || alwaysWriteHeading ? `### ${before.body.packageName}/v${before.body.packageVersion}` : undefined,
     ``,
     createTable(before, after, prNumber),
     ``,
     getSystemMismatchMessage(before, after),
     ``,
     getInterestingMetricsMessage(before, after),
-  ].join('\n')).join('\n\n');
+  ]).join('\n')).join('\n\n');
 }
 
 function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {

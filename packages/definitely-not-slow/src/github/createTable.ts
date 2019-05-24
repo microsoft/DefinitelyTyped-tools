@@ -38,7 +38,7 @@ export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<Pa
     createRow('CPU speed', a, b, x => `${x.system.cpus[0].speed / 100} GHz`),
     createRow('CPU model', a, b, x => x.system.cpus[0].model),
     createRow('CPU Architecture', a, b, x => x.system.arch),
-    createRow('Memory', a, b, x => `${x.system.totalmem / 2 ** 30} GiB`),
+    createRow('Memory', a, b, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
     createRow('Platform', a, b, x => x.system.platform),
     createRow('Release', a, b, x => x.system.release),
   ]);
@@ -78,7 +78,7 @@ function createRow(
 }
 
 function formatDiff(percentDiff: number) {
-  const percentString = `${percentDiff > 0 ? '+' : ''}${percentDiff * 100}%`;
+  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100)}%`;
   if (percentDiff > config.comparison.percentDiffSevereThreshold) {
     return `**${percentString}** 🚨`;
   }
@@ -94,7 +94,7 @@ function formatDiff(percentDiff: number) {
 function format(x: string | number | undefined): string {
   switch (typeof x) {
     case 'string': return x;
-    case 'number': return isNaN(x) ? 'N/A' : x.toPrecision(3);
+    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(1);
     default: return '';
   }
 }

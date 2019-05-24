@@ -94,14 +94,15 @@ export async function measurePerf({
       },
       handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
         testMatrix.addMeasurement(measurement);
+        done++;
         if (progress) {
           updateProgress(
             `${packageName}/v${version}: benchmarking over ${nProcesses} processes`,
-            ++done,
+            done,
             testMatrix.inputs.length);
         } else if (Date.now() - lastUpdate > 1000 * 60 * 5) {
           // Log every 5 minutes or so to make sure Pipelines doesn’t shut us down
-          console.log((100 * done / testMatrix.inputs.length).toFixed(1) + ' done...');
+          console.log((100 * done / testMatrix.inputs.length).toFixed(1) + '% done...');
         }
       },
     });

@@ -20,6 +20,7 @@ export async function postDependentsComparisonResult({
     createTablesWithAnalysesMessage(
       comparisons,
       parseInt(process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER || '')),
+      true,
   ]).join('\n');
 
   if (!dryRun) {
