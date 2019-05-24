@@ -48,7 +48,7 @@ export async function measurePerf({
   failOnErrors,
 }: MeasurePerfOptions) {
   let duration = NaN;
-  const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' });
+  const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' }).trim();
   const observer = new PerformanceObserver(list => {
     const totalMeasurement = list.getEntriesByName('benchmark')[0];
     duration = totalMeasurement.duration;
