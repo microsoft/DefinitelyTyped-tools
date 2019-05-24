@@ -19,7 +19,7 @@ export function ensureExists(...pathNames: string[]): string {
   throw new Error(`File or directory does not exist: ${pathNamesPrint}`);
 }
 
-export type Args = { [key: string]: string | true | number };
+export type Args = { [key: string]: string | boolean | number };
 
 export function deserializeArgs(args: string[]): Args {
   const obj: Args = {};

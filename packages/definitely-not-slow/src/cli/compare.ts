@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmark, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmark, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber } from '../common';
 import { getLatestBenchmark } from '../query';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { benchmarkPackage } from './benchmark';
@@ -17,6 +17,7 @@ export interface CompareOptions {
   typeScriptVersionMajorMinor: string;
   packageName: string;
   packageVersion: number;
+  maxRunSeconds?: number;
 }
 
 export async function compare(args: Args) {
@@ -24,6 +25,7 @@ export async function compare(args: Args) {
   const typeScriptVersionMajorMinor = assertString(args.typeScriptVersion ? args.typeScriptVersion.toString() : undefined);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const changedPackages = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
+  const maxRunSeconds = args.maxRunSeconds ? assertNumber(args.maxRunSeconds) : undefined;
   const shouldComment = !!args.comment;
   if (!changedPackages) {
     return;
@@ -40,6 +42,7 @@ export async function compare(args: Args) {
       typeScriptVersionMajorMinor,
       packageName: affectedPackage.id.name,
       packageVersion: affectedPackage.major,
+      maxRunSeconds,
     }));
   }
 
@@ -61,6 +64,7 @@ export async function compare(args: Args) {
       typeScriptVersionMajorMinor,
       packageName: affectedPackage.id.name,
       packageVersion: affectedPackage.major,
+      maxRunSeconds,
     }));
   }
 
@@ -76,6 +80,7 @@ export async function compareBenchmarks({
   typeScriptVersionMajorMinor,
   packageName,
   packageVersion,
+  maxRunSeconds,
 }: CompareOptions): Promise<[Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>]> {
   const { container } = await getDatabase(DatabaseAccessLevel.Read);
   const latestBenchmarkDocument = await getLatestBenchmark({
@@ -108,12 +113,13 @@ export async function compareBenchmarks({
         definitelyTypedPath,
         printSummary: true,
         iterations: config.benchmarks.languageServiceIterations,
-        progress: true,
+        progress: false,
         upload: true,
         tsVersion: typeScriptVersionMajorMinor,
         nProcesses: os.cpus().length,
         failOnErrors: true,
         installTypeScript: false,
+        maxRunSeconds,
       }))[0]);
       await execAndThrowErrors(`git checkout -`);
     }
@@ -123,12 +129,13 @@ export async function compareBenchmarks({
     definitelyTypedPath,
     printSummary: true,
     iterations: config.benchmarks.languageServiceIterations,
-    progress: true,
+    progress: false,
     upload: false,
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,
     failOnErrors: true,
     installTypeScript: false,
+    maxRunSeconds,
   }))[0];
 
   if (!latestBenchmark) {

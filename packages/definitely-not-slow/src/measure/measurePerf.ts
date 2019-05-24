@@ -75,6 +75,7 @@ export async function measurePerf({
     const testPaths = getTestFileNames(commandLine.fileNames);
 
     let done = 0;
+    let lastUpdate = Date.now();
     const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
     if (progress) {
       updateProgress(`${packageName}/v${version}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
@@ -98,6 +99,9 @@ export async function measurePerf({
             `${packageName}/v${version}: benchmarking over ${nProcesses} processes`,
             ++done,
             testMatrix.inputs.length);
+        } else if (Date.now() - lastUpdate > 1000 * 60 * 5) {
+          // Log every 5 minutes or so to make sure Pipelines doesn’t shut us down
+          console.log((100 * done / testMatrix.inputs.length).toFixed(1) + ' done...');
         }
       },
     });
