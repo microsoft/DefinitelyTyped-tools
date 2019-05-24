@@ -1,32 +1,20 @@
-import { PackageBenchmarkSummary, Document, config, compact, systemsAreCloseEnough, getPercentDiff } from '../common';
-import { getOctokit } from './getOctokit';
-import { assertDefined } from 'types-publisher/bin/util/util';
-import { metrics, Metric } from './metrics';
 import { createTable } from './createTable';
+import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document } from '../common';
+import { metrics, Metric } from './metrics';
 
-export async function postComparisonResults(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  const prNumber = parseInt(assertDefined(
-    process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER,
-    `Required environment variable 'SYSTEM_PULLREQUEST_PULLREQUESTNUMBER' was not set.`), 10);
-
-  const octokit = getOctokit();
-  octokit.issues.createComment({
-    ...config.github.commonParams,
-    issue_number: prNumber,
-    body: compact([
-      `👋 **Hi there!** I’ve run some quick performance metrics against master and your PR. **This is still an experiment**, so don’t panic if I say something crazy! I’m still learning how to interpret these metrics. 😄`,
-      ``,
-      `Let’s review the numbers, shall we?`,
-      ``,
-      createTable(a, b, prNumber),
-      ``,
-      getSystemMismatchMessage(a, b),
-      ``,
-      getInterestingMetricsMessage(a, b),
-      ``,
-      'If you have any questions or comments about me, you can ping [`@andrewbranch`](https://github.com/andrewbranch). Have a nice day!'
-    ]).join('\n'),
-  });
+export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][], prNumber: number) {
+  if (pairs.length === 1) {
+    return createTable(pairs[0][0], pairs[0][1], prNumber);
+  }
+  return pairs.map(([before, after]) => [
+    `### ${before.body.packageName}/v${before.body.packageVersion}`,
+    ``,
+    createTable(before, after, prNumber),
+    ``,
+    getSystemMismatchMessage(before, after),
+    ``,
+    getInterestingMetricsMessage(before, after),
+  ].join('\n')).join('\n\n');
 }
 
 function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {

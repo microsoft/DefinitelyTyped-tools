@@ -1,10 +1,9 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import { createHash } from 'crypto';
-import { exec } from 'child_process';
 import { promisify } from 'util';
-import { SystemInfo } from './types';
-import { AllPackages, PackageId } from 'types-publisher/bin/lib/packages';
+import { SystemInfo, Document } from './types';
+import { PackageId } from 'types-publisher/bin/lib/packages';
 import { execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
 
@@ -141,4 +140,13 @@ export function systemsAreCloseEnough(a: SystemInfo, b: SystemInfo, cpuSpeedTole
       return cpu.model === otherCPU.model
         && isWithin(cpu.speed, otherCPU.speed, cpuSpeedTolerance);
     });
+}
+
+export function createDocument<T>(body: T, version: number): Document<T> {
+  return {
+    version,
+    createdAt: new Date(),
+    system: getSystemInfo(),
+    body,
+  };
 }
