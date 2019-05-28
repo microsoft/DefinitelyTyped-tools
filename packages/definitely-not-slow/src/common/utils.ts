@@ -31,7 +31,8 @@ export function deserializeArgs(args: string[]): Args {
         obj[arg.slice(2)] = true;
       } else {
         const numberArg = parseFloat(nextArg);
-        obj[arg.slice(2)] = isNaN(numberArg) ? nextArg : numberArg;
+        const boolArg = nextArg === 'true' ? true : nextArg === 'false' ? false : undefined;
+        obj[arg.slice(2)] = boolArg || (isNaN(numberArg) ? nextArg : numberArg);
         i++;
       }
     }

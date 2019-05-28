@@ -1,7 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { PackageId, AllPackages } from "types-publisher/bin/lib/packages";
-import { getDatabase, DatabaseAccessLevel, Document, PackageBenchmarkSummary, getChangedPackages, packageIdsAreEqual, getParsedPackages, config, toPackageKey, parsePackageKey, createDocument, Args, assertString, withDefault, assertNumber, assertDefined } from "../common";
+import { getDatabase, DatabaseAccessLevel, Document, PackageBenchmarkSummary, getChangedPackages, packageIdsAreEqual, getParsedPackages, config, toPackageKey, parsePackageKey, createDocument, Args, assertString, withDefault, assertNumber, assertDefined, assertBoolean } from "../common";
 import { Container, Response } from "@azure/cosmos";
 import { FS } from "types-publisher/bin/get-definitely-typed";
 import { benchmarkPackage } from "./benchmark";
@@ -15,6 +15,7 @@ export interface CompareTypeScriptOptions {
   packages?: PackageId[];
   maxRunSeconds?: number;
   typeScriptPath?: string;
+  upload: boolean;
 }
 
 function convertArgs(args: Args): CompareTypeScriptOptions {
@@ -24,6 +25,7 @@ function convertArgs(args: Args): CompareTypeScriptOptions {
     typeScriptPath:  assertString(withDefault(args.typeScriptPath, path.resolve('built/local')), 'typeScriptPath'),
     packages: args.packages ? assertString(args.packages, 'packages').split(',').map(p => parsePackageKey(p.trim())) : undefined,
     maxRunSeconds: args.maxRunSeconds ? assertNumber(args.maxRunSeconds, 'maxRunSeconds') : undefined,
+    upload: assertBoolean(withDefault(args.upload, true), 'upload'),
   };
 }
 
@@ -37,6 +39,7 @@ export async function compareTypeScript({
   packages,
   maxRunSeconds,
   typeScriptPath,
+  upload,
 }: CompareTypeScriptOptions) {
   await getTypeScript(compareAgainstMajorMinor);
   const getAllPackages = createGetAllPackages(definitelyTypedPath);
@@ -56,7 +59,7 @@ export async function compareTypeScript({
         nProcesses: os.cpus().length,
         printSummary: true,
         progress: false,
-        upload: true,
+        upload,
         installTypeScript: false,
         maxRunSeconds,
       }))[0]), config.database.packageBenchmarksDocumentSchemaVersion);
@@ -70,7 +73,7 @@ export async function compareTypeScript({
       nProcesses: os.cpus().length,
       printSummary: true,
       progress: false,
-      upload: true,
+      upload: false,
       installTypeScript: false,
       maxRunSeconds,
     }))[0]), config.database.packageBenchmarksDocumentSchemaVersion);
