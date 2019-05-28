@@ -22,6 +22,7 @@ export interface BenchmarkPackageOptions {
   definitelyTypedPath: string;
   failOnErrors?: boolean;
   installTypeScript?: boolean;
+  localTypeScriptPath?: string;
 }
 
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
@@ -53,6 +54,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     definitelyTypedPath: path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath')),
     failOnErrors: true,
     installTypeScript: true,
+    localTypeScriptPath: assertString(withDefault(args.localTypeScriptPath, path.resolve('built/local')), 'localTypeScriptPath'),
   };
 }
 
@@ -86,8 +88,9 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     definitelyTypedPath,
     failOnErrors,
     installTypeScript,
+    localTypeScriptPath,
   } = options;
-  const { ts, tsPath } = await getTypeScript(tsVersion.toString(), undefined, installTypeScript);
+  const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
   const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
   const benchmarks = await measurePerf({
     packageName,

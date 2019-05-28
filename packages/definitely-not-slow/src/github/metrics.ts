@@ -1,11 +1,17 @@
 import { mean } from '../measure/utils';
 import { PackageBenchmarkSummary, Document } from '../common';
 
+export interface FormatOptions {
+  noDiff?: boolean;
+  precision?: number;
+}
+
 export interface Metric {
   columnName: string;
   sentenceName: string;
   isUninteresting?: boolean;
   higherIsBetter?: boolean;
+  formatOptions?: FormatOptions;
   getValue: (x: Document<PackageBenchmarkSummary>) => number | undefined;
 }
 
@@ -30,26 +36,31 @@ export const metrics: { [K in MetricName]: Metric } = {
   typeCount: {
     columnName: 'Type count',
     sentenceName: 'type count',
+    formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
   },
   assignabilityCacheSize: {
     columnName: 'Assignability cache size',
     sentenceName: 'assignability cache size',
+    formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
   },
   subtypeCacheSize: {
     columnName: 'Subtype cache size',
     sentenceName: 'subtype cache size',
+    formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.subtype,
   },
   identityCacheSize: {
     columnName: 'Identity cache size',
     sentenceName: 'identity cache size',
+    formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.identity,
   },
   samplesTaken: {
     columnName: 'Samples taken',
     sentenceName: 'number of samples taken',
+    formatOptions: { precision: 0 },
     isUninteresting: true,
     higherIsBetter: true,
     getValue: x => Math.max(x.body.completions.trials, x.body.quickInfo.trials),
@@ -57,6 +68,7 @@ export const metrics: { [K in MetricName]: Metric } = {
   identifierCount: {
     columnName: 'Identifiers in tests',
     sentenceName: 'number of identifiers present in test files',
+    formatOptions: { precision: 0 },
     isUninteresting: true,
     higherIsBetter: true,
     getValue: x => x.body.testIdentifierCount,

@@ -1,10 +1,10 @@
 import table from 'markdown-table';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
-import { metrics, Metric } from './metrics';
+import { metrics, Metric, FormatOptions } from './metrics';
 
-export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, prNumber: number) {
+export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, leftTitle: string, rightTitle: string) {
   return table([
-    ['', 'master', `#${prNumber}`, 'diff'],
+    ['', leftTitle, rightTitle, 'diff'],
     ['**Batch compilation**'],
     createRowFromMetric(metrics.typeCount, a, b),
     createRowFromMetric(metrics.assignabilityCacheSize, a, b),
@@ -34,8 +34,8 @@ export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<Pa
       x.body.quickInfo.worst.fileName,
       x.body.quickInfo.worst.line)),
     ['**System information**'],
-    createRow('CPU count', a, b, x => x.system.cpus.length),
-    createRow('CPU speed', a, b, x => `${x.system.cpus[0].speed / 100} GHz`),
+    createRow('CPU count', a, b, x => x.system.cpus.length, { precision: 0 }),
+    createRow('CPU speed', a, b, x => `${x.system.cpus[0].speed / 1000} GHz`),
     createRow('CPU model', a, b, x => x.system.cpus[0].model),
     createRow('CPU Architecture', a, b, x => x.system.arch),
     createRow('Memory', a, b, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
@@ -44,16 +44,12 @@ export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<Pa
   ]);
 }
 
-interface DiffOptions {
-  noDiff?: boolean;
-}
-
 function sourceLink(text: string, sourceVersion: string, fileName: string, line: number) {
-  return `[${text}](/${config.github.commonParams.owner}/${config.github.commonParams.repo}/blob/${sourceVersion}/${fileName}#L${line})`;
+  return `[${text}](/${config.github.commonParams.owner}/${config.github.commonParams.repo}/blob/${sourceVersion.replace('\n', '')}/${fileName}#L${line})`;
 }
 
 function createRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  return createRow(metric.columnName, a, b, metric.getValue);
+  return createRow(metric.columnName, a, b, metric.getValue, metric.formatOptions);
 }
 
 function createRow(
@@ -61,24 +57,24 @@ function createRow(
   a: Document<PackageBenchmarkSummary>,
   b: Document<PackageBenchmarkSummary>,
   getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
-  diffOptions: DiffOptions = {},
+  formatOptions: FormatOptions = {},
 ) {
   const aValue = getValue(a);
   const bValue = getValue(b);
-  const percentDiff = !diffOptions.noDiff && typeof aValue === 'number' && typeof bValue === 'number' && !isNaN(bValue) && !isNaN(bValue)
-    ? getPercentDiff(aValue, bValue)
+  const percentDiff = !formatOptions.noDiff && typeof aValue === 'number' && typeof bValue === 'number' && !isNaN(bValue) && !isNaN(bValue)
+    ? getPercentDiff(bValue, aValue)
     : undefined;
   
   return [
     `**${title}**`,
-    format(aValue),
-    format(bValue),
-    typeof percentDiff === 'number' ? formatDiff(percentDiff) : '',
+    format(aValue, formatOptions.precision),
+    format(bValue, formatOptions.precision),
+    typeof percentDiff === 'number' ? formatDiff(percentDiff, formatOptions.precision) : '',
   ];
 }
 
-function formatDiff(percentDiff: number) {
-  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100)}%`;
+function formatDiff(percentDiff: number, precision?: number) {
+  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100, precision)}%`;
   if (percentDiff > config.comparison.percentDiffSevereThreshold) {
     return `**${percentString}** 🚨`;
   }
@@ -91,10 +87,10 @@ function formatDiff(percentDiff: number) {
   return percentString;
 }
 
-function format(x: string | number | undefined): string {
+function format(x: string | number | undefined, precision = 1): string {
   switch (typeof x) {
     case 'string': return x;
-    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(1);
+    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision);
     default: return '';
   }
 }

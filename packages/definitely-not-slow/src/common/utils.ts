@@ -68,6 +68,13 @@ export function assertBoolean(input: any, name?: string): boolean {
   return input;
 }
 
+export function assertDefined<T>(input: T | null | undefined, name?: string): T {
+  if (input == undefined) {
+    throw new Error(`Expected a string for input${name ? ` '${name}'` : ''} but received ${typeof input}`);
+  }
+  return input;
+}
+
 export function withDefault<T>(input: T, defaultValue: T): T {
   return typeof input === 'undefined' ? defaultValue : input;
 }
@@ -149,4 +156,19 @@ export function createDocument<T>(body: T, version: number): Document<T> {
     system: getSystemInfo(),
     body,
   };
+}
+
+export function parsePackageKey(key: string): PackageId {
+  const [name, version] = key.split('/');
+  return {
+    name,
+    majorVersion: parseInt(version.replace(/^v/, '')) || '*' as const,
+  };
+}
+
+export function toPackageKey(name: string, majorVersion: string): string;
+export function toPackageKey(packageId: PackageId): string;
+export function toPackageKey(packageIdOrName: string | PackageId, majorVersion?: string) {
+  const { name, majorVersion: version } = typeof packageIdOrName === 'string' ? { name: packageIdOrName, majorVersion } : packageIdOrName;
+  return `${name}/v${version}`;
 }

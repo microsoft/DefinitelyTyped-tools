@@ -6,7 +6,7 @@ export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmar
   return pairs.map(([before, after]) => compact([
     pairs.length > 1 || alwaysWriteHeading ? `### ${before.body.packageName}/v${before.body.packageVersion}` : undefined,
     ``,
-    createTable(before, after, prNumber),
+    createTable(before, after, 'master', `#${prNumber}`),
     ``,
     getSystemMismatchMessage(before, after),
     ``,
@@ -41,7 +41,7 @@ function getInterestingMetrics(a: Document<PackageBenchmarkSummary>, b: Document
     }
     const aValue = metric.getValue(a);
     const bValue = metric.getValue(b);
-    const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(aValue, bValue);
+    const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
     const comparisonValue = percentDiff && metric.higherIsBetter ? percentDiff * -1 : percentDiff;
     const isGood = comparisonValue < config.comparison.percentDiffGoldStarThreshold;
     if (percentDiff && comparisonValue && (comparisonValue > config.comparison.percentDiffWarningThreshold || isGood)) {

@@ -2,6 +2,7 @@ import { deserializeArgs } from '../common';
 import { benchmark } from './benchmark';
 import { getPackagesToBenchmark } from './getPackagesToBenchmark';
 import { compare } from './compare';
+import { compareTypeScriptCLI } from './compareTypeScript';
 
 
 const entry = process.argv[2];
@@ -15,6 +16,8 @@ const args = deserializeArgs(process.argv.slice(3));
         return getPackagesToBenchmark(args);
       case 'compare':
         return compare(args);
+      case 'compareTypeScript':
+        return compareTypeScriptCLI(args);
       default:
         console.error(`Unrecognized entry '${entry}'`);
     }
