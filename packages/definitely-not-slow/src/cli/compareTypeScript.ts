@@ -1,13 +1,14 @@
 import * as os from 'os';
 import * as path from 'path';
 import { PackageId, AllPackages } from "types-publisher/bin/lib/packages";
-import { getDatabase, DatabaseAccessLevel, Document, PackageBenchmarkSummary, getChangedPackages, packageIdsAreEqual, getParsedPackages, config, toPackageKey, parsePackageKey, createDocument, Args, assertString, withDefault, assertNumber, assertDefined, assertBoolean } from "../common";
+import { getDatabase, DatabaseAccessLevel, Document, PackageBenchmarkSummary, getChangedPackages, packageIdsAreEqual, getParsedPackages, config, toPackageKey, parsePackageKey, createDocument, Args, assertString, withDefault, assertNumber, assertDefined, assertBoolean, getSystemInfo, systemsAreCloseEnough } from "../common";
 import { Container, Response } from "@azure/cosmos";
 import { FS } from "types-publisher/bin/get-definitely-typed";
 import { benchmarkPackage } from "./benchmark";
 import { getTypeScript } from '../measure/getTypeScript';
 import { summarize } from '../measure';
 import { postTypeScriptComparisonResults } from '../github/postTypeScriptComparisonResult';
+const currentSystem = getSystemInfo();
 
 export interface CompareTypeScriptOptions {
   compareAgainstMajorMinor: string;
@@ -108,6 +109,11 @@ async function getPackagesToTestAndPriorResults(container: Container, typeScript
       continue;
     }
 
+    if (!systemsAreCloseEnough(result.system, currentSystem)) {
+      console.log(`Skipping ${packageKey} because the system is too different`);
+      continue;
+    }
+
     const candidate = packages.get(packageKey);
     if (candidate && candidate.createdAt > result.createdAt) {
       continue;
@@ -118,16 +124,13 @@ async function getPackagesToTestAndPriorResults(container: Container, typeScript
     if (changedPackages && changedPackages.some(packageIdsAreEqual(packageId))) {
       console.log(`Skipping ${packageKey} because it changed`);
       continue;
-    } else if (!changedPackages) {
-      packages.set(packageKey, result);
-      continue;
-    }
-
-    const { allPackages } = await getAllPackages();
-    const dependencies = allPackages.getTypingsData(packageId).dependencies;
-    if (dependencies.some(dep => changedPackages.some(packageIdsAreEqual(dep)))) {
-      console.log(`Skipping ${packageKey} because one or more of its dependencies changed`);
-      continue;
+    } else if (changedPackages) {
+      const { allPackages } = await getAllPackages();
+      const dependencies = allPackages.getTypingsData(packageId).dependencies;
+      if (dependencies.some(dep => changedPackages.some(packageIdsAreEqual(dep)))) {
+        console.log(`Skipping ${packageKey} because one or more of its dependencies changed`);
+        continue;
+      }
     }
 
     packages.set(packageKey, result);
