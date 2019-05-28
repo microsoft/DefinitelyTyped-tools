@@ -109,13 +109,13 @@ async function getPackagesToTestAndPriorResults(container: Container, typeScript
       continue;
     }
 
-    if (!systemsAreCloseEnough(result.system, currentSystem)) {
-      console.log(`Skipping ${packageKey} because the system is too different`);
+    const candidate = packages.get(packageKey);
+    if (candidate && candidate.createdAt > result.createdAt) {
       continue;
     }
 
-    const candidate = packages.get(packageKey);
-    if (candidate && candidate.createdAt > result.createdAt) {
+    if (!systemsAreCloseEnough(result.system, currentSystem)) {
+      console.log(`Skipping ${packageKey} because the system is too different`);
       continue;
     }
 
