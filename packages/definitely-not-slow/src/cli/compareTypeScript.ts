@@ -23,7 +23,7 @@ function convertArgs(args: Args): CompareTypeScriptOptions {
     compareAgainstMajorMinor: assertDefined(args.compareAgainstMajorMinor, 'compareAgainstMajorMinor').toString(),
     definitelyTypedPath: assertString(args.definitelyTypedPath, 'definitelyTypedPath'),
     typeScriptPath:  assertString(withDefault(args.typeScriptPath, path.resolve('built/local')), 'typeScriptPath'),
-    packages: args.packages ? assertString(args.packages, 'packages').split(',').map(p => parsePackageKey(p.trim())) : undefined,
+    packages: args.packages === true ? undefined : args.packages ? assertString(args.packages, 'packages').split(',').map(p => parsePackageKey(p.trim())) : undefined,
     maxRunSeconds: args.maxRunSeconds ? assertNumber(args.maxRunSeconds, 'maxRunSeconds') : undefined,
     upload: assertBoolean(withDefault(args.upload, true), 'upload'),
   };
