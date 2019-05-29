@@ -65,7 +65,7 @@ export async function compareTypeScript({
 }: CompareTypeScriptOptions) {
   await getTypeScript(compareAgainstMajorMinor);
   const getAllPackages = createGetAllPackages(definitelyTypedPath);
-  const { packageBenchmarks, typeScriptComparisons } = await getDatabase(upload ? DatabaseAccessLevel.Write : DatabaseAccessLevel.Read);
+  const { packageBenchmarks, typeScriptComparisons } = await getDatabase(upload && !outFile ? DatabaseAccessLevel.Write : DatabaseAccessLevel.Read);
   const agentIndex = groups && assertDefined(opts.agentIndex, 'agentIndex');
   const priorResults = groups
     ? new Map<string, QueryResult<Document<PackageBenchmarkSummary>>>(Object.keys(groups[agentIndex!]).map(key => [key, deserializeSummary(groups[agentIndex!][key])] as const))
