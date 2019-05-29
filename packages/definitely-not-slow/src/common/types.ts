@@ -88,7 +88,7 @@ type Serializable<T extends {}> = {
     T[K] extends boolean ? boolean :
     T[K] extends Date ? string :
     T[K] extends ReadonlyArray<infer U> ? Serializable<U>[] :
-    T[K] extends {} ? Serializable<T> :
+    T[K] extends {} ? Serializable<T[K]> :
     never;
 };
 

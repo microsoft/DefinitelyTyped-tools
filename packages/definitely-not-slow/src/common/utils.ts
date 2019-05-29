@@ -2,7 +2,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { createHash } from 'crypto';
 import { promisify } from 'util';
-import { SystemInfo, Document } from './types';
+import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary } from './types';
 import { PackageId } from 'types-publisher/bin/lib/packages';
 import { execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
@@ -172,4 +172,15 @@ export function toPackageKey(packageId: PackageId): string;
 export function toPackageKey(packageIdOrName: string | PackageId, majorVersion?: string) {
   const { name, majorVersion: version } = typeof packageIdOrName === 'string' ? { name: packageIdOrName, majorVersion } : packageIdOrName;
   return `${name}/v${version}`;
+}
+
+export function deserializeSummary(doc: JSONDocument<PackageBenchmarkSummary>): Document<PackageBenchmarkSummary> {
+  return {
+    ...doc,
+    createdAt: new Date(doc.createdAt),
+    body: {
+      ...doc.body,
+      batchRunStart: new Date(doc.body.batchRunStart),
+    },
+  };
 }
