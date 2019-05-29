@@ -129,7 +129,7 @@ export function packageIdsAreEqual(a: PackageId, b?: PackageId): boolean | ((b: 
 }
 
 export function getPercentDiff(actual: number, expected: number): number {
-  return (expected - actual) / expected;
+  return (actual - expected) / expected;
 }
 
 export function isWithin(actual: number, expected: number, tolerance: number): boolean {
