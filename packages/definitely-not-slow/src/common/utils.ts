@@ -71,7 +71,7 @@ export function assertBoolean(input: any, name?: string): boolean {
 
 export function assertDefined<T>(input: T | null | undefined, name?: string): T {
   if (input == undefined) {
-    throw new Error(`Expected a string for input${name ? ` '${name}'` : ''} but received ${typeof input}`);
+    throw new Error(`Expected ${name ? ` '${name}'` : ''} to be defined`);
   }
   return input;
 }

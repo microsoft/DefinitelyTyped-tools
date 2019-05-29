@@ -80,3 +80,21 @@ export interface Document<T> {
   system: SystemInfo;
   body: T;
 }
+
+type Serializable<T extends {}> = {
+  [K in keyof T]:
+    T[K] extends string ? string :
+    T[K] extends number ? number :
+    T[K] extends boolean ? boolean :
+    T[K] extends Date ? string :
+    T[K] extends ReadonlyArray<infer U> ? Serializable<U>[] :
+    T[K] extends {} ? Serializable<T> :
+    never;
+};
+
+export interface JSONDocument<T extends {}> {
+  version: number;
+  createdAt: string;
+  system: SystemInfo;
+  body: Serializable<T>;
+}
