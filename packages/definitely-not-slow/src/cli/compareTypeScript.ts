@@ -102,7 +102,12 @@ export async function compareTypeScript({
     const { name, majorVersion } = parsePackageKey(packageKey);
     let priorResult: Document<PackageBenchmarkSummary> | QueryResult<Document<PackageBenchmarkSummary>> | undefined = priorResults.get(packageKey);
     let priorResultId = priorResult && 'id' in priorResult && priorResult.id;
-    if (!priorResult) {
+    if (priorResult) {
+      if (!systemsAreCloseEnough(currentSystem, priorResult.system)) {
+        console.log(`Skipping ${packageKey} because the system is too different`);
+        continue;
+      }
+    } else {
       const { id, summary } = await benchmarkPackage(name, majorVersion.toString(), now, {
         definitelyTypedPath,
         iterations: config.benchmarks.languageServiceIterations,
@@ -176,11 +181,6 @@ async function getPackagesToTestAndPriorResults(container: Container, typeScript
 
     const candidate = packages.get(packageKey);
     if (candidate && candidate.createdAt > result.createdAt) {
-      continue;
-    }
-
-    if (!systemsAreCloseEnough(result.system, currentSystem)) {
-      console.log(`Skipping ${packageKey} because the system is too different`);
       continue;
     }
 
