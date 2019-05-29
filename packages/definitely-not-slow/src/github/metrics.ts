@@ -4,6 +4,7 @@ import { PackageBenchmarkSummary, Document } from '../common';
 export interface FormatOptions {
   noDiff?: boolean;
   precision?: number;
+  indent?: number;
 }
 
 export interface Metric {

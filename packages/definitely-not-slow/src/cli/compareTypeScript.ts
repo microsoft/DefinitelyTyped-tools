@@ -8,7 +8,6 @@ import { Container, Response } from "@azure/cosmos";
 import { FS } from "types-publisher/bin/get-definitely-typed";
 import { benchmarkPackage } from "./benchmark";
 import { getTypeScript } from '../measure/getTypeScript';
-import { summarize } from '../measure';
 import { postTypeScriptComparisonResults } from '../github/postTypeScriptComparisonResult';
 import { insertDocument } from '../write';
 const writeFile = promisify(fs.writeFile);
