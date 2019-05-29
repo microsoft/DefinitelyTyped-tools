@@ -2,7 +2,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { getDatabase, DatabaseAccessLevel, config, getParsedPackages, assertString, assertBoolean, withDefault, assertNumber, getSystemInfo } from '../common';
 import { getTypeScript } from '../measure/getTypeScript';
-import { insertPackageBenchmark } from '../write';
+import { insertDocument } from '../write';
 import { summarize, printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
 import { PackageId } from 'types-publisher/bin/lib/packages';
@@ -91,14 +91,13 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     localTypeScriptPath,
   } = options;
   const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
-  const { allPackages, definitelyTypedFS } = await getParsedPackages(definitelyTypedPath);
-  const benchmarks = await measurePerf({
+  const { allPackages } = await getParsedPackages(definitelyTypedPath);
+  const benchmark = await measurePerf({
     packageName,
-    packageVersion: packageVersion ? packageVersion.replace(/^v/, '') : undefined,
+    packageVersion: packageVersion.replace(/^v/, ''),
     allPackages,
     iterations,
     progress,
-    definitelyTypedFS,
     definitelyTypedRootPath: definitelyTypedPath,
     typeScriptVersion: ts.version,
     maxRunSeconds,
@@ -109,21 +108,21 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     failOnErrors,
   });
 
-  const summaries = benchmarks.map(summarize);
+  const summary = summarize(benchmark);
 
   if (shouldPrintSummary) {
-    printSummary(summaries);
+    printSummary([summary]);
   }
 
   if (upload) {
-    const { container } = await getDatabase(DatabaseAccessLevel.Write);
-    await Promise.all(summaries.map(summary => {
-      return insertPackageBenchmark(
-        summary,
-        config.database.packageBenchmarksDocumentSchemaVersion,
-        container);
-    }));
+    const { packageBenchmarks } = await getDatabase(DatabaseAccessLevel.Write);
+    const item = await insertDocument(
+      summary,
+      config.database.packageBenchmarksDocumentSchemaVersion,
+      packageBenchmarks);
+    
+    return { benchmark, summary, id: item.id };
   }
 
-  return benchmarks;
+  return { benchmark, summary, id: undefined };
 }

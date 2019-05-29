@@ -8,6 +8,8 @@ export const config = {
     benchmarksDatabaseId: 'benchmarks',
     packageBenchmarksContainerId: 'packageBenchmarks',
     packageBenchmarksDocumentSchemaVersion: 1,
+    typeScriptComparisonsContainerId: 'typeScriptComparisons',
+    typeScriptComparisonsDocumentSchemaVersion: 1,
     endpoint: 'https://dt-perf.documents.azure.com:443/',
     get writeKey() {
       return assertDefined(

@@ -40,7 +40,7 @@ export async function getPackagesToBenchmark(args: Args) {
     outFile,
   } = convertArgs(args);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
-  const { container } = await getDatabase(DatabaseAccessLevel.Read);
+  const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const changedPackages = await nAtATime(10, allPackages.allTypings(), async typingsData => {
     const result = await getLatestBenchmark({
       container,

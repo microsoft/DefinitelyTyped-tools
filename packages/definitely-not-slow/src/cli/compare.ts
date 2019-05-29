@@ -82,7 +82,7 @@ export async function compareBenchmarks({
   packageVersion,
   maxRunSeconds,
 }: CompareOptions): Promise<[Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>]> {
-  const { container } = await getDatabase(DatabaseAccessLevel.Read);
+  const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const latestBenchmarkDocument = await getLatestBenchmark({
     container,
     typeScriptVersionMajorMinor,
@@ -109,7 +109,7 @@ export async function compareBenchmarks({
     if (needsRerun) {
       console.log(`No previous benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`);
       await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
-      latestBenchmark = summarize((await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+      latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: true,
         iterations: config.benchmarks.languageServiceIterations,
@@ -120,7 +120,7 @@ export async function compareBenchmarks({
         failOnErrors: true,
         installTypeScript: false,
         maxRunSeconds,
-      }))[0]);
+      })).summary;
       await execAndThrowErrors(`git checkout -`);
     }
   }
@@ -136,21 +136,20 @@ export async function compareBenchmarks({
     failOnErrors: true,
     installTypeScript: false,
     maxRunSeconds,
-  }))[0];
+  })).summary;
 
   if (!latestBenchmark) {
     throw new Error('Failed to get a benchmark for master. This error should be impossible.');
   }
 
-  const currentBenchmarkSummary = summarize(currentBenchmark);
   console.log('\nmaster');
   console.log('======');
   console.log(printSummary([latestBenchmark]));
   console.log('\nHEAD');
   console.log('====');
-  console.log(printSummary([currentBenchmarkSummary]));
+  console.log(printSummary([currentBenchmark]));
   return [
     latestBenchmarkDocument || createDocument(latestBenchmark, config.database.packageBenchmarksDocumentSchemaVersion),
-    createDocument(currentBenchmarkSummary, config.database.packageBenchmarksDocumentSchemaVersion),
+    createDocument(currentBenchmark, config.database.packageBenchmarksDocumentSchemaVersion),
   ];
 }

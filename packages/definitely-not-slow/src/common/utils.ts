@@ -2,10 +2,11 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { createHash } from 'crypto';
 import { promisify } from 'util';
-import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary } from './types';
+import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult } from './types';
 import { PackageId } from 'types-publisher/bin/lib/packages';
 import { execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { gitChanges } from 'types-publisher/bin/tester/test-runner';
+import { execSync } from 'child_process';
 
 export const pathExists = promisify(fs.exists);
 
@@ -174,6 +175,7 @@ export function toPackageKey(packageIdOrName: string | PackageId, majorVersion?:
   return `${name}/v${version}`;
 }
 
+export function deserializeSummary(doc: QueryResult<JSONDocument<PackageBenchmarkSummary>>): QueryResult<Document<PackageBenchmarkSummary>>;
 export function deserializeSummary(doc: JSONDocument<PackageBenchmarkSummary>): Document<PackageBenchmarkSummary> {
   return {
     ...doc,
@@ -183,4 +185,8 @@ export function deserializeSummary(doc: JSONDocument<PackageBenchmarkSummary>): 
       batchRunStart: new Date(doc.body.batchRunStart),
     },
   };
+}
+
+export function getSourceVersion(cwd: string) {
+  return execSync('git rev-parse HEAD', { cwd, encoding: 'utf8' }).trim()
 }

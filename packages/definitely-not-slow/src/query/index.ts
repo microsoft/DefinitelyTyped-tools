@@ -1,5 +1,5 @@
 import { Container } from '@azure/cosmos';
-import { config, PackageBenchmarkSummary, Document } from '../common';
+import { config, PackageBenchmarkSummary, Document, QueryResult } from '../common';
 
 export interface GetLatestBenchmarkOptions {
   container: Container;
@@ -13,7 +13,7 @@ export async function getLatestBenchmark({
   packageName,
   packageVersion,
   typeScriptVersionMajorMinor,
-}: GetLatestBenchmarkOptions): Promise<Document<PackageBenchmarkSummary> | undefined> {
+}: GetLatestBenchmarkOptions): Promise<QueryResult<Document<PackageBenchmarkSummary>> | undefined> {
   const response = await container.items.query({
     query:
       `SELECT TOP 1 * FROM ${config.database.packageBenchmarksContainerId} b` +
