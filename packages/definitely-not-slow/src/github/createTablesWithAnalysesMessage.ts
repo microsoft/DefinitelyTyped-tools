@@ -7,6 +7,8 @@ export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmar
     pairs.length > 1 || alwaysWriteHeading ? `### ${after.body.packageName}/v${after.body.packageVersion}` : undefined,
     getIntroMessage(before, after),
     ``,
+    getLanguageServiceCrashMessage(after),
+    ``,
     before
       ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))
       : createSingleRunTable(after),
@@ -39,6 +41,15 @@ function getIntroMessage(before: Document<PackageBenchmarkSummary> | undefined, 
     return `These typings are for a version of ${before.body.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.body.packageVersion}.`;
   }
   return `These typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to ${after.body.packageName} with its source on master.`;
+}
+
+function getLanguageServiceCrashMessage(benchmark: Document<PackageBenchmarkSummary>) {
+  if (benchmark.body.languageServiceCrashed) {
+    return `Before we get into it, I need to mention that **the language service crashed** while taking these measurements. ` +
+      `This isn’t your fault—on the contrary, you helped us find a probably TypeScript bug! But, be aware that these results ` +
+      `may or may not be quite what they should be, depending on how many locations in your tests caused a crash. Paging ` +
+      `@andrewbranch to investigate.`;
+  }
 }
 
 function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
