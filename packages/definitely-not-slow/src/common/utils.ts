@@ -87,7 +87,8 @@ export function getSystemInfo(): SystemInfo {
     arch: os.arch(),
     platform: os.platform(),
     release: os.release(),
-    totalmem: os.totalmem()
+    totalmem: os.totalmem(),
+    nodeVersion: process.version,
   };
 
   return {
@@ -143,6 +144,7 @@ export function systemsAreCloseEnough(a: SystemInfo, b: SystemInfo, cpuSpeedTole
   }
   return a.arch === b.arch
     && a.platform === b.platform
+    && a.nodeVersion === b.nodeVersion
     && a.cpus.length === b.cpus.length
     && a.cpus.every((cpu, index) => {
       const otherCPU = b.cpus[index];

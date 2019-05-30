@@ -9,6 +9,7 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     typeScriptVersionMajorMinor: benchmark.typeScriptVersionMajorMinor,
     sourceVersion: benchmark.sourceVersion,
     typeCount: benchmark.typeCount,
+    memoryUsage: benchmark.memoryUsage,
     relationCacheSizes: benchmark.relationCacheSizes,
     benchmarkDuration: benchmark.benchmarkDuration,
     batchRunStart: benchmark.batchRunStart,

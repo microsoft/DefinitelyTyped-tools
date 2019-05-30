@@ -124,6 +124,7 @@ export async function measurePerf({
     typeScriptVersion,
     typeScriptVersionMajorMinor: ts.versionMajorMinor,
     typeCount: (program as any).getTypeCount(),
+    memoryUsage: ts.sys.getMemoryUsage!(),
     relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
     languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
     requestedLanguageServiceTestIterations: iterations,

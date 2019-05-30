@@ -18,6 +18,7 @@ export interface Metric {
 
 export type MetricName =
   | 'typeCount'
+  | 'memoryUsage'
   | 'assignabilityCacheSize'
   | 'subtypeCacheSize'
   | 'identityCacheSize'
@@ -39,6 +40,11 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: 'type count',
     formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
+  },
+  memoryUsage: {
+    columnName: 'Memory usage',
+    sentenceName: 'memory usage',
+    getValue: x => x.body.memoryUsage,
   },
   assignabilityCacheSize: {
     columnName: 'Assignability cache size',
