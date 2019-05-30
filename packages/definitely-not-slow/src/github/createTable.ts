@@ -2,47 +2,94 @@ import table from 'markdown-table';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
 import { metrics, Metric, FormatOptions } from './metrics';
 
-export function createTable(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, leftTitle: string, rightTitle: string) {
+export function createComparisonTable(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>, beforeTitle: string, afterTitle: string) {
   return table([
-    ['', leftTitle, rightTitle, 'diff'],
+    ['', beforeTitle, afterTitle, 'diff'],
     ['**Batch compilation**'],
-    createRowFromMetric(metrics.typeCount, a, b),
-    createRowFromMetric(metrics.assignabilityCacheSize, a, b),
-    createRowFromMetric(metrics.subtypeCacheSize, a, b),
-    createRowFromMetric(metrics.identityCacheSize, a, b),
+    createComparisonRowFromMetric(metrics.memoryUsage, before, after),
+    createComparisonRowFromMetric(metrics.typeCount, before, after),
+    createComparisonRowFromMetric(metrics.assignabilityCacheSize, before, after),
+    createComparisonRowFromMetric(metrics.subtypeCacheSize, before, after),
+    createComparisonRowFromMetric(metrics.identityCacheSize, before, after),
     [],
     ['**Language service measurements**'],
-    createRowFromMetric(metrics.samplesTaken, a, b),
-    createRowFromMetric(metrics.identifierCount, a, b),
+    createComparisonRowFromMetric(metrics.samplesTaken, before, after),
+    createComparisonRowFromMetric(metrics.identifierCount, before, after),
     ['**`getCompletionsAtPosition`**'], 
-    createRowFromMetric(metrics.completionsMean, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.completionsMedian, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.completionsStdDev, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.completionsWorstMean, a, b, { indent: 1 }),
-    createRow('Worst identifier', a, b, x => sourceLink(
+    createComparisonRowFromMetric(metrics.completionsMean, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.completionsMedian, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.completionsStdDev, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.completionsWorstMean, before, after, { indent: 1 }),
+    createComparisonRow('Worst identifier', before, after, x => sourceLink(
       x.body.completions.worst.identifierText,
       x.body.sourceVersion,
       x.body.completions.worst.fileName,
       x.body.completions.worst.line), { indent: 1 }),
     ['**`getQuickInfoAtPosition`**'],
-    createRowFromMetric(metrics.quickInfoMean, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.quickInfoMedian, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.quickInfoStdDev, a, b, { indent: 1 }),
-    createRowFromMetric(metrics.quickInfoWorstMean, a, b, { indent: 1 }),
-    createRow('Worst identifier', a, b, x => sourceLink(
+    createComparisonRowFromMetric(metrics.quickInfoMean, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.quickInfoMedian, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.quickInfoStdDev, before, after, { indent: 1 }),
+    createComparisonRowFromMetric(metrics.quickInfoWorstMean, before, after, { indent: 1 }),
+    createComparisonRow('Worst identifier', before, after, x => sourceLink(
       x.body.quickInfo.worst.identifierText,
       x.body.sourceVersion,
       x.body.quickInfo.worst.fileName,
       x.body.quickInfo.worst.line), { indent: 1 }),
     [],
     ['**System information**'],
-    createRow('CPU count', a, b, x => x.system.cpus.length, { precision: 0 }),
-    createRow('CPU speed', a, b, x => `${x.system.cpus[0].speed / 1000} GHz`),
-    createRow('CPU model', a, b, x => x.system.cpus[0].model),
-    createRow('CPU Architecture', a, b, x => x.system.arch),
-    createRow('Memory', a, b, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
-    createRow('Platform', a, b, x => x.system.platform),
-    createRow('Release', a, b, x => x.system.release),
+    createComparisonRow('Node version', before, after, x => x.system.nodeVersion),
+    createComparisonRow('CPU count', before, after, x => x.system.cpus.length, { precision: 0 }),
+    createComparisonRow('CPU speed', before, after, x => `${x.system.cpus[0].speed / 1000} GHz`),
+    createComparisonRow('CPU model', before, after, x => x.system.cpus[0].model),
+    createComparisonRow('CPU Architecture', before, after, x => x.system.arch),
+    createComparisonRow('Memory', before, after, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
+    createComparisonRow('Platform', before, after, x => x.system.platform),
+    createComparisonRow('Release', before, after, x => x.system.release),
+  ]);
+}
+
+export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary>) {
+  return table([
+    ['**Batch compilation**'],
+    createSingleRunRowFromMetric(metrics.memoryUsage, benchmark),
+    createSingleRunRowFromMetric(metrics.typeCount, benchmark),
+    createSingleRunRowFromMetric(metrics.assignabilityCacheSize, benchmark),
+    createSingleRunRowFromMetric(metrics.subtypeCacheSize, benchmark),
+    createSingleRunRowFromMetric(metrics.identityCacheSize, benchmark),
+    [],
+    ['**Language service measurements**'],
+    createSingleRunRowFromMetric(metrics.samplesTaken, benchmark),
+    createSingleRunRowFromMetric(metrics.identifierCount, benchmark),
+    ['**`getCompletionsAtPosition`**'], 
+    createSingleRunRowFromMetric(metrics.completionsMean, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.completionsMedian, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.completionsStdDev, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.completionsWorstMean, benchmark, { indent: 1 }),
+    createSingleRunRow('Worst identifier', benchmark, x => sourceLink(
+      x.body.completions.worst.identifierText,
+      x.body.sourceVersion,
+      x.body.completions.worst.fileName,
+      x.body.completions.worst.line), { indent: 1 }),
+    ['**`getQuickInfoAtPosition`**'],
+    createSingleRunRowFromMetric(metrics.quickInfoMean, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.quickInfoMedian, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.quickInfoStdDev, benchmark, { indent: 1 }),
+    createSingleRunRowFromMetric(metrics.quickInfoWorstMean, benchmark, { indent: 1 }),
+    createSingleRunRow('Worst identifier', benchmark, x => sourceLink(
+      x.body.quickInfo.worst.identifierText,
+      x.body.sourceVersion,
+      x.body.quickInfo.worst.fileName,
+      x.body.quickInfo.worst.line), { indent: 1 }),
+    [],
+    ['**System information**'],
+    createSingleRunRow('Node version', benchmark, x => x.system.nodeVersion),
+    createSingleRunRow('CPU count', benchmark, x => x.system.cpus.length, { precision: 0 }),
+    createSingleRunRow('CPU speed', benchmark, x => `${x.system.cpus[0].speed / 1000} GHz`),
+    createSingleRunRow('CPU model', benchmark, x => x.system.cpus[0].model),
+    createSingleRunRow('CPU Architecture', benchmark, x => x.system.arch),
+    createSingleRunRow('Memory', benchmark, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
+    createSingleRunRow('Platform', benchmark, x => x.system.platform),
+    createSingleRunRow('Release', benchmark, x => x.system.release),
   ]);
 }
 
@@ -50,11 +97,15 @@ function sourceLink(text: string, sourceVersion: string, fileName: string, line:
   return `[${text}](/${config.github.commonParams.owner}/${config.github.commonParams.repo}/blob/${sourceVersion.replace('\n', '')}/${fileName}#L${line})`;
 }
 
-function createRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
-  return createRow(metric.columnName, a, b, metric.getValue, { ...metric.formatOptions, ...formatOptions });
+function createComparisonRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
+  return createComparisonRow(metric.columnName, a, b, metric.getValue, { ...metric.formatOptions, ...formatOptions });
 }
 
-function createRow(
+function createSingleRunRowFromMetric(metric: Metric, benchmark: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
+  return createSingleRunRow(metric.columnName, benchmark, metric.getValue, { ...metric.formatOptions, ...formatOptions });
+}
+
+function createComparisonRow(
   title: string,
   a: Document<PackageBenchmarkSummary>,
   b: Document<PackageBenchmarkSummary>,
@@ -72,6 +123,20 @@ function createRow(
     format(aValue, formatOptions.precision),
     format(bValue, formatOptions.precision),
     typeof percentDiff === 'number' ? formatDiff(percentDiff, formatOptions.precision) : '',
+  ];
+}
+
+function createSingleRunRow(
+  title: string,
+  benchmark: Document<PackageBenchmarkSummary>,
+  getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
+  formatOptions: FormatOptions = {}
+) {
+  const value = getValue(benchmark);
+
+  return [
+    indent(title, formatOptions.indent || 0),
+    format(value, formatOptions.precision),
   ];
 }
 

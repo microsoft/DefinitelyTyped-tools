@@ -1,17 +1,44 @@
-import { createTable } from './createTable';
+import { createComparisonTable, createSingleRunTable } from './createTable';
 import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document, compact } from '../common';
 import { metrics, Metric } from './metrics';
 
-export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
+export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
   return pairs.map(([before, after]) => compact([
-    pairs.length > 1 || alwaysWriteHeading ? `### ${before.body.packageName}/v${before.body.packageVersion}` : undefined,
+    pairs.length > 1 || alwaysWriteHeading ? `### ${after.body.packageName}/v${after.body.packageVersion}` : undefined,
+    getIntroMessage(before, after),
     ``,
-    createTable(before, after, 'master', `#${prNumber}`),
+    before
+      ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))
+      : createSingleRunTable(after),
     ``,
-    getSystemMismatchMessage(before, after),
+    before && getSystemMismatchMessage(before, after),
     ``,
-    getInterestingMetricsMessage(before, after),
+    before && getInterestingMetricsMessage(before, after),
   ]).join('\n')).join('\n\n');
+}
+
+function getBeforeTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
+  if (before.body.packageVersion === after.body.packageVersion) {
+    return 'master';
+  }
+  return `${before.body.packageVersion}@master`;
+}
+
+function getAfterTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>, prNumber: number) {
+  if (before.body.packageVersion === after.body.packageVersion) {
+    return `#${prNumber}`;
+  }
+  return `${after.body.packageVersion} in #${prNumber}`;
+}
+
+function getIntroMessage(before: Document<PackageBenchmarkSummary> | undefined, after: Document<PackageBenchmarkSummary>) {
+  if (before && before.body.packageVersion === after.body.packageVersion) {
+    return;
+  }
+  if (before) {
+    return `These typings are for a version of ${before.body.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.body.packageVersion}.`;
+  }
+  return `These typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to ${after.body.packageName} with its source on master.`;
 }
 
 function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {

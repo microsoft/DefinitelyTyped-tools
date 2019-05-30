@@ -3,7 +3,7 @@ import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { createTablesWithAnalysesMessage } from './createTablesWithAnalysesMessage';
 
-type BeforeAndAfter = [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>];
+type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
 
 export interface PostInitialComparisonResultsOptions {
   comparisons: BeforeAndAfter[];

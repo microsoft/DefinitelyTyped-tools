@@ -33,7 +33,7 @@ export async function compare(args: Args) {
 
   await getTypeScript(typeScriptVersionMajorMinor);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
-  const comparisons: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][] = [];
+  const comparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
   for (const affectedPackage of affectedPackages.changedPackages) {
     console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
     comparisons.push(await compareBenchmarks({
@@ -55,7 +55,7 @@ export async function compare(args: Args) {
     console.log('\n' + message + '\n');
   }
 
-  const dependentComparisons: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][] = [];
+  const dependentComparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
   for (const affectedPackage of affectedPackages.dependentPackages) {
     console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`);
     dependentComparisons.push(await compareBenchmarks({
@@ -81,7 +81,7 @@ export async function compareBenchmarks({
   packageName,
   packageVersion,
   maxRunSeconds,
-}: CompareOptions): Promise<[Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>]> {
+}: CompareOptions): Promise<[Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>]> {
   const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const latestBenchmarkDocument = await getLatestBenchmark({
     container,
@@ -109,7 +109,7 @@ export async function compareBenchmarks({
     if (needsRerun) {
       console.log(`No previous benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`);
       await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
-      latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+      const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: true,
         iterations: config.benchmarks.languageServiceIterations,
@@ -120,8 +120,9 @@ export async function compareBenchmarks({
         failOnErrors: true,
         installTypeScript: false,
         maxRunSeconds,
-      })).summary;
+      });
       await execAndThrowErrors(`git checkout -`);
+      latestBenchmark = latest && latest.summary;
     }
   }
 
@@ -136,20 +137,19 @@ export async function compareBenchmarks({
     failOnErrors: true,
     installTypeScript: false,
     maxRunSeconds,
-  })).summary;
+  }))!.summary;
 
-  if (!latestBenchmark) {
-    throw new Error('Failed to get a benchmark for master. This error should be impossible.');
+  if (latestBenchmark) {
+    console.log('\nmaster');
+    console.log('======');
+    console.log(printSummary([latestBenchmark]));
   }
 
-  console.log('\nmaster');
-  console.log('======');
-  console.log(printSummary([latestBenchmark]));
   console.log('\nHEAD');
   console.log('====');
   console.log(printSummary([currentBenchmark]));
   return [
-    latestBenchmarkDocument || createDocument(latestBenchmark, config.database.packageBenchmarksDocumentSchemaVersion),
+    latestBenchmarkDocument || latestBenchmark && createDocument(latestBenchmark, config.database.packageBenchmarksDocumentSchemaVersion),
     createDocument(currentBenchmark, config.database.packageBenchmarksDocumentSchemaVersion),
   ];
 }

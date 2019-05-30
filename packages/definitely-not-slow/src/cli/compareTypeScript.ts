@@ -136,7 +136,7 @@ export async function compareTypeScript({
       upload: false,
       installTypeScript: false,
       maxRunSeconds,
-    })).summary, config.database.packageBenchmarksDocumentSchemaVersion);
+    }))!.summary, config.database.packageBenchmarksDocumentSchemaVersion);
     
     comparisons.push([priorResult!, currentResult]);
     if (upload && priorResultId) {

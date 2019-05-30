@@ -82,7 +82,7 @@ export async function benchmark(args: Args) {
   }
 }
 
-export async function benchmarkPackage(packageName: string, packageVersion: string, batchRunStart: Date, options: BenchmarkPackageOptions) {
+export async function benchmarkPackage(packageName: string, packageVersion: string | undefined, batchRunStart: Date, options: BenchmarkPackageOptions) {
   const {
     upload,
     progress,
@@ -96,11 +96,16 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     installTypeScript,
     localTypeScriptPath,
   } = options;
+  const version = packageVersion ? parseInt(packageVersion.replace(/^v/, ''), 10) || '*' as const : '*';
   const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
+  if (!allPackages.tryGetTypingsData({ name: packageName, majorVersion: version })) {
+    return undefined;
+  }
+
   const benchmark = await measurePerf({
     packageName,
-    packageVersion: packageVersion.replace(/^v/, ''),
+    packageVersion: version.toString(),
     allPackages,
     iterations,
     progress,

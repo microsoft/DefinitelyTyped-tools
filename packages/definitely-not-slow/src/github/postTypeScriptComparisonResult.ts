@@ -1,5 +1,5 @@
-import { compact, PackageBenchmarkSummary, Document, toPackageKey } from "../common";
-import { createTable } from "./createTable";
+import { PackageBenchmarkSummary, Document, toPackageKey } from '../common';
+import { createComparisonTable } from './createTable';
 
 type BeforeAndAfter = [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>];
 
@@ -13,7 +13,7 @@ export async function postTypeScriptComparisonResults({
 }: PostTypeScriptComparisonResultsOptions) {
   const message = comparisons.map(([baseline, head]) => [
     `### ${toPackageKey(baseline.body.packageName, baseline.body.packageVersion)}`,
-    createTable(baseline, head, baseline.body.typeScriptVersion, 'HEAD'),
+    createComparisonTable(baseline, head, baseline.body.typeScriptVersion, 'HEAD'),
   ].join('\n')).join('\n\n');
 
   return message;
