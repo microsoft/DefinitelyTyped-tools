@@ -23,6 +23,7 @@ export interface BenchmarkPackageOptions {
   failOnErrors?: boolean;
   installTypeScript?: boolean;
   localTypeScriptPath?: string;
+  reverse?: boolean;
 }
 
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
@@ -55,6 +56,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     failOnErrors: true,
     installTypeScript: true,
     localTypeScriptPath: assertString(withDefault(args.localTypeScriptPath, path.resolve('built/local')), 'localTypeScriptPath'),
+    reverse: !!args.reverse,
   };
 }
 
@@ -62,7 +64,11 @@ export async function benchmark(args: Args) {
   const options = convertArgs(args);
   const time = new Date();
   if (options.groups) {
-    const group = options.groups[assertNumber(options.agentIndex, 'agentIndex')];
+    let group = options.groups[assertNumber(options.agentIndex, 'agentIndex')];
+    if (options.reverse) {
+      group = group.reverse();
+    }
+
     for (let i = 0; i < group.length; i++) {
       const packageId = group[i];
       const logString = `Benchmarking ${packageId.name}/${packageId.majorVersion} (${i + 1} of ${group.length})`;
