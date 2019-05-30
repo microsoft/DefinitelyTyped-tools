@@ -66,6 +66,7 @@ export async function measurePerf({
 
   let done = 0;
   let lastUpdate = Date.now();
+  let languageServiceCrashed = false;
   const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
   if (progress) {
     updateProgress(`${toPackageKey(packageName, packageVersion)}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
@@ -80,6 +81,7 @@ export async function measurePerf({
     cwd: process.cwd(),
     softTimeoutMs: maxRunSeconds * 1000,
     handleCrash: input => {
+      languageServiceCrashed = true;
       console.error('Failed measurement on request:', JSON.stringify(input, undefined, 2));
     },
     handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
@@ -128,6 +130,7 @@ export async function measurePerf({
     relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
     languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
     requestedLanguageServiceTestIterations: iterations,
+    languageServiceCrashed,
     testIdentifierCount: testMatrix.uniquePositionCount,
     batchRunStart,
   };

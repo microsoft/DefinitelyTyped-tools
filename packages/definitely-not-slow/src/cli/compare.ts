@@ -1,12 +1,12 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmark, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber } from '../common';
 import { getLatestBenchmark } from '../query';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { benchmarkPackage } from './benchmark';
 import { execAndThrowErrors } from 'types-publisher/bin/util/util';
 import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
-import { printSummary, summarize } from '../measure';
+import { printSummary } from '../measure';
 import { getTypeScript } from '../measure/getTypeScript';
 import { postInitialComparisonResults } from '../github/postInitialComparisonResults';
 import { postDependentsComparisonResult } from '../github/postDependentsComparisonResults';

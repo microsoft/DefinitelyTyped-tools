@@ -15,6 +15,7 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     batchRunStart: benchmark.batchRunStart,
     testIdentifierCount: benchmark.testIdentifierCount,
     requestedLanguageServiceTestIterations: benchmark.requestedLanguageServiceTestIterations,
+    languageServiceCrashed: benchmark.languageServiceCrashed,
     ...summarizeStats(benchmark.languageServiceBenchmarks),
   }
 }

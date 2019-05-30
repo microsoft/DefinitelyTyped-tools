@@ -108,7 +108,7 @@ export async function compareTypeScript({
         continue;
       }
     } else {
-      const { id, summary } = await benchmarkPackage(name, majorVersion.toString(), now, {
+      const benchmark = await benchmarkPackage(name, majorVersion.toString(), now, {
         definitelyTypedPath,
         iterations: config.benchmarks.languageServiceIterations,
         tsVersion: compareAgainstMajorMinor,
@@ -117,11 +117,18 @@ export async function compareTypeScript({
         progress: false,
         upload,
         installTypeScript: false,
+        failOnErrors: false,
         maxRunSeconds,
       });
+
+      if (!benchmark) {
+        console.log(`Skipping ${packageKey} because it was deleted`);
+        continue;
+      }
+
       priorResult = {
-        id,
-        ...createDocument(summary, config.database.packageBenchmarksDocumentSchemaVersion)
+        id: benchmark.id,
+        ...createDocument(benchmark.summary, config.database.packageBenchmarksDocumentSchemaVersion)
       };
     }
 
@@ -135,6 +142,7 @@ export async function compareTypeScript({
       progress: false,
       upload: false,
       installTypeScript: false,
+      failOnErrors: false,
       maxRunSeconds,
     }))!.summary, config.database.packageBenchmarksDocumentSchemaVersion);
     

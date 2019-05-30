@@ -19,6 +19,7 @@ export interface PackageBenchmark {
   relationCacheSizes?: RelationCacheSizes;
   testIdentifierCount: number;
   requestedLanguageServiceTestIterations: number;
+  languageServiceCrashed: boolean;
   languageServiceBenchmarks: LanguageServiceBenchmark[];
 }
 
@@ -35,6 +36,7 @@ export interface PackageBenchmarkSummary {
   relationCacheSizes?: RelationCacheSizes;
   testIdentifierCount: number;
   requestedLanguageServiceTestIterations: number;
+  languageServiceCrashed: boolean;
   completions: StatSummary<LanguageServiceBenchmark>;
   quickInfo: StatSummary<LanguageServiceBenchmark>;
 }
