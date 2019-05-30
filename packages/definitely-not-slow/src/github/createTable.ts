@@ -141,7 +141,7 @@ function createSingleRunRow(
 }
 
 function indent(text: string, level: number) {
-  return '&nbsp;'.repeat(2 * level) + text;
+  return '&nbsp;'.repeat(4 * level) + text;
 }
 
 function formatDiff(percentDiff: number, precision?: number) {

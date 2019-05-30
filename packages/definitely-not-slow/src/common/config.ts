@@ -30,7 +30,7 @@ export const config = {
         `Required environment variable 'TYPESCRIPT_BOT_GITHUB_TOKEN' was not set`);
     },
     commonParams: {
-      owner: 'Microsoft',
+      owner: 'DefinitelyTyped',
       repo: 'DefinitelyTyped',
     },
   },

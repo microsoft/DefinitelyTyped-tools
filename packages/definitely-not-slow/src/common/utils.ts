@@ -1,5 +1,6 @@
 import * as os from 'os';
 import * as fs from 'fs';
+import { randomBytes } from 'crypto';
 import { createHash } from 'crypto';
 import { promisify } from 'util';
 import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult } from './types';
@@ -191,4 +192,18 @@ export function deserializeSummary(doc: JSONDocument<PackageBenchmarkSummary>): 
 
 export function getSourceVersion(cwd: string) {
   return execSync('git rev-parse HEAD', { cwd, encoding: 'utf8' }).trim()
+}
+
+export function shuffle<T>(array: readonly T[]): T[] {
+  const output = array.slice();
+  let counter = output.length;
+  while (counter > 0) {
+      const index = Math.floor(randomBytes(1).readUInt8(0) / 2 ** 8 * counter);
+      counter--;
+      const elem = output[counter];
+      output[counter] = output[index];
+      output[index] = elem;
+  }
+
+  return output;
 }

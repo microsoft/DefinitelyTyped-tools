@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber, shuffle } from '../common';
 import { getLatestBenchmark } from '../query';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { benchmarkPackage } from './benchmark';
@@ -27,6 +27,7 @@ export async function compare(args: Args) {
   const changedPackages = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
   const maxRunSeconds = args.maxRunSeconds ? assertNumber(args.maxRunSeconds) : undefined;
   const shouldComment = !!args.comment;
+  const runDependents = args.runDependents ? typeof args.runDependents === 'number' ? args.runDependents : 2 : 0;
   if (!changedPackages) {
     console.log('No changed packages; nothing to do');
     return;
@@ -47,17 +48,18 @@ export async function compare(args: Args) {
     }));
   }
 
+  const dependentsToTest = runDependents ? shuffle(affectedPackages.dependentPackages).slice(0, runDependents) : [];
   if (comparisons.length) {
     const message = await postInitialComparisonResults({
       comparisons,
-      dependentCount: affectedPackages.dependentPackages.length,
+      dependentCount: dependentsToTest.length,
       dryRun: !shouldComment,
     });
     console.log('\n' + message + '\n');
   }
 
   const dependentComparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
-  for (const affectedPackage of affectedPackages.dependentPackages) {
+  for (const affectedPackage of dependentsToTest) {
     console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`);
     dependentComparisons.push(await compareBenchmarks({
       allPackages,
