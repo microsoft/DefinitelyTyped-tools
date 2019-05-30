@@ -63,7 +63,6 @@ export async function compareTypeScript({
   groups,
   ...opts
 }: CompareTypeScriptOptions) {
-  await getTypeScript(compareAgainstMajorMinor);
   const getAllPackages = createGetAllPackages(definitelyTypedPath);
   const { packageBenchmarks, typeScriptComparisons } = await getDatabase(upload && !outFile ? DatabaseAccessLevel.Write : DatabaseAccessLevel.Read);
   const agentIndex = groups && assertDefined(opts.agentIndex, 'agentIndex');
@@ -95,6 +94,7 @@ export async function compareTypeScript({
     return writeFile(outFile, fileContent, 'utf8');
   }
 
+  await getTypeScript(compareAgainstMajorMinor);
   const packagesToTest = packages ? packages.map(p => `${p.name}/v${p.majorVersion}`) : Array.from(priorResults.keys());
   const now = new Date();
   const comparisons: [Document<PackageBenchmarkSummary>, Document<PackageBenchmarkSummary>][] = [];
