@@ -97,12 +97,12 @@ export async function benchmarkPackage(packageName: string, packageVersion: stri
     localTypeScriptPath,
   } = options;
   const version = packageVersion ? parseInt(packageVersion.replace(/^v/, ''), 10) || '*' as const : '*';
-  const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   if (!allPackages.tryGetTypingsData({ name: packageName, majorVersion: version })) {
     return undefined;
   }
-
+  
+  const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
   const benchmark = await measurePerf({
     packageName,
     packageVersion: version.toString(),

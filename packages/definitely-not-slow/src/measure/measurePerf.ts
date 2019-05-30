@@ -113,7 +113,6 @@ export async function measurePerf({
     console.log(ts.formatDiagnostics(diagnostics, formatDiagnosticsHost));
     throw new Error('Compilation had errors');
   }
-
   
   performance.mark('benchmarkEnd');
   performance.measure('benchmark', 'benchmarkStart', 'benchmarkEnd');

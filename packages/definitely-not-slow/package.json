@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b .",
     "cli": "node dist/src/cli/index.js",
-    "push-production": "npm run build && git checkout production && git merge master && npm run build && git add dist && git commit -m \"Update dist\" && git push -u origin production && git checkout -"
+    "push-production": "npm run build && npm version patch && git commit -am 'Bump version' && git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin production && git checkout -"
   },
   "author": "",
   "license": "UNLICENSED",

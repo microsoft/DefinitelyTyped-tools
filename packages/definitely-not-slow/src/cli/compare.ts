@@ -28,6 +28,7 @@ export async function compare(args: Args) {
   const maxRunSeconds = args.maxRunSeconds ? assertNumber(args.maxRunSeconds) : undefined;
   const shouldComment = !!args.comment;
   if (!changedPackages) {
+    console.log('No changed packages; nothing to do');
     return;
   }
 
@@ -111,7 +112,7 @@ export async function compareBenchmarks({
       await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
-        printSummary: true,
+        printSummary: false,
         iterations: config.benchmarks.languageServiceIterations,
         progress: false,
         upload: true,
@@ -121,7 +122,7 @@ export async function compareBenchmarks({
         installTypeScript: false,
         maxRunSeconds,
       });
-      await execAndThrowErrors(`git checkout -`);
+      await execAndThrowErrors(`git checkout -`, definitelyTypedPath);
       latestBenchmark = latest && latest.summary;
     }
   }
