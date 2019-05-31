@@ -115,7 +115,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.quickInfo.standardDeviation,
   },
   quickInfoWorstMean: {
-    columnName: 'Worst quick info duration (ms)',
+    columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting quick info at a position',
     getValue: x => mean(x.body.quickInfo.worst.quickInfoDurations),
   },
