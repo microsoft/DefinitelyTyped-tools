@@ -145,7 +145,7 @@ function indent(text: string, level: number) {
 }
 
 function formatDiff(percentDiff: number, higherIsBetter = false, includeEmoji = true, precision?: number) {
-  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100, precision, '%')}`;
+  const percentString = format(percentDiff * 100, precision, '%', true);
   const valueToCompare = higherIsBetter ? percentDiff * -1 : percentDiff;
   if (valueToCompare > config.comparison.percentDiffSevereThreshold) {
     return `**${percentString}**&nbsp;🚨`;
@@ -159,10 +159,14 @@ function formatDiff(percentDiff: number, higherIsBetter = false, includeEmoji = 
   return percentString;
 }
 
-function format(x: string | number | undefined, precision = 1, unit = ''): string {
+function format(x: string | number | undefined, precision = 1, unit = '', showPlusSign?: boolean): string {
   switch (typeof x) {
     case 'string': return x + unit;
-    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision).replace(/^[-+]0(\.0*)?$/, '0$1') + unit;
+    case 'number':
+      if (isNaN(x)) return '';
+      let numString = x.toFixed(precision).replace(/^-0(\.0*)?$/, '0$1');
+      if (showPlusSign && !/^0(\.0*)?$/.test(numString)) numString = `+${numString}`;
+      return numString + unit;
     default: return '';
   }
 }
