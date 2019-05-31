@@ -12,7 +12,7 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
     createComparisonRowFromMetric(metrics.subtypeCacheSize, before, after),
     createComparisonRowFromMetric(metrics.identityCacheSize, before, after),
     [],
-    ['**Language service measurements**'],
+    ['**Language service**'],
     createComparisonRowFromMetric(metrics.samplesTaken, before, after),
     createComparisonRowFromMetric(metrics.identifierCount, before, after),
     ['**`getCompletionsAtPosition`**'], 
@@ -122,7 +122,7 @@ function createComparisonRow(
     indent(title, formatOptions.indent || 0),
     format(aValue, formatOptions.precision),
     format(bValue, formatOptions.precision),
-    typeof percentDiff === 'number' ? formatDiff(percentDiff, formatOptions.precision) : '',
+    typeof percentDiff === 'number' ? formatDiff(percentDiff, formatOptions.higherIsBetter, formatOptions.includeEmoji, formatOptions.precision) : '',
   ];
 }
 
@@ -144,16 +144,17 @@ function indent(text: string, level: number) {
   return '&nbsp;'.repeat(4 * level) + text;
 }
 
-function formatDiff(percentDiff: number, precision?: number) {
+function formatDiff(percentDiff: number, higherIsBetter = false, includeEmoji = true, precision?: number) {
   const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100, precision, '%')}`;
-  if (percentDiff > config.comparison.percentDiffSevereThreshold) {
-    return `**${percentString}** 🚨`;
+  const valueToCompare = higherIsBetter ? percentDiff * -1 : percentDiff;
+  if (valueToCompare > config.comparison.percentDiffSevereThreshold) {
+    return `**${percentString}**&nbsp;🚨`;
   }
-  if (percentDiff > config.comparison.percentDiffWarningThreshold) {
-    return `**${percentString}** 🔸`;
+  if (valueToCompare > config.comparison.percentDiffWarningThreshold) {
+    return `**${percentString}**&nbsp;🔸`;
   }
-  if (percentDiff < config.comparison.percentDiffGoldStarThreshold) {
-    return `**${percentString}** 🌟`;
+  if (valueToCompare < config.comparison.percentDiffGoldStarThreshold) {
+    return `**${percentString}**&nbsp;🌟`;
   }
   return percentString;
 }
@@ -161,7 +162,7 @@ function formatDiff(percentDiff: number, precision?: number) {
 function format(x: string | number | undefined, precision = 1, unit = ''): string {
   switch (typeof x) {
     case 'string': return x + unit;
-    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision).replace(/^-0(\.0*)?$/, '0$1') + unit;
+    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision).replace(/^[-+]0(\.0*)?$/, '0$1') + unit;
     default: return '';
   }
 }

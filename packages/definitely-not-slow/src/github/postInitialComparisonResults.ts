@@ -17,7 +17,7 @@ export async function postInitialComparisonResults({
   dryRun,
 }: PostInitialComparisonResultsOptions) {
   const message = compact([
-    `👋 **Hi there!** I’ve run some quick performance metrics against master and your PR. **This is still an experiment**, so don’t panic if I say something crazy! I’m still learning how to interpret these metrics. 😄`,
+    `👋 **Hi there!** I’ve run some quick performance metrics against master and your PR. **This is still an experiment**, so don’t panic if I say something crazy! I’m still learning how to interpret these metrics.`,
     ``,
     getDependentsMessage(dependentCount),
     ``,

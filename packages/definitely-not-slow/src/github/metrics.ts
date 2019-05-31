@@ -5,13 +5,14 @@ export interface FormatOptions {
   noDiff?: boolean;
   precision?: number;
   indent?: number;
+  higherIsBetter?: boolean;
+  includeEmoji?: boolean;
 }
 
 export interface Metric {
   columnName: string;
   sentenceName: string;
   isUninteresting?: boolean;
-  higherIsBetter?: boolean;
   formatOptions?: FormatOptions;
   getValue: (x: Document<PackageBenchmarkSummary>) => number | undefined;
 }
@@ -67,17 +68,15 @@ export const metrics: { [K in MetricName]: Metric } = {
   samplesTaken: {
     columnName: 'Samples taken',
     sentenceName: 'number of samples taken',
-    formatOptions: { precision: 0 },
+    formatOptions: { precision: 0, higherIsBetter: true, includeEmoji: false },
     isUninteresting: true,
-    higherIsBetter: true,
     getValue: x => Math.max(x.body.completions.trials, x.body.quickInfo.trials),
   },
   identifierCount: {
     columnName: 'Identifiers in tests',
     sentenceName: 'number of identifiers present in test files',
-    formatOptions: { precision: 0 },
+    formatOptions: { precision: 0, higherIsBetter: true, includeEmoji: false },
     isUninteresting: true,
-    higherIsBetter: true,
     getValue: x => x.body.testIdentifierCount,
   },
   completionsMean: {
@@ -96,7 +95,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.completions.standardDeviation,
   },
   completionsWorstMean: {
-    columnName: 'Worst completions duration (ms)',
+    columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting completions at a position',
     getValue: x => mean(x.body.completions.worst.completionsDurations),
   },
@@ -116,8 +115,8 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.quickInfo.standardDeviation,
   },
   quickInfoWorstMean: {
-    columnName: 'Worst completions duration (ms)',
-    sentenceName: 'worst-case duration for getting completions at a position',
-    getValue: x => mean(x.body.completions.worst.completionsDurations),
+    columnName: 'Worst quick info duration (ms)',
+    sentenceName: 'worst-case duration for getting quick info at a position',
+    getValue: x => mean(x.body.quickInfo.worst.quickInfoDurations),
   },
 };

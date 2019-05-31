@@ -61,7 +61,7 @@ function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Docum
 function getInterestingMetricsMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
   const interestingMetrics = getInterestingMetrics(a, b);
   if (!interestingMetrics.length) {
-    return `It looks like nothing changed _too_ much. I’m pretty lenient since I’m still an experiment, so take a look anyways and make sure nothing looks out of place.`;
+    return `It looks like nothing changed too much. I’m pretty lenient since I’m still an experiment, so take a look anyways and make sure nothing looks out of place.`;
   }
   if (interestingMetrics.every(({ isGood }) => isGood)) {
     return `Wow, it looks like all the big movers moved in the right direction! Way to go! 🌟`;
@@ -80,7 +80,7 @@ function getInterestingMetrics(a: Document<PackageBenchmarkSummary>, b: Document
     const aValue = metric.getValue(a);
     const bValue = metric.getValue(b);
     const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
-    const comparisonValue = percentDiff && metric.higherIsBetter ? percentDiff * -1 : percentDiff;
+    const comparisonValue = percentDiff && metric.formatOptions && metric.formatOptions.higherIsBetter ? percentDiff * -1 : percentDiff;
     const isGood = comparisonValue < config.comparison.percentDiffGoldStarThreshold;
     if (percentDiff && comparisonValue && (comparisonValue > config.comparison.percentDiffWarningThreshold || isGood)) {
       return [
