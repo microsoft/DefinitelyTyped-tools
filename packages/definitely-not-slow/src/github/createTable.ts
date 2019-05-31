@@ -6,7 +6,7 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
   return table([
     ['', beforeTitle, afterTitle, 'diff'],
     ['**Batch compilation**'],
-    createComparisonRowFromMetric(metrics.memoryUsage, before, after),
+    // createComparisonRowFromMetric(metrics.memoryUsage, before, after),
     createComparisonRowFromMetric(metrics.typeCount, before, after),
     createComparisonRowFromMetric(metrics.assignabilityCacheSize, before, after),
     createComparisonRowFromMetric(metrics.subtypeCacheSize, before, after),
@@ -51,7 +51,7 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
 export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary>) {
   return table([
     ['**Batch compilation**'],
-    createSingleRunRowFromMetric(metrics.memoryUsage, benchmark),
+    // createSingleRunRowFromMetric(metrics.memoryUsage, benchmark),
     createSingleRunRowFromMetric(metrics.typeCount, benchmark),
     createSingleRunRowFromMetric(metrics.assignabilityCacheSize, benchmark),
     createSingleRunRowFromMetric(metrics.subtypeCacheSize, benchmark),
@@ -145,7 +145,7 @@ function indent(text: string, level: number) {
 }
 
 function formatDiff(percentDiff: number, precision?: number) {
-  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100, precision)}%`;
+  const percentString = `${percentDiff > 0 ? '+' : ''}${format(percentDiff * 100, precision, '%')}`;
   if (percentDiff > config.comparison.percentDiffSevereThreshold) {
     return `**${percentString}** 🚨`;
   }
@@ -158,10 +158,10 @@ function formatDiff(percentDiff: number, precision?: number) {
   return percentString;
 }
 
-function format(x: string | number | undefined, precision = 1): string {
+function format(x: string | number | undefined, precision = 1, unit = ''): string {
   switch (typeof x) {
-    case 'string': return x;
-    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision);
+    case 'string': return x + unit;
+    case 'number': return isNaN(x) ? 'N/A' : x.toFixed(precision).replace(/^-0(\.0*)?$/, '0$1') + unit;
     default: return '';
   }
 }
