@@ -1,6 +1,7 @@
 import table from 'markdown-table';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
-import { metrics, Metric, FormatOptions } from './metrics';
+import { metrics, Metric, FormatOptions, SignificanceLevel } from './metrics';
+import { assertNever } from 'types-publisher/bin/util/util';
 
 export function createComparisonTable(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>, beforeTitle: string, afterTitle: string) {
   return table([
@@ -24,7 +25,7 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
       x.body.completions.worst.identifierText,
       x.body.sourceVersion,
       x.body.completions.worst.fileName,
-      x.body.completions.worst.line), { indent: 1 }),
+      x.body.completions.worst.line), undefined, { indent: 1 }),
     ['**`getQuickInfoAtPosition`**'],
     createComparisonRowFromMetric(metrics.quickInfoMean, before, after, { indent: 1 }),
     createComparisonRowFromMetric(metrics.quickInfoMedian, before, after, { indent: 1 }),
@@ -34,11 +35,11 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
       x.body.quickInfo.worst.identifierText,
       x.body.sourceVersion,
       x.body.quickInfo.worst.fileName,
-      x.body.quickInfo.worst.line), { indent: 1 }),
+      x.body.quickInfo.worst.line), undefined, { indent: 1 }),
     [],
     ['**System information**'],
     createComparisonRow('Node version', before, after, x => x.system.nodeVersion),
-    createComparisonRow('CPU count', before, after, x => x.system.cpus.length, { precision: 0 }),
+    createComparisonRow('CPU count', before, after, x => x.system.cpus.length, undefined, { precision: 0 }),
     createComparisonRow('CPU speed', before, after, x => `${x.system.cpus[0].speed / 1000} GHz`),
     createComparisonRow('CPU model', before, after, x => x.system.cpus[0].model),
     createComparisonRow('CPU Architecture', before, after, x => x.system.arch),
@@ -97,8 +98,15 @@ function sourceLink(text: string, sourceVersion: string, fileName: string, line:
   return `[${text}](/${config.github.commonParams.owner}/${config.github.commonParams.repo}/blob/${sourceVersion.replace('\n', '')}/${fileName}#L${line})`;
 }
 
-function createComparisonRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
-  return createComparisonRow(metric.columnName, a, b, metric.getValue, { ...metric.formatOptions, ...formatOptions });
+function createComparisonRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, formatOptions: FormatOptions = {}) {
+  const aValue = metric.getValue(a);
+  const bValue = metric.getValue(b);
+  const format = { ...metric.formatOptions, ...formatOptions };
+  const percentDiff = typeof aValue === 'number' && typeof bValue === 'number' && !isNaN(bValue) && !isNaN(bValue)
+    ? getPercentDiff(bValue, aValue)
+    : undefined;
+  const diffString = typeof percentDiff === 'number' ? formatDiff(percentDiff, metric.getSignificance(percentDiff, a, b), format.precision) : undefined;
+  return createComparisonRow(metric.columnName, a, b, metric.getValue, diffString, format);
 }
 
 function createSingleRunRowFromMetric(metric: Metric, benchmark: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
@@ -110,19 +118,17 @@ function createComparisonRow(
   a: Document<PackageBenchmarkSummary>,
   b: Document<PackageBenchmarkSummary>,
   getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
+  diff?: string,
   formatOptions: FormatOptions = {},
-) {
+): string[] {
   const aValue = getValue(a);
   const bValue = getValue(b);
-  const percentDiff = !formatOptions.noDiff && typeof aValue === 'number' && typeof bValue === 'number' && !isNaN(bValue) && !isNaN(bValue)
-    ? getPercentDiff(bValue, aValue)
-    : undefined;
   
   return [
     indent(title, formatOptions.indent || 0),
     format(aValue, formatOptions.precision),
     format(bValue, formatOptions.precision),
-    typeof percentDiff === 'number' ? formatDiff(percentDiff, formatOptions.higherIsBetter, formatOptions.includeEmoji, formatOptions.precision) : '',
+    diff || '',
   ];
 }
 
@@ -131,7 +137,7 @@ function createSingleRunRow(
   benchmark: Document<PackageBenchmarkSummary>,
   getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
   formatOptions: FormatOptions = {}
-) {
+): string[] {
   const value = getValue(benchmark);
 
   return [
@@ -140,23 +146,22 @@ function createSingleRunRow(
   ];
 }
 
-function indent(text: string, level: number) {
+function indent(text: string, level: number): string {
   return '&nbsp;'.repeat(4 * level) + text;
 }
 
-function formatDiff(percentDiff: number, higherIsBetter = false, includeEmoji = true, precision?: number) {
+function formatDiff(percentDiff: number, significance: SignificanceLevel | undefined, precision?: number): string {
   const percentString = format(percentDiff * 100, precision, '%', true);
-  const valueToCompare = higherIsBetter ? percentDiff * -1 : percentDiff;
-  if (valueToCompare > config.comparison.percentDiffSevereThreshold) {
-    return `**${percentString}**&nbsp;🚨`;
+  if (!significance) {
+    return percentString;
   }
-  if (valueToCompare > config.comparison.percentDiffWarningThreshold) {
-    return `**${percentString}**&nbsp;🔸`;
+
+  switch (significance) {
+    case SignificanceLevel.Warning: return `**${percentString}**&nbsp;🔸`;
+    case SignificanceLevel.Alert: return `**${percentString}**&nbsp;🚨`;
+    case SignificanceLevel.Awesome: return `**${percentString}**&nbsp;🌟`;
+    default: return assertNever(significance);
   }
-  if (valueToCompare < config.comparison.percentDiffGoldStarThreshold) {
-    return `**${percentString}**&nbsp;🌟`;
-  }
-  return percentString;
 }
 
 function format(x: string | number | undefined, precision = 1, unit = '', showPlusSign?: boolean): string {
@@ -165,7 +170,7 @@ function format(x: string | number | undefined, precision = 1, unit = '', showPl
     case 'number':
       if (isNaN(x)) return '';
       let numString = x.toFixed(precision).replace(/^-0(\.0*)?$/, '0$1');
-      if (showPlusSign && !/^0(\.0*)?$/.test(numString)) numString = `+${numString}`;
+      if (showPlusSign && x > 0 && !/^0(\.0*)?$/.test(numString)) numString = `+${numString}`;
       return numString + unit;
     default: return '';
   }

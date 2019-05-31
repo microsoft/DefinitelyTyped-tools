@@ -1,6 +1,6 @@
 import { createComparisonTable, createSingleRunTable } from './createTable';
 import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document, compact } from '../common';
-import { metrics, Metric } from './metrics';
+import { metrics, Metric, SignificanceLevel } from './metrics';
 
 export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
   return pairs.map(([before, after]) => compact([
@@ -63,33 +63,41 @@ function getInterestingMetricsMessage(a: Document<PackageBenchmarkSummary>, b: D
   if (!interestingMetrics.length) {
     return `It looks like nothing changed too much. I’m pretty lenient since I’m still an experiment, so take a look anyways and make sure nothing looks out of place.`;
   }
-  if (interestingMetrics.every(({ isGood }) => isGood)) {
+  const awesomeMetrics = interestingMetrics.filter(({ significance }) => significance === SignificanceLevel.Awesome);
+  if (interestingMetrics.length === awesomeMetrics.length) {
     return `Wow, it looks like all the big movers moved in the right direction! Way to go! 🌟`;
   }
-  if (interestingMetrics.length > 3 && interestingMetrics.filter(({ isGood }) => isGood).length / interestingMetrics.length < 0.5) {
-    return `It looks like there are several metrics that changed quite a bit. You might want to take a look and make sure your changes won’t cause painful slow-downs for users consuming these types.`;
+  if (interestingMetrics.length > 3 && awesomeMetrics.length / interestingMetrics.length < 0.5) {
+    return 'It looks like there are several metrics that changed quite a bit. You might want to take a look and make sure your changes won’t cause slow-downs for users consuming these types.';
   }
-  return `Looks like there were a couple significant differences. You might want to take a look and make sure your changes won’t cause painful slow-downs for users consuming these types.`;
+  const metricsToCheck = interestingMetrics.filter(({ significance }) => significance === SignificanceLevel.Warning || significance === SignificanceLevel.Alert);
+  return `Looks like there were a couple significant differences—take a look at `
+    + formatListForSentence(metricsToCheck.map(m => `**${m.metric.sentenceName}**`))
+    + ` to make sure everything looks ok.`;
 }
 
 function getInterestingMetrics(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, isGood: boolean }[], metric) => {
-    if (metric.isUninteresting) {
-      return acc;
-    }
+  return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, significance: SignificanceLevel }[], metric) => {
     const aValue = metric.getValue(a);
     const bValue = metric.getValue(b);
     const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
-    const comparisonValue = percentDiff && metric.formatOptions && metric.formatOptions.higherIsBetter ? percentDiff * -1 : percentDiff;
-    const isGood = comparisonValue < config.comparison.percentDiffGoldStarThreshold;
-    if (percentDiff && comparisonValue && (comparisonValue > config.comparison.percentDiffWarningThreshold || isGood)) {
+    const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, a, b);
+    if (percentDiff && significance) {
       return [
         ...acc,
-        { metric, percentDiff, isGood },
+        { metric, percentDiff, significance },
       ];
     }
     return acc;
   }, []);
+}
+
+function formatListForSentence(items: string[]) {
+  return items.map((item, index) => {
+    const isFirst = index === 0;
+    const isLast = index === items.length - 1;
+    return !isFirst && isLast ? `and ${item}` : item;
+  }).join(items.length > 2 ? ', ' : ' ');
 }
 
 function isNumber(n: any): n is number {
