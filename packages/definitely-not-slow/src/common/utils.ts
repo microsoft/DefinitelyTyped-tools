@@ -34,7 +34,7 @@ export function deserializeArgs(args: string[]): Args {
       } else {
         const numberArg = parseFloat(nextArg);
         const boolArg = nextArg === 'true' ? true : nextArg === 'false' ? false : undefined;
-        obj[arg.slice(2)] = boolArg || (isNaN(numberArg) ? nextArg : numberArg);
+        obj[arg.slice(2)] = typeof boolArg === 'boolean' ? boolArg : (isNaN(numberArg) ? nextArg : numberArg);
         i++;
       }
     }

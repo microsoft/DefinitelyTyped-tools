@@ -11,8 +11,9 @@ import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasur
 import { installDependencies } from './installDependencies';
 import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
 import { formatDiagnosticsHost } from './formatDiagnosticsHost';
-import { runWithListeningChildProcesses } from 'types-publisher/bin/util/util';
+import { runWithListeningChildProcesses, runWithChildProcesses } from 'types-publisher/bin/util/util';
 import { measureLanguageServiceWorkerFilename, MeasureLanguageServiceChildProcessArgs } from './measureLanguageServiceWorker';
+import { MeasureBatchCompilationChildProcessArgs, measureBatchCompilationWorkerFilename, MeasureBatchCompilationChildProcessResult } from './measureBatchCompilationWorker';
 
 export interface MeasurePerfOptions {
   packageName: string;
@@ -105,28 +106,38 @@ export async function measurePerf({
     process.stdout.write(os.EOL);
   }
 
-  const program = ts.createProgram({ rootNames: commandLine.fileNames, options: commandLine.options });
-  const diagnostics = program.getSemanticDiagnostics().filter(diagnostic => {
-    return diagnostic.code === 2307; // Cannot find module
+  const batchCompilationInput: MeasureBatchCompilationChildProcessArgs = {
+    tsPath,
+    fileNames: commandLine.fileNames,
+    options: commandLine.options,
+  };
+
+  let batchCompilationResult: MeasureBatchCompilationChildProcessResult | undefined;
+  await runWithChildProcesses({
+    inputs: [batchCompilationInput],
+    workerFile: measureBatchCompilationWorkerFilename,
+    commandLineArgs: [],
+    nProcesses: 1,
+    handleOutput: (result: MeasureBatchCompilationChildProcessResult) => {
+      batchCompilationResult = result;
+    },
   });
-  if (diagnostics.length) {
-    console.log(ts.formatDiagnostics(diagnostics, formatDiagnosticsHost));
-    throw new Error('Compilation had errors');
+
+  if (!batchCompilationResult) {
+    throw new Error('Failed to get batch compilation metrics');
   }
   
   performance.mark('benchmarkEnd');
   performance.measure('benchmark', 'benchmarkStart', 'benchmarkEnd');
 
   const measurement: PackageBenchmark = {
+    ...batchCompilationResult,
     benchmarkDuration: duration,
     sourceVersion,
     packageName,
     packageVersion,
     typeScriptVersion,
     typeScriptVersionMajorMinor: ts.versionMajorMinor,
-    typeCount: (program as any).getTypeCount(),
-    memoryUsage: ts.sys.getMemoryUsage!(),
-    relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
     languageServiceBenchmarks: testMatrix.getAllBenchmarks(),
     requestedLanguageServiceTestIterations: iterations,
     languageServiceCrashed,

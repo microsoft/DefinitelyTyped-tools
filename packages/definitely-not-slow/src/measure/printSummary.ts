@@ -16,6 +16,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log('-'.repeat(versionString.length));
     console.log('  Total duration (ms): ', benchmark.benchmarkDuration);
     console.log('  Type count:          ', benchmark.typeCount);
+    console.log('  Memory usage:        ', benchmark.memoryUsage);
     if (benchmark.relationCacheSizes) {
       console.log('  Cache sizes');
       console.log('    Assignability: ', benchmark.relationCacheSizes.assignable);

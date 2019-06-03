@@ -1,5 +1,5 @@
 import { mean } from '../measure/utils';
-import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
+import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemoryUsage } from '../common';
 
 export interface FormatOptions {
   precision?: number;
@@ -26,7 +26,7 @@ export interface Metric {
 
 export type MetricName =
   | 'typeCount'
-  // | 'memoryUsage'
+  | 'memoryUsage'
   | 'assignabilityCacheSize'
   | 'subtypeCacheSize'
   | 'identityCacheSize'
@@ -73,6 +73,17 @@ export const metrics: { [K in MetricName]: Metric } = {
     formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
     getSignificance: getSignificanceProportionalTo('identifierCount'),
+  },
+  memoryUsage: {
+    columnName: 'Memory usage',
+    sentenceName: 'memory usage',
+    getValue: x => x.body.memoryUsage,
+    getSignificance: (percentDiff, before, after) => {
+      if (supportsMemoryUsage(before) && supportsMemoryUsage(after)) {
+        return getSignificanceProportionalTo('identifierCount')(percentDiff, before, after);
+      }
+      return getInsignificant();
+    }
   },
   assignabilityCacheSize: {
     columnName: 'Assignability cache size',
