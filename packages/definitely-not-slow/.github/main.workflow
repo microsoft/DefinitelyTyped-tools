@@ -1,6 +1,6 @@
 workflow "build, test and publish on release" {
   on = "push"
-  resolves = ["publish production", "publish beta"]
+  resolves = "publish production"
 }
 
 action "install" {
@@ -27,7 +27,7 @@ action "publish beta" {
 }
 
 action "check for new tag" {
-  needs = ["build", "test"]
+  needs = "publish beta"
   uses = "actions/bin/filter@master"
   args = "tag"
 }
