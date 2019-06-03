@@ -20,8 +20,14 @@ action "test" {
   args = "test"
 }
 
-action "publish beta" {
+action "filter branch master" {
   needs = ["build", "test"]
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
+action "publish beta" {
+  needs = "filter branch master"
   uses = "actions/npm@master"
   args = "run push-beta"
 }
