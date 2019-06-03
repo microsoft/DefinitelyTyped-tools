@@ -7,7 +7,10 @@
     "build": "tsc -b .",
     "test": "jest",
     "cli": "node dist/src/cli/index.js",
+    "git-config": "test $GITHUB_WORKFLOW && git config --global user.name 'Andrew Branch (automated)' && git config --global user.email 'andrew@wheream.io' || echo ''",
+    "prepush-production": "npm run git-config",
     "push-production": "git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin production && git checkout -",
+    "prepush-beta": "npm run git-config",
     "push-beta": "git checkout beta && git merge -m 'Merge master into beta' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin beta && git checkout -"
   },
   "author": "",
