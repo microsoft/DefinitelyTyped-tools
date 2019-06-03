@@ -7,7 +7,8 @@
     "build": "tsc -b .",
     "test": "jest",
     "cli": "node dist/src/cli/index.js",
-    "push-production": "git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin production && git checkout -"
+    "push-production": "git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin production && git checkout -",
+    "push-beta": "git checkout beta && git merge -m 'Merge master into beta' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin beta && git checkout -"
   },
   "author": "",
   "license": "UNLICENSED",
