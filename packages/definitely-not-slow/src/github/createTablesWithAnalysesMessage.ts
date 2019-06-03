@@ -1,5 +1,5 @@
 import { createComparisonTable, createSingleRunTable } from './createTable';
-import { PackageBenchmarkSummary, systemsAreCloseEnough, Document, compact } from '../common';
+import { PackageBenchmarkSummary, systemsAreCloseEnough, Document, compact, toPackageKey } from '../common';
 import { getInterestingMetrics, SignificanceLevel, ComparedMetric } from '../analysis';
 
 export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
@@ -20,11 +20,19 @@ export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmar
       ``,
       getLanguageServiceCrashMessage(after),
       ``,
-      shouldCollapseDetails ? details(messageBody, 'Comparison details') : messageBody,
+      shouldCollapseDetails ? details(messageBody, getDetailsSummaryTitle(pairs.length, after)) : messageBody,
       ``,
       interestingMetrics && getInterestingMetricsMessage(interestingMetrics),
     ]).join('\n');
   }).join('\n\n');
+}
+
+function getDetailsSummaryTitle(comparisonsCount: number, benchmark: Document<PackageBenchmarkSummary>) {
+  const title = '**Comparison details**';
+  if (comparisonsCount > 1) {
+    return title + ` for ${toPackageKey(benchmark.body.packageName, benchmark.body.packageVersion)} 📊`;
+  }
+  return `${title} 📊`;
 }
 
 function getBeforeTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
@@ -87,6 +95,7 @@ function details(details: string, summary?: string) {
   return compact([
     '<details>',
     summary && `<summary>${summary}</summary>`,
+    '',
     details,
     `</details>`
   ]).join('\n');
