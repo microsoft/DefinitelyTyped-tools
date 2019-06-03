@@ -1,6 +1,5 @@
 import { mean } from '../measure/utils';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
-import { isNumber } from 'util';
 
 export interface FormatOptions {
   precision?: number;
@@ -160,11 +159,17 @@ export const metrics: { [K in MetricName]: Metric } = {
   },
 };
 
-export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
+export interface ComparedMetric {
+  metric: Metric;
+  percentDiff: number;
+  significance: SignificanceLevel;
+}
+
+export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>): ComparedMetric[] {
   return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, significance: SignificanceLevel }[], metric) => {
     const aValue = metric.getValue(before);
     const bValue = metric.getValue(after);
-    const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
+    const percentDiff = isNonNaNNumber(aValue) && isNonNaNNumber(bValue) && getPercentDiff(bValue, aValue);
     const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, before, after);
     if (percentDiff && significance) {
       return [
@@ -174,4 +179,8 @@ export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>,
     }
     return acc;
   }, []);
+}
+
+function isNonNaNNumber(n: any): n is number {
+  return typeof n === 'number' && !isNaN(n);
 }
