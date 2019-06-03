@@ -30,6 +30,7 @@ action "publish beta" {
   needs = "filter branch master"
   uses = "actions/npm@master"
   args = "run push-beta"
+  secrets = ["GITHUB_TOKEN", "GH_USER", "GH_EMAIL"]
 }
 
 action "check for new tag" {
@@ -42,5 +43,5 @@ action "publish production" {
   needs = "check for new tag"
   uses = "actions/npm@master"
   args = "run push-production"
-  secrets = ["GITHUB_TOKEN"]
+  secrets = ["GITHUB_TOKEN", "GH_USER", "GH_EMAIL"]
 }
