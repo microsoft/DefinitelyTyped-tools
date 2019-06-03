@@ -13,8 +13,8 @@
     "prepush-beta": "npm run git-config",
     "push-beta": "git checkout beta && git merge -m 'Merge master into beta' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin beta && git checkout -"
   },
-  "author": "",
-  "license": "UNLICENSED",
+  "author": "Andrew Branch <andrew@wheream.io>",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.4",
