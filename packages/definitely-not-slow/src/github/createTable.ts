@@ -1,6 +1,6 @@
 import table from 'markdown-table';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
-import { metrics, Metric, FormatOptions, SignificanceLevel } from './metrics';
+import { metrics, Metric, FormatOptions, SignificanceLevel } from '../analysis';
 import { assertNever } from 'types-publisher/bin/util/util';
 
 export function createComparisonTable(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>, beforeTitle: string, afterTitle: string) {

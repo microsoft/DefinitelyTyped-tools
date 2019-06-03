@@ -1,6 +1,6 @@
 import { createComparisonTable, createSingleRunTable } from './createTable';
-import { PackageBenchmarkSummary, systemsAreCloseEnough, getPercentDiff, config, Document, compact } from '../common';
-import { metrics, Metric, SignificanceLevel } from './metrics';
+import { PackageBenchmarkSummary, systemsAreCloseEnough, Document, compact } from '../common';
+import { getInterestingMetrics, SignificanceLevel } from '../analysis';
 
 export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
   return pairs.map(([before, after]) => compact([
@@ -76,21 +76,7 @@ function getInterestingMetricsMessage(a: Document<PackageBenchmarkSummary>, b: D
     + ` to make sure everything looks ok.`;
 }
 
-function getInterestingMetrics(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, significance: SignificanceLevel }[], metric) => {
-    const aValue = metric.getValue(a);
-    const bValue = metric.getValue(b);
-    const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
-    const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, a, b);
-    if (percentDiff && significance) {
-      return [
-        ...acc,
-        { metric, percentDiff, significance },
-      ];
-    }
-    return acc;
-  }, []);
-}
+
 
 function formatListForSentence(items: string[]) {
   return items.map((item, index) => {

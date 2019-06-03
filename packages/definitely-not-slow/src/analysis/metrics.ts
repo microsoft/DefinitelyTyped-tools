@@ -1,5 +1,6 @@
 import { mean } from '../measure/utils';
-import { PackageBenchmarkSummary, Document, config } from '../common';
+import { PackageBenchmarkSummary, Document, config, getPercentDiff } from '../common';
+import { isNumber } from 'util';
 
 export interface FormatOptions {
   precision?: number;
@@ -43,10 +44,10 @@ export type MetricName =
 
 function defaultGetSignificance(percentDiff: number): SignificanceLevel | undefined {
   if (percentDiff > config.comparison.percentDiffSevereThreshold) {
-    return SignificanceLevel.Warning;
+    return SignificanceLevel.Alert;
   }
   if (percentDiff > config.comparison.percentDiffWarningThreshold) {
-    return SignificanceLevel.Alert;
+    return SignificanceLevel.Warning;
   }
   if (percentDiff < config.comparison.percentDiffGoldStarThreshold) {
     return SignificanceLevel.Awesome;
@@ -55,34 +56,45 @@ function defaultGetSignificance(percentDiff: number): SignificanceLevel | undefi
 
 const getInsignificant = () => undefined;
 
+function getSignificanceProportionalTo(proportionalTo: MetricName) {
+  return (percentDiff: number, before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) => {
+    const proportionalToBeforeValue = metrics[proportionalTo].getValue(before);
+    const proportionalToAfterValue = metrics[proportionalTo].getValue(after);
+    if (typeof proportionalToBeforeValue === 'number' && typeof proportionalToAfterValue === 'number') {
+      const proportionalToPercentDiff = getPercentDiff(proportionalToAfterValue, proportionalToBeforeValue);
+      return defaultGetSignificance(percentDiff - proportionalToPercentDiff);
+    }
+  };
+}
+
 export const metrics: { [K in MetricName]: Metric } = {
   typeCount: {
     columnName: 'Type count',
     sentenceName: 'type count',
     formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getSignificanceProportionalTo('identifierCount'),
   },
   assignabilityCacheSize: {
     columnName: 'Assignability cache size',
     sentenceName: 'assignability cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getSignificanceProportionalTo('identifierCount'),
   },
   subtypeCacheSize: {
     columnName: 'Subtype cache size',
     sentenceName: 'subtype cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.subtype,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getSignificanceProportionalTo('identifierCount'),
   },
   identityCacheSize: {
     columnName: 'Identity cache size',
     sentenceName: 'identity cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.identity,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getSignificanceProportionalTo('identifierCount'),
   },
   samplesTaken: {
     columnName: 'Samples taken',
@@ -147,3 +159,19 @@ export const metrics: { [K in MetricName]: Metric } = {
     getSignificance: defaultGetSignificance,
   },
 };
+
+export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
+  return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, significance: SignificanceLevel }[], metric) => {
+    const aValue = metric.getValue(before);
+    const bValue = metric.getValue(after);
+    const percentDiff = isNumber(aValue) && isNumber(bValue) && getPercentDiff(bValue, aValue);
+    const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, before, after);
+    if (percentDiff && significance) {
+      return [
+        ...acc,
+        { metric, percentDiff, significance },
+      ];
+    }
+    return acc;
+  }, []);
+}

@@ -5,13 +5,17 @@
   "bin": "index.js",
   "scripts": {
     "build": "tsc -b .",
+    "test": "jest",
     "cli": "node dist/src/cli/index.js",
     "push-production": "npm run build && npm version patch && git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit -m 'Update dist' && git push -u origin production && git checkout -"
   },
   "author": "",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@types/node": "^11.13.12"
+    "@types/jest": "^24.0.13",
+    "@types/node": "^11.13.12",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
   },
   "dependencies": {
     "@azure/cosmos": "^2.1.5",

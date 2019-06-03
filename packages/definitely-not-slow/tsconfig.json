@@ -11,6 +11,7 @@
   },
   "include": ["src"],
   "references": [
+    { "path": "src/analysis" },
     { "path": "src/cli" },
     { "path": "src/github" },
     { "path": "src/common" },
