@@ -4,15 +4,15 @@ import { Document, PackageBenchmarkSummary, config } from '../../src/common';
 describe('analysis', () => {
   describe('metrics', () => {
     test('type count doesn’t warn unless it’s disproportionately higher with identifier count', () => {
-      const significance1 = metrics.typeCount.getSignificance(config.comparison.percentDiffWarningThreshold + .01,
+      const significance1 = metrics.typeCount.getSignificance(6,
         { body: { testIdentifierCount: 100, typeCount: 100 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 110, typeCount: 110 } } as Document<PackageBenchmarkSummary>);
+        { body: { testIdentifierCount: 600, typeCount: 600 } } as Document<PackageBenchmarkSummary>);
 
       expect(significance1).toBe(undefined);
 
-      const significance2 = metrics.typeCount.getSignificance(config.comparison.percentDiffWarningThreshold + .01,
+      const significance2 = metrics.typeCount.getSignificance(6,
         { body: { testIdentifierCount: 100, typeCount: 100 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 100, typeCount: 110 } } as Document<PackageBenchmarkSummary>);
+        { body: { testIdentifierCount: 100, typeCount: 600 } } as Document<PackageBenchmarkSummary>);
       
       expect(significance2).toBe(SignificanceLevel.Warning);
     });

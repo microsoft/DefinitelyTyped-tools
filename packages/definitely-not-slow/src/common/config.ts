@@ -36,8 +36,8 @@ export const config = {
     },
   },
   comparison: {
-    percentDiffWarningThreshold: 0.1,
-    percentDiffSevereThreshold: 0.5,
-    percentDiffGoldStarThreshold: -0.25,
+    percentDiffWarningThreshold: 0.2,
+    percentDiffAlertThreshold: 1,
+    percentDiffAwesomeThreshold: -0.25,
   },
 };

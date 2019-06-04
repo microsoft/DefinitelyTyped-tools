@@ -45,27 +45,27 @@ export type MetricName =
   | 'quickInfoWorstMean';
 
 function defaultGetSignificance(percentDiff: number): SignificanceLevel | undefined {
-  if (percentDiff > config.comparison.percentDiffSevereThreshold) {
+  if (percentDiff > config.comparison.percentDiffAlertThreshold) {
     return SignificanceLevel.Alert;
   }
   if (percentDiff > config.comparison.percentDiffWarningThreshold) {
     return SignificanceLevel.Warning;
   }
-  if (percentDiff < config.comparison.percentDiffGoldStarThreshold) {
+  if (percentDiff < config.comparison.percentDiffAwesomeThreshold) {
     return SignificanceLevel.Awesome;
   }
 }
 
 const getInsignificant = () => undefined;
 
-function getSignificanceProportionalTo(proportionalTo: MetricName) {
+function getSignificanceProportionalTo(proportionalTo: MetricName, getSignificance = defaultGetSignificance) {
   return (percentDiff: number, before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) => {
     const proportionalToBeforeValue = metrics[proportionalTo].getValue(before);
     const proportionalToAfterValue = metrics[proportionalTo].getValue(after);
     if (typeof proportionalToBeforeValue === 'number' && typeof proportionalToAfterValue === 'number') {
       const proportionalToPercentDiff = getPercentDiff(proportionalToAfterValue, proportionalToBeforeValue);
-      const defaultSignificance = defaultGetSignificance(percentDiff);
-      const weightedSignificance = defaultGetSignificance(percentDiff - proportionalToPercentDiff);
+      const defaultSignificance = getSignificance(percentDiff);
+      const weightedSignificance = getSignificance(percentDiff - proportionalToPercentDiff);
       // Can’t give out a gold star unless it’s absolutely better, otherwise it looks really confusing
       // when type count increased by 400% and that gets treated as “awesome” when identifier count
       // increased by 500%. It may _be_ awesome, but it looks confusing.
@@ -77,13 +77,25 @@ function getSignificanceProportionalTo(proportionalTo: MetricName) {
   };
 }
 
+function getOrderOfMagnitudeSignificance(percentDiff: number): SignificanceLevel | undefined {
+  if (percentDiff > 10) { // decimal: 10 = 1000% = 10x increase
+    return SignificanceLevel.Alert;
+  }
+  if (percentDiff > 5) {
+    return SignificanceLevel.Warning;
+  }
+  if (percentDiff < -5) {
+    return SignificanceLevel.Awesome;
+  }
+}
+
 export const metrics: { [K in MetricName]: Metric } = {
   typeCount: {
     columnName: 'Type count',
     sentenceName: 'type count',
     formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
-    getSignificance: getSignificanceProportionalTo('identifierCount'),
+    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
   },
   memoryUsage: {
     columnName: 'Memory usage',
@@ -91,7 +103,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.memoryUsage,
     getSignificance: (percentDiff, before, after) => {
       if (supportsMemoryUsage(before) && supportsMemoryUsage(after)) {
-        return getSignificanceProportionalTo('identifierCount')(percentDiff, before, after);
+        return getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance)(percentDiff, before, after);
       }
       return getInsignificant();
     }
@@ -101,21 +113,21 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: 'assignability cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
-    getSignificance: getSignificanceProportionalTo('identifierCount'),
+    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
   },
   subtypeCacheSize: {
     columnName: 'Subtype cache size',
     sentenceName: 'subtype cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.subtype,
-    getSignificance: getSignificanceProportionalTo('identifierCount'),
+    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
   },
   identityCacheSize: {
     columnName: 'Identity cache size',
     sentenceName: 'identity cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.identity,
-    getSignificance: getSignificanceProportionalTo('identifierCount'),
+    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
   },
   samplesTaken: {
     columnName: 'Samples taken',
