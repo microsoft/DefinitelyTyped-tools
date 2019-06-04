@@ -4,6 +4,7 @@ import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemo
 export interface FormatOptions {
   precision?: number;
   indent?: number;
+  percentage?: boolean;
 }
 
 export const enum SignificanceLevel {
@@ -153,6 +154,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: 'mean coefficient of variation of samples measured for completions time',
     getValue: x => x.body.completions.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
+    formatOptions: { percentage: true },
   },
   completionsWorstMean: {
     columnName: 'Worst duration (ms)',
@@ -183,6 +185,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: 'mean coefficient of variation of samples measured for quick info time',
     getValue: x => x.body.quickInfo.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
+    formatOptions: { percentage: true },
   },
   quickInfoWorstMean: {
     columnName: 'Worst duration (ms)',

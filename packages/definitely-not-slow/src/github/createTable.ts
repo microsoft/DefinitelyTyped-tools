@@ -132,8 +132,8 @@ function createComparisonRow(
   
   return [
     indent(title, formatOptions.indent || 0),
-    format(aValue, formatOptions.precision),
-    format(bValue, formatOptions.precision),
+    format(aValue, formatOptions),
+    format(bValue, formatOptions),
     diff || '',
   ];
 }
@@ -148,7 +148,7 @@ function createSingleRunRow(
 
   return [
     indent(title, formatOptions.indent || 0),
-    format(value, formatOptions.precision),
+    format(value, formatOptions),
   ];
 }
 
@@ -157,7 +157,7 @@ function indent(text: string, level: number): string {
 }
 
 function formatDiff(percentDiff: number, significance: SignificanceLevel | undefined, precision?: number): string {
-  const percentString = format(percentDiff * 100, precision, '%', true);
+  const percentString = format(percentDiff, { percentage: true }, '%', true);
   if (!significance) {
     return percentString;
   }
@@ -170,12 +170,17 @@ function formatDiff(percentDiff: number, significance: SignificanceLevel | undef
   }
 }
 
-function format(x: string | number | undefined, precision = 1, unit = '', showPlusSign?: boolean): string {
+function format(
+  x: string | number | undefined,
+  { precision = 1, percentage }: FormatOptions = {},
+  unit = percentage ? '%' : '',
+  showPlusSign?: boolean
+): string {
   switch (typeof x) {
     case 'string': return x + unit;
     case 'number':
-      if (isNaN(x)) return '';
-      let numString = x.toFixed(precision).replace(/^-0(\.0*)?$/, '0$1');
+      if (isNaN(x) || !isFinite(x)) return '';
+      let numString = (percentage ? x * 100 : x).toFixed(precision).replace(/^-0(\.0*)?$/, '0$1');
       if (showPlusSign && x > 0 && !/^0(\.0*)?$/.test(numString)) numString = `+${numString}`;
       return numString + unit;
     default: return '';
