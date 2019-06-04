@@ -2,10 +2,10 @@ import { createComparisonTable, createSingleRunTable } from './createTable';
 import { PackageBenchmarkSummary, systemsAreCloseEnough, Document, compact, toPackageKey } from '../common';
 import { getInterestingMetrics, SignificanceLevel, ComparedMetric } from '../analysis';
 
-export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false) {
+export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][], prNumber: number, alwaysWriteHeading = false, alwaysCollapseDetails = false) {
   return pairs.map(([before, after]) => {
     const interestingMetrics = before && getInterestingMetrics(before, after);
-    const shouldCollapseDetails = !interestingMetrics || !interestingMetrics.length;
+    const shouldCollapseDetails = alwaysCollapseDetails || !interestingMetrics || !interestingMetrics.length;
     const messageBody = [
       before
         ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))

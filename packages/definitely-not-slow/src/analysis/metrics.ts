@@ -61,7 +61,15 @@ function getSignificanceProportionalTo(proportionalTo: MetricName) {
     const proportionalToAfterValue = metrics[proportionalTo].getValue(after);
     if (typeof proportionalToBeforeValue === 'number' && typeof proportionalToAfterValue === 'number') {
       const proportionalToPercentDiff = getPercentDiff(proportionalToAfterValue, proportionalToBeforeValue);
-      return defaultGetSignificance(percentDiff - proportionalToPercentDiff);
+      const defaultSignificance = defaultGetSignificance(percentDiff);
+      const weightedSignificance = defaultGetSignificance(percentDiff - proportionalToPercentDiff);
+      // Can’t give out a gold star unless it’s absolutely better, otherwise it looks really confusing
+      // when type count increased by 400% and that gets treated as “awesome” when identifier count
+      // increased by 500%. It may _be_ awesome, but it looks confusing.
+      if (weightedSignificance === SignificanceLevel.Awesome && defaultSignificance !== SignificanceLevel.Awesome) {
+        return undefined;
+      }
+      return weightedSignificance;
     }
   };
 }

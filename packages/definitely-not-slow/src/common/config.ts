@@ -24,6 +24,7 @@ export const config = {
   },
   github: {
     userAgent: 'definitely-not-slow',
+    typeScriptBotUsername: 'typescript-bot',
     get typeScriptBotAuthToken() {
       return assertDefined(
         process.env.TYPESCRIPT_BOT_GITHUB_TOKEN,
