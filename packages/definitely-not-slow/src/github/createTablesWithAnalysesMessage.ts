@@ -28,7 +28,7 @@ export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmar
 }
 
 function getDetailsSummaryTitle(comparisonsCount: number, benchmark: Document<PackageBenchmarkSummary>) {
-  const title = '**Comparison details**';
+  const title = '<strong>Comparison details</strong>';
   if (comparisonsCount > 1) {
     return title + ` for ${toPackageKey(benchmark.body.packageName, benchmark.body.packageVersion)} 📊`;
   }
