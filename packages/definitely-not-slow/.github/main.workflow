@@ -3,7 +3,13 @@ workflow "build, test and publish beta" {
   resolves = "publish beta"
 }
 
+action "filter not tag" {
+  uses = "actions/bin/filter@master"
+  args = "not tag"
+}
+
 action "install" {
+  needs = "filter not tag"
   uses = "actions/npm@master"
   args = "install"
 }
