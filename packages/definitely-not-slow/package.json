@@ -9,9 +9,9 @@
     "cli": "node dist/src/cli/index.js",
     "git-config": "test \"$GITHUB_WORKFLOW\" && git remote -v && git config --global user.name \"$GH_USER\" && git config --global user.email \"$GH_EMAIL\" || echo ''",
     "prepush-production": "npm run git-config",
-    "push-production": "git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit --allow-empty -m 'Update dist' && git push -u origin production && git checkout -",
+    "push-production": "git fetch && git checkout production && git merge -m 'Merge master into production' master && npm run build && git add dist && git commit --allow-empty -m 'Update dist' && git push -u origin production && git checkout -",
     "prepush-beta": "npm run git-config",
-    "push-beta": "git checkout beta && git merge -m 'Merge master into beta' master && npm run build && git add dist && git commit -m --allow-empty 'Update dist' && git push -u origin beta && git checkout -"
+    "push-beta": "git fetch && git checkout beta && git merge -m 'Merge master into beta' master && npm run build && git add dist && git commit -m --allow-empty 'Update dist' && git push -u origin beta && git checkout -"
   },
   "author": "Andrew Branch <andrew@wheream.io>",
   "license": "MIT",
