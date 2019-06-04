@@ -1,5 +1,5 @@
 import { PackageBenchmark, PackageBenchmarkSummary, StatSummary, LanguageServiceBenchmark } from '../common';
-import { max, mean, median, stdDev } from './utils';
+import { max, mean, median, stdDev, coefficientOfVariation } from './utils';
 
 export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary {
   return {
@@ -20,21 +20,22 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
   }
 }
 
-export function summarizeStats(benchmarks: LanguageServiceBenchmark[]): {
-  quickInfo: StatSummary<LanguageServiceBenchmark>;
-  completions: StatSummary<LanguageServiceBenchmark>;
- } {
+export function summarizeStats(benchmarks: LanguageServiceBenchmark[]): Pick<PackageBenchmarkSummary, 'quickInfo' | 'completions'> {
   return [
     ['completions', (benchmark: LanguageServiceBenchmark) => benchmark.completionsDurations] as const,
     ['quickInfo', (benchmark: LanguageServiceBenchmark) => benchmark.quickInfoDurations] as const,
   ].reduce((acc, [key, getDurations]) => {
-    const durations = Array.prototype.concat.apply([], benchmarks.map(getDurations));
-    const worst = max(benchmarks, m => mean(getDurations(m)));
+    const [means, cvs] = benchmarks.map(b => {
+      const durations = getDurations(b);
+      return [mean(durations), coefficientOfVariation(durations)];
+    });
+    const worst = max(benchmarks, b => mean(getDurations(b)));
     const stats: StatSummary<LanguageServiceBenchmark> = {
-      mean: mean(durations),
-      median: median(durations),
-      standardDeviation: stdDev(durations),
-      trials: durations.length,
+      mean: mean(means),
+      median: median(means),
+      standardDeviation: stdDev(means),
+      meanCoefficientOfVariation: mean(cvs),
+      trials: means.length,
       worst,
     };
 

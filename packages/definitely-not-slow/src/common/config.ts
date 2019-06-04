@@ -7,7 +7,7 @@ export const config = {
   database: {
     benchmarksDatabaseId: 'benchmarks',
     packageBenchmarksContainerId: 'packageBenchmarks',
-    packageBenchmarksDocumentSchemaVersion: 3,
+    packageBenchmarksDocumentSchemaVersion: 4,
     typeScriptComparisonsContainerId: 'typeScriptComparisons',
     typeScriptComparisonsDocumentSchemaVersion: 1,
     endpoint: 'https://dt-perf.documents.azure.com:443/',

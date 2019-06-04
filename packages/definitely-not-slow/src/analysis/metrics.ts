@@ -35,9 +35,11 @@ export type MetricName =
   | 'completionsMean'
   | 'completionsMedian'
   | 'completionsStdDev'
+  | 'completionsAvgCV'
   | 'quickInfoMean'
   | 'quickInfoMedian'
   | 'quickInfoStdDev'
+  | 'quickInfoAvgCV'
   | 'completionsWorstMean'
   | 'quickInfoWorstMean';
 
@@ -146,6 +148,12 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.completions.standardDeviation,
     getSignificance: getInsignificant,
   },
+  completionsAvgCV: {
+    columnName: 'Mean CV',
+    sentenceName: 'mean coefficient of variation of samples measured for completions time',
+    getValue: x => x.body.completions.meanCoefficientOfVariation,
+    getSignificance: getInsignificant,
+  },
   completionsWorstMean: {
     columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting completions at a position',
@@ -168,6 +176,12 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Std. deviation (ms)',
     sentenceName: 'standard deviation of the durations for getting quick info at a position',
     getValue: x => x.body.quickInfo.standardDeviation,
+    getSignificance: getInsignificant,
+  },
+  quickInfoAvgCV: {
+    columnName: 'Mean CV',
+    sentenceName: 'mean coefficient of variation of samples measured for quick info time',
+    getValue: x => x.body.quickInfo.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
   },
   quickInfoWorstMean: {

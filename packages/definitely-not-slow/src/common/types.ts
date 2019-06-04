@@ -51,6 +51,7 @@ export interface StatSummary<T> {
   mean: number;
   median: number;
   standardDeviation: number;
+  meanCoefficientOfVariation: number;
   trials: number;
   worst: T;
 }

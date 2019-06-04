@@ -18,15 +18,17 @@ export interface CompareOptions {
   packageName: string;
   packageVersion: number;
   maxRunSeconds?: number;
+  upload?: boolean;
 }
 
 export async function compare(args: Args) {
   const definitelyTypedPath = path.resolve(assertString(withDefault(args.definitelyTypedPath, process.cwd()), 'definitelyTypedPath'));
-  const typeScriptVersionMajorMinor = assertString(args.typeScriptVersion ? args.typeScriptVersion.toString() : undefined);
+  const typeScriptVersionMajorMinor = assertString(args.typeScriptVersion ? args.typeScriptVersion.toString() : undefined, 'typeScriptVersion');
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const changedPackages = await getChangedPackages({ diffTo: 'origin/master', definitelyTypedPath });
   const maxRunSeconds = args.maxRunSeconds ? assertNumber(args.maxRunSeconds) : undefined;
   const shouldComment = !!args.comment;
+  const upload = !!args.upload;
   const runDependents = args.runDependents ? typeof args.runDependents === 'number' ? args.runDependents : 2 : 0;
   if (!changedPackages) {
     console.log('No changed packages; nothing to do');
@@ -45,6 +47,7 @@ export async function compare(args: Args) {
       packageName: affectedPackage.id.name,
       packageVersion: affectedPackage.major,
       maxRunSeconds,
+      upload,
     }));
   }
 
@@ -68,6 +71,7 @@ export async function compare(args: Args) {
       packageName: affectedPackage.id.name,
       packageVersion: affectedPackage.major,
       maxRunSeconds,
+      upload,
     }));
   }
 
@@ -84,6 +88,7 @@ export async function compareBenchmarks({
   packageName,
   packageVersion,
   maxRunSeconds,
+  upload = true,
 }: CompareOptions): Promise<[Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>]> {
   const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const latestBenchmarkDocument = await getLatestBenchmark({
@@ -117,7 +122,7 @@ export async function compareBenchmarks({
         printSummary: false,
         iterations: config.benchmarks.languageServiceIterations,
         progress: false,
-        upload: true,
+        upload,
         tsVersion: typeScriptVersionMajorMinor,
         nProcesses: os.cpus().length,
         failOnErrors: true,
