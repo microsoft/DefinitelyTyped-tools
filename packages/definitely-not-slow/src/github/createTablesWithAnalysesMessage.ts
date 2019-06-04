@@ -28,11 +28,11 @@ export function createTablesWithAnalysesMessage(pairs: [Document<PackageBenchmar
 }
 
 function getDetailsSummaryTitle(comparisonsCount: number, benchmark: Document<PackageBenchmarkSummary>) {
-  const title = '<strong>Comparison details</strong>';
+  let titleStart = '<strong>Comparison details';
   if (comparisonsCount > 1) {
-    return title + ` for ${toPackageKey(benchmark.body.packageName, benchmark.body.packageVersion)} 📊`;
+    titleStart += ` for ${toPackageKey(benchmark.body.packageName, benchmark.body.packageVersion)}`;
   }
-  return `${title} 📊`;
+  return titleStart + '</strong> 📊';
 }
 
 function getBeforeTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
