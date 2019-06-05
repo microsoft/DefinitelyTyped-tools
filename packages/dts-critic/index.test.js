@@ -1,4 +1,4 @@
-const { findDtsName, findNames, retrieveNpmHomepageOrFail, checkNames, checkSource } = require("./index");
+const { findDtsName, findNames, retrieveNpmHomepageOrFail, checkSource } = require("./index");
 /**
  * @param {string} description
  * @param {{ [s: string]: () => void }} tests
@@ -29,36 +29,20 @@ suite("findParent", {
 })
 suite("findNames", {
     absolutePathsBoth() {
-        expect(findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toEqual({
-            dts: "jquery",
-            src: "dts-critic",
-            homepage: undefined,
-            project: undefined
-        })
+        expect(() => findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toThrow(
+            `d.ts name 'jquery' must match source name 'dts-critic'.`)
     },
     currentDirectorySource() {
-        expect(findNames("jquery/index.d.ts", ".", undefined)).toEqual({
-            dts: "jquery",
-            src: "dts-critic",
-            homepage: undefined,
-            project: undefined
-        })
+        expect(() => findNames("jquery/index.d.ts", ".", undefined)).toThrow(
+            `d.ts name 'jquery' must match source name 'dts-critic'.`);
     },
     mistakenFileNameSource() {
-        expect(findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toEqual({
-            dts: "jquery",
-            src: "lol",
-            homepage: undefined,
-            project: undefined
-        })
+        expect(() => findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toThrow(
+            `d.ts name 'jquery' must match source name 'lol'.`);
     },
     trailingSlashSource() {
-        expect(findNames("jquery/index.d.ts", "/home/lol/", undefined)).toEqual({
-            dts: "jquery",
-            src: "lol",
-            homepage: undefined,
-            project: undefined
-        })
+        expect(() => findNames("jquery/index.d.ts", "/home/lol/", undefined)).toThrow(
+            `d.ts name 'jquery' must match source name 'lol'.`);
     },
     mismatchPackageFailNoHeader() {
         // surely parseltongue will never exist
@@ -131,41 +115,6 @@ suite("retrieveNpmHomepageOrFail", {
         expect(retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs")
     }
 })
-suite("checkNames", {
-    standaloneFail() {
-        expect(() => checkNames({ dts: "a", src: "b" }, undefined)).toThrow("d.ts name 'a' must match source name 'b'.")
-    },
-    okWithJustHomepage() {
-        expect(checkNames({ dts: "a", src: "a", homepage: "zombo.com" }, undefined)).toBeUndefined()
-    },
-    okWithJustHeader() {
-        expect(checkNames({ dts: "a", src: "a" }, {
-            nonNpm: false,
-            libraryName: "a",
-            libraryMajorVersion: 1,
-            libraryMinorVersion: 2,
-            typeScriptVersion: "3.2",
-            contributors: [],
-            projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-        })).toBeUndefined()
-    },
-    homepageFail() {
-        expect(() => checkNames({ dts: "a", src: "a", homepage: "zombo.com" }, {
-            nonNpm: false,
-            libraryName: "a",
-            libraryMajorVersion: 1,
-            libraryMinorVersion: 2,
-            typeScriptVersion: "3.2",
-            contributors: [],
-            projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-        })).toThrow(`At least one of the project urls listed in the header, ["welcome-to-zombo.com","this-is-zombo.com"], must match the homepage listed by npm, 'zombo.com'.
-If your d.ts file is not for the npm package with URL zombo.com,
-change the name by adding -browser to the end and change the first line
-of the Definitely Typed header to
-
-    // Type definitions for non-npm package a-browser`)
-    }
-});
 
 suite("checkSource", {
     badExportDefault() {

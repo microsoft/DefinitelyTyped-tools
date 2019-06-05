@@ -18,7 +18,6 @@ function dtsCritic(dtsPath, sourcePath) {
         header = undefined;
     }
     const names = findNames(dtsPath, sourcePath, header)
-    checkNames(names, header);
     if (header && !header.nonNpm) {
         checkSource(names.dts, dts, readSource(sourcePath, names.src, header));
     }
@@ -26,7 +25,6 @@ function dtsCritic(dtsPath, sourcePath) {
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
 dtsCritic.retrieveNpmHomepageOrFail = retrieveNpmHomepageOrFail;
-dtsCritic.checkNames = checkNames;
 dtsCritic.checkSource = checkSource;
 
 module.exports = dtsCritic;
@@ -84,6 +82,9 @@ function findNames(dtsPath, sourcePath, header) {
     let homepage;
     if (sourcePath) {
         src = findSourceName(sourcePath);
+        if (dts !== src) {
+            throw new Error(`d.ts name '${dts}' must match source name '${src}'.`);
+        }
     }
     else {
         let nonNpmHasMatchingPackage = false;
@@ -164,30 +165,6 @@ function mangleScoped(baseName) {
 }
 
 /**
- * @param {Names} names
- * @param {headerParser.Header | undefined} header
- */
-function checkNames(names, header) {
-    if (names.dts !== names.src) {
-        throw new Error(`d.ts name '${names.dts}' must match source name '${names.src}'.`);
-    }
-    if (names.homepage && header) {
-        const homepage = normalise(names.homepage);
-        if (!header.projects.some(p => homepage === normalise(p)) && !isExistingSquatter(names.dts)) {
-            const e = new Error(`At least one of the project urls listed in the header, ${JSON.stringify(header.projects)}, must match the homepage listed by npm, '${homepage}'.
-If your d.ts file is not for the npm package with URL ${homepage},
-change the name by adding -browser to the end and change the first line
-of the Definitely Typed header to
-
-    // Type definitions for non-npm package ${names.dts}-browser
-`);
-            /** @type {*} */(e).homepage = homepage;
-            throw e;
-        }
-    }
-}
-
-/**
  * A d.ts with 'export default' and no ambient modules should have source that contains
  * either 'default' or '__esModule' or 'react-side-effect' or '@flow' somewhere.
  * This function also skips any package named 'react-native'.
@@ -206,25 +183,6 @@ function checkSource(name, dts, src) {
 Here is the source:
 ${src}`);
     }
-}
-
-/** @param {string} url */
-function normalise(url) {
-    url = url.toLowerCase();
-    url = skipEnd(url, "#readme");
-    url = skipEnd(url, "/");
-    return url;
-}
-
-/**
- * @param {string} s
- * @param {string} suffix
- */
-function skipEnd(s, suffix) {
-    if (s.endsWith(suffix)) {
-        return s.slice(0, s.length - suffix.length);
-    }
-    return s;
 }
 
 /** @param {string} name */
