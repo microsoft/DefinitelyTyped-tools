@@ -1,6 +1,6 @@
 {
   "name": "definitely-not-slow",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "",
   "bin": "index.js",
   "scripts": {
