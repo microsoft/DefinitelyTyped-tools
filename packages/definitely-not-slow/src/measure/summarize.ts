@@ -25,10 +25,13 @@ export function summarizeStats(benchmarks: LanguageServiceBenchmark[]): Pick<Pac
     ['completions', (benchmark: LanguageServiceBenchmark) => benchmark.completionsDurations] as const,
     ['quickInfo', (benchmark: LanguageServiceBenchmark) => benchmark.quickInfoDurations] as const,
   ].reduce((acc, [key, getDurations]) => {
-    const [means, cvs] = benchmarks.map(b => {
+    const [means, cvs] = benchmarks.reduce((acc, b) => {
       const durations = getDurations(b);
-      return [mean(durations), coefficientOfVariation(durations)];
-    });
+      acc[0].push(mean(durations));
+      acc[1].push(coefficientOfVariation(durations));
+      return acc;
+    }, [[], []] as [number[], number[]]);
+
     const worst = max(benchmarks, b => mean(getDurations(b)));
     const stats: StatSummary<LanguageServiceBenchmark> = {
       mean: mean(means),

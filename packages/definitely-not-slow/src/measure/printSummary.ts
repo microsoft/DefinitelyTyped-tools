@@ -27,6 +27,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log('    Trials       ', `${completions.trials} (sampled from ${benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations})`);
     console.log('    Mean (ms):   ', toPrecision(completions.mean, 6));
     console.log('    Median (ms): ', toPrecision(completions.median, 6));
+    console.log('    Mean CV:     ', toPrecision(completions.meanCoefficientOfVariation, 6));
     console.log('    Worst');
     console.log('      Duration (ms):  ', toPrecision(mean(worstCompletion.completionsDurations), 6));
     console.log('      Trials:         ', `${worstCompletion.completionsDurations.length} (wanted ${benchmark.requestedLanguageServiceTestIterations})`);
@@ -37,6 +38,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log('    Trials       ', `${quickInfo.trials} (sampled from ${benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations})`);
     console.log('    Mean (ms):   ', toPrecision(quickInfo.mean, 6));
     console.log('    Median (ms): ', toPrecision(quickInfo.median, 6));
+    console.log('    Mean CV:     ', toPrecision(quickInfo.meanCoefficientOfVariation, 6));
     console.log('    Worst');
     console.log('      Duration (ms):  ', toPrecision(mean(worstQuickInfo.quickInfoDurations), 6));
     console.log('      Trials:         ', `${worstCompletion.completionsDurations.length} (wanted ${benchmark.requestedLanguageServiceTestIterations})`);
