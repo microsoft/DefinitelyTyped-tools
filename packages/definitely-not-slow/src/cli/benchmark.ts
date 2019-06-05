@@ -3,9 +3,10 @@ import * as path from 'path';
 import { getDatabase, DatabaseAccessLevel, config, getParsedPackages, assertString, assertBoolean, withDefault, assertNumber, getSystemInfo } from '../common';
 import { getTypeScript } from '../measure/getTypeScript';
 import { insertDocument } from '../write';
-import { summarize, printSummary, measurePerf } from '../measure';
+import { printSummary, measurePerf } from '../measure';
 import { Args } from '../common';
 import { PackageId } from 'types-publisher/bin/lib/packages';
+import { summarize } from '../analysis';
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
