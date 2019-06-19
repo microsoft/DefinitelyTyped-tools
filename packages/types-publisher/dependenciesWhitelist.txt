@@ -61,6 +61,7 @@ jointjs
 levelup
 localforage
 log4js
+loglevel
 knex
 magic-string
 mali
