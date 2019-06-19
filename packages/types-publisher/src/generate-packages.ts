@@ -171,7 +171,7 @@ function createReadme(typing: TypingsData): string {
 
     lines.push("# Summary");
     if (typing.projectName) {
-        lines.push(`This package contains type definitions for ${typing.libraryName} ( ${typing.projectName} ).`);
+        lines.push(`This package contains type definitions for ${typing.libraryName} (${typing.projectName}).`);
     } else {
         lines.push(`This package contains type definitions for ${typing.libraryName}.`);
     }
@@ -189,7 +189,7 @@ function createReadme(typing: TypingsData): string {
     lines.push("");
 
     lines.push("# Credits");
-    const contributors = typing.contributors.map(({ name, url }) => `${name} <${url}>`).join(", ");
+    const contributors = typing.contributors.map(({ name, url }) => `${name} <${url}>`).join(", ").replace(/, ([^,]+)$/, ", and $1");
     lines.push(`These definitions were written by ${contributors}.`);
     lines.push("");
 
