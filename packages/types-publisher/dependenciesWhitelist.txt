@@ -95,6 +95,7 @@ protobufjs
 protractor
 quill-delta
 raven-js
+re-resizable
 react-dnd
 react-native-maps
 react-native-svg
