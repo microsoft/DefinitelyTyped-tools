@@ -102,6 +102,7 @@ scroll-into-view-if-needed
 source-map
 styled-components
 sw-toolbox
+swagger-parser
 terser
 three
 tslint
