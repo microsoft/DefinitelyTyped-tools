@@ -5,6 +5,10 @@
 @babel/template
 @babel/traverse
 @babel/types
+@jest/environment
+@jest/fake-timers
+@jest/transform
+@jest/types
 @material-ui/core
 @sentry/browser
 @types/firebase
@@ -57,6 +61,11 @@ hoist-non-react-statics
 immutable
 indefinite-observable
 inversify
+jest-diff
+jest-environment-node
+jest-environment-jsdom
+jest-mock
+jest-snapshot
 jointjs
 levelup
 localforage
