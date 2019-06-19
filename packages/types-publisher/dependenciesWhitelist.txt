@@ -37,6 +37,7 @@ broadcast-channel
 cac
 chalk
 chokidar
+commander
 cordova-plugin-camera
 cordova-plugin-file
 cordova-plugin-file-transfer
