@@ -5,6 +5,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@electron/get
 @jest/environment
 @jest/fake-timers
 @jest/transform
@@ -47,6 +48,8 @@ del
 dnd-core
 egg
 electron
+electron-notarize
+electron-osx-sign
 eventemitter2
 eventemitter3
 expect
