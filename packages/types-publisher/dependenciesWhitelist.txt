@@ -75,6 +75,7 @@ levelup
 localforage
 log4js
 loglevel
+logrocket
 knex
 magic-string
 mali
