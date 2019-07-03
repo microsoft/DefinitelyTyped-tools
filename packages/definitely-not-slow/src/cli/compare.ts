@@ -116,7 +116,7 @@ export async function compareBenchmarks({
     }
     if (needsRerun) {
       console.log(`No previous benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`);
-      await execAndThrowErrors('git checkout origin/master', definitelyTypedPath);
+      await execAndThrowErrors('git checkout origin/master && git clean -df', definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: false,
@@ -129,7 +129,7 @@ export async function compareBenchmarks({
         installTypeScript: false,
         maxRunSeconds,
       });
-      await execAndThrowErrors(`git checkout -`, definitelyTypedPath);
+      await execAndThrowErrors(`git checkout - && git clean -df`, definitelyTypedPath);
       latestBenchmark = latest && latest.summary;
     }
   }
