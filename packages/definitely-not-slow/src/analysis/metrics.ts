@@ -98,9 +98,9 @@ export const metrics: { [K in MetricName]: Metric } = {
     getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
   },
   memoryUsage: {
-    columnName: 'Memory usage',
+    columnName: 'Memory usage (MiB)',
     sentenceName: 'memory usage',
-    getValue: x => x.body.memoryUsage,
+    getValue: x => x.body.memoryUsage / 2 ** 20,
     getSignificance: (percentDiff, before, after) => {
       if (supportsMemoryUsage(before) && supportsMemoryUsage(after)) {
         return getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance)(percentDiff, before, after);
