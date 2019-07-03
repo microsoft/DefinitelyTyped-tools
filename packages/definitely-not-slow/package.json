@@ -22,7 +22,7 @@
     "ts-jest": "^24.0.2"
   },
   "dependencies": {
-    "@azure/cosmos": "^2.1.5",
+    "@azure/cosmos": "^2.1.7",
     "@octokit/rest": "^16.28.1",
     "dtslint": "^0.7.7",
     "markdown-table": "^1.1.3",
