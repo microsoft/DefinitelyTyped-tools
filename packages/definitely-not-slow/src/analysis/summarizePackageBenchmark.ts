@@ -2,7 +2,6 @@ import { PackageBenchmark, PackageBenchmarkSummary, StatSummary, LanguageService
 import { max, mean, median, stdDev, coefficientOfVariation } from '../measure/utils';
 
 export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary {
-  console.log(JSON.stringify(benchmark));
   return {
     packageName: benchmark.packageName,
     packageVersion: benchmark.packageVersion,
