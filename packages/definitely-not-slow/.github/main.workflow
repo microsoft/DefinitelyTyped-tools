@@ -11,7 +11,7 @@ action "filter not tag" {
 action "install" {
   needs = "filter not tag"
   uses = "actions/npm@master"
-  args = "install"
+  args = "ci"
 }
 
 action "build" {
