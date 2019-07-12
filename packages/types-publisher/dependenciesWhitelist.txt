@@ -74,6 +74,7 @@ jest-mock
 jest-snapshot
 jointjs
 levelup
+lit-element
 localforage
 log4js
 loglevel
