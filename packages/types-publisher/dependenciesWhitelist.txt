@@ -44,6 +44,7 @@ cordova-plugin-camera
 cordova-plugin-file
 cordova-plugin-file-transfer
 csstype
+date-fns
 decimal.js
 del
 dnd-core
