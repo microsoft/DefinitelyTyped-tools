@@ -3,6 +3,7 @@ const headerParser = require("definitelytyped-header-parser");
 const fs = require("fs");
 const path = require("path");
 const download = require("download-file-sync");
+const semver = require("semver");
 
 /**
  * @param {string} dtsPath
@@ -24,7 +25,7 @@ function dtsCritic(dtsPath, sourcePath) {
 }
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
-dtsCritic.retrieveNpmHomepageOrFail = retrieveNpmHomepageOrFail;
+dtsCritic.retrieveNpmOrFail = retrieveNpmOrFail;
 dtsCritic.checkSource = checkSource;
 
 module.exports = dtsCritic;
@@ -36,7 +37,7 @@ if (!module.parent) {
 /** @typedef {{
  *    dts: string,
  *    src: string,
- *    homepage?: string
+ *    homepage?: string,
  * }}
  * Names
  */
@@ -80,6 +81,7 @@ function findNames(dtsPath, sourcePath, header) {
     const dts = findDtsName(dtsPath);
     let src;
     let homepage;
+    let versions;
     if (sourcePath) {
         src = findSourceName(sourcePath);
         if (dts !== src) {
@@ -88,10 +90,18 @@ function findNames(dtsPath, sourcePath, header) {
     }
     else {
         let nonNpmHasMatchingPackage = false;
+        let noMatchingVersion = false;
         src = dts;
         try {
-            homepage = retrieveNpmHomepageOrFail(dts);
+            const npm = retrieveNpmOrFail(dts)
+            homepage = npm.homepage;
+            versions = Object.keys(npm.versions).map(v => {
+                const ver = semver.parse(v);
+                if (!ver) return "";
+                return ver.major + "." + ver.minor;
+            });
             nonNpmHasMatchingPackage = !!header && header.nonNpm && !isExistingSquatter(dts);
+            noMatchingVersion = !!header && !header.nonNpm && !versions.includes(header.libraryMajorVersion + "." + header.libraryMinorVersion);
         }
         catch (e) {
             if (!header || !header.nonNpm) {
@@ -117,6 +127,19 @@ Try adding -browser to the end of the name to get
 
     ${dts}-browser
 `);
+
+        }
+        if (noMatchingVersion) {
+            const verstring = versions ? versions.join(', ') : "NO VERSIONS FOUND";
+            const lateststring = versions ? versions[versions.length - 1] : "NO LATEST VERSION FOUND";
+            const headerstring = header ? header.libraryMajorVersion + '.' + header.libraryMinorVersion : "NO HEADER VERSION FOUND";
+            throw new Error(`The types for ${dts} must match a version that exists on npm.
+You should copy the major and minor version from the package on npm.
+
+To resolve this error, change the version in the header, ${headerstring},
+to match one on npm: ${verstring}.
+
+For example, if you're trying to match the latest version, use ${lateststring}.`);
 
         }
     }
@@ -146,14 +169,14 @@ function findSourceName(sourcePath) {
 /**
  * This function makes it an ERROR not to have a npm package that matches the base name.
  * @param {string} baseName
- * @return {string}
+ * @return {{ homepage: string, versions: { [s: string]: any } }}
  */
-function retrieveNpmHomepageOrFail(baseName) {
+function retrieveNpmOrFail(baseName) {
     const npm = JSON.parse(download("https://registry.npmjs.org/" + mangleScoped(baseName)));
     if ("error" in npm) {
         throw new Error(baseName + " " + npm.error);
     }
-    return npm.homepage;
+    return npm;
 }
 
 /** @param {string} baseName */

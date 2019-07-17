@@ -1,4 +1,4 @@
-const { findDtsName, findNames, retrieveNpmHomepageOrFail, checkSource } = require("./index");
+const { findDtsName, findNames, retrieveNpmOrFail, checkSource } = require("./index");
 /**
  * @param {string} description
  * @param {{ [s: string]: () => void }} tests
@@ -109,10 +109,10 @@ Try adding -browser to the end of the name to get
 suite("retrieveNpmHomepageOrFail", {
     retrieveFailure() {
         // surely parseltongue will never exist
-        expect(() => retrieveNpmHomepageOrFail("parseltongue")).toThrow(`parseltongue Not found`);
+        expect(() => retrieveNpmOrFail("parseltongue")).toThrow(`parseltongue Not found`);
     },
     retrieveShelljs() {
-        expect(retrieveNpmHomepageOrFail("shelljs")).toBe("http://github.com/shelljs/shelljs")
+        expect(retrieveNpmOrFail("shelljs").homepage).toBe("http://github.com/shelljs/shelljs")
     }
 })
 

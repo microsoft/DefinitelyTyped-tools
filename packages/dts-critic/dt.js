@@ -3,22 +3,36 @@ const fs = require('fs')
 const path = require('path')
 const stripJsonComments = require('strip-json-comments')
 /** @param {string} tslintPath */
-function hasDtHeaderLintRule(tslintPath) {
+function hasNpmNamingLintRule(tslintPath) {
     if (fs.existsSync(tslintPath)) {
         const tslint = JSON.parse(stripJsonComments(fs.readFileSync(tslintPath, 'utf-8')))
-        if(tslint.rules && tslint.rules["dt-header"] !== undefined) {
-            return !!tslint.rules["dt-header"]
+        if(tslint.rules && tslint.rules["npm-naming"] !== undefined) {
+            return !!tslint.rules["npm-naming"]
         }
         return true;
     }
     return false;
 }
 
+/** @param {string} tslintPath */
+function addNpmNamingLintRule(tslintPath) {
+    if (fs.existsSync(tslintPath)) {
+        const tslint = JSON.parse(stripJsonComments(fs.readFileSync(tslintPath, 'utf-8')))
+        if (tslint.rules) {
+            tslint.rules["npm-naming"] = false;
+        }
+        else {
+            tslint.rules = { "npm-naming": false }
+        }
+        fs.writeFileSync(tslintPath, JSON.stringify(tslint, undefined, 4), 'utf-8')
+    }
+}
+
 function main() {
     for (const item of fs.readdirSync('../DefinitelyTyped/types')) {
         const entry = '../DefinitelyTyped/types/' + item
         try {
-            if (hasDtHeaderLintRule(entry + '/tslint.json')) {
+            if (hasNpmNamingLintRule(entry + '/tslint.json')) {
                 critic(entry + '/index.d.ts')
             }
         }
@@ -45,6 +59,19 @@ function main() {
                 s = s.replace(anon, 'export = _default;\ndeclare function _default(')
                 s = s.replace(id, 'export =$1;')
                 fs.writeFileSync(entry + '/index.d.ts', s, 'utf-8')
+            }
+            else if (/must match a version that exists on npm/.test(e.message)) {
+                const m = /** @type {string} */(e.message).match(/in the header, ([0-9.]+), to match one on npm, ([0-9., ]+)\./)
+                if (m) {
+                    const headerver = parseFloat(m[1])
+                    const npmvers = m[2].split(',').map(s => parseFloat(s.trim()))
+                    const fixto = npmvers.every(v => headerver > v) ? -1.0 : Math.max(...npmvers)
+                    console.log(`npm-version:${item}:${m[1]}:${m[2]}:${fixto}`)
+                    addNpmNamingLintRule(entry + '/tslint.json')
+                }
+                else {
+                    console.log('could not parse error message: ', e.message)
+                }
             }
             else {
                 console.log('*** ERROR for ' + item + ' ***')
