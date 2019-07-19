@@ -104,6 +104,7 @@ protractor
 quill-delta
 raven-js
 re-resizable
+react-autosize-textarea
 react-dnd
 react-native-maps
 react-native-svg
