@@ -55,6 +55,7 @@ electron-osx-sign
 eventemitter2
 eventemitter3
 expect
+express-graphql
 fast-glob
 fastify
 flatpickr
