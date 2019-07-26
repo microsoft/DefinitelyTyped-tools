@@ -47,6 +47,7 @@ csstype
 date-fns
 decimal.js
 del
+dexie
 dnd-core
 egg
 electron
