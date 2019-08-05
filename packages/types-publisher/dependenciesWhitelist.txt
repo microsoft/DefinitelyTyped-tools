@@ -130,6 +130,7 @@ swagger-parser
 terser
 three
 tslint
+ts-toolbelt
 tweetnacl
 typescript
 utility-types
