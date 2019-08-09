@@ -141,4 +141,5 @@ vuex
 webpack-chain
 winston
 xmlbuilder
+xpath
 zipkin
