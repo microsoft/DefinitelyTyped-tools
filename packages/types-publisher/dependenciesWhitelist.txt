@@ -67,6 +67,7 @@ graphql-tools
 grpc
 handlebars
 hoist-non-react-statics
+i18next
 immutable
 indefinite-observable
 inversify
