@@ -73,7 +73,7 @@ export default class BlobWriter {
     private createBlobFromStream(blobName: string, stream: NodeJS.ReadableStream): Promise<void> {
         const options: BlobService.CreateBlobRequestOptions =  {
             contentSettings: {
-                contentEncoding: "GZIP",
+                contentEncoding: "gzip",
                 contentType: "application/json; charset=utf-8",
             },
         };
@@ -88,7 +88,7 @@ export async function readBlob(blobName: string): Promise<string> {
         const req = https.get(url, res => {
             switch (res.statusCode) {
                 case 200:
-                    if (res.headers["content-encoding"] !== "GZIP") {
+                    if (res.headers["content-encoding"] !== "gzip") {
                         reject(new Error(`${url} is not gzipped`));
                     } else {
                         resolve(stringOfStream(unGzip(res), blobName));
