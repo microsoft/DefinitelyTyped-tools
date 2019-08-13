@@ -22,6 +22,7 @@
 @types/wonder-commonlib
 @types/wonder-frp
 @uirouter/angularjs
+@vue/test-utils
 abort-controller
 activex-helpers
 ajv
