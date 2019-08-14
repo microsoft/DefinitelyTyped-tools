@@ -142,6 +142,7 @@ vue-router
 vuex
 webpack-chain
 winston
+winston-transport
 xmlbuilder
 xpath
 zipkin
