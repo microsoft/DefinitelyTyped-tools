@@ -241,7 +241,7 @@ async function entryFilesFromTsConfig(packageName: string, tsconfig: TsConfig, d
                 const expectedName = `${packageName}-tests.ts`;
                 if (file !== expectedName && file !== `${expectedName}x`) {
                     const message = file.endsWith(".ts") || file.endsWith(".tsx")
-                        ? `Expected file '${file}' to be named ${expectedName}`
+                        ? `Expected file '${file}' to be named '${expectedName}' or to be inside a '${directoryPath}/test/' directory`
                         : `Unexpected file extension for '${file}' -- expected '.ts' or '.tsx' (maybe this should not be in "files")`;
                     throw new Error(message);
                 }
