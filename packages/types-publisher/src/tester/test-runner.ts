@@ -16,7 +16,7 @@ import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
 import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses, CrashRecoveryState } from "../util/util";
 
-import { getAffectedPackages, Affected, allDependencies } from "./get-affected-packages";
+import { getAffectedPackages, allDependencies } from "./get-affected-packages";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 
@@ -68,6 +68,17 @@ export default async function runTests(
     nProcesses: number,
     selection: "all" | "affected" | RegExp,
 ): Promise<void> {
+    const { changedPackages, dependentPackages, allPackages } = await getAffectedPackagesFromDiff(dt, definitelyTypedPath, selection);
+    console.log(`Running with ${nProcesses} processes.`);
+
+    const typesPath = `${definitelyTypedPath}/types`;
+    await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath, nProcesses);
+
+    console.log("Testing...");
+    await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
+}
+
+export async function getAffectedPackagesFromDiff(dt: FS, definitelyTypedPath: string, selection: "all" | "affected" | RegExp) {
     const allPackages = await AllPackages.read(dt);
     const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
     if (diffs.find(d => d.file === "notNeededPackages.json")) {
@@ -78,20 +89,14 @@ export default async function runTests(
             checkNotNeededPackage(deleted, source, typings);
         }
     }
-    const { changedPackages, dependentPackages }: Affected =
-        selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [] } :
-        selection === "affected" ? getAffectedPackages(allPackages, gitChanges(diffs))
-        : { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [] };
 
-    console.log(`Testing ${changedPackages.length} changed packages: ${changedPackages.map(t => t.desc)}`);
-    console.log(`Testing ${dependentPackages.length} dependent packages: ${dependentPackages.map(t => t.desc)}`);
-    console.log(`Running with ${nProcesses} processes.`);
+    const affected = selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
+        : selection === "affected" ? getAffectedPackages(allPackages, gitChanges(diffs))
+        : { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [], allPackages };
 
-    const typesPath = `${definitelyTypedPath}/types`;
-    await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath, nProcesses);
-
-    console.log("Testing...");
-    await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
+    console.log(`Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages.map(t => t.desc)}`);
+    console.log(`Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages.map(t => t.desc)}`);
+    return affected;
 }
 
 /**

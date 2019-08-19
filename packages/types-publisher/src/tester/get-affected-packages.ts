@@ -4,6 +4,7 @@ import { mapDefined, mapIter, sort } from "../util/util";
 export interface Affected {
     readonly changedPackages: ReadonlyArray<TypingsData>;
     readonly dependentPackages: ReadonlyArray<TypingsData>;
+    allPackages: AllPackages;
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
@@ -12,7 +13,7 @@ export function getAffectedPackages(allPackages: AllPackages, changedPackageIds:
     // If a package doesn't exist, that's because it was deleted.
     const changed = mapDefined(resolved, id => allPackages.tryGetTypingsData(id));
     const dependent = mapIter(collectDependers(resolved, getReverseDependencies(allPackages, resolved)), p => allPackages.getTypingsData(p));
-    return { changedPackages: changed, dependentPackages: sortPackages(dependent) };
+    return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
 }
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
