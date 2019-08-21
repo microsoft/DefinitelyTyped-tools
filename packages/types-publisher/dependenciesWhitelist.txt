@@ -137,6 +137,7 @@ ts-toolbelt
 tweetnacl
 typescript
 utility-types
+vega-typings
 vue
 vue-router
 vuex
