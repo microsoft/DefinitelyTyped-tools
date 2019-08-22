@@ -64,6 +64,7 @@ flatpickr
 form-data
 google-auth-library
 google-gax
+graphql
 graphql-tools
 grpc
 handlebars
