@@ -103,6 +103,7 @@ pkcs11js
 popper.js
 postcss
 preact
+pretty-format
 probot
 prom-client
 protobufjs
