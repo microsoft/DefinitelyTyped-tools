@@ -104,7 +104,7 @@ describe("tagsToUpdate", () => {
     it("works", () => {
         assert.deepEqual(
             TypeScriptVersion.tagsToUpdate("2.5"),
-            ["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9", "ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "latest"]);
+            ["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9", "ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "ts3.7", "latest"]);
     });
 });
 
