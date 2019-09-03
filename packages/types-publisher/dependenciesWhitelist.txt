@@ -10,6 +10,7 @@
 @jest/fake-timers
 @jest/transform
 @jest/types
+@loadable/component
 @material-ui/core
 @sentry/browser
 @types/firebase
