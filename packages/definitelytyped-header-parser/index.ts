@@ -12,7 +12,7 @@ Example:
 
 /** Parse-able TypeScript versions. Only add to this list if we will support this version on DefinitelyTyped. */
 export type TypeScriptVersion =
-    "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7" | "2.8" | "2.9" | "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6";
+    "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7" | "2.8" | "2.9" | "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7";
 export namespace TypeScriptVersion {
     export const all: ReadonlyArray<TypeScriptVersion> =
         ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6"];
@@ -47,6 +47,7 @@ export namespace TypeScriptVersion {
         "ts3.4",
         "ts3.5",
         "ts3.6",
+        "ts3.7",
         "latest",
     ];
 
