@@ -15,6 +15,7 @@
     "watch": "tsc --watch",
     "lint": "tslint --project tsconfig.json --format stylish && tslint --project test/tsconfig.json --format stylish",
     "test": "mocha --require test/mocha-require.js \"test/*.ts\""
+    "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "dependencies": {
     "parsimmon": "^1.2.0",
