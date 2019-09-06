@@ -94,6 +94,7 @@ meteor-typings
 moment
 monaco-editor
 mqtt
+nock
 normalize-url
 objection
 opentracing
