@@ -4,12 +4,17 @@ const fs = require("fs");
 const path = require("path");
 const download = require("download-file-sync");
 const semver = require("semver");
+const commandExistsSync = require("command-exists").sync;
 
 /**
  * @param {string} dtsPath
  * @param {string} [sourcePath]
  */
 function dtsCritic(dtsPath, sourcePath) {
+    if (!commandExistsSync('curl')) {
+        throw new Error("You need to have curl installed to run dts-critic, you can get it from https://curl.haxx.se/download.html")
+    }
+
     const dts = fs.readFileSync(dtsPath, "utf-8");
     let header;
     try {

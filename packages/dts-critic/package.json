@@ -4,6 +4,7 @@
     "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
     "dependencies": {
+        "command-exists": "^1.2.8",
         "definitelytyped-header-parser": "^1.2.0",
         "download-file-sync": "^1.0.4",
         "semver": "^6.2.0",
