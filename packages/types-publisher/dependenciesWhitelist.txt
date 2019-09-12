@@ -62,6 +62,7 @@ expect
 express-graphql
 fast-glob
 fastify
+final-form
 flatpickr
 form-data
 google-auth-library
