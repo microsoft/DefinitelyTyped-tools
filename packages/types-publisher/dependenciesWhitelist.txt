@@ -6,6 +6,7 @@
 @babel/traverse
 @babel/types
 @electron/get
+@emotion/core
 @emotion/styled
 @jest/environment
 @jest/fake-timers
