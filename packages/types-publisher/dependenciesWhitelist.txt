@@ -15,6 +15,7 @@
 @loadable/component
 @material-ui/core
 @sentry/browser
+@storybook/react
 @types/firebase
 @types/hoist-non-react-statics
 @types/js-data
