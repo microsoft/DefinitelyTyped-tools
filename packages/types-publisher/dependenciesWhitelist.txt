@@ -119,6 +119,7 @@ raven-js
 re-resizable
 react-autosize-textarea
 react-dnd
+react-dnd-touch-backend
 react-intl
 react-native-maps
 react-native-modal
