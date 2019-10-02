@@ -20,7 +20,7 @@ export async function publishTypingsPackage(client: NpmPublishClient, changedTyp
         // If this is an older version of the package, we still update tags for the *latest*.
         // NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
         // so we must undo that by re-tagging latest.
-        await updateLatestTag(pkg.fullEscapedNpmName, latestVersion, client, log, dry);
+        await updateLatestTag(pkg.fullNpmName, latestVersion, client, log, dry);
     }
 }
 
@@ -55,17 +55,17 @@ export async function updateTypeScriptVersionTags(
         log("(dry) Skip tag");
     } else {
         for (const tagName of tags) {
-            await client.tag(pkg.fullEscapedNpmName, version, tagName, dry, log);
+            await client.tag(pkg.fullNpmName, version, tagName, dry, log);
         }
     }
 }
 
 export async function updateLatestTag(
-    fullEscapedNpmName: string, version: string, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
-    log(`   but tag ${fullEscapedNpmName}@${version} as "latest"`);
+    fullNpmName: string, version: string, client: NpmPublishClient, log: Logger, dry: boolean): Promise<void> {
+    log(`   but tag ${fullNpmName}@${version} as "latest"`);
     if (dry) {
         log("   (dry) Skip move \"latest\" back to newest version");
     } else {
-        await client.tag(fullEscapedNpmName, version, "latest", dry, log);
+        await client.tag(fullNpmName, version, "latest", dry, log);
     }
 }

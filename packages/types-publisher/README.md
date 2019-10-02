@@ -475,7 +475,7 @@ npm run push-production
 
 This script merges changes from master into production and updates the `bin/` directory.
 Azure is listening for changes to `production` and should restart itself.
-The server also serves a simple web page [here](http://types-publisher.azurewebsites.net).
+The server also serves a simple web page [here](http://typespublisher.azurewebsites.net).
 
 ## Debugging Azure
 
