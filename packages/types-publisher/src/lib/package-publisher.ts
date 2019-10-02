@@ -55,7 +55,7 @@ export async function updateTypeScriptVersionTags(
         log("(dry) Skip tag");
     } else {
         for (const tagName of tags) {
-            await client.tag(pkg.fullEscapedNpmName, version, tagName);
+            await client.tag(pkg.fullEscapedNpmName, version, tagName, dry, log);
         }
     }
 }
@@ -66,6 +66,6 @@ export async function updateLatestTag(
     if (dry) {
         log("   (dry) Skip move \"latest\" back to newest version");
     } else {
-        await client.tag(fullEscapedNpmName, version, "latest");
+        await client.tag(fullEscapedNpmName, version, "latest", dry, log);
     }
 }
