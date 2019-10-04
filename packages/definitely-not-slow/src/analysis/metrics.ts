@@ -98,10 +98,10 @@ enum FineIf {
   GreaterThanOrEqualTo = 1,
 }
 
-function withThreshold(ignoreIf: FineIf, threshold: number) {
+function withThreshold(fineIf: FineIf, threshold: number) {
   return (getSignificance: GetSignificance): GetSignificance => (percentDiff, beforeValue, afterValue, beforeDoc, afterDoc) => {
     const significance = getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
-    if (afterValue * ignoreIf >= threshold * ignoreIf) {
+    if (afterValue * fineIf >= threshold * fineIf) {
       switch (significance) {
         case undefined:
         case SignificanceLevel.Alert:
@@ -185,7 +185,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Mean duration (ms)',
     sentenceName: 'mean duration for getting completions at a position',
     getValue: x => x.body.completions.mean,
-    getSignificance: getDefaultSignificance,
+    getSignificance: withThreshold(FineIf.LessThan, 150)(getDefaultSignificance),
   },
   completionsStdDev: {
     columnName: 'Std. deviation (ms)',
@@ -194,7 +194,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getSignificance: getInsignificant,
   },
   completionsAvgCV: {
-    columnName: 'Mean CV',
+    columnName: 'Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation)',
     sentenceName: 'mean coefficient of variation of samples measured for completions time',
     getValue: x => x.body.completions.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
@@ -204,13 +204,13 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting completions at a position',
     getValue: x => mean(x.body.completions.worst.completionsDurations),
-    getSignificance: getDefaultSignificance,
+    getSignificance: withThreshold(FineIf.LessThan, 200)(getDefaultSignificance),
   },
   quickInfoMean: {
     columnName: 'Mean duration (ms)',
     sentenceName: 'mean duration for getting quick info at a position',
     getValue: x => x.body.quickInfo.mean,
-    getSignificance: getDefaultSignificance,
+    getSignificance: withThreshold(FineIf.LessThan, 150)(getDefaultSignificance),
   },
   quickInfoStdDev: {
     columnName: 'Std. deviation (ms)',
@@ -229,7 +229,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting quick info at a position',
     getValue: x => mean(x.body.quickInfo.worst.quickInfoDurations),
-    getSignificance: getDefaultSignificance,
+    getSignificance: withThreshold(FineIf.LessThan, 200)(getDefaultSignificance),
   },
 };
 
