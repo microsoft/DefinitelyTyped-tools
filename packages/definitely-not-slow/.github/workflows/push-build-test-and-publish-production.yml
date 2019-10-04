@@ -1,0 +1,32 @@
+on: push
+name: build, test and publish production
+jobs:
+  checkForNewTag:
+    name: check for new tag
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: check for new tag
+      uses: actions/bin/filter@master
+      with:
+        args: tag
+    - name: install-prod
+      uses: actions/npm@master
+      with:
+        args: install
+    - name: test-prod
+      uses: actions/npm@master
+      with:
+        args: test
+    - name: build-prod
+      uses: actions/npm@master
+      with:
+        args: run build
+    - name: publish production
+      uses: actions/npm@master
+      env:
+        GH_EMAIL: ${{ secrets.GH_EMAIL }}
+        GH_USER: ${{ secrets.GH_USER }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: run push-production

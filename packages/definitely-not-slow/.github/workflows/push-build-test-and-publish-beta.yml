@@ -1,0 +1,36 @@
+on: push
+name: build, test and publish beta
+jobs:
+  filterNotTag:
+    name: filter not tag
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: filter not tag
+      uses: actions/bin/filter@master
+      with:
+        args: not tag
+    - name: install
+      uses: actions/npm@master
+      with:
+        args: install
+    - name: test
+      uses: actions/npm@master
+      with:
+        args: test
+    - name: build
+      uses: actions/npm@master
+      with:
+        args: run build
+    - name: filter branch master
+      uses: actions/bin/filter@master
+      with:
+        args: branch master
+    - name: publish beta
+      uses: actions/npm@master
+      env:
+        GH_EMAIL: ${{ secrets.GH_EMAIL }}
+        GH_USER: ${{ secrets.GH_USER }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: run push-beta
