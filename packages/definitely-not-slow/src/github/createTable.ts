@@ -20,7 +20,6 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
     createComparisonRowFromMetric(metrics.identifierCount, before, after),
     ['**`getCompletionsAtPosition`**'], 
     createComparisonRowFromMetric(metrics.completionsMean, before, after, { indent: 1 }),
-    createComparisonRowFromMetric(metrics.completionsMedian, before, after, { indent: 1 }),
     createComparisonRowFromMetric(metrics.completionsAvgCV, before, after, { indent: 1 }),
     createComparisonRowFromMetric(metrics.completionsWorstMean, before, after, { indent: 1 }),
     createComparisonRow('Worst identifier', before, after, x => sourceLink(
@@ -30,7 +29,6 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
       x.body.completions.worst.line), undefined, { indent: 1 }),
     ['**`getQuickInfoAtPosition`**'],
     createComparisonRowFromMetric(metrics.quickInfoMean, before, after, { indent: 1 }),
-    createComparisonRowFromMetric(metrics.quickInfoMedian, before, after, { indent: 1 }),
     createComparisonRowFromMetric(metrics.quickInfoAvgCV, before, after, { indent: 1 }),
     createComparisonRowFromMetric(metrics.quickInfoWorstMean, before, after, { indent: 1 }),
     createComparisonRow('Worst identifier', before, after, x => sourceLink(
@@ -69,7 +67,6 @@ export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary
     createSingleRunRowFromMetric(metrics.identifierCount, benchmark),
     ['**`getCompletionsAtPosition`**'], 
     createSingleRunRowFromMetric(metrics.completionsMean, benchmark, { indent: 1 }),
-    createSingleRunRowFromMetric(metrics.completionsMedian, benchmark, { indent: 1 }),
     createSingleRunRowFromMetric(metrics.completionsAvgCV, benchmark, { indent: 1 }),
     createSingleRunRowFromMetric(metrics.completionsWorstMean, benchmark, { indent: 1 }),
     createSingleRunRow('Worst identifier', benchmark, x => sourceLink(
@@ -79,7 +76,6 @@ export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary
       x.body.completions.worst.line), { indent: 1 }),
     ['**`getQuickInfoAtPosition`**'],
     createSingleRunRowFromMetric(metrics.quickInfoMean, benchmark, { indent: 1 }),
-    createSingleRunRowFromMetric(metrics.quickInfoMedian, benchmark, { indent: 1 }),
     createSingleRunRowFromMetric(metrics.quickInfoAvgCV, benchmark, { indent: 1 }),
     createSingleRunRowFromMetric(metrics.quickInfoWorstMean, benchmark, { indent: 1 }),
     createSingleRunRow('Worst identifier', benchmark, x => sourceLink(

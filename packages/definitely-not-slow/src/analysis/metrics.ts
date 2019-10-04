@@ -34,11 +34,9 @@ export type MetricName =
   | 'samplesTaken'
   | 'identifierCount'
   | 'completionsMean'
-  | 'completionsMedian'
   | 'completionsStdDev'
   | 'completionsAvgCV'
   | 'quickInfoMean'
-  | 'quickInfoMedian'
   | 'quickInfoStdDev'
   | 'quickInfoAvgCV'
   | 'completionsWorstMean'
@@ -149,12 +147,6 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.completions.mean,
     getSignificance: defaultGetSignificance,
   },
-  completionsMedian: {
-    columnName: 'Median duration (ms)',
-    sentenceName: 'median duration for getting completions at a position',
-    getValue: x => x.body.completions.median,
-    getSignificance: defaultGetSignificance,
-  },
   completionsStdDev: {
     columnName: 'Std. deviation (ms)',
     sentenceName: 'standard deviation of the durations for getting completions at a position',
@@ -178,12 +170,6 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Mean duration (ms)',
     sentenceName: 'mean duration for getting quick info at a position',
     getValue: x => x.body.quickInfo.mean,
-    getSignificance: defaultGetSignificance,
-  },
-  quickInfoMedian: {
-    columnName: 'Median duration (ms)',
-    sentenceName: 'median duration for getting quick info at a position',
-    getValue: x => x.body.quickInfo.median,
     getSignificance: defaultGetSignificance,
   },
   quickInfoStdDev: {
