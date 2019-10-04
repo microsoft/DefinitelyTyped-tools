@@ -100,7 +100,7 @@ function createComparisonRowFromMetric(metric: Metric, before: Document<PackageB
   const beforeValue = metric.getValue(before);
   const afterValue = metric.getValue(after);
   const format = { ...metric.formatOptions, ...formatOptions };
-  const percentDiff = typeof beforeValue === 'number' && typeof afterValue === 'number' && !isNaN(afterValue) && !isNaN(afterValue)
+  const percentDiff = !format.noDiff && typeof beforeValue === 'number' && typeof afterValue === 'number' && !isNaN(afterValue) && !isNaN(afterValue)
     ? getPercentDiff(afterValue, beforeValue)
     : undefined;
   const diffString = typeof percentDiff === 'number' ? formatDiff(percentDiff, metric.getSignificance(percentDiff, beforeValue!, afterValue!, before, after), format.precision) : undefined;

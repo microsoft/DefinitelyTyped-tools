@@ -1,10 +1,12 @@
 import { mean } from '../measure/utils';
 import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemoryUsage, not } from '../common';
+import { assertNever } from 'types-publisher/bin/util/util';
 
 export interface FormatOptions {
   precision?: number;
   indent?: number;
   percentage?: boolean;
+  noDiff?: boolean;
 }
 
 export const enum SignificanceLevel {
@@ -91,17 +93,27 @@ function proportionalTo(proportionalTo: MetricName) {
   };
 }
 
-enum IgnoreIf {
+enum FineIf {
   LessThan = -1,
   GreaterThanOrEqualTo = 1,
 }
 
-function withThreshold(ignoreIf: IgnoreIf, threshold: number) {
+function withThreshold(ignoreIf: FineIf, threshold: number) {
   return (getSignificance: GetSignificance): GetSignificance => (percentDiff, beforeValue, afterValue, beforeDoc, afterDoc) => {
+    const significance = getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
     if (afterValue * ignoreIf >= threshold * ignoreIf) {
-      return undefined;
+      switch (significance) {
+        case undefined:
+        case SignificanceLevel.Alert:
+        case SignificanceLevel.Warning:
+          return undefined;
+        case SignificanceLevel.Awesome:
+          return significance;
+        default:
+          assertNever(significance);
+      }
     }
-    return getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
+    return significance;
   };
 }
 
@@ -132,7 +144,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.typeCount,
     getSignificance: compose(
       proportionalTo('identifierCount'),
-      withThreshold(IgnoreIf.LessThan, 5000),
+      withThreshold(FineIf.LessThan, 5000),
     )(getOrderOfMagnitudeSignificance),
   },
   memoryUsage: {
@@ -141,7 +153,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.memoryUsage / 2 ** 20,
     getSignificance: compose(
       proportionalTo('identifierCount'),
-      withThreshold(IgnoreIf.LessThan, 65),
+      withThreshold(FineIf.LessThan, 65),
       ignoreIfEitherBenchmark(not(supportsMemoryUsage)),
     )(getOrderOfMagnitudeSignificance),
   },
@@ -152,7 +164,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
     getSignificance: compose(
       proportionalTo('identifierCount'),
-      withThreshold(IgnoreIf.LessThan, 1000),
+      withThreshold(FineIf.LessThan, 1000),
     )(getOrderOfMagnitudeSignificance),
   },
   samplesTaken: {
@@ -186,7 +198,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: 'mean coefficient of variation of samples measured for completions time',
     getValue: x => x.body.completions.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
-    formatOptions: { percentage: true },
+    formatOptions: { percentage: true, noDiff: true },
   },
   completionsWorstMean: {
     columnName: 'Worst duration (ms)',
@@ -207,7 +219,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getSignificance: getInsignificant,
   },
   quickInfoAvgCV: {
-    columnName: 'Mean CV',
+    columnName: 'Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation)',
     sentenceName: 'mean coefficient of variation of samples measured for quick info time',
     getValue: x => x.body.quickInfo.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
