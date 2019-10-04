@@ -76,11 +76,11 @@ function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Docum
 
 function getInterestingMetricsMessage(interestingMetrics: readonly ComparedMetric[]) {
   if (!interestingMetrics.length) {
-    return `It looks like nothing changed too much. I’m pretty lenient since I’m still an experiment, so take a look anyways and make sure nothing looks out of place.`;
+    return `It looks like nothing changed too much. I won’t post performance data again unless it gets worse.`;
   }
   const awesomeMetrics = interestingMetrics.filter(({ significance }) => significance === SignificanceLevel.Awesome);
   if (interestingMetrics.length === awesomeMetrics.length) {
-    return `Wow, it looks like all the big movers moved in the right direction! Way to go! 🌟`;
+    return `Wow, it looks like all the big movers moved in the right direction! Way to go! 🌟 I won’t post performance data again unless it gets worse.`;
   }
   if (interestingMetrics.length > 3 && awesomeMetrics.length / interestingMetrics.length < 0.5) {
     return 'It looks like there are several metrics that changed quite a bit. You might want to take a look and make sure your changes won’t cause slow-downs for users consuming these types.';

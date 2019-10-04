@@ -255,6 +255,31 @@ export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>,
   }, []);
 }
 
+export enum OverallChange {
+  Same = 0,
+  Worse = 1 << 0,
+  Better = 1 << 1,
+  Mixed = Worse | Better,
+}
+
+export function getOverallChange(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
+  let change = OverallChange.Same;
+  for (const { significance } of getInterestingMetrics(before, after)) {
+    switch (significance) {
+      case SignificanceLevel.Alert:
+      case SignificanceLevel.Warning:
+        change |= OverallChange.Worse;
+        break;
+      case SignificanceLevel.Awesome:
+        change |= OverallChange.Better;
+        break;
+      default:
+        assertNever(significance);
+    }
+  }
+  return change;
+}
+
 function isNonNaNNumber(n: any): n is number {
   return typeof n === 'number' && !isNaN(n);
 }

@@ -211,3 +211,12 @@ export function shuffle<T>(array: readonly T[]): T[] {
 export function not<P extends unknown[]>(fn: (...args: P) => boolean): (...args: P) => boolean {
   return (...args) => !fn(...args);
 }
+
+export function findLast<T>(arr: T[], predicate: (element: T) => boolean): T | undefined {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const element = arr[i];
+    if (predicate(element)) {
+      return element;
+    }
+  }
+}

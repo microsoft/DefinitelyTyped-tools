@@ -1,8 +1,10 @@
-import { PackageBenchmarkSummary, Document, config, compact } from '../common';
+import { PackageBenchmarkSummary, Document, config, compact, findLast } from '../common';
 import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { createTablesWithAnalysesMessage } from './createTablesWithAnalysesMessage';
-import { isPerfComment, createPerfCommentBody } from './comment';
+import { isPerfComment, createPerfCommentBody, getCommentData } from './comment';
+import { getOverallChange, OverallChange } from '../analysis';
+import { setLabels } from './setLabels';
 
 type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
 
@@ -36,18 +38,41 @@ export async function postInitialComparisonResults({
         issue_number: prNumber,
       });
 
-      const hasPreviousComment = comments.data.some(isPerfComment);
-      const message = hasPreviousComment
-        ? getConciseUpdateMessage(
-          createTablesWithAnalysesMessage(comparisons, prNumber, /*alwaysWriteHeader*/ false, /*alwaysCollapseDetails*/ true),
-          comparisons[0][1].body.sourceVersion)
-        : getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
+      let currentOverallChange = OverallChange.Same;
+      for (const comparison of comparisons) {
+        currentOverallChange |= comparison[0] ? getOverallChange(comparison[0], comparison[1]) : OverallChange.Same;
+      }
 
-      await octokit.issues.createComment({
-        ...config.github.commonParams,
-        issue_number: prNumber,
-        body: createPerfCommentBody(message),
-      });
+      const mostRecentComment = findLast(comments.data, isPerfComment);
+      if (mostRecentComment) {
+        const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
+
+        if (currentOverallChange === lastOverallChange && !(currentOverallChange & OverallChange.Worse)) {
+          // Everything is fine and nothing has changed, just chill
+          return;
+        }
+
+        const message = getConciseUpdateMessage(
+          lastOverallChange,
+          currentOverallChange,
+          createTablesWithAnalysesMessage(comparisons, prNumber, /*alwaysWriteHeader*/ false, /*alwaysCollapseDetails*/ true),
+          comparisons[0][1].body.sourceVersion);
+
+        await octokit.issues.createComment({
+          ...config.github.commonParams,
+          issue_number: prNumber,
+          body: createPerfCommentBody({ overallChange: currentOverallChange }, message),
+        });
+      } else {
+        const message = getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
+        await octokit.issues.createComment({
+          ...config.github.commonParams,
+          issue_number: prNumber,
+          body: createPerfCommentBody({ overallChange: currentOverallChange }, message),
+        });
+      }
+
+      await setLabels(prNumber, currentOverallChange);
     } catch (err) {
       throw err;
     }
@@ -56,22 +81,25 @@ export async function postInitialComparisonResults({
 
 function getFullFirstPostMessage(mainMessage: string, dependentCount: number): string {
   return compact([
-    `👋 **Hi there!** I’ve run some quick performance metrics against master and your PR. **This is still an experiment**, so don’t panic if I say something crazy! I’m still learning how to interpret these metrics.`,
+    `👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.`,
     ``,
     getDependentsMessage(dependentCount),
     ``,
     `Let’s review the numbers, shall we?`,
     ``,
-    mainMessage,
-    ``,
-    `---`,
-    'If you have any questions or comments about me, you can ping [`@andrewbranch`](https://github.com/andrewbranch). Have a nice day!',
+    mainMessage
   ]).join('\n');
 }
 
-function getConciseUpdateMessage(mainMessage: string, sha: string): string {
+function getConciseUpdateMessage(
+  prevOverallChange: OverallChange | undefined,
+  overallChange: OverallChange,
+  mainMessage: string,
+  sha: string,
+): string {
+  const gotBetter = (prevOverallChange ?? 0) & OverallChange.Worse && !((overallChange ?? 0) & OverallChange.Worse);
   return [
-    `Updated numbers for you here from ${sha.slice(0, 7)}:`,
+    `Updated numbers for you here from ${sha.slice(0, 7)}. ${gotBetter ? 'Nice job, these numbers look better.' : ''}`,
     ``,
     mainMessage,
   ].join('\n');
