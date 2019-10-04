@@ -12,8 +12,6 @@ export function createComparisonTable(before: Document<PackageBenchmarkSummary>,
       : undefined,
     createComparisonRowFromMetric(metrics.typeCount, before, after),
     createComparisonRowFromMetric(metrics.assignabilityCacheSize, before, after),
-    createComparisonRowFromMetric(metrics.subtypeCacheSize, before, after),
-    createComparisonRowFromMetric(metrics.identityCacheSize, before, after),
     [],
     ['**Language service**'],
     createComparisonRowFromMetric(metrics.samplesTaken, before, after),
@@ -59,8 +57,6 @@ export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary
     // createSingleRunRowFromMetric(metrics.memoryUsage, benchmark),
     createSingleRunRowFromMetric(metrics.typeCount, benchmark),
     createSingleRunRowFromMetric(metrics.assignabilityCacheSize, benchmark),
-    createSingleRunRowFromMetric(metrics.subtypeCacheSize, benchmark),
-    createSingleRunRowFromMetric(metrics.identityCacheSize, benchmark),
     [],
     ['**Language service measurements**'],
     createSingleRunRowFromMetric(metrics.samplesTaken, benchmark),
@@ -100,15 +96,15 @@ function sourceLink(text: string, sourceVersion: string, fileName: string, line:
   return `[${text}](/${config.github.commonParams.owner}/${config.github.commonParams.repo}/blob/${sourceVersion.replace('\n', '')}/${fileName}#L${line})`;
 }
 
-function createComparisonRowFromMetric(metric: Metric, a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>, formatOptions: FormatOptions = {}) {
-  const aValue = metric.getValue(a);
-  const bValue = metric.getValue(b);
+function createComparisonRowFromMetric(metric: Metric, before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>, formatOptions: FormatOptions = {}) {
+  const beforeValue = metric.getValue(before);
+  const afterValue = metric.getValue(after);
   const format = { ...metric.formatOptions, ...formatOptions };
-  const percentDiff = typeof aValue === 'number' && typeof bValue === 'number' && !isNaN(bValue) && !isNaN(bValue)
-    ? getPercentDiff(bValue, aValue)
+  const percentDiff = typeof beforeValue === 'number' && typeof afterValue === 'number' && !isNaN(afterValue) && !isNaN(afterValue)
+    ? getPercentDiff(afterValue, beforeValue)
     : undefined;
-  const diffString = typeof percentDiff === 'number' ? formatDiff(percentDiff, metric.getSignificance(percentDiff, a, b), format.precision) : undefined;
-  return createComparisonRow(metric.columnName, a, b, metric.getValue, diffString, format);
+  const diffString = typeof percentDiff === 'number' ? formatDiff(percentDiff, metric.getSignificance(percentDiff, beforeValue!, afterValue!, before, after), format.precision) : undefined;
+  return createComparisonRow(metric.columnName, before, after, metric.getValue, diffString, format);
 }
 
 function createSingleRunRowFromMetric(metric: Metric, benchmark: Document<PackageBenchmarkSummary>, formatOptions?: FormatOptions) {
@@ -152,9 +148,9 @@ function indent(text: string, level: number): string {
   return '&nbsp;'.repeat(4 * level) + text;
 }
 
-function formatDiff(percentDiff: number, significance: SignificanceLevel | undefined, precision?: number): string {
-  const percentString = format(percentDiff, { percentage: true }, '%', true);
-  if (!significance) {
+export function formatDiff(percentDiff: number, significance: SignificanceLevel | undefined, precision?: number): string {
+  const percentString = format(percentDiff, { percentage: true, precision }, '%', true);
+  if (!significance || !percentString) {
     return percentString;
   }
 

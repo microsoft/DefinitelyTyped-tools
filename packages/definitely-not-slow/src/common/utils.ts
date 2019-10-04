@@ -207,3 +207,7 @@ export function shuffle<T>(array: readonly T[]): T[] {
 
   return output;
 }
+
+export function not<P extends unknown[]>(fn: (...args: P) => boolean): (...args: P) => boolean {
+  return (...args) => !fn(...args);
+}

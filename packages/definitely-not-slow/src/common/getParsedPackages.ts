@@ -2,10 +2,9 @@ import * as os from 'os';
 import { AllPackages, typesDataFilename } from 'types-publisher/bin/lib/packages';
 import { FS, getLocallyInstalledDefinitelyTyped } from 'types-publisher/bin/get-definitely-typed';
 import { consoleLogger } from 'types-publisher/bin/util/logging';
-import { pathExists } from '../common';
 import { dataFilePath } from 'types-publisher/bin/lib/common';
 import parseDefinitions from 'types-publisher/bin/parse-definitions';
-import { getSourceVersion } from './utils';
+import { getSourceVersion, pathExists } from './utils';
 
 let parsedSourceVersion: string | undefined;
 export async function getParsedPackages(definitelyTypedPath: string): Promise<{

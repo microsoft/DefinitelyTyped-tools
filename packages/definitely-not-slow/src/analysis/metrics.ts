@@ -1,5 +1,5 @@
 import { mean } from '../measure/utils';
-import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemoryUsage } from '../common';
+import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemoryUsage, not } from '../common';
 
 export interface FormatOptions {
   precision?: number;
@@ -13,24 +13,28 @@ export const enum SignificanceLevel {
   Awesome = 'awesome',
 }
 
+export type GetSignificance = (
+  percentDiff: number,
+  beforeValue: number,
+  afterValue: number,
+  beforeDoc: Document<PackageBenchmarkSummary>,
+  afterDoc: Document<PackageBenchmarkSummary>
+) => SignificanceLevel | undefined;
+
+export type CreateGetSignificance = (getSignificance: GetSignificance) => GetSignificance;
+
 export interface Metric {
   columnName: string;
   sentenceName: string;
   formatOptions?: FormatOptions;
   getValue: (x: Document<PackageBenchmarkSummary>) => number | undefined;
-  getSignificance: (
-    percentDiff: number,
-    before: Document<PackageBenchmarkSummary>,
-    after: Document<PackageBenchmarkSummary>
-  ) => SignificanceLevel | undefined;
+  getSignificance: GetSignificance;
 }
 
 export type MetricName =
   | 'typeCount'
   | 'memoryUsage'
   | 'assignabilityCacheSize'
-  | 'subtypeCacheSize'
-  | 'identityCacheSize'
   | 'samplesTaken'
   | 'identifierCount'
   | 'completionsMean'
@@ -42,7 +46,7 @@ export type MetricName =
   | 'completionsWorstMean'
   | 'quickInfoWorstMean';
 
-function defaultGetSignificance(percentDiff: number): SignificanceLevel | undefined {
+function getDefaultSignificance(percentDiff: number): SignificanceLevel | undefined {
   if (percentDiff > config.comparison.percentDiffAlertThreshold) {
     return SignificanceLevel.Alert;
   }
@@ -52,27 +56,6 @@ function defaultGetSignificance(percentDiff: number): SignificanceLevel | undefi
   if (percentDiff < config.comparison.percentDiffAwesomeThreshold) {
     return SignificanceLevel.Awesome;
   }
-}
-
-const getInsignificant = () => undefined;
-
-function getSignificanceProportionalTo(proportionalTo: MetricName, getSignificance = defaultGetSignificance) {
-  return (percentDiff: number, before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) => {
-    const proportionalToBeforeValue = metrics[proportionalTo].getValue(before);
-    const proportionalToAfterValue = metrics[proportionalTo].getValue(after);
-    if (typeof proportionalToBeforeValue === 'number' && typeof proportionalToAfterValue === 'number') {
-      const proportionalToPercentDiff = getPercentDiff(proportionalToAfterValue, proportionalToBeforeValue);
-      const defaultSignificance = getSignificance(percentDiff);
-      const weightedSignificance = getSignificance(percentDiff - proportionalToPercentDiff);
-      // Can’t give out a gold star unless it’s absolutely better, otherwise it looks really confusing
-      // when type count increased by 400% and that gets treated as “awesome” when identifier count
-      // increased by 500%. It may _be_ awesome, but it looks confusing.
-      if (weightedSignificance === SignificanceLevel.Awesome && defaultSignificance !== SignificanceLevel.Awesome) {
-        return undefined;
-      }
-      return weightedSignificance;
-    }
-  };
 }
 
 function getOrderOfMagnitudeSignificance(percentDiff: number): SignificanceLevel | undefined {
@@ -87,45 +70,90 @@ function getOrderOfMagnitudeSignificance(percentDiff: number): SignificanceLevel
   }
 }
 
+const getInsignificant = () => undefined;
+
+function proportionalTo(proportionalTo: MetricName) {
+  return (getSignificance: GetSignificance): GetSignificance => (percentDiff, beforeValue, afterValue, beforeDoc, afterDoc) => {
+    const proportionalToBeforeValue = metrics[proportionalTo].getValue(beforeDoc);
+    const proportionalToAfterValue = metrics[proportionalTo].getValue(afterDoc);
+    if (typeof proportionalToBeforeValue === 'number' && typeof proportionalToAfterValue === 'number') {
+      const proportionalToPercentDiff = getPercentDiff(proportionalToAfterValue, proportionalToBeforeValue);
+      const defaultSignificance = getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
+      const weightedSignificance = getSignificance(percentDiff - proportionalToPercentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
+      // Can’t give out a gold star unless it’s absolutely better, otherwise it looks really confusing
+      // when type count increased by 400% and that gets treated as “awesome” when identifier count
+      // increased by 500%. It may _be_ awesome, but it looks confusing.
+      if (weightedSignificance === SignificanceLevel.Awesome && defaultSignificance !== SignificanceLevel.Awesome) {
+        return undefined;
+      }
+      return weightedSignificance;
+    }
+  };
+}
+
+enum IgnoreIf {
+  LessThan = -1,
+  GreaterThanOrEqualTo = 1,
+}
+
+function withThreshold(ignoreIf: IgnoreIf, threshold: number) {
+  return (getSignificance: GetSignificance): GetSignificance => (percentDiff, beforeValue, afterValue, beforeDoc, afterDoc) => {
+    if (afterValue * ignoreIf >= threshold * ignoreIf) {
+      return undefined;
+    }
+    return getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
+  };
+}
+
+function ignoreIfEitherBenchmark(predicate: (document: Document<PackageBenchmarkSummary>) => boolean) {
+  return (getSignificance: GetSignificance): GetSignificance => (percentDiff, beforeValue, afterValue, beforeDoc, afterDoc) => {
+    if (predicate(beforeDoc) || predicate(afterDoc)) {
+      return undefined;
+    }
+    return getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
+  };
+}
+
+function compose(x: CreateGetSignificance, ...xs: CreateGetSignificance[]): CreateGetSignificance {
+  return getSignificance => {
+    let current = x(getSignificance);
+    while (x = xs.pop()!) {
+      current = x(current);
+    }
+    return current;
+  };
+}
+
 export const metrics: { [K in MetricName]: Metric } = {
   typeCount: {
     columnName: 'Type count',
     sentenceName: 'type count',
     formatOptions: { precision: 0 },
     getValue: x => x.body.typeCount,
-    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
+    getSignificance: compose(
+      proportionalTo('identifierCount'),
+      withThreshold(IgnoreIf.LessThan, 5000),
+    )(getOrderOfMagnitudeSignificance),
   },
   memoryUsage: {
     columnName: 'Memory usage (MiB)',
     sentenceName: 'memory usage',
     getValue: x => x.body.memoryUsage / 2 ** 20,
-    getSignificance: (percentDiff, before, after) => {
-      if (supportsMemoryUsage(before) && supportsMemoryUsage(after)) {
-        return getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance)(percentDiff, before, after);
-      }
-      return getInsignificant();
-    }
+    getSignificance: compose(
+      proportionalTo('identifierCount'),
+      withThreshold(IgnoreIf.LessThan, 65),
+      ignoreIfEitherBenchmark(not(supportsMemoryUsage)),
+    )(getOrderOfMagnitudeSignificance),
   },
   assignabilityCacheSize: {
     columnName: 'Assignability cache size',
     sentenceName: 'assignability cache size',
     formatOptions: { precision: 0 },
     getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
-    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
-  },
-  subtypeCacheSize: {
-    columnName: 'Subtype cache size',
-    sentenceName: 'subtype cache size',
-    formatOptions: { precision: 0 },
-    getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.subtype,
-    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
-  },
-  identityCacheSize: {
-    columnName: 'Identity cache size',
-    sentenceName: 'identity cache size',
-    formatOptions: { precision: 0 },
-    getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.identity,
-    getSignificance: getSignificanceProportionalTo('identifierCount', getOrderOfMagnitudeSignificance),
+    getSignificance: compose(
+      proportionalTo('identifierCount'),
+      withThreshold(IgnoreIf.LessThan, 1000),
+    )(getOrderOfMagnitudeSignificance),
   },
   samplesTaken: {
     columnName: 'Samples taken',
@@ -145,7 +173,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Mean duration (ms)',
     sentenceName: 'mean duration for getting completions at a position',
     getValue: x => x.body.completions.mean,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getDefaultSignificance,
   },
   completionsStdDev: {
     columnName: 'Std. deviation (ms)',
@@ -164,13 +192,13 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting completions at a position',
     getValue: x => mean(x.body.completions.worst.completionsDurations),
-    getSignificance: defaultGetSignificance,
+    getSignificance: getDefaultSignificance,
   },
   quickInfoMean: {
     columnName: 'Mean duration (ms)',
     sentenceName: 'mean duration for getting quick info at a position',
     getValue: x => x.body.quickInfo.mean,
-    getSignificance: defaultGetSignificance,
+    getSignificance: getDefaultSignificance,
   },
   quickInfoStdDev: {
     columnName: 'Std. deviation (ms)',
@@ -189,7 +217,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: 'Worst duration (ms)',
     sentenceName: 'worst-case duration for getting quick info at a position',
     getValue: x => mean(x.body.quickInfo.worst.quickInfoDurations),
-    getSignificance: defaultGetSignificance,
+    getSignificance: getDefaultSignificance,
   },
 };
 
@@ -201,10 +229,10 @@ export interface ComparedMetric {
 
 export function getInterestingMetrics(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>): ComparedMetric[] {
   return Object.values(metrics).reduce((acc: { metric: Metric, percentDiff: number, significance: SignificanceLevel }[], metric) => {
-    const aValue = metric.getValue(before);
-    const bValue = metric.getValue(after);
-    const percentDiff = isNonNaNNumber(aValue) && isNonNaNNumber(bValue) && getPercentDiff(bValue, aValue);
-    const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, before, after);
+    const beforeValue = metric.getValue(before);
+    const afterValue = metric.getValue(after);
+    const percentDiff = isNonNaNNumber(beforeValue) && isNonNaNNumber(afterValue) && getPercentDiff(afterValue, beforeValue);
+    const significance = typeof percentDiff === 'number' && metric.getSignificance(percentDiff, beforeValue!, afterValue!, before, after);
     if (percentDiff && significance) {
       return [
         ...acc,

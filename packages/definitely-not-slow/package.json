@@ -4,7 +4,7 @@
   "description": "",
   "bin": "index.js",
   "scripts": {
-    "build": "tsc -b .",
+    "build": "tsc -b src/cli",
     "test": "jest",
     "cli": "node dist/src/cli/index.js",
     "git-config": "test \"$GITHUB_WORKFLOW\" && git remote -v && git config --global user.name \"$GH_USER\" && git config --global user.email \"$GH_EMAIL\" || echo ''",
