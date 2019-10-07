@@ -3,6 +3,7 @@ import { assertDefined } from 'types-publisher/bin/util/util';
 import { getOctokit } from './getOctokit';
 import { createTablesWithAnalysesMessage } from './createTablesWithAnalysesMessage';
 import { createPerfCommentBody } from './comment';
+import { getOverallChangeForComparisons } from '../analysis';
 
 type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
 
@@ -34,7 +35,7 @@ export async function postDependentsComparisonResult({
       await octokit.issues.createComment({
         ...config.github.commonParams,
         issue_number: prNumber,
-        body: createPerfCommentBody(message),
+        body: createPerfCommentBody({ overallChange: getOverallChangeForComparisons(comparisons) }, message),
       });
     } catch (err) {
       console.log(message);

@@ -3,7 +3,7 @@ import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { createTablesWithAnalysesMessage } from './createTablesWithAnalysesMessage';
 import { isPerfComment, createPerfCommentBody, getCommentData } from './comment';
-import { getOverallChange, OverallChange } from '../analysis';
+import { OverallChange, getOverallChangeForComparisons } from '../analysis';
 import { setLabels } from './setLabels';
 
 type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
@@ -38,11 +38,7 @@ export async function postInitialComparisonResults({
         issue_number: prNumber,
       });
 
-      let currentOverallChange = OverallChange.Same;
-      for (const comparison of comparisons) {
-        currentOverallChange |= comparison[0] ? getOverallChange(comparison[0], comparison[1]) : OverallChange.Same;
-      }
-
+      const currentOverallChange = getOverallChangeForComparisons(comparisons);
       const mostRecentComment = findLast(comments.data, isPerfComment);
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
