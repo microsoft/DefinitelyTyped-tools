@@ -1,0 +1,8 @@
+src
+test
+logs
+.DS_Store
+.vscode
+.github
+tsconfig.base.json
+jest.config.js

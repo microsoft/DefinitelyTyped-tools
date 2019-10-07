@@ -1,6 +1,6 @@
 {
   "name": "@andrewbranch/definitely-not-slow",
-  "version": "1.2.6-alpha.0",
+  "version": "1.2.5",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -34,6 +34,6 @@
     "typescript": "^3.7.0-dev.20191004"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry":"https://npm.pkg.github.com/"
   }
 }
