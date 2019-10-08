@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    branches:
+      - master
 name: build, test and publish beta
 jobs:
   publish_beta:
@@ -6,11 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     container: node:latest
     steps:
-    - uses: actions/checkout@master
-    - name: filter not tag
-      uses: actions/bin/filter@master
-      with:
-        args: not tag
     - name: install
       uses: actions/npm@master
       with:
