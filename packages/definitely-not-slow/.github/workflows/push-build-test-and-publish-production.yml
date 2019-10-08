@@ -1,7 +1,6 @@
 on:
-  push:
-    tags:
-    - "*"
+  release:
+    types: [published]
 env:
   NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: build, test and publish production
@@ -21,5 +20,4 @@ jobs:
     - name: build
       run: npm run build
     - name: publish production
-      run: |
-        npm publish
+      run: npm publish
