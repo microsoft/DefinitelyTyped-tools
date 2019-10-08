@@ -14,13 +14,14 @@ jobs:
         fetch-depth: 1
     - name: install
       run: npm ci
+      env:
+        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: test
       run: npm test
     - name: build
       run: npm run build
     - name: publish beta
       run: |
-        export NPM_TOKEN=$GITHUB_TOKEN
         version=`node .github/workflows/getVersion.js`
         npm --no-git-tag-version version $version
         npm publish
@@ -28,4 +29,4 @@ jobs:
       env:
         GH_EMAIL: ${{ secrets.GH_EMAIL }}
         GH_USER: ${{ secrets.GH_USER }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}

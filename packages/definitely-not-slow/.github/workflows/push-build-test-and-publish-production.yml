@@ -14,6 +14,8 @@ jobs:
         fetch-depth: 1
     - name: install
       run: npm ci
+      env:
+        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: test
       run: npm test
     - name: build
