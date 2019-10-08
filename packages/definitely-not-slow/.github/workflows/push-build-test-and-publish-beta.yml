@@ -25,4 +25,5 @@ jobs:
         version=`node .github/workflows/getVersion.js`
         npm --no-git-tag-version version $version
         npm publish
+        sleep 15
         npm dist-tag add @andrewbranch/definitely-not-slow@$version alpha
