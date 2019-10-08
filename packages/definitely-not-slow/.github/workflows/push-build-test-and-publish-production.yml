@@ -2,6 +2,8 @@ on:
   push:
     tags:
     - "*"
+env:
+  NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: build, test and publish production
 jobs:
   publish_production:
@@ -14,17 +16,10 @@ jobs:
         fetch-depth: 1
     - name: install
       run: npm ci
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: test
       run: npm test
     - name: build
       run: npm run build
     - name: publish production
       run: |
-        export NPM_TOKEN=$GITHUB_TOKEN
         npm publish
-      env:
-        GH_EMAIL: ${{ secrets.GH_EMAIL }}
-        GH_USER: ${{ secrets.GH_USER }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

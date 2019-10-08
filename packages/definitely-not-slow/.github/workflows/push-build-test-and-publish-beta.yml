@@ -2,6 +2,8 @@ on:
   push:
     branches:
     - master
+env:
+  NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: build, test and publish beta
 jobs:
   publish_beta:
@@ -14,8 +16,6 @@ jobs:
         fetch-depth: 1
     - name: install
       run: npm ci
-      env:
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: test
       run: npm test
     - name: build
@@ -26,7 +26,3 @@ jobs:
         npm --no-git-tag-version version $version
         npm publish
         npm dist-tag add @andrewbranch/definitely-not-slow@$version alpha
-      env:
-        GH_EMAIL: ${{ secrets.GH_EMAIL }}
-        GH_USER: ${{ secrets.GH_USER }}
-        NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
