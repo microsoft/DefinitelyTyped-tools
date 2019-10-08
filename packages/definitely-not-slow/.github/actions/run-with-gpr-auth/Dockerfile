@@ -1,4 +1,4 @@
 FROM node:latest
 USER root
-COPY .npmrc /root/.npmrc
+COPY .npmrc /usr/local/lib/node_modules/npm/npmrc
 ENTRYPOINT [ "sh", "-c" ]
