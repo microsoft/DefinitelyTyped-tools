@@ -1,9 +1,10 @@
 on: push
 name: build, test and publish beta
 jobs:
-  filterNotTag:
-    name: filter not tag
+  publish_beta:
+    name: build, test and publish beta
     runs-on: ubuntu-latest
+    container: node:latest
     steps:
     - uses: actions/checkout@master
     - name: filter not tag
@@ -27,10 +28,14 @@ jobs:
       with:
         args: branch master
     - name: publish beta
-      uses: actions/npm@master
+      run: |
+        export NPM_TOKEN=$GITHUB_TOKEN
+        version=`node .github/workflows/getVersion.js`
+        npm --no-git-tag-version version $version
+        npm publish
+        npm dist-tag add @andrewbranch/definitely-not-slow@$version alpha
+      shell: bash
       env:
         GH_EMAIL: ${{ secrets.GH_EMAIL }}
         GH_USER: ${{ secrets.GH_USER }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: run push-beta
