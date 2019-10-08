@@ -15,13 +15,17 @@ jobs:
       with:
         fetch-depth: 1
     - name: install
-      run: npm ci
+      uses: ./.github/actions/run-with-gpr-auth
+      with:
+        run: npm ci
     - name: test
       run: npm test
     - name: build
       run: npm run build
     - name: publish beta
-      run: |
-        version=`node .github/workflows/getVersion.js`
-        npm --no-git-tag-version version $version
-        npm publish --tag alpha
+      uses: ./.github/actions/run-with-gpr-auth
+      with:
+        run: |
+          version=`node .github/workflows/getVersion.js`
+          npm --no-git-tag-version version $version
+          npm publish --tag alpha

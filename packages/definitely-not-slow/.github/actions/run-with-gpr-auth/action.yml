@@ -1,0 +1,11 @@
+name: Run with GPR auth
+description: Runs a shell command in node:latest with a ~/.npmrc authed to GitHub Package Registry
+inputs:
+  run:
+    description: Shell command to run
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+  - ${{ inputs.run }}

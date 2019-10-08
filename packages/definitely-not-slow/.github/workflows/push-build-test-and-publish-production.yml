@@ -14,10 +14,14 @@ jobs:
       with:
         fetch-depth: 1
     - name: install
-      run: npm ci
+      uses: ./.github/actions/run-with-gpr-auth
+      with:
+        run: npm ci
     - name: test
       run: npm test
     - name: build
       run: npm run build
     - name: publish production
-      run: npm publish
+      uses: ./.github/actions/run-with-gpr-auth
+      with:
+        run: npm publish
