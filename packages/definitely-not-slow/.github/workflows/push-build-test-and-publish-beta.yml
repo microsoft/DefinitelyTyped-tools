@@ -17,11 +17,7 @@ jobs:
     - name: install
       uses: ./.github/actions/run-with-gpr-auth
       with:
-        run: |
-          whoami
-          ls -la /usr/local/lib/node_modules/npm
-          npm -g bin
-          npm ci
+        run: npm ci
     - name: test
       run: npm test
     - name: build
