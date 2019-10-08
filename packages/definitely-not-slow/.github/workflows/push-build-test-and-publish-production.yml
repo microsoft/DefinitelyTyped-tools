@@ -1,32 +1,28 @@
-on: push
+on:
+  push:
+    tags:
+    - "*"
 name: build, test and publish production
 jobs:
-  checkForNewTag:
-    name: check for new tag
+  publish_production:
+    name: build, test and publish production
     runs-on: ubuntu-latest
+    container: node:latest
     steps:
-    - uses: actions/checkout@master
-    - name: check for new tag
-      uses: actions/bin/filter@master
+    - uses: actions/checkout@v1
       with:
-        args: tag
-    - name: install-prod
-      uses: actions/npm@master
-      with:
-        args: ci
-    - name: test-prod
-      uses: actions/npm@master
-      with:
-        args: test
-    - name: build-prod
-      uses: actions/npm@master
-      with:
-        args: run build
+        fetch-depth: 1
+    - name: install
+      run: npm ci
+    - name: test
+      run: npm test
+    - name: build
+      run: npm run build
     - name: publish production
-      uses: actions/npm@master
+      run: |
+        export NPM_TOKEN=$GITHUB_TOKEN
+        npm publish
       env:
         GH_EMAIL: ${{ secrets.GH_EMAIL }}
         GH_USER: ${{ secrets.GH_USER }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: run push-production
