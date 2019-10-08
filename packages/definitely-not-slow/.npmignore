@@ -1,8 +1,10 @@
 src
+!dist/src
 test
 logs
 .DS_Store
 .vscode
 .github
 tsconfig.base.json
+*.tsbuildinfo
 jest.config.js
