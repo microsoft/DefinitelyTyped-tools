@@ -10,21 +10,11 @@ jobs:
     container: node:latest
     steps:
     - name: install
-      uses: actions/npm@master
-      with:
-        args: ci
+      run: npm ci
     - name: test
-      uses: actions/npm@master
-      with:
-        args: test
+      run: npm test
     - name: build
-      uses: actions/npm@master
-      with:
-        args: run build
-    - name: filter branch master
-      uses: actions/bin/filter@master
-      with:
-        args: branch master
+      run: npm run build
     - name: publish beta
       run: |
         export NPM_TOKEN=$GITHUB_TOKEN
@@ -32,7 +22,6 @@ jobs:
         npm --no-git-tag-version version $version
         npm publish
         npm dist-tag add @andrewbranch/definitely-not-slow@$version alpha
-      shell: bash
       env:
         GH_EMAIL: ${{ secrets.GH_EMAIL }}
         GH_USER: ${{ secrets.GH_USER }}
