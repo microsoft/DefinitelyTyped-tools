@@ -6,12 +6,7 @@
   "scripts": {
     "build": "tsc -b src/cli",
     "test": "jest",
-    "cli": "node dist/src/cli/index.js",
-    "git-config": "test \"$GITHUB_WORKFLOW\" && git remote set-url --push origin \"https://$GH_USER:$GITHUB_TOKEN@github.com/andrewbranch/definitely-not-slow\" && git config --global user.name \"$GH_USER\" && git config --global user.email \"$GH_EMAIL\" || echo ''",
-    "prepush-production": "npm run git-config",
-    "push-production": "git fetch && git checkout production && git merge -m 'Merge master into production' origin/master && npm run build && git add dist && git commit --allow-empty -m 'Update dist' && git push -u origin production && git checkout -",
-    "prepush-beta": "npm run git-config",
-    "push-beta": "git fetch && git checkout beta && git merge -m 'Merge master into beta' origin/master && npm run build && git add dist && git commit --allow-empty -m 'Update dist' && git push -u origin beta && git checkout -"
+    "cli": "node dist/src/cli/index.js"
   },
   "author": "Andrew Branch <andrew@wheream.io>",
   "license": "MIT",
