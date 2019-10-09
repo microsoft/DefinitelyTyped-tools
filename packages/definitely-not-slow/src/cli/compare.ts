@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as path from 'path';
-import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber, shuffle } from '../common';
+import { getDatabase, DatabaseAccessLevel, config, getChangedPackages, packageIdsAreEqual, PackageBenchmarkSummary, Args, getParsedPackages, assertString, withDefault, Document, createDocument, assertNumber, shuffle, systemsAreCloseEnough, getSystemInfo } from '../common';
 import { getLatestBenchmark } from '../query';
 import { AllPackages } from 'types-publisher/bin/lib/packages';
 import { benchmarkPackage } from './benchmark';
@@ -10,6 +10,7 @@ import { printSummary } from '../measure';
 import { getTypeScript } from '../measure/getTypeScript';
 import { postInitialComparisonResults } from '../github/postInitialComparisonResults';
 import { postDependentsComparisonResult } from '../github/postDependentsComparisonResults';
+const currentSystem = getSystemInfo();
 
 export interface CompareOptions {
   allPackages: AllPackages;
@@ -113,6 +114,10 @@ export async function compareBenchmarks({
     definitelyTypedPath,
   });
 
+  if (latestBenchmarkDocument && !systemsAreCloseEnough(currentSystem, latestBenchmarkDocument.system)) {
+    latestBenchmark = undefined;
+  }
+
   if (changedPackagesBetweenLastRunAndMaster || !latestBenchmark) {
     let needsRerun = !latestBenchmark;
     if (changedPackagesBetweenLastRunAndMaster) {
@@ -121,7 +126,7 @@ export async function compareBenchmarks({
       needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
     }
     if (needsRerun) {
-      console.log(`No previous benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`);
+      console.log(`No comparable benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`);
       await execAndThrowErrors('git checkout origin/master && git clean -xdf types', definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
