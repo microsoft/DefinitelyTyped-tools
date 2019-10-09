@@ -38,7 +38,12 @@ export async function compare(args: Args) {
   await getTypeScript(typeScriptVersionMajorMinor);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
   const comparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
+  const startTime = Date.now();
   for (const affectedPackage of affectedPackages.changedPackages) {
+    if ((Date.now() - startTime) / 1000 > (maxRunSeconds ?? Infinity)) {
+      console.log(`Skipping ${affectedPackage.id.name} because we ran out of time`);
+    }
+
     console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
     comparisons.push(await compareBenchmarks({
       allPackages,
@@ -51,7 +56,8 @@ export async function compare(args: Args) {
     }));
   }
 
-  const dependentsToTest = runDependents ? shuffle(affectedPackages.dependentPackages).slice(0, runDependents) : [];
+  const outOfTime = (Date.now() - startTime) / 1000 > (maxRunSeconds ?? Infinity);
+  const dependentsToTest = runDependents && !outOfTime ? shuffle(affectedPackages.dependentPackages).slice(0, runDependents) : [];
   if (comparisons.length) {
     const message = await postInitialComparisonResults({
       comparisons,
