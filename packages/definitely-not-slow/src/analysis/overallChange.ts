@@ -29,10 +29,15 @@ export function getOverallChangeForSingleComparison(before: Document<PackageBenc
   return change;
 }
 
-export function getOverallChangeForComparisons(comparisons: BeforeAndAfter[]): OverallChange {
-  let change = OverallChange.Same;
+export function getOverallChangeForComparisons(comparisons: BeforeAndAfter[]): OverallChange | undefined {
+  let change: OverallChange | undefined = undefined;
   for (const comparison of comparisons) {
-    change |= comparison[0] ? getOverallChangeForSingleComparison(comparison[0], comparison[1]) : OverallChange.Same;
+    if (comparison[0]) {
+      if (change === undefined) {
+        change = OverallChange.Same;
+      }
+      change |= getOverallChangeForSingleComparison(comparison[0], comparison[1]);
+    }
   }
   return change;
 }

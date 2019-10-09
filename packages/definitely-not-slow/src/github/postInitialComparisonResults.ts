@@ -43,7 +43,7 @@ export async function postInitialComparisonResults({
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
 
-        if (currentOverallChange === lastOverallChange && !(currentOverallChange & OverallChange.Worse)) {
+        if (currentOverallChange === lastOverallChange && !((currentOverallChange ?? 0) & OverallChange.Worse)) {
           // Everything is fine and nothing has changed, just chill
           return;
         }
@@ -89,7 +89,7 @@ function getFullFirstPostMessage(mainMessage: string, dependentCount: number): s
 
 function getConciseUpdateMessage(
   prevOverallChange: OverallChange | undefined,
-  overallChange: OverallChange,
+  overallChange: OverallChange | undefined,
   mainMessage: string,
   sha: string,
 ): string {
