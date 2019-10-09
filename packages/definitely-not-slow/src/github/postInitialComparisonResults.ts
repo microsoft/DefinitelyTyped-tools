@@ -2,7 +2,7 @@ import { PackageBenchmarkSummary, Document, config, compact, findLast } from '..
 import { getOctokit } from './getOctokit';
 import { assertDefined } from 'types-publisher/bin/util/util';
 import { createTablesWithAnalysesMessage } from './createTablesWithAnalysesMessage';
-import { isPerfComment, createPerfCommentBody, getCommentData } from './comment';
+import { isPerfComment, createPerfCommentBody, getCommentData, CommentData } from './comment';
 import { OverallChange, getOverallChangeForComparisons } from '../analysis';
 import { setLabels } from './setLabels';
 
@@ -40,6 +40,10 @@ export async function postInitialComparisonResults({
 
       const currentOverallChange = getOverallChangeForComparisons(comparisons);
       const mostRecentComment = findLast(comments.data, isPerfComment);
+      const commentData: CommentData = {
+        overallChange: currentOverallChange,
+        benchmarks: comparisons.map(([, b]) => ({ createdAt: b.createdAt })),
+      };
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
 
@@ -57,14 +61,14 @@ export async function postInitialComparisonResults({
         await octokit.issues.createComment({
           ...config.github.commonParams,
           issue_number: prNumber,
-          body: createPerfCommentBody({ overallChange: currentOverallChange }, message),
+          body: createPerfCommentBody(commentData, message),
         });
       } else {
         const message = getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
         await octokit.issues.createComment({
           ...config.github.commonParams,
           issue_number: prNumber,
-          body: createPerfCommentBody({ overallChange: currentOverallChange }, message),
+          body: createPerfCommentBody(commentData, message),
         });
       }
 

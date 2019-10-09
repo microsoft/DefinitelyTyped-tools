@@ -58,7 +58,7 @@ export async function measurePerf({
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
   const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : '.');
   await installDependencies(allPackages, typings.id, typesPath);
-  
+
   const commandLine = getParsedCommandLineForPackage(ts, latestTSTypesDir);
   const testPaths = getTestFileNames(commandLine.fileNames);
 

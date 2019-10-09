@@ -35,7 +35,10 @@ export async function postDependentsComparisonResult({
       await octokit.issues.createComment({
         ...config.github.commonParams,
         issue_number: prNumber,
-        body: createPerfCommentBody({ overallChange: getOverallChangeForComparisons(comparisons) }, message),
+        body: createPerfCommentBody({
+          overallChange: getOverallChangeForComparisons(comparisons),
+          benchmarks: comparisons.map(([, b]) => ({ createdAt: b.createdAt })),
+        }, message),
       });
     } catch (err) {
       console.log(message);

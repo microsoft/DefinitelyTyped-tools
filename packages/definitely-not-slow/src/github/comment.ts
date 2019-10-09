@@ -14,11 +14,14 @@ function assertCommentSafe(str: string) {
 
 export interface CommentData {
   overallChange?: OverallChange;
+  benchmarks: {
+    createdAt: Date;
+  }[];
 }
 
 export function createPerfCommentBody(data: CommentData, body: string): string {
   return [
-    commentTagStart + assertCommentSafe(JSON.stringify({ version: 1, data })) + commentTagEnd,
+    commentTagStart + assertCommentSafe(JSON.stringify({ version: 2, data })) + commentTagEnd,
     '',
     body,
   ].join('\n');
