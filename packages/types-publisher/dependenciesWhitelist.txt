@@ -63,6 +63,7 @@ eventemitter2
 eventemitter3
 expect
 express-graphql
+express-rate-limit
 fast-glob
 fastify
 final-form
