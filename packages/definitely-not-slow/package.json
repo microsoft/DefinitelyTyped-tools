@@ -1,6 +1,6 @@
 {
   "name": "@andrewbranch/definitely-not-slow",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "",
   "bin": "index.js",
   "scripts": {
