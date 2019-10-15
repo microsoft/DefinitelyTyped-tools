@@ -38,7 +38,7 @@ export function getCommentData(comment: Pick<IssuesListCommentsResponseItem, 'bo
       const trimmed = comment.body.trimLeft();
       const dataText = trimmed
         .substring(commentTagStart.length)
-        .substring(0, trimmed.length - commentTagStart.length - commentTagEnd.length);
+        .substring(0, trimmed.indexOf(commentTagEnd) - commentTagStart.length);
       return JSON.parse(dataText).data;
     } catch {
       return undefined;
