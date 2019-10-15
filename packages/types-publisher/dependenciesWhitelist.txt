@@ -94,6 +94,7 @@ log4js
 loglevel
 logrocket
 knex
+knockout
 magic-string
 mali
 meteor-typings
