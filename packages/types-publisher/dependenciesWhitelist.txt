@@ -136,6 +136,7 @@ redux-persist
 redux-saga
 redux-thunk
 rollup
+rrule
 rxjs
 safe-buffer
 should
