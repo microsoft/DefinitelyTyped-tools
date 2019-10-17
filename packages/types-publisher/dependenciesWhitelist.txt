@@ -118,6 +118,7 @@ probot
 prom-client
 protobufjs
 protractor
+query-string
 quill-delta
 raven-js
 re-resizable
