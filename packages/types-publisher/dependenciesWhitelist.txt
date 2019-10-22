@@ -30,6 +30,7 @@
 @vue/test-utils
 abort-controller
 activex-helpers
+adal-node
 ajv
 anydb-sql
 apollo-client
