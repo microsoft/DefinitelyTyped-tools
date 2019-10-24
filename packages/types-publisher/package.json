@@ -14,7 +14,7 @@
     "azure-storage": "^2.0.0",
     "charm": "^1.0.2",
     "definitelytyped-header-parser": "^3.7.2",
-    "dtslint": "^0.9.4",
+    "dtslint": "^0.9.9",
     "fs-extra": "4.0.0",
     "fstream": "^1.0.10",
     "longjohn": "^0.2.11",
