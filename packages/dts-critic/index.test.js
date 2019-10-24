@@ -124,6 +124,12 @@ suite("checkSource", {
             `module.exports = function () {};`)).toThrow(
                 "The types for foo specify 'export default' but the source does not mention 'default' anywhere.");
     },
+    serverErrorRateExceeded() {
+        expect(checkSource(
+            "foo",
+            `function f() {}; export default f;`,
+            `Rate exceeded`)).toBeUndefined();
+    },
     serverError500() {
         expect(checkSource(
             "foo",

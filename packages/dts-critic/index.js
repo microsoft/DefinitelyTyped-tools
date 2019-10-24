@@ -205,11 +205,13 @@ function mangleScoped(baseName) {
  */
 function checkSource(name, dts, src) {
     if (dts.indexOf("export default") > -1 && dts.indexOf("export =") === -1 && !/declare module ['"]/.test(dts) &&
-        src.indexOf("524: A timeout occurred") === -1 && src.indexOf("500 Server Error") === -1 && src.indexOf("Cannot find package") === -1 &&
+        src.indexOf("524: A timeout occurred") === -1 && src.indexOf("500 Server Error") === -1 && src.indexOf("Cannot find package") === -1 && src.indexOf("Rate exceeded") === -1 &&
         !isRealExportDefault(name) && src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
         throw new Error(`The types for ${name} specify 'export default' but the source does not mention 'default' anywhere.
 Here is the source:
-${src}`);
+${src}
+
+`);
     }
 }
 
