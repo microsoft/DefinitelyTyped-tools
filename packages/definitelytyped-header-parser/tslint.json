@@ -1,6 +1,7 @@
 {
     "extends": "tslint:all",
     "rules": {
+        "increment-decrement": false,
         "completed-docs": false, // TODO
         "strict-type-predicates": false, // TODO: https://github.com/Microsoft/TypeScript/issues/17963
 
