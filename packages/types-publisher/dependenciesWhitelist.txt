@@ -29,6 +29,7 @@
 @uirouter/angularjs
 @vue/test-utils
 abort-controller
+actions-on-google
 activex-helpers
 adal-node
 ajv
