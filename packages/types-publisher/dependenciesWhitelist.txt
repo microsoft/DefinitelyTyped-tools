@@ -47,6 +47,7 @@ bignumber.js
 bookshelf
 broadcast-channel
 cac
+cassandra-driver
 chalk
 chokidar
 commander
