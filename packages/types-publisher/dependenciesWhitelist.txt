@@ -174,3 +174,4 @@ winston-transport
 xmlbuilder
 xpath
 zipkin
+zipkin-transport-http
