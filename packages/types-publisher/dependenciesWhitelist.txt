@@ -111,6 +111,7 @@ moment
 monaco-editor
 moment-range
 mqtt
+next
 nock
 normalize-url
 objection
