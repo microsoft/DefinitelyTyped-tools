@@ -162,6 +162,7 @@ tweetnacl
 typescript
 utility-types
 vega-typings
+vfile
 vfile-message
 vue
 vue-router
