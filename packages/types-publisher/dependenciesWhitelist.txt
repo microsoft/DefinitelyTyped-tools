@@ -42,6 +42,7 @@ ast-types
 aws-sdk
 axe-core
 axios
+base-x
 bignumber.js
 bookshelf
 broadcast-channel
