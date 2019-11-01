@@ -146,6 +146,7 @@ redux-saga
 redux-thunk
 rollup
 rrule
+rsmq
 rxjs
 safe-buffer
 should
