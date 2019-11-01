@@ -103,6 +103,7 @@ mali
 meteor-typings
 moment
 monaco-editor
+moment-range
 mqtt
 nock
 normalize-url
