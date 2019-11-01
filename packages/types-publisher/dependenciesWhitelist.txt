@@ -112,6 +112,7 @@ monaco-editor
 moment-range
 mqtt
 next
+next-redux-wrapper
 nock
 normalize-url
 objection
