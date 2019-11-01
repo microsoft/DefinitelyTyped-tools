@@ -135,6 +135,7 @@ react-autosize-textarea
 react-dnd
 react-dnd-touch-backend
 react-intl
+react-native-fs
 react-native-maps
 react-native-modal
 react-native-svg
