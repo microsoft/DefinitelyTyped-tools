@@ -1,17 +1,17 @@
 import assert = require("assert");
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 
-import { readFileAndWarn } from "../lib/common";
-import { ChangedTyping } from "../lib/versions";
+import { readFileAndWarn, Registry } from "./common";
+import { ChangedTyping } from "./versions";
 import { Logger } from "../util/logging";
 import { joinPaths } from "../util/util";
 
 import { NpmPublishClient } from "./npm-client";
 import { AnyPackage, NotNeededPackage } from "./packages";
 
-export async function publishTypingsPackage(client: NpmPublishClient, changedTyping: ChangedTyping, dry: boolean, log: Logger): Promise<void> {
+export async function publishTypingsPackage(client: NpmPublishClient, changedTyping: ChangedTyping, dry: boolean, log: Logger, registry: Registry): Promise<void> {
     const { pkg, version, latestVersion } = changedTyping;
-    await common(client, pkg, log, dry);
+    await common(client, pkg, log, dry, registry);
     if (pkg.isLatest) {
         await updateTypeScriptVersionTags(pkg, version, client, log, dry);
     }
@@ -24,16 +24,16 @@ export async function publishTypingsPackage(client: NpmPublishClient, changedTyp
     }
 }
 
-export async function publishNotNeededPackage(client: NpmPublishClient, pkg: NotNeededPackage, dry: boolean, log: Logger): Promise<void> {
+export async function publishNotNeededPackage(client: NpmPublishClient, pkg: NotNeededPackage, dry: boolean, log: Logger, registry: Registry): Promise<void> {
     log(`Deprecating ${pkg.name}`);
-    await common(client, pkg, log, dry);
+    await common(client, pkg, log, dry, registry);
     // Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
     await deprecateNotNeededPackage(client, pkg, dry, log);
 }
 
-async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean): Promise<void> {
+async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean, registry: Registry): Promise<void> {
     const packageDir = pkg.outputDirectory;
-    const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
+    const packageJson = await readFileAndWarn("generate", joinPaths(packageDir + (registry === Registry.Github ? "-github" : ""), "package.json"));
     await client.publish(packageDir, packageJson, dry, log);
 }
 

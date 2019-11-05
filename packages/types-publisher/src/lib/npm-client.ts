@@ -1,4 +1,5 @@
 import assert = require("assert");
+import { Registry } from "./common";
 import { ensureFile, pathExists } from "fs-extra";
 import RegClient = require("npm-registry-client");
 import { resolve as resolveUrl } from "url";
@@ -137,8 +138,8 @@ function splitToFixedSizeGroups(names: ReadonlyArray<string>, chunkSize: number)
 }
 
 export class NpmPublishClient {
-    static async create(config?: RegClient.Config, registryName: "github" | "npm" = "npm"): Promise<NpmPublishClient> {
-        if (registryName === "github") {
+    static async create(config?: RegClient.Config, registry: Registry = Registry.NPM): Promise<NpmPublishClient> {
+        if (registry === Registry.Github) {
             return new this(new RegClient(config), { token: await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN) }, githubRegistry);
         } else {
             return new this(new RegClient(config), { token: await getSecret(Secret.NPM_TOKEN) }, npmRegistry);

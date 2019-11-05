@@ -3,7 +3,7 @@ import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
-import { Options } from "./lib/common";
+import { Options, Registry as RegistryName } from "./lib/common";
 import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient, withNpmCache } from "./lib/npm-client";
 import { AllPackages, NotNeededPackage, readNotNeededPackages, TypingsData } from "./lib/packages";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
@@ -43,16 +43,16 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
     const isTimeForNewVersion = isSevenDaysAfter(lastModified);
 
     try {
-        await publishToRegistry("github");
+        await publishToRegistry(RegistryName.Github);
     } catch(e) {
         // log and continue
         log("publishing to github failed: " + e.toString());
     }
-    await publishToRegistry("npm");
+    await publishToRegistry(RegistryName.NPM);
     await writeLog("publish-registry.md", logResult());
 
-    async function publishToRegistry(registryName: "github" | "npm") {
-        const packageName = registryName === "github" ? "@definitelytyped/" + typesRegistry : typesRegistry;
+    async function publishToRegistry(registryName: RegistryName) {
+        const packageName = registryName === RegistryName.Github ? "@definitelytyped/" + typesRegistry : typesRegistry;
         const packageJson = generatePackageJson(packageName, registryName, newVersion, newContentHash);
         await generate(registry, packageJson);
 
@@ -186,14 +186,14 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
     }
 }
 
-function generatePackageJson(name: string, registryName: "github" | "npm", version: string, typesPublisherContentHash: string): object {
+function generatePackageJson(name: string, registryName: RegistryName, version: string, typesPublisherContentHash: string): object {
     const json = {
         name,
         version,
         description: "A registry of TypeScript declaration file packages published within the @types scope.",
         repository: {
             type: "git",
-            url: registryName === "github"
+            url: registryName === RegistryName.Github
                 ? "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
                 : "https://github.com/Microsoft/types-publisher.git",
         },
@@ -208,7 +208,7 @@ function generatePackageJson(name: string, registryName: "github" | "npm", versi
         license: "MIT",
         typesPublisherContentHash,
     };
-    if (registryName === "github") {
+    if (registryName === RegistryName.Github) {
         (json as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
     }
     return json;

@@ -10,6 +10,12 @@ if (process.env.LONGJOHN) {
     longjohn.async_trace_limit = -1; // unlimited
 }
 
+/** Which registry to publish to */
+export enum Registry {
+    NPM,
+    Github,
+}
+
 /** Settings that may be determined dynamically. */
 export interface Options {
     /**

@@ -5,7 +5,7 @@ import { FS } from "../get-definitely-typed";
 import { assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
 
 import { readDataFile } from "./common";
-import { outputDirPath, scopeName } from "./settings";
+import { outputDirPath, orgName, scopeName } from "./settings";
 import { Semver } from "./versions";
 
 export class AllPackages {
@@ -196,9 +196,19 @@ export abstract class PackageBase {
         return getFullNpmName(this.name);
     }
 
+    /** '@definitelytyped/foo' for a package 'foo'. */
+    get fullGithubName(): string {
+        return getFullGithubName(this.name);
+    }
+
     /** '@types%2ffoo' for a package 'foo'. */
     get fullEscapedNpmName(): string {
         return `@${scopeName}%2f${this.name}`;
+    }
+
+    /** '@definitelytyped%2ffoo' for a package 'foo'. */
+    get fullEscapedGithubName(): string {
+        return `@${orgName}%2f${this.name}`;
     }
 
     abstract readonly major: number;
@@ -210,6 +220,10 @@ export abstract class PackageBase {
     get outputDirectory(): string {
         return joinPaths(outputDirPath, this.desc);
     }
+}
+
+export function getFullGithubName(packageName: string): string {
+    return `@${orgName}/${getMangledNameForScopedPackage(packageName)}`;
 }
 
 export function getFullNpmName(packageName: string): string {

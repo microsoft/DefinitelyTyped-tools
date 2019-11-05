@@ -2,7 +2,7 @@ import * as yargs from "yargs";
 
 import appInsights = require("applicationinsights");
 import { getDefinitelyTyped } from "./get-definitely-typed";
-import { Options } from "./lib/common";
+import { Options, Registry } from "./lib/common";
 import { withNpmCache, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
 import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { AllPackages } from "./lib/packages";
@@ -40,11 +40,19 @@ export default async function publishPackages(
         log("=== Publishing packages ===");
     }
 
-    const client = await NpmPublishClient.create();
+    const client = await NpmPublishClient.create(undefined, Registry.NPM);
+    const ghClient = await NpmPublishClient.create(undefined, Registry.Github);
 
     for (const cp of changedPackages.changedTypings) {
         log(`Publishing ${cp.pkg.desc}...`);
-        await publishTypingsPackage(client, cp, dry, log);
+
+        try {
+            await publishTypingsPackage(ghClient, cp, dry, log, Registry.Github);
+        } catch(e) {
+            // log and continue
+            log("publishing to github failed: " + e.toString());
+        }
+        await publishTypingsPackage(client, cp, dry, log, Registry.NPM);
 
         const commits = await queryGithub(
             `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`,
@@ -119,7 +127,14 @@ export default async function publishPackages(
 
     withNpmCache(new UncachedNpmInfoClient(), async infoClient => {
         for (const n of changedPackages.changedNotNeededPackages) {
-            await publishNotNeededPackage(client, skipBadPublishes(n, infoClient, log), dry, log);
+            const target = skipBadPublishes(n, infoClient, log)
+            try {
+                await publishNotNeededPackage(ghClient, target, dry, log, Registry.Github);
+            } catch(e) {
+                // log and continue
+                log("publishing to github failed: " + e.toString());
+            }
+            await publishNotNeededPackage(client, target, dry, log, Registry.NPM);
         }
     });
 

@@ -2,7 +2,7 @@ import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
-import { Options } from "./lib/common";
+import { Options, Registry } from "./lib/common";
 import {
     AllPackages, AnyPackage, DependencyVersion, getFullNpmName, License, NotNeededPackage, PackageJsonDependency, TypingsData,
 } from "./lib/packages";
@@ -55,19 +55,22 @@ async function generateTypingPackage(typing: TypingsData, packages: AllPackages,
     const typesDirectory = dt.subDir("types").subDir(typing.name);
     const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(`v${typing.major}`);
 
-    const packageJson = createPackageJSON(typing, version, packages);
-    await writeCommonOutputs(typing, packageJson, createReadme(typing));
+    await writeCommonOutputs(typing, createPackageJSON(typing, version, packages, Registry.NPM), createReadme(typing, Registry.NPM), Registry.NPM);
+    await writeCommonOutputs(typing, createPackageJSON(typing, version, packages, Registry.Github), createReadme(typing, Registry.Github), Registry.Github);
     await Promise.all(
-        typing.files.map(async file => writeFile(await outputFilePath(typing, file), await packageFS.readFile(file))));
+        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.NPM, file), await packageFS.readFile(file))));
+    await Promise.all(
+        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.Github, file), await packageFS.readFile(file))));
 }
 
 async function generateNotNeededPackage(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger): Promise<void> {
-    const packageJson = createNotNeededPackageJSON(skipBadPublishes(pkg, client, log));
-    await writeCommonOutputs(pkg, packageJson, pkg.readme());
+    pkg = skipBadPublishes(pkg, client, log);
+    await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.NPM), pkg.readme(), Registry.NPM);
+    await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.Github), pkg.readme(), Registry.Github);
 }
 
-async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
-    await mkdir(pkg.outputDirectory);
+async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string, registry: Registry): Promise<void> {
+    await mkdir(pkg.outputDirectory + (registry === Registry.Github ? "-github" : ""));
 
     await Promise.all([
         writeOutputFile("package.json", packageJson),
@@ -76,12 +79,12 @@ async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: 
     ]);
 
     async function writeOutputFile(filename: string, content: string): Promise<void> {
-        await writeFile(await outputFilePath(pkg, filename), content);
+        await writeFile(await outputFilePath(pkg, registry, filename), content);
     }
 }
 
-async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string> {
-    const full = joinPaths(pkg.outputDirectory, filename);
+async function outputFilePath(pkg: AnyPackage, registry: Registry, filename: string): Promise<string> {
+    const full = joinPaths(pkg.outputDirectory + (registry === Registry.Github ? "-github" : ""), filename);
     const dir = path.dirname(full);
     if (dir !== pkg.outputDirectory) {
         await mkdirp(dir);
@@ -91,10 +94,10 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 
 interface Dependencies { [name: string]: string; }
 
-function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): string {
+export function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages, registry: Registry): string {
     // Use the ordering of fields from https://docs.npmjs.com/files/package.json
     const out: {} = {
-        name: typing.fullNpmName,
+        name: registry === Registry.NPM ? typing.fullNpmName : typing.fullGithubName,
         version,
         description: `TypeScript definitions for ${typing.libraryName}`,
         // keywords,
@@ -115,6 +118,9 @@ function createPackageJSON(typing: TypingsData, version: string, packages: AllPa
         typesPublisherContentHash: typing.contentHash,
         typeScriptVersion: typing.minTypeScriptVersion,
     };
+    if (registry === Registry.Github) {
+        (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
+    }
 
     return JSON.stringify(out, undefined, 4);
 }
@@ -142,31 +148,32 @@ function dependencySemver(dependency: DependencyVersion): string {
     return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage): string {
-    return JSON.stringify(
-        {
-            name: fullNpmName,
-            version: version.versionString,
-            typings: null, // tslint:disable-line no-null-keyword
-            description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
-            main: "",
-            scripts: {},
-            author: "",
-            repository: sourceRepoURL,
-            license,
-            // No `typings`, that's provided by the dependency.
-            dependencies: {
-                [name]: "*",
-            },
+export function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, fullGithubName, sourceRepoURL, version }: NotNeededPackage, registry: Registry): string {
+    const out = {
+        name: registry === Registry.NPM ? fullNpmName : fullGithubName,
+        version: version.versionString,
+        typings: null, // tslint:disable-line no-null-keyword
+        description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
+        main: "",
+        scripts: {},
+        author: "",
+        repository: sourceRepoURL,
+        license,
+        // No `typings`, that's provided by the dependency.
+        dependencies: {
+            [name]: "*",
         },
-        undefined,
-        4);
+    };
+    if (registry === Registry.Github) {
+        (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
+    }
+    return JSON.stringify(out, undefined, 4);
 }
 
-function createReadme(typing: TypingsData): string {
+export function createReadme(typing: TypingsData, reg: Registry): string {
     const lines: string[] = [];
     lines.push("# Installation");
-    lines.push(`> \`npm install --save ${typing.fullNpmName}\``);
+    lines.push(`> \`npm install --save ${reg === Registry.NPM ? typing.fullNpmName : typing.fullGithubName}\``);
     lines.push("");
 
     lines.push("# Summary");
@@ -196,7 +203,7 @@ function createReadme(typing: TypingsData): string {
     return lines.join("\r\n");
 }
 
-function getLicenseFileText(typing: AnyPackage): string {
+export function getLicenseFileText(typing: AnyPackage): string {
     switch (typing.license) {
         case License.MIT:
             return mitLicense;

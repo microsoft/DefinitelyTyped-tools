@@ -9,6 +9,8 @@ export const githubRegistry = `https://${githubRegistryHostName}/`;
 export const npmApi = "api.npmjs.org";
 /** Note: this is 'types' and not '@types' */
 export const scopeName = "types";
+/** TODO: Change this to definitelytyped when it's ready */
+export const orgName = "testtypepublishing";
 const root = joinPaths(__dirname, "..", "..");
 export const dataDirPath = joinPaths(root, "data");
 export const outputDirPath = joinPaths(root, "output");
