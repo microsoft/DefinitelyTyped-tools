@@ -110,7 +110,9 @@ export function createPackageJSON(typing: TypingsData, version: string, packages
         typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
         repository: {
             type: "git",
-            url: `${definitelyTypedURL}.git`,
+            url: registry === Registry.Github
+                ? "https://github.com/TestTypePublishing/TypePublishing.git"
+                : "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
             directory: `types/${typing.name}`,
         },
         scripts: {},
