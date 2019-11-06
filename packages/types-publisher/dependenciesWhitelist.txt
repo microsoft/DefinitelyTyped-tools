@@ -17,6 +17,7 @@
 @sentry/browser
 @storybook/addons
 @storybook/react
+@types/expect
 @types/firebase
 @types/hoist-non-react-statics
 @types/js-data
