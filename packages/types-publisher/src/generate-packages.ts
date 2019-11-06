@@ -159,7 +159,7 @@ export function createNotNeededPackageJSON({ libraryName, license, name, fullNpm
         main: "",
         scripts: {},
         author: "",
-        repository: sourceRepoURL,
+        repository: registry === Registry.NPM ? sourceRepoURL : "https://github.com/TestTypePublishing/TypePublishing.git",
         license,
         // No `typings`, that's provided by the dependency.
         dependencies: {
