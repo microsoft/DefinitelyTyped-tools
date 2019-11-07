@@ -40,7 +40,7 @@ describe("parse", () => {
             libraryName: "foo",
             libraryMajorVersion: 1,
             libraryMinorVersion: 2,
-            typeScriptVersion: "2.0",
+            typeScriptVersion: "2.8",
             nonNpm: false,
             projects: ["https://github.com/foo/foo", "https://foo.com"],
             contributors: [
@@ -99,12 +99,37 @@ describe("parseTypeScriptVersionLine", () => {
     });
 });
 
+describe("isSupported", () => {
+    it("works", () => {
+        assert(TypeScriptVersion.isSupported("3.5"));
+    });
+    it("supports 2.8", () => {
+        assert(TypeScriptVersion.isSupported("2.8"));
+    });
+    it("does not support 2.7", () => {
+        assert(!TypeScriptVersion.isSupported("2.7"));
+    });
+});
+
+describe("range", () => {
+    it("works", () => {
+        assert.deepEqual(TypeScriptVersion.range("3.5"), ["3.5", "3.6", "3.7", "3.8"]);
+    });
+    it("includes 2.8 onwards", () => {
+        assert.deepEqual(TypeScriptVersion.range("2.8"), TypeScriptVersion.supported);
+    });
+});
+
 describe("tagsToUpdate", () => {
     it("works", () => {
         assert.deepEqual(
-            TypeScriptVersion.tagsToUpdate("2.5"),
-            ["ts2.5", "ts2.6", "ts2.7", "ts2.8", "ts2.9",
-             "ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "ts3.7", "ts3.8", "latest"]);
+            TypeScriptVersion.tagsToUpdate("3.0"),
+            ["ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "ts3.7", "ts3.8", "latest"]);
+    });
+    it("allows 2.8 onwards", () => {
+        assert.deepEqual(
+            TypeScriptVersion.tagsToUpdate("2.8"),
+            TypeScriptVersion.supported.map(s => "ts" + s).concat("latest"));
     });
 });
 

@@ -10,36 +10,39 @@ Example:
 // TypeScript Version: 2.1
 */
 
-/** Parse-able TypeScript versions. Only add to this list if we will support this version on DefinitelyTyped. */
+/** Parse-able but unsupported TypeScript versions. */
+export type UnsupportedTypeScriptVersion =
+    | "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7";
+/** Parse-able and supported TypeScript versions. Only add to this list if we will support this version on DefinitelyTyped. */
 export type TypeScriptVersion =
-    | "2.0" | "2.1" | "2.2" | "2.3" | "2.4" | "2.5" | "2.6" | "2.7" | "2.8" | "2.9"
+    | "2.8" | "2.9"
     | "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8";
+export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 export namespace TypeScriptVersion {
-    export const all: ReadonlyArray<TypeScriptVersion> =
-        ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9",
+    export const supported: readonly TypeScriptVersion[] =
+        ["2.8", "2.9",
          "3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8"];
-    export const lowest = all[0];
+    export const unsupported: readonly UnsupportedTypeScriptVersion[] =
+        ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7"];
+    export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
+    export const lowest = supported[0];
     /** Latest version that may be specified in a `// TypeScript Version:` header. */
-    export const latest = all[all.length - 1];
+    export const latest = supported[supported.length - 1];
 
     /** @deprecated */
     export function isPrerelease(_version: TypeScriptVersion): boolean {
         return false;
     }
 
-    export function range(min: TypeScriptVersion): ReadonlyArray<TypeScriptVersion> {
-        return all.filter(v => v >= min);
+    export function isSupported(v: AllTypeScriptVersion): v is TypeScriptVersion {
+        return supported.indexOf(v as TypeScriptVersion) > -1;
     }
 
-    const allTags: ReadonlyArray<string> = [
-        "ts2.0",
-        "ts2.1",
-        "ts2.2",
-        "ts2.3",
-        "ts2.4",
-        "ts2.5",
-        "ts2.6",
-        "ts2.7",
+    export function range(min: TypeScriptVersion): ReadonlyArray<TypeScriptVersion> {
+        return supported.filter(v => v >= min);
+    }
+
+    const supportedTags: readonly string[] = [
         "ts2.8",
         "ts2.9",
         "ts3.0",
@@ -55,18 +58,16 @@ export namespace TypeScriptVersion {
     ];
 
     /** List of NPM tags that should be changed to point to the latest version. */
-    export function tagsToUpdate(typeScriptVersion: TypeScriptVersion): ReadonlyArray<string>  {
-        // A 2.0-compatible package is assumed compatible with TypeScript 2.1
-        // We want the "2.1" tag to always exist.
-        const idx = allTags.indexOf(`ts${typeScriptVersion}`);
-        if (idx === -1) { throw new Error(); }
-        return allTags.slice(idx);
+    export function tagsToUpdate(v: TypeScriptVersion): ReadonlyArray<string>  {
+        const idx = supportedTags.indexOf(`ts${v}`);
+        assert(idx !== -1);
+        return supportedTags.slice(idx);
     }
 
     export function previous(v: TypeScriptVersion): TypeScriptVersion | undefined {
-        const index = all.indexOf(v);
+        const index = supported.indexOf(v);
         assert(index !== -1);
-        return index === 0 ? undefined : all[index - 1];
+        return index === 0 ? undefined : supported[index - 1];
     }
 
     export function isRedirectable(v: TypeScriptVersion): boolean {
@@ -79,7 +80,7 @@ export interface Header {
     readonly libraryName: string;
     readonly libraryMajorVersion: number;
     readonly libraryMinorVersion: number;
-    readonly typeScriptVersion: TypeScriptVersion;
+    readonly typeScriptVersion: AllTypeScriptVersion;
     readonly projects: ReadonlyArray<string>;
     readonly contributors: ReadonlyArray<Author>;
 }
@@ -269,18 +270,18 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
     });
 }
 
-const typeScriptVersionLineParser: pm.Parser<TypeScriptVersion> =
+const typeScriptVersionLineParser: pm.Parser<AllTypeScriptVersion> =
     pm.regexp(/\/\/ TypeScript Version: (\d.(\d))/, 1).chain<TypeScriptVersion>(v =>
         TypeScriptVersion.all.includes(v as TypeScriptVersion)
             ? pm.succeed(v as TypeScriptVersion)
             : pm.fail(`TypeScript ${v} is not yet supported.`));
 
-const typeScriptVersionParser: pm.Parser<TypeScriptVersion> =
+const typeScriptVersionParser: pm.Parser<AllTypeScriptVersion> =
     pm.regexp(/\r?\n/)
         .then(typeScriptVersionLineParser)
-        .fallback<TypeScriptVersion>("2.0");
+        .fallback<TypeScriptVersion>("2.8");
 
-export function parseTypeScriptVersionLine(line: string): TypeScriptVersion {
+export function parseTypeScriptVersionLine(line: string): AllTypeScriptVersion {
     const result = typeScriptVersionLineParser.parse(line);
     if (!result.status) {
         throw new Error(`Could not parse version: line is '${line}'`);
