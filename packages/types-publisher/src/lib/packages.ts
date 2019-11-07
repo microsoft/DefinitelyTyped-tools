@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Author, TypeScriptVersion } from "definitelytyped-header-parser";
+import { Author, TypeScriptVersion, AllTypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
 import { assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";
@@ -309,7 +309,7 @@ export interface TypingsDataRaw extends BaseRaw {
     // The minor version of the library
     readonly libraryMinorVersion: number;
 
-    readonly minTsVersion: TypeScriptVersion;
+    readonly minTsVersion: AllTypeScriptVersion;
     /**
      * List of TS versions that have their own directories, and corresponding "typesVersions" in package.json.
      * Usually empty.
@@ -417,7 +417,9 @@ export class TypingsData extends PackageBase {
     get major(): number { return this.data.libraryMajorVersion; }
     get minor(): number { return this.data.libraryMinorVersion; }
 
-    get minTypeScriptVersion(): TypeScriptVersion { return this.data.minTsVersion; }
+    get minTypeScriptVersion(): TypeScriptVersion {
+        return TypeScriptVersion.isSupported(this.data.minTsVersion) ? this.data.minTsVersion : TypeScriptVersion.lowest;
+    }
     get typesVersions(): ReadonlyArray<TypeScriptVersion> { return this.data.typesVersions; }
 
     get files(): ReadonlyArray<string> { return this.data.files; }

@@ -192,7 +192,8 @@ function checkPackageJsonDependencies(dependencies: unknown, path: string): Read
     for (const dependencyName in dependencies) {
         if (!dependenciesWhitelist.has(dependencyName)) {
             const msg = dependencyName.startsWith("@types/")
-                ? `Don't use a 'package.json' for @types dependencies unless this package relies on
+                ? `Dependency ${dependencyName} not in whitelist.
+Don't use a 'package.json' for @types dependencies unless this package relies on
 an old version of types that have since been moved to the source repo.
 For example, if package *P* used to have types on Definitely Typed at @types/P,
 but now has its own types, a dependent package *D* will need to use package.json
