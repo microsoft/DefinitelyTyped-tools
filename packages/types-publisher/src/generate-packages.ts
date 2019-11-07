@@ -106,7 +106,7 @@ export function createPackageJSON(typing: TypingsData, version: string, packages
         license: typing.license,
         contributors: typing.contributors,
         main: "",
-        types: "index",
+        types: "index.d.ts",
         typesVersions:  makeTypesVersionsForPackageJson(typing.typesVersions),
         repository: {
             type: "git",
