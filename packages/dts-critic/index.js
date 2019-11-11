@@ -1,8 +1,8 @@
 const yargs = require("yargs");
 const headerParser = require("definitelytyped-header-parser");
 const fs = require("fs");
+const cp = require("child_process");
 const path = require("path");
-const download = require("download-file-sync");
 const semver = require("semver");
 const commandExistsSync = require("command-exists").sync;
 
@@ -233,4 +233,12 @@ function isRealExportDefault(name) {
     return name.indexOf("react-native") > -1 ||
         name === "ember-feature-flags" ||
         name === "material-ui-datatables";
+}
+
+/**
+ * Based on download-file-sync, but with a larger buffer. So even LESS efficient.
+ * @param {string} url
+ */
+function download(url) {
+  return cp.execFileSync('curl', ['--silent', '-L', url], { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 });
 }
