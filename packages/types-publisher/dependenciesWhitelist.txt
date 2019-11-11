@@ -26,6 +26,7 @@
 @types/ink
 @types/js-data
 @types/react-native-tab-view
+@types/react-navigation
 @types/three
 @types/rsmq
 @types/vue
@@ -146,6 +147,7 @@ react-native-fs
 react-native-maps
 react-native-modal
 react-native-svg
+react-native-tab-view
 react-navigation
 recast
 redux
