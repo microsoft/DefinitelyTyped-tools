@@ -25,6 +25,7 @@
 @types/next-redux-wrapper
 @types/ink
 @types/js-data
+@types/react-native-tab-view
 @types/three
 @types/vue
 @types/webdriverio
@@ -145,7 +146,6 @@ react-native-maps
 react-native-modal
 react-native-svg
 react-navigation
-react-native-tab-view
 recast
 redux
 redux-observable
