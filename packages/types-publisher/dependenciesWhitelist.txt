@@ -22,6 +22,7 @@
 @types/firebase
 @types/highcharts
 @types/hoist-non-react-statics
+@types/next-redux-wrapper
 @types/ink
 @types/js-data
 @types/three
@@ -115,7 +116,6 @@ monaco-editor
 moment-range
 mqtt
 next
-next-redux-wrapper
 nock
 normalize-url
 objection
