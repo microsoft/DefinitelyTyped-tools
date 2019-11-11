@@ -27,6 +27,7 @@
 @types/js-data
 @types/react-native-tab-view
 @types/three
+@types/rsmq
 @types/vue
 @types/webdriverio
 @types/winston
@@ -154,7 +155,6 @@ redux-saga
 redux-thunk
 rollup
 rrule
-rsmq
 rxjs
 safe-buffer
 should
