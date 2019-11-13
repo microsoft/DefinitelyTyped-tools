@@ -240,5 +240,5 @@ function isRealExportDefault(name) {
  * @param {string} url
  */
 function download(url) {
-  return cp.execFileSync('curl', ['--silent', '-L', url], { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 });
+  return cp.execFileSync('curl', ['--silent', '-L', url], { encoding: 'utf8', maxBuffer: 100 * 1024 * 1024 });
 }
