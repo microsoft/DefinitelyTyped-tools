@@ -375,12 +375,12 @@ export async function readFileAndThrowOnBOM(fileName: string, fs: FS): Promise<s
     return text;
 }
 
-const unusedFilesName = "UNUSED_FILES.txt";
+const unusedFilesName = "OTHER_FILES.txt";
 
 async function checkAllFilesUsed(ls: ReadonlyArray<string>, usedFiles: Set<string>, fs: FS): Promise<void> {
     const lsSet = new Set(ls);
     const unusedFiles = lsSet.delete(unusedFilesName)
-        ? new Set((await fs.readFile(unusedFilesName)).split(/\r?\n/g))
+        ? new Set((await fs.readFile(unusedFilesName)).split(/\r?\n/g).filter(Boolean))
         : new Set<string>();
     await checkAllUsedRecur(lsSet, usedFiles, unusedFiles, fs);
 }
