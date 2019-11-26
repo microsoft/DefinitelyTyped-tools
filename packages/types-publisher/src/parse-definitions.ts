@@ -37,6 +37,7 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
 
     const typings: { [name: string]: TypingsVersionsRaw } = {};
 
+    const start = Date.now();
     if (parallel) {
         log.info("Parsing in parallel...");
         await runWithChildProcesses({
@@ -54,6 +55,7 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
             typings[packageName] = await getTypingInfo(packageName, typesFS.subDir(packageName));
         }
     }
+    log.info("Parsing took " + ((Date.now() - start) / 1000) + " s");
     await writeDataFile(typesDataFilename, sorted(typings));
     return AllPackages.from(typings, await readNotNeededPackages(dt));
 }

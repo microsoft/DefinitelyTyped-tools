@@ -20,7 +20,7 @@ testo({
         const log = loggerWithErrors()[0];
         const defs = await parseDefinitions(createMockDT(), undefined, log);
         expect(defs.allNotNeeded().length).toBe(1)
-        expect(defs.allTypings().length).toBe(1)
+        expect(defs.allTypings().length).toBe(3)
         const j = defs.tryGetLatestVersion("jquery")
         expect(j).toBeDefined()
         expect(j!.fullNpmName).toContain("types")
