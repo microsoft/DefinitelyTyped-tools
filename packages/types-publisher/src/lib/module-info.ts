@@ -207,8 +207,10 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
         addReference({ text: ref.fileName, exact: true });
     }
     for (const ref of src.typeReferenceDirectives) {
-        // only <reference types="packagename/x" /> references are local
-        if (ref.fileName.startsWith(packageName + "/")) {
+        // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
+        if (ref.fileName.startsWith("../" + packageName + "/")) {
+            addReference({ text: ref.fileName, exact: false });
+        } else if (ref.fileName.startsWith(packageName + "/")) {
             addReference({ text: convertToRelativeReference(ref.fileName), exact: false });
         }
     }
@@ -227,7 +229,12 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
         // `path.normalize` may add windows slashes
         const full = normalizeSlashes(path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text))));
         // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
-        if (full.startsWith("..") && (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))) {
+        if (full.startsWith("../" + packageName + "/")) {
+            ref.text = full.slice(4 + packageName.length);
+            refs.push(ref);
+            return;
+        } else if (full.startsWith("..")
+            && (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))) {
             throw new Error(
                 `${src.fileName}: ` +
                 'Definitions must use global references to other packages, not parent ("../xxx") references.' +
