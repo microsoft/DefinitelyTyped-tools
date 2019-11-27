@@ -10,7 +10,7 @@ import { Semver } from "./versions";
 
 export class AllPackages {
     static async read(dt: FS): Promise<AllPackages> {
-        return AllPackages.from(await readTypesDataFile(), await readNotNeededPackages(dt));
+        return AllPackages.from(await readTypesDataFile(), readNotNeededPackages(dt));
     }
 
     static from(data: TypesDataFile, notNeeded: ReadonlyArray<NotNeededPackage>): AllPackages {
@@ -38,8 +38,8 @@ export class AllPackages {
         return new TypingsData(raw[versions[0]], /*isLatest*/ true);
     }
 
-    static async readSingleNotNeeded(name: string, dt: FS): Promise<NotNeededPackage> {
-        const notNeeded = await readNotNeededPackages(dt);
+    static readSingleNotNeeded(name: string, dt: FS): NotNeededPackage {
+        const notNeeded = readNotNeededPackages(dt);
         const pkg = notNeeded.find(p => p.name === name);
         if (pkg === undefined) {
             throw new Error(`Cannot find not-needed package ${name}`);
@@ -454,7 +454,7 @@ function readTypesDataFile(): Promise<TypesDataFile> {
     return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
 }
 
-export async function readNotNeededPackages(dt: FS): Promise<ReadonlyArray<NotNeededPackage>> {
-    const rawJson = await dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
+export function readNotNeededPackages(dt: FS): ReadonlyArray<NotNeededPackage> {
+    const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
     return (rawJson as { readonly packages: ReadonlyArray<NotNeededPackageRaw> }).packages.map(raw => new NotNeededPackage(raw));
 }

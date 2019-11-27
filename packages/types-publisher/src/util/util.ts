@@ -89,14 +89,6 @@ export async function filterNAtATimeOrdered<T>(
     return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 
-export async function mapAsyncOrdered<T, U>(arr: ReadonlyArray<T>, mapper: (t: T) => Promise<U>): Promise<U[]> {
-    const out = new Array(arr.length);
-    await Promise.all(arr.map(async (em, idx) => {
-        out[idx] = await mapper(em);
-    }));
-    return out;
-}
-
 export function unique<T>(arr: Iterable<T>): T[] {
     return [...new Set(arr)];
 }

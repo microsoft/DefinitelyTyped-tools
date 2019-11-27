@@ -15,7 +15,7 @@ if (!module.parent) {
         const typesPath = process.argv[2];
         logUncaughtErrors(async () => {
             for (const packageName of message as ReadonlyArray<string>) {
-                const data = await getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
+                const data = getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
                 process.send!({ data, packageName });
             }
         });

@@ -3,7 +3,7 @@ import * as ts from "typescript";
 
 import { FS } from "../get-definitely-typed";
 import {
-    computeHash, filter, flatMap, hasWindowsSlashes, join, mapAsyncOrdered, mapDefined, sort, split, unique, unmangleScopedPackage, withoutStart,
+    computeHash, filter, flatMap, hasWindowsSlashes, join, mapDefined, sort, split, unique, unmangleScopedPackage, withoutStart,
 } from "../util/util";
 
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
@@ -11,26 +11,26 @@ import { getLicenseFromPackageJson, PackageId, PackageJsonDependency, PathMappin
 import { dependenciesWhitelist } from "./settings";
 
 /** @param fs Rooted at the package's directory, e.g. `DefinitelyTyped/types/abs` */
-export async function getTypingInfo(packageName: string, fs: FS): Promise<TypingsVersionsRaw> {
+export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
     if (packageName !== packageName.toLowerCase()) {
         throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
     }
     interface OlderVersionDir { readonly directoryName: string; readonly majorVersion: number; }
-    const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(await fs.readdir(), fileOrDirectoryName => {
+    const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(fs.readdir(), fileOrDirectoryName => {
         const majorVersion = parseMajorVersionFromDirectoryName(fileOrDirectoryName);
         return majorVersion === undefined ? undefined : { directoryName: fileOrDirectoryName, majorVersion };
     });
 
-    const latestData = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined);
+    const latestData = combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined);
     const latestVersion = latestData.libraryMajorVersion;
 
-    const older = await mapAsyncOrdered(olderVersionDirectories, async ({ directoryName, majorVersion }) => {
+    const older = olderVersionDirectories.map(({ directoryName, majorVersion }) => {
         if (majorVersion === latestVersion) {
             throw new Error(`The latest major version is ${latestVersion}, but a directory v${latestVersion} exists.`);
         }
 
-        const ls = await fs.readdir(directoryName);
-        const data = await combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), majorVersion);
+        const ls = fs.readdir(directoryName);
+        const data = combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), majorVersion);
 
         if (data.libraryMajorVersion !== majorVersion) {
             throw new Error(
@@ -74,27 +74,26 @@ export function parseMajorVersionFromDirectoryName(directoryName: string): numbe
     // tslint:disable-next-line no-null-keyword
     return match === null ? undefined : Number(match[1]);
 }
-async function combineDataForAllTypesVersions(
+function combineDataForAllTypesVersions(
     typingsPackageName: string,
     ls: ReadonlyArray<string>,
     fs: FS,
     oldMajorVersion: number | undefined,
-): Promise<TypingsDataRaw> {
+): TypingsDataRaw {
     const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
 
     // Every typesVersion has an index.d.ts, but only the root index.d.ts should have a header.
     const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion: minTsVersion, libraryName, projects } =
-        parseHeaderOrFail(await readFileAndThrowOnBOM("index.d.ts", fs));
+        parseHeaderOrFail(readFileAndThrowOnBOM("index.d.ts", fs));
 
-    const dataForRoot = await getTypingDataForSingleTypesVersion(undefined, typingsPackageName, fs.debugPath(), remainingLs, fs, oldMajorVersion);
-    const dataForOtherTypesVersions = await mapAsyncOrdered(typesVersions, async tsVersion => {
+    const dataForRoot = getTypingDataForSingleTypesVersion(undefined, typingsPackageName, fs.debugPath(), remainingLs, fs, oldMajorVersion);
+    const dataForOtherTypesVersions = typesVersions.map(tsVersion => {
         const subFs = fs.subDir(`ts${tsVersion}`);
-        return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, fs.debugPath(), await subFs.readdir(), subFs, oldMajorVersion);
+        return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, fs.debugPath(), subFs.readdir(), subFs, oldMajorVersion);
     });
     const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
-    // tslint:disable-next-line await-promise (tslint bug)
-    const packageJson = hasPackageJson ? await fs.readJson(packageJsonName) as { readonly license?: unknown, readonly dependencies?: unknown } : {};
+    const packageJson = hasPackageJson ? fs.readJson(packageJsonName) as { readonly license?: unknown, readonly dependencies?: unknown } : {};
     const license = getLicenseFromPackageJson(packageJson.license);
     const packageJsonDependencies = checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
 
@@ -118,7 +117,7 @@ async function combineDataForAllTypesVersions(
         testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"),
         pathMappings: getAllUniqueValues<"pathMappings", PathMapping>(allTypesVersions, "pathMappings"),
         packageJsonDependencies,
-        contentHash: await hash(hasPackageJson ? [...files, packageJsonName] : files, mapDefined(allTypesVersions, a => a.tsconfigPathsForHash), fs),
+        contentHash: hash(hasPackageJson ? [...files, packageJsonName] : files, mapDefined(allTypesVersions, a => a.tsconfigPathsForHash), fs),
         globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
         declaredModules: getAllUniqueValues<"declaredModules", string>(allTypesVersions, "declaredModules"),
     };
@@ -146,32 +145,32 @@ interface TypingDataFromIndividualTypeScriptVersion {
  * @param ls All file/directory names in `directory`.
  * @param fs FS rooted at the directory for this particular TS version, e.g. `types/abs/ts3.1` or `types/abs` when typescriptVersion is undefined.
  */
-async function getTypingDataForSingleTypesVersion(
+function getTypingDataForSingleTypesVersion(
     typescriptVersion: TypeScriptVersion | undefined,
     packageName: string,
     packageDirectory: string,
     ls: ReadonlyArray<string>,
     fs: FS,
     oldMajorVersion: number | undefined,
-): Promise<TypingDataFromIndividualTypeScriptVersion> {
-    const tsconfig = await fs.readJson("tsconfig.json") as TsConfig; // tslint:disable-line await-promise (tslint bug)
-    await checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
-    const { types, tests } = await allReferencedFiles(tsconfig.files!, fs, packageName, packageDirectory);
+): TypingDataFromIndividualTypeScriptVersion {
+    const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
+    checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
+    const { types, tests } = allReferencedFiles(tsconfig.files!, fs, packageName, packageDirectory);
     const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
-    const otherFiles = ls.indexOf(unusedFilesName) > -1 ? (await fs.readFile(unusedFilesName)).split(/\r?\n/g).filter(Boolean) : [];
-    await checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
+    const otherFiles = ls.indexOf(unusedFilesName) > -1 ? (fs.readFile(unusedFilesName)).split(/\r?\n/g).filter(Boolean) : [];
+    checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
     for (const untestedTypeFile of filter(otherFiles, name => name.endsWith('.d.ts'))) {
         // add d.ts files from OTHER_FILES.txt in order get their dependencies
-        types.set(untestedTypeFile, createSourceFile(untestedTypeFile, await fs.readFile(untestedTypeFile)));
+        types.set(untestedTypeFile, createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile)));
     }
 
-    const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules } = await getModuleInfo(packageName, types);
+    const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules } = getModuleInfo(packageName, types);
     const declaredModulesSet = new Set(declaredModules);
     // Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
     const dependenciesSet = new Set(filter(dependenciesWithDeclaredModules, m => !declaredModulesSet.has(m)));
-    const testDependencies = Array.from(filter(await getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m)));
+    const testDependencies = Array.from(filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m)));
 
-    const { dependencies, pathMappings } = await calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
+    const { dependencies, pathMappings } = calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
     const tsconfigPathsForHash = JSON.stringify(tsconfig.compilerOptions.paths);
     return { typescriptVersion, dependencies, testDependencies, pathMappings, globals, declaredModules, declFiles: sort(types.keys()), tsconfigPathsForHash };
 }
@@ -213,7 +212,7 @@ If this is an external library that provides typings,  please make a pull reques
     return deps;
 }
 
-async function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): Promise<void> {
+function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): void {
     const tsconfigPath = `${directoryPath}/tsconfig.json`;
     if (tsconfig.include) {
         throw new Error(`In tsconfig, don't use "include", must use "files"`);
@@ -252,12 +251,12 @@ interface TsConfig {
 
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
 interface DependenciesAndPathMappings { readonly dependencies: ReadonlyArray<PackageId>; readonly pathMappings: ReadonlyArray<PathMapping>; }
-async function calculateDependencies(
+function calculateDependencies(
     packageName: string,
     tsconfig: TsConfig,
     dependencyNames: ReadonlySet<string>,
     oldMajorVersion: number | undefined,
-): Promise<DependenciesAndPathMappings> {
+): DependenciesAndPathMappings {
     const paths = tsconfig.compilerOptions && tsconfig.compilerOptions.paths || {};
 
     const dependencies: PackageId[] = [];
@@ -342,8 +341,8 @@ function withoutEnd(s: string, end: string): string | undefined {
     return undefined;
 }
 
-async function hash(files: ReadonlyArray<string>, tsconfigPathsForHash: ReadonlyArray<string>, fs: FS): Promise<string> {
-    const fileContents = await mapAsyncOrdered(files, async f => `${f}**${await readFileAndThrowOnBOM(f, fs)}`);
+function hash(files: ReadonlyArray<string>, tsconfigPathsForHash: ReadonlyArray<string>, fs: FS): string {
+    const fileContents = files.map(f => `${f}**${readFileAndThrowOnBOM(f, fs)}`);
     let allContent = fileContents.join("||");
     for (const path of tsconfigPathsForHash) {
         allContent += path;
@@ -351,8 +350,8 @@ async function hash(files: ReadonlyArray<string>, tsconfigPathsForHash: Readonly
     return computeHash(allContent);
 }
 
-export async function readFileAndThrowOnBOM(fileName: string, fs: FS): Promise<string> {
-    const text = await fs.readFile(fileName);
+export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
+    const text = fs.readFile(fileName);
     if (text.charCodeAt(0) === 0xFEFF) {
         const commands = [
             "npm install -g strip-bom-cli",
@@ -366,17 +365,17 @@ export async function readFileAndThrowOnBOM(fileName: string, fs: FS): Promise<s
 
 const unusedFilesName = "OTHER_FILES.txt";
 
-async function checkAllFilesUsed(ls: ReadonlyArray<string>, usedFiles: Set<string>, otherFiles: string[], packageName: string, fs: FS): Promise<void> {
+function checkAllFilesUsed(ls: ReadonlyArray<string>, usedFiles: Set<string>, otherFiles: string[], packageName: string, fs: FS): void {
     // Double-check that no windows "\\" broke in.
     for (const fileName of usedFiles) {
         if (hasWindowsSlashes(fileName)) {
             throw new Error(`In ${packageName}: windows slash detected in ${fileName}`);
         }
     }
-    await checkAllUsedRecur(new Set(ls), usedFiles,  new Set(otherFiles), fs);
+    checkAllUsedRecur(new Set(ls), usedFiles,  new Set(otherFiles), fs);
 }
 
-async function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedFiles: Set<string>, fs: FS): Promise<void> {
+function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedFiles: Set<string>, fs: FS): void {
     for (const lsEntry of ls) {
         if (usedFiles.has(lsEntry)) {
             continue;
@@ -386,14 +385,14 @@ async function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, u
             continue;
         }
 
-        if (await fs.isDirectory(lsEntry)) {
+        if (fs.isDirectory(lsEntry)) {
             const subdir = fs.subDir(lsEntry);
             // We allow a "scripts" directory to be used for scripts.
             if (lsEntry === "node_modules" || lsEntry === "scripts") {
                 continue;
             }
 
-            const lssubdir = await subdir.readdir();
+            const lssubdir = subdir.readdir();
             if (lssubdir.length === 0) {
                 throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
             }
@@ -409,7 +408,7 @@ async function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, u
                 }
                 return subdirSet;
             }
-            await checkAllUsedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(unusedFiles), subdir);
+            checkAllUsedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(unusedFiles), subdir);
         } else {
             if (lsEntry.toLowerCase() !== "readme.md" && lsEntry !== "NOTICE" && lsEntry !== ".editorconfig" && lsEntry !== unusedFilesName) {
                 throw new Error(`Unused file ${fs.debugPath()}/${lsEntry} (used files: ${JSON.stringify(Array.from(usedFiles))})`);

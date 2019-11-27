@@ -7,7 +7,7 @@ import { hasWindowsSlashes, joinPaths, normalizeSlashes, sort } from "../util/ut
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
 
-export async function getModuleInfo(packageName: string, all: Map<string, ts.SourceFile>): Promise<ModuleInfo> {
+export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFile>): ModuleInfo {
 
     const dependencies = new Set<string>();
     const declaredModules: string[] = [];
@@ -142,24 +142,24 @@ function withoutExtension(str: string, ext: string): string {
 }
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
-export async function allReferencedFiles(
+export function allReferencedFiles(
     entryFilenames: ReadonlyArray<string>, fs: FS, packageName: string, baseDirectory: string
-): Promise<{ types: Map<string, ts.SourceFile>, tests: Map<string, ts.SourceFile> }> {
+): { types: Map<string, ts.SourceFile>, tests: Map<string, ts.SourceFile> } {
     const seenReferences = new Set<string>();
     const types = new Map<string, ts.SourceFile>();
     const tests = new Map<string, ts.SourceFile>();
-    await Promise.all(entryFilenames.map(text => recur({ text, exact: true })));
+    entryFilenames.forEach(text => recur({ text, exact: true }));
     return { types, tests };
 
-    async function recur({ text, exact }: Reference): Promise<void> {
+    function recur({ text, exact }: Reference): void {
         if (seenReferences.has(text)) {
             return;
         }
         seenReferences.add(text);
 
-        const resolvedFilename = exact ? text : await resolveModule(text, fs);
-        if (await fs.exists(resolvedFilename)) {
-            const src = createSourceFile(resolvedFilename, await readFileAndThrowOnBOM(resolvedFilename, fs));
+        const resolvedFilename = exact ? text : resolveModule(text, fs);
+        if (fs.exists(resolvedFilename)) {
+            const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
             if (resolvedFilename.endsWith(".d.ts")) {
                 types.set(resolvedFilename, src);
             } else {
@@ -167,20 +167,20 @@ export async function allReferencedFiles(
             }
 
             const refs = findReferencedFiles(src, packageName, path.dirname(resolvedFilename), normalizeSlashes(path.relative(baseDirectory, fs.debugPath())));
-            await Promise.all(refs.map(recur));
+            refs.forEach(recur);
         }
     }
 
 }
 
-async function resolveModule(importSpecifier: string, fs: FS): Promise<string> {
+function resolveModule(importSpecifier: string, fs: FS): string {
     importSpecifier = importSpecifier.endsWith("/") ? importSpecifier.slice(0, importSpecifier.length - 1) : importSpecifier;
     if (importSpecifier !== "." && importSpecifier !== "..") {
-        if (await fs.exists(importSpecifier + ".d.ts")) {
+        if (fs.exists(importSpecifier + ".d.ts")) {
             return importSpecifier + ".d.ts";
-        } else if (await fs.exists(importSpecifier + ".ts")) {
+        } else if (fs.exists(importSpecifier + ".ts")) {
             return importSpecifier + ".ts";
-        } else if (await fs.exists(importSpecifier + ".tsx")) {
+        } else if (fs.exists(importSpecifier + ".tsx")) {
             return importSpecifier + ".tsx";
         }
     }
@@ -333,16 +333,16 @@ function assertNoWindowsSlashes(packageName: string, fileName: string): string {
     return fileName;
 }
 
-export async function getTestDependencies(
+export function getTestDependencies(
     packageName: string,
     typeFiles: Map<string, unknown>,
     testFiles: Iterable<string>,
     dependencies: ReadonlySet<string>,
     fs: FS,
-): Promise<Iterable<string>> {
+): Iterable<string> {
     const testDependencies = new Set<string>();
     for (const filename of testFiles) {
-        const content = await readFileAndThrowOnBOM(filename, fs);
+        const content = readFileAndThrowOnBOM(filename, fs);
         const sourceFile = createSourceFile(filename, content);
         const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
         const filePath = () => path.join(packageName, fileName);

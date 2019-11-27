@@ -58,9 +58,9 @@ async function generateTypingPackage(typing: TypingsData, packages: AllPackages,
     await writeCommonOutputs(typing, createPackageJSON(typing, version, packages, Registry.NPM), createReadme(typing, Registry.NPM), Registry.NPM);
     await writeCommonOutputs(typing, createPackageJSON(typing, version, packages, Registry.Github), createReadme(typing, Registry.Github), Registry.Github);
     await Promise.all(
-        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.NPM, file), await packageFS.readFile(file))));
+        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.NPM, file), packageFS.readFile(file))));
     await Promise.all(
-        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.Github, file), await packageFS.readFile(file))));
+        typing.files.map(async file => writeFile(await outputFilePath(typing, Registry.Github, file), packageFS.readFile(file))));
 }
 
 async function generateNotNeededPackage(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger): Promise<void> {

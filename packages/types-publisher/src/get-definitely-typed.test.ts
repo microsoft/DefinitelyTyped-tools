@@ -6,8 +6,8 @@ import { testo } from "./util/test";
 testo({
     async downloadDefinitelyTyped() {
         const dt = await getDefinitelyTyped(Options.azure, loggerWithErrors()[0]);
-        expect(await dt.exists("types")).toBe(true);
-        expect(await dt.exists("buncho")).toBe(false);
+        expect(dt.exists("types")).toBe(true);
+        expect(dt.exists("buncho")).toBe(false);
     },
     createDirs() {
         const root = new Dir(undefined);

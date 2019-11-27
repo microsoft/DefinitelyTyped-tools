@@ -1,4 +1,4 @@
-import { readFile as readFileWithEncoding, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
+import { readFile as readFileWithEncoding, readFileSync as readFileWithEncodingSync, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
 import { request as httpRequest } from "http";
 import { Agent, request } from "https";
 import { Readable as ReadableStream } from "stream";
@@ -12,6 +12,18 @@ export async function readFile(path: string): Promise<string> {
         throw new Error(`Bad character in ${path}`);
     }
     return res;
+}
+
+export function readFileSync(path: string): string {
+    const res = readFileWithEncodingSync(path, { encoding: "utf8" });
+    if (res.includes("�")) {
+        throw new Error(`Bad character in ${path}`);
+    }
+    return res;
+}
+
+export function readJsonSync(path: string): object {
+    return parseJson(readFileSync(path));
 }
 
 export async function readJson(path: string): Promise<object> {
