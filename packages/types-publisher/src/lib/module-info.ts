@@ -346,6 +346,10 @@ export function getTestDependencies(
         const sourceFile = createSourceFile(filename, content);
         const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
         const filePath = () => path.join(packageName, fileName);
+        let hasImports = false;
+        let isModule = false;
+        let referencesSelf = false;
+
         for (const { fileName: ref } of referencedFiles) {
             throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
         }
@@ -355,17 +359,36 @@ export function getTestDependencies(
                     `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`);
             }
             if (referencedPackage === packageName) {
-                throw new Error(`'${filePath()}' unnecessarily references the package. This can be removed.`);
+                referencesSelf = true;
             }
             testDependencies.add(referencedPackage);
         }
         for (const imported of imports(sourceFile)) {
+            hasImports = true;
             if (!imported.startsWith(".")) {
                 const dep = rootName(imported, typeFiles);
                 if (!dependencies.has(dep) && dep !== packageName) {
                     testDependencies.add(dep);
                 }
             }
+        }
+
+        isModule = hasImports || (() => {
+            // FIXME: This results in files without imports to be walked twice,
+            // once in the `imports(...)` function, and once more here:
+            for (const node of sourceFile.statements) {
+                if (
+                    node.kind === ts.SyntaxKind.ExportAssignment ||
+                    node.kind === ts.SyntaxKind.ExportDeclaration
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        })();
+
+        if (isModule && referencesSelf) {
+            throw new Error(`'${filePath()}' unnecessarily references the package. This can be removed.`);
         }
     }
     return testDependencies;
