@@ -14,7 +14,7 @@ import { AllPackages, DependencyVersion, PackageId, TypingsData, NotNeededPackag
 import { UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
-import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, nAtATime, numberOfOsProcesses, runWithListeningChildProcesses, CrashRecoveryState } from "../util/util";
+import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, numberOfOsProcesses, runWithListeningChildProcesses, CrashRecoveryState } from "../util/util";
 
 import { getAffectedPackages, allDependencies } from "./get-affected-packages";
 
@@ -72,7 +72,7 @@ export default async function runTests(
     console.log(`Running with ${nProcesses} processes.`);
 
     const typesPath = `${definitelyTypedPath}/types`;
-    await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath, nProcesses);
+    await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath);
 
     console.log("Testing...");
     await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
@@ -137,14 +137,14 @@ it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmN
     assert(source.versions.has(unneeded.version.versionString), `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`);
 }
 
-async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string, nProcesses: number): Promise<void> {
+async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
     console.log("Installing NPM dependencies...");
 
     // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-    await nAtATime(nProcesses, allDependencies(allPackages, packages), async pkg => {
+    for (const pkg of allDependencies(allPackages, packages)) {
         const cwd = directoryPath(typesPath, pkg);
         if (!await pathExists(joinPaths(cwd, "package.json"))) {
-            return;
+            continue;
         }
 
         // Scripts may try to compile native code.
@@ -156,7 +156,7 @@ async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsDa
             // Must specify what this is for since these run in parallel.
             console.log(` from ${cwd}: ${stdout}`);
         }
-    });
+    }
 
     await runCommand(console, undefined, require.resolve("dtslint"), ["--installAll"]);
 }
