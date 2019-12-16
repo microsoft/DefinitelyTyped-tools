@@ -108,6 +108,7 @@ levelup
 lit-element
 localforage
 log4js
+logform
 loglevel
 logrocket
 knex
