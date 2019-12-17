@@ -23,13 +23,13 @@ if (!module.parent) {
             const log = logger()[0];
             try {
                 await deprecateNotNeededPackage(
-                    await NpmPublishClient.create(), AllPackages.readSingleNotNeeded(deprecateName, dt), /*dry*/ false, log, Registry.Github);
+                    await NpmPublishClient.create(undefined, Registry.Github), AllPackages.readSingleNotNeeded(deprecateName, dt), /*dry*/ false, log);
             } catch(e) {
                 // log and continue
                 log("publishing to github failed: " + e.toString());
             }
             await deprecateNotNeededPackage(
-                await NpmPublishClient.create(), AllPackages.readSingleNotNeeded(deprecateName, dt), /*dry*/ false, log, Registry.NPM);
+                await NpmPublishClient.create(undefined, Registry.NPM), AllPackages.readSingleNotNeeded(deprecateName, dt), /*dry*/ false, log);
         } else {
             await publishPackages(await readChangedPackages(await AllPackages.read(dt)), dry, process.env.GH_API_TOKEN || "", new Fetcher());
         }

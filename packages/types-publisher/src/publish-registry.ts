@@ -62,7 +62,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
             // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
             // If so, we should just update it to "latest" now.
             log("Old version of types-registry was never tagged latest, so updating");
-            await validateIsSubset(await readNotNeededPackages(dt), log);
+            await validateIsSubset(readNotNeededPackages(dt), log);
             await (await publishClient()).tag(packageName, highestSemverVersion.versionString, "latest", dry, log);
         } else if (npmContentHash !== newContentHash && isTimeForNewVersion) {
             log("New packages have been added, so publishing a new registry.");

@@ -50,23 +50,19 @@ testo({
     },
     basicReadme() {
         const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-        expect(createReadme(typing, Registry.NPM)).toEqual(expect.stringContaining("This package contains type definitions for"));
-    },
-    githubReadme() {
-        const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-        expect(createReadme(typing, Registry.Github)).toEqual(expect.stringContaining("npm install --save @testtypepublishing/"));
+        expect(createReadme(typing)).toEqual(expect.stringContaining("This package contains type definitions for"));
     },
     readmeContainsProjectName() {
         const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-        expect(createReadme(typing, Registry.NPM)).toEqual(expect.stringContaining("jquery.org"));
+        expect(createReadme(typing)).toEqual(expect.stringContaining("jquery.org"));
     },
     readmeNoDependencies() {
         const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-        expect(createReadme(typing, Registry.NPM)).toEqual(expect.stringContaining("Dependencies: none"));
+        expect(createReadme(typing)).toEqual(expect.stringContaining("Dependencies: none"));
     },
     readmeNoGlobals() {
         const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-        expect(createReadme(typing, Registry.NPM)).toEqual(expect.stringContaining("Global values: none"));
+        expect(createReadme(typing)).toEqual(expect.stringContaining("Global values: none"));
     },
     async basicPackageJson() {
         const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
@@ -100,7 +96,7 @@ testo({
         const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
         const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
         expect(createPackageJSON(typing, "1.0", packages, Registry.Github)).toEqual(
-            expect.stringContaining('"name": "@testtypepublishing/jquery"'));
+            expect.stringContaining('"name": "@types/jquery"'));
     },
     async githubPackageJsonRegistry() {
         const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
@@ -128,7 +124,7 @@ testo({
     },
     async githubNotNeededPackageJson() {
         const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.Github);
-        expect(s).toEqual(expect.stringContaining('@testtypepublishing'));
+        expect(s).toEqual(expect.stringContaining('@types'));
         expect(s).toEqual(expect.stringContaining('npm.pkg.github.com'));
     },
 });

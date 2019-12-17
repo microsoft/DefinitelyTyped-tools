@@ -33,7 +33,7 @@ export enum Secret {
      */
     NPM_TOKEN,
     /**
-     * Token used to publish packages to Github.
+     * Token used to publish @definitelytyped/types-registry and @types/* to Github.
      * This *could* be the same as GITHUB_ACCESS_TOKEN, but I think it's better if they remain separate.
      */
     GITHUB_PUBLISH_ACCESS_TOKEN,

@@ -12,7 +12,9 @@ if (process.env.LONGJOHN) {
 
 /** Which registry to publish to */
 export enum Registry {
+    /** types-registry and @types/* on NPM */
     NPM,
+    /** @definitelytyped/types-registry and @types/* on Github */
     Github,
 }
 
