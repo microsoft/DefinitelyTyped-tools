@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Author, TypeScriptVersion, AllTypeScriptVersion } from "definitelytyped-header-parser";
+import { AllTypeScriptVersion, Author, TypeScriptVersion } from "definitelytyped-header-parser";
 
 import { FS } from "../get-definitely-typed";
 import { assertSorted, joinPaths, mapValues, unmangleScopedPackage } from "../util/util";

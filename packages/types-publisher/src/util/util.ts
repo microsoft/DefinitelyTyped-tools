@@ -4,15 +4,17 @@ import * as crypto from "crypto";
 import moment = require("moment");
 import * as os from "os";
 import * as sourceMapSupport from "source-map-support";
+
+import { Options } from "../lib/common";
+
+import ProgressBar from "./progress";
+
 sourceMapSupport.install();
 
 export function assertDefined<T>(x: T | undefined, message?: string | Error | undefined): T {
     assert(x !== undefined, message);
     return x!;
 }
-
-import { Options } from "../lib/common";
-import ProgressBar from "./progress";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 

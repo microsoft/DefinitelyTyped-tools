@@ -1,7 +1,7 @@
+import { createMockDT } from "./mocks";
 import parseDefinitions from "./parse-definitions";
 import { loggerWithErrors } from "./util/logging";
 import { testo } from "./util/test";
-import { createMockDT } from "./mocks";
 
 testo({
     // async parseDefinitions() {
@@ -19,12 +19,12 @@ testo({
     async mockParse() {
         const log = loggerWithErrors()[0];
         const defs = await parseDefinitions(createMockDT(), undefined, log);
-        expect(defs.allNotNeeded().length).toBe(1)
-        expect(defs.allTypings().length).toBe(3)
-        const j = defs.tryGetLatestVersion("jquery")
-        expect(j).toBeDefined()
-        expect(j!.fullNpmName).toContain("types")
-        expect(j!.fullNpmName).toContain("jquery")
-        expect(defs.allPackages().length).toEqual(defs.allTypings().length + defs.allNotNeeded().length)
-    }
+        expect(defs.allNotNeeded().length).toBe(1);
+        expect(defs.allTypings().length).toBe(3);
+        const j = defs.tryGetLatestVersion("jquery");
+        expect(j).toBeDefined();
+        expect(j!.fullNpmName).toContain("types");
+        expect(j!.fullNpmName).toContain("jquery");
+        expect(defs.allPackages().length).toEqual(defs.allTypings().length + defs.allNotNeeded().length);
+    },
 });

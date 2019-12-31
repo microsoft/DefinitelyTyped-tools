@@ -1,6 +1,6 @@
+import appInsights = require("applicationinsights");
 import * as yargs from "yargs";
 
-import appInsights = require("applicationinsights");
 import { Options } from "./lib/common";
 import { getSecret, Secret } from "./lib/secrets";
 import webhookServer from "./lib/webhook-server";

@@ -1,9 +1,9 @@
-import { assertDefined, best, intOfString } from "../util/util";
 import { Logger } from "../util/logging";
+import { assertDefined, best, intOfString } from "../util/util";
 
 import { readDataFile } from "./common";
-import { AllPackages, NotNeededPackage, PackageId, TypingsData } from "./packages";
 import { CachedNpmInfoClient } from "./npm-client";
+import { AllPackages, NotNeededPackage, PackageId, TypingsData } from "./packages";
 
 export const versionsFilename = "versions.json";
 
@@ -64,9 +64,9 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
     return pkg;
 }
 
-function findActualLatest(times: Map<string,string>) {
+function findActualLatest(times: Map<string, string>) {
     const actual = best(
-        times, ([k,v], [bestK,bestV]) =>
+        times, ([k, v], [bestK, bestV]) =>
             (bestK === "modified" || bestK === "created") ? true :
             (k === "modified" || k === "created") ? false :
             new Date(v) > new Date(bestV));

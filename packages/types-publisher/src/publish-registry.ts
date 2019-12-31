@@ -44,7 +44,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
 
     try {
         await publishToRegistry(RegistryName.Github);
-    } catch(e) {
+    } catch (e) {
         // log and continue
         log("publishing to github failed: " + e.toString());
     }

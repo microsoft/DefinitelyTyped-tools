@@ -2,8 +2,8 @@ import assert = require("assert");
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, writeDataFile } from "./lib/common";
-import { withNpmCache, CachedNpmInfoClient, UncachedNpmInfoClient, NpmInfoVersion } from "./lib/npm-client";
-import { AllPackages, TypingsData, NotNeededPackage } from "./lib/packages";
+import { CachedNpmInfoClient, NpmInfoVersion, UncachedNpmInfoClient, withNpmCache } from "./lib/npm-client";
+import { AllPackages, NotNeededPackage, TypingsData } from "./lib/packages";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, Semver, versionsFilename } from "./lib/versions";
 import { loggerWithErrors, LoggerWithErrors } from "./util/logging";
 import { assertDefined, best, logUncaughtErrors, mapDefined, mapDefinedAsync } from "./util/util";
@@ -15,7 +15,7 @@ if (!module.parent) {
 export default async function calculateVersions(
     dt: FS,
     uncachedClient: UncachedNpmInfoClient,
-    log: LoggerWithErrors
+    log: LoggerWithErrors,
 ): Promise<ChangedPackages> {
     log.info("=== Calculating versions ===");
     return withNpmCache(uncachedClient, async client => {
@@ -28,7 +28,7 @@ export default async function calculateVersions(
 async function computeAndSaveChangedPackages(
     allPackages: AllPackages,
     log: LoggerWithErrors,
-    client: CachedNpmInfoClient
+    client: CachedNpmInfoClient,
 ): Promise<ChangedPackages> {
     const cp = await computeChangedPackages(allPackages, log, client);
     const json: ChangedPackagesJson = {
@@ -42,7 +42,7 @@ async function computeAndSaveChangedPackages(
 async function computeChangedPackages(
     allPackages: AllPackages,
     log: LoggerWithErrors,
-    client: CachedNpmInfoClient
+    client: CachedNpmInfoClient,
 ): Promise<ChangedPackages> {
     log.info("# Computing changed packages...");
     const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
@@ -71,7 +71,7 @@ async function fetchTypesPackageVersionInfo(
     pkg: TypingsData,
     client: CachedNpmInfoClient,
     canPublish: boolean,
-    log?: LoggerWithErrors
+    log?: LoggerWithErrors,
 ): Promise<{ version: string, needsPublish: boolean }> {
     let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
     let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);

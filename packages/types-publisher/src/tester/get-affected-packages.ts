@@ -1,4 +1,4 @@
-import { AllPackages, PackageBase, TypingsData, PackageId, getMangledNameForScopedPackage } from "../lib/packages";
+import { AllPackages, getMangledNameForScopedPackage, PackageBase, PackageId, TypingsData } from "../lib/packages";
 import { mapDefined, mapIter, sort } from "../util/util";
 
 export interface Affected {
@@ -63,30 +63,30 @@ function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item:
 /** Generate a map from a package to packages that depend on it. */
 function getReverseDependencies(allPackages: AllPackages, changedPackages: PackageId[]): Map<PackageId, Set<PackageId>> {
    const map = new Map<string, [PackageId, Set<PackageId>]>();
-     for (const changed of changedPackages) {
+   for (const changed of changedPackages) {
          map.set(packageIdToKey(changed), [changed, new Set()]);
     }
-    for (const typing of allPackages.allTypings()) {
+   for (const typing of allPackages.allTypings()) {
         if (!map.has(packageIdToKey(typing.id))) {
             map.set(packageIdToKey(typing.id), [typing.id, new Set()]);
         }
     }
-    for (const typing of allPackages.allTypings()) {
+   for (const typing of allPackages.allTypings()) {
         for (const dependency of typing.dependencies) {
-            const dependencies = map.get(packageIdToKey(allPackages.tryResolve(dependency)))
+            const dependencies = map.get(packageIdToKey(allPackages.tryResolve(dependency)));
             if (dependencies) {
                 dependencies[1].add(typing.id);
             }
         }
         for (const dependencyName of typing.testDependencies) {
-            const latest = { name: dependencyName, majorVersion: "*" } as PackageId;
+            const latest: PackageId = { name: dependencyName, majorVersion: "*" };
             const dependencies = map.get(packageIdToKey(allPackages.tryResolve(latest)));
             if (dependencies) {
                 dependencies[1].add(typing.id);
             }
         }
     }
-    return new Map(map.values())
+   return new Map(map.values());
 }
 
 function packageIdToKey(pkg: PackageId): string {

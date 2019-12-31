@@ -10,4 +10,3 @@ export { consoleLogger, loggerWithErrors } from "./util/logging";
 export { logUncaughtErrors, nAtATime } from "./util/util";
 
 export { updateLatestTag, updateTypeScriptVersionTags } from "./lib/package-publisher";
-

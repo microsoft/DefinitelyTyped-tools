@@ -1,21 +1,20 @@
-import { emptyDir } from "fs-extra";
+import { makeTypesVersionsForPackageJson } from "definitelytyped-header-parser";
+import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
+import * as path from "path";
 import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options, Registry } from "./lib/common";
+import { CachedNpmInfoClient, UncachedNpmInfoClient, withNpmCache } from "./lib/npm-client";
 import {
     AllPackages, AnyPackage, DependencyVersion, getFullNpmName, License, NotNeededPackage, PackageJsonDependency, TypingsData,
 } from "./lib/packages";
-import { sourceBranch, outputDirPath } from "./lib/settings";
+import { outputDirPath, sourceBranch } from "./lib/settings";
 import { ChangedPackages, readChangedPackages, skipBadPublishes } from "./lib/versions";
 import { writeFile } from "./util/io";
-import { logger, loggerWithErrors, writeLog, Logger } from "./util/logging";
+import { logger, Logger, loggerWithErrors, writeLog } from "./util/logging";
 import { writeTgz } from "./util/tgz";
 import { assertNever, joinPaths, logUncaughtErrors, sortObjectKeys } from "./util/util";
-import { makeTypesVersionsForPackageJson } from "definitelytyped-header-parser";
-import { mkdir, mkdirp, readFileSync } from "fs-extra";
-import * as path from "path";
-import { withNpmCache, CachedNpmInfoClient, UncachedNpmInfoClient } from "./lib/npm-client";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
@@ -43,7 +42,7 @@ export default async function generatePackages(dt: FS, allPackages: AllPackages,
         log(` * ${pkg.libraryName}`);
     }
     log("## Generating deprecated packages");
-    withNpmCache(new UncachedNpmInfoClient(), async client => {
+    await withNpmCache(new UncachedNpmInfoClient(), async client => {
         for (const pkg of changedPackages.changedNotNeededPackages) {
             log(` * ${pkg.libraryName}`);
             await generateNotNeededPackage(pkg, client, log);
@@ -150,7 +149,17 @@ function dependencySemver(dependency: DependencyVersion): string {
     return dependency === "*" ? dependency : `^${dependency}`;
 }
 
-export function createNotNeededPackageJSON({ libraryName, license, name, fullNpmName, sourceRepoURL, version }: NotNeededPackage, registry: Registry): string {
+export function createNotNeededPackageJSON(
+    {
+        libraryName,
+        license,
+        name,
+        fullNpmName,
+        sourceRepoURL,
+        version,
+    }: NotNeededPackage,
+    registry: Registry,
+): string {
     const out = {
         name: fullNpmName,
         version: version.versionString,

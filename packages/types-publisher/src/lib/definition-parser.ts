@@ -159,7 +159,7 @@ function getTypingDataForSingleTypesVersion(
     const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
     const otherFiles = ls.indexOf(unusedFilesName) > -1 ? (fs.readFile(unusedFilesName)).split(/\r?\n/g).filter(Boolean) : [];
     checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
-    for (const untestedTypeFile of filter(otherFiles, name => name.endsWith('.d.ts'))) {
+    for (const untestedTypeFile of filter(otherFiles, name => name.endsWith(".d.ts"))) {
         // add d.ts files from OTHER_FILES.txt in order get their dependencies
         types.set(untestedTypeFile, createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile)));
     }
@@ -168,11 +168,25 @@ function getTypingDataForSingleTypesVersion(
     const declaredModulesSet = new Set(declaredModules);
     // Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
     const dependenciesSet = new Set(filter(dependenciesWithDeclaredModules, m => !declaredModulesSet.has(m)));
-    const testDependencies = Array.from(filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m)));
+    const testDependencies = Array.from(
+        filter(
+            getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs),
+            m => !declaredModulesSet.has(m),
+        ),
+    );
 
     const { dependencies, pathMappings } = calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
     const tsconfigPathsForHash = JSON.stringify(tsconfig.compilerOptions.paths);
-    return { typescriptVersion, dependencies, testDependencies, pathMappings, globals, declaredModules, declFiles: sort(types.keys()), tsconfigPathsForHash };
+    return {
+        typescriptVersion,
+        dependencies,
+        testDependencies,
+        pathMappings,
+        globals,
+        declaredModules,
+        declFiles: sort(types.keys()),
+        tsconfigPathsForHash,
+    };
 }
 
 function checkPackageJsonDependencies(dependencies: unknown, path: string): ReadonlyArray<PackageJsonDependency> {
@@ -228,7 +242,7 @@ function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directo
         }
         if (file.endsWith(".d.ts") && file !== "index.d.ts") {
             throw new Error(`${packageName}: Only index.d.ts may be listed explicitly in tsconfig's "files" entry.
-Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`)
+Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`);
         }
 
         if (!file.endsWith(".d.ts") && !file.startsWith("test/")) {
@@ -236,7 +250,8 @@ Other d.ts files must either be referenced through index.d.ts, tests, or added t
             if (file !== expectedName && file !== `${expectedName}x`) {
                 const message = file.endsWith(".ts") || file.endsWith(".tsx")
                     ? `Expected file '${file}' to be named '${expectedName}' or to be inside a '${directoryPath}/test/' directory`
-                    : `Unexpected file extension for '${file}' -- expected '.ts' or '.tsx' (maybe this should not be in "files", but OTHER_FILES.txt)`;
+                    : (`Unexpected file extension for '${file}' -- expected '.ts' or '.tsx' (maybe this should not be in "files", but ` +
+                        "OTHER_FILES.txt)");
                 throw new Error(message);
             }
         }
@@ -419,8 +434,7 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
     for (const unusedFile of unusedFiles) {
         if (usedFiles.has(unusedFile)) {
             throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`);
-        }
-        else {
+        } else {
             throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} does not exist.`);
         }
     }

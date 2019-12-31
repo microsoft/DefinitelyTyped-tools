@@ -45,7 +45,7 @@
     "tslint": "^5.13.0"
   },
   "scripts": {
-    "test": "npm run build && jest",
+    "test": "npm run lint && npm run build && jest",
     "build": "node node_modules/typescript/lib/tsc.js",
     "watch": "node node_modules/typescript/lib/tsc.js --watch",
     "clean": "node bin/clean.js",

@@ -1,8 +1,8 @@
 import { createNotNeededPackageJSON, createPackageJSON, createReadme, getLicenseFileText } from "./generate-packages";
 import { Registry } from "./lib/common";
-import { TypingsData, TypingsDataRaw, License, AllPackages, readNotNeededPackages, TypesDataFile, NotNeededPackage } from "./lib/packages";
+import { AllPackages, License, NotNeededPackage, readNotNeededPackages, TypesDataFile, TypingsData, TypingsDataRaw } from "./lib/packages";
+import { createMockDT } from "./mocks";
 import { testo } from "./util/test";
-import { createMockDT } from "./mocks"
 function createRawPackage(license: License): TypingsDataRaw {
     return {
         libraryName: "jquery",
@@ -22,14 +22,14 @@ function createRawPackage(license: License): TypingsDataRaw {
         projectName: "jquery.org",
         globals: [],
         declaredModules: ["juqery"],
-    }
+    };
 }
 function createTypesData(): TypesDataFile {
     return {
-        "jquery": {
-            "1": createRawPackage(License.MIT)
+        jquery: {
+            1: createRawPackage(License.MIT),
         },
-    }
+    };
 }
 function createUnneededPackage() {
     return new NotNeededPackage({
@@ -37,7 +37,7 @@ function createUnneededPackage() {
         typingsPackageName: "absalom",
         asOfVersion: "1.1.1",
         sourceRepoURL: "https://github.com/aardwulf/absalom",
-    })
+    });
 }
 testo({
     mitLicenseText() {
@@ -64,8 +64,8 @@ testo({
         const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
         expect(createReadme(typing)).toEqual(expect.stringContaining("Global values: none"));
     },
-    async basicPackageJson() {
-        const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
+    basicPackageJson() {
+        const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT()));
         const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
         expect(createPackageJSON(typing, "1.0", packages, Registry.NPM)).toEqual(`{
     "name": "@types/jquery",
@@ -92,20 +92,20 @@ testo({
     "typeScriptVersion": "3.0"
 }`);
     },
-    async githubPackageJsonName() {
-        const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
+    githubPackageJsonName() {
+        const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT()));
         const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
         expect(createPackageJSON(typing, "1.0", packages, Registry.Github)).toEqual(
             expect.stringContaining('"name": "@types/jquery"'));
     },
-    async githubPackageJsonRegistry() {
-        const packages = AllPackages.from(createTypesData(), await readNotNeededPackages(createMockDT()));
+    githubPackageJsonRegistry() {
+        const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT()));
         const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
         const s = createPackageJSON(typing, "1.0", packages, Registry.Github);
-        expect(s).toEqual(expect.stringContaining('publishConfig'));
+        expect(s).toEqual(expect.stringContaining("publishConfig"));
         expect(s).toEqual(expect.stringContaining('"registry": "https://npm.pkg.github.com/"'));
     },
-    async basicNotNeededPackageJson() {
+    basicNotNeededPackageJson() {
         const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.NPM);
         expect(s).toEqual(`{
     "name": "@types/absalom",
@@ -122,9 +122,9 @@ testo({
     }
 }`);
     },
-    async githubNotNeededPackageJson() {
+    githubNotNeededPackageJson() {
         const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.Github);
-        expect(s).toEqual(expect.stringContaining('@types'));
-        expect(s).toEqual(expect.stringContaining('npm.pkg.github.com'));
+        expect(s).toEqual(expect.stringContaining("@types"));
+        expect(s).toEqual(expect.stringContaining("npm.pkg.github.com"));
     },
 });

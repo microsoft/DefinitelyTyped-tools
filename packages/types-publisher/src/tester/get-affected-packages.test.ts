@@ -1,5 +1,6 @@
-import { testo, createTypingsVersionRaw } from "../util/test";
 import { AllPackages, NotNeededPackage, TypesDataFile } from "../lib/packages";
+import { createTypingsVersionRaw, testo } from "../util/test";
+
 import { getAffectedPackages } from "./get-affected-packages";
 const typesData: TypesDataFile = {
     jquery: createTypingsVersionRaw("jquery", [], []),
@@ -11,7 +12,7 @@ const typesData: TypesDataFile = {
 };
 
 const notNeeded = [
-    new NotNeededPackage({ typingsPackageName: "jest", libraryName: "jest", asOfVersion: "100.0.0", sourceRepoURL: "jest.com" })
+    new NotNeededPackage({ typingsPackageName: "jest", libraryName: "jest", asOfVersion: "100.0.0", sourceRepoURL: "jest.com" }),
 ];
 const allPackages = AllPackages.from(typesData, notNeeded);
 
@@ -26,5 +27,5 @@ testo({
         const affected = getAffectedPackages(allPackages, [{ name: "WAT", majorVersion: "*" }]);
         expect(affected.changedPackages.length).toEqual(0);
         expect(affected.dependentPackages.length).toEqual(1);
-    }
-})
+    },
+});

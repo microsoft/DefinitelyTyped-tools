@@ -1,30 +1,40 @@
 import assert = require("assert");
+import { existsSync, readFileSync } from "fs";
 import { pathExists } from "fs-extra";
 import os = require("os");
-import { existsSync, readFileSync } from "fs";
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
 
-import { Semver } from "../lib/versions";
-import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
-import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
-import { AllPackages, DependencyVersion, PackageId, TypingsData, NotNeededPackage } from "../lib/packages";
-import { UncachedNpmInfoClient, NpmInfo } from "../lib/npm-client";
+import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
+import { NpmInfo, UncachedNpmInfoClient } from "../lib/npm-client";
+import { AllPackages, DependencyVersion, NotNeededPackage, PackageId, TypingsData } from "../lib/packages";
+import { sourceBranch, typesDirectoryName } from "../lib/settings";
+import { Semver } from "../lib/versions";
 import { npmInstallFlags } from "../util/io";
 import { consoleLogger, Logger, LoggerWithErrors, loggerWithErrors } from "../util/logging";
-import { assertDefined, exec, execAndThrowErrors, flatMap, joinPaths, logUncaughtErrors, mapIter, numberOfOsProcesses, runWithListeningChildProcesses, CrashRecoveryState } from "../util/util";
+import {
+    assertDefined,
+    CrashRecoveryState,
+    exec,
+    execAndThrowErrors,
+    flatMap,
+    joinPaths,
+    logUncaughtErrors,
+    mapIter,
+    numberOfOsProcesses,
+    runWithListeningChildProcesses,
+} from "../util/util";
 
-import { getAffectedPackages, allDependencies } from "./get-affected-packages";
+import { allDependencies, getAffectedPackages } from "./get-affected-packages";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 
 if (!module.parent) {
     if (yargs.argv.affected) {
         logUncaughtErrors(testAffectedOnly(Options.defaults));
-    }
-    else {
+    } else {
         const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
         const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
         logUncaughtErrors(
@@ -34,7 +44,7 @@ if (!module.parent) {
 
 export interface GitDiff {
     status: "A" | "D" | "M";
-    file: string
+    file: string;
 }
 
 async function testAffectedOnly(options: TesterOptions): Promise<void> {
@@ -82,10 +92,10 @@ export async function getAffectedPackagesFromDiff(dt: FS, definitelyTypedPath: s
     const allPackages = await AllPackages.read(dt);
     const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
     if (diffs.find(d => d.file === "notNeededPackages.json")) {
-        const uncached = new UncachedNpmInfoClient()
+        const uncached = new UncachedNpmInfoClient();
         for (const deleted of getNotNeededPackages(allPackages, diffs)) {
-            const source = await uncached.fetchNpmInfo(deleted.libraryName) // eg @babel/parser
-            const typings = await uncached.fetchNpmInfo(deleted.fullNpmName) // eg @types/babel__parser
+            const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
+            const typings = await uncached.fetchNpmInfo(deleted.fullNpmName); // eg @types/babel__parser
             checkNotNeededPackage(deleted, source, typings);
         }
     }
@@ -107,7 +117,7 @@ export async function getAffectedPackagesFromDiff(dt: FS, definitelyTypedPath: s
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]): Iterable<NotNeededPackage> {
     const deletedPackages = new Set(diffs.filter(d => d.status === "D").map(d =>
         assertDefined(getDependencyFromFile(d.file),
-            `Unexpected file deleted: ${d.file}
+                      `Unexpected file deleted: ${d.file}
 When removing packages, you should only delete files that are a part of removed packages.`)
         .name));
     return mapIter(deletedPackages, p => {
@@ -131,10 +141,18 @@ export function checkNotNeededPackage(unneeded: NotNeededPackage, source: NpmInf
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
 Unneeded packages have to be replaced with a package on npm.`);
     typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
-    const latestTypings = Semver.parse(assertDefined(typings.distTags.get("latest"), `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`));
-    assert(unneeded.version.greaterThan(latestTypings), `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`);
-    assert(source.versions.has(unneeded.version.versionString), `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`);
+    const latestTypings = Semver.parse(
+        assertDefined(typings.distTags.get("latest"), `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`),
+    );
+    assert(
+        unneeded.version.greaterThan(latestTypings),
+        `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
+it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`,
+    );
+    assert(
+        source.versions.has(unneeded.version.versionString),
+        `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`,
+    );
 }
 
 async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
@@ -262,7 +280,6 @@ async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: s
     }
 }
 
-
 /** Returns all immediate subdirectories of the root directory that have changed. */
 export function gitChanges(diffs: GitDiff[]): PackageId[] {
     const changedPackages = new Map<string, Set<DependencyVersion>>();
@@ -310,7 +327,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
         diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
     }
     return diff.split("\n").map(line => {
-        var [status, file] = line.split(/\s+/, 2);
+        const [status, file] = line.split(/\s+/, 2);
         return { status: status.trim(), file: file.trim() } as GitDiff;
     });
 

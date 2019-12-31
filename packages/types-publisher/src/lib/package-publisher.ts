@@ -1,15 +1,21 @@
 import assert = require("assert");
 import { TypeScriptVersion } from "definitelytyped-header-parser";
 
-import { readFileAndWarn, Registry } from "./common";
-import { ChangedTyping } from "./versions";
 import { Logger } from "../util/logging";
 import { joinPaths } from "../util/util";
 
+import { readFileAndWarn, Registry } from "./common";
 import { NpmPublishClient } from "./npm-client";
 import { AnyPackage, NotNeededPackage } from "./packages";
+import { ChangedTyping } from "./versions";
 
-export async function publishTypingsPackage(client: NpmPublishClient, changedTyping: ChangedTyping, dry: boolean, log: Logger, registry: Registry): Promise<void> {
+export async function publishTypingsPackage(
+    client: NpmPublishClient,
+    changedTyping: ChangedTyping,
+    dry: boolean,
+    log: Logger,
+    registry: Registry,
+): Promise<void> {
     const { pkg, version, latestVersion } = changedTyping;
     await common(client, pkg, log, dry, registry);
     if (pkg.isLatest) {
@@ -24,7 +30,13 @@ export async function publishTypingsPackage(client: NpmPublishClient, changedTyp
     }
 }
 
-export async function publishNotNeededPackage(client: NpmPublishClient, pkg: NotNeededPackage, dry: boolean, log: Logger, registry: Registry): Promise<void> {
+export async function publishNotNeededPackage(
+    client: NpmPublishClient,
+    pkg: NotNeededPackage,
+    dry: boolean,
+    log: Logger,
+    registry: Registry,
+): Promise<void> {
     log(`Deprecating ${pkg.name}`);
     await common(client, pkg, log, dry, registry);
     // Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
@@ -48,7 +60,7 @@ export async function deprecateNotNeededPackage(client: NpmPublishClient, pkg: N
 }
 
 export async function updateTypeScriptVersionTags(
-    pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean
+    pkg: AnyPackage, version: string, client: NpmPublishClient, log: Logger, dry: boolean,
 ): Promise<void> {
     const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
     const name = pkg.fullNpmName;

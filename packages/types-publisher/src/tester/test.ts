@@ -9,7 +9,7 @@ import parseDefinitions from "../parse-definitions";
 import { loggerWithErrors } from "../util/logging";
 import { logUncaughtErrors } from "../util/util";
 
-import runTests, { parseNProcesses, testerOptions, getAffectedPackagesFromDiff } from "./test-runner";
+import runTests, { getAffectedPackagesFromDiff, parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
     const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
@@ -24,10 +24,9 @@ async function main(options: TesterOptions, nProcesses: number, all: boolean): P
     await parseDefinitions(dt, { nProcesses, definitelyTypedPath: options.definitelyTypedPath }, log);
     try {
         await checkParseResults(/*includeNpmChecks*/false, dt, options, new UncachedNpmInfoClient());
-    }
-    catch (e) {
+    } catch (e) {
         if (!all) {
-            await getAffectedPackagesFromDiff(dt, options.definitelyTypedPath, "affected")
+            await getAffectedPackagesFromDiff(dt, options.definitelyTypedPath, "affected");
         }
 
         throw e;

@@ -1,4 +1,10 @@
-import { readFile as readFileWithEncoding, readFileSync as readFileWithEncodingSync, stat, writeFile as writeFileWithEncoding, writeJson as writeJsonRaw } from "fs-extra";
+import {
+    readFile as readFileWithEncoding,
+    readFileSync as readFileWithEncodingSync,
+    stat,
+    writeFile as writeFileWithEncoding,
+    writeJson as writeJsonRaw,
+} from "fs-extra";
 import { request as httpRequest } from "http";
 import { Agent, request } from "https";
 import { Readable as ReadableStream } from "stream";

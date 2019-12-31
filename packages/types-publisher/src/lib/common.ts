@@ -2,6 +2,7 @@ import { ensureDir } from "fs-extra";
 
 import { readJson, writeJson } from "../util/io";
 import { joinPaths } from "../util/util";
+
 import { dataDirPath } from "./settings";
 
 if (process.env.LONGJOHN) {

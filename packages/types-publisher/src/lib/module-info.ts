@@ -14,7 +14,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
     const globals = new Set<string>();
 
     function addDependency(ref: string): void {
-        if (ref.startsWith(".")) return;
+        if (ref.startsWith(".")) { return; }
         const dependency = rootName(ref, all);
         if (dependency !== packageName) {
             dependencies.add(dependency);
@@ -143,7 +143,7 @@ function withoutExtension(str: string, ext: string): string {
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
 export function allReferencedFiles(
-    entryFilenames: ReadonlyArray<string>, fs: FS, packageName: string, baseDirectory: string
+    entryFilenames: ReadonlyArray<string>, fs: FS, packageName: string, baseDirectory: string,
 ): { types: Map<string, ts.SourceFile>, tests: Map<string, ts.SourceFile> } {
     const seenReferences = new Set<string>();
     const types = new Map<string, ts.SourceFile>();
@@ -166,7 +166,12 @@ export function allReferencedFiles(
                 tests.set(resolvedFilename, src);
             }
 
-            const refs = findReferencedFiles(src, packageName, path.dirname(resolvedFilename), normalizeSlashes(path.relative(baseDirectory, fs.debugPath())));
+            const refs = findReferencedFiles(
+                src,
+                packageName,
+                path.dirname(resolvedFilename),
+                normalizeSlashes(path.relative(baseDirectory, fs.debugPath())),
+            );
             refs.forEach(recur);
         }
     }
@@ -200,7 +205,7 @@ interface Reference {
  * versionsBaseDirectory may be "" when not in typesVersions or ".." when inside `react-router/ts3.1`
  */
 function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirectory: string, baseDirectory: string) {
-    const refs: Reference[] = []
+    const refs: Reference[] = [];
 
     for (const ref of src.referencedFiles) {
         // Any <reference path="foo"> is assumed to be local
@@ -230,7 +235,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
         const full = normalizeSlashes(path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text))));
         // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
         if (full.startsWith("../" + packageName + "/")) {
-            ref.text = full.slice(4 + packageName.length);
+            ref.text = full.slice(packageName.length + 4);
             refs.push(ref);
             return;
         } else if (full.startsWith("..")

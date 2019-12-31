@@ -1,5 +1,4 @@
 import assert = require("assert");
-import { Registry } from "./common";
 import { ensureFile, pathExists } from "fs-extra";
 import RegClient = require("npm-registry-client");
 import { resolve as resolveUrl } from "url";
@@ -7,8 +6,9 @@ import { resolve as resolveUrl } from "url";
 import { Fetcher, readFile, readJson, sleep, writeJson } from "../util/io";
 import { Logger, loggerWithErrors } from "../util/logging";
 import { createTgz } from "../util/tgz";
-import { identity, joinPaths, mapToRecord, recordToMap, assertNever } from "../util/util";
+import { assertNever, identity, joinPaths, mapToRecord, recordToMap } from "../util/util";
 
+import { Registry } from "./common";
 import { getSecret, Secret } from "./secrets";
 import { githubRegistry, npmApi, npmRegistry, npmRegistryHostName } from "./settings";
 
@@ -149,7 +149,7 @@ export class NpmPublishClient {
         }
     }
 
-    private constructor(private client: RegClient, private auth: RegClient.Credentials, private registry: string) {}
+    private constructor(private readonly client: RegClient, private readonly auth: RegClient.Credentials, private readonly registry: string) {}
 
     async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
         const readme = await readFile(joinPaths(publishedDirectory, "README.md"));

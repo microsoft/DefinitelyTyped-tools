@@ -1,6 +1,6 @@
+import appInsights = require("applicationinsights");
 import * as yargs from "yargs";
 
-import appInsights = require("applicationinsights");
 import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
 import createSearchIndex from "./create-search-index";

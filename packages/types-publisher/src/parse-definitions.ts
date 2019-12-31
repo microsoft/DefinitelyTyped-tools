@@ -45,7 +45,7 @@ export default async function parseDefinitions(dt: FS, parallel: ParallelOptions
             commandLineArgs: [`${parallel.definitelyTypedPath}/types`],
             workerFile: definitionParserWorkerFilename,
             nProcesses: parallel.nProcesses,
-            handleOutput({ data, packageName} : { data: TypingsVersionsRaw, packageName: string }) {
+            handleOutput({ data, packageName}: { data: TypingsVersionsRaw, packageName: string }) {
                 typings[packageName] = data;
             },
         });

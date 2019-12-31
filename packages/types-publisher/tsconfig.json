@@ -13,6 +13,7 @@
         "outDir": "bin",
         "sourceMap": true,
         "target": "es2017",
+        "newLine": "crlf",
 
         "baseUrl": ".",
         "paths": {
