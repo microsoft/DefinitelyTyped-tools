@@ -10,11 +10,11 @@
     "index.js"
   ],
   "scripts": {
-    "all": "npm-run-all build lint test",
     "build": "tsc",
     "watch": "tsc --watch",
     "lint": "tslint --project tsconfig.json --format stylish && tslint --project test/tsconfig.json --format stylish",
-    "test": "mocha --require test/mocha-require.js \"test/*.ts\"",
+    "pretest": "tsc -p test",
+    "test": "mocha \"test/*.js\"",
     "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "dependencies": {
@@ -25,8 +25,6 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^12.12.6",
     "mocha": "^6.2.2",
-    "npm-run-all": "^4.0.1",
-    "ts-node": "^3.0.4",
     "tslint": "^5.5.0",
     "typescript": "next"
   },

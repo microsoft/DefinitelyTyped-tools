@@ -1,3 +1,4 @@
-index.d.ts
-index.js
 node_modules
+*.d.ts
+*.js
+*.map

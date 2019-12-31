@@ -79,6 +79,9 @@ describe("parseTypeScriptVersionLine", () => {
         const src = "// TypeScript Version: 2.1";
         assert.equal(parseTypeScriptVersionLine(src), "2.1");
 
+        const minimum = "// Minimum TypeScript Version: 2.8";
+        assert.equal(parseTypeScriptVersionLine(minimum), "2.8");
+
         const wrong = "// TypeScript Version: 3.14";
         assert.throws(() => parseTypeScriptVersionLine(wrong));
     });
