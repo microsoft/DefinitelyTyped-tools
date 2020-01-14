@@ -8,6 +8,9 @@
 @electron/get
 @emotion/core
 @emotion/styled
+@hapi/boom
+@hapi/iron
+@hapi/wreck
 @jest/environment
 @jest/fake-timers
 @jest/transform
