@@ -10,7 +10,7 @@ import { Options } from "./lib/common";
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { readFileSync, readJsonSync, stringOfStream } from "./util/io";
 import { LoggerWithErrors, loggerWithErrors } from "./util/logging";
-import { assertDefined, assertSorted, exec, joinPaths, logUncaughtErrors, withoutStart } from "./util/util";
+import { assertDefined, exec, joinPaths, logUncaughtErrors, withoutStart } from "./util/util";
 
 /**
  * Readonly filesystem.
@@ -225,7 +225,7 @@ class DiskFS implements FS {
     }
 
     readdir(dirPath?: string): ReadonlyArray<string> {
-        return assertSorted(readdirSync(this.getPath(dirPath))).filter(name => name !== ".DS_Store");
+        return readdirSync(this.getPath(dirPath)).sort().filter(name => name !== ".DS_Store");
     }
 
     isDirectory(dirPath: string): boolean {
