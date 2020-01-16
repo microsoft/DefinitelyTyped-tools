@@ -122,6 +122,29 @@ testo({
     }
 }`);
     },
+    scopedNotNeededPackageJson() {
+        const scopedUnneeded = new NotNeededPackage({
+        libraryName: "@google-cloud/pubsub",
+        typingsPackageName: "google-cloud__pubsub",
+        asOfVersion: "0.26.0",
+        sourceRepoURL: "https://github.com/googleapis/nodejs-storage",
+    });
+        const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
+        expect(s).toEqual(`{
+    "name": "@types/google-cloud__pubsub",
+    "version": "0.26.0",
+    "typings": null,
+    "description": "Stub TypeScript definitions entry for @google-cloud/pubsub, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "author": "",
+    "repository": "https://github.com/googleapis/nodejs-storage",
+    "license": "MIT",
+    "dependencies": {
+        "@google-cloud/pubsub": "*"
+    }
+}`);
+    },
     githubNotNeededPackageJson() {
         const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.Github);
         expect(s).toEqual(expect.stringContaining("@types"));

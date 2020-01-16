@@ -153,7 +153,7 @@ export function createNotNeededPackageJSON(
     {
         libraryName,
         license,
-        name,
+        unescapedName,
         fullNpmName,
         sourceRepoURL,
         version,
@@ -172,7 +172,7 @@ export function createNotNeededPackageJSON(
         license,
         // No `typings`, that's provided by the dependency.
         dependencies: {
-            [name]: "*",
+            [unescapedName]: "*",
         },
     };
     if (registry === Registry.Github) {
