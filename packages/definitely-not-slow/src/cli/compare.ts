@@ -140,7 +140,7 @@ export async function compareBenchmarks({
         installTypeScript: false,
         maxRunSeconds,
       });
-      await execAndThrowErrors(`git checkout - && git clean -xdf types`, definitelyTypedPath);
+      await execAndThrowErrors(`git checkout . && git checkout - && git clean -xdf types`, definitelyTypedPath);
       latestBenchmark = latest && latest.summary;
     }
   }
