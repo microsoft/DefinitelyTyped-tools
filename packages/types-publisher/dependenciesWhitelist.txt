@@ -81,6 +81,7 @@ egg
 electron
 electron-notarize
 electron-osx-sign
+ethers
 eventemitter2
 eventemitter3
 expect
