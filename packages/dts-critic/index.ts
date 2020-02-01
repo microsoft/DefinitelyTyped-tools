@@ -1,18 +1,15 @@
-const yargs = require("yargs");
-const headerParser = require("definitelytyped-header-parser");
-const fs = require("fs");
-const cp = require("child_process");
-const path = require("path");
-const semver = require("semver");
-const commandExistsSync = require("command-exists").sync;
+import yargs = require("yargs");
+import headerParser = require("definitelytyped-header-parser");
+import fs = require("fs");
+import cp = require("child_process");
+import path = require("path");
+import semver = require("semver");
+import commandExists = require("command-exists");
+const commandExistsSync = commandExists.sync;
 
-/**
- * @param {string} dtsPath
- * @param {string} [sourcePath]
- */
-function dtsCritic(dtsPath, sourcePath) {
-    if (!commandExistsSync('curl')) {
-        throw new Error("You need to have curl installed to run dts-critic, you can get it from https://curl.haxx.se/download.html")
+function dtsCritic(dtsPath: string, sourcePath?: string): void {
+    if (!commandExistsSync("curl")) {
+        throw new Error("You need to have curl installed to run dts-critic, you can get it from https://curl.haxx.se/download.html");
     }
 
     const dts = fs.readFileSync(dtsPath, "utf-8");
@@ -23,29 +20,29 @@ function dtsCritic(dtsPath, sourcePath) {
     catch(e) {
         header = undefined;
     }
-    const names = findNames(dtsPath, sourcePath, header)
+    const names = findNames(dtsPath, sourcePath, header);
     if (header && !header.nonNpm) {
         checkSource(names.dts, dts, readSource(sourcePath, names.src, header));
     }
 }
+
 dtsCritic.findDtsName = findDtsName;
 dtsCritic.findNames = findNames;
 dtsCritic.retrieveNpmOrFail = retrieveNpmOrFail;
 dtsCritic.checkSource = checkSource;
+dtsCritic.readSource = readSource;
 
-module.exports = dtsCritic;
+export = dtsCritic;
 // @ts-ignore
 if (!module.parent) {
     main();
 }
 
-/** @typedef {{
- *    dts: string,
- *    src: string,
- *    homepage?: string,
- * }}
- * Names
- */
+interface Names {
+    dts: string,
+    src: string,
+    homepage?: string,
+}
 
 function main() {
     const argv = yargs.
@@ -59,12 +56,7 @@ function main() {
     return dtsCritic(argv._[0], argv._[1]);
 }
 
-/**
- * @param {string | undefined} sourcePath
- * @param {string} name
- * @param {headerParser.Header | undefined} header
- */
-function readSource(sourcePath, name, header) {
+function readSource(sourcePath: string | undefined, name: string, header: headerParser.Header | undefined) {
     if (sourcePath) {
         return fs.readFileSync(require.resolve(sourcePath), "utf-8");
     }
@@ -72,17 +64,14 @@ function readSource(sourcePath, name, header) {
     if (header) {
         fullName += `@${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
     }
+
     return download("https://unpkg.com/" + fullName);
 }
 
 /**
  * Find package names of dts and source. Also finds the homepage from the DT header, if present.
- * @param {string} dtsPath
- * @param {string | undefined} sourcePath
- * @param {headerParser.Header | undefined} header
- * @return {Names}
  */
-function findNames(dtsPath, sourcePath, header) {
+function findNames(dtsPath: string, sourcePath: string | undefined, header: headerParser.Header | undefined): Names {
     const dts = findDtsName(dtsPath);
     let src;
     let homepage;
@@ -98,7 +87,7 @@ function findNames(dtsPath, sourcePath, header) {
         let noMatchingVersion = false;
         src = dts;
         try {
-            const npm = retrieveNpmOrFail(dts)
+            const npm = retrieveNpmOrFail(dts);
             homepage = npm.homepage;
             versions = Object.keys(npm.versions).map(v => {
                 const ver = semver.parse(v);
@@ -135,9 +124,9 @@ Try adding -browser to the end of the name to get
 
         }
         if (noMatchingVersion) {
-            const verstring = versions ? versions.join(', ') : "NO VERSIONS FOUND";
+            const verstring = versions ? versions.join(", ") : "NO VERSIONS FOUND";
             const lateststring = versions ? versions[versions.length - 1] : "NO LATEST VERSION FOUND";
-            const headerstring = header ? header.libraryMajorVersion + '.' + header.libraryMinorVersion : "NO HEADER VERSION FOUND";
+            const headerstring = header ? header.libraryMajorVersion + "." + header.libraryMinorVersion : "NO HEADER VERSION FOUND";
             throw new Error(`The types for ${dts} must match a version that exists on npm.
 You should copy the major and minor version from the package on npm.
 
@@ -153,19 +142,17 @@ For example, if you're trying to match the latest version, use ${lateststring}.`
 
 /**
  * If dtsName is 'index' (as with DT) then look to the parent directory for the name.
- * @param {string} dtsPath
  */
-function findDtsName(dtsPath) {
+function findDtsName(dtsPath: string) {
     const resolved = path.resolve(dtsPath);
-    const baseName = path.basename(resolved, '.d.ts');
+    const baseName = path.basename(resolved, ".d.ts");
     if (baseName && baseName !== "index") {
         return baseName;
     }
     return path.basename(path.dirname(resolved));
 }
 
-/** @param {string} sourcePath */
-function findSourceName(sourcePath) {
+function findSourceName(sourcePath: string) {
     const resolved = path.resolve(sourcePath);
     const hasExtension = !!path.extname(resolved);
     return hasExtension ? path.basename(path.dirname(resolved)) : path.basename(resolved);
@@ -173,10 +160,8 @@ function findSourceName(sourcePath) {
 
 /**
  * This function makes it an ERROR not to have a npm package that matches the base name.
- * @param {string} baseName
- * @return {{ homepage: string, versions: { [s: string]: any } }}
  */
-function retrieveNpmOrFail(baseName) {
+function retrieveNpmOrFail(baseName: string): { homepage: string; versions: { [s: string]: any; }; } {
     const npm = JSON.parse(download("https://registry.npmjs.org/" + mangleScoped(baseName)));
     if ("error" in npm) {
         throw new Error(baseName + " " + npm.error);
@@ -184,8 +169,7 @@ function retrieveNpmOrFail(baseName) {
     return npm;
 }
 
-/** @param {string} baseName */
-function mangleScoped(baseName) {
+function mangleScoped(baseName: string) {
     if (/__/.test(baseName)) {
         return "@" + baseName.replace("__", "/");
     }
@@ -199,11 +183,8 @@ function mangleScoped(baseName) {
  *
  * Note that this function doesn't follow requires, but just tries to detect
  * 'module.exports = require'
- * @param {string} name
- * @param {string} dts
- * @param {string} src
  */
-function checkSource(name, dts, src) {
+function checkSource(name: string, dts: string, src: string) {
     if (dts.indexOf("export default") > -1 && dts.indexOf("export =") === -1 && !/declare module ['"]/.test(dts) &&
         src.indexOf("524: A timeout occurred") === -1 && src.indexOf("500 Server Error") === -1 && src.indexOf("Cannot find package") === -1 && src.indexOf("Rate exceeded") === -1 &&
         !isRealExportDefault(name) && src.indexOf("default") === -1 && src.indexOf("__esModule") === -1 && src.indexOf("react-side-effect") === -1 && src.indexOf("@flow") === -1 && src.indexOf("module.exports = require") === -1) {
@@ -217,8 +198,7 @@ ${src}
     }
 }
 
-/** @param {string} name */
-function isExistingSquatter(name) {
+function isExistingSquatter(name: string) {
     return name === "atom" ||
         name === "ember__string" ||
         name === "fancybox" ||
@@ -228,8 +208,7 @@ function isExistingSquatter(name) {
         name === "titanium";
 }
 
-/** @param {string} name */
-function isRealExportDefault(name) {
+function isRealExportDefault(name: string) {
     return name.indexOf("react-native") > -1 ||
         name === "ember-feature-flags" ||
         name === "material-ui-datatables";
@@ -237,8 +216,7 @@ function isRealExportDefault(name) {
 
 /**
  * Based on download-file-sync, but with a larger buffer. So even LESS efficient.
- * @param {string} url
  */
-function download(url) {
-  return cp.execFileSync('curl', ['--silent', '-L', url], { encoding: 'utf8', maxBuffer: 100 * 1024 * 1024 });
+function download(url: string) {
+    return cp.execFileSync("curl", ["--silent", "-L", url], { encoding: "utf8", maxBuffer: 100 * 1024 * 1024 });
 }

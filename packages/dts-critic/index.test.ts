@@ -1,36 +1,33 @@
-const { findDtsName, findNames, retrieveNpmOrFail, checkSource } = require("./index");
-/**
- * @param {string} description
- * @param {{ [s: string]: () => void }} tests
- */
-function suite(description, tests) {
+import { findDtsName, findNames, retrieveNpmOrFail, checkSource } from "./index";
+
+function suite(description: string, tests: { [s: string]: () => void; }) {
     describe(description, () => {
         for (const k in tests) {
             test(k, tests[k], 10 * 1000);
         }
-    })
+    });
 }
 suite("findParent", {
     absolutePath() {
-        expect(findDtsName("~/dt/types/jquery/index.d.ts")).toBe("jquery")
+        expect(findDtsName("~/dt/types/jquery/index.d.ts")).toBe("jquery");
     },
     relativePath() {
-        expect(findDtsName("jquery/index.d.ts")).toBe("jquery")
+        expect(findDtsName("jquery/index.d.ts")).toBe("jquery");
     },
     currentDirectory() {
-        expect(findDtsName("index.d.ts")).toBe("dts-critic")
+        expect(findDtsName("index.d.ts")).toBe("dts-critic");
     },
     relativeCurrentDirectory() {
-        expect(findDtsName("./index.d.ts")).toBe("dts-critic")
+        expect(findDtsName("./index.d.ts")).toBe("dts-critic");
     },
     emptyDirectory() {
-        expect(findDtsName("")).toBe("dts-critic")
+        expect(findDtsName("")).toBe("dts-critic");
     },
-})
+});
 suite("findNames", {
     absolutePathsBoth() {
         expect(() => findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toThrow(
-            `d.ts name 'jquery' must match source name 'dts-critic'.`)
+            `d.ts name 'jquery' must match source name 'dts-critic'.`);
     },
     currentDirectorySource() {
         expect(() => findNames("jquery/index.d.ts", ".", undefined)).toThrow(
@@ -60,7 +57,7 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 - OR -
 
 3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
-`)
+`);
     },
     mismatchPackageFailNpmHeader() {
         // surely parseltongue will never exist
@@ -86,7 +83,7 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 - OR -
 
 3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
-`)
+`);
     },
     mismatchPackageFailNonNpmHeader() {
         // surely parseltongue will never exist
@@ -103,18 +100,18 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
 Try adding -browser to the end of the name to get
 
     jquery-browser
-`)
+`);
     }
-})
+});
 suite("retrieveNpmHomepageOrFail", {
     retrieveFailure() {
         // surely parseltongue will never exist
         expect(() => retrieveNpmOrFail("parseltongue")).toThrow(`parseltongue Not found`);
     },
     retrieveShelljs() {
-        expect(retrieveNpmOrFail("shelljs").homepage).toBe("http://github.com/shelljs/shelljs")
+        expect(retrieveNpmOrFail("shelljs").homepage).toBe("http://github.com/shelljs/shelljs");
     }
-})
+});
 
 suite("checkSource", {
     badExportDefault() {

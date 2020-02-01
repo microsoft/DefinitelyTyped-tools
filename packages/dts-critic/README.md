@@ -3,10 +3,23 @@
 Checks a new dts against the Javascript sources and tells you what
 problems it has.
 
-To use:
+# Usage
 
+Install [Gulp](https://gulpjs.com/) and dependencies:
+
+```bash
+$ npm install -g gulp
+$ npm install
+```
+
+Use gulp to build the program:
+```bash
+$ gulp build
+```
+
+Run the program using node:
 ```sh
-$ node index.js path-to-d.ts [path-to-source]
+$ node dist/index.js path-to-d.ts [path-to-source]
 ```
 
 If the d.ts path is to a file named `index.d.ts`, the name of the directory
@@ -43,8 +56,18 @@ Note that for real use on Definitely Typed, a lot of these checks need to be pre
 # Also
 
 ```sh
-$ node dt.js
+$ node dist/dt.js
 ```
 
 Will run dts-critic on every directory inside `../DefinitelyTyped` and
 print errors.
+
+# Contributing
+
+## Testing
+
+The tests use the [Jest](https://jestjs.io/) framework. To build and execute the tests, run:
+
+```bash
+$ gulp test
+```

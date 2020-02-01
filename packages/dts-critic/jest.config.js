@@ -1,9 +1,9 @@
 module.exports = {
-  "testRegex": "(/__tests__/.*|\\.(test|spec))\\.jsx?$",
-  "moduleFileExtensions": [
+  rootDir: "dist",
+  moduleFileExtensions: [
     "js",
     "jsx",
     "json",
     "node"
   ],
-}
+};

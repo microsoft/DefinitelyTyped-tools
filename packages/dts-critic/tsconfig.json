@@ -2,10 +2,16 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true,
     "target": "esnext",
     "module": "commonjs",
     "resolveJsonModule": true,
-    "strict": true
-  }
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "declaration": true,
+    "esModuleInterop": true,
+  },
+  "exclude": [
+    "dist/*",
+  ]
 }
