@@ -64,6 +64,7 @@ cassandra-driver
 chalk
 chokidar
 commander
+connect-mongo
 cordova-plugin-camera
 cordova-plugin-file
 cordova-plugin-file-transfer
