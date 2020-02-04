@@ -13,6 +13,7 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "test": "jest",
+        "build": "tsc",
         "dt": "node dist/dt.js"
     },
     "repository": {
