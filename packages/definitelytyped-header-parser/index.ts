@@ -19,12 +19,12 @@ export type UnsupportedTypeScriptVersion =
  */
 export type TypeScriptVersion =
     | "2.8" | "2.9"
-    | "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8";
+    | "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9";
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 export namespace TypeScriptVersion {
     export const supported: readonly TypeScriptVersion[] =
         ["2.8", "2.9",
-         "3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8"];
+         "3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9"];
     export const unsupported: readonly UnsupportedTypeScriptVersion[] =
         ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7"];
     export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
@@ -57,6 +57,7 @@ export namespace TypeScriptVersion {
         "ts3.6",
         "ts3.7",
         "ts3.8",
+        "ts3.9",
         "latest",
     ];
 
