@@ -27,6 +27,7 @@
 @types/firebase
 @types/highcharts
 @types/hoist-non-react-statics
+@types/mkdirp-promise
 @types/next-redux-wrapper
 @types/ink
 @types/js-data
