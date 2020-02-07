@@ -64,3 +64,6 @@ typings/
 
 # TypeScript compiler output
 dist/
+
+# Files downloaded during development
+sources/

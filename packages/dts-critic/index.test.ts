@@ -1,4 +1,12 @@
-import { findDtsName, findNames, retrieveNpmOrFail, checkSource } from "./index";
+import {
+    findDtsName,
+    getNpmInfo,
+    dtToNpmName,
+    toExportErrorKind,
+    dtsCritic,
+    checkSource,
+    ErrorKind,
+    ExportErrorKind } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void; }) {
     describe(description, () => {
@@ -7,7 +15,8 @@ function suite(description: string, tests: { [s: string]: () => void; }) {
         }
     });
 }
-suite("findParent", {
+
+suite("findDtsName", {
     absolutePath() {
         expect(findDtsName("~/dt/types/jquery/index.d.ts")).toBe("jquery");
     },
@@ -24,119 +33,217 @@ suite("findParent", {
         expect(findDtsName("")).toBe("dts-critic");
     },
 });
-suite("findNames", {
-    absolutePathsBoth() {
-        expect(() => findNames("jquery/index.d.ts", "~/dts-critic", undefined)).toThrow(
-            `d.ts name 'jquery' must match source name 'dts-critic'.`);
+suite("getNpmInfo", {
+    nonNpm() {
+        expect(getNpmInfo("parseltongue")).toEqual({ isNpm: false });
     },
-    currentDirectorySource() {
-        expect(() => findNames("jquery/index.d.ts", ".", undefined)).toThrow(
-            `d.ts name 'jquery' must match source name 'dts-critic'.`);
+    npm() {
+        expect(getNpmInfo("typescript")).toEqual({
+            isNpm: true,
+            versions: expect.arrayContaining(["3.7.5"]),
+            tags: expect.objectContaining({ latest: expect.stringContaining("") }),
+        });
     },
-    mistakenFileNameSource() {
-        expect(() => findNames("jquery/index.d.ts", "/home/lol/oops.index.js", undefined)).toThrow(
-            `d.ts name 'jquery' must match source name 'lol'.`);
+});
+suite("dtToNpmName", {
+    nonScoped() {
+        expect(dtToNpmName("content-type")).toBe("content-type");
     },
-    trailingSlashSource() {
-        expect(() => findNames("jquery/index.d.ts", "/home/lol/", undefined)).toThrow(
-            `d.ts name 'jquery' must match source name 'lol'.`);
+    scoped() {
+        expect(dtToNpmName("babel__core")).toBe("@babel/core");
     },
-    mismatchPackageFailNoHeader() {
-        // surely parseltongue will never exist
-        expect(() => findNames("parseltongue.d.ts", undefined, undefined)).toThrow(
-            `d.ts file must have a matching npm package.
-To resolve this error, either:
-1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-    // Type definitions for non-npm package parseltongue-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
-
-- OR -
-
-3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
-`);
+});
+suite("toErrorKind", {
+    existent() {
+        expect(toExportErrorKind("NoDefaultExport")).toBe(ErrorKind.NoDefaultExport);
     },
-    mismatchPackageFailNpmHeader() {
-        // surely parseltongue will never exist
-        expect(() => findNames("parseltongue.d.ts", undefined, {
-                nonNpm: false,
-                libraryName: "a",
-                libraryMajorVersion: 1,
-                libraryMinorVersion: 2,
-                typeScriptVersion: "3.2",
-                contributors: [],
-                projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-        })).toThrow(
-            `d.ts file must have a matching npm package.
-To resolve this error, either:
-1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-    // Type definitions for non-npm package parseltongue-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.
-
-- OR -
-
-3. Explicitly provide dts-critic with a source file. This is not allowed for submission to Definitely Typed.
-`);
+    existentDifferentCase() {
+        expect(toExportErrorKind("JspropertyNotinDTS")).toBe(ErrorKind.JsPropertyNotInDts);
     },
-    mismatchPackageFailNonNpmHeader() {
-        // surely parseltongue will never exist
-        expect(() => findNames("jquery.d.ts", undefined, {
-                nonNpm: true,
-                libraryName: "a",
-                libraryMajorVersion: 1,
-                libraryMinorVersion: 2,
-                typeScriptVersion: "3.2",
-                contributors: [],
-                projects: ["welcome-to-zombo.com", "this-is-zombo.com"]
-        })).toThrow(
-            `The non-npm package 'jquery' conflicts with the existing npm package 'jquery'.
-Try adding -browser to the end of the name to get
-
-    jquery-browser
-`);
+    nonexistent() {
+        expect(toExportErrorKind("FakeError")).toBe(undefined);
     }
 });
-suite("retrieveNpmHomepageOrFail", {
-    retrieveFailure() {
-        // surely parseltongue will never exist
-        expect(() => retrieveNpmOrFail("parseltongue")).toThrow(`parseltongue Not found`);
-    },
-    retrieveShelljs() {
-        expect(retrieveNpmOrFail("shelljs").homepage).toBe("http://github.com/shelljs/shelljs");
-    }
-});
+
+const allErrors: Map<ExportErrorKind, true> = new Map([
+    [ErrorKind.NeedsExportEquals, true],
+    [ErrorKind.NoDefaultExport, true],
+    [ErrorKind.JsSignatureNotInDts, true],
+    [ErrorKind.DtsSignatureNotInJs, true],
+    [ErrorKind.DtsPropertyNotInJs, true],
+    [ErrorKind.JsPropertyNotInDts, true],
+]);
 
 suite("checkSource", {
-    badExportDefault() {
-        expect(() => checkSource(
-            "foo",
-            `function f() {}; export default f;`,
-            `module.exports = function () {};`)).toThrow(
-                "The types for foo specify 'export default' but the source does not mention 'default' anywhere.");
-    },
-    serverErrorRateExceeded() {
+    noErrors() {
         expect(checkSource(
-            "foo",
-            `function f() {}; export default f;`,
-            `Rate exceeded`)).toBeUndefined();
+            "noErrors",
+            "testsource/noErrors.d.ts",
+            "testsource/noErrors.js",
+            allErrors,
+            false,
+        )).toEqual([]);
     },
-    serverError500() {
+    missingJsProperty() {
         expect(checkSource(
-            "foo",
-            `function f() {}; export default f;`,
-            `<title>500 Server Error</title>`)).toBeUndefined();
+            "missingJsProperty",
+            "testsource/missingJsProperty.d.ts",
+            "testsource/missingJsProperty.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.JsPropertyNotInDts,
+                message: `The declaration doesn't match the JavaScript module 'missingJsProperty'. Reason:
+The JavaScript module exports a property named 'foo', which is missing from the declaration module.`
+            }
+        ]));
     },
-    serverError524() {
+    missingDtsProperty() {
         expect(checkSource(
-            "foo",
-            `function f() {}; export default f;`,
-            `<title>unpkg.com | 524: A timeout occurred</title>`)).toBeUndefined();
+            "missingDtsProperty",
+            "testsource/missingDtsProperty.d.ts",
+            "testsource/missingDtsProperty.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.DtsPropertyNotInJs,
+                message: `The declaration doesn't match the JavaScript module 'missingDtsProperty'. Reason:
+The declaration module exports a property named 'foo', which is missing from the JavaScript module.`,
+                position: {
+                    start: 67,
+                    length: 11,
+                },
+            }
+        ]));
     },
+    missingDefaultExport() {
+        expect(checkSource(
+            "missingDefault",
+            "testsource/missingDefault.d.ts",
+            "testsource/missingDefault.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.NoDefaultExport,
+                message: `The declaration doesn't match the JavaScript module 'missingDefault'. Reason:
+The declaration specifies 'export default' but the JavaScript source does not mention 'default' anywhere.
+
+The most common way to resolve this error is to use 'export =' syntax instead of 'export default'.
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+                position: {
+                    start: 0,
+                    length: 32,
+                },
+            }
+        ]));
+    },
+    missingJsSignatureExportEquals() {
+        expect(checkSource(
+            "missingJsSignatureExportEquals",
+            "testsource/missingJsSignatureExportEquals.d.ts",
+            "testsource/missingJsSignatureExportEquals.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.JsSignatureNotInDts,
+                message: `The declaration doesn't match the JavaScript module 'missingJsSignatureExportEquals'. Reason:
+The JavaScript module can be called or constructed, but the declaration module cannot.`,
+            }
+        ]));
+    },
+    missingJsSignatureNoExportEquals() {
+        expect(checkSource(
+            "missingJsSignatureNoExportEquals",
+            "testsource/missingJsSignatureNoExportEquals.d.ts",
+            "testsource/missingJsSignatureNoExportEquals.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.JsSignatureNotInDts,
+                message: `The declaration doesn't match the JavaScript module 'missingJsSignatureNoExportEquals'. Reason:
+The JavaScript module can be called or constructed, but the declaration module cannot.
+
+The most common way to resolve this error is to use 'export =' syntax.
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+            }
+        ]));
+    },
+    missingDtsSignature() {
+        expect(checkSource(
+            "missingDtsSignature",
+            "testsource/missingDtsSignature.d.ts",
+            "testsource/missingDtsSignature.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.DtsSignatureNotInJs,
+                message: `The declaration doesn't match the JavaScript module 'missingDtsSignature'. Reason:
+The declaration module can be called or constructed, but the JavaScript module cannot.`,
+            }
+        ]));
+    },
+    missingExportEquals() {
+        expect(checkSource(
+            "missingExportEquals",
+            "testsource/missingExportEquals.d.ts",
+            "testsource/missingExportEquals.js",
+            allErrors,
+            false,
+        )).toEqual(expect.arrayContaining([
+            {
+                kind: ErrorKind.NeedsExportEquals,
+                message: `The declaration doesn't match the JavaScript module 'missingExportEquals'. Reason:
+The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and 'module.exports' can be called or constructed.
+
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+            }
+        ]));
+    },
+});
+suite("dtsCritic", {
+    noErrors() {
+        expect(dtsCritic("testsource/dts-critic.d.ts", "testsource/dts-critic.js")).toEqual([]);
+    },
+    noMatchingNpmPackage() {
+        expect(dtsCritic("testsource/parseltongue.d.ts")).toEqual([
+            {
+                kind: ErrorKind.NoMatchingNpmPackage,
+                message: `Declaration file must have a matching npm package.
+To resolve this error, either:
+1. Change the name to match an npm package.
+2. Add a Definitely Typed header with the first line
+
+
+// Type definitions for non-npm package parseltongue-browser
+
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+            },
+        ]);
+    },
+    noMatchingNpmVersion() {
+        expect(dtsCritic("testsource/typescript.d.ts")).toEqual([
+            {
+                kind: ErrorKind.NoMatchingNpmVersion,
+                message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
+You should copy the major and minor version from the package on npm.`),
+            },
+        ]);
+    },
+    nonNpmHasMatchingPackage() {
+        expect(dtsCritic("testsource/tslib.d.ts")).toEqual([
+            {
+                kind: ErrorKind.NonNpmHasMatchingPackage,
+                message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
+Try adding -browser to the end of the name to get
+
+tslib-browser`,
+            },
+        ]);
+    }
 });

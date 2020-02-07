@@ -19,7 +19,7 @@ $ gulp build
 
 Run the program using node:
 ```sh
-$ node dist/index.js path-to-d.ts [path-to-source]
+$ node dist/index.js --dts=path-to-d.ts [--js=path-to-source] [--mode=mode] [--debug]
 ```
 
 If the d.ts path is to a file named `index.d.ts`, the name of the directory
@@ -29,20 +29,40 @@ will be used as the package name instead. For example
 `path-to-source` is optional; if you leave it off, the code will
 check npm for a package with the same name as the d.ts.
 
+## Mode
+
+You can run dts-critic in different modes that affect which checks will be performed:
+1. `name-only`: dts-critic will check your package name and [DefinitelyTyped header]
+(https://github.com/Microsoft/definitelytyped-header-parser) (if present) against npm packages.
+For example, if your declaration is for an npm package called 'cool-js-package', it will check if a
+package named 'cool-js-package' actually exists in npm.
+
+2. `code`: in addition to the checks performed in `name-only` mode, dts-critic will check if your
+declaration exports match the source JavaScript module exports.
+For example, if your declaration has a default export, it will check if the JavaScript module also
+has a default export.
+
 # Current checks
 
+## Npm declaration
+If your declaration is for an npm package:
 
-1. If no local path to source is provided, an npm package with the
-same name as the d.ts must exist.
-2. The d.ts and the source path must have the same name.
-3. If the d.ts has a
-[Definitely Typed header](https://github.com/Microsoft/definitelytyped-header-parser)
-*and* npm is used to obtain the path to the source, the `homepage`
-property of npm must be one of the entries in the `Project` field of
-the DT header.
-4. If the d.ts has a DT header and npm is used *and* the header
-specifies that the d.ts is for a non-npm package, the name of the d.ts
-must not conflict with an existing npm package.
+1. An npm package with the same name of your declaration's package must exist.
+2. If your declaration has a [Definitely Typed header](https://github.com/Microsoft/definitelytyped-header-parser)
+and the header specifies a target version, the npm package must have
+a matching version.
+3. If you are running under `code` mode, your declaration must also match the source JavaScript module.
+
+## Non-npm declaration
+<!-- 2. If no local path to source is provided, an npm package with the
+same name as the d.ts must exist. -->
+If your declaration is for a non-npm package (in other words, if your declaration has a
+[Definitely Typed header](https://github.com/Microsoft/definitelytyped-header-parser) *and*
+the header specifies that the declaration file is for a non-npm package):
+
+1. An npm package with the same name of your declaration's package **cannot** exist.
+3. If you are running under `code` mode *and* a path to the JavaScript source file was provided, your
+declaration must also match the source JavaScript module.
 
 # Planned work
 
