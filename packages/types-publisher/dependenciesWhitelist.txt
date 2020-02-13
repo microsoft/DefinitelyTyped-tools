@@ -138,6 +138,7 @@ path-to-regexp
 pkcs11js
 popper.js
 postcss
+polished
 preact
 pretty-format
 probot
