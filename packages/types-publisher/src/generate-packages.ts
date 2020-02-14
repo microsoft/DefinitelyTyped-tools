@@ -207,7 +207,7 @@ export function createReadme(typing: TypingsData): string {
     lines.push("");
 
     lines.push("# Credits");
-    const contributors = typing.contributors.map(({ name, url }) => `${name} (${url})`).join(", ").replace(/, ([^,]+)$/, ", and $1");
+    const contributors = typing.contributors.map(({ name, url }) => `[${name}](${url})`).join(", ").replace(/, ([^,]+)$/, ", and $1");
     lines.push(`These definitions were written by ${contributors}.`);
     lines.push("");
 
