@@ -7,7 +7,7 @@ import {
     dtsCritic,
     dtToNpmName,
     getNpmInfo,
-    toExportErrorKind,
+    parseExportErrorKind,
     CriticError,
     ExportErrorKind,
     Mode,
@@ -183,7 +183,7 @@ function getOptions(modeArg: string, enabledErrors: string[]): CheckOptions {
 function getEnabledErrors(errorNames: string[]): Map<ExportErrorKind, boolean> {
     const errors: ExportErrorKind[] = [];
     for (const name of errorNames) {
-        const error = toExportErrorKind(name);
+        const error = parseExportErrorKind(name);
         if (error === undefined) {
             throw new Error(`Could not find error named '${name}'.`);
         }

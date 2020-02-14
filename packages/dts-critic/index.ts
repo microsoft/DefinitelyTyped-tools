@@ -7,6 +7,27 @@ import semver = require("semver");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 
+export enum ErrorKind {
+    /** Declaration is marked as npm in header and has no matching npm package. */
+    NoMatchingNpmPackage = "NoMatchingNpmPackage",
+    /** Declaration has no npm package matching specified version. */
+    NoMatchingNpmVersion = "NoMatchingNpmVersion",
+    /** Declaration is not for an npm package, but has a name that conflicts with an existing npm package. */
+    NonNpmHasMatchingPackage = "NonNpmHasMatchingPackage",
+    /** Declaration needs to use `export =` to match the JavaScript module's behavior. */
+    NeedsExportEquals = "NeedsExportEquals",
+    /** Declaration has a default export, but JavaScript module does not have a default export. */
+    NoDefaultExport = "NoDefaultExport",
+    /** JavaScript exports property not found in declaration exports. */
+    JsPropertyNotInDts = "JsPropertyNotInDts",
+    /** Declaration exports property not found in JavaScript exports. */
+    DtsPropertyNotInJs = "DtsPropertyNotInJs",
+    /** JavaScript module has signatures, but declaration module does not. */
+    JsSignatureNotInDts = "JsSignatureNotInDts",
+    /** Declaration module has signatures, but JavaScript module does not. */
+    DtsSignatureNotInJs = "DtsSignatureNotInJs",
+}
+
 export enum Mode {
     /** Checks based only on the package name and on the declaration's DefinitelyTyped header. */
     NameOnly = "name-only",
@@ -21,6 +42,7 @@ export function parseMode(mode: string): Mode | undefined {
         case Mode.Code:
             return Mode.Code;
     }
+    return undefined;
 }
 
 export type CheckOptions = NameOnlyOptions | CodeOptions;
@@ -96,18 +118,7 @@ function isNonNpm(header: headerParser.Header | undefined): boolean {
     return !!header && header.nonNpm;
 }
 
-function defaultEnabledErrors(error: ExportErrorKind): boolean {
-    switch (error) {
-        case ErrorKind.NeedsExportEquals:
-        case ErrorKind.NoDefaultExport:
-            return true;
-        case ErrorKind.JsPropertyNotInDts:
-        case ErrorKind.DtsPropertyNotInJs:
-        case ErrorKind.JsSignatureNotInDts:
-        case ErrorKind.DtsSignatureNotInJs:
-            return false;
-    }
-};
+export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport];
 
 function main() {
     const argv = yargs.
@@ -192,9 +203,11 @@ function checkNonNpm(name: string, npmInfo: NpmInfo): NonNpmError | undefined {
             message: `The non-npm package '${name}' conflicts with the existing npm package '${dtToNpmName(name)}'.
 Try adding -browser to the end of the name to get
 
-${name}-browser`
+    ${name}-browser
+`
         };
     }
+    return undefined;
 }
 
 /**
@@ -278,7 +291,7 @@ export function findDtsName(dtsPath: string) {
 }
 
 /** Default path to store packages downloaded from npm. */
-const sourceDir = "sources";
+const sourceDir = path.resolve(path.join(__dirname, "..", "sources"));
 
 /**
  * If path of source package was not provided, downloads package from npm and return path to
@@ -292,7 +305,7 @@ function getNpmSourcePath(sourcePath: string | undefined, name: string, npmVersi
         throw new Error(`Expected matching npm version for package ${dtToNpmName(name)}.`);
     }
     const packagePath = downloadNpmPackage(name, npmVersion, sourceDir);
-    return require.resolve(path.join("../", packagePath));
+    return require.resolve(path.resolve(packagePath));
 }
 
 /** Returns path of downloaded npm package. */
@@ -303,7 +316,7 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
     const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts);
     const npmPackOut = JSON.parse(npmPack)[0];
     const tarballName: string = npmPackOut.filename;
-    const outPath = path.join(outDir, `${name}`);
+    const outPath = path.join(outDir, name);
     initDir(outPath);
     cp.execFileSync("tar", ["-xz", "-f", tarballName, "-C", outPath], cpOpts);
     fs.unlinkSync(tarballName);
@@ -320,9 +333,9 @@ function getPackageDir(outPath: string): string {
     return "package";
 }
 
-function initDir(path: string): void {
-    if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
+function initDir(dirPath: string): void {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
     }
 }
 
@@ -337,7 +350,7 @@ export function checkSource(
         console.log(formatDebug(name, diagnostics));
     }
 
-    return diagnostics.errors.filter(err => enabledErrors.get(err.kind) ?? defaultEnabledErrors(err.kind));
+    return diagnostics.errors.filter(err => enabledErrors.get(err.kind) ?? defaultErrors.includes(err.kind));
 }
 
 function formatDebug(name: string, diagnostics: ExportsDiagnostics): string {
@@ -687,6 +700,7 @@ function getDtsDefaultExport(sourceFile: ts.SourceFile, moduleType: InferenceRes
             length: exportDefault.declarations[0].getWidth(),
         };
     }
+    return undefined;
 }
 
 const ignoredProperties = ["__esModule", "prototype", "default"];
@@ -855,7 +869,7 @@ export function dtToNpmName(baseName: string) {
 /**
  * @param error case-insensitive name of the error
  */
-export function toExportErrorKind(error: string): ExportErrorKind | undefined {
+export function parseExportErrorKind(error: string): ExportErrorKind | undefined {
     error = error.toLowerCase();
     switch (error) {
         case "needsexportequals":
@@ -871,33 +885,13 @@ export function toExportErrorKind(error: string): ExportErrorKind | undefined {
         case "dtssignaturenotinjs":
             return ErrorKind.DtsSignatureNotInJs;
     }
+    return undefined;
 }
 
 export interface CriticError {
     kind: ErrorKind,
     message: string,
     position?: Position,
-}
-
-export enum ErrorKind {
-    /** Declaration is marked as npm in header and has no matching npm package. */
-    NoMatchingNpmPackage,
-    /** Declaration has no npm package matching specified version. */
-    NoMatchingNpmVersion,
-    /** Declaration is not for an npm package, but has a name that conflicts with an existing npm package. */
-    NonNpmHasMatchingPackage,
-    /** Declaration needs to use `export =` to match the JavaScript module's behavior. */
-    NeedsExportEquals,
-    /** Declaration has a default export, but JavaScript module does not have a default export. */
-    NoDefaultExport,
-    /** JavaScript exports property not found in declaration exports. */
-    JsPropertyNotInDts,
-    /** Declaration exports property not found in JavaScript exports. */
-    DtsPropertyNotInJs,
-    /** JavaScript module has signatures, but declaration module does not. */
-    JsSignatureNotInDts,
-    /** Declaration module has signatures, but JavaScript module does not. */
-    DtsSignatureNotInJs,
 }
 
 interface NpmError extends CriticError {

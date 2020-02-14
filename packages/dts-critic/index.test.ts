@@ -2,7 +2,7 @@ import {
     findDtsName,
     getNpmInfo,
     dtToNpmName,
-    toExportErrorKind,
+    parseExportErrorKind,
     dtsCritic,
     checkSource,
     ErrorKind,
@@ -53,15 +53,15 @@ suite("dtToNpmName", {
         expect(dtToNpmName("babel__core")).toBe("@babel/core");
     },
 });
-suite("toErrorKind", {
+suite("parseExportErrorKind", {
     existent() {
-        expect(toExportErrorKind("NoDefaultExport")).toBe(ErrorKind.NoDefaultExport);
+        expect(parseExportErrorKind("NoDefaultExport")).toBe(ErrorKind.NoDefaultExport);
     },
     existentDifferentCase() {
-        expect(toExportErrorKind("JspropertyNotinDTS")).toBe(ErrorKind.JsPropertyNotInDts);
+        expect(parseExportErrorKind("JspropertyNotinDTS")).toBe(ErrorKind.JsPropertyNotInDts);
     },
     nonexistent() {
-        expect(toExportErrorKind("FakeError")).toBe(undefined);
+        expect(parseExportErrorKind("FakeError")).toBe(undefined);
     }
 });
 
@@ -242,7 +242,8 @@ You should copy the major and minor version from the package on npm.`),
                 message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
 Try adding -browser to the end of the name to get
 
-tslib-browser`,
+    tslib-browser
+`,
             },
         ]);
     }

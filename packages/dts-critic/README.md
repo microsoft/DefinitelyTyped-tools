@@ -5,16 +5,9 @@ problems it has.
 
 # Usage
 
-Install [Gulp](https://gulpjs.com/) and dependencies:
-
-```bash
-$ npm install -g gulp
-$ npm install
-```
-
-Use gulp to build the program:
-```bash
-$ gulp build
+Build the program:
+```sh
+$ npm run build
 ```
 
 Run the program using node:
@@ -88,6 +81,8 @@ print errors.
 
 The tests use the [Jest](https://jestjs.io/) framework. To build and execute the tests, run:
 
-```bash
-$ gulp test
+```sh
+$ npm run test
 ```
+
+This will build the program and run jest.
