@@ -18,7 +18,7 @@ testo({
     // },
     async mockParse() {
         const log = loggerWithErrors()[0];
-        const defs = await parseDefinitions(createMockDT(), undefined, log);
+        const defs = await parseDefinitions(createMockDT().fs, undefined, log);
         expect(defs.allNotNeeded().length).toBe(1);
         expect(defs.allTypings().length).toBe(3);
         const j = defs.tryGetLatestVersion("jquery");

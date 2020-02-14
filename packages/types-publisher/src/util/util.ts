@@ -3,13 +3,10 @@ import { ChildProcess, exec as node_exec, fork } from "child_process";
 import * as crypto from "crypto";
 import moment = require("moment");
 import * as os from "os";
-import * as sourceMapSupport from "source-map-support";
 
 import { Options } from "../lib/common";
 
 import ProgressBar from "./progress";
-
-sourceMapSupport.install();
 
 export function assertDefined<T>(x: T | undefined, message?: string | Error | undefined): T {
     assert(x !== undefined, message);

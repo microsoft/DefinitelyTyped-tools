@@ -75,7 +75,7 @@ of time if the filesystem is very slow.
 You can manually run this step locally with `npm run get-definitely-typed`.
 Pass `--dry` to download the DefinitelyTyped copy and unzip it into memory.
 
-> `node bin/parse-definitions.js`
+> `npm run parse`
 
 This generates the data file `data/definitions.json`.
 All future steps depend on this file.
@@ -86,60 +86,62 @@ One can also pass `--single=package_name` to test this on a single package.
 This file is a key/value mapping used by other steps in the process.
 
 ### Example entry
-```js
-"jquery": {
-	"authors": "Boris Yankov <https://github.com/borisyankov/>",
-	"definitionFilename": "jquery.d.ts",
-	"libraryDependencies": [],
-	"moduleDependencies": [],
-	"libraryMajorVersion": "1",
-	"libraryMinorVersion": "10",
-	"libraryName": "jQuery 1.10.x / 2.0.x",
-	"typingsPackageName": "jquery",
-	"projectName": "http://jquery.com/",
-	"sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
-	"kind": "Mixed",
-	"globals": [
-		"jQuery",
-		"$"
-	],
-	"declaredModules": [
-		"jquery"
-	],
-	"root": "C:\\github\\DefinitelyTyped\\jquery",
-	"files": [
-		"jquery.d.ts"
-	],
-	"contentHash": "5cfce9ba1a777bf2eecb20d0830f4f4bcd5eee2e1fd9936ca6c2f2201a44b618"
+```json
+{
+    "jquery": {
+        "3.3": {
+            "libraryName": "jquery",
+            "typingsPackageName": "jquery",
+            "projectName": "https://jquery.com",
+            "contributors": [
+                {
+                    "name": "Boris Yankov",
+                    "url": "https://github.com/borisyankov",
+                    "githubUsername": "borisyankov"
+                }
+            ],
+            "libraryMajorVersion": 3,
+            "libraryMinorVersion": 3,
+            "minTsVersion": "2.3",
+            "typesVersions": [],
+            "files": [
+                "JQuery.d.ts",
+                "JQueryStatic.d.ts",
+                "dist/jquery.slim.d.ts",
+                "index.d.ts",
+                "legacy.d.ts",
+                "misc.d.ts"
+            ],
+            "license": "MIT",
+            "dependencies": [
+                {
+                    "name": "sizzle",
+                    "version": "*"
+                }
+            ],
+            "testDependencies": [],
+            "pathMappings": [],
+            "packageJsonDependencies": [],
+            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
+            "globals": [
+                "$",
+                "Symbol",
+                "jQuery"
+            ],
+            "declaredModules": [
+                "jquery",
+                "jquery/dist/jquery.slim"
+            ]
+		}
 	}
+}
 ```
 
 ### Fields in `data/definitions.json`
 
-* `"jquery"` (i.e. the property name): The name of the *folder* from the source repo
-* `authors`: Author data parsed from a header comment in the entry point .d.ts file
-* `definitionFilename`: The filename of the entry point .d.ts file. This file must be either `index.d.ts`, `folderName.d.ts` (where `folderName` is the folder name), or the only .d.ts file in the folder
-* `libraryDependencies`: Which other definitions this file depends on. These will refer to *package names*, not *folder names*
-* `libraryMajorVersion` / `libraryMinorVersion`: Version data parsed from a header comment in the entry point .d.ts. These values will be `0` if the entry point .d.ts file did not specify a version
-* `libraryName`: Library name parsed from a header comment in the entry point .d.ts file
-* `typingsPackageName`: The name on NPM that the type package will be published under
-* `projectName`: Project name or URL information parsed from a header comment in the entry point .d.ts file
-* `sourceRepoURL`: The URL to the originating type definition repo. Currently hardcoded to DefinitelyType's URL
-* `kind`: One of the following strings based on the declarations in the folder:
-	* `Unknown`: The type of declaration could not be detected
-	* `MultipleModules`: Multiple ambient module declarations (`declare module "modName" {`) were found
-	* `Mixed`: At least one global declaration and exactly one ambient module declaration
-	* `DeclareModule`: Exactly one ambient module declaration and zero global declarations
-	* `Global`: Only global declarations. **Preferred**
-	* `ProperModule`: Only top-level `import` and `export` declarations. **Preferred**
-	* `ModuleAugmentation`: An ambient module declaration and at top-level `import` or `export` declaration. **Preferred**
-	* `UMD`: Only top-level `import` and `export` declarations, as well as a UMD declaration. **Preferred**
-	* `OldUMD`: Exactly one namespace declaration and exactly one ambient module declaration
-* `globals`: A list of *values* declared in the global namespace. Note that this does not include types declared in the global namespace
-* `declaredModules`: A list of modules declared. If `kind` is `ProperModule`, this list will explicitly list the containing folder name
-* `root`: A full path to the declaration folder
-* `files`: A list of the .d.ts files in the declaration folder
-* `contentHash`: A hash of the names and contents of the `files` list, used for versioning
+A key of the root object represents the name of the *folder* of a definition package, as it exists in the source repo. Its corresponding value holds a
+an object that represents the versions of the package for which definitions are provided in parallel. Each version entry holds data about the package;
+refer to [the `TypingsDataRaw` interface declaration](./src/lib/packages.ts) for details on this data.
 
 ## Contents of `logs/parser-log-summary.md`
 
@@ -179,7 +181,7 @@ This warning might not be appropriate; consider logging an issue.
 
 # Check for conflicts
 
-> `node bin/check-parse-results.js`
+> `npm run check`
 
 This is an optional script that checks for multiple declaration packages with the same library name or same project name.
 
@@ -209,7 +211,7 @@ This argument may be needed during development, but should not be used during ro
 
 # Create a search index
 
-> `node bin/create-search-index.js`
+> `npm run index`
 
 This script creates `data/search-index-min.json`, which (in the upload step) will be uploaded to Azure and used by [TypeSearch](https://github.com/microsoft/typesearch).
 This step is not necessary for other steps in the process.
@@ -251,21 +253,21 @@ Empty arrays may be elided in future versions of the minified files.
 
 # Generate packages on disk
 
-> `node bin/generate-packages.js`
+> `npm run generate`
 
 This step writes all type packages to disk.
 The output folder is specified in `settings.json` (see section "Settings").
 
-You can also output a single package with e.g. `node bin/generate-packages.js --single abs`.
+You can also output a single package with e.g. `npm run generate -- --single abs`.
 (This will still require parsing every package first, as we may need information about referenced packages.)
 
-## Arguments to `generate-packages`
+## Arguments to `generate`
 
 Use the `--single foo` option to generate just the package named "foo".
 Use the `--all` option to generate even packages that have not changed.
 Use the `--tgz` option to create `.tgz` archives as well. These should represent what is actually uploaded to NPM.
 
-## Outputs of `generate-packages`
+## Outputs of `generate`
 
 ### Package Folders
 
@@ -289,7 +291,7 @@ This file is currently uninteresting.
 
 # Publish packages on disk
 
-> `node bin/publish-packages.js`
+> `npm run publish`
 
 This step publishes the files to the NPM registry.
 
@@ -298,7 +300,7 @@ Several keys in `settings.json` affect this step; be sure to read this section.
 Before publishing, the script checks the NPM registry to see if a package with the same version number has already been published.
 If so, the publishing is skipped.
 
-## Outputs of `publish-packages.js`
+## Outputs of `publish`
 
 ### `logs/publishing.md`
 
@@ -310,7 +312,7 @@ Scripts should save this log under a unique filename so any errors may be review
 
 # Publish registry
 
-> `node bin/publish-registry.js [--dry]`
+> `npm run publish -- [--dry]`
 
 This step publishes the `types-registry` package on NPM, which keeps a list of all `@types` packages.
 This step only happens if there are some new packages to register.
@@ -350,7 +352,7 @@ The script `npm run make-server-run` will trigger the local webhook just like Gi
 		"sourceRepository": "https://github.com/your/dummy-repo"
 	* Set the `GITHUB_SECRET` environment variable to `swordfish`
 	* `npm install; npm run build`
-	* `node bin/webhook.js --dry`
+	* `npm run webhook-dry`
 
 * Make a test change:
 	* git clone https://github.com/your/dummy-repo.git
@@ -455,7 +457,7 @@ npm run validate [<package>]
 for instance:
 
 ```sh
-npm run validate node exress jquery
+npm run validate node express jquery
 ```
 
 will try to install the three packages, and run the tsc compiler on them.

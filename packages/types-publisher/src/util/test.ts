@@ -1,4 +1,5 @@
 import { License, PackageId, TypingsVersionsRaw } from "../lib/packages";
+
 export function testo(o: { [s: string]: () => void }) {
     for (const k in o) {
         test(k, o[k], 100_000);
@@ -9,7 +10,7 @@ export function createTypingsVersionRaw(
     name: string, dependencies: PackageId[], testDependencies: string[],
 ): TypingsVersionsRaw {
     return {
-        1: {
+        "1.0.0": {
             libraryName: name,
             typingsPackageName: name,
             dependencies,

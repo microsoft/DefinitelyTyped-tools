@@ -1,7 +1,7 @@
 import { FS, getDefinitelyTyped } from "./get-definitely-typed";
 import { Options } from "./lib/common";
 import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
-import { AllPackages, TypingsData } from "./lib/packages";
+import { AllPackages, formatTypingVersion, TypingsData, TypingVersion } from "./lib/packages";
 import { Semver } from "./lib/versions";
 import { Logger, logger, loggerWithErrors, writeLog } from "./util/logging";
 import { assertDefined, best, logUncaughtErrors, mapDefined, nAtATime } from "./util/util";
@@ -56,18 +56,26 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
 
 function checkPathMappings(allPackages: AllPackages): void {
     for (const pkg of allPackages.allTypings()) {
-        const pathMappings = new Map(pkg.pathMappings.map((p): [string, number] => [p.packageName, p.majorVersion]));
+        const pathMappings = new Map<string, TypingVersion>(pkg.pathMappings.map(p => [p.packageName, p.version]));
         const unusedPathMappings = new Set(pathMappings.keys());
 
         // If A depends on B, and B has path mappings, A must have the same mappings.
         for (const dependency of allPackages.allDependencyTypings(pkg)) {
-            for (const { packageName, majorVersion } of dependency.pathMappings) {
-                if (pathMappings.get(packageName) !== majorVersion) {
+            for (const { packageName: transitiveDependencyName, version: transitiveDependencyVersion } of dependency.pathMappings) {
+                const pathMappingVersion = pathMappings.get(transitiveDependencyName);
+                if (
+                    pathMappingVersion
+                    && (
+                        pathMappingVersion.major !== transitiveDependencyVersion.major
+                        || pathMappingVersion.minor !== transitiveDependencyVersion.minor
+                    )
+                ) {
+                    const expectedPathMapping = `${transitiveDependencyName}/v${formatTypingVersion(transitiveDependencyVersion)}`;
                     throw new Error(
-                        `${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${packageName} v${majorVersion}. ` +
+                        `${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${expectedPathMapping}. ` +
                         `${pkg.desc} must have the same path mappings as its dependencies.`);
                 }
-                unusedPathMappings.delete(packageName);
+                unusedPathMappings.delete(transitiveDependencyName);
             }
 
             unusedPathMappings.delete(dependency.name);

@@ -1,16 +1,82 @@
-import { Dir, InMemoryDT } from "./get-definitely-typed";
+import { parseHeaderOrFail } from "definitelytyped-header-parser";
+
+import { Dir, FS, InMemoryDT } from "./get-definitely-typed";
+import { Semver } from "./lib/versions";
+
+class DTMock {
+    public readonly fs: FS;
+    private readonly root: Dir;
+
+    constructor() {
+        this.root = new Dir(undefined);
+        this.root.set("notNeededPackages.json", `{
+            "packages": [{
+            "libraryName": "Angular 2",
+            "typingsPackageName": "angular",
+            "asOfVersion": "1.2.3",
+            "sourceRepoURL": "https://github.com/angular/angular2"
+          }]
+        }`);
+        this.fs = new InMemoryDT(this.root, "DefinitelyTyped");
+    }
+
+    public pkgDir(packageName: string): Dir {
+        return this.root.subdir("types").subdir(packageName);
+    }
+
+    public pkgFS(packageName: string): FS {
+        return this.fs.subDir("types").subDir(packageName);
+    }
+
+    /**
+     * Creates a shallow copy of a package, meaning all entries in the old version directory that will be created refer to the copied entry from the
+     * latest version. The only exceptions are the `index.d.ts` and `tsconfig.json` files.
+     *
+     * The directory name will exactly follow the given `olderVersion`. I.e. `2` will become `v2`, whereas `2.2` will become `v2.2`.
+     *
+     * @param packageName The package of which an old version is to be added.
+     * @param olderVersion The older version that's to be added.
+     */
+    public addOldVersionOfPackage(packageName: string, olderVersion: string) {
+        const latestDir = this.pkgDir(packageName);
+        const index = latestDir.get("index.d.ts") as string;
+        const latestHeader = parseHeaderOrFail(index);
+        const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
+        const olderVersionParsed = Semver.parse(olderVersion, true)!;
+
+        const oldDir = latestDir.subdir(`v${olderVersion}`);
+        const tsconfig = JSON.parse(latestDir.get("tsconfig.json") as string);
+
+        oldDir.set("index.d.ts", index.replace(latestVersion, `${olderVersionParsed.major}.${olderVersionParsed.minor}`));
+        oldDir.set("tsconfig.json", JSON.stringify({
+            ...tsconfig,
+            compilerOptions: {
+                ...tsconfig.compilerOptions,
+                paths: {
+                    [packageName]: [`${packageName}/v${olderVersion}`],
+                },
+            },
+        }));
+
+        latestDir.forEach((content, entry) => {
+            if (
+                content !== oldDir
+                && entry !== "index.d.ts"
+                && entry !== "tsconfig.json"
+                && !(content instanceof Dir && /^v\d+(\.\d+)?$/.test(entry))
+            ) {
+                oldDir.set(entry, content);
+            }
+        });
+
+        return oldDir;
+    }
+}
+
 export function createMockDT() {
-    const root = new Dir(undefined);
-    root.set("notNeededPackages.json", `{
-    "packages": [{
-    "libraryName": "Angular 2",
-    "typingsPackageName": "angular",
-    "asOfVersion": "1.2.3",
-    "sourceRepoURL": "https://github.com/angular/angular2"
-  }]
-}`);
-    const types = root.subdir("types");
-    const boring = types.subdir("boring");
+    const dt = new DTMock();
+
+    const boring = dt.pkgDir("boring");
     boring.set("index.d.ts", `// Type definitions for boring 1.0
 // Project: https://boring.com
 // Definitions by: Some Guy From Space <https://github.com/goodspaceguy420>
@@ -85,8 +151,8 @@ untested.d.ts
     ]
 }`);
 
-    const globby = types.subdir("globby");
-    globby.set("index.d.ts", `// Type definitions for globby 0.1
+    const globby = dt.pkgDir("globby");
+    globby.set("index.d.ts", `// Type definitions for globby 0.2
 // Project: https://globby-gloopy.com
 // Definitions by: The Dragon Quest Slime <https://github.com/gloopyslime>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -135,7 +201,7 @@ var z = y;
         "test/other-tests.ts"
     ]
 }`);
-    const jquery = types.subdir("jquery");
+    const jquery = dt.pkgDir("jquery");
     jquery.set("JQuery.d.ts", `
 declare var jQuery: 1;
 `);
@@ -180,5 +246,5 @@ console.log(jQuery);
 
 `);
 
-    return new InMemoryDT(root, "DefinitelyTyped");
+    return dt;
 }

@@ -5,7 +5,7 @@ import { createMockDT } from "../mocks";
 import { testo } from "../util/test";
 
 import { allReferencedFiles, getModuleInfo, getTestDependencies } from "./module-info";
-const fs = createMockDT();
+const fs = createMockDT().fs;
 function getBoringReferences() {
     return allReferencedFiles(["index.d.ts", "boring-tests.ts"], fs.subDir("types").subDir("boring"), "boring", "types/boring");
 }

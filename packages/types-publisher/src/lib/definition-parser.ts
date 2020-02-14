@@ -7,42 +7,83 @@ import {
 } from "../util/util";
 
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
-import { getLicenseFromPackageJson, PackageId, PackageJsonDependency, PathMapping, TypingsDataRaw, TypingsVersionsRaw } from "./packages";
+import {
+    formatTypingVersion,
+    getLicenseFromPackageJson,
+    PackageId,
+    PackageJsonDependency,
+    PathMapping,
+    TypingsDataRaw,
+    TypingsVersionsRaw,
+    TypingVersion,
+} from "./packages";
 import { dependenciesWhitelist } from "./settings";
+
+function matchesVersion(typingsDataRaw: TypingsDataRaw, version: TypingVersion, considerLibraryMinorVersion: boolean) {
+    return typingsDataRaw.libraryMajorVersion === version.major
+        && (considerLibraryMinorVersion ?
+            (version.minor === undefined || typingsDataRaw.libraryMinorVersion === version.minor)
+            : true);
+}
+
+function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw) {
+    return `${typingsDataRaw.libraryMajorVersion}.${typingsDataRaw.libraryMinorVersion}`;
+}
 
 /** @param fs Rooted at the package's directory, e.g. `DefinitelyTyped/types/abs` */
 export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
     if (packageName !== packageName.toLowerCase()) {
         throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
     }
-    interface OlderVersionDir { readonly directoryName: string; readonly majorVersion: number; }
+    interface OlderVersionDir { readonly directoryName: string; readonly version: TypingVersion; }
     const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(fs.readdir(), fileOrDirectoryName => {
-        const majorVersion = parseMajorVersionFromDirectoryName(fileOrDirectoryName);
-        return majorVersion === undefined ? undefined : { directoryName: fileOrDirectoryName, majorVersion };
+        const version = parseVersionFromDirectoryName(fileOrDirectoryName);
+        return version === undefined ? undefined : { directoryName: fileOrDirectoryName, version };
     });
 
-    const latestData = combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined);
-    const latestVersion = latestData.libraryMajorVersion;
+    const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
 
-    const older = olderVersionDirectories.map(({ directoryName, majorVersion }) => {
-        if (majorVersion === latestVersion) {
-            throw new Error(`The latest major version is ${latestVersion}, but a directory v${latestVersion} exists.`);
+    const latestData: TypingsDataRaw = {
+        libraryVersionDirectoryName: undefined,
+        ...combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined),
+    };
+
+    const older = olderVersionDirectories.map(({ directoryName, version: directoryVersion }) => {
+        if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
+            const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
+            throw new Error(
+                `The latest version is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
+                    (`v${latest}` === directoryName ?
+                        "." : `; since it applies to any ${latestData.libraryMajorVersion}.* version, up to and including ${latest}.`),
+            );
         }
 
         const ls = fs.readdir(directoryName);
-        const data = combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), majorVersion);
+        const data: TypingsDataRaw = {
+            libraryVersionDirectoryName: formatTypingVersion(directoryVersion),
+            ...combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), directoryVersion),
+        };
 
-        if (data.libraryMajorVersion !== majorVersion) {
-            throw new Error(
-                `Directory ${directoryName} indicates major version ${majorVersion}, but header indicates major version ${data.libraryMajorVersion}`);
+        if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
+            if (considerLibraryMinorVersion) {
+                throw new Error(
+                    `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor}, ` +
+                    `but header indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`,
+                );
+            } else {
+                throw new Error(
+                    `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
+                    data.libraryMajorVersion.toString(),
+                );
+            }
         }
         return data;
     });
 
     const res: TypingsVersionsRaw = {};
-    res[latestVersion] = latestData;
+    res[formattedLibraryVersion(latestData)] = latestData;
     for (const o of older) {
-        res[o.libraryMajorVersion] = o;
+        res[formattedLibraryVersion(o)] = o;
     }
     return res;
 }
@@ -69,27 +110,44 @@ function getTypesVersionsAndPackageJson(ls: ReadonlyArray<string>): LsMinusTypes
     return { remainingLs, typesVersions, hasPackageJson: withoutPackageJson.length !== ls.length };
 }
 
-export function parseMajorVersionFromDirectoryName(directoryName: string): number | undefined {
-    const match = /^v(\d+)$/.exec(directoryName);
-    // tslint:disable-next-line no-null-keyword
-    return match === null ? undefined : Number(match[1]);
+/**
+ * Parses a directory name into a version that either holds a single major version or a major and minor version.
+ *
+ * @example
+ *
+ * ```ts
+ * parseVersionFromDirectoryName("v1") // { major: 1 }
+ * parseVersionFromDirectoryName("v0.61") // { major: 0, minor: 61 }
+ * ```
+ */
+export function parseVersionFromDirectoryName(directoryName: string): TypingVersion | undefined {
+    const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName);
+    if (match === null) {
+        return undefined;
+    } else {
+        return {
+            major: Number(match[1]),
+            minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
+        };
+    }
 }
+
 function combineDataForAllTypesVersions(
     typingsPackageName: string,
     ls: ReadonlyArray<string>,
     fs: FS,
-    oldMajorVersion: number | undefined,
-): TypingsDataRaw {
+    directoryVersion: TypingVersion | undefined,
+): Omit<TypingsDataRaw, "libraryVersionDirectoryName"> {
     const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
 
     // Every typesVersion has an index.d.ts, but only the root index.d.ts should have a header.
     const { contributors, libraryMajorVersion, libraryMinorVersion, typeScriptVersion: minTsVersion, libraryName, projects } =
         parseHeaderOrFail(readFileAndThrowOnBOM("index.d.ts", fs));
 
-    const dataForRoot = getTypingDataForSingleTypesVersion(undefined, typingsPackageName, fs.debugPath(), remainingLs, fs, oldMajorVersion);
+    const dataForRoot = getTypingDataForSingleTypesVersion(undefined, typingsPackageName, fs.debugPath(), remainingLs, fs, directoryVersion);
     const dataForOtherTypesVersions = typesVersions.map(tsVersion => {
         const subFs = fs.subDir(`ts${tsVersion}`);
-        return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, fs.debugPath(), subFs.readdir(), subFs, oldMajorVersion);
+        return getTypingDataForSingleTypesVersion(tsVersion, typingsPackageName, fs.debugPath(), subFs.readdir(), subFs, directoryVersion);
     });
     const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
@@ -151,7 +209,7 @@ function getTypingDataForSingleTypesVersion(
     packageDirectory: string,
     ls: ReadonlyArray<string>,
     fs: FS,
-    oldMajorVersion: number | undefined,
+    directoryVersion: TypingVersion | undefined,
 ): TypingDataFromIndividualTypeScriptVersion {
     const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
     checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
@@ -175,7 +233,7 @@ function getTypingDataForSingleTypesVersion(
         ),
     );
 
-    const { dependencies, pathMappings } = calculateDependencies(packageName, tsconfig, dependenciesSet, oldMajorVersion);
+    const { dependencies, pathMappings } = calculateDependencies(packageName, tsconfig, dependenciesSet, directoryVersion);
     const tsconfigPathsForHash = JSON.stringify(tsconfig.compilerOptions.paths);
     return {
         typescriptVersion,
@@ -270,7 +328,7 @@ function calculateDependencies(
     packageName: string,
     tsconfig: TsConfig,
     dependencyNames: ReadonlySet<string>,
-    oldMajorVersion: number | undefined,
+    directoryVersion: TypingVersion | undefined,
 ): DependenciesAndPathMappings {
     const paths = tsconfig.compilerOptions && tsconfig.compilerOptions.paths || {};
 
@@ -302,30 +360,36 @@ function calculateDependencies(
             continue;
         }
 
-        const majorVersion = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
+        const pathMappingVersion = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
         if (dependencyName === packageName) {
-            if (oldMajorVersion === undefined) {
+            if (directoryVersion === undefined) {
                 throw new Error(`In ${packageName}: Latest version of a package should not have a path mapping for itself.`);
-            } else if (majorVersion !== oldMajorVersion) {
-                const correctPathMapping = [`${dependencyName}/v${oldMajorVersion}`];
+            } else if (
+                directoryVersion.major !== pathMappingVersion.major
+                || directoryVersion.minor !== pathMappingVersion.minor
+             ) {
+                const correctPathMapping = [`${dependencyName}/v${formatTypingVersion(directoryVersion)}`];
                 throw new Error(`In ${packageName}: Must have a "paths" entry of "${dependencyName}": ${JSON.stringify(correctPathMapping)}`);
             }
         } else {
             if (dependencyNames.has(dependencyName)) {
-                dependencies.push({ name: dependencyName, majorVersion });
+                dependencies.push({ name: dependencyName, version: pathMappingVersion });
             }
         }
-        // Else, the path mapping may be necessary if it is for a dependency-of-a-dependency. We will check this in check-parse-results.
-        pathMappings.push({ packageName: dependencyName, majorVersion });
+        // Else, the path mapping may be necessary if it is for a transitive dependency. We will check this in check-parse-results.
+        pathMappings.push({ packageName: dependencyName, version: pathMappingVersion });
     }
 
-    if (oldMajorVersion !== undefined && !(paths && packageName in paths)) {
-        throw new Error(`${packageName}: Older version ${oldMajorVersion} must have a path mapping for itself.`);
+    if (directoryVersion !== undefined && !(paths && packageName in paths)) {
+        const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}`]);
+        throw new Error(
+            `${packageName}: Older version ${formatTypingVersion(directoryVersion)} must have a "paths" entry of "${packageName}": ${mapping}`,
+        );
     }
 
     for (const dependency of dependencyNames) {
         if (!dependencies.some(d => d.name === dependency) && !nodeBuiltins.has(dependency)) {
-            dependencies.push({ name: dependency, majorVersion: "*" });
+            dependencies.push({ name: dependency, version: "*" });
         }
     }
 
@@ -339,10 +403,9 @@ const nodeBuiltins: ReadonlySet<string> = new Set([
     "string_decoder", "timers", "tls", "tty", "url", "util", "v8", "vm", "zlib",
 ]);
 
-// e.g. parseDependencyVersionFromPath("../../foo/v0", "foo") should return "0"
-function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): number {
+function parseDependencyVersionFromPath(packageName: string, dependencyName: string, dependencyPath: string): TypingVersion {
     const versionString = withoutStart(dependencyPath, `${dependencyName}/`);
-    const version = versionString === undefined ? undefined : parseMajorVersionFromDirectoryName(versionString);
+    const version = versionString === undefined ? undefined : parseVersionFromDirectoryName(versionString);
     if (version === undefined) {
         throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
     }

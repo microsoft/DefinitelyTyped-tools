@@ -1,4 +1,4 @@
-import { AllPackages, getMangledNameForScopedPackage, PackageBase, PackageId, TypingsData } from "../lib/packages";
+import { AllPackages, formatDependencyVersion, getMangledNameForScopedPackage, PackageBase, PackageId, TypingsData } from "../lib/packages";
 import { mapDefined, mapIter, sort } from "../util/util";
 
 export interface Affected {
@@ -79,7 +79,7 @@ function getReverseDependencies(allPackages: AllPackages, changedPackages: Packa
             }
         }
         for (const dependencyName of typing.testDependencies) {
-            const latest: PackageId = { name: dependencyName, majorVersion: "*" };
+            const latest: PackageId = { name: dependencyName, version: "*" };
             const dependencies = map.get(packageIdToKey(allPackages.tryResolve(latest)));
             if (dependencies) {
                 dependencies[1].add(typing.id);
@@ -90,5 +90,5 @@ function getReverseDependencies(allPackages: AllPackages, changedPackages: Packa
 }
 
 function packageIdToKey(pkg: PackageId): string {
-    return getMangledNameForScopedPackage(pkg.name) + "/v" + pkg.majorVersion;
+    return getMangledNameForScopedPackage(pkg.name) + "/v" + formatDependencyVersion(pkg.version);
 }

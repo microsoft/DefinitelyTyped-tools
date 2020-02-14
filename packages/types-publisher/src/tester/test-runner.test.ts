@@ -6,10 +6,10 @@ import { checkNotNeededPackage, getNotNeededPackages, GitDiff } from "./test-run
 
 const typesData: TypesDataFile = {
     jquery: createTypingsVersionRaw("jquery", [], []),
-    known: createTypingsVersionRaw("known", [{ name: "jquery", majorVersion: 1 }], []),
+    known: createTypingsVersionRaw("known", [{ name: "jquery", version: { major: 1 }}], []),
     "known-test": createTypingsVersionRaw("known-test", [], ["jquery"]),
-    "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", majorVersion: "*" }], []),
-    unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", majorVersion: 1 }], []),
+    "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", version: "*" }], []),
+    unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", version: { major: 1 }}], []),
     "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"]),
 };
 

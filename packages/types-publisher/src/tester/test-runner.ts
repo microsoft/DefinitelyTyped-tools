@@ -7,9 +7,9 @@ import * as yargs from "yargs";
 
 import { FS, getDefinitelyTyped } from "../get-definitely-typed";
 import { Options, TesterOptions } from "../lib/common";
-import { parseMajorVersionFromDirectoryName } from "../lib/definition-parser";
+import { parseVersionFromDirectoryName } from "../lib/definition-parser";
 import { NpmInfo, UncachedNpmInfoClient } from "../lib/npm-client";
-import { AllPackages, DependencyVersion, NotNeededPackage, PackageId, TypingsData } from "../lib/packages";
+import { AllPackages, DependencyVersion, formatDependencyVersion, NotNeededPackage, PackageId, TypingsData } from "../lib/packages";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import { Semver } from "../lib/versions";
 import { npmInstallFlags } from "../util/io";
@@ -121,7 +121,7 @@ export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[])
 When removing packages, you should only delete files that are a part of removed packages.`)
         .name));
     return mapIter(deletedPackages, p => {
-        if (allPackages.hasTypingFor({ name: p, majorVersion: "*" })) {
+        if (allPackages.hasTypingFor({ name: p, version: "*" })) {
             throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
         }
         return assertDefined(allPackages.getNotNeededPackage(p), `Deleted package ${p} is not in notNeededPackages.json.`);
@@ -282,22 +282,22 @@ async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: s
 
 /** Returns all immediate subdirectories of the root directory that have changed. */
 export function gitChanges(diffs: GitDiff[]): PackageId[] {
-    const changedPackages = new Map<string, Set<DependencyVersion>>();
+    const changedPackages = new Map<string, Map<string, DependencyVersion>>();
 
     for (const diff of diffs) {
         const dep = getDependencyFromFile(diff.file);
         if (dep) {
             const versions = changedPackages.get(dep.name);
             if (!versions) {
-                changedPackages.set(dep.name, new Set([dep.majorVersion]));
+                changedPackages.set(dep.name, new Map([[formatDependencyVersion(dep.version), dep.version]]));
             } else {
-                versions.add(dep.majorVersion);
+                versions.set(formatDependencyVersion(dep.version), dep.version);
             }
         }
     }
 
     return Array.from(flatMap(changedPackages, ([name, versions]) =>
-        mapIter(versions, majorVersion => ({ name, majorVersion }))));
+        mapIter(versions, ([_, version]) => ({ name, version }))));
 }
 
 /*
@@ -358,12 +358,11 @@ function getDependencyFromFile(file: string): PackageId | undefined {
     }
 
     if (subDirName) {
-        // Looks like "types/a/v3/c"
-        const majorVersion = parseMajorVersionFromDirectoryName(subDirName);
-        if (majorVersion !== undefined) {
-            return { name,  majorVersion };
+        const version = parseVersionFromDirectoryName(subDirName);
+        if (version !== undefined) {
+            return { name, version };
         }
     }
 
-    return { name, majorVersion: "*" };
+    return { name, version: "*" };
 }
