@@ -40,4 +40,9 @@ describe(TypingsVersions, () => {
         expect(versions.get({ major: 2, minor: 0 }).versionDirectoryName).toEqual("v2");
         expect(versions.get({ major: 2, minor: 0 }).subDirectoryPath).toEqual("jquery/v2");
     });
+
+    it("formats missing version error nicely", () => {
+        expect(() => versions.get({ major: 111, minor: 1001 })).toThrow("Could not find version 111.1001");
+        expect(() => versions.get({ major: 111 })).toThrow("Could not find version 111.*");
+    });
 });

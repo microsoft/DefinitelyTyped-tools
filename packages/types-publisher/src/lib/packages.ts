@@ -479,7 +479,7 @@ export class TypingsVersions {
     private getLatestMatch(version: TypingVersion): TypingsData {
         const data = this.tryGetLatestMatch(version);
         if (!data) {
-            throw new Error(`Could not find version ${version}`);
+            throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}`);
         }
         return data;
     }
