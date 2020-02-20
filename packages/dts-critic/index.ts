@@ -318,7 +318,7 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
     const tarballName: string = npmPackOut.filename;
     const outPath = path.join(outDir, name);
     initDir(outPath);
-    cp.execFileSync("tar", ["-xz", "-f", tarballName, "-C", outPath], cpOpts);
+    cp.execFileSync("tar", ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"], cpOpts);
     fs.unlinkSync(tarballName);
     return path.join(outPath, getPackageDir(outPath));
 }
