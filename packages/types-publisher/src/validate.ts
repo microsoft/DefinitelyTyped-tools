@@ -82,7 +82,7 @@ async function validatePackages(packageNames: ReadonlyArray<string>, outPath: st
     log.info("");
 
     if (failed.length) {
-        log.info(`These packages failed: ${failed}`);
+        log.info(`These packages failed: ${failed.toString()}`);
     }
 }
 
@@ -152,8 +152,7 @@ async function runCommand(commandDescription: string, log: LoggerWithErrors, dir
         log.error(`${commandDescription} failed: ${JSON.stringify(error)}`);
         log.info(`${commandDescription} failed, refer to error log`);
         return false;
-    } else {
-        log.info(stdout);
-        return true;
     }
+    log.info(stdout);
+    return true;
 }

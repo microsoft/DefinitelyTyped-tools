@@ -183,9 +183,11 @@ function resolveModule(importSpecifier: string, fs: FS): string {
     if (importSpecifier !== "." && importSpecifier !== "..") {
         if (fs.exists(importSpecifier + ".d.ts")) {
             return importSpecifier + ".d.ts";
-        } else if (fs.exists(importSpecifier + ".ts")) {
+        }
+        if (fs.exists(importSpecifier + ".ts")) {
             return importSpecifier + ".ts";
-        } else if (fs.exists(importSpecifier + ".tsx")) {
+        }
+        if (fs.exists(importSpecifier + ".tsx")) {
             return importSpecifier + ".tsx";
         }
     }
@@ -238,7 +240,8 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
             ref.text = full.slice(packageName.length + 4);
             refs.push(ref);
             return;
-        } else if (full.startsWith("..")
+        }
+        if (full.startsWith("..")
             && (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))) {
             throw new Error(
                 `${src.fileName}: ` +

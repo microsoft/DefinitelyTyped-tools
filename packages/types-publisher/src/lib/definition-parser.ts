@@ -70,12 +70,11 @@ export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
                     `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor}, ` +
                     `but header indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`,
                 );
-            } else {
-                throw new Error(
-                    `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
-                    data.libraryMajorVersion.toString(),
-                );
             }
+            throw new Error(
+                `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
+                data.libraryMajorVersion.toString(),
+            );
         }
         return data;
     });
@@ -124,12 +123,11 @@ export function parseVersionFromDirectoryName(directoryName: string): TypingVers
     const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName);
     if (match === null) {
         return undefined;
-    } else {
-        return {
-            major: Number(match[1]),
-            minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
-        };
     }
+    return {
+        major: Number(match[1]),
+        minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
+    };
 }
 
 function combineDataForAllTypesVersions(
@@ -257,7 +255,7 @@ function checkPackageJsonDependencies(dependencies: unknown, path: string): Read
 
     const deps: PackageJsonDependency[] = [];
 
-    for (const dependencyName in dependencies) {
+    for (const dependencyName of Object.keys(dependencies!)) { // `dependencies` cannot be null because of check above.
         if (!dependenciesWhitelist.has(dependencyName)) {
             const msg = dependencyName.startsWith("@types/")
                 ? `Dependency ${dependencyName} not in whitelist.
@@ -335,7 +333,7 @@ function calculateDependencies(
     const dependencies: PackageId[] = [];
     const pathMappings: PathMapping[] = [];
 
-    for (const dependencyName in paths) {
+    for (const dependencyName of Object.keys(paths)) {
         // Might have a path mapping for "foo/*" to support subdirectories
         const rootDirectory = withoutEnd(dependencyName, "/*");
         if (rootDirectory !== undefined) {
@@ -364,7 +362,8 @@ function calculateDependencies(
         if (dependencyName === packageName) {
             if (directoryVersion === undefined) {
                 throw new Error(`In ${packageName}: Latest version of a package should not have a path mapping for itself.`);
-            } else if (
+            }
+            if (
                 directoryVersion.major !== pathMappingVersion.major
                 || directoryVersion.minor !== pathMappingVersion.minor
              ) {
@@ -472,6 +471,7 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
 
             const lssubdir = subdir.readdir();
             if (lssubdir.length === 0) {
+                // tslint:disable-next-line strict-string-expressions
                 throw new Error(`Empty directory ${subdir} (${join(usedFiles)})`);
             }
 
@@ -497,8 +497,7 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
     for (const unusedFile of unusedFiles) {
         if (usedFiles.has(unusedFile)) {
             throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`);
-        } else {
-            throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} does not exist.`);
         }
+        throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} does not exist.`);
     }
 }

@@ -247,7 +247,7 @@ export class NotNeededPackage extends PackageBase {
         super(raw);
         this.sourceRepoURL = raw.sourceRepoURL;
 
-        for (const key in raw) {
+        for (const key of Object.keys(raw)) {
             if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
                 throw new Error(`Unexpected key in not-needed package: ${key}`);
             }
@@ -421,7 +421,7 @@ export function getLicenseFromPackageJson(packageJsonLicense: unknown): License 
     if (packageJsonLicense === undefined) { // tslint:disable-line strict-type-predicates (false positive)
         return License.MIT;
     }
-    if (packageJsonLicense === "MIT") {
+    if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
         throw new Error(`Specifying '"license": "MIT"' is redundant, this is the default.`);
     }
     if (allLicenses.includes(packageJsonLicense as License)) {
@@ -443,9 +443,8 @@ export class TypingsVersions {
             const version = Semver.parse(key, true);
             if (version) {
                 return [version, key];
-            } else {
-                throw new Error(`Unable to parse version ${key}`);
             }
+            throw new Error(`Unable to parse version ${key}`);
         }));
 
         /**
@@ -456,7 +455,7 @@ export class TypingsVersions {
 
         this.map = new Map(this.versions.map(version => {
             const dataKey = versionMappings.get(version)!;
-            return [version, new TypingsData(data[dataKey], version === this.versions[0])];
+            return [version, new TypingsData(data[dataKey], version.equals(this.versions[0]))];
         }));
     }
 

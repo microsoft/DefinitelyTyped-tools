@@ -100,8 +100,8 @@ export default async function publishPackages(
                 await queryGithub(`repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`, githubAccessToken, fetcher) as { merged_at: string };
             const latency = Date.now() - new Date(latest.merged_at).valueOf();
             const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
-            log("Current date is " + new Date(Date.now()));
-            log("  Merge date is " + new Date(latest.merged_at));
+            log("Current date is " + new Date(Date.now()).toString());
+            log("  Merge date is " + new Date(latest.merged_at).toString());
 
             const published = cp.pkg.fullNpmName + "@" + cp.version;
             const publishNotification =

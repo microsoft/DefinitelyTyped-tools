@@ -111,9 +111,8 @@ function updateOneAtATime(
         if (working) {
             log.info("Not starting update, because already performing one.");
             return undefined;
-        } else {
-            return work();
         }
+        return work();
 
         async function work(): Promise<void> {
             log.info("Starting update");
@@ -136,7 +135,7 @@ function checkSignature(key: string, data: string, headers: { readonly [key: str
     if (typeof signature === "string" && stringEqualsConstantTime(signature, expected)) {
         return true;
     }
-
+    // tslint:disable-next-line strict-string-expressions
     log.error(`Invalid request: expected ${expected}, got ${signature}`);
     log.error(`Headers are: ${JSON.stringify(headers, undefined, 4)}`);
     log.error(`Data is: ${data}`);

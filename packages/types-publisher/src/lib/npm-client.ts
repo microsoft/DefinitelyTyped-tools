@@ -120,8 +120,8 @@ export class UncachedNpmInfoClient {
                 retries: true,
             }) as { readonly error: string } | { readonly [key: string]: { readonly downloads: number } };
             if ("error" in data) { throw new Error(data.error as string); }
-            for (const key in data) {
-                assert(key === names[out.length], `at index ${out.length} of ${Object.keys(data)} : ${key} !== ${names[out.length]}`);
+            for (const key of Object.keys(data)) {
+                assert(key === names[out.length], `at index ${out.length} of ${Object.keys(data).toString()} : ${key} !== ${names[out.length]}`);
                 out.push(data[key] ? data[key].downloads : 0);
             }
         }
@@ -141,9 +141,9 @@ export class NpmPublishClient {
     static async create(config?: RegClient.Config, registry: Registry = Registry.NPM): Promise<NpmPublishClient> {
         switch (registry) {
             case Registry.NPM:
-                return new this(new RegClient(config), { token: await getSecret(Secret.NPM_TOKEN) }, npmRegistry);
+                return new NpmPublishClient(new RegClient(config), { token: await getSecret(Secret.NPM_TOKEN) }, npmRegistry);
             case Registry.Github:
-                return new this(new RegClient(config), { token: await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN) }, githubRegistry);
+                return new NpmPublishClient(new RegClient(config), { token: await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN) }, githubRegistry);
             default:
                 assertNever(registry);
         }

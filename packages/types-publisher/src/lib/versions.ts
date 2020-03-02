@@ -69,7 +69,7 @@ function findActualLatest(times: Map<string, string>) {
         times, ([k, v], [bestK, bestV]) =>
             (bestK === "modified" || bestK === "created") ? true :
             (k === "modified" || k === "created") ? false :
-            new Date(v) > new Date(bestV));
+            new Date(v).getTime() > new Date(bestV).getTime());
     if (!actual) {
         throw new Error("failed to find actual latest");
     }

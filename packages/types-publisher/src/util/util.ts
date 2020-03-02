@@ -242,6 +242,7 @@ export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number):
 export function join<T>(values: Iterable<T>, joiner = ", "): string {
     let s = "";
     for (const v of values) {
+        // tslint:disable-next-line strict-string-expressions
         s += `${v}${joiner}`;
     }
     return s.slice(0, s.length - joiner.length);
@@ -593,7 +594,7 @@ export function recordToMap<T>(record: Record<string, T>): Map<string, T>;
 export function recordToMap<T, U>(record: Record<string, T>, cb: (t: T) => U): Map<string, U>;
 export function recordToMap<T, U>(record: Record<string, T>, cb?: (t: T) => U): Map<string, T | U> {
     const m = new Map<string, T | U>();
-    for (const key in record) {
+    for (const key of Object.keys(record)) {
         m.set(key, cb ? cb(record[key]) : record[key]);
     }
     return m;

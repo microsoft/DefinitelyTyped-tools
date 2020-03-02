@@ -75,7 +75,7 @@ async function uploadFile(container: BlobWriter, blobName: string, filePath: str
 async function deleteDirectory(container: BlobWriter, uploadedDirPath: string, log: Logger): Promise<void> {
     const blobs = await container.listBlobs(uploadedDirPath);
     const blobNames = blobs.map(b => b.name);
-    log(`Deleting directory ${uploadedDirPath}: delete files ${blobNames}`);
+    log(`Deleting directory ${uploadedDirPath}: delete files ${blobNames.toString()}`);
     await Promise.all(blobNames.map(b => container.deleteBlob(b)));
 }
 
@@ -96,7 +96,7 @@ async function removeOldDirectories(container: BlobWriter, prefix: string, maxDi
     const sortedNames = dirNames.sort();
     const toDelete = sortedNames.slice(0, sortedNames.length - maxDirectories);
 
-    log(`Too many old logs, so removing the following directories: [${toDelete}]`);
+    log(`Too many old logs, so removing the following directories: [${toDelete.toString()}]`);
     await Promise.all(toDelete.map(d => deleteDirectory(container, prefix + d, log)));
 }
 

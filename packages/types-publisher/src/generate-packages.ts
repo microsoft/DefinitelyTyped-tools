@@ -146,6 +146,7 @@ function getDependencies(packageJsonDependencies: ReadonlyArray<PackageJsonDepen
 }
 
 function dependencySemver(dependency: DependencyVersion): string {
+    // tslint:disable-next-line strict-string-expressions
     return dependency === "*" ? dependency : `^${dependency}`;
 }
 

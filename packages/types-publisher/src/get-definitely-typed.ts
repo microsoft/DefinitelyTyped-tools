@@ -51,14 +51,13 @@ export async function getDefinitelyTyped(options: Options, log: LoggerWithErrors
         log.info("Downloading Definitely Typed ...");
         await ensureDir(dataDirPath);
         return downloadAndExtractFile(definitelyTypedZipUrl);
-    } else {
-        const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
-        if (error) { throw error; }
-        if (stderr) { throw new Error(stderr); }
-        if (stdout) { throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`); }
-        log.info(`Using local Definitely Typed at ${options.definitelyTypedPath}.`);
-        return new DiskFS(`${options.definitelyTypedPath}/`);
     }
+    const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
+    if (error) { throw error; }
+    if (stderr) { throw new Error(stderr); }
+    if (stdout) { throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`); }
+    log.info(`Using local Definitely Typed at ${options.definitelyTypedPath}.`);
+    return new DiskFS(`${options.definitelyTypedPath}/`);
 }
 
 export function getLocallyInstalledDefinitelyTyped(path: string): FS {
@@ -156,7 +155,7 @@ export class InMemoryDT implements FS {
                 return undefined;
             }
             if (!(entry instanceof Dir)) {
-                throw new Error(`No file system entry at ${this.pathToRoot}/${path}. Siblings are: ${Array.from(dir.keys())}`);
+                throw new Error(`No file system entry at ${this.pathToRoot}/${path}. Siblings are: ${Array.from(dir.keys()).toString()}`);
             }
             dir = entry;
         }
@@ -218,10 +217,9 @@ class DiskFS implements FS {
     private getPath(path: string | undefined): string {
         if (path === undefined) {
             return this.rootPrefix;
-        } else {
-            validatePath(path);
-            return this.rootPrefix + path;
         }
+        validatePath(path);
+        return this.rootPrefix + path;
     }
 
     readdir(dirPath?: string): ReadonlyArray<string> {
@@ -257,9 +255,11 @@ class DiskFS implements FS {
 function validatePath(path: string): void {
     if (path.startsWith(".") && path !== ".editorconfig" && !path.startsWith("../")) {
         throw new Error(`${path}: filesystem doesn't support paths of the form './x'.`);
-    } else if (path.startsWith("/")) {
+    }
+    if (path.startsWith("/")) {
         throw new Error(`${path}: filesystem doesn't support paths of the form '/xxx'.`);
-    } else if (path.endsWith("/")) {
+    }
+    if (path.endsWith("/")) {
         throw new Error(`${path}: filesystem doesn't support paths of the form 'xxx/'.`);
     }
 }
