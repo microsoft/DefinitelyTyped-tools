@@ -1,18 +1,11 @@
 {
+  "private": true,
   "name": "@definitelytyped/utils",
   "version": "1.0.0",
   "description": "> TODO: description",
-  "author": "Andrew Branch <andrew@wheream.io>",
   "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
   "license": "MIT",
   "main": "dist/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "publishConfig": {
     "access": "public"
   },
@@ -25,5 +18,8 @@
   },
   "bugs": {
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
+  },
+  "dependencies": {
+    "fs-extra": "^8.1.0"
   }
 }
