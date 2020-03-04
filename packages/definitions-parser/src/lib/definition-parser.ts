@@ -1,11 +1,5 @@
-import { isTypeScriptVersion, parseHeaderOrFail, TypeScriptVersion } from "definitelytyped-header-parser";
 import * as ts from "typescript";
-
-import { FS } from "../get-definitely-typed";
-import {
-    computeHash, filter, flatMap, hasWindowsSlashes, join, mapDefined, sort, split, unique, unmangleScopedPackage, withoutStart,
-} from "../util/util";
-
+import { isTypeScriptVersion, parseHeaderOrFail, TypeScriptVersion } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
 import {
     formatTypingVersion,
@@ -18,6 +12,7 @@ import {
     TypingVersion,
 } from "./packages";
 import { dependenciesWhitelist } from "./settings";
+import { FS, split, mapDefined, filter, sort, withoutStart, computeHash, hasWindowsSlashes, join, flatMap, unique, unmangleScopedPackage } from "@definitelytyped/utils";
 
 function matchesVersion(typingsDataRaw: TypingsDataRaw, version: TypingVersion, considerLibraryMinorVersion: boolean) {
     return typingsDataRaw.libraryMajorVersion === version.major

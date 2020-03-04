@@ -5,6 +5,7 @@
     "rootDir": "src"
   },
   "references": [
-    { "path": "../utils" }
+    { "path": "../utils" },
+    { "path": "../header-parser" }
   ]
 }

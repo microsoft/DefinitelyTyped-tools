@@ -20,6 +20,7 @@
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
+    "@definitelytyped/header-parser": "^0.0.0",
     "@definitelytyped/utils": "^1.0.0",
     "fs-extra": "^8.1.0"
   },
