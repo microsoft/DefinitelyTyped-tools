@@ -5,11 +5,16 @@ import {
   writeFile as writeFileWithEncoding,
   writeJson as writeJsonRaw,
 } from "fs-extra";
+import tarStream from "tar-stream";
+import https from "https";
+import zlib from "zlib";
 import { request as httpRequest } from "http";
 import { Agent, request } from "https";
 import { Readable as ReadableStream } from "stream";
 import { StringDecoder } from "string_decoder";
-import { parseJson } from "./miscellany";
+import { parseJson, withoutStart } from "./miscellany";
+import { FS, Dir, InMemoryFS } from "./fs";
+import { assertDefined } from "./assertions";
 
 export async function readFile(path: string): Promise<string> {
   const res = await readFileWithEncoding(path, { encoding: "utf8" });
@@ -150,3 +155,45 @@ export async function isDirectory(path: string): Promise<boolean> {
 }
 
 export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
+
+export function downloadAndExtractFile(url: string): Promise<FS> {
+    return new Promise<FS>((resolve, reject) => {
+        const root = new Dir(undefined);
+        function insertFile(path: string, content: string): void {
+            const components = path.split("/");
+            const baseName = assertDefined(components.pop());
+            let dir = root;
+            for (const component of components) {
+                dir = dir.subdir(component);
+            }
+            dir.set(baseName, content);
+        }
+
+        https.get(url, response => {
+            const extract = tarStream.extract();
+            response.pipe(zlib.createGunzip()).pipe(extract);
+            interface Header {
+                readonly name: string;
+                readonly type: "file" | "directory";
+            }
+            extract.on("entry", (header: Header, stream: NodeJS.ReadableStream, next: () => void) => {
+                const name = assertDefined(withoutStart(header.name, "DefinitelyTyped-master/"));
+                switch (header.type) {
+                    case "file":
+                        stringOfStream(stream, name).then(s => {
+                            insertFile(name, s);
+                            next();
+                        }).catch(reject);
+                        break;
+                    case "directory":
+                        next();
+                        break;
+                    default:
+                        throw new Error(`Unexpected file system entry kind ${header.type}`);
+                }
+            });
+            extract.on("error", reject);
+            extract.on("finish", () => { resolve(new InMemoryFS(root.finish(), "")); });
+        });
+    });
+}

@@ -7,6 +7,11 @@
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "composite": true
-  }
+    "composite": true,
+    "types": ["node"]
+  },
+  "exclude": [
+    "packages/*/test",
+    "packages/*/dist"
+  ]
 }
