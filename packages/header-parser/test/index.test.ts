@@ -1,5 +1,4 @@
-import assert = require("assert");
-import { parseHeaderOrFail, parseTypeScriptVersionLine, TypeScriptVersion } from "..";
+import { parseHeaderOrFail, parseTypeScriptVersionLine, TypeScriptVersion } from "../src";
 
 describe("parse", () => {
     it("works", () => {
@@ -11,7 +10,7 @@ describe("parse", () => {
             // TypeScript Version: 2.2
 
             ...file content...`;
-        assert.deepStrictEqual(parseHeaderOrFail(src), {
+        expect(parseHeaderOrFail(src)).toStrictEqual({
             libraryName: "foo",
             libraryMajorVersion: 1,
             libraryMinorVersion: 2,
@@ -36,7 +35,7 @@ describe("parse", () => {
 
             ...file content...`;
 
-        assert.deepStrictEqual(parseHeaderOrFail(src), {
+        expect(parseHeaderOrFail(src)).toStrictEqual({
             libraryName: "foo",
             libraryMajorVersion: 1,
             libraryMinorVersion: 2,
@@ -56,7 +55,7 @@ describe("parse", () => {
             // Project: https://github.com/foo/foo
             // Definitions by: Bad Url <sptth://hubgit.moc/em>
             // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped`;
-        assert.deepStrictEqual(parseHeaderOrFail(src).contributors, [
+        expect(parseHeaderOrFail(src).contributors).toStrictEqual([
             { name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
         ]);
     });
@@ -70,74 +69,72 @@ describe("parse", () => {
             // TypeScript Version: 2.2
 
             ...file content...`;
-        assert.equal(parseHeaderOrFail(src).nonNpm, true);
+        expect(parseHeaderOrFail(src).nonNpm).toBe(true);
     });
 });
 
 describe("parseTypeScriptVersionLine", () => {
     it("works", () => {
         const src = "// TypeScript Version: 2.1";
-        assert.equal(parseTypeScriptVersionLine(src), "2.1");
+        expect(parseTypeScriptVersionLine(src)).toBe("2.1");
 
         const minimum = "// Minimum TypeScript Version: 2.8";
-        assert.equal(parseTypeScriptVersionLine(minimum), "2.8");
+        expect(parseTypeScriptVersionLine(minimum)).toBe("2.8");
 
         const wrong = "// TypeScript Version: 3.14";
-        assert.throws(() => parseTypeScriptVersionLine(wrong));
+        expect(() => parseTypeScriptVersionLine(wrong)).toThrow();
     });
 
     it("allows typescript 2.3", () => {
         const src = "// TypeScript Version: 2.3";
-        assert.equal(parseTypeScriptVersionLine(src), "2.3");
+        expect(parseTypeScriptVersionLine(src)).toBe("2.3");
     });
 
     it("allows post 3 version tags", () => {
         const src = "// TypeScript Version: 3.0";
-        assert.equal(parseTypeScriptVersionLine(src), "3.0");
+        expect(parseTypeScriptVersionLine(src)).toBe("3.0");
     });
 
     it("does not allow unallowed version tags", () => {
         const src = "// TypeScript Version: 4.7";
-        assert.throws(() => parseTypeScriptVersionLine(src), `Could not parse version: line is ${src}`);
+        expect(() => parseTypeScriptVersionLine(src)).toThrow(`Could not parse version: line is '${src}'`);
     });
 });
 
 describe("isSupported", () => {
     it("works", () => {
-        assert(TypeScriptVersion.isSupported("3.5"));
+        expect(TypeScriptVersion.isSupported("3.5")).toBeTruthy();
     });
     it("supports 2.8", () => {
-        assert(TypeScriptVersion.isSupported("2.8"));
+        expect(TypeScriptVersion.isSupported("2.8")).toBeTruthy();
     });
     it("does not support 2.7", () => {
-        assert(!TypeScriptVersion.isSupported("2.7"));
+        expect(!TypeScriptVersion.isSupported("2.7")).toBeTruthy();
     });
 });
 
 describe("range", () => {
     it("works", () => {
-        assert.deepEqual(TypeScriptVersion.range("3.5"), ["3.5", "3.6", "3.7", "3.8", "3.9"]);
+        expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9"]);
     });
     it("includes 2.8 onwards", () => {
-        assert.deepEqual(TypeScriptVersion.range("2.8"), TypeScriptVersion.supported);
+        expect(TypeScriptVersion.range("2.8")).toEqual(TypeScriptVersion.supported);
     });
 });
 
 describe("tagsToUpdate", () => {
     it("works", () => {
-        assert.deepEqual(
-            TypeScriptVersion.tagsToUpdate("3.0"),
-            ["ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "ts3.7", "ts3.8", "ts3.9", "latest"]);
+        expect(TypeScriptVersion.tagsToUpdate("3.0"))
+            .toEqual(["ts3.0", "ts3.1", "ts3.2", "ts3.3", "ts3.4", "ts3.5", "ts3.6", "ts3.7", "ts3.8", "ts3.9", "latest"]);
     });
     it("allows 2.8 onwards", () => {
-        assert.deepEqual(
-            TypeScriptVersion.tagsToUpdate("2.8"),
-            TypeScriptVersion.supported.map(s => "ts" + s).concat("latest"));
+        expect(TypeScriptVersion.tagsToUpdate("2.8"))
+            .toEqual(TypeScriptVersion.supported.map(s => "ts" + s).concat("latest"));
     });
 });
 
 function dedent(strings: TemplateStringsArray): string {
-    assert.equal(strings.length, 1);
+    expect(strings).toHaveLength(1);
     const x = strings[0].trim();
     return x.replace(/\n +/g, "\n");
 }

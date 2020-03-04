@@ -1,0 +1,12 @@
+// `extends` and `types` should be unnecessary, but ts-jest has issues
+//  with project references: https://github.com/kulshekhar/ts-jest/issues/766
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node", "jest"]
+  },
+  "references": [
+    { "path": "packages/header-parser/test" }
+  ],
+  "files": []
+}

@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "@definitelytyped/header-parser",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Nathan Shively-Sanders <nathansa@microsoft.com>",
+  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped-tools.git"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
+  },
+  "dependencies": {
+    "@types/parsimmon": "^1.10.1",
+    "parsimmon": "^1.13.0"
+  }
+}
