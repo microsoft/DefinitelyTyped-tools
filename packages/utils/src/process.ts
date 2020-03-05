@@ -1,5 +1,5 @@
 import assert from "assert";
-import { ChildProcess, exec as node_exec, fork, Serializable } from "child_process";
+import { ChildProcess, exec as node_exec, fork } from "child_process";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 
@@ -105,7 +105,7 @@ interface RunWithListeningChildProcessesOptions<In> {
   handleStart?(input: In, processIndex: number | undefined): void;
   handleCrash?(input: In, state: CrashRecoveryState, processIndex: number | undefined): void;
 }
-export function runWithListeningChildProcesses<In extends Serializable>(
+export function runWithListeningChildProcesses<In>(
   { inputs, commandLineArgs, workerFile, nProcesses, cwd, handleOutput, crashRecovery,
     crashRecoveryMaxOldSpaceSize = DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE,
     handleStart, handleCrash, softTimeoutMs = Infinity }: RunWithListeningChildProcessesOptions<In>,

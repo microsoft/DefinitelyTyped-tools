@@ -8,8 +8,10 @@
             "*": ["src/types/*"]
         }
     },
+    "include": ["src"],
     "references": [
         { "path": "../definitions-parser" },
+        { "path": "../header-parser" },
         { "path": "../utils" }
     ]
 }

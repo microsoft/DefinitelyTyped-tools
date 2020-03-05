@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "packages/definitions-parser" },
+    { "path": "packages/header-parser" },
+    { "path": "packages/publisher" },
+    { "path": "packages/utils" }
+  ]
+}

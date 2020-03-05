@@ -14,9 +14,5 @@
     "allowUnusedLabels": false,
     "composite": true,
     "types": ["node"]
-  },
-  "exclude": [
-    "packages/*/test",
-    "packages/*/dist"
-  ]
+  }
 }

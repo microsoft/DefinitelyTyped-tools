@@ -4,6 +4,7 @@
     "outDir": "dist",
     "rootDir": "src"
   },
+  "include": ["src"],
   "references": [
     { "path": "../utils" },
     { "path": "../header-parser" }

@@ -8,7 +8,7 @@ import { TesterOptions } from "../lib/common";
 import { UncachedNpmInfoClient } from "../lib/npm-client";
 
 import runTests, { getAffectedPackagesFromDiff, parseNProcesses, testerOptions } from "./test-runner";
-import parseDefinitions from "@definitelytyped/definitions-parser/src/parseDefinitions";
+import { parseDefinitions } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
     const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);

@@ -15,6 +15,7 @@ import {
     NotNeededPackage,
     PackageId,
     TypingsData,
+    parseVersionFromDirectoryName,
 } from "@definitelytyped/definitions-parser"
 import {
     assertDefined,
@@ -37,7 +38,6 @@ import {
 
 import { allDependencies, getAffectedPackages } from "./get-affected-packages";
 import { numberOfOsProcesses } from "../util/util";
-import { parseVersionFromDirectoryName } from "@definitelytyped/definitions-parser/src/lib/definition-parser";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");

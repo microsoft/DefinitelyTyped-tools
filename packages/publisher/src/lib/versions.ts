@@ -1,6 +1,5 @@
 import { assertDefined } from "@definitelytyped/utils";
-import { AllPackages, NotNeededPackage, PackageId, TypingsData } from "@definitelytyped/definitions-parser/src/packages";
-import { readDataFile } from "@definitelytyped/definitions-parser";
+import { AllPackages, NotNeededPackage, PackageId, TypingsData, readDataFile } from "@definitelytyped/definitions-parser";
 
 export const versionsFilename = "versions.json";
 

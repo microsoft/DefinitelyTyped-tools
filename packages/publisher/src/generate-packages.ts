@@ -11,7 +11,7 @@ import { assertNever, joinPaths, logUncaughtErrors, sortObjectKeys, loggerWithEr
 import { getDefinitelyTyped, AllPackages, TypingsData, NotNeededPackage, AnyPackage, PackageJsonDependency, getFullNpmName, DependencyVersion, License } from "@definitelytyped/definitions-parser";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 
-const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
+const mitLicense = readFileSync(joinPaths(__dirname, "../../..", "LICENSE"), "utf-8");
 
 if (!module.parent) {
     const tgz = !!yargs.argv.tgz;
