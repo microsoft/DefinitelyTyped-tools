@@ -1,7 +1,7 @@
 import { createNotNeededPackageJSON, createPackageJSON, createReadme, getLicenseFileText } from "../src/generate-packages";
 import { Registry } from "../src/lib/common";
 import { AllPackages, License, NotNeededPackage, readNotNeededPackages, TypesDataFile, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
-import { createMockDT } from "../src/mocks";
+import { createMockDT } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
 
 function createRawPackage(license: License): TypingsDataRaw {

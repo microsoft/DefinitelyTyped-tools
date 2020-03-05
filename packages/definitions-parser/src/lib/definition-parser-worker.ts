@@ -1,7 +1,7 @@
 import assert = require("assert");
 import process = require("process");
 import { logUncaughtErrors } from "@definitelytyped/utils";
-import { getLocallyInstalledDefinitelyTyped } from "../getDefinitelyTyped";
+import { getLocallyInstalledDefinitelyTyped } from "../get-definitely-typed";
 import { getTypingInfo } from "./definition-parser";
 
 // This file is "called" by runWithChildProcesses from parse-definition.ts

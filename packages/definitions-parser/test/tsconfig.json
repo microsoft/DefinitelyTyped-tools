@@ -7,6 +7,6 @@
   },
   "references": [
     { "path": ".." },
-    { "path": "../../definitions-parser" }
+    { "path": "../../utils" }
   ]
 }

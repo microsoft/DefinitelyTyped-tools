@@ -1,5 +1,5 @@
 import { FS, LoggerWithErrors, filterNAtATimeOrdered, runWithChildProcesses } from "@definitelytyped/utils";
-import { writeDataFile } from "./dataFile";
+import { writeDataFile } from "./data-file";
 import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./packages";
