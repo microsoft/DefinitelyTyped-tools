@@ -6,9 +6,9 @@
   "types": "./bin/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^1.0.0",
-    "@definitelytyped/header-parser": "^0.0.0",
-    "@definitelytyped/utils": "^1.0.0",
+    "@definitelytyped/definitions-parser": "0.0.0",
+    "@definitelytyped/header-parser": "0.0.0",
+    "@definitelytyped/utils": "0.0.0",
     "@octokit/rest": "^16.1.0",
     "@types/node": "^12.12.29",
     "@types/tar-stream": "^1.6.0",
@@ -32,16 +32,12 @@
   },
   "devDependencies": {
     "@types/fs-extra": "4.0.0",
-    "@types/jest": "^23.3.9",
     "@types/mz": "^0.0.31",
     "@types/oboe": "^2.0.28",
     "@types/source-map-support": "^0.4.0",
     "@types/tar": "^1.0.27",
     "@types/travis-fold": "^0.1.0",
-    "@types/yargs": "^8.0.1",
-    "jest": "^24.9.0",
-    "ts-jest": "^24.2.0",
-    "tslint": "^5.13.0"
+    "@types/yargs": "^8.0.1"
   },
   "scripts": {
     "test": "npm run build && jest && npm run lint",

@@ -21,7 +21,7 @@
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/utils": "^1.0.0",
+    "@definitelytyped/utils": "0.0.0",
     "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
   }
