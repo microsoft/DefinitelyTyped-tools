@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { isTypeScriptVersion, parseHeaderOrFail, TypeScriptVersion } from "@definitelytyped/header-parser";
+import { isTypeScriptVersion, parseHeaderOrFail } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
 import {
   formatTypingVersion,
@@ -24,7 +24,8 @@ import {
   join,
   flatMap,
   unique,
-  unmangleScopedPackage
+  unmangleScopedPackage,
+  TypeScriptVersion
 } from "@definitelytyped/utils";
 
 function matchesVersion(typingsDataRaw: TypingsDataRaw, version: TypingVersion, considerLibraryMinorVersion: boolean) {

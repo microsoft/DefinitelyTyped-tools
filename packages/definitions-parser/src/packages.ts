@@ -1,6 +1,15 @@
 import assert = require("assert");
-import { AllTypeScriptVersion, Author, TypeScriptVersion } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, unmangleScopedPackage, joinPaths, Semver } from "@definitelytyped/utils";
+import { Author } from "@definitelytyped/header-parser";
+import {
+  FS,
+  mapValues,
+  assertSorted,
+  unmangleScopedPackage,
+  joinPaths,
+  Semver,
+  TypeScriptVersion,
+  AllTypeScriptVersion
+} from "@definitelytyped/utils";
 import { readDataFile } from "./data-file";
 import { outputDirPath, scopeName } from "./lib/settings";
 

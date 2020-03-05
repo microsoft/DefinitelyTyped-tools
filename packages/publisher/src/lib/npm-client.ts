@@ -154,7 +154,7 @@ export class UncachedNpmInfoClient {
   }
 }
 
-function splitToFixedSizeGroups(names: readonly string[], chunkSize: number): readonly (readonly string[][]) {
+function splitToFixedSizeGroups(names: readonly string[], chunkSize: number): readonly (readonly string[])[] {
   const out: string[][] = [];
   for (let i = 0; i < names.length; i += chunkSize) {
     out.push(names.slice(i, i + chunkSize));

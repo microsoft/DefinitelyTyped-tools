@@ -1,5 +1,5 @@
 import { getDefinitelyTyped } from "../src/get-definitely-typed";
-import { loggerWithErrors, Dir, FS, InMemoryFS } from "@definitelytyped/utils";
+import { quietLoggerWithErrors, Dir, FS, InMemoryFS } from "@definitelytyped/utils";
 import { testo } from "./utils";
 
 testo({
@@ -10,7 +10,7 @@ testo({
         parseInParallel: false,
         progress: false
       },
-      loggerWithErrors()[0]
+      quietLoggerWithErrors()[0]
     );
     expect(dt.exists("types")).toBe(true);
     expect(dt.exists("buncho")).toBe(false);

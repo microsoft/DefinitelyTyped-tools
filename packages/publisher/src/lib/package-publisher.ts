@@ -1,10 +1,9 @@
 import assert = require("assert");
-import { Logger, joinPaths, readFileAndWarn } from "@definitelytyped/utils";
+import { Logger, joinPaths, readFileAndWarn, TypeScriptVersion } from "@definitelytyped/utils";
 import { Registry } from "./common";
 import { NpmPublishClient } from "./npm-client";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
 import { ChangedTyping } from "./versions";
-import { TypeScriptVersion } from "@definitelytyped/header-parser";
 
 export async function publishTypingsPackage(
   client: NpmPublishClient,

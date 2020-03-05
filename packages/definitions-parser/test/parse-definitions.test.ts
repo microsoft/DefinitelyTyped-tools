@@ -1,6 +1,6 @@
 import { createMockDT } from "../src/mocks";
 import { parseDefinitions } from "../src/parse-definitions";
-import { loggerWithErrors } from "@definitelytyped/utils";
+import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { testo } from "./utils";
 
 testo({
@@ -17,7 +17,7 @@ testo({
   //     expect(defs.allPackages().length).toEqual(defs.allTypings().length + defs.allNotNeeded().length)
   // },
   async mockParse() {
-    const log = loggerWithErrors()[0];
+    const log = quietLoggerWithErrors()[0];
     const defs = await parseDefinitions(createMockDT().fs, undefined, log);
     expect(defs.allNotNeeded().length).toBe(1);
     expect(defs.allTypings().length).toBe(3);
