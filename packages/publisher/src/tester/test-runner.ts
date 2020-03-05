@@ -20,7 +20,6 @@ import {
 import {
     assertDefined,
     CrashRecoveryState,
-    exec,
     execAndThrowErrors,
     joinPaths,
     logUncaughtErrors,
@@ -31,9 +30,9 @@ import {
     FS,
     Semver,
     npmInstallFlags,
-    LoggerWithErrors,
     Logger,
     flatMapIterable,
+    installAllTypeScriptVersions,
 } from "@definitelytyped/utils";
 
 import { allDependencies, getAffectedPackages } from "./get-affected-packages";
@@ -187,7 +186,11 @@ async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsDa
         }
     }
 
-    await runCommand(console, undefined, require.resolve("dtslint"), ["--installAll"]);
+    try {
+        await installAllTypeScriptVersions();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function directoryPath(typesPath: string, pkg: TypingsData): string {
@@ -280,28 +283,6 @@ async function doRunTests(
     }
 
     throw new Error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
-}
-
-interface TesterError {
-    message: string;
-}
-
-async function runCommand(log: LoggerWithErrors, cwd: string | undefined, cmd: string, args: string[]): Promise<TesterError | undefined> {
-    const nodeCmd = `node ${cmd} ${args.join(" ")}`;
-    log.info(`Running: ${nodeCmd}`);
-    try {
-        const { error, stdout, stderr } = await exec(nodeCmd, cwd);
-        if (stdout) {
-            log.info(stdout);
-        }
-        if (stderr) {
-            log.error(stderr);
-        }
-
-        return error && { message: `${error.message}\n${stdout}\n${stderr}` };
-    } catch (e) {
-        return e as TesterError;
-    }
 }
 
 /** Returns all immediate subdirectories of the root directory that have changed. */
