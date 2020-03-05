@@ -1,12 +1,12 @@
 import { removeSync } from "fs-extra";
 
 if (!module.parent) {
-    clean();
+  clean();
 }
 
 export function clean() {
-    for (const dir of ["data", "logs", "output"]) {
-        console.log(`Clean ${dir}`);
-        removeSync(dir);
-    }
+  for (const dir of ["data", "logs", "output"]) {
+    console.log(`Clean ${dir}`);
+    removeSync(dir);
+  }
 }

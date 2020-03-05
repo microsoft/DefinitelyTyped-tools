@@ -8,31 +8,31 @@ import { TesterOptions, defaultLocalOptions } from "../lib/common";
 import { NpmInfo, UncachedNpmInfoClient } from "../lib/npm-client";
 import { sourceBranch, typesDirectoryName } from "../lib/settings";
 import {
-    getDefinitelyTyped,
-    AllPackages,
-    DependencyVersion,
-    formatDependencyVersion,
-    NotNeededPackage,
-    PackageId,
-    TypingsData,
-    parseVersionFromDirectoryName,
-} from "@definitelytyped/definitions-parser"
+  getDefinitelyTyped,
+  AllPackages,
+  DependencyVersion,
+  formatDependencyVersion,
+  NotNeededPackage,
+  PackageId,
+  TypingsData,
+  parseVersionFromDirectoryName
+} from "@definitelytyped/definitions-parser";
 import {
-    assertDefined,
-    CrashRecoveryState,
-    execAndThrowErrors,
-    joinPaths,
-    logUncaughtErrors,
-    mapIterable,
-    runWithListeningChildProcesses,
-    loggerWithErrors,
-    consoleLogger,
-    FS,
-    Semver,
-    npmInstallFlags,
-    Logger,
-    flatMapIterable,
-    installAllTypeScriptVersions,
+  assertDefined,
+  CrashRecoveryState,
+  execAndThrowErrors,
+  joinPaths,
+  logUncaughtErrors,
+  mapIterable,
+  runWithListeningChildProcesses,
+  loggerWithErrors,
+  consoleLogger,
+  FS,
+  Semver,
+  npmInstallFlags,
+  Logger,
+  flatMapIterable,
+  installAllTypeScriptVersions
 } from "@definitelytyped/utils";
 
 import { allDependencies, getAffectedPackages } from "./get-affected-packages";
@@ -42,81 +42,111 @@ const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 if (!module.parent) {
-    if (yargs.argv.affected) {
-        logUncaughtErrors(testAffectedOnly(defaultLocalOptions));
-    } else {
-        const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
-        const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
-        logUncaughtErrors(
-            getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt => runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)));
-    }
+  if (yargs.argv.affected) {
+    logUncaughtErrors(testAffectedOnly(defaultLocalOptions));
+  } else {
+    const selection = yargs.argv.all ? "all" : yargs.argv._[0] ? new RegExp(yargs.argv._[0]) : "affected";
+    const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);
+    logUncaughtErrors(
+      getDefinitelyTyped(options, loggerWithErrors()[0]).then(dt =>
+        runTests(dt, options.definitelyTypedPath, parseNProcesses(), selection)
+      )
+    );
+  }
 }
 
 export interface GitDiff {
-    status: "A" | "D" | "M";
-    file: string;
+  status: "A" | "D" | "M";
+  file: string;
 }
 
 async function testAffectedOnly(options: TesterOptions): Promise<void> {
-    const changes = getAffectedPackages(
-        await AllPackages.read(await getDefinitelyTyped(options, loggerWithErrors()[0])),
-        gitChanges(await gitDiff(consoleLogger.info, options.definitelyTypedPath)));
-    console.log({ changedPackages: changes.changedPackages.map(t => t.desc), dependersLength: changes.dependentPackages.map(t => t.desc).length });
+  const changes = getAffectedPackages(
+    await AllPackages.read(await getDefinitelyTyped(options, loggerWithErrors()[0])),
+    gitChanges(await gitDiff(consoleLogger.info, options.definitelyTypedPath))
+  );
+  console.log({
+    changedPackages: changes.changedPackages.map(t => t.desc),
+    dependersLength: changes.dependentPackages.map(t => t.desc).length
+  });
 }
 
 export function parseNProcesses(): number {
-    const str = yargs.argv.nProcesses as string | undefined;
-    if (!str) {
-        return numberOfOsProcesses;
-    }
-    const nProcesses = Number.parseInt(str, 10);
-    if (Number.isNaN(nProcesses)) {
-        throw new Error("Expected nProcesses to be a number.");
-    }
-    return nProcesses;
+  const str = yargs.argv.nProcesses as string | undefined;
+  if (!str) {
+    return numberOfOsProcesses;
+  }
+  const nProcesses = Number.parseInt(str, 10);
+  if (Number.isNaN(nProcesses)) {
+    throw new Error("Expected nProcesses to be a number.");
+  }
+  return nProcesses;
 }
 
 export function testerOptions(runFromDefinitelyTyped: boolean): TesterOptions {
-    return runFromDefinitelyTyped
-        ? { definitelyTypedPath: process.cwd(), progress: false, parseInParallel: true }
-        : defaultLocalOptions;
+  return runFromDefinitelyTyped
+    ? { definitelyTypedPath: process.cwd(), progress: false, parseInParallel: true }
+    : defaultLocalOptions;
 }
 
 export default async function runTests(
-    dt: FS,
-    definitelyTypedPath: string,
-    nProcesses: number,
-    selection: "all" | "affected" | RegExp,
+  dt: FS,
+  definitelyTypedPath: string,
+  nProcesses: number,
+  selection: "all" | "affected" | RegExp
 ): Promise<void> {
-    const { changedPackages, dependentPackages, allPackages } = await getAffectedPackagesFromDiff(dt, definitelyTypedPath, selection);
-    console.log(`Running with ${nProcesses} processes.`);
+  const { changedPackages, dependentPackages, allPackages } = await getAffectedPackagesFromDiff(
+    dt,
+    definitelyTypedPath,
+    selection
+  );
+  console.log(`Running with ${nProcesses} processes.`);
 
-    const typesPath = `${definitelyTypedPath}/types`;
-    await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath);
+  const typesPath = `${definitelyTypedPath}/types`;
+  await doInstalls(allPackages, [...changedPackages, ...dependentPackages], typesPath);
 
-    console.log("Testing...");
-    await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
+  console.log("Testing...");
+  await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
 }
 
-export async function getAffectedPackagesFromDiff(dt: FS, definitelyTypedPath: string, selection: "all" | "affected" | RegExp) {
-    const allPackages = await AllPackages.read(dt);
-    const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
-    if (diffs.find(d => d.file === "notNeededPackages.json")) {
-        const uncached = new UncachedNpmInfoClient();
-        for (const deleted of getNotNeededPackages(allPackages, diffs)) {
-            const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
-            const typings = await uncached.fetchNpmInfo(deleted.fullNpmName); // eg @types/babel__parser
-            checkNotNeededPackage(deleted, source, typings);
-        }
+export async function getAffectedPackagesFromDiff(
+  dt: FS,
+  definitelyTypedPath: string,
+  selection: "all" | "affected" | RegExp
+) {
+  const allPackages = await AllPackages.read(dt);
+  const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+  if (diffs.find(d => d.file === "notNeededPackages.json")) {
+    const uncached = new UncachedNpmInfoClient();
+    for (const deleted of getNotNeededPackages(allPackages, diffs)) {
+      const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
+      const typings = await uncached.fetchNpmInfo(deleted.fullNpmName); // eg @types/babel__parser
+      checkNotNeededPackage(deleted, source, typings);
     }
+  }
 
-    const affected = selection === "all" ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
-        : selection === "affected" ? getAffectedPackages(allPackages, gitChanges(diffs))
-        : { changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)), dependentPackages: [], allPackages };
+  const affected =
+    selection === "all"
+      ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
+      : selection === "affected"
+      ? getAffectedPackages(allPackages, gitChanges(diffs))
+      : {
+          changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)),
+          dependentPackages: [],
+          allPackages
+        };
 
-    console.log(`Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages.map(t => t.desc).toString()}`);
-    console.log(`Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages.map(t => t.desc).toString()}`);
-    return affected;
+  console.log(
+    `Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages
+      .map(t => t.desc)
+      .toString()}`
+  );
+  console.log(
+    `Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages
+      .map(t => t.desc)
+      .toString()}`
+  );
+  return affected;
 }
 
 /**
@@ -125,17 +155,24 @@ export async function getAffectedPackagesFromDiff(dt: FS, definitelyTypedPath: s
  * 3. make sure that each toplevel deleted has a matching entry in notNeededPackages
  */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]): Iterable<NotNeededPackage> {
-    const deletedPackages = new Set(diffs.filter(d => d.status === "D").map(d =>
-        assertDefined(getDependencyFromFile(d.file),
-                      `Unexpected file deleted: ${d.file}
-When removing packages, you should only delete files that are a part of removed packages.`)
-        .name));
-    return mapIterable(deletedPackages, p => {
-        if (allPackages.hasTypingFor({ name: p, version: "*" })) {
-            throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
-        }
-        return assertDefined(allPackages.getNotNeededPackage(p), `Deleted package ${p} is not in notNeededPackages.json.`);
-    });
+  const deletedPackages = new Set(
+    diffs
+      .filter(d => d.status === "D")
+      .map(
+        d =>
+          assertDefined(
+            getDependencyFromFile(d.file),
+            `Unexpected file deleted: ${d.file}
+When removing packages, you should only delete files that are a part of removed packages.`
+          ).name
+      )
+  );
+  return mapIterable(deletedPackages, p => {
+    if (allPackages.hasTypingFor({ name: p, version: "*" })) {
+      throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
+    }
+    return assertDefined(allPackages.getNotNeededPackage(p), `Deleted package ${p} is not in notNeededPackages.json.`);
+  });
 }
 
 /**
@@ -146,163 +183,189 @@ When removing packages, you should only delete files that are a part of removed 
  *
  * I skipped (2) because the cached npm info doesn't include it. I might add it later.
  */
-export function checkNotNeededPackage(unneeded: NotNeededPackage, source: NpmInfo | undefined, typings: NpmInfo | undefined) {
-    source = assertDefined(source, `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
+export function checkNotNeededPackage(
+  unneeded: NotNeededPackage,
+  source: NpmInfo | undefined,
+  typings: NpmInfo | undefined
+) {
+  source = assertDefined(
+    source,
+    `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
-Unneeded packages have to be replaced with a package on npm.`);
-    typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
-    const latestTypings = Semver.parse(
-        assertDefined(typings.distTags.get("latest"), `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`),
-    );
-    assert(
-        unneeded.version.greaterThan(latestTypings),
-        `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`,
-    );
-    assert(
-        source.versions.has(unneeded.version.versionString),
-        `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`,
-    );
+Unneeded packages have to be replaced with a package on npm.`
+  );
+  typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
+  const latestTypings = Semver.parse(
+    assertDefined(
+      typings.distTags.get("latest"),
+      `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`
+    )
+  );
+  assert(
+    unneeded.version.greaterThan(latestTypings),
+    `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
+it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`
+  );
+  assert(
+    source.versions.has(unneeded.version.versionString),
+    `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`
+  );
 }
 
 async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
-    console.log("Installing NPM dependencies...");
+  console.log("Installing NPM dependencies...");
 
-    // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-    for (const pkg of allDependencies(allPackages, packages)) {
-        const cwd = directoryPath(typesPath, pkg);
-        if (!await pathExists(joinPaths(cwd, "package.json"))) {
-            continue;
-        }
-
-        // Scripts may try to compile native code.
-        // This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-        const cmd = `npm install ${npmInstallFlags}`;
-        console.log(`  ${cwd}: ${cmd}`);
-        const stdout = await execAndThrowErrors(cmd, cwd);
-        if (stdout) {
-            // Must specify what this is for since these run in parallel.
-            console.log(` from ${cwd}: ${stdout}`);
-        }
+  // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
+  for (const pkg of allDependencies(allPackages, packages)) {
+    const cwd = directoryPath(typesPath, pkg);
+    if (!(await pathExists(joinPaths(cwd, "package.json")))) {
+      continue;
     }
 
-    try {
-        await installAllTypeScriptVersions();
-    } catch (error) {
-        console.error(error);
+    // Scripts may try to compile native code.
+    // This doesn't work reliably on travis, and we're just installing for the types, so ignore.
+    const cmd = `npm install ${npmInstallFlags}`;
+    console.log(`  ${cwd}: ${cmd}`);
+    const stdout = await execAndThrowErrors(cmd, cwd);
+    if (stdout) {
+      // Must specify what this is for since these run in parallel.
+      console.log(` from ${cwd}: ${stdout}`);
     }
+  }
+
+  try {
+    await installAllTypeScriptVersions();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function directoryPath(typesPath: string, pkg: TypingsData): string {
-    return joinPaths(typesPath, pkg.subDirectoryPath);
+  return joinPaths(typesPath, pkg.subDirectoryPath);
 }
 
 async function doRunTests(
-    packages: ReadonlyArray<TypingsData>,
-    changed: ReadonlySet<TypingsData>,
-    typesPath: string,
-    nProcesses: number,
+  packages: readonly TypingsData[],
+  changed: ReadonlySet<TypingsData>,
+  typesPath: string,
+  nProcesses: number
 ): Promise<void> {
-    await remove(suggestionsDir);
-    const allFailures: Array<[string, string]> = [];
-    if (fold.isTravis()) { console.log(fold.start("tests")); }
-    await runWithListeningChildProcesses({
-        inputs: packages.map(p => ({ path: p.subDirectoryPath, onlyTestTsNext: !changed.has(p), expectOnly: !changed.has(p) })),
-        commandLineArgs: ["--listen"],
-        workerFile: require.resolve("dtslint"),
-        nProcesses,
-        crashRecovery: true,
-        crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
-        cwd: typesPath,
-        handleStart(input, processIndex): void {
-            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
-            console.log(`${prefix}${input.path} START`);
-        },
-        handleOutput(output, processIndex): void {
-            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
-            const { path, status } = output as { path: string, status: string };
-            if (status === "OK") {
-                console.log(`${prefix}${path} OK`);
-            } else {
-                console.error(`${prefix}${path} failing:`);
-                console.error(prefix ? status.split(/\r?\n/).map(line => `${prefix}${line}`).join("\n") : status);
-                allFailures.push([path, status]);
-            }
-        },
-        handleCrash(input, state, processIndex) {
-            const prefix = processIndex === undefined ? "" : `${processIndex}> `;
-            switch (state) {
-                case CrashRecoveryState.Retry:
-                    console.warn(`${prefix}${input.path} Out of memory: retrying`);
-                    break;
-                case CrashRecoveryState.RetryWithMoreMemory:
-                    console.warn(`${prefix}${input.path} Out of memory: retrying with increased memory (4096M)`);
-                    break;
-                case CrashRecoveryState.Crashed:
-                    console.error(`${prefix}${input.path} Out of memory: failed`);
-                    allFailures.push([input.path, "Out of memory"]);
-                    break;
-                default:
-            }
-        },
-    });
-    if (fold.isTravis()) { console.log(fold.end("tests")); }
-
-    console.log("\n\n=== SUGGESTIONS ===\n");
-    const suggestionLines: string[] = [];
-    for (const change of changed) {
-        const pkgPath = change.versionDirectoryName ? change.name + change.versionDirectoryName : change.name;
-        const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-        if (existsSync(path)) {
-            const suggestions = readFileSync(path, "utf8").split("\n");
-            suggestionLines.push(`"${change.subDirectoryPath}": [${suggestions.join(",")}]`);
-        }
+  await remove(suggestionsDir);
+  const allFailures: [string, string][] = [];
+  if (fold.isTravis()) {
+    console.log(fold.start("tests"));
+  }
+  await runWithListeningChildProcesses({
+    inputs: packages.map(p => ({
+      path: p.subDirectoryPath,
+      onlyTestTsNext: !changed.has(p),
+      expectOnly: !changed.has(p)
+    })),
+    commandLineArgs: ["--listen"],
+    workerFile: require.resolve("dtslint"),
+    nProcesses,
+    crashRecovery: true,
+    crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
+    cwd: typesPath,
+    handleStart(input, processIndex): void {
+      const prefix = processIndex === undefined ? "" : `${processIndex}> `;
+      console.log(`${prefix}${input.path} START`);
+    },
+    handleOutput(output, processIndex): void {
+      const prefix = processIndex === undefined ? "" : `${processIndex}> `;
+      const { path, status } = output as { path: string; status: string };
+      if (status === "OK") {
+        console.log(`${prefix}${path} OK`);
+      } else {
+        console.error(`${prefix}${path} failing:`);
+        console.error(
+          prefix
+            ? status
+                .split(/\r?\n/)
+                .map(line => `${prefix}${line}`)
+                .join("\n")
+            : status
+        );
+        allFailures.push([path, status]);
+      }
+    },
+    handleCrash(input, state, processIndex) {
+      const prefix = processIndex === undefined ? "" : `${processIndex}> `;
+      switch (state) {
+        case CrashRecoveryState.Retry:
+          console.warn(`${prefix}${input.path} Out of memory: retrying`);
+          break;
+        case CrashRecoveryState.RetryWithMoreMemory:
+          console.warn(`${prefix}${input.path} Out of memory: retrying with increased memory (4096M)`);
+          break;
+        case CrashRecoveryState.Crashed:
+          console.error(`${prefix}${input.path} Out of memory: failed`);
+          allFailures.push([input.path, "Out of memory"]);
+          break;
+        default:
+      }
     }
-    console.log(`{${suggestionLines.join(",")}}`);
+  });
+  if (fold.isTravis()) {
+    console.log(fold.end("tests"));
+  }
 
-    console.log("\n\n=== PERFORMANCE ===\n");
-    console.log("{");
-    for (const change of changed) {
-        const path = joinPaths(perfDir, change.name + ".json");
-        if (existsSync(path)) {
-            const perf = JSON.parse(readFileSync(path, "utf8")) as { [name: string]: { typeCount: number } };
-            console.log(`  "${change.name}": ${perf[change.name].typeCount},`);
-        }
+  console.log("\n\n=== SUGGESTIONS ===\n");
+  const suggestionLines: string[] = [];
+  for (const change of changed) {
+    const pkgPath = change.versionDirectoryName ? change.name + change.versionDirectoryName : change.name;
+    const path = joinPaths(suggestionsDir, pkgPath + ".txt");
+    if (existsSync(path)) {
+      const suggestions = readFileSync(path, "utf8").split("\n");
+      suggestionLines.push(`"${change.subDirectoryPath}": [${suggestions.join(",")}]`);
     }
-    console.log("}");
+  }
+  console.log(`{${suggestionLines.join(",")}}`);
 
-    if (allFailures.length === 0) {
-        return;
+  console.log("\n\n=== PERFORMANCE ===\n");
+  console.log("{");
+  for (const change of changed) {
+    const path = joinPaths(perfDir, change.name + ".json");
+    if (existsSync(path)) {
+      const perf = JSON.parse(readFileSync(path, "utf8")) as { [name: string]: { typeCount: number } };
+      console.log(`  "${change.name}": ${perf[change.name].typeCount},`);
     }
+  }
+  console.log("}");
 
-    console.error("\n\n=== ERRORS ===\n");
+  if (allFailures.length === 0) {
+    return;
+  }
 
-    for (const [path, error] of allFailures) {
-        console.error(`\n\nError in ${path}`);
-        console.error(error);
-    }
+  console.error("\n\n=== ERRORS ===\n");
 
-    throw new Error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
+  for (const [path, error] of allFailures) {
+    console.error(`\n\nError in ${path}`);
+    console.error(error);
+  }
+
+  throw new Error(`The following packages had errors: ${allFailures.map(e => e[0]).join(", ")}`);
 }
 
 /** Returns all immediate subdirectories of the root directory that have changed. */
 export function gitChanges(diffs: GitDiff[]): PackageId[] {
-    const changedPackages = new Map<string, Map<string, DependencyVersion>>();
+  const changedPackages = new Map<string, Map<string, DependencyVersion>>();
 
-    for (const diff of diffs) {
-        const dep = getDependencyFromFile(diff.file);
-        if (dep) {
-            const versions = changedPackages.get(dep.name);
-            if (!versions) {
-                changedPackages.set(dep.name, new Map([[formatDependencyVersion(dep.version), dep.version]]));
-            } else {
-                versions.set(formatDependencyVersion(dep.version), dep.version);
-            }
-        }
+  for (const diff of diffs) {
+    const dep = getDependencyFromFile(diff.file);
+    if (dep) {
+      const versions = changedPackages.get(dep.name);
+      if (!versions) {
+        changedPackages.set(dep.name, new Map([[formatDependencyVersion(dep.version), dep.version]]));
+      } else {
+        versions.set(formatDependencyVersion(dep.version), dep.version);
+      }
     }
+  }
 
-    return Array.from(flatMapIterable(changedPackages, ([name, versions]) =>
-        mapIterable(versions, ([_, version]) => ({ name, version }))));
+  return Array.from(
+    flatMapIterable(changedPackages, ([name, versions]) => mapIterable(versions, ([_, version]) => ({ name, version })))
+  );
 }
 
 /*
@@ -317,31 +380,31 @@ Travis runs:
 If editing this code, be sure to test on both full and shallow clones.
 */
 export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise<GitDiff[]> {
-    try {
-        await run(`git rev-parse --verify ${sourceBranch}`);
-        // If this succeeds, we got the full clone.
-    } catch (_) {
-        // This is a shallow clone.
-        await run(`git fetch origin ${sourceBranch}`);
-        await run(`git branch ${sourceBranch} FETCH_HEAD`);
-    }
+  try {
+    await run(`git rev-parse --verify ${sourceBranch}`);
+    // If this succeeds, we got the full clone.
+  } catch (_) {
+    // This is a shallow clone.
+    await run(`git fetch origin ${sourceBranch}`);
+    await run(`git branch ${sourceBranch} FETCH_HEAD`);
+  }
 
-    let diff = (await run(`git diff ${sourceBranch} --name-status`)).trim();
-    if (diff === "") {
-        // We are probably already on master, so compare to the last commit.
-        diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
-    }
-    return diff.split("\n").map(line => {
-        const [status, file] = line.split(/\s+/, 2);
-        return { status: status.trim(), file: file.trim() } as GitDiff;
-    });
+  let diff = (await run(`git diff ${sourceBranch} --name-status`)).trim();
+  if (diff === "") {
+    // We are probably already on master, so compare to the last commit.
+    diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
+  }
+  return diff.split("\n").map(line => {
+    const [status, file] = line.split(/\s+/, 2);
+    return { status: status.trim(), file: file.trim() } as GitDiff;
+  });
 
-    async function run(cmd: string): Promise<string> {
-        log(`Running: ${cmd}`);
-        const stdout = await execAndThrowErrors(cmd, definitelyTypedPath);
-        log(stdout);
-        return stdout;
-    }
+  async function run(cmd: string): Promise<string> {
+    log(`Running: ${cmd}`);
+    const stdout = await execAndThrowErrors(cmd, definitelyTypedPath);
+    log(stdout);
+    return stdout;
+  }
 }
 
 /**
@@ -350,24 +413,24 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
  * For "x", returns undefined.
  */
 function getDependencyFromFile(file: string): PackageId | undefined {
-    const parts = file.split("/");
-    if (parts.length <= 2) {
-        // It's not in a typings directory at all.
-        return undefined;
+  const parts = file.split("/");
+  if (parts.length <= 2) {
+    // It's not in a typings directory at all.
+    return undefined;
+  }
+
+  const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+
+  if (typesDirName !== typesDirectoryName) {
+    return undefined;
+  }
+
+  if (subDirName) {
+    const version = parseVersionFromDirectoryName(subDirName);
+    if (version !== undefined) {
+      return { name, version };
     }
+  }
 
-    const [typesDirName, name, subDirName] = parts; // Ignore any other parts
-
-    if (typesDirName !== typesDirectoryName) {
-        return undefined;
-    }
-
-    if (subDirName) {
-        const version = parseVersionFromDirectoryName(subDirName);
-        if (version !== undefined) {
-            return { name, version };
-        }
-    }
-
-    return { name, version: "*" };
+  return { name, version: "*" };
 }

@@ -5,34 +5,33 @@ import * as zlib from "zlib";
 import { streamDone } from "@definitelytyped/utils";
 
 export function gzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
-    return input.pipe(zlib.createGzip());
+  return input.pipe(zlib.createGzip());
 }
 
 export function unGzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
-    const output = zlib.createGunzip();
-    input.pipe(output);
-    return output;
+  const output = zlib.createGunzip();
+  input.pipe(output);
+  return output;
 }
 
 export function writeTgz(inputDirectory: string, outFileName: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        resolve(streamDone(createTgz(inputDirectory, reject).pipe(createWriteStream(outFileName))));
-    });
+  return new Promise<void>((resolve, reject) => {
+    resolve(streamDone(createTgz(inputDirectory, reject).pipe(createWriteStream(outFileName))));
+  });
 }
 
 // To output this for testing: Export it and:
 // `require("./bin/lib/npm-client").createTgz("./output/foo", err => { throw err }).pipe(fs.createWriteStream("foo.tgz"))`
 export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-    return gzip(createTar(dir, onError));
+  return gzip(createTar(dir, onError));
 }
 
 function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-    const packer = Pack({ noProprietary: true })
-        .on("error", onError);
+  const packer = Pack({ noProprietary: true }).on("error", onError);
 
-    return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission })
-        .on("error", onError)
-        .pipe(packer);
+  return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission })
+    .on("error", onError)
+    .pipe(packer);
 }
 
 /**
@@ -40,18 +39,18 @@ function createTar(dir: string, onError: (error: Error) => void): NodeJS.Readabl
  * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
  */
 function addDirectoryExecutablePermission(entry: FStreamEntry): boolean {
-    if (entry.props.type === "Directory") {
-        entry.props.mode = addExecutePermissionsFromReadPermissions(entry.props.mode);
-    }
-    return true;
+  if (entry.props.type === "Directory") {
+    entry.props.mode = addExecutePermissionsFromReadPermissions(entry.props.mode);
+  }
+  return true;
 }
 
 function addExecutePermissionsFromReadPermissions(mode: number): number {
-    // Constant that gives execute permissions to owner, group, and others. "+x"
-    const allExecutePermissions = 0o111;
-    // Moves the bits for read permissions into the place for execute permissions.
-    // In other words, a component will have execute permissions if it has read permissions.
-    const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions; // tslint:disable-line no-bitwise
-    // Add these additional execute permissions to the mode.
-    return mode | readPermissionsAsExecutePermissions; // tslint:disable-line no-bitwise
+  // Constant that gives execute permissions to owner, group, and others. "+x"
+  const allExecutePermissions = 0o111;
+  // Moves the bits for read permissions into the place for execute permissions.
+  // In other words, a component will have execute permissions if it has read permissions.
+  const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions; // tslint:disable-line no-bitwise
+  // Add these additional execute permissions to the mode.
+  return mode | readPermissionsAsExecutePermissions; // tslint:disable-line no-bitwise
 }

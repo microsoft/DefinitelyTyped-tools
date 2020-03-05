@@ -6,7 +6,6 @@ export function initArray<T>(length: number, makeElement: (i: number) => T): T[]
   return arr;
 }
 
-
 export function mapValues<K, V1, V2>(map: Map<K, V1>, valueMapper: (value: V1) => V2): Map<K, V2> {
   const out = new Map<K, V2>();
   map.forEach((value, key) => {
@@ -62,12 +61,16 @@ export function join<T>(values: Iterable<T>, joiner = ", "): string {
 }
 
 /** Returns [values that cb returned undefined for, defined results of cb]. */
-export function split<T, U>(inputs: ReadonlyArray<T>, cb: (t: T) => U | undefined): [ReadonlyArray<T>, ReadonlyArray<U>] {
+export function split<T, U>(inputs: readonly T[], cb: (t: T) => U | undefined): [readonly T[], readonly U[]] {
   const keep: T[] = [];
   const splitOut: U[] = [];
   for (const input of inputs) {
     const res = cb(input);
-    if (res === undefined) { keep.push(input); } else { splitOut.push(res); }
+    if (res === undefined) {
+      keep.push(input);
+    } else {
+      splitOut.push(res);
+    }
   }
   return [keep, splitOut];
 }
@@ -91,8 +94,18 @@ function toOffset(array: readonly any[], offset: number) {
  * @param end The offset in `from` at which to stop copying values (non-inclusive).
  */
 export function addRange<T>(to: T[], from: readonly T[] | undefined, start?: number, end?: number): T[];
-export function addRange<T>(to: T[] | undefined, from: readonly T[] | undefined, start?: number, end?: number): T[] | undefined;
-export function addRange<T>(to: T[] | undefined, from: readonly T[] | undefined, start?: number, end?: number): T[] | undefined {
+export function addRange<T>(
+  to: T[] | undefined,
+  from: readonly T[] | undefined,
+  start?: number,
+  end?: number
+): T[] | undefined;
+export function addRange<T>(
+  to: T[] | undefined,
+  from: readonly T[] | undefined,
+  start?: number,
+  end?: number
+): T[] | undefined {
   if (from === undefined || from.length === 0) return to;
   if (to === undefined) return from.slice(start, end);
   start = start === undefined ? 0 : toOffset(from, start);
@@ -113,7 +126,10 @@ export function addRange<T>(to: T[] | undefined, from: readonly T[] | undefined,
  * @param value The value to append to the array. If `value` is `undefined`, nothing is
  * appended.
  */
-export function append<TArray extends any[] | undefined, TValue extends NonNullable<TArray>[number] | undefined>(to: TArray, value: TValue): [undefined, undefined] extends [TArray, TValue] ? TArray : NonNullable<TArray>[number][];
+export function append<TArray extends any[] | undefined, TValue extends NonNullable<TArray>[number] | undefined>(
+  to: TArray,
+  value: TValue
+): [undefined, undefined] extends [TArray, TValue] ? TArray : NonNullable<TArray>[number][];
 export function append<T>(to: T[], value: T | undefined): T[];
 export function append<T>(to: T[] | undefined, value: T): T[];
 export function append<T>(to: T[] | undefined, value: T | undefined): T[] | undefined;
@@ -137,7 +153,10 @@ export function isArray(value: any): value is readonly {}[] {
  * @param array The array to map.
  * @param mapfn The callback used to map the result into one or more values.
  */
-export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: number) => U | readonly U[] | undefined): readonly U[] {
+export function flatMap<T, U>(
+  array: readonly T[] | undefined,
+  mapfn: (x: T, i: number) => U | readonly U[] | undefined
+): readonly U[] {
   let result: U[] | undefined;
   if (array) {
     for (let i = 0; i < array.length; i++) {
@@ -145,8 +164,7 @@ export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: 
       if (v) {
         if (isArray(v)) {
           result = addRange(result, v);
-        }
-        else {
+        } else {
           result = append(result, v);
         }
       }
@@ -181,7 +199,9 @@ export function mapToRecord<T>(map: Map<string, T>): Record<string, T>;
 export function mapToRecord<T, U>(map: Map<string, T>, cb: (t: T) => U): Record<string, U>;
 export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record<string, T | U> {
   const o: Record<string, T | U> = {};
-  map.forEach((value, key) => { o[key] = cb ? cb(value) : value; });
+  map.forEach((value, key) => {
+    o[key] = cb ? cb(value) : value;
+  });
   return o;
 }
 

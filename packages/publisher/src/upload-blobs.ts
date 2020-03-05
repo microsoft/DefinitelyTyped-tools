@@ -3,7 +3,7 @@ import { currentTimeStamp } from "./util/util";
 import { logUncaughtErrors } from "@definitelytyped/utils";
 
 if (!module.parent) {
-    logUncaughtErrors(uploadBlobsAndUpdateIssue(currentTimeStamp()));
+  logUncaughtErrors(uploadBlobsAndUpdateIssue(currentTimeStamp()));
 }
 
 export default uploadBlobsAndUpdateIssue;

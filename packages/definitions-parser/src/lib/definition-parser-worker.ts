@@ -8,15 +8,15 @@ import { getTypingInfo } from "./definition-parser";
 export const definitionParserWorkerFilename = __filename;
 
 if (!module.parent) {
-    process.on("message", message => {
-        assert(process.argv.length === 3);
-        const typesPath = process.argv[2];
-        // tslint:disable-next-line no-async-without-await
-        logUncaughtErrors(async () => {
-            for (const packageName of message as ReadonlyArray<string>) {
-                const data = getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
-                process.send!({ data, packageName });
-            }
-        });
+  process.on("message", message => {
+    assert(process.argv.length === 3);
+    const typesPath = process.argv[2];
+    // tslint:disable-next-line no-async-without-await
+    logUncaughtErrors(async () => {
+      for (const packageName of message as readonly string[]) {
+        const data = getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
+        process.send!({ data, packageName });
+      }
     });
+  });
 }

@@ -1,0 +1,72 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "warnOnUnsupportedTypeScriptVersion": false,
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": false,
+        "node": true,
+        "es6": true
+    },
+    "extends": ["plugin:prettier/recommended"],
+    "plugins": [
+        "@typescript-eslint", "jsdoc", "import"
+    ],
+    "rules": {
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        "@typescript-eslint/array-type": "error",
+
+        "camelcase": "off",
+        "@typescript-eslint/camelcase": ["error", { "properties": "never", "allow": ["^[A-Za-z][a-zA-Za-z]+_[A-Za-z]+$"] }],
+
+        "@typescript-eslint/class-name-casing": "error",
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+        "@typescript-eslint/interface-name-prefix": "error",
+        "@typescript-eslint/no-inferrable-types": "error",
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/no-this-alias": "error",
+
+        "no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-expressions": ["error", { "allowTernary": true }],
+
+        "@typescript-eslint/prefer-for-of": "error",
+        "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/prefer-namespace-keyword": "error",
+        "@typescript-eslint/triple-slash-reference": "error",
+        "@typescript-eslint/unified-signatures": "error",
+
+        // eslint-plugin-import
+        "import/no-extraneous-dependencies": ["error", { "optionalDependencies": false }],
+
+        // eslint-plugin-jsdoc
+        "jsdoc/check-alignment": "error",
+
+        // eslint
+        "constructor-super": "error",
+        "dot-notation": "error",
+        "eqeqeq": "error",
+        "no-caller": "error",
+        "no-duplicate-case": "error",
+        "no-duplicate-imports": "error",
+        "no-empty": "error",
+        "no-eval": "error",
+        "no-extra-bind": "error",
+        "no-fallthrough": "error",
+        "no-new-func": "error",
+        "no-new-wrappers": "error",
+        "no-return-await": "error",
+        "no-sparse-arrays": "error",
+        "no-template-curly-in-string": "error",
+        "no-throw-literal": "error",
+        "no-undef-init": "error",
+        "no-unsafe-finally": "error",
+        "no-unused-labels": "error",
+        "no-var": "error",
+        "object-shorthand": "error",
+        "prefer-const": "error",
+        "prefer-object-spread": "error",
+        "use-isnan": "error"
+    }
+}

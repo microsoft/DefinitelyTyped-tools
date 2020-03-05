@@ -22,7 +22,8 @@
   "dependencies": {
     "@definitelytyped/header-parser": "^0.0.0",
     "@definitelytyped/utils": "^1.0.0",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0"
