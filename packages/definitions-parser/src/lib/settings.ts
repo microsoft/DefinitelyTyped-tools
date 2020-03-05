@@ -11,3 +11,6 @@ export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyType
 
 export const dependenciesWhitelist: ReadonlySet<string> =
   new Set(readFileSync(joinPaths(root, "dependenciesWhitelist.txt")).split(/\r?\n/));
+
+/** Note: this is 'types' and not '@types' */
+export const scopeName = "types";

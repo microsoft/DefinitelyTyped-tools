@@ -8,7 +8,20 @@ import {
 } from "@definitelytyped/utils";
 
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
-import { ParseDefinitionsOptions } from "./lib/common";
+
+/** Settings that may be determined dynamically. */
+export interface ParseDefinitionsOptions {
+    /**
+     * e.g. '../DefinitelyTyped'
+     * This is overridden to `cwd` when running the tester, as that is run from within DefinitelyTyped.
+     * If undefined, downloads instead.
+     */
+    readonly definitelyTypedPath: string | undefined;
+    /** Whether to show progress bars. Good when running locally, bad when running in CI. */
+    readonly progress: boolean;
+    /** Disabled in CI since it has problems logging errors from other processes. */
+    readonly parseInParallel: boolean;
+  }
 
 export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: LoggerWithErrors): Promise<FS> {
     if (options.definitelyTypedPath === undefined) {
@@ -27,3 +40,4 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
 export function getLocallyInstalledDefinitelyTyped(path: string): FS {
     return new DiskFS(`${path}/`);
 }
+

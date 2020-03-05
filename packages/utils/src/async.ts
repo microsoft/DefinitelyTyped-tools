@@ -1,4 +1,4 @@
-import { ProgressBar } from "./lib/progress";
+import { ProgressBar } from "./progress";
 import { initArray } from "./collections";
 
 /** Progress options needed for `nAtATime`. Other options will be inferred. */

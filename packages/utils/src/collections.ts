@@ -37,13 +37,13 @@ export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => 
   return out;
 }
 
-export function* mapIterator<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
+export function* mapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
   for (const input of inputs) {
     yield mapper(input);
   }
 }
 
-export function* flatMapIterator<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U>): Iterable<U> {
+export function* flatMapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U>): Iterable<U> {
   for (const input of inputs) {
     yield* mapper(input);
   }
@@ -157,4 +157,55 @@ export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: 
 
 export function unique<T>(arr: Iterable<T>): T[] {
   return [...new Set(arr)];
+}
+
+export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
+  const out = {} as T;
+  for (const key of Object.keys(data).sort()) {
+    out[key as keyof T] = data[key as keyof T];
+  }
+  return out;
+}
+
+export function recordToMap<T>(record: Record<string, T>): Map<string, T>;
+export function recordToMap<T, U>(record: Record<string, T>, cb: (t: T) => U): Map<string, U>;
+export function recordToMap<T, U>(record: Record<string, T>, cb?: (t: T) => U): Map<string, T | U> {
+  const m = new Map<string, T | U>();
+  for (const key of Object.keys(record)) {
+    m.set(key, cb ? cb(record[key]) : record[key]);
+  }
+  return m;
+}
+
+export function mapToRecord<T>(map: Map<string, T>): Record<string, T>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb: (t: T) => U): Record<string, U>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record<string, T | U> {
+  const o: Record<string, T | U> = {};
+  map.forEach((value, key) => { o[key] = cb ? cb(value) : value; });
+  return o;
+}
+
+/**
+ * Returns the input that is better than all others, or `undefined` if there are no inputs.
+ * @param isBetter Returns true if `a` should be preferred over `b`.
+ */
+export function best<T>(inputs: Iterable<T>, isBetter: (a: T, b: T) => boolean): T | undefined {
+  const iter = inputs[Symbol.iterator]();
+
+  const first = iter.next();
+  if (first.done) {
+    return undefined;
+  }
+
+  let res = first.value;
+  while (true) {
+    const { value, done } = iter.next();
+    if (done) {
+      break;
+    }
+    if (isBetter(value, res)) {
+      res = value;
+    }
+  }
+  return res;
 }

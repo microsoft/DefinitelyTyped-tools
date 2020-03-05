@@ -6,3 +6,5 @@ export * from "./io";
 export * from "./logging";
 export * from "./miscellany";
 export * from "./process";
+export * from "./progress";
+export * from "./semver";

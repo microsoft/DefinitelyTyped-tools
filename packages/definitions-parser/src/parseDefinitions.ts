@@ -1,15 +1,15 @@
 import { FS, LoggerWithErrors, filterNAtATimeOrdered, runWithChildProcesses } from "@definitelytyped/utils";
-import { writeDataFile } from "./lib/common";
+import { writeDataFile } from "./dataFile";
 import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
-import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./lib/packages";
+import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./packages";
 
 export interface ParallelOptions {
     readonly nProcesses: number;
     readonly definitelyTypedPath: string;
 }
 
-export default async function parseDefinitions(dt: FS, parallel: ParallelOptions | undefined, log: LoggerWithErrors): Promise<AllPackages> {
+export async function parseDefinitions(dt: FS, parallel: ParallelOptions | undefined, log: LoggerWithErrors): Promise<AllPackages> {
     log.info("Parsing definitions...");
     const typesFS = dt.subDir("types");
     const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, typesFS.readdir(), name => typesFS.isDirectory(name));

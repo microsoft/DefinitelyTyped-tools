@@ -4,6 +4,7 @@
     "types": ["node", "jest"]
   },
   "references": [
-    { "path": ".." }
+    { "path": ".." },
+    { "path": "../../definitions-parser" }
   ]
 }

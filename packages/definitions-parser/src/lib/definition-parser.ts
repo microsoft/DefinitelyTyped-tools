@@ -10,7 +10,7 @@ import {
     TypingsDataRaw,
     TypingsVersionsRaw,
     TypingVersion,
-} from "./packages";
+} from "../packages";
 import { dependenciesWhitelist } from "./settings";
 import { FS, split, mapDefined, filter, sort, withoutStart, computeHash, hasWindowsSlashes, join, flatMap, unique, unmangleScopedPackage } from "@definitelytyped/utils";
 
