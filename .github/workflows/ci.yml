@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - name: install
-      run: npm ci && lerna bootstrap
+      run: npm ci
     - name: lint
       run: npm run lint
     - name: test

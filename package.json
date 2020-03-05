@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "prepare": "lerna bootstrap",
     "pretest": "npm run build",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
