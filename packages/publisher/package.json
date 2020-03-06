@@ -1,8 +1,8 @@
 {
-  "name": "types-publisher",
+  "name": "@definitelytyped/publisher",
   "version": "0.0.12",
-  "main": "./bin/index.js",
-  "types": "./bin/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
     "@definitelytyped/definitions-parser": "^0.0.12",
