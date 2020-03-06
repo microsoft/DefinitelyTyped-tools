@@ -30,6 +30,6 @@ jobs:
         tag=${ref:11} # 0.0.1
         npx lerna version $tag --yes --tag-version-prefix=''
     - name: publish
-      run: npx lerna publish from-git --yes --tag-version-prefix=''
+      run: npx lerna publish from-git --yes --tag-version-prefix='' --no-verify-access
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
