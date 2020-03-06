@@ -11,6 +11,8 @@ jobs:
         node-version: 12.x
         registry-url: https://npm.pkg.github.com
         scope: '@definitelytyped'
+    - name: install
+      run: npm ci
     - name: lint
       run: npm run lint
     - name: test
