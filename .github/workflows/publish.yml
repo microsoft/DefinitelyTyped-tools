@@ -28,7 +28,7 @@ jobs:
       run: |
         ref=${{ github.ref }} # refs/tags/v0.0.1
         tag=${ref:10} # v0.0.1
-        npx lerna version $tag --yes
+        npx lerna version $tag --yes --no-git-tag-version
     - name: publish
       run: npx lerna publish from-git --yes
       env:
