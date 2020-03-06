@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@definitelytyped/definitions-parser",
   "version": "0.0.0",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
@@ -7,7 +6,8 @@
   "license": "MIT",
   "main": "dist/index.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",

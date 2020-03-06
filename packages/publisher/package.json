@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "types-publisher",
   "version": "0.0.0",
   "main": "./bin/index.js",
@@ -77,5 +76,9 @@
   "engines": {
     "node": ">=6.10.0"
   },
-  "homepage": "https://github.com/Microsoft/types-publisher#readme"
+  "homepage": "https://github.com/Microsoft/types-publisher#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
+  }
 }

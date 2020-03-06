@@ -1,13 +1,13 @@
 {
-  "private": true,
   "name": "@definitelytyped/utils",
   "version": "0.0.0",
-  "description": "> TODO: description",
+  "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
