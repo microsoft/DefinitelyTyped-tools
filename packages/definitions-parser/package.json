@@ -2,7 +2,7 @@
   "name": "@definitelytyped/definitions-parser",
   "version": "0.0.11",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
-  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
+  "homepage": "https://github.com/DefinitelyTyped/tools#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "publishConfig": {
@@ -11,13 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped-tools.git"
+    "url": "git+https://github.com/DefinitelyTyped/tools.git",
+    "directory": "packages/definitions-parser"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
+    "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "dependencies": {
     "@definitelytyped/header-parser": "^0.0.11",

@@ -3,7 +3,7 @@
   "version": "0.0.11",
   "description": "",
   "author": "Nathan Shively-Sanders <nathansa@microsoft.com>",
-  "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
+  "homepage": "https://github.com/DefinitelyTyped/tools#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "publishConfig": {
@@ -12,13 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped-tools.git"
+    "url": "git+https://github.com/DefinitelyTyped/tools.git",
+    "directory": "packages/header-parser"
   },
   "scripts": {
     "test": "jest"
   },
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools/issues"
+    "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "dependencies": {
     "@definitelytyped/utils": "^0.0.11",
