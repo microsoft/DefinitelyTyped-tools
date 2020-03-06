@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/utils",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped-tools#readme",
   "license": "MIT",
