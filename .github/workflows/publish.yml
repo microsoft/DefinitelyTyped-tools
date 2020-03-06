@@ -27,9 +27,9 @@ jobs:
     - name: version
       run: |
         ref=${{ github.ref }} # refs/tags/v0.0.1
-        tag=${ref:10} # v0.0.1
-        npx lerna version $tag --yes --no-git-tag-version
+        tag=${ref:11} # 0.0.1
+        npx lerna version $tag --yes --tag-version-prefix=''
     - name: publish
-      run: npx lerna publish from-git --yes
+      run: npx lerna publish from-git --yes --tag-version-prefix=''
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
