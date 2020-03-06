@@ -18,8 +18,8 @@ jobs:
     - name: test
       run: npm test
     - name: version
-      run: lerna version ${{ github.ref }}
+      run: npx lerna version ${{ github.ref }}
     - name: publish
-      run: lerna publish from-git --yes
+      run: npx lerna publish from-git --yes
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
