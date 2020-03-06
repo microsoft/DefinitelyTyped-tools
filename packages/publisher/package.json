@@ -66,18 +66,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DefinitelyTyped/publisher.git",
+    "url": "git+https://github.com/DefinitelyTyped/tools.git",
     "directory": "packages/publisher"
   },
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/publisher/issues"
+    "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "engines": {
     "node": ">=6.10.0"
   },
-  "homepage": "https://github.com/DefinitelyTyped/publisher#readme",
+  "homepage": "https://github.com/DefinitelyTyped/tools#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://npm.pkg.github.com/"
