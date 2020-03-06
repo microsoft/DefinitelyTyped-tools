@@ -1,13 +1,13 @@
 {
   "name": "@definitelytyped/publisher",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.14",
-    "@definitelytyped/header-parser": "^0.0.14",
-    "@definitelytyped/utils": "^0.0.14",
+    "@definitelytyped/definitions-parser": "^0.0.15",
+    "@definitelytyped/header-parser": "^0.0.15",
+    "@definitelytyped/utils": "^0.0.15",
     "@octokit/rest": "^16.1.0",
     "@types/node": "^12.12.29",
     "@types/tar-stream": "^1.6.0",
