@@ -102,6 +102,7 @@ graphql-tools
 grpc
 handlebars
 hoist-non-react-statics
+htmlparser2
 i18next
 immutable
 indefinite-observable
