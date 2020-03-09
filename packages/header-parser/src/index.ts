@@ -2,12 +2,15 @@ import pm = require("parsimmon");
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/utils";
 
 /*
-Example:
-// Type definitions for foo 1.2
-// Project: https://github.com/foo/foo, https://foo.com
-// Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.1
+
+  # Example header format #
+
+  // Type definitions for foo 1.2
+  // Project: https://github.com/foo/foo, https://foo.com
+  // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
+  // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+  // TypeScript Version: 2.1
+
 */
 
 export interface Header {

@@ -4,6 +4,32 @@ import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 
+/*
+
+  # How to add new version of Typescript #
+
+  For the RC:
+
+  1. Add a new version to the end of `supportedTags`.
+  2. Update failing tests.
+  3. Publish and update dependents.
+
+  For the release:
+
+  1. Add new versions to the end of `TypeScriptVersion` and `supported`.
+  2. Update failing tests.
+  3. Publish and update dependents.
+
+  # How to deprecate versions on Definitely Typed #
+
+  1. Move versions from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
+  2. Move versions from `supported` to `unsupported`.
+  3. Remove entry from `supportedTags`.
+  4. Update failing tests.
+  5. Publish and update dependents.
+
+*/
+
 const installsDir = path.join(os.homedir(), ".dts", "typescript-installs");
 
 /** Parseable but unsupported TypeScript versions. */
