@@ -50,6 +50,31 @@ describe("parse", () => {
     });
   });
 
+  it("works with slash end", () => {
+    const src = dedent`
+        // Type definitions for foo 1.2
+        // Project: https://github.com/foo/foo,
+        //          https://foo.com
+        // Definitions by: My Self <https://github.com/me/>,
+        //                 Some Other Guy <https://github.com/otherguy/>
+        // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+        ...file content...`;
+
+    expect(parseHeaderOrFail(src)).toStrictEqual({
+      libraryName: "foo",
+      libraryMajorVersion: 1,
+      libraryMinorVersion: 2,
+      typeScriptVersion: "2.8",
+      nonNpm: false,
+      projects: ["https://github.com/foo/foo", "https://foo.com"],
+      contributors: [
+        { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
+        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" }
+      ]
+    });
+  });
+
   it("works with bad url", () => {
     const src = dedent`
             // Type definitions for foo 1.2

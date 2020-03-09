@@ -134,15 +134,16 @@ function contributorsParser(strict: boolean): pm.Parser<readonly Author[]> {
   const contributor: pm.Parser<Author> = strict
     ? pm.seqMap(
         pm.regexp(/([^<]+) /, 1),
-        pm.regexp(/\<https\:\/\/github\.com\/([a-zA-Z\d\-]+)\>/, 1),
+        pm.regexp(/\<https\:\/\/github\.com\/([a-zA-Z\d\-]+)\/?\>/, 1),
         (name, githubUsername) => ({ name, url: `https://github.com/${githubUsername}`, githubUsername })
       )
     : // In non-strict mode, allows arbitrary URL, and trailing whitespace.
       pm.seqMap(pm.regexp(/([^<]+) /, 1), pm.regexp(/<([^>]+)> */, 1), (name, url) => {
-        const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)$/;
+        const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)\/?$/;
         const match = rgx.exec(url);
+        const githubUsername = match === null ? undefined : match[1];
         // tslint:disable-next-line no-null-keyword
-        return { name, url, githubUsername: match === null ? undefined : match[1] };
+        return { name, url: githubUsername ? `https://github.com/${githubUsername}` : url, githubUsername };
       });
   return pm.sepBy1(contributor, separator);
 }
