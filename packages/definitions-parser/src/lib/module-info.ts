@@ -14,7 +14,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
     if (ref.startsWith(".")) {
       return;
     }
-    const dependency = rootName(ref, all);
+    const dependency = rootName(ref, all, packageName);
     if (dependency !== packageName) {
       dependencies.add(dependency);
     }
@@ -118,8 +118,10 @@ function properModuleName(folderName: string, fileName: string): string {
 /**
  * "foo/bar/baz" -> "foo"; "@foo/bar/baz" -> "@foo/bar"
  * Note: Throws an error for references like
+ * "bar/v3" because referencing old versions of *other* packages is illegal;
+ * those directories won't exist in the published @types package.
  */
-function rootName(importText: string, typeFiles: Map<string, unknown>): string {
+function rootName(importText: string, typeFiles: Map<string, unknown>, packageName: string): string {
   let slash = importText.indexOf("/");
   // Root of `@foo/bar/baz` is `@foo/bar`
   if (importText.startsWith("@")) {
@@ -128,7 +130,7 @@ function rootName(importText: string, typeFiles: Map<string, unknown>): string {
   }
   const root = importText.slice(0, slash);
   const postImport = importText.slice(slash + 1);
-  if (slash > -1 && postImport.match(/v\d+$/) && !typeFiles.has(postImport + ".d.ts")) {
+  if (slash > -1 && postImport.match(/v\d+$/) && !typeFiles.has(postImport + ".d.ts") && root !== packageName) {
     throw new Error(`${importText}: do not directly import specific versions of another types package.
 You should work with the latest version of ${root} instead.`);
   }
@@ -382,7 +384,7 @@ export function getTestDependencies(
     for (const imported of imports(sourceFile)) {
       hasImports = true;
       if (!imported.startsWith(".")) {
-        const dep = rootName(imported, typeFiles);
+        const dep = rootName(imported, typeFiles, packageName);
         if (!dependencies.has(dep) && dep !== packageName) {
           testDependencies.add(dep);
         }
