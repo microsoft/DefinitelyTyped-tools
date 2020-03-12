@@ -28,7 +28,8 @@ import {
   PackageJsonDependency,
   getFullNpmName,
   DependencyVersion,
-  License
+  License,
+  formatTypingVersion
 } from "@definitelytyped/definitions-parser";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 
@@ -212,8 +213,7 @@ function getDependencies(
 }
 
 function dependencySemver(dependency: DependencyVersion): string {
-  // tslint:disable-next-line strict-string-expressions
-  return dependency === "*" ? dependency : `^${dependency}`;
+  return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
 }
 
 export function createNotNeededPackageJSON(
