@@ -5,13 +5,12 @@ import {
   mapValues,
   assertSorted,
   unmangleScopedPackage,
-  joinPaths,
   Semver,
   TypeScriptVersion,
   AllTypeScriptVersion
 } from "@definitelytyped/utils";
 import { readDataFile } from "./data-file";
-import { outputDirPath, scopeName } from "./lib/settings";
+import { scopeName } from "./lib/settings";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -228,10 +227,6 @@ export abstract class PackageBase {
 
   get id(): PackageId {
     return { name: this.name, version: { major: this.major, minor: this.minor } };
-  }
-
-  get outputDirectory(): string {
-    return joinPaths(outputDirPath, this.desc);
   }
 }
 

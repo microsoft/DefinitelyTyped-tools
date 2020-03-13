@@ -4,6 +4,7 @@ import { Registry } from "./common";
 import { NpmPublishClient } from "./npm-client";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
 import { ChangedTyping } from "./versions";
+import { outputDirectory } from "../util/util";
 
 export async function publishTypingsPackage(
   client: NpmPublishClient,
@@ -46,7 +47,7 @@ async function common(
   dry: boolean,
   registry: Registry
 ): Promise<void> {
-  const packageDir = pkg.outputDirectory;
+  const packageDir = outputDirectory(pkg);
   const packageJson = await readFileAndWarn(
     "generate",
     joinPaths(packageDir + (registry === Registry.Github ? "-github" : ""), "package.json")

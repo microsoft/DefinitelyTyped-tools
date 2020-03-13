@@ -39,9 +39,6 @@
     "@types/yargs": "^8.0.1"
   },
   "scripts": {
-    "test": "npm run build && jest && npm run lint",
-    "build": "node node_modules/typescript/lib/tsc.js",
-    "watch": "node node_modules/typescript/lib/tsc.js --watch",
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
     "parse": "node -r source-map-support/register dist/parse-definitions.js",

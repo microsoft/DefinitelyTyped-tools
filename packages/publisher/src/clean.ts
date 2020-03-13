@@ -1,12 +1,15 @@
+import { clean as cleanParser } from "@definitelytyped/definitions-parser";
+import { cleanLogDirectory } from "@definitelytyped/utils";
 import { removeSync } from "fs-extra";
+import { outputDirPath, validateOutputPath } from "./lib/settings";
 
 if (!module.parent) {
   clean();
 }
 
 export function clean() {
-  for (const dir of ["data", "logs", "output"]) {
-    console.log(`Clean ${dir}`);
-    removeSync(dir);
-  }
+  cleanParser();
+  cleanLogDirectory();
+  removeSync(outputDirPath);
+  removeSync(validateOutputPath);
 }

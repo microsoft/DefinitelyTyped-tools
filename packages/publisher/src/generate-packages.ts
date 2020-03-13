@@ -32,6 +32,7 @@ import {
   formatTypingVersion
 } from "@definitelytyped/definitions-parser";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
+import { outputDirectory } from "./util/util";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "../../..", "LICENSE"), "utf-8");
 
@@ -54,12 +55,13 @@ export default async function generatePackages(
   const [log, logResult] = logger();
   log("\n## Generating packages");
 
+  await mkdirp(outputDirPath);
   await emptyDir(outputDirPath);
 
   for (const { pkg, version } of changedPackages.changedTypings) {
     await generateTypingPackage(pkg, allPackages, version, dt);
     if (tgz) {
-      await writeTgz(pkg.outputDirectory, `${pkg.outputDirectory}.tgz`);
+      await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
     log(` * ${pkg.desc}`);
   }
@@ -121,7 +123,7 @@ async function writeCommonOutputs(
   readme: string,
   registry: Registry
 ): Promise<void> {
-  await mkdir(pkg.outputDirectory + (registry === Registry.Github ? "-github" : ""));
+  await mkdir(outputDirectory(pkg) + (registry === Registry.Github ? "-github" : ""));
 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
@@ -135,9 +137,9 @@ async function writeCommonOutputs(
 }
 
 async function outputFilePath(pkg: AnyPackage, registry: Registry, filename: string): Promise<string> {
-  const full = joinPaths(pkg.outputDirectory + (registry === Registry.Github ? "-github" : ""), filename);
+  const full = joinPaths(outputDirectory(pkg) + (registry === Registry.Github ? "-github" : ""), filename);
   const dir = path.dirname(full);
-  if (dir !== pkg.outputDirectory) {
+  if (dir !== outputDirectory(pkg)) {
     await mkdirp(dir);
   }
   return full;

@@ -1,4 +1,4 @@
-import { ensureDir } from "fs-extra";
+import { ensureDir, removeSync } from "fs-extra";
 
 import { logDir } from "./lib/settings";
 import { joinPaths } from "./fs";
@@ -102,4 +102,8 @@ export async function writeLog(logName: string, contents: readonly string[]): Pr
 
 export function joinLogWithErrors({ infos, errors }: LogWithErrors): Log {
   return errors.length ? infos.concat(["", "=== ERRORS ===", ""], errors) : infos;
+}
+
+export function cleanLogDirectory() {
+  removeSync(logDir);
 }

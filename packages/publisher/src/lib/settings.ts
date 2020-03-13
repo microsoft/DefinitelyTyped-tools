@@ -8,7 +8,6 @@ export const githubRegistry = `https://${githubRegistryHostName}/`;
 export const npmApi = "api.npmjs.org";
 
 const root = joinPaths(__dirname, "..", "..");
-export const dataDirPath = joinPaths(root, "data");
 export const outputDirPath = joinPaths(root, "output");
 export const validateOutputPath = joinPaths(root, "validateOutput");
 export const logDir = joinPaths(root, "logs");
