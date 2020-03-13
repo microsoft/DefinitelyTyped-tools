@@ -24,3 +24,9 @@ export const defaultLocalOptions: TesterOptions = {
   progress: true,
   parseInParallel: true
 };
+
+export const defaultRemoteOptions: ParseDefinitionsOptions = {
+  definitelyTypedPath: undefined,
+  progress: false,
+  parseInParallel: false
+};

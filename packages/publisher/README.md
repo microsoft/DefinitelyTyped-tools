@@ -38,7 +38,7 @@ npm run check
 npm run calculate-versions
 npm run generate
 npm run index
-npm run publish
+npm run publish-packages
 npm run upload-blobs
 ```
 
