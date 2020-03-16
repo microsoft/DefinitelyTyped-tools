@@ -16,7 +16,8 @@
     "directory": "packages/definitions-parser"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "tsc -b",
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/definitions-parser"
   },
   "bugs": {
     "url": "https://github.com/DefinitelyTyped/tools/issues"

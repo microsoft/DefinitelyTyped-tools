@@ -5,7 +5,7 @@ module.exports = {
   testMatch: ["<rootDir>/packages/*/test/**/*.test.ts"],
   globals: {
     "ts-jest": {
-      tsConfig: "./tsconfig.test.json",
+      tsConfig: "<rootDir>/tsconfig.test.json",
       diagnostics: false
     }
   }

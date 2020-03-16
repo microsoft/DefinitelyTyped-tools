@@ -17,7 +17,8 @@
     "directory": "packages/header-parser"
   },
   "scripts": {
-    "test": "jest"
+    "build": "tsc -b",
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/header-parser"
   },
   "bugs": {
     "url": "https://github.com/DefinitelyTyped/tools/issues"
