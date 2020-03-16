@@ -1,11 +1,3 @@
-# `@definitelytyped/utils`
+# @definitelytyped/utils
 
-> TODO: description
-
-## Usage
-
-```
-const utils = require('@definitelytyped/utils');
-
-// TODO: DEMONSTRATE API
-```
+Common utilities shared between DefinitelyTyped tools. Mostly extracted from [types-publisher](https://github.com/microsoft/types-publisher).
