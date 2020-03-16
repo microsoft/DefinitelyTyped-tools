@@ -112,6 +112,7 @@ jest-environment-node
 jest-environment-jsdom
 jest-mock
 jest-snapshot
+jimp
 jointjs
 levelup
 lit-element
