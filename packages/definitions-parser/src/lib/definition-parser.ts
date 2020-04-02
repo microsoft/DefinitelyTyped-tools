@@ -121,10 +121,10 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
     }
 
     const version = match[1];
-    if (!isTypeScriptVersion(version)) {
-      throw new Error(`Directory name starting with 'ts' should be a valid TypeScript version. Got: ${version}`);
+    if (parseInt(version, 10) < 3) {
+      throw new Error(`Directory name starting with 'ts' should be a TypeScript version newer than 3.0. Got: ${version}`);
     }
-    return version;
+    return version as TypeScriptVersion;
   });
   return { remainingLs, typesVersions, hasPackageJson: withoutPackageJson.length !== ls.length };
 }
