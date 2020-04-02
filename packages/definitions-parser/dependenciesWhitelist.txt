@@ -185,6 +185,7 @@ tslint
 ts-toolbelt
 tweetnacl
 typescript
+typescript-tuple
 utility-types
 vega-typings
 vfile
