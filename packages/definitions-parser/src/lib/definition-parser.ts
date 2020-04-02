@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { isTypeScriptVersion, parseHeaderOrFail } from "@definitelytyped/header-parser";
+import { parseHeaderOrFail } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
 import {
   formatTypingVersion,
