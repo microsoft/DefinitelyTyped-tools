@@ -12,8 +12,6 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: 12.x
-        registry-url: https://npm.pkg.github.com
-        scope: '@definitelytyped'
     - name: configure git
       run: |
         git config user.email "typescriptbot@microsoft.com"
@@ -29,7 +27,8 @@ jobs:
         ref=${{ github.ref }} # refs/tags/v0.0.1
         tag=${ref:11} # 0.0.1
         npx lerna version $tag --yes --tag-version-prefix=''
-    - name: publish
+    - name: publish to npm
+      if: ${{ false }} # disable for now
       run: npx lerna publish from-git --yes --tag-version-prefix='' --no-verify-access
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

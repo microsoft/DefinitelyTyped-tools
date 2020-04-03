@@ -1,0 +1,28 @@
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  deploy:
+    if: |
+      github.event.issue.number == 1
+        && github.event.comment.user.login == 'andrewbranch'
+        && startsWith(github.event.comment.body, '/deploy publisher')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: install
+      run: npm ci
+    - name: lint
+      run: npm run lint
+    - name: test
+      run: npm test
+    - name: deploy publisher
+      uses: azure/webapps-deploy@v1
+      with:
+        app-name: TypesPublisher
+        publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
