@@ -1,1 +1,1 @@
-require("./bin/webhook.js").default().catch(console.error);
+require("./dist/webhook.js").default().catch(console.error);
