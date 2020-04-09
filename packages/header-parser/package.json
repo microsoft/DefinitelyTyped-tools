@@ -23,5 +23,8 @@
     "@definitelytyped/utils": "^0.0.21",
     "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

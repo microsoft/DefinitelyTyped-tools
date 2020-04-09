@@ -28,5 +28,8 @@
     "@types/charm": "^1.0.1",
     "@types/fs-extra": "^8.1.0",
     "@types/tar-stream": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
