@@ -31,6 +31,14 @@ jobs:
         git commit -am "v$tag"
         git tag -f v$tag
         git push && git push --tags -f
+    # Necessary because publisher installs npm,
+    # which will be the default npm used to run
+    # `npm ci` on publisher itself in the next
+    # step, which starts by removing node_modules.
+    # So npm removes itself and then errors because
+    # it can’t find itself.
+    - name: clean
+      run: npx lerna clean
     - name: publish to npm
       run: npx lerna publish from-git --yes
       env:
