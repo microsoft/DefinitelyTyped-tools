@@ -43,3 +43,9 @@ jobs:
       run: npx lerna publish from-git --yes
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: trigger publisher deploy
+      uses: peter-evens/repository-dispatch@v1.0.0
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        event-type: published
+        
