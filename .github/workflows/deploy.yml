@@ -21,10 +21,22 @@ jobs:
       run: npm run lint
     - name: test
       run: npm test
+    - name: package
+      run: |
+        pushd packages/publisher
+        mkdir packed && cd $_
+        cp ../package.json ./
+        cp ../package-lock.json ./
+        cp ../tsconfig.json ./
+        cp ../server.js ./
+        cp ../IISNode.yml ./
+        cp -r ../dist ./
+        npm ci
+        popd
     - name: deploy publisher
       uses: azure/webapps-deploy@v1
       with:
         app-name: TypesPublisher
         publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
-        package: packages/publisher
+        package: packages/publisher/packed
         slot-name: typespublisher
