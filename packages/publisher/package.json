@@ -74,9 +74,5 @@
   "engines": {
     "node": ">=6.10.0"
   },
-  "homepage": "https://github.com/DefinitelyTyped/tools#readme",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
-  }
+  "homepage": "https://github.com/DefinitelyTyped/tools#readme"
 }
