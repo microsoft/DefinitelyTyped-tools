@@ -30,6 +30,7 @@ jobs:
         cp ../tsconfig.json ./
         cp ../server.js ./
         cp ../IISNode.yml ./
+        cp ../LICENSE ./
         cp -r ../dist ./
         npm install
         popd

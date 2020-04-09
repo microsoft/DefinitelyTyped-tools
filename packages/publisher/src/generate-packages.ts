@@ -34,7 +34,7 @@ import {
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
 
-const mitLicense = readFileSync(joinPaths(__dirname, "../../..", "LICENSE"), "utf-8");
+const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (!module.parent) {
   const tgz = !!yargs.argv.tgz;
