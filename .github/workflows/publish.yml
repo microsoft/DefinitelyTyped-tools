@@ -38,7 +38,7 @@ jobs:
     # So npm removes itself and then errors because
     # it can’t find itself.
     - name: clean
-      run: npx lerna clean
+      run: npx lerna clean --yes
     - name: publish to npm
       run: npx lerna publish from-git --yes
       env:
