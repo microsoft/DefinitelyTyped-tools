@@ -31,7 +31,7 @@ jobs:
         cp ../server.js ./
         cp ../IISNode.yml ./
         cp -r ../dist ./
-        npm ci
+        npm install
         popd
     - name: deploy publisher
       uses: azure/webapps-deploy@v1
