@@ -1,3 +1,4 @@
+import assert from "assert";
 import { sourceBranch } from "./lib/settings";
 import {
   PackageId,
@@ -19,7 +20,6 @@ import {
   UncachedNpmInfoClient,
   NpmInfo
 } from "@definitelytyped/utils";
-import { assert } from "console";
 import { getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {

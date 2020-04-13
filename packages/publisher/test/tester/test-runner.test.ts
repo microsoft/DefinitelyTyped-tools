@@ -1,8 +1,13 @@
-import { NpmInfo } from "../../src/lib/npm-client";
-import { AllPackages, NotNeededPackage, TypesDataFile } from "@definitelytyped/definitions-parser";
+import {
+  AllPackages,
+  NotNeededPackage,
+  TypesDataFile,
+  GitDiff,
+  getNotNeededPackages,
+  checkNotNeededPackage
+} from "@definitelytyped/definitions-parser";
 import { createTypingsVersionRaw, testo } from "../utils";
-
-import { checkNotNeededPackage, getNotNeededPackages, GitDiff } from "../../src/tester/test-runner";
+import { NpmInfo } from "@definitelytyped/utils";
 
 const typesData: TypesDataFile = {
   jquery: createTypingsVersionRaw("jquery", [], []),

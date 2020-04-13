@@ -4,7 +4,6 @@ import {
   createReadme,
   getLicenseFileText
 } from "../src/generate-packages";
-import { Registry } from "../src/lib/common";
 import {
   AllPackages,
   License,
@@ -16,6 +15,7 @@ import {
   createMockDT
 } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
+import { Registry } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
