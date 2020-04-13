@@ -1,0 +1,30 @@
+{
+  "name": "@definitelytyped/perf",
+  "version": "0.0.22",
+  "description": "",
+  "bin": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/perf",
+    "cli": "node dist/cli/index.js"
+  },
+  "author": "Andrew Branch <andrew@wheream.io>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andrewbranch/definitely-not-slow.git"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^2.1.7",
+    "@definitelytyped/definitions-parser": "^0.0.22",
+    "@definitelytyped/header-parser": "^0.0.22",
+    "@definitelytyped/utils": "^0.0.22",
+    "@octokit/rest": "^16.33.0",
+    "dtslint": "^2.0.3",
+    "markdown-table": "^1.1.3",
+    "typescript": "^3.8.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

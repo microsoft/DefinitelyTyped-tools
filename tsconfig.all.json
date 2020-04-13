@@ -4,6 +4,7 @@
   "references": [
     { "path": "packages/definitions-parser" },
     { "path": "packages/header-parser" },
+    { "path": "packages/perf" },
     { "path": "packages/publisher" },
     { "path": "packages/utils" }
   ]

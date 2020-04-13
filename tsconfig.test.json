@@ -8,6 +8,8 @@
   "files": [],
   "references": [
     { "path": "packages/header-parser/test" },
+    { "path": "packages/definitions-parser/test" },
+    { "path": "packages/perf/test" },
     { "path": "packages/publisher/test" },
     { "path": "packages/utils/test" }
   ]

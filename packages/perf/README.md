@@ -1,4 +1,4 @@
-# definitely-not-slow
+# @definitelytyped/perf
 
 Performance measuring utilities for [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped).
 
