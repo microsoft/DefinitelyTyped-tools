@@ -2,8 +2,7 @@ import assert = require("assert");
 import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
-import { defaultLocalOptions, Registry as RegistryName } from "./lib/common";
-import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient, withNpmCache } from "./lib/npm-client";
+import { defaultLocalOptions } from "./lib/common";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 import {
   getDefinitelyTyped,
@@ -30,8 +29,14 @@ import {
   sleep,
   npmInstallFlags,
   readJson,
-  Semver
+  Semver,
+  UncachedNpmInfoClient,
+  withNpmCache,
+  NpmPublishClient,
+  CachedNpmInfoClient,
+  Registry as RegistryName
 } from "@definitelytyped/utils";
+import { getSecret, Secret } from "./lib/secrets";
 
 const typesRegistry = "types-registry";
 const registryOutputPath = joinPaths(outputDirPath, typesRegistry);
@@ -85,7 +90,12 @@ export default async function publishRegistry(
     const packageJson = generatePackageJson(packageName, registryName, newVersion, newContentHash);
     await generate(registry, packageJson);
 
-    const publishClient = () => NpmPublishClient.create({ defaultTag: "next" }, registryName);
+    const token =
+      registryName === RegistryName.Github
+        ? await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN)
+        : await getSecret(Secret.NPM_TOKEN);
+
+    const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" }, registryName);
     if (!highestSemverVersion.equals(npmVersion)) {
       // There was an error in the last publish and types-registry wasn't validated.
       // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.

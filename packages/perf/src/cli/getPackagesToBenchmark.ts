@@ -1,12 +1,23 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { promisify } from 'util';
-import { getDatabase, getParsedPackages, DatabaseAccessLevel, compact, Args, assertNumber, assertString, getSystemInfo, getChangedPackages, packageIdsAreEqual, systemsAreCloseEnough } from '../common';
-import { nAtATime } from 'types-publisher/bin/util/util';
-import { getAffectedPackages } from 'types-publisher/bin/tester/get-affected-packages';
-import { PackageId } from 'types-publisher/bin/lib/packages';
-import { BenchmarkPackageOptions } from './benchmark';
-import { getLatestBenchmark } from '../query';
+import * as fs from "fs";
+import * as path from "path";
+import { promisify } from "util";
+import {
+  getDatabase,
+  getParsedPackages,
+  DatabaseAccessLevel,
+  compact,
+  Args,
+  assertNumber,
+  assertString,
+  getSystemInfo,
+  getChangedPackages,
+  packageIdsAreEqual,
+  systemsAreCloseEnough
+} from "../common";
+import { BenchmarkPackageOptions } from "./benchmark";
+import { getLatestBenchmark } from "../query";
+import { nAtATime } from "@definitelytyped/utils";
+import { getAffectedPackages, PackageId, formatDependencyVersion } from "@definitelytyped/definitions-parser";
 const writeFile = promisify(fs.writeFile);
 const currentSystem = getSystemInfo();
 
@@ -18,27 +29,22 @@ export interface GetPackagesToBenchmarkOptions {
 }
 
 function convertArgs(args: Args): GetPackagesToBenchmarkOptions {
-  const tsVersion = (args.typeScriptVersion || '').toString();
-  if (tsVersion.split('.').length !== 2) {
+  const tsVersion = (args.typeScriptVersion || "").toString();
+  if (tsVersion.split(".").length !== 2) {
     throw new Error(`Argument 'typeScriptVersion' must be in format 'major.minor' (e.g. '3.1')`);
   }
-  const dtPath = assertString(args.definitelyTypedPath || process.cwd(), 'definitelyTypedPath');
+  const dtPath = assertString(args.definitelyTypedPath || process.cwd(), "definitelyTypedPath");
   const definitelyTypedPath = path.isAbsolute(dtPath) ? dtPath : path.resolve(process.cwd(), dtPath);
   return {
     definitelyTypedPath,
-    agentCount: assertNumber(args.agentCount, 'agentCount'),
+    agentCount: assertNumber(args.agentCount, "agentCount"),
     typeScriptVersionMajorMinor: tsVersion,
-    outFile: assertString(args.outFile, 'outFile'),
+    outFile: assertString(args.outFile, "outFile")
   };
 }
 
 export async function getPackagesToBenchmark(args: Args) {
-  const {
-    definitelyTypedPath,
-    agentCount,
-    typeScriptVersionMajorMinor,
-    outFile,
-  } = convertArgs(args);
+  const { definitelyTypedPath, agentCount, typeScriptVersionMajorMinor, outFile } = convertArgs(args);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const changedPackages = await nAtATime(10, allPackages.allTypings(), async typingsData => {
@@ -46,17 +52,19 @@ export async function getPackagesToBenchmark(args: Args) {
       container,
       typeScriptVersionMajorMinor,
       packageName: typingsData.id.name,
-      packageVersion: typingsData.id.majorVersion,
+      packageVersion: formatDependencyVersion(typingsData.id.version)
     });
 
     // No previous run exists; run one
     if (!result) {
       return typingsData.id;
     }
-    
+
     // System specs are different; run it
     if (!systemsAreCloseEnough(result.system, currentSystem)) {
-      console.log(`Queueing ${typingsData.id.name}/${typingsData.id.majorVersion} due to system change`);
+      console.log(
+        `Queueing ${typingsData.id.name}/v${formatDependencyVersion(typingsData.id.version)} due to system change`
+      );
       return typingsData.id;
     }
 
@@ -69,6 +77,8 @@ export async function getPackagesToBenchmark(args: Args) {
       // Package has changed; run it
       return typingsData.id;
     }
+
+    return undefined;
   });
 
   const affectedPackages = getAffectedPackages(allPackages, compact(changedPackages));
@@ -86,15 +96,23 @@ export async function getPackagesToBenchmark(args: Args) {
   const benchmarkOptions: Partial<BenchmarkPackageOptions> = {
     definitelyTypedPath,
     tsVersion: typeScriptVersionMajorMinor,
-    upload: true,
-  }
+    upload: true
+  };
 
-  await writeFile(outFile, JSON.stringify({
-    changedPackageCount: affectedPackages.changedPackages.length,
-    dependentPackageCount: affectedPackages.dependentPackages.length,
-    totalPackageCount: packagesToBenchmark.length,
-    system: currentSystem,
-    options: benchmarkOptions,
-    groups,
-  }, undefined, 2), 'utf8');
+  await writeFile(
+    outFile,
+    JSON.stringify(
+      {
+        changedPackageCount: affectedPackages.changedPackages.length,
+        dependentPackageCount: affectedPackages.dependentPackages.length,
+        totalPackageCount: packagesToBenchmark.length,
+        system: currentSystem,
+        options: benchmarkOptions,
+        groups
+      },
+      undefined,
+      2
+    ),
+    "utf8"
+  );
 }

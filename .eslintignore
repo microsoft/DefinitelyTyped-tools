@@ -1,3 +1,4 @@
 *.d.ts
 dist/**
 node_modules
+packages/publisher/output

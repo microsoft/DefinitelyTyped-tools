@@ -1,2 +1,2 @@
-export * from './measurePerf';
-export * from './printSummary';
+export * from "./measurePerf";
+export * from "./printSummary";

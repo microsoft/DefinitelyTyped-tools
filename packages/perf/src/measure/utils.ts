@@ -7,7 +7,7 @@ export function mean(xs: number[]) {
 }
 
 export function max<T>(xs: T[], mapper: (x: T) => number): T {
-  return xs.reduce((max, x) => mapper(x) > mapper(max) ? x : max, xs[0]);
+  return xs.reduce((max, x) => (mapper(x) > mapper(max) ? x : max), xs[0]);
 }
 
 export function median(xs: number[]) {

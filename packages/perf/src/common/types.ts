@@ -1,4 +1,4 @@
-import { CpuInfo } from 'os';
+import { CpuInfo } from "os";
 
 export type RelationCacheSizes = {
   assignable: number;
@@ -77,7 +77,7 @@ export interface LanguageServiceSingleMeasurement {
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface SystemInfo {
-  cpus: Omit<CpuInfo, 'times'>[];
+  cpus: Omit<CpuInfo, "times">[];
   arch: string;
   platform: string;
   release: string;
@@ -94,14 +94,19 @@ export interface Document<T> {
 }
 
 type Serialized<T extends {}> = {
-  [K in keyof T]:
-    T[K] extends string ? string :
-    T[K] extends number ? number :
-    T[K] extends boolean ? boolean :
-    T[K] extends Date ? string :
-    T[K] extends ReadonlyArray<infer U> ? Serialized<U>[] :
-    T[K] extends {} ? Serialized<T[K]> :
-    never;
+  [K in keyof T]: T[K] extends string
+    ? string
+    : T[K] extends number
+    ? number
+    : T[K] extends boolean
+    ? boolean
+    : T[K] extends Date
+    ? string
+    : T[K] extends ReadonlyArray<infer U>
+    ? Serialized<U>[]
+    : T[K] extends {}
+    ? Serialized<T[K]>
+    : never;
 };
 
 export interface JSONDocument<T extends {}> {

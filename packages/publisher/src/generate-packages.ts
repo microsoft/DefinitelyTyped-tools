@@ -3,10 +3,8 @@ import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import * as path from "path";
 import * as yargs from "yargs";
 
-import { defaultLocalOptions, Registry } from "./lib/common";
-import { CachedNpmInfoClient, UncachedNpmInfoClient, withNpmCache, skipBadPublishes } from "./lib/npm-client";
+import { defaultLocalOptions } from "./lib/common";
 import { outputDirPath, sourceBranch } from "./lib/settings";
-import { writeTgz } from "./util/tgz";
 import {
   assertNever,
   joinPaths,
@@ -17,7 +15,12 @@ import {
   logger,
   writeLog,
   writeFile,
-  Logger
+  Logger,
+  writeTgz,
+  withNpmCache,
+  UncachedNpmInfoClient,
+  Registry,
+  CachedNpmInfoClient
 } from "@definitelytyped/utils";
 import {
   getDefinitelyTyped,
@@ -33,6 +36,7 @@ import {
 } from "@definitelytyped/definitions-parser";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
+import { skipBadPublishes } from "./lib/npm";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 

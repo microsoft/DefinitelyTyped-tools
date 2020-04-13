@@ -1,16 +1,22 @@
-import * as os from 'os';
-import * as path from 'path';
-import { execSync } from 'child_process';
-import { PerformanceObserver, performance } from 'perf_hooks';
-import { AllPackages } from 'types-publisher/bin/lib/packages';
-import { Semver } from 'types-publisher/bin/lib/versions';
-import { Node, SourceFile, Extension, CompilerOptions } from 'typescript';
-import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement, toPackageKey } from '../common';
-import { installDependencies } from './installDependencies';
-import { getParsedCommandLineForPackage } from './getParsedCommandLineForPackage';
-import { runWithListeningChildProcesses, runWithChildProcesses } from 'types-publisher/bin/util/util';
-import { measureLanguageServiceWorkerFilename, MeasureLanguageServiceChildProcessArgs } from './measureLanguageServiceWorker';
-import { MeasureBatchCompilationChildProcessArgs, measureBatchCompilationWorkerFilename, MeasureBatchCompilationChildProcessResult } from './measureBatchCompilationWorker';
+import * as os from "os";
+import * as path from "path";
+import { execSync } from "child_process";
+import { PerformanceObserver, performance } from "perf_hooks";
+import { Node, SourceFile, Extension, CompilerOptions } from "typescript";
+import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement, toPackageKey } from "../common";
+import { installDependencies } from "./installDependencies";
+import { getParsedCommandLineForPackage } from "./getParsedCommandLineForPackage";
+import {
+  measureLanguageServiceWorkerFilename,
+  MeasureLanguageServiceChildProcessArgs
+} from "./measureLanguageServiceWorker";
+import {
+  MeasureBatchCompilationChildProcessArgs,
+  measureBatchCompilationWorkerFilename,
+  MeasureBatchCompilationChildProcessResult
+} from "./measureBatchCompilationWorker";
+import { AllPackages, parseVersionFromDirectoryName } from "@definitelytyped/definitions-parser";
+import { runWithListeningChildProcesses, runWithChildProcesses, Semver } from "@definitelytyped/utils";
 
 export interface MeasurePerfOptions {
   packageName: string;
@@ -23,7 +29,7 @@ export interface MeasurePerfOptions {
   iterations: number;
   allPackages: AllPackages;
   tsPath: string;
-  ts: typeof import('typescript');
+  ts: typeof import("typescript");
   batchRunStart: Date;
   failOnErrors?: boolean;
 }
@@ -41,22 +47,26 @@ export async function measurePerf({
   tsPath,
   ts,
   batchRunStart,
-  failOnErrors,
+  failOnErrors
 }: MeasurePerfOptions) {
   let duration = NaN;
-  const sourceVersion = execSync('git rev-parse HEAD', { cwd: definitelyTypedRootPath, encoding: 'utf8' }).trim();
+  const sourceVersion = execSync("git rev-parse HEAD", { cwd: definitelyTypedRootPath, encoding: "utf8" }).trim();
   const observer = new PerformanceObserver(list => {
-    const totalMeasurement = list.getEntriesByName('benchmark')[0];
+    const totalMeasurement = list.getEntriesByName("benchmark")[0];
     duration = totalMeasurement.duration;
   });
 
-  observer.observe({ entryTypes: ['measure'] });
-  performance.mark('benchmarkStart');
-  const typesPath = path.join(definitelyTypedRootPath, 'types');
-  const typings = allPackages.getTypingsData({ name: packageName, majorVersion: parseInt(packageVersion, 10) || '*'  });
+  observer.observe({ entryTypes: ["measure"] });
+  performance.mark("benchmarkStart");
+  const typesPath = path.join(definitelyTypedRootPath, "types");
+  const version = parseVersionFromDirectoryName(packageVersion) || "*";
+  const typings = allPackages.getTypingsData({
+    name: packageName,
+    version
+  });
   const packagePath = path.join(typesPath, typings.subDirectoryPath);
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
-  const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : '.');
+  const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : ".");
   await installDependencies(allPackages, typings.id, typesPath);
 
   const commandLine = getParsedCommandLineForPackage(ts, latestTSTypesDir);
@@ -67,7 +77,11 @@ export async function measurePerf({
   let languageServiceCrashed = false;
   const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
   if (progress) {
-    updateProgress(`${toPackageKey(packageName, packageVersion)}: benchmarking over ${nProcesses} processes`, 0, testMatrix.inputs.length);
+    updateProgress(
+      `${toPackageKey(packageName, version)}: benchmarking over ${nProcesses} processes`,
+      0,
+      testMatrix.inputs.length
+    );
   }
 
   await runWithListeningChildProcesses({
@@ -80,33 +94,34 @@ export async function measurePerf({
     softTimeoutMs: maxRunSeconds * 1000,
     handleCrash: input => {
       languageServiceCrashed = true;
-      console.error('Failed measurement on request:', JSON.stringify(input, undefined, 2));
+      console.error("Failed measurement on request:", JSON.stringify(input, undefined, 2));
     },
     handleOutput: (measurement: LanguageServiceSingleMeasurement) => {
       testMatrix.addMeasurement(measurement);
       done++;
       if (progress) {
         updateProgress(
-          `${toPackageKey(packageName, packageVersion)}: benchmarking over ${nProcesses} processes`,
+          `${toPackageKey(packageName, version)}: benchmarking over ${nProcesses} processes`,
           done,
-          testMatrix.inputs.length);
+          testMatrix.inputs.length
+        );
       } else if (Date.now() - lastUpdate > 1000 * 60 * 5) {
         // Log every 5 minutes or so to make sure Pipelines doesn’t shut us down
-        console.log((100 * done / testMatrix.inputs.length).toFixed(1) + '% done...');
+        console.log(((100 * done) / testMatrix.inputs.length).toFixed(1) + "% done...");
         lastUpdate = Date.now();
       }
-    },
+    }
   });
 
   if (progress && done !== testMatrix.inputs.length) {
-    updateProgress(`${toPackageKey(packageName, packageVersion)}: timed out`, done, testMatrix.inputs.length);
+    updateProgress(`${toPackageKey(packageName, version)}: timed out`, done, testMatrix.inputs.length);
     process.stdout.write(os.EOL);
   }
 
   const batchCompilationInput: MeasureBatchCompilationChildProcessArgs = {
     tsPath,
     fileNames: commandLine.fileNames,
-    options: commandLine.options,
+    options: commandLine.options
   };
 
   let batchCompilationResult: MeasureBatchCompilationChildProcessResult | undefined;
@@ -117,15 +132,15 @@ export async function measurePerf({
     nProcesses: 1,
     handleOutput: (result: MeasureBatchCompilationChildProcessResult) => {
       batchCompilationResult = result;
-    },
+    }
   });
 
   if (!batchCompilationResult) {
-    throw new Error('Failed to get batch compilation metrics');
+    throw new Error("Failed to get batch compilation metrics");
   }
-  
-  performance.mark('benchmarkEnd');
-  performance.measure('benchmark', 'benchmarkStart', 'benchmarkEnd');
+
+  performance.mark("benchmarkEnd");
+  performance.measure("benchmark", "benchmarkStart", "benchmarkEnd");
 
   const measurement: PackageBenchmark = {
     ...batchCompilationResult,
@@ -139,7 +154,7 @@ export async function measurePerf({
     requestedLanguageServiceTestIterations: iterations,
     languageServiceCrashed,
     testIdentifierCount: testMatrix.uniquePositionCount,
-    batchRunStart,
+    batchRunStart
   };
 
   return measurement;
@@ -149,8 +164,7 @@ export async function measurePerf({
     ts.forEachChild(sourceFile, function visit(node) {
       if (ts.isIdentifier(node)) {
         identifiers.push(node);
-      }
-      else {
+      } else {
         ts.forEachChild(node, visit);
       }
     });
@@ -160,7 +174,7 @@ export async function measurePerf({
   function getTestFileNames(fileNames: readonly string[]) {
     return fileNames.filter(name => {
       const ext = path.extname(name);
-      return (ext === Extension.Ts || ext === Extension.Tsx)  && !name.endsWith(Extension.Dts);
+      return (ext === Extension.Ts || ext === Extension.Tsx) && !name.endsWith(Extension.Dts);
     });
   }
 
@@ -179,7 +193,8 @@ export async function measurePerf({
       const sourceFile = ts.createSourceFile(
         testPath,
         ts.sys.readFile(testPath)!,
-        compilerOptions.target || ts.ScriptTarget.Latest);
+        compilerOptions.target || ts.ScriptTarget.Latest
+      );
       // Reverse: more complex examples are usually near the end of test files,
       // so prioritize those.
       const identifiers = getIdentifiers(sourceFile).reverse();
@@ -200,7 +215,7 @@ export async function measurePerf({
               line: lineAndCharacter.line + 1,
               offset: lineAndCharacter.character + 1,
               completionsDurations: [],
-              quickInfoDurations: [],
+              quickInfoDurations: []
             };
             positionMap.set(start, benchmark);
           }
@@ -208,7 +223,7 @@ export async function measurePerf({
             fileName: testPath,
             start,
             packageDirectory,
-            tsPath,
+            tsPath
           });
         }
       }
@@ -223,30 +238,38 @@ export async function measurePerf({
       },
       getAllBenchmarks: () => {
         return Array.prototype.concat
-          .apply([], Array.from(fileMap.values()).map(map => Array.from(map.values())))
-          .filter((benchmark: LanguageServiceBenchmark) =>
-            benchmark.completionsDurations.length > 0 ||
-            benchmark.quickInfoDurations.length > 0);
-      },
+          .apply(
+            [],
+            Array.from(fileMap.values()).map(map => Array.from(map.values()))
+          )
+          .filter(
+            (benchmark: LanguageServiceBenchmark) =>
+              benchmark.completionsDurations.length > 0 || benchmark.quickInfoDurations.length > 0
+          );
+      }
     };
   }
 }
 
-function getLatestTypesVersionForTypeScriptVersion(typesVersions: readonly string[], typeScriptVersion: string): string | undefined {
-  const tsVersion = Semver.parse(typeScriptVersion.replace(/-dev.*$/, ''));
+function getLatestTypesVersionForTypeScriptVersion(
+  typesVersions: readonly string[],
+  typeScriptVersion: string
+): string | undefined {
+  const tsVersion = Semver.parse(typeScriptVersion.replace(/-dev.*$/, ""));
   for (let i = typesVersions.length - 1; i > 0; i--) {
     const typesVersion = Semver.parse(typesVersions[i]);
     if (tsVersion.greaterThan(typesVersion)) {
       return typesVersions[i];
     }
   }
+  return;
 }
 
 function updateProgress(text: string, done: number, total: number) {
   const padDigits = total.toString().length - done.toString().length;
   if (done === total) {
     if (process.stdout.clearLine && process.stdout.cursorTo) {
-      process.stdout.clearLine();
+      process.stdout.clearLine(0);
       process.stdout.cursorTo(0);
       process.stdout.write(`${text} (✔)`);
       process.stdout.write(os.EOL);
@@ -254,8 +277,8 @@ function updateProgress(text: string, done: number, total: number) {
   } else if (!done) {
     process.stdout.write(`${text}`);
   } else if (process.stdout.clearLine && process.stdout.cursorTo) {
-    process.stdout.clearLine();
+    process.stdout.clearLine(0);
     process.stdout.cursorTo(0);
-    process.stdout.write(`${text} ${' '.repeat(padDigits)}(${done}/${total} trials)`);
+    process.stdout.write(`${text} ${" ".repeat(padDigits)}(${done}/${total} trials)`);
   }
 }

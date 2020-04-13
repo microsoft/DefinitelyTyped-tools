@@ -1,10 +1,10 @@
-import { CosmosClient, Database, Container } from '@azure/cosmos';
-import { config } from './config';
-import { assertNever } from 'types-publisher/bin/util/util';
+import { CosmosClient, Database, Container } from "@azure/cosmos";
+import { config } from "./config";
+import { assertNever } from "@definitelytyped/utils";
 
 export const enum DatabaseAccessLevel {
-  Read = 'read',
-  Write = 'write',
+  Read = "read",
+  Write = "write"
 }
 
 function getKey(accessLevel: DatabaseAccessLevel) {
@@ -16,32 +16,34 @@ function getKey(accessLevel: DatabaseAccessLevel) {
     default:
       assertNever(accessLevel);
   }
-};
+}
 
-export async function getDatabase(accessLevel: DatabaseAccessLevel): Promise<{
+export async function getDatabase(
+  accessLevel: DatabaseAccessLevel
+): Promise<{
   database: Database;
   packageBenchmarks: Container;
   typeScriptComparisons: Container;
 }> {
   const client = new CosmosClient({
     endpoint: config.database.endpoint,
-    key: getKey(accessLevel),
+    key: getKey(accessLevel)
   });
 
   const { database } = await client.databases.createIfNotExists({
-    id: config.database.benchmarksDatabaseId,
+    id: config.database.benchmarksDatabaseId
   });
 
   const { container: packageBenchmarks } = await database.containers.createIfNotExists({
     id: config.database.packageBenchmarksContainerId,
     partitionKey: {
-      kind: 'Hash',
-      paths: ['/body/packageName']
+      kind: "Hash",
+      paths: ["/body/packageName"]
     }
   });
 
   const { container: typeScriptComparisons } = await database.containers.createIfNotExists({
-    id: config.database.typeScriptComparisonsContainerId,
+    id: config.database.typeScriptComparisonsContainerId
   });
 
   return { database, packageBenchmarks, typeScriptComparisons };

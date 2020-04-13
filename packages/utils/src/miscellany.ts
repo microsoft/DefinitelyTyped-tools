@@ -29,3 +29,7 @@ export function unmangleScopedPackage(packageName: string): string | undefined {
   const separator = "__";
   return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
 }
+
+export async function sleep(seconds: number): Promise<void> {
+  return new Promise<void>(resolve => setTimeout(resolve, seconds * 1000));
+}

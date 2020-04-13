@@ -1,13 +1,13 @@
-import { IssuesListCommentsResponseItem } from '@octokit/rest';
-import { config } from '../common';
-import { OverallChange } from '../analysis';
+import { IssuesListCommentsResponseItem } from "@octokit/rest";
+import { config } from "../common";
+import { OverallChange } from "../analysis";
 
-const commentTagStart = '<!-- @dt-perf ';
-const commentTagEnd = ' -->';
+const commentTagStart = "<!-- @dt-perf ";
+const commentTagEnd = " -->";
 
 function assertCommentSafe(str: string) {
-  if (str.includes('-->')) {
-    throw new Error('Data is unsafe to serialize in HTML comment');
+  if (str.includes("-->")) {
+    throw new Error("Data is unsafe to serialize in HTML comment");
   }
   return str;
 }
@@ -20,19 +20,18 @@ export interface CommentData {
 }
 
 export function createPerfCommentBody(data: CommentData, body: string): string {
-  return [
-    commentTagStart + assertCommentSafe(JSON.stringify({ version: 2, data })) + commentTagEnd,
-    '',
-    body,
-  ].join('\n');
+  return [commentTagStart + assertCommentSafe(JSON.stringify({ version: 2, data })) + commentTagEnd, "", body].join(
+    "\n"
+  );
 }
 
-export function isPerfComment({ body, user }: Pick<IssuesListCommentsResponseItem, 'body' | 'user'>): boolean {
-  return user.login === config.github.typeScriptBotUsername
-    && body.trimLeft().startsWith(commentTagStart);
+export function isPerfComment({ body, user }: Pick<IssuesListCommentsResponseItem, "body" | "user">): boolean {
+  return user.login === config.github.typeScriptBotUsername && body.trimLeft().startsWith(commentTagStart);
 }
 
-export function getCommentData(comment: Pick<IssuesListCommentsResponseItem, 'body' | 'user'>): CommentData | undefined {
+export function getCommentData(
+  comment: Pick<IssuesListCommentsResponseItem, "body" | "user">
+): CommentData | undefined {
   if (isPerfComment(comment)) {
     try {
       const trimmed = comment.body.trimLeft();
@@ -44,4 +43,5 @@ export function getCommentData(comment: Pick<IssuesListCommentsResponseItem, 'bo
       return undefined;
     }
   }
+  return;
 }

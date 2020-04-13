@@ -5,6 +5,7 @@ export * from "./fs";
 export * from "./io";
 export * from "./logging";
 export * from "./miscellany";
+export * from "./npm";
 export * from "./process";
 export * from "./progress";
 export * from "./semver";

@@ -1,6 +1,6 @@
-import { PackageBenchmarkSummary, Document } from '../common';
-import { getInterestingMetrics, SignificanceLevel } from './metrics';
-import { assertNever } from 'types-publisher/bin/util/util';
+import { PackageBenchmarkSummary, Document } from "../common";
+import { getInterestingMetrics, SignificanceLevel } from "./metrics";
+import { assertNever } from "@definitelytyped/utils";
 
 type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
 
@@ -8,10 +8,13 @@ export enum OverallChange {
   Same = 0,
   Worse = 1 << 0,
   Better = 1 << 1,
-  Mixed = Worse | Better,
+  Mixed = Worse | Better
 }
 
-export function getOverallChangeForSingleComparison(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
+export function getOverallChangeForSingleComparison(
+  before: Document<PackageBenchmarkSummary>,
+  after: Document<PackageBenchmarkSummary>
+) {
   let change = OverallChange.Same;
   for (const { significance } of getInterestingMetrics(before, after)) {
     switch (significance) {
@@ -30,7 +33,7 @@ export function getOverallChangeForSingleComparison(before: Document<PackageBenc
 }
 
 export function getOverallChangeForComparisons(comparisons: BeforeAndAfter[]): OverallChange | undefined {
-  let change: OverallChange | undefined = undefined;
+  let change: OverallChange | undefined;
   for (const comparison of comparisons) {
     if (comparison[0]) {
       if (change === undefined) {

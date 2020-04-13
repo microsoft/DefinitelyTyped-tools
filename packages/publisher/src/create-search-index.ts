@@ -1,8 +1,7 @@
 import * as yargs from "yargs";
 
 import { getDefinitelyTyped, AllPackages, writeDataFile, TypingsData } from "@definitelytyped/definitions-parser";
-import { loggerWithErrors, logUncaughtErrors } from "@definitelytyped/utils";
-import { UncachedNpmInfoClient } from "./lib/npm-client";
+import { loggerWithErrors, logUncaughtErrors, UncachedNpmInfoClient } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 
 if (!module.parent) {
