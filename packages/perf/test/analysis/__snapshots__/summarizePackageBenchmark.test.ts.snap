@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`analysis summarizePackageBenchmarks snapshot 1`] = `
+Object {
+  "batchRunStart": "2019-06-05T21:02:57.283Z",
+  "benchmarkDuration": 6146.653569,
+  "completions": Object {
+    "mean": 148.38288194,
+    "meanCoefficientOfVariation": 0.23178183452633877,
+    "median": 146.9316702,
+    "standardDeviation": 14.526224099473964,
+    "trials": 20,
+    "worst": Object {
+      "completionsDurations": Array [
+        260.302261,
+        161.823348,
+        209.062858,
+        138.921087,
+        123.359843,
+      ],
+      "end": 310,
+      "fileName": "types/abbrev/abbrev-tests.ts",
+      "identifierText": "abbrev",
+      "line": 12,
+      "offset": 15,
+      "quickInfoDurations": Array [
+        144.181488,
+        128.053511,
+        181.161561,
+        116.247208,
+        104.89903,
+      ],
+      "start": 304,
+    },
+  },
+  "languageServiceCrashed": false,
+  "memoryUsage": 33111296,
+  "packageName": "abbrev",
+  "packageVersion": "*",
+  "quickInfo": Object {
+    "mean": 140.33250924,
+    "meanCoefficientOfVariation": 0.21107195517210994,
+    "median": 139.3310676,
+    "standardDeviation": 12.553366997435981,
+    "trials": 20,
+    "worst": Object {
+      "completionsDurations": Array [
+        188.397316,
+        111.76699,
+        154.360542,
+        137.790343,
+        142.34316,
+      ],
+      "end": 275,
+      "fileName": "types/abbrev/abbrev-tests.ts",
+      "identifierText": "ReadonlyArray",
+      "line": 11,
+      "offset": 14,
+      "quickInfoDurations": Array [
+        209.811926,
+        229.587525,
+        166.220571,
+        111.510644,
+        173.78985,
+      ],
+      "start": 262,
+    },
+  },
+  "relationCacheSizes": Object {
+    "assignable": 104,
+    "identity": 0,
+    "subtype": 0,
+  },
+  "requestedLanguageServiceTestIterations": 5,
+  "sourceVersion": "d1039d660b82d765804f731255279f15693b43c6",
+  "testIdentifierCount": 20,
+  "typeCount": 2044,
+  "typeScriptVersion": "3.6.0-dev.20190604",
+  "typeScriptVersionMajorMinor": "3.6",
+}
+`;

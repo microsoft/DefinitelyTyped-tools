@@ -1,10 +1,9 @@
 import { BlobService, common, createBlobService, ErrorOrResponse, ErrorOrResult } from "azure-storage";
 import * as fs from "fs";
 import * as https from "https";
-import { gzip, unGzip } from "../util/tgz";
 import { getSecret, Secret } from "./secrets";
 import { azureContainer, azureStorageAccount } from "./settings";
-import { streamOfString, streamDone, stringOfStream, parseJson } from "@definitelytyped/utils";
+import { streamOfString, streamDone, stringOfStream, parseJson, gzip, unGzip } from "@definitelytyped/utils";
 
 export default class BlobWriter {
   static async create(): Promise<BlobWriter> {

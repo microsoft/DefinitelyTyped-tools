@@ -10,7 +10,8 @@ import {
   AllTypeScriptVersion
 } from "@definitelytyped/utils";
 import { readDataFile } from "./data-file";
-import { scopeName } from "./lib/settings";
+import { scopeName, typesDirectoryName } from "./lib/settings";
+import { parseVersionFromDirectoryName } from "./parse-definitions";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -610,4 +611,32 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   return (rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages.map(
     raw => new NotNeededPackage(raw)
   );
+}
+
+/**
+ * For "types/a/b/c", returns { name: "a", version: "*" }.
+ * For "types/a/v3/c", returns { name: "a", version: 3 }.
+ * For "x", returns undefined.
+ */
+export function getDependencyFromFile(file: string): PackageId | undefined {
+  const parts = file.split("/");
+  if (parts.length <= 2) {
+    // It's not in a typings directory at all.
+    return undefined;
+  }
+
+  const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+
+  if (typesDirName !== typesDirectoryName) {
+    return undefined;
+  }
+
+  if (subDirName) {
+    const version = parseVersionFromDirectoryName(subDirName);
+    if (version !== undefined) {
+      return { name, version };
+    }
+  }
+
+  return { name, version: "*" };
 }

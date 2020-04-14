@@ -21,6 +21,7 @@
   "dependencies": {
     "@definitelytyped/header-parser": "^0.0.22",
     "@definitelytyped/utils": "^0.0.22",
+    "@types/node": "^12.12.29",
     "fs-extra": "^8.1.0",
     "typescript": "^3.8.3"
   },

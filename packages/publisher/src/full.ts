@@ -5,12 +5,18 @@ import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
 import createSearchIndex from "./create-search-index";
 import generatePackages from "./generate-packages";
-import { UncachedNpmInfoClient } from "./lib/npm-client";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
 import uploadBlobsAndUpdateIssue from "./upload-blobs";
 import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
-import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors, assertDefined } from "@definitelytyped/utils";
+import {
+  Fetcher,
+  logUncaughtErrors,
+  loggerWithErrors,
+  LoggerWithErrors,
+  assertDefined,
+  UncachedNpmInfoClient
+} from "@definitelytyped/utils";
 import { currentTimeStamp, numberOfOsProcesses } from "./util/util";
 import validate from "./validate";
 import { defaultLocalOptions } from "./lib/common";

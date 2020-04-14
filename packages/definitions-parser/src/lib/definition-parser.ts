@@ -141,8 +141,8 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
  * parseVersionFromDirectoryName("v0.61") // { major: 0, minor: 61 }
  * ```
  */
-export function parseVersionFromDirectoryName(directoryName: string): TypingVersion | undefined {
-  const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName);
+export function parseVersionFromDirectoryName(directoryName: string | undefined): TypingVersion | undefined {
+  const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName!);
   if (match === null) {
     return undefined;
   }

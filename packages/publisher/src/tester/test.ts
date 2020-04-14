@@ -2,12 +2,10 @@ import yargs = require("yargs");
 
 import checkParseResults from "../check-parse-results";
 import { clean } from "../clean";
-import { getDefinitelyTyped, parseDefinitions } from "@definitelytyped/definitions-parser";
-import { logUncaughtErrors, loggerWithErrors } from "@definitelytyped/utils";
+import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff } from "@definitelytyped/definitions-parser";
+import { logUncaughtErrors, loggerWithErrors, UncachedNpmInfoClient } from "@definitelytyped/utils";
 import { TesterOptions } from "../lib/common";
-import { UncachedNpmInfoClient } from "../lib/npm-client";
-
-import runTests, { getAffectedPackagesFromDiff, parseNProcesses, testerOptions } from "./test-runner";
+import runTests, { parseNProcesses, testerOptions } from "./test-runner";
 
 if (!module.parent) {
   const options = testerOptions(!!yargs.argv.runFromDefinitelyTyped);

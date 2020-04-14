@@ -1,12 +1,12 @@
-import {
-  AllPackages,
-  formatDependencyVersion,
-  getMangledNameForScopedPackage,
-  PackageBase,
-  PackageId,
-  TypingsData
-} from "@definitelytyped/definitions-parser";
 import { mapDefined, mapIterable, sort } from "@definitelytyped/utils";
+import {
+  TypingsData,
+  AllPackages,
+  PackageId,
+  PackageBase,
+  getMangledNameForScopedPackage,
+  formatDependencyVersion
+} from "./packages";
 
 export interface Affected {
   readonly changedPackages: readonly TypingsData[];

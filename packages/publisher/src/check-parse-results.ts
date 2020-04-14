@@ -1,5 +1,4 @@
 import { defaultLocalOptions } from "./lib/common";
-import { NpmInfoRawVersions, NpmInfoVersion, UncachedNpmInfoClient } from "./lib/npm-client";
 import {
   getDefinitelyTyped,
   AllPackages,
@@ -19,7 +18,10 @@ import {
   logger,
   writeLog,
   Logger,
-  Semver
+  Semver,
+  UncachedNpmInfoClient,
+  NpmInfoRawVersions,
+  NpmInfoVersion
 } from "@definitelytyped/utils";
 
 if (!module.parent) {

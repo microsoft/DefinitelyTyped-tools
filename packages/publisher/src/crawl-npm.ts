@@ -2,9 +2,14 @@ import assert = require("assert");
 import oboe = require("oboe");
 
 import { packageHasTypes } from "./check-parse-results";
-import { UncachedNpmInfoClient } from "./lib/npm-client";
-import { npmRegistry } from "./lib/settings";
-import { filterNAtATimeOrdered, logUncaughtErrors, ProgressBar, strProgress } from "@definitelytyped/utils";
+import {
+  filterNAtATimeOrdered,
+  logUncaughtErrors,
+  ProgressBar,
+  strProgress,
+  UncachedNpmInfoClient,
+  npmRegistry
+} from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 import { ParseDefinitionsOptions, writeDataFile } from "@definitelytyped/definitions-parser";
 

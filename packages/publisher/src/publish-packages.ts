@@ -1,12 +1,23 @@
 import appInsights = require("applicationinsights");
 import * as yargs from "yargs";
 
-import { defaultLocalOptions, Registry } from "./lib/common";
-import { NpmPublishClient, UncachedNpmInfoClient, withNpmCache, skipBadPublishes } from "./lib/npm-client";
+import { defaultLocalOptions } from "./lib/common";
 import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { getDefinitelyTyped, AllPackages } from "@definitelytyped/definitions-parser";
-import { loggerWithErrors, logUncaughtErrors, logger, Fetcher, writeLog } from "@definitelytyped/utils";
+import {
+  loggerWithErrors,
+  logUncaughtErrors,
+  logger,
+  Fetcher,
+  writeLog,
+  NpmPublishClient,
+  Registry,
+  withNpmCache,
+  UncachedNpmInfoClient
+} from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
+import { skipBadPublishes } from "./lib/npm";
+import { getSecret, Secret } from "./lib/secrets";
 
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
@@ -20,7 +31,11 @@ if (!module.parent) {
       const log = logger()[0];
       try {
         await deprecateNotNeededPackage(
-          await NpmPublishClient.create(undefined, Registry.Github),
+          await NpmPublishClient.create(
+            await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN),
+            undefined,
+            Registry.Github
+          ),
           AllPackages.readSingleNotNeeded(deprecateName, dt),
           false /*dry*/,
           log
@@ -30,7 +45,7 @@ if (!module.parent) {
         log("publishing to github failed: " + e.toString());
       }
       await deprecateNotNeededPackage(
-        await NpmPublishClient.create(undefined, Registry.NPM),
+        await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined, Registry.NPM),
         AllPackages.readSingleNotNeeded(deprecateName, dt),
         /*dry*/ false,
         log
@@ -59,8 +74,12 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(undefined, Registry.NPM);
-  const ghClient = await NpmPublishClient.create(undefined, Registry.Github);
+  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined, Registry.NPM);
+  const ghClient = await NpmPublishClient.create(
+    await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN),
+    undefined,
+    Registry.Github
+  );
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);

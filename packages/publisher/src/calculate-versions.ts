@@ -1,7 +1,6 @@
 import assert = require("assert");
 
 import { defaultLocalOptions } from "./lib/common";
-import { CachedNpmInfoClient, NpmInfoVersion, UncachedNpmInfoClient, withNpmCache } from "./lib/npm-client";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, versionsFilename } from "./lib/versions";
 import {
   getDefinitelyTyped,
@@ -19,7 +18,11 @@ import {
   loggerWithErrors,
   FS,
   LoggerWithErrors,
-  Semver
+  Semver,
+  UncachedNpmInfoClient,
+  withNpmCache,
+  CachedNpmInfoClient,
+  NpmInfoVersion
 } from "@definitelytyped/utils";
 
 if (!module.parent) {

@@ -6,14 +6,6 @@ if (process.env.LONGJOHN) {
   longjohn.async_trace_limit = -1; // unlimited
 }
 
-/** Which registry to publish to */
-export enum Registry {
-  /** types-registry and @types/* on NPM */
-  NPM,
-  /** @definitelytyped/types-registry and @types/* on Github */
-  Github
-}
-
 export interface TesterOptions extends ParseDefinitionsOptions {
   // Tester can only run on files stored on-disk.
   readonly definitelyTypedPath: string;

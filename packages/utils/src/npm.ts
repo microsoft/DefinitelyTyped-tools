@@ -1,32 +1,30 @@
+import "./types/npm-registry-client";
 import assert = require("assert");
-import { ensureFile, pathExists } from "fs-extra";
-import RegClient = require("npm-registry-client");
+import { ensureFile, pathExists, readJson, writeJson, readFile } from "fs-extra";
+import RegClient from "npm-registry-client";
 import { resolve as resolveUrl } from "url";
-import { createTgz } from "../util/tgz";
+import { joinPaths } from "./fs";
+import { loggerWithErrors, Logger } from "./logging";
+import { mapToRecord, recordToMap } from "./collections";
+import { Fetcher, createTgz } from "./io";
+import { sleep, identity } from "./miscellany";
+import { assertNever } from "./assertions";
 
-import { Registry } from "./common";
-import { getSecret, Secret } from "./secrets";
-import { githubRegistry, npmApi, npmRegistry, npmRegistryHostName } from "./settings";
-import {
-  joinPaths,
-  loggerWithErrors,
-  readJson,
-  recordToMap,
-  writeJson,
-  mapToRecord,
-  Fetcher,
-  sleep,
-  assertNever,
-  Logger,
-  readFile,
-  identity,
-  best,
-  assertDefined,
-  Semver
-} from "@definitelytyped/utils";
-import { NotNeededPackage } from "@definitelytyped/definitions-parser";
+export const npmRegistryHostName = "registry.npmjs.org";
+export const githubRegistryHostName = "npm.pkg.github.com";
+export const npmRegistry = `https://${npmRegistryHostName}/`;
+export const githubRegistry = `https://${githubRegistryHostName}/`;
+export const npmApi = "api.npmjs.org";
 
-const cacheFile = joinPaths(__dirname, "..", "..", "cache", "npmInfo.json");
+const cacheFile = joinPaths(__dirname, "..", "cache", "npmInfo.json");
+
+/** Which registry to publish to */
+export enum Registry {
+  /** types-registry and @types/* on NPM */
+  NPM,
+  /** @definitelytyped/types-registry and @types/* on Github */
+  Github
+}
 
 export type NpmInfoCache = ReadonlyMap<string, NpmInfo>;
 
@@ -163,16 +161,16 @@ function splitToFixedSizeGroups(names: readonly string[], chunkSize: number): re
 }
 
 export class NpmPublishClient {
-  static async create(config?: RegClient.Config, registry: Registry = Registry.NPM): Promise<NpmPublishClient> {
+  static async create(
+    token: string,
+    config?: RegClient.Config,
+    registry: Registry = Registry.NPM
+  ): Promise<NpmPublishClient> {
     switch (registry) {
       case Registry.NPM:
-        return new NpmPublishClient(new RegClient(config), { token: await getSecret(Secret.NPM_TOKEN) }, npmRegistry);
+        return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
       case Registry.Github:
-        return new NpmPublishClient(
-          new RegClient(config),
-          { token: await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN) },
-          githubRegistry
-        );
+        return new NpmPublishClient(new RegClient(config), { token }, githubRegistry);
       default:
         assertNever(registry);
     }
@@ -256,46 +254,4 @@ function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => vo
       }
     });
   });
-}
-
-/**
- * When we fail to publish a deprecated package, it leaves behind an entry in the time property.
- * So the keys of 'time' give the actual 'latest'.
- * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
- */
-export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger) {
-  // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
-  const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
-  const notNeeded = pkg.version;
-  const latest = Semver.parse(findActualLatest(info.time));
-  if (
-    latest.equals(notNeeded) ||
-    latest.greaterThan(notNeeded) ||
-    (info.versions.has(notNeeded.versionString) &&
-      !assertDefined(info.versions.get(notNeeded.versionString)).deprecated)
-  ) {
-    const plusOne = new Semver(latest.major, latest.minor, latest.patch + 1);
-    log(`Deprecation of ${notNeeded.versionString} failed, instead using ${plusOne.versionString}.`);
-    return new NotNeededPackage({
-      asOfVersion: plusOne.versionString,
-      libraryName: pkg.libraryName,
-      sourceRepoURL: pkg.sourceRepoURL,
-      typingsPackageName: pkg.name
-    });
-  }
-  return pkg;
-}
-
-function findActualLatest(times: Map<string, string>) {
-  const actual = best(times, ([k, v], [bestK, bestV]) =>
-    bestK === "modified" || bestK === "created"
-      ? true
-      : k === "modified" || k === "created"
-      ? false
-      : new Date(v).getTime() > new Date(bestV).getTime()
-  );
-  if (!actual) {
-    throw new Error("failed to find actual latest");
-  }
-  return actual[0];
 }
