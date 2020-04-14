@@ -34,6 +34,10 @@ jobs:
         fetch-depth: 0
     - name: fetch tags
       run: git fetch origin +refs/tags/*:refs/tags/*
+    - name: configure git
+      run: |
+        git config user.email "typescriptbot@microsoft.com"
+        git config user.name "TypeScript Bot"
     - uses: actions/setup-node@v1
       with:
         node-version: 12.x
@@ -51,6 +55,6 @@ jobs:
     - name: clean
       run: npx lerna clean --yes
     - name: publish alpha
-      run: npx lerna publish -y --canary --pre-dist-tag next --preid next
+      run: npx lerna publish prepatch -y --pre-dist-tag next --preid next
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
