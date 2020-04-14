@@ -1,4 +1,4 @@
-import { TypeScriptVersion } from "@definitelytyped/utils";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { parseHeaderOrFail, parseTypeScriptVersionLine } from "../src";
 
 describe("parse", () => {
