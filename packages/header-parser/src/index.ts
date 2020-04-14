@@ -1,5 +1,5 @@
 import pm = require("parsimmon");
-import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/utils";
+import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
 /*
 
@@ -34,10 +34,6 @@ export interface ParseError {
   readonly line: number;
   readonly column: number;
   readonly expected: readonly string[];
-}
-
-export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
-  return TypeScriptVersion.all.includes(str as TypeScriptVersion);
 }
 
 export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScriptVersion[]): unknown {

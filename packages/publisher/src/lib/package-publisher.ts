@@ -1,12 +1,5 @@
 import assert = require("assert");
-import {
-  Logger,
-  joinPaths,
-  readFileAndWarn,
-  TypeScriptVersion,
-  NpmPublishClient,
-  Registry
-} from "@definitelytyped/utils";
+import { Logger, joinPaths, readFileAndWarn, NpmPublishClient, Registry } from "@definitelytyped/utils";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
 import { ChangedTyping } from "./versions";
 import { outputDirectory } from "../util/util";
