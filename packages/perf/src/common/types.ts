@@ -1,10 +1,10 @@
 import { CpuInfo } from "os";
 
-export type RelationCacheSizes = {
+export interface RelationCacheSizes {
   assignable: number;
   identity: number;
   subtype: number;
-};
+}
 
 export interface PackageBenchmark {
   batchRunStart: Date;

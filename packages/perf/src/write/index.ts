@@ -7,11 +7,6 @@ export async function insertDocument(
   container: Container
 ): Promise<Item>;
 export async function insertDocument(
-  benchmark: PackageBenchmarkSummary,
-  version: number,
-  container: Container
-): Promise<Item>;
-export async function insertDocument(
   benchmark: PackageBenchmarkSummary | TypeScriptComparisonRun,
   version: number,
   container: Container
