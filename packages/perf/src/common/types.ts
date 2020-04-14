@@ -102,7 +102,7 @@ type Serialized<T extends {}> = {
     ? boolean
     : T[K] extends Date
     ? string
-    : T[K] extends ReadonlyArray<infer U>
+    : T[K] extends readonly (infer U)[]
     ? Serialized<U>[]
     : T[K] extends {}
     ? Serialized<T[K]>
