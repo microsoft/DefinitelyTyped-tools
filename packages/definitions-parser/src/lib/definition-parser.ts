@@ -24,9 +24,9 @@ import {
   join,
   flatMap,
   unique,
-  unmangleScopedPackage,
-  TypeScriptVersion
+  unmangleScopedPackage
 } from "@definitelytyped/utils";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
 function matchesVersion(typingsDataRaw: TypingsDataRaw, version: TypingVersion, considerLibraryMinorVersion: boolean) {
   return (

@@ -1,0 +1,19 @@
+{
+  "name": "@definitelytyped/typescript-versions",
+  "version": "0.0.23-next.0",
+  "description": "List of supported TypeScript versions",
+  "author": "Andrew Branch <andrew@wheream.io>",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  }
+}

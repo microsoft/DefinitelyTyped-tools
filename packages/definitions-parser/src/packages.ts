@@ -1,14 +1,7 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import {
-  FS,
-  mapValues,
-  assertSorted,
-  unmangleScopedPackage,
-  Semver,
-  TypeScriptVersion,
-  AllTypeScriptVersion
-} from "@definitelytyped/utils";
+import { FS, mapValues, assertSorted, unmangleScopedPackage, Semver } from "@definitelytyped/utils";
+import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
 import { parseVersionFromDirectoryName } from "./parse-definitions";
