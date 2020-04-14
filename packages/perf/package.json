@@ -21,7 +21,6 @@
     "@definitelytyped/utils": "^0.0.23-next.0",
     "@octokit/rest": "^16.33.0",
     "@types/node": "^12.12.29",
-    "dtslint": "^2.0.3",
     "markdown-table": "^1.1.3",
     "typescript": "^3.8.3"
   },

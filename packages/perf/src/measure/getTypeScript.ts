@@ -1,7 +1,13 @@
 import * as fs from "fs";
 import * as path from "path";
 import { promisify } from "util";
-import { installAll, typeScriptPath, cleanInstalls, installNext } from "dtslint/bin/installer";
+import {
+  TsVersion,
+  installAllTypeScriptVersions,
+  typeScriptPath,
+  cleanTypeScriptInstalls,
+  installTypeScriptNext
+} from "@definitelytyped/utils";
 const exists = promisify(fs.exists);
 
 export async function getTypeScript(
@@ -9,13 +15,13 @@ export async function getTypeScript(
   localTypeScriptPath?: string,
   install = true
 ): Promise<{ ts: typeof import("typescript"); tsPath: string }> {
-  const tsPath = path.resolve(typeScriptPath(version, localTypeScriptPath));
+  const tsPath = path.resolve(typeScriptPath(version as TsVersion, localTypeScriptPath));
   if (install) {
     if (version === "next") {
-      await cleanInstalls();
-      await installNext();
+      await cleanTypeScriptInstalls();
+      await installTypeScriptNext();
     } else if (!(await exists(tsPath))) {
-      await installAll();
+      await installAllTypeScriptVersions();
     }
   }
   if (!(await exists(tsPath))) {
