@@ -6,8 +6,8 @@ on:
     branches:
     - master
 jobs:
-  ci:
-    name: 'build and test'
+  build_and_test:
+    name: build and test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,3 +23,30 @@ jobs:
       run: npm run lint
     - name: test
       run: npm test
+  publish_alpha:
+    name: publish alpha release
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    if: github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+        registry-url: https://registry.npmjs.org
+    - name: install
+      run: npm ci
+    - name: build
+      run: npm run build
+    # Necessary because publisher installs npm,
+    # which will be the default npm used to run
+    # `npm ci` on publisher itself in the next
+    # step, which starts by removing node_modules.
+    # So npm removes itself and then errors because
+    # it can’t find itself.
+    - name: clean
+      run: npx lerna clean --yes
+    - name: publish alpha
+      run: npx lerna publish -y --canary --pre-dist-tag next --preid next
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
