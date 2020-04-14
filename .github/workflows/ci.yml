@@ -30,7 +30,10 @@ jobs:
     if: github.event_name == 'push'
     steps:
     - uses: actions/checkout@v2
-    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      with:
+        fetch-depth: 0
+    - name: fetch tags
+      run: git fetch origin +refs/tags/*:refs/tags/*
     - uses: actions/setup-node@v1
       with:
         node-version: 12.x
