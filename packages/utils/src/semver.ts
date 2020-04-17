@@ -8,7 +8,7 @@ export class Semver {
     return result;
   }
 
-  static fromRaw({ major, minor, patch }: Semver): Semver {
+  static fromRaw({ major, minor, patch }: { major: number; minor: number; patch: number }): Semver {
     return new Semver(major, minor, patch);
   }
 
