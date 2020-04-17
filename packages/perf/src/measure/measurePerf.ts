@@ -257,7 +257,8 @@ function getLatestTypesVersionForTypeScriptVersion(
 ): string | undefined {
   const tsVersion = Semver.parse(typeScriptVersion.replace(/-dev.*$/, ""));
   for (let i = typesVersions.length - 1; i > 0; i--) {
-    const typesVersion = Semver.parse(typesVersions[i]);
+    const [major, minor] = typesVersions[i].split(".").map(Number); // e.g. '3.5'
+    const typesVersion = new Semver(major, minor, 0);
     if (tsVersion.greaterThan(typesVersion)) {
       return typesVersions[i];
     }
