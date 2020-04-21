@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "fs";
-import { pathExists, remove } from "fs-extra";
+import { remove } from "fs-extra";
 import os = require("os");
 import * as fold from "travis-fold";
 import * as yargs from "yargs";
@@ -92,34 +92,6 @@ export default async function runTests(
 
   console.log("Testing...");
   await doRunTests([...changedPackages, ...dependentPackages], new Set(changedPackages), typesPath, nProcesses);
-}
-
-async function doInstalls(allPackages: AllPackages, packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
-  console.log("Installing NPM dependencies...");
-
-  // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-  for (const pkg of allDependencies(allPackages, packages)) {
-    const cwd = directoryPath(typesPath, pkg);
-    if (!(await pathExists(joinPaths(cwd, "package.json")))) {
-      continue;
-    }
-
-    // Scripts may try to compile native code.
-    // This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-    const cmd = `npm install ${npmInstallFlags}`;
-    console.log(`  ${cwd}: ${cmd}`);
-    const stdout = await execAndThrowErrors(cmd, cwd);
-    if (stdout) {
-      // Must specify what this is for since these run in parallel.
-      console.log(` from ${cwd}: ${stdout}`);
-    }
-  }
-
-  try {
-    await installAllTypeScriptVersions();
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 function directoryPath(typesPath: string, pkg: TypingsData): string {

@@ -41,7 +41,6 @@
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
     "parse": "node -r source-map-support/register dist/parse-definitions.js",
-    "check": "node -r source-map-support/register dist/check-parse-results.js",
     "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
     "generate": "node -r source-map-support/register dist/generate-packages.js",
     "validate": "node -r source-map-support/register dist/validate.js",

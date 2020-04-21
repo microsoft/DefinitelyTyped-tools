@@ -1,0 +1,28 @@
+{
+  "name": "@definitelytyped/dtslint-runner",
+  "version": "0.0.24",
+  "description": "Run dtslint on DefinitelyTyped packages",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.24",
+    "@definitelytyped/utils": "^0.0.24",
+    "dtslint": "^3.4.1",
+    "fs-extra": "^9.0.0",
+    "yargs": "^15.3.1"
+  }
+}
