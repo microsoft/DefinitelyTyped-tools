@@ -1,19 +1,20 @@
 import os from "os";
+import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
-  nAtATime,
-  loggerWithErrors,
-  npmInstallFlags,
   installAllTypeScriptVersions,
   runWithListeningChildProcesses,
   CrashRecoveryState
 } from "@definitelytyped/utils";
-import { remove, readdir, readFileSync, pathExists } from "fs-extra";
+import { remove, readFileSync, existsSync, readdirSync } from "fs-extra";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
 import { execSync } from "child_process";
+
+const perfDir = joinPaths(os.homedir(), ".dts", "perf");
+const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
   definitelyTypedAcquisition,
@@ -55,8 +56,11 @@ export async function runDTSLint({
       .map(s => s.trim())
   );
 
+  const allPackages = [...packageNames, ...dependents];
+  const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
+
   await runWithListeningChildProcesses({
-    inputs: [...packageNames, ...dependents].map(path => ({
+    inputs: testedPackages.map(path => ({
       path,
       onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
       expectOnly: expectOnly || !packageNames.includes(path)
@@ -122,6 +126,32 @@ export async function runDTSLint({
       }
     }
   });
+
+  console.log("\n\n=== SUGGESTIONS ===\n");
+  const suggestionLines: string[] = [];
+  for (const packageName of packageNames) {
+    const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
+    const path = joinPaths(suggestionsDir, pkgPath + ".txt");
+    if (existsSync(path)) {
+      const suggestions = readFileSync(path, "utf8").split("\n");
+      suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
+    }
+  }
+  console.log(`{${suggestionLines.join(",")}}`);
+
+  logPerformance();
+
+  if (allFailures.length === 0) {
+    return;
+  }
+
+  console.error("\n\n=== ERRORS ===\n");
+  for (const [path, error] of allFailures) {
+    console.error(`\n\nError in ${path}`);
+    console.error(error);
+  }
+
+  return allFailures.length;
 }
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {
@@ -144,4 +174,34 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
     console.log(cmd);
     await execAndThrowErrors(cmd, cwd);
   }
+}
+
+function logPerformance() {
+  console.log("\n\n=== PERFORMANCE ===\n");
+  const big: [string, number][] = [];
+  const types: number[] = [];
+  for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
+    const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
+      [s: string]: { typeCount: number; memory: number };
+    };
+    for (const k of Object.keys(x)) {
+      big.push([k, x[k].typeCount]);
+      types.push(x[k].typeCount);
+    }
+  }
+  console.log(
+    "{" +
+      big
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ` "${name}": ${count}`)
+        .join(",") +
+      "}"
+  );
+
+  console.log("  * Percentiles: ");
+  console.log("99:", percentile(types, 0.99));
+  console.log("95:", percentile(types, 0.95));
+  console.log("90:", percentile(types, 0.9));
+  console.log("70:", percentile(types, 0.7));
+  console.log("50:", percentile(types, 0.5));
 }
