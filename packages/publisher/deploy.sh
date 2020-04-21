@@ -112,8 +112,9 @@ selectNodeVersion
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
-  echo "Running $NPM_CMD ci --production"
-  eval $NPM_CMD ci --production
+  rm -rf node_modules
+  echo "Running $NPM_CMD install --production"
+  eval $NPM_CMD install --production
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
