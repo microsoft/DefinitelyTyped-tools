@@ -26,7 +26,7 @@
     "fstream": "^1.0.12",
     "npm-registry-client": "^8.6.0",
     "tar": "^2.2.2",
-    "tar-stream": "^2.1.0"
+    "tar-stream": "1.6.2"
   },
   "devDependencies": {
     "@types/charm": "^1.0.1",
