@@ -49,4 +49,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: publisher
-        path: packed
+        path: packages/publisher/packed
