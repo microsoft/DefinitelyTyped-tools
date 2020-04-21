@@ -45,3 +45,8 @@ jobs:
         publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
         package: packages/publisher/packed
         slot-name: typespublisher
+    - name: upload packed directory
+      uses: actions/upload-artifact@v1
+      with:
+        name: publisher
+        path: packed
