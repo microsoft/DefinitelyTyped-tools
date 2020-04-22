@@ -4,6 +4,7 @@ import fs = require("fs");
 import cp = require("child_process");
 import path = require("path");
 import semver = require("semver");
+import rimraf = require("rimraf");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 
@@ -98,7 +99,21 @@ If you want to check the declaration against the JavaScript source code, you mus
         }
 
         if (options.mode === Mode.Code) {
-            return checkSource(name, dtsPath, getNpmSourcePath(sourcePath, name, npmVersion), options.errors, debug);
+            let sourceEntry;
+            let packagePath;
+            if (sourcePath) {
+                sourceEntry = sourcePath;
+            }
+            else {
+                packagePath = downloadNpmPackage(name, npmVersion, sourceDir)
+                sourceEntry = require.resolve(path.resolve(packagePath));
+            }
+            const errors = checkSource(name, dtsPath, sourceEntry, options.errors, debug);
+            if (packagePath) {
+                // Delete the source afterward to avoid running out of space
+                rimraf.sync(packagePath)
+            }
+            return errors;
         }
 
         return [];
@@ -292,21 +307,6 @@ export function findDtsName(dtsPath: string) {
 
 /** Default path to store packages downloaded from npm. */
 const sourceDir = path.resolve(path.join(__dirname, "..", "sources"));
-
-/**
- * If path of source package was not provided, downloads package from npm and return path to
- * package's main file.
- */
-function getNpmSourcePath(sourcePath: string | undefined, name: string, npmVersion: string | undefined): string {
-    if (sourcePath) {
-        return sourcePath;
-    }
-    if (!npmVersion) {
-        throw new Error(`Expected matching npm version for package ${dtToNpmName(name)}.`);
-    }
-    const packagePath = downloadNpmPackage(name, npmVersion, sourceDir);
-    return require.resolve(path.resolve(packagePath));
-}
 
 /** Returns path of downloaded npm package. */
 function downloadNpmPackage(name: string, version: string, outDir: string): string {
