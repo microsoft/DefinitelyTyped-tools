@@ -1,5 +1,5 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { parseHeaderOrFail, parseTypeScriptVersionLine } from "../src";
+import { parseHeaderOrFail, parseTypeScriptVersionLine, makeTypesVersionsForPackageJson } from "../src";
 
 describe("parse", () => {
   it("works", () => {
@@ -168,6 +168,57 @@ describe("tagsToUpdate", () => {
     expect(TypeScriptVersion.tagsToUpdate("2.8")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
+  });
+});
+
+describe("makeTypesVersionsForPackageJson", () => {
+  it("is undefined for empty versions", () => {
+    expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
+  });
+  it("works for one version", () => {
+    expect(makeTypesVersionsForPackageJson(["3.3"])).toEqual({
+      ">=3.3.0-0": {
+        "*": ["ts3.3/*"]
+      }
+    });
+  });
+  it("orders versions new to old with old-to-new input", () => {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.2", "3.5", "3.6"]), undefined, 4)).toEqual(`{
+    ">=3.6.0-0": {
+        "*": [
+            "ts3.6/*"
+        ]
+    },
+    ">=3.5.0-0": {
+        "*": [
+            "ts3.5/*"
+        ]
+    },
+    ">=3.2.0-0": {
+        "*": [
+            "ts3.2/*"
+        ]
+    }
+}`);
+  });
+  it("orders versions new to old with new-to-old input", () => {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.6", "3.5", "3.2"]), undefined, 4)).toEqual(`{
+    ">=3.6.0-0": {
+        "*": [
+            "ts3.6/*"
+        ]
+    },
+    ">=3.5.0-0": {
+        "*": [
+            "ts3.5/*"
+        ]
+    },
+    ">=3.2.0-0": {
+        "*": [
+            "ts3.2/*"
+        ]
+    }
+}`);
   });
 });
 
