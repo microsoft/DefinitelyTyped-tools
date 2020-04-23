@@ -172,18 +172,18 @@ describe("tagsToUpdate", () => {
 });
 
 describe("makeTypesVersionsForPackageJson", () => {
-    it("is undefined for empty versions", () => {
-        expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
+  it("is undefined for empty versions", () => {
+    expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
+  });
+  it("works for one version", () => {
+    expect(makeTypesVersionsForPackageJson(["3.3"])).toEqual({
+      ">=3.3.0-0": {
+        "*": ["ts3.3/*"]
+      }
     });
-    it("works for one version", () => {
-        expect(makeTypesVersionsForPackageJson(["3.3"])).toEqual({
-            ">=3.3.0-0": {
-                "*": ["ts3.3/*"]
-            }
-        });
-    });
-    it("orders versions new to old with old-to-new input", () => {
-        expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.2", "3.5", "3.6"]), undefined, 4)).toEqual(`{
+  });
+  it("orders versions new to old with old-to-new input", () => {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.2", "3.5", "3.6"]), undefined, 4)).toEqual(`{
     ">=3.6.0-0": {
         "*": [
             "ts3.6/*"
@@ -200,9 +200,9 @@ describe("makeTypesVersionsForPackageJson", () => {
         ]
     }
 }`);
-    });
-    it("orders versions new to old with new-to-old input", () => {
-        expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.6", "3.5", "3.2"]), undefined, 4)).toEqual(`{
+  });
+  it("orders versions new to old with new-to-old input", () => {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.6", "3.5", "3.2"]), undefined, 4)).toEqual(`{
     ">=3.6.0-0": {
         "*": [
             "ts3.6/*"
@@ -219,7 +219,7 @@ describe("makeTypesVersionsForPackageJson", () => {
         ]
     }
 }`);
-    });
+  });
 });
 
 function dedent(strings: TemplateStringsArray): string {
