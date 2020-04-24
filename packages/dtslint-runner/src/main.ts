@@ -7,11 +7,10 @@ import {
   runWithListeningChildProcesses,
   CrashRecoveryState
 } from "@definitelytyped/utils";
-import { remove, readFileSync, pathExists, readdirSync } from "fs-extra";
+import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
-import { execSync } from "child_process";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
@@ -93,7 +92,6 @@ export async function runDTSLint({
         }
       } else if (status === "OK") {
         console.log(`${prefix}${path} OK`);
-        console.log(execSync("df -h /dev/sda1").toString());
       } else {
         console.error(`${prefix}${path} failing:`);
         console.error(
@@ -188,31 +186,33 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
 }
 
 function logPerformance() {
-  console.log("\n\n=== PERFORMANCE ===\n");
   const big: [string, number][] = [];
   const types: number[] = [];
-  for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
-    const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
-      [s: string]: { typeCount: number; memory: number };
-    };
-    for (const k of Object.keys(x)) {
-      big.push([k, x[k].typeCount]);
-      types.push(x[k].typeCount);
+  if (existsSync(perfDir)) {
+    console.log("\n\n=== PERFORMANCE ===\n");
+    for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
+      const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
+        [s: string]: { typeCount: number; memory: number };
+      };
+      for (const k of Object.keys(x)) {
+        big.push([k, x[k].typeCount]);
+        types.push(x[k].typeCount);
+      }
     }
-  }
-  console.log(
-    "{" +
-      big
-        .sort((a, b) => b[1] - a[1])
-        .map(([name, count]) => ` "${name}": ${count}`)
-        .join(",") +
-      "}"
-  );
+    console.log(
+      "{" +
+        big
+          .sort((a, b) => b[1] - a[1])
+          .map(([name, count]) => ` "${name}": ${count}`)
+          .join(",") +
+        "}"
+    );
 
-  console.log("  * Percentiles: ");
-  console.log("99:", percentile(types, 0.99));
-  console.log("95:", percentile(types, 0.95));
-  console.log("90:", percentile(types, 0.9));
-  console.log("70:", percentile(types, 0.7));
-  console.log("50:", percentile(types, 0.5));
+    console.log("  * Percentiles: ");
+    console.log("99:", percentile(types, 0.99));
+    console.log("95:", percentile(types, 0.95));
+    console.log("90:", percentile(types, 0.9));
+    console.log("70:", percentile(types, 0.7));
+    console.log("50:", percentile(types, 0.5));
+  }
 }

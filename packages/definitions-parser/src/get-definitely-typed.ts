@@ -33,7 +33,7 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
   if (stdout) {
     throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`);
   }
-  log.info(`Using local Definitely Typed at ${options.definitelyTypedPath}.`);
+  log.info(`Using local DefinitelyTyped at ${options.definitelyTypedPath}`);
   return new DiskFS(`${options.definitelyTypedPath}/`);
 }
 

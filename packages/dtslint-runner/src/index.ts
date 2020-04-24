@@ -18,18 +18,21 @@ if (!module.parent) {
         group: "DefinitelyTyped acquisition",
         description: "Path to local DefinitelyTyped clone.",
         conflicts: "clone",
-        type: "string"
+        type: "string",
+        default: "../DefinitelyTyped"
       },
       selection: {
         group: "Package selection",
         description: "Which packages to test.",
         type: "string",
-        choices: ["all", "affected"]
+        choices: ["all", "affected"],
+        default: "affected"
       },
       nProcesses: {
         group: "Parallelism",
         description: "How many processes to distribute parallelizable tasks over.",
-        type: "number"
+        type: "number",
+        default: os.cpus().length
       },
       shardId: {
         group: "Parallelism",
@@ -54,17 +57,20 @@ if (!module.parent) {
         group: "dtslint options",
         description: "Run dtslint only with typescript@next instead of all supported TypeScript versions.",
         type: "boolean",
-        conflicts: "localTypeScriptPath"
+        conflicts: "localTypeScriptPath",
+        default: false
       },
       expectOnly: {
         group: "dtslint options",
         description: "Run only the ExpectType lint rule.",
-        type: "boolean"
+        type: "boolean",
+        default: false
       },
       // Not sure why you’d use this, so I’m hiding it
       noInstall: {
         hidden: true,
-        type: "boolean"
+        type: "boolean",
+        default: false
       }
     })
     .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
@@ -77,15 +83,15 @@ if (!module.parent) {
         }
       : {
           kind: "local",
-          path: assertDefined(args.path)
+          path: args.path
         },
     onlyRunAffectedPackages: args.selection === "affected",
-    nProcesses: args.nProcesses ?? os.cpus().length,
+    nProcesses: args.nProcesses,
     shard: args.shardCount ? { id: assertDefined(args.shardId), count: args.shardCount } : undefined,
     localTypeScriptPath: args.localTypeScriptPath,
-    onlyTestTsNext: args.onlyTestTsNext ?? false,
-    expectOnly: args.expectOnly ?? false,
-    noInstall: args.noInstall ?? false
+    onlyTestTsNext: args.onlyTestTsNext,
+    expectOnly: args.expectOnly,
+    noInstall: args.noInstall
   };
 
   logUncaughtErrors(async () => {

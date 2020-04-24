@@ -70,7 +70,11 @@ export async function filterNAtATimeOrdered<T>(
 
 export function logUncaughtErrors<T>(promise: Promise<T> | (() => Promise<T>)): Promise<T> {
   return (typeof promise === "function" ? promise() : promise).catch(error => {
-    console.error(error);
+    if (error && error.stack) {
+      console.error(error.stack);
+    } else {
+      console.error(error);
+    }
     process.exit(1);
   });
 }

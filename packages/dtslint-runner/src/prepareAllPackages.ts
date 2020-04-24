@@ -1,4 +1,5 @@
-import { readdir, pathExists } from "fs-extra";
+import fs from "fs";
+import { pathExists } from "fs-extra";
 import { joinPaths, nAtATime, execAndThrowErrors, npmInstallFlags } from "@definitelytyped/utils";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
@@ -22,17 +23,17 @@ const exclude = new Set<string>([
 ]);
 
 async function getAllPackages(typesDir: string): Promise<readonly string[]> {
-  const packageNames = await readdir(typesDir);
-  const results = await nAtATime(1, packageNames, async packageName => {
-    if (exclude.has(packageName)) {
+  const packageNames = await fs.promises.readdir(typesDir, { withFileTypes: true });
+  const results = await nAtATime(1, packageNames, async dir => {
+    if (exclude.has(dir.name) || !dir.isDirectory()) {
       return [];
     }
-    const packageDir = joinPaths(typesDir, packageName);
-    const files = await readdir(packageDir);
-    const packages = [packageName];
+    const packageDir = joinPaths(typesDir, dir.name);
+    const files = await fs.promises.readdir(packageDir);
+    const packages = [dir.name];
     for (const file of files) {
       if (/^v\d+$/.test(file)) {
-        packages.push(`${packageName}/${file}`);
+        packages.push(`${dir.name}/${file}`);
       }
     }
     return packages;
