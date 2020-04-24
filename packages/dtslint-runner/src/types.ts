@@ -21,11 +21,11 @@ export interface LocalDefinitelyTyped {
 
 export interface RunDTSLintOptions {
   definitelyTypedAcquisition: CloneDefinitelyTyped | LocalDefinitelyTyped;
-  selection: "all" | "affected";
-  noInstall?: boolean;
-  onlyTestTsNext?: boolean;
-  expectOnly?: boolean;
+  onlyRunAffectedPackages: boolean;
+  noInstall: boolean;
+  onlyTestTsNext: boolean;
+  expectOnly: boolean;
   localTypeScriptPath?: string;
-  nProcesses?: number;
+  nProcesses: number;
   shard?: { id: number; count: number };
 }

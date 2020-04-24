@@ -7,7 +7,7 @@ import {
   runWithListeningChildProcesses,
   CrashRecoveryState
 } from "@definitelytyped/utils";
-import { remove, readFileSync, existsSync, readdirSync } from "fs-extra";
+import { remove, readFileSync, pathExists, readdirSync } from "fs-extra";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
@@ -18,43 +18,41 @@ const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
   definitelyTypedAcquisition,
-  selection,
+  onlyRunAffectedPackages = false,
   noInstall,
   onlyTestTsNext,
   expectOnly,
   localTypeScriptPath,
-  nProcesses = os.cpus().length,
+  nProcesses,
   shard
 }: RunDTSLintOptions) {
-  if (definitelyTypedAcquisition.kind === "clone" && !noInstall) {
-    await remove(joinPaths(process.cwd(), "DefinitelyTyped"));
-    await cloneDefinitelyTyped(process.cwd(), definitelyTypedAcquisition.sha);
+  let definitelyTypedPath;
+  if (definitelyTypedAcquisition.kind === "clone") {
+    definitelyTypedPath = joinPaths(process.cwd(), "DefinitelyTyped");
+    if (!noInstall) {
+      await remove(definitelyTypedPath);
+      await cloneDefinitelyTyped(process.cwd(), definitelyTypedAcquisition.sha);
+    }
+  } else {
+    definitelyTypedPath = definitelyTypedAcquisition.path;
   }
 
-  const definitelyTypedPath = joinPaths(
-    process.cwd(),
-    definitelyTypedAcquisition.kind === "clone" ? "" : "..",
-    "DefinitelyTyped"
-  );
+  if (!(await pathExists(definitelyTypedPath))) {
+    throw new Error(`Path '${definitelyTypedPath}' does not exist.`);
+  }
 
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
-  const { packageNames, dependents } =
-    selection === "all"
-      ? await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall })
-      : await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall });
+  const { packageNames, dependents } = onlyRunAffectedPackages
+    ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
+    : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
 
   if (!onlyTestTsNext && !noInstall && !localTypeScriptPath) {
     await installAllTypeScriptVersions();
   }
 
   const allFailures: [string, string][] = [];
-  const expectedFailures = new Set(
-    (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
-      .split("\n")
-      .filter(Boolean)
-      .map(s => s.trim())
-  );
+  const expectedFailures = getExpectedFailures(onlyRunAffectedPackages);
 
   const allPackages = [...packageNames, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
@@ -78,7 +76,7 @@ export async function runDTSLint({
     handleOutput(output, processIndex) {
       const prefix = processIndex === undefined ? "" : `${processIndex}> `;
       const { path, status } = output as { path: string; status: string };
-      if (expectedFailures.has(path)) {
+      if (expectedFailures?.has(path)) {
         if (status === "OK") {
           console.error(`${prefix}${path} passed, but was expected to fail.`);
           allFailures.push([path, status]);
@@ -132,7 +130,7 @@ export async function runDTSLint({
   for (const packageName of packageNames) {
     const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
     const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-    if (existsSync(path)) {
+    if (await pathExists(path)) {
       const suggestions = readFileSync(path, "utf8").split("\n");
       suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
     }
@@ -142,7 +140,7 @@ export async function runDTSLint({
   logPerformance();
 
   if (allFailures.length === 0) {
-    return;
+    return 0;
   }
 
   console.error("\n\n=== ERRORS ===\n");
@@ -152,6 +150,19 @@ export async function runDTSLint({
   }
 
   return allFailures.length;
+}
+
+function getExpectedFailures(onlyRunAffectedPackages: boolean) {
+  if (onlyRunAffectedPackages) {
+    return undefined;
+  }
+
+  return new Set(
+    (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
+      .split("\n")
+      .filter(Boolean)
+      .map(s => s.trim())
+  );
 }
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {

@@ -5,6 +5,7 @@
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
   "license": "MIT",
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "publishConfig": {
     "access": "public"
   },
@@ -27,6 +28,7 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.1.0",
     "@types/stats-lite": "^2.2.0"
   }
 }

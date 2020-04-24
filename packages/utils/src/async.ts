@@ -68,8 +68,8 @@ export async function filterNAtATimeOrdered<T>(
   return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 
-export function logUncaughtErrors(promise: Promise<unknown> | (() => Promise<unknown>)): void {
-  (typeof promise === "function" ? promise() : promise).catch(error => {
+export function logUncaughtErrors<T>(promise: Promise<T> | (() => Promise<T>)): Promise<T> {
+  return (typeof promise === "function" ? promise() : promise).catch(error => {
     console.error(error);
     process.exit(1);
   });
