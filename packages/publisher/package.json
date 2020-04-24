@@ -33,7 +33,7 @@
     "@types/oboe": "^2.0.28",
     "@types/source-map-support": "^0.4.0",
     "@types/travis-fold": "^0.1.0",
-    "@types/yargs": "^8.0.1"
+    "@types/yargs": "^15.0.4"
   },
   "scripts": {
     "build": "tsc -b",

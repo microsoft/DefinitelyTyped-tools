@@ -1,5 +1,6 @@
-import { AllPackages, NotNeededPackage, TypesDataFile, getAffectedPackages } from "@definitelytyped/definitions-parser";
-import { createTypingsVersionRaw, testo } from "../utils";
+import { getAffectedPackages } from "../src/get-affected-packages";
+import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
+import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
   jquery: createTypingsVersionRaw("jquery", [], []),
