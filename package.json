@@ -2,7 +2,7 @@
   "name": "definitelytyped-tools",
   "private": true,
   "scripts": {
-    "prepare": "lerna bootstrap",
+    "prepare": "lerna bootstrap --no-ci",
     "pretest": "npm run build",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
