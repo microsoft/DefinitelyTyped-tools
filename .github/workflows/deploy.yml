@@ -18,7 +18,7 @@ jobs:
         ref: master
     - uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: 12.15.0
     - name: install
       run: npm ci
     - name: lint
@@ -35,8 +35,9 @@ jobs:
         cp ../server.js ./
         cp ../IISNode.yml ./
         cp ../LICENSE ./
+        cp ../.deployment ./
+        cp ../deploy.sh ./
         cp -r ../dist ./
-        npm install
         popd
     - name: deploy publisher
       uses: azure/webapps-deploy@v1
@@ -45,3 +46,8 @@ jobs:
         publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
         package: packages/publisher/packed
         slot-name: typespublisher
+    - name: upload packed directory
+      uses: actions/upload-artifact@v1
+      with:
+        name: publisher
+        path: packages/publisher/packed
