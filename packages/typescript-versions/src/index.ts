@@ -60,7 +60,7 @@ export namespace TypeScriptVersion {
     "3.5",
     "3.6",
     "3.7",
-    "3.8",
+    "3.8"
   ];
   /** Add to this list when a version is available as typescript@next */
   export const supported: readonly TypeScriptVersion[] = [...shipped, "3.9", "4.0"];
