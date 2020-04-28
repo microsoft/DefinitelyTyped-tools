@@ -10,11 +10,7 @@ export type TsVersion = TypeScriptVersion | "next" | "local";
 const installsDir = path.join(os.homedir(), ".dts", "typescript-installs");
 
 export async function installAllTypeScriptVersions() {
-  for (const v of TypeScriptVersion.supported) {
-    // manually install typescript@next outside the loop
-    if (v === TypeScriptVersion.supported[TypeScriptVersion.supported.length - 1]) {
-      continue;
-    }
+  for (const v of TypeScriptVersion.shipped) {
     await install(v);
   }
   await installTypeScriptNext();
