@@ -3,7 +3,7 @@ import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
-import { outputDirPath, validateOutputPath } from "./lib/settings";
+import { outputDirPath, validateOutputPath, cacheDirPath } from "./lib/settings";
 import {
   getDefinitelyTyped,
   AllPackages,
@@ -68,8 +68,10 @@ export default async function publishRegistry(
   assert.strictEqual(npmVersion.minor, 1);
 
   // Don't include not-needed packages in the registry.
-  const registryJsonData = await withNpmCache(client, cachedClient =>
-    generateRegistry(allPackages.allLatestTypings(), cachedClient)
+  const registryJsonData = await withNpmCache(
+    client,
+    cachedClient => generateRegistry(allPackages.allLatestTypings(), cachedClient),
+    cacheDirPath
   );
   const registry = JSON.stringify(registryJsonData);
   const newContentHash = computeHash(registry);
