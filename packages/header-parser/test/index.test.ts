@@ -127,8 +127,6 @@ describe("parseTypeScriptVersionLine", () => {
   });
 });
 
-// TODO: Add tests for isPrerelease
-// TODO: Move tests to typescript-version?
 describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
@@ -138,15 +136,6 @@ describe("isSupported", () => {
   });
   it("does not support 2.8", () => {
     expect(!TypeScriptVersion.isSupported("2.8")).toBeTruthy();
-  });
-});
-
-describe("isPrelease", () => {
-  it("expects 4.0", () => {
-    expect(TypeScriptVersion.isPrerelease("4.0")).toBeTruthy();
-  });
-  it("does not expect 3.9", () => {
-    expect(!TypeScriptVersion.isPrerelease("3.9")).toBeTruthy();
   });
 });
 

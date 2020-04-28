@@ -49,7 +49,7 @@ export type TypeScriptVersion =
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
 export namespace TypeScriptVersion {
-  // TODO Add to this list when a version actually ships (remove when deprecating)
+  /** Add to this list when a version actual ships.  */
   export const shipped: readonly TypeScriptVersion[] = [
     "2.9",
     "3.0",
@@ -61,11 +61,10 @@ export namespace TypeScriptVersion {
     "3.6",
     "3.7",
     "3.8",
-    "3.9"
   ];
-  // TODO Should be [...shipped] before RC or [...shipped, "4.0"] during RC
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.0"];
-  // TODO Add to this list when deprecating a version
+  /** Add to this list when a version is available as typescript@next */
+  export const supported: readonly TypeScriptVersion[] = [...shipped, "3.9", "4.0"];
+  /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
     "2.0",
     "2.1",
@@ -81,10 +80,6 @@ export namespace TypeScriptVersion {
   export const lowest = supported[0];
   /** Latest version that may be specified in a `// TypeScript Version:` header. */
   export const latest = supported[supported.length - 1];
-
-  export function isPrerelease(version: TypeScriptVersion): boolean {
-    return shipped.length === supported.length - 1 && version === supported[supported.length - 1];
-  }
 
   export function isSupported(v: AllTypeScriptVersion): v is TypeScriptVersion {
     return supported.indexOf(v as TypeScriptVersion) > -1;
