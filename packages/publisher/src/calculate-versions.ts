@@ -24,6 +24,7 @@ import {
   CachedNpmInfoClient,
   NpmInfoVersion
 } from "@definitelytyped/utils";
+import { cacheDirPath } from "./lib/settings";
 
 if (!module.parent) {
   const log = loggerWithErrors()[0];
@@ -38,11 +39,15 @@ export default async function calculateVersions(
   log: LoggerWithErrors
 ): Promise<ChangedPackages> {
   log.info("=== Calculating versions ===");
-  return withNpmCache(uncachedClient, async client => {
-    log.info("* Reading packages...");
-    const packages = await AllPackages.read(dt);
-    return computeAndSaveChangedPackages(packages, log, client);
-  });
+  return withNpmCache(
+    uncachedClient,
+    async client => {
+      log.info("* Reading packages...");
+      const packages = await AllPackages.read(dt);
+      return computeAndSaveChangedPackages(packages, log, client);
+    },
+    cacheDirPath
+  );
 }
 
 async function computeAndSaveChangedPackages(
