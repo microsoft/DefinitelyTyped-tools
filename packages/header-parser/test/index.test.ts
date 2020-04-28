@@ -139,6 +139,18 @@ describe("isSupported", () => {
   });
 });
 
+describe("isTypeScriptVersion", () => {
+  it("accepts in-range", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("3.8")).toBeTruthy();
+  });
+  it("rejects out-of-range", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
+  });
+  it("rejects garbage", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi")).toBeFalsy();
+  });
+});
+
 describe("range", () => {
   it("works", () => {
     expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9", "4.0"]);

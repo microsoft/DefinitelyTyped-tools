@@ -108,4 +108,8 @@ export namespace TypeScriptVersion {
   export function isRedirectable(v: TypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
+
+  export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+    return all.includes(str as TypeScriptVersion);
+  }
 }
