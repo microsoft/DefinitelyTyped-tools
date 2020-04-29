@@ -25,5 +25,16 @@
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
-  }
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.30-next.0",
+    "@definitelytyped/publisher": "^0.0.30-next.0",
+    "@definitelytyped/utils": "^0.0.30-next.0",
+    "yargs": "^12.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^10.17.21",
+    "@types/yargs": "^12.0.8"
+  },
+  "private": true
 }
