@@ -2,7 +2,7 @@ import assert from "assert";
 
 /*
 
-  # How to add new version of Typescript #
+  # How to add a new version of Typescript #
 
   For the RC:
 
