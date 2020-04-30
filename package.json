@@ -7,7 +7,8 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "test": "jest",
-    "build": "tsc -b tsconfig.all.json"
+    "build": "tsc -b tsconfig.all.json",
+    "retag": "node packages/retag/lib/retag.js"
   },
   "devDependencies": {
     "@types/jest": "^25.1.3",

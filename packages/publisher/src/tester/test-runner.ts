@@ -25,7 +25,7 @@ import {
   installAllTypeScriptVersions
 } from "@definitelytyped/utils";
 
-import { allDependencies, getAffectedPackages } from "@definitelytyped/definitions-parser/src/get-affected-packages";
+import { allDependencies, getAffectedPackages } from "@definitelytyped/definitions-parser";
 import { numberOfOsProcesses } from "../util/util";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
