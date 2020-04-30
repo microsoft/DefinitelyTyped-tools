@@ -374,15 +374,17 @@ export function getTestDependencies(
       throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
     }
     for (const { fileName: referencedPackage } of typeReferenceDirectives) {
-      if (dependencies.has(referencedPackage)) {
-        throw new Error(
-          `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`
-        );
+      if (!referencedPackage.startsWith(".")) {
+        if (dependencies.has(referencedPackage)) {
+          throw new Error(
+            `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`
+          );
+        }
+        if (referencedPackage === packageName) {
+          referencesSelf = true;
+        }
+        testDependencies.add(referencedPackage);
       }
-      if (referencedPackage === packageName) {
-        referencesSelf = true;
-      }
-      testDependencies.add(referencedPackage);
     }
     for (const imported of imports(sourceFile)) {
       hasImports = true;
