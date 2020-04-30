@@ -10,7 +10,9 @@ import {
   TypingsData,
   getAffectedPackagesFromDiff,
   gitChanges,
-  gitDiff
+  gitDiff,
+  allDependencies,
+  getAffectedPackages
 } from "@definitelytyped/definitions-parser";
 import {
   CrashRecoveryState,
@@ -25,7 +27,6 @@ import {
   installAllTypeScriptVersions
 } from "@definitelytyped/utils";
 
-import { allDependencies, getAffectedPackages } from "@definitelytyped/definitions-parser";
 import { numberOfOsProcesses } from "../util/util";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
