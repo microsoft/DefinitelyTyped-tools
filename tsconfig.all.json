@@ -7,7 +7,7 @@
     { "path": "packages/perf" },
     { "path": "packages/publisher" },
     { "path": "packages/typescript-versions" },
-      { "path": "packages/utils" },
-      { "path": "packages/retag" }
+    { "path": "packages/utils" },
+    { "path": "packages/retag" }
   ]
 }

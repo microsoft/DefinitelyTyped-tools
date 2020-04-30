@@ -1,17 +1,13 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "checkJs": true,
-        "noEmit": true,
-        "target": "esnext",
-        "module": "commonjs",
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "strict": true
-    },
-    "references": [
-        { "path": "../definitions-parser" },
-        { "path": "../publisher" },
-        { "path": "../utils" }
-    ]
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "references": [{ "path": "../definitions-parser" }, { "path": "../publisher" }, { "path": "../utils" }]
 }
