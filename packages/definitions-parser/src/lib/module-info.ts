@@ -225,8 +225,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
     addReference({ text: ref.fileName, exact: true });
   }
   for (const ref of src.typeReferenceDirectives) {
-    // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
-    if (ref.fileName.startsWith("../" + packageName + "/")) {
+    if (ref.fileName.startsWith(".")) {
       addReference({ text: ref.fileName, exact: false });
     } else if (ref.fileName.startsWith(packageName + "/")) {
       addReference({ text: convertToRelativeReference(ref.fileName), exact: false });
