@@ -85,7 +85,7 @@ export function runWithChildProcesses<In>({
       for (const child of allChildren) {
         child.kill();
       }
-      reject(new Error("Parsing failed."));
+      reject(new Error(`Parsing failed \nInputs: ${inputs}\nCLI Args: ${commandLineArgs}\n\n`));
     }
   });
 }
