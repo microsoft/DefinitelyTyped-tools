@@ -1,4 +1,4 @@
-import { IssuesListCommentsResponseItem } from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
 import { config } from "../common";
 import { OverallChange } from "../analysis";
 
@@ -25,12 +25,12 @@ export function createPerfCommentBody(data: CommentData, body: string): string {
   );
 }
 
-export function isPerfComment({ body, user }: Pick<IssuesListCommentsResponseItem, "body" | "user">): boolean {
+export function isPerfComment({ body, user }: Pick<Octokit.IssuesListCommentsResponseItem, "body" | "user">): boolean {
   return user.login === config.github.typeScriptBotUsername && body.trimLeft().startsWith(commentTagStart);
 }
 
 export function getCommentData(
-  comment: Pick<IssuesListCommentsResponseItem, "body" | "user">
+  comment: Pick<Octokit.IssuesListCommentsResponseItem, "body" | "user">
 ): CommentData | undefined {
   if (isPerfComment(comment)) {
     try {
