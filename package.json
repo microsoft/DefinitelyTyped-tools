@@ -1,6 +1,7 @@
 {
   "name": "definitelytyped-tools",
   "private": true,
+  "workspaces": ["packages/*"],
   "scripts": {
     "prepare": "lerna bootstrap --no-ci",
     "pretest": "npm run build",
