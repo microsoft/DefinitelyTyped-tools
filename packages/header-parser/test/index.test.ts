@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "2.8",
+      typeScriptVersion: "2.9",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "2.8",
+      typeScriptVersion: "2.9",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -129,22 +129,34 @@ describe("parseTypeScriptVersionLine", () => {
 
 describe("isSupported", () => {
   it("works", () => {
-    expect(TypeScriptVersion.isSupported("3.5")).toBeTruthy();
+    expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
   });
-  it("supports 2.8", () => {
-    expect(TypeScriptVersion.isSupported("2.8")).toBeTruthy();
+  it("supports 2.9", () => {
+    expect(TypeScriptVersion.isSupported("2.9")).toBeTruthy();
   });
-  it("does not support 2.7", () => {
-    expect(!TypeScriptVersion.isSupported("2.7")).toBeTruthy();
+  it("does not support 2.8", () => {
+    expect(!TypeScriptVersion.isSupported("2.8")).toBeTruthy();
+  });
+});
+
+describe("isTypeScriptVersion", () => {
+  it("accepts in-range", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("3.8")).toBeTruthy();
+  });
+  it("rejects out-of-range", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
+  });
+  it("rejects garbage", () => {
+    expect(TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi")).toBeFalsy();
   });
 });
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9"]);
+    expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9", "4.0"]);
   });
-  it("includes 2.8 onwards", () => {
-    expect(TypeScriptVersion.range("2.8")).toEqual(TypeScriptVersion.supported);
+  it("includes 2.9 onwards", () => {
+    expect(TypeScriptVersion.range("2.9")).toEqual(TypeScriptVersion.supported);
   });
 });
 
@@ -161,11 +173,12 @@ describe("tagsToUpdate", () => {
       "ts3.7",
       "ts3.8",
       "ts3.9",
+      "ts4.0",
       "latest"
     ]);
   });
-  it("allows 2.8 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("2.8")).toEqual(
+  it("allows 2.9 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("2.9")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
   });

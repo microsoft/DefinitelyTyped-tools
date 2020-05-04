@@ -14,6 +14,7 @@
 @hapi/wreck
 @jest/environment
 @jest/fake-timers
+@jest/globals
 @jest/transform
 @jest/types
 @loadable/component
@@ -64,6 +65,7 @@ cac
 cassandra-driver
 chalk
 chokidar
+cids
 commander
 connect-mongo
 cordova-plugin-camera

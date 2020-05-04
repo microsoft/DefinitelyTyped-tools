@@ -10,11 +10,7 @@ export type TsVersion = TypeScriptVersion | "local";
 const installsDir = path.join(os.homedir(), ".dts", "typescript-installs");
 
 export async function installAllTypeScriptVersions() {
-  for (const v of TypeScriptVersion.supported) {
-    // manually install typescript@next outside the loop
-    if (v === TypeScriptVersion.supported[TypeScriptVersion.supported.length - 1]) {
-      continue;
-    }
+  for (const v of TypeScriptVersion.shipped) {
     await install(v);
   }
   await installTypeScriptNext();
@@ -52,9 +48,7 @@ export function typeScriptPath(version: TsVersion, tsLocal: string | undefined):
 
 function installDir(version: TsVersion | "next"): string {
   assert(version !== "local");
-  if (version === "next") {
-    version = TypeScriptVersion.latest;
-  }
+  if (version === "next") version = TypeScriptVersion.latest;
   return path.join(installsDir, version);
 }
 

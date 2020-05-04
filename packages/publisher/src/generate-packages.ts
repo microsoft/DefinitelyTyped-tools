@@ -4,7 +4,7 @@ import * as path from "path";
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
-import { outputDirPath, sourceBranch } from "./lib/settings";
+import { outputDirPath, sourceBranch, cacheDirPath } from "./lib/settings";
 import {
   assertNever,
   joinPaths,
@@ -70,12 +70,16 @@ export default async function generatePackages(
     log(` * ${pkg.desc}`);
   }
   log("## Generating deprecated packages");
-  await withNpmCache(new UncachedNpmInfoClient(), async client => {
-    for (const pkg of changedPackages.changedNotNeededPackages) {
-      log(` * ${pkg.libraryName}`);
-      await generateNotNeededPackage(pkg, client, log);
-    }
-  });
+  await withNpmCache(
+    new UncachedNpmInfoClient(),
+    async client => {
+      for (const pkg of changedPackages.changedNotNeededPackages) {
+        log(` * ${pkg.libraryName}`);
+        await generateNotNeededPackage(pkg, client, log);
+      }
+    },
+    cacheDirPath
+  );
   await writeLog("package-generator.md", logResult());
 }
 async function generateTypingPackage(

@@ -16,7 +16,8 @@ export const npmRegistry = `https://${npmRegistryHostName}/`;
 export const githubRegistry = `https://${githubRegistryHostName}/`;
 export const npmApi = "api.npmjs.org";
 
-const cacheFile = joinPaths(__dirname, "..", "cache", "npmInfo.json");
+const defaultCacheDir = joinPaths(__dirname, "..", "cache");
+const cacheFileBasename = "npmInfo.json";
 
 /** Which registry to publish to */
 export enum Registry {
@@ -59,9 +60,11 @@ export interface CachedNpmInfoClient {
 
 export async function withNpmCache<T>(
   uncachedClient: UncachedNpmInfoClient,
-  cb: (client: CachedNpmInfoClient) => Promise<T>
+  cb: (client: CachedNpmInfoClient) => Promise<T>,
+  cacheDir = defaultCacheDir
 ): Promise<T> {
   const log = loggerWithErrors()[0];
+  const cacheFile = joinPaths(cacheDir, cacheFileBasename);
   let unroll: Map<string, NpmInfo>;
   log.info(`Checking for cache file at ${cacheFile}...`);
   const cacheFileExists = await pathExists(cacheFile);
