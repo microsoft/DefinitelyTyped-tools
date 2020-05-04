@@ -15,17 +15,10 @@ export async function prepareAllPackages({
   return { packageNames: allPackages, dependents: [] };
 }
 
-const exclude = new Set<string>([
-  // https://github.com/Microsoft/TypeScript/issues/17862
-  "xadesjs",
-  // https://github.com/Microsoft/TypeScript/issues/18765
-  "strophe"
-]);
-
 async function getAllPackages(typesDir: string): Promise<readonly string[]> {
   const packageNames = await fs.promises.readdir(typesDir, { withFileTypes: true });
   const results = await nAtATime(1, packageNames, async dir => {
-    if (exclude.has(dir.name) || !dir.isDirectory()) {
+    if (!dir.isDirectory()) {
       return [];
     }
     const packageDir = joinPaths(typesDir, dir.name);
