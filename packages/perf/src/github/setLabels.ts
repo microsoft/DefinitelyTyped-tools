@@ -1,7 +1,7 @@
+import { Octokit } from "@octokit/rest";
 import { getOctokit } from "./getOctokit";
 import { OverallChange } from "../analysis";
 import { config } from "../common";
-import Octokit = require("@octokit/rest");
 
 const perfLabels = ["Perf: Same", "Perf: Better", "Perf: Mixed", "Perf: Worse"];
 

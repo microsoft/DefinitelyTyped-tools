@@ -4,7 +4,7 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "prepare": "lerna bootstrap --no-ci",
-    "pretest": "npm run build",
+    "pretest": "yarn build",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "test": "jest",
