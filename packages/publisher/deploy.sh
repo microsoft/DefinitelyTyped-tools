@@ -112,10 +112,12 @@ selectNodeVersion
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
+  echo "Installing yarn"
+  $NPM_CMD install --global yarn@1.19.2
   rm -rf node_modules
-  echo "Running $NPM_CMD install --production"
-  eval $NPM_CMD install --production
-  exitWithMessageOnError "npm failed"
+  echo "Running yarn install --frozen-lockfile --production"
+  eval yarn install --frozen-lockfile --production
+  exitWithMessageOnError "yarn failed"
   cd - > /dev/null
 fi
 

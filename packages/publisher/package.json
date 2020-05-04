@@ -1,15 +1,15 @@
 {
   "name": "@definitelytyped/publisher",
   "private": true,
-  "version": "0.0.30-next.0",
+  "version": "0.0.30-next.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.30-next.0",
-    "@definitelytyped/header-parser": "^0.0.30-next.0",
+    "@definitelytyped/definitions-parser": "^0.0.30-next.2",
+    "@definitelytyped/header-parser": "^0.0.30-next.2",
     "@definitelytyped/typescript-versions": "^0.0.30-next.0",
-    "@definitelytyped/utils": "^0.0.30-next.0",
+    "@definitelytyped/utils": "^0.0.30-next.2",
     "@octokit/rest": "^16.1.0",
     "adal-node": "^0.1.22",
     "applicationinsights": "^1.0.7",
@@ -24,7 +24,7 @@
     "source-map-support": "^0.4.0",
     "travis-fold": "^0.1.2",
     "typescript": "next",
-    "yargs": "^8.0.2"
+    "yargs": "15.3.1"
   },
   "devDependencies": {
     "@types/fs-extra": "4.0.0",
@@ -33,7 +33,7 @@
     "@types/oboe": "^2.0.28",
     "@types/source-map-support": "^0.4.0",
     "@types/travis-fold": "^0.1.0",
-    "@types/yargs": "^8.0.1"
+    "@types/yargs": "^15.0.4"
   },
   "scripts": {
     "build": "tsc -b",
@@ -41,7 +41,6 @@
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
     "parse": "node -r source-map-support/register dist/parse-definitions.js",
-    "check": "node -r source-map-support/register dist/check-parse-results.js",
     "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
     "generate": "node -r source-map-support/register dist/generate-packages.js",
     "validate": "node -r source-map-support/register dist/validate.js",

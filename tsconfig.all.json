@@ -3,6 +3,7 @@
   "files": [],
   "references": [
     { "path": "packages/definitions-parser" },
+    { "path": "packages/dtslint-runner" },
     { "path": "packages/header-parser" },
     { "path": "packages/perf" },
     { "path": "packages/publisher" },

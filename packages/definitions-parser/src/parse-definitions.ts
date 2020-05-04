@@ -26,7 +26,7 @@ export async function parseDefinitions(
   const typings: { [name: string]: TypingsVersionsRaw } = {};
 
   const start = Date.now();
-  if (parallel) {
+  if (parallel && parallel.nProcesses > 1) {
     log.info("Parsing in parallel...");
     await runWithChildProcesses({
       inputs: packageNames,
