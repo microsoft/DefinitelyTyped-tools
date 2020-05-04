@@ -1,7 +1,6 @@
 import assert = require("assert");
 import oboe = require("oboe");
 
-import { packageHasTypes } from "./check-parse-results";
 import {
   filterNAtATimeOrdered,
   logUncaughtErrors,
@@ -11,7 +10,7 @@ import {
   npmRegistry
 } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
-import { ParseDefinitionsOptions, writeDataFile } from "@definitelytyped/definitions-parser";
+import { ParseDefinitionsOptions, writeDataFile, packageHasTypes } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
   logUncaughtErrors(main(defaultLocalOptions));

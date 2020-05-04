@@ -1,19 +1,10 @@
-import { defaultLocalOptions } from "./lib/common";
-import {
-  getDefinitelyTyped,
-  AllPackages,
-  formatTypingVersion,
-  TypingsData,
-  TypingVersion,
-  ParseDefinitionsOptions
-} from "@definitelytyped/definitions-parser";
+import { ParseDefinitionsOptions } from "./get-definitely-typed";
+import { TypingsData, AllPackages, TypingVersion, formatTypingVersion } from "./packages";
 import {
   assertDefined,
   best,
-  logUncaughtErrors,
   mapDefined,
   nAtATime,
-  loggerWithErrors,
   FS,
   logger,
   writeLog,
@@ -24,23 +15,22 @@ import {
   NpmInfoVersion
 } from "@definitelytyped/utils";
 
-if (!module.parent) {
-  const log = loggerWithErrors()[0];
-  logUncaughtErrors(async () =>
-    checkParseResults(
-      true,
-      await getDefinitelyTyped(defaultLocalOptions, log),
-      defaultLocalOptions,
-      new UncachedNpmInfoClient()
-    )
-  );
-}
-
-export default async function checkParseResults(
-  includeNpmChecks: boolean,
+export async function checkParseResults(
+  includeNpmChecks: false,
+  dt: FS,
+  options: ParseDefinitionsOptions
+): Promise<void>;
+export async function checkParseResults(
+  includeNpmChecks: true,
   dt: FS,
   options: ParseDefinitionsOptions,
   client: UncachedNpmInfoClient
+): Promise<void>;
+export async function checkParseResults(
+  includeNpmChecks: boolean,
+  dt: FS,
+  options: ParseDefinitionsOptions,
+  client?: UncachedNpmInfoClient
 ): Promise<void> {
   const allPackages = await AllPackages.read(dt);
   const [log, logResult] = logger();
@@ -66,7 +56,7 @@ export default async function checkParseResults(
     await nAtATime(
       10,
       allPackages.allTypings(),
-      pkg => checkNpm(pkg, log, dependedOn, client),
+      pkg => checkNpm(pkg, log, dependedOn, client!),
       options.progress
         ? {
             name: "Checking for typed packages...",

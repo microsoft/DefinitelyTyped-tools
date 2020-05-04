@@ -24,7 +24,7 @@
     "source-map-support": "^0.4.0",
     "travis-fold": "^0.1.2",
     "typescript": "next",
-    "yargs": "^8.0.2"
+    "yargs": "15.3.1"
   },
   "devDependencies": {
     "@types/fs-extra": "4.0.0",
@@ -33,7 +33,7 @@
     "@types/oboe": "^2.0.28",
     "@types/source-map-support": "^0.4.0",
     "@types/travis-fold": "^0.1.0",
-    "@types/yargs": "^8.0.1"
+    "@types/yargs": "^15.0.4"
   },
   "scripts": {
     "build": "tsc -b",
@@ -41,7 +41,6 @@
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
     "parse": "node -r source-map-support/register dist/parse-definitions.js",
-    "check": "node -r source-map-support/register dist/check-parse-results.js",
     "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
     "generate": "node -r source-map-support/register dist/generate-packages.js",
     "validate": "node -r source-map-support/register dist/validate.js",

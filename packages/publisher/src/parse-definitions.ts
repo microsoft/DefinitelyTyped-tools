@@ -1,7 +1,7 @@
+import os from "os";
 import yargs from "yargs";
 import { logUncaughtErrors, loggerWithErrors, assertDefined, FS } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
-import { parseNProcesses } from "./tester/test-runner";
 import { getTypingInfo } from "@definitelytyped/definitions-parser/dist/lib/definition-parser";
 import {
   getDefinitelyTyped,
@@ -11,7 +11,11 @@ import {
 } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
-  const singleName = yargs.argv.single as string | undefined;
+  const { nProcesses, single: singleName } = yargs.options({
+    single: { type: "string" },
+    nProcesses: { type: "number" }
+  }).argv;
+
   const options = defaultLocalOptions;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
@@ -22,7 +26,10 @@ if (!module.parent) {
       await parseDefinitions(
         dt,
         options.parseInParallel
-          ? { nProcesses: parseNProcesses(), definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
+          ? {
+              nProcesses: nProcesses || os.cpus().length,
+              definitelyTypedPath: assertDefined(options.definitelyTypedPath)
+            }
           : undefined,
         log
       );
