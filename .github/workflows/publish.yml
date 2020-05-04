@@ -18,7 +18,7 @@ jobs:
         git config user.email "typescriptbot@microsoft.com"
         git config user.name "TypeScript Bot"
     - name: install
-      run: yarn install
+      run: yarn install --frozen-lockfile
     - name: lint
       run: yarn lint
     - name: test

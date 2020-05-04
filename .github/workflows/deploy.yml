@@ -20,7 +20,7 @@ jobs:
       with:
         node-version: 12.15.0
     - name: install
-      run: yarn install
+      run: yarn install --frozen-lockfile
     - name: lint
       run: yarn lint
     - name: test
@@ -29,6 +29,7 @@ jobs:
       run: |
         pushd packages/publisher
         mkdir packed && cd $_
+        cp ../../../yarn.lock ./
         cp ../package.json ./
         cp ../tsconfig.json ./
         cp ../server.js ./
