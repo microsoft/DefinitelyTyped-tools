@@ -1,5 +1,6 @@
 const yargs = require("yargs");
 const process = require("process");
+const os = require("os");
 
 const {
   withNpmCache,
@@ -13,7 +14,6 @@ const {
 } = require("@definitelytyped/utils");
 const { AllPackages, parseDefinitions, getDefinitelyTyped } = require("@definitelytyped/definitions-parser");
 const {
-  parseNProcesses,
   updateLatestTag,
   updateTypeScriptVersionTags,
   getLatestTypingVersion
@@ -22,8 +22,13 @@ const {
 logUncaughtErrors(main);
 
 async function main() {
-  await tag(!!yargs.argv.dry, false, /** @type {string=} */ (yargs.argv.name));
-  await tag(!!yargs.argv.dry, true, /** @type {string=} */ (yargs.argv.name));
+    const  { dry, nProcesses, name } = yargs.options({
+        dry: { type: "boolean", default: false },
+        nProcesses: { type: "number", default: os.cpus().length },
+        name: { type: "string" }
+    }).argv;
+    await tag(dry, false, nProcesses, name);
+    await tag(dry, true, nProcesses, name);
 }
 
 /**
@@ -35,15 +40,16 @@ async function main() {
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  * @param {boolean} dry
  * @param {boolean} github
+ * @param {number} nProcesses
  * @param {string} [name]
  * @return {Promise<void>}
  */
-async function tag(dry, github, name) {
+async function tag(dry, github, nProcesses, name) {
   const log = loggerWithErrors()[0];
   const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
   await parseDefinitions(
     await getDefinitelyTyped(options, log),
-    { nProcesses: parseNProcesses(), definitelyTypedPath: "../DefinitelyTyped" },
+      { nProcesses: nProcesses || os.cpus().length, definitelyTypedPath: "../DefinitelyTyped" },
     log
   );
 
