@@ -18,11 +18,11 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - name: install
-      run: npm ci
+      run: yarn install
     - name: lint
-      run: npm run lint
+      run: yarn lint
     - name: test
-      run: npm test
+      run: yarn test
   publish_alpha:
     name: publish alpha release
     runs-on: ubuntu-latest
@@ -43,18 +43,10 @@ jobs:
         node-version: 12.x
         registry-url: https://registry.npmjs.org
     - name: install
-      run: npm ci
+      run: yarn install
     - name: build
-      run: npm run build
-    # Necessary because publisher installs npm,
-    # which will be the default npm used to run
-    # `npm ci` on publisher itself in the next
-    # step, which starts by removing node_modules.
-    # So npm removes itself and then errors because
-    # it can’t find itself.
-    - name: clean
-      run: npx lerna clean --yes
+      run: yarn build
     - name: publish alpha
-      run: npx lerna publish prerelease -y --pre-dist-tag next --preid next
+      run: yarn lerna publish prerelease -y --pre-dist-tag next --preid next
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

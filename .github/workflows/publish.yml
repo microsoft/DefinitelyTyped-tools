@@ -18,29 +18,21 @@ jobs:
         git config user.email "typescriptbot@microsoft.com"
         git config user.name "TypeScript Bot"
     - name: install
-      run: npm ci
+      run: yarn install
     - name: lint
-      run: npm run lint
+      run: yarn lint
     - name: test
-      run: npm test
+      run: yarn test
     - name: version
       run: |
         ref=${{ github.ref }} # refs/tags/v0.0.1
         tag=${ref:11} # 0.0.1
-        npx lerna version $tag --yes --no-git-tag-version --no-push
+        yarn lerna version $tag --yes --no-git-tag-version --no-push
         git commit -am "v$tag"
         git tag -af v$tag -m v$tag
         git push && git push --tags -f
-    # Necessary because publisher installs npm,
-    # which will be the default npm used to run
-    # `npm ci` on publisher itself in the next
-    # step, which starts by removing node_modules.
-    # So npm removes itself and then errors because
-    # it can’t find itself.
-    - name: clean
-      run: npx lerna clean --yes
     - name: publish to npm
-      run: npx lerna publish from-git --yes
+      run: yarn lerna publish from-git --yes
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - name: trigger publisher deploy
