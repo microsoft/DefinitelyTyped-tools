@@ -5,7 +5,7 @@ import os = require("os");
 
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
-    Logger,
+  Logger,
   assertDefined,
   withNpmCache,
   NpmPublishClient,
@@ -19,10 +19,16 @@ import {
   loggerWithErrors,
   LoggerWithErrors,
   Registry,
-    nAtATime,
+  nAtATime,
   CachedNpmInfoClient
 } from "@definitelytyped/utils";
-import { AnyPackage, TypingsData, AllPackages, parseDefinitions, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
+import {
+  AnyPackage,
+  TypingsData,
+  AllPackages,
+  parseDefinitions,
+  getDefinitelyTyped
+} from "@definitelytyped/definitions-parser";
 
 logUncaughtErrors(main);
 

@@ -68,4 +68,3 @@ export async function deprecateNotNeededPackage(
     await client.deprecate(name, pkg.version.versionString, pkg.deprecatedMessage());
   }
 }
-
