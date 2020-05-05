@@ -12,7 +12,7 @@ Run this whenever an RC of Typescript is released.
 From DefinitelyTyped-tools root:
 
 ```
-$ node packages/retag/dist/retag.js
+$ node packages/retag/dist/index.js
 ```
 
 Make sure that you have an up-to-date Definitely Typed repo next to the DefinitelyTyped-tools directory.

@@ -26,6 +26,7 @@
     "@types/node": "^10.17.21",
     "@types/yargs": "^12.0.8"
   },
+  "main": "dist/index.js",
   "bin": {
     "retag": "./dist/retag.js"
   },

@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "lib",
+    "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["lib"],
+  "include": ["src"],
     "references": [{ "path": "../definitions-parser" }, { "path": "../typescript-versions" }, { "path": "../utils" }]
 }
