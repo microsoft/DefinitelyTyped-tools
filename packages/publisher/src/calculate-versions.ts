@@ -1,29 +1,18 @@
-import assert = require("assert");
-
 import { defaultLocalOptions } from "./lib/common";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, versionsFilename } from "./lib/versions";
-import {
-  getDefinitelyTyped,
-  AllPackages,
-  TypingsData,
-  NotNeededPackage,
-  writeDataFile
-} from "@definitelytyped/definitions-parser";
+import { getDefinitelyTyped, AllPackages, NotNeededPackage, writeDataFile } from "@definitelytyped/definitions-parser";
 import {
   assertDefined,
-  best,
-  logUncaughtErrors,
-  mapDefined,
   mapDefinedAsync,
+  logUncaughtErrors,
   loggerWithErrors,
   FS,
   LoggerWithErrors,
-  Semver,
   UncachedNpmInfoClient,
   withNpmCache,
-  CachedNpmInfoClient,
-  NpmInfoVersion
+  CachedNpmInfoClient
 } from "@definitelytyped/utils";
+import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import { cacheDirPath } from "./lib/settings";
 
 if (!module.parent) {
@@ -104,47 +93,6 @@ async function computeChangedPackages(
   return { changedTypings, changedNotNeededPackages };
 }
 
-async function fetchTypesPackageVersionInfo(
-  pkg: TypingsData,
-  client: CachedNpmInfoClient,
-  canPublish: boolean,
-  log?: LoggerWithErrors
-): Promise<{ version: string; needsPublish: boolean }> {
-  let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
-  let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-  let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
-  if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
-    if (log) {
-      log.info(`Version info not cached for ${pkg.desc}`);
-    }
-    info = await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName);
-    latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-    latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
-    if (!latestVersionInfo) {
-      return { version: versionString(pkg, /*patch*/ 0), needsPublish: true };
-    }
-  }
-
-  if (latestVersionInfo.deprecated) {
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
-    assert(
-      pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
-      `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
-    );
-  }
-  const needsPublish = canPublish && pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
-  const patch = needsPublish
-    ? latestVersion!.minor === pkg.minor
-      ? latestVersion!.patch + 1
-      : 0
-    : latestVersion!.patch;
-  return { version: versionString(pkg, patch), needsPublish };
-}
-
-function versionString(pkg: TypingsData, patch: number): string {
-  return new Semver(pkg.major, pkg.minor, patch).versionString;
-}
-
 async function isAlreadyDeprecated(
   pkg: NotNeededPackage,
   client: CachedNpmInfoClient,
@@ -160,33 +108,4 @@ async function isAlreadyDeprecated(
     latestVersionInfo = assertDefined(info.versions.get(latestVersion));
   }
   return !!latestVersionInfo.deprecated;
-}
-
-function getHighestVersionForMajor(
-  versions: ReadonlyMap<string, NpmInfoVersion>,
-  { major, minor }: TypingsData
-): Semver | undefined {
-  const patch = latestPatchMatchingMajorAndMinor(versions.keys(), major, minor);
-  return patch === undefined ? undefined : new Semver(major, minor, patch);
-}
-
-/** Finds the version with matching major/minor with the latest patch version. */
-function latestPatchMatchingMajorAndMinor(
-  versions: Iterable<string>,
-  newMajor: number,
-  newMinor: number
-): number | undefined {
-  const versionsWithTypings = mapDefined(versions, v => {
-    const semver = Semver.tryParse(v);
-    if (!semver) {
-      return undefined;
-    }
-    const { major, minor, patch } = semver;
-    return major === newMajor && minor === newMinor ? patch : undefined;
-  });
-  return best(versionsWithTypings, (a, b) => a > b);
-}
-
-export async function getLatestTypingVersion(pkg: TypingsData, client: CachedNpmInfoClient): Promise<string> {
-  return (await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ false)).version;
 }
