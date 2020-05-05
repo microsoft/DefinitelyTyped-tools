@@ -12,6 +12,7 @@
     "references": [
         { "path": "../definitions-parser" },
         { "path": "../header-parser" },
+        { "path": "../retag" },
         { "path": "../utils" }
     ]
 }

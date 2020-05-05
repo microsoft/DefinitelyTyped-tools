@@ -1,7 +1,7 @@
 import assert = require("assert");
 import { Logger, joinPaths, readFileAndWarn, NpmPublishClient, Registry } from "@definitelytyped/utils";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { updateTypeScriptVersionTags, updateLatestTag } from "@definitelytyped/retag";
 import { ChangedTyping } from "./versions";
 import { outputDirectory } from "../util/util";
 
@@ -66,39 +66,5 @@ export async function deprecateNotNeededPackage(
   } else {
     log(`Deprecating ${name} at ${pkg.version.versionString} with message: ${pkg.deprecatedMessage()}.`);
     await client.deprecate(name, pkg.version.versionString, pkg.deprecatedMessage());
-  }
-}
-
-export async function updateTypeScriptVersionTags(
-  pkg: AnyPackage,
-  version: string,
-  client: NpmPublishClient,
-  log: Logger,
-  dry: boolean
-): Promise<void> {
-  const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
-  const name = pkg.fullNpmName;
-  log(`Tag ${name}@${version} as ${JSON.stringify(tags)}`);
-  if (dry) {
-    log("(dry) Skip tag");
-  } else {
-    for (const tagName of tags) {
-      await client.tag(name, version, tagName, dry, log);
-    }
-  }
-}
-
-export async function updateLatestTag(
-  fullName: string,
-  version: string,
-  client: NpmPublishClient,
-  log: Logger,
-  dry: boolean
-): Promise<void> {
-  log(`   but tag ${fullName}@${version} as "latest"`);
-  if (dry) {
-    log('   (dry) Skip move "latest" back to newest version');
-  } else {
-    await client.tag(fullName, version, "latest", dry, log);
   }
 }

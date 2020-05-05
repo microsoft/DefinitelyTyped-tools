@@ -1,0 +1,37 @@
+{
+  "name": "@definitelytyped/retag",
+  "version": "0.0.30-next.2",
+  "description": "Refresh tags on all DT-published packages in the @types scope.",
+  "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/retag"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/retag"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.30-next.2",
+    "@definitelytyped/typescript-versions": "^0.0.30-next.0",
+    "@definitelytyped/utils": "^0.0.30-next.2",
+    "yargs": "^12.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^10.17.21",
+    "@types/yargs": "^12.0.8"
+  },
+  "main": "dist/index.js",
+  "bin": {
+    "retag": "./dist/retag.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
