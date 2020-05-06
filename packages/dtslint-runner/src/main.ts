@@ -51,15 +51,19 @@ export async function runDTSLint({
   const allPackages = [...packageNames, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
 
+  const dtslintArgs = [
+    "--listen",
+    ...(onlyTestTsNext ? ["--onlyTestTsNext"] : []),
+    ...(localTypeScriptPath ? ["--localTs", localTypeScriptPath] : [])
+  ];
+
   await runWithListeningChildProcesses({
     inputs: testedPackages.map(path => ({
       path,
       onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
       expectOnly: expectOnly || !packageNames.includes(path)
     })),
-    commandLineArgs: ["--listen", onlyTestTsNext ? "--onlyTestTsNext" : ""].concat(
-      localTypeScriptPath ? ["--localTs", localTypeScriptPath] : []
-    ),
+    commandLineArgs: dtslintArgs,
     workerFile: require.resolve("dtslint"),
     nProcesses,
     cwd: typesPath,
