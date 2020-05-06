@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import assert = require("assert");
 import yargs from "yargs";
 import process = require("process");
