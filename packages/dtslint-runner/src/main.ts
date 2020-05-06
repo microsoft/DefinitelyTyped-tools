@@ -3,7 +3,6 @@ import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
-  installAllTypeScriptVersions,
   runWithListeningChildProcesses,
   CrashRecoveryState
 } from "@definitelytyped/utils";
@@ -46,15 +45,17 @@ export async function runDTSLint({
     ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
     : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
 
-  if (!onlyTestTsNext && !noInstall && !localTypeScriptPath) {
-    await installAllTypeScriptVersions();
-  }
-
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages);
 
   const allPackages = [...packageNames, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
+
+  const dtslintArgs = [
+    "--listen",
+    ...(onlyTestTsNext ? ["--onlyTestTsNext"] : []),
+    ...(localTypeScriptPath ? ["--localTs", localTypeScriptPath] : [])
+  ];
 
   await runWithListeningChildProcesses({
     inputs: testedPackages.map(path => ({
@@ -62,7 +63,7 @@ export async function runDTSLint({
       onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
       expectOnly: expectOnly || !packageNames.includes(path)
     })),
-    commandLineArgs: localTypeScriptPath ? ["--listen", "--localTs", localTypeScriptPath] : ["--listen"],
+    commandLineArgs: dtslintArgs,
     workerFile: require.resolve("dtslint"),
     nProcesses,
     cwd: typesPath,
