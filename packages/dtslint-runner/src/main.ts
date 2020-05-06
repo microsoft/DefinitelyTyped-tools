@@ -57,7 +57,9 @@ export async function runDTSLint({
       onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
       expectOnly: expectOnly || !packageNames.includes(path)
     })),
-    commandLineArgs: localTypeScriptPath ? ["--listen", "--localTs", localTypeScriptPath] : ["--listen"],
+    commandLineArgs: ["--listen", onlyTestTsNext ? "--onlyTestTsNext" : ""].concat(
+      localTypeScriptPath ? ["--localTs", localTypeScriptPath] : []
+    ),
     workerFile: require.resolve("dtslint"),
     nProcesses,
     cwd: typesPath,
