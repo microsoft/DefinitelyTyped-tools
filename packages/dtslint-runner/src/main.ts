@@ -3,7 +3,6 @@ import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
-  installAllTypeScriptVersions,
   runWithListeningChildProcesses,
   CrashRecoveryState
 } from "@definitelytyped/utils";
@@ -45,10 +44,6 @@ export async function runDTSLint({
   const { packageNames, dependents } = onlyRunAffectedPackages
     ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
     : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
-
-  if (!onlyTestTsNext && !noInstall && !localTypeScriptPath) {
-    await installAllTypeScriptVersions();
-  }
 
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages);
