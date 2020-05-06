@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import os from "os";
 import yargs from "yargs";
 import { RunDTSLintOptions } from "./types";
