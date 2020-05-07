@@ -62,6 +62,7 @@ bignumber.js
 bookshelf
 broadcast-channel
 cac
+cash-dom
 cassandra-driver
 chalk
 chokidar
