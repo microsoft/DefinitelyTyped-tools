@@ -22,7 +22,7 @@
   "dependencies": {
     "@definitelytyped/definitions-parser": "^0.0.30-next.2",
     "@definitelytyped/utils": "^0.0.30-next.2",
-    "dtslint": "^3.4.1",
+    "dtslint": "latest",
     "fs-extra": "^9.0.0",
     "stats-lite": "^2.2.0",
     "yargs": "^15.3.1"
