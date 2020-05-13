@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/header-parser",
-  "version": "0.0.30-next.7",
+  "version": "0.0.30",
   "description": "",
   "author": "Nathan Shively-Sanders <nathansa@microsoft.com>",
   "homepage": "https://github.com/DefinitelyTyped/tools#readme",
@@ -20,7 +20,7 @@
     "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-versions": "^0.0.30-next.7",
+    "@definitelytyped/typescript-versions": "^0.0.30",
     "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
   },
