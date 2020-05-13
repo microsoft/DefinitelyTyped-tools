@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "2.9",
+      typeScriptVersion: "3.0",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "2.9",
+      typeScriptVersion: "3.0",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
