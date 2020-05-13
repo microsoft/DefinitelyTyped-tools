@@ -15,14 +15,14 @@ import assert from "assert";
 
   1. Move the newly-released version from `supported` to `shipped`.
   2. Update failing tests.
-  3. Publish and update dependents. (dtslint, dts-critic and dt-retag)
+  3. Publish and update dependents. (dtslint and dts-critic)
 
   # How to deprecate versions on Definitely Typed #
 
   1. Move versions from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
   2. Move versions from `shipped` to `unsupported`.
   4. Update failing tests.
-  5. Publish and update dependents. (dtslint, dts-critic and dt-retag)
+  5. Publish and update dependents. (dtslint and dts-critic)
 
 */
 
