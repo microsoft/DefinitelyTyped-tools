@@ -266,7 +266,10 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
 
   /** boring/foo -> ./foo when subDirectory === '.'; ../foo when it's === 'x'; ../../foo when it's 'x/y' */
   function convertToRelativeReference(name: string) {
-    const relative = "." + "/..".repeat(subDirectory === "." ? 0 : subDirectory.split("/").length);
+    let relative = "." + "/..".repeat(subDirectory === "." ? 0 : subDirectory.split("/").length);
+    if (baseDirectory && subDirectory.startsWith("..")) {
+      relative = relative.slice(0, -2) + baseDirectory;
+    }
     return relative + name.slice(packageName.length);
   }
 }
