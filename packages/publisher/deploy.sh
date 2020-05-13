@@ -116,7 +116,8 @@ if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   $NPM_CMD install --global yarn@1.19.2
   rm -rf node_modules
   echo "Running yarn install --frozen-lockfile --production"
-  "`$NPM_CMD --global bin`/yarn" install --frozen-lockfile --production
+  YARN="`$NPM_CMD --global bin`/yarn"
+  "$YARN" install --frozen-lockfile --production
   exitWithMessageOnError "yarn failed"
   cd - > /dev/null
 fi
