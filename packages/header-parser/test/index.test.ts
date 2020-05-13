@@ -131,11 +131,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
   });
-  it("supports 2.9", () => {
-    expect(TypeScriptVersion.isSupported("2.9")).toBeTruthy();
+  it("supports 3.0", () => {
+    expect(TypeScriptVersion.isSupported("3.0")).toBeTruthy();
   });
-  it("does not support 2.8", () => {
-    expect(!TypeScriptVersion.isSupported("2.8")).toBeTruthy();
+  it("does not support 2.9", () => {
+    expect(!TypeScriptVersion.isSupported("2.9")).toBeTruthy();
   });
 });
 
@@ -177,8 +177,8 @@ describe("tagsToUpdate", () => {
       "latest"
     ]);
   });
-  it("allows 2.9 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("2.9")).toEqual(
+  it("allows 3.0 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("3.0")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
   });
