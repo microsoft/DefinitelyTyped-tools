@@ -32,7 +32,9 @@ import {
   getDefinitelyTyped
 } from "@definitelytyped/definitions-parser";
 
-logUncaughtErrors(main);
+if (!module.parent) {
+    logUncaughtErrors(main);
+}
 
 async function main() {
   const { dry, nProcesses, name } = yargs.options({
