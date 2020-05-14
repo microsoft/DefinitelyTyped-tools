@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/definitions-parser",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
   "homepage": "https://github.com/DefinitelyTyped/tools#readme",
   "license": "MIT",
@@ -19,9 +19,9 @@
     "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.30",
-    "@definitelytyped/typescript-versions": "^0.0.30",
-    "@definitelytyped/utils": "^0.0.30",
+    "@definitelytyped/header-parser": "^0.0.31",
+    "@definitelytyped/typescript-versions": "^0.0.31",
+    "@definitelytyped/utils": "^0.0.31",
     "@types/node": "^12.12.29",
     "fs-extra": "^8.1.0",
     "typescript": "^3.8.3"
