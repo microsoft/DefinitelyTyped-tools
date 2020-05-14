@@ -28,9 +28,11 @@ jobs:
         ref=${{ github.ref }} # refs/tags/v0.0.1
         tag=${ref:11} # 0.0.1
         yarn lerna version $tag --yes --no-git-tag-version --no-push
-        git commit -am "v$tag"
-        git tag -af v$tag -m v$tag
-        git push && git push --tags -f
+        if [ -n "`git status -s`" ]; then
+          git commit -am "v$tag"
+          git tag -af v$tag -m v$tag
+          git push && git push --tags -f
+        fi
     - name: publish to npm
       run: yarn lerna publish from-git --yes
       env:
