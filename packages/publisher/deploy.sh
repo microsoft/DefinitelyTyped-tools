@@ -113,10 +113,11 @@ selectNodeVersion
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
   echo "Installing yarn"
-  $NPM_CMD install --global yarn@1.19.2
+  eval $NPM_CMD install --global yarn@1.19.2
   rm -rf node_modules
   echo "Running yarn install --frozen-lockfile --production"
-  npx yarn install --frozen-lockfile --production
+  NPM_BIN=`eval $NPM_CMD --global bin`
+  "$NPM_BIN/yarn" install --frozen-lockfile --production
   exitWithMessageOnError "yarn failed"
   cd - > /dev/null
 fi
