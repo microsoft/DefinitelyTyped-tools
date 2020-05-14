@@ -117,9 +117,7 @@ fi
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  cd "$DEPLOYMENT_TARGET"
-  rm -rf node_modules
-  cd - > /dev/null
+  rm -rf "$DEPLOYMENT_TARGET/node_modules" # Sync sometimes messes up node_modules
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
