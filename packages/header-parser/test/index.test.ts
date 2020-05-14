@@ -127,6 +127,23 @@ describe("parseTypeScriptVersionLine", () => {
   });
 });
 
+describe("unsupported", () => {
+  it("contains at least 2.9", () => {
+    expect(TypeScriptVersion.unsupported.includes("2.9")).toBeTruthy();
+  });
+});
+
+describe("all", () => {
+  it("doesn't have any holes", () => {
+    let prev = TypeScriptVersion.all[0];
+    for (const version of TypeScriptVersion.all.slice(1)) {
+      expect(+version - +prev).toBeLessThan(0.111);
+      expect(+version - +prev).toBeGreaterThan(0.0999);
+      prev = version;
+    }
+  });
+});
+
 describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
@@ -156,7 +173,7 @@ describe("range", () => {
     expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9", "4.0"]);
   });
   it("includes 2.9 onwards", () => {
-    expect(TypeScriptVersion.range("2.9")).toEqual(TypeScriptVersion.supported);
+    expect(TypeScriptVersion.range("3.0")).toEqual(TypeScriptVersion.supported);
   });
 });
 
