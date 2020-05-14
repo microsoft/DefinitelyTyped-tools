@@ -137,8 +137,7 @@ describe("all", () => {
   it("doesn't have any holes", () => {
     let prev = TypeScriptVersion.all[0];
     for (const version of TypeScriptVersion.all.slice(1)) {
-      expect(+version - +prev).toBeLessThan(0.111);
-      expect(+version - +prev).toBeGreaterThan(0.0999);
+      expect(+version * 10 - +prev * 10).toEqual(1);
       prev = version;
     }
   });
