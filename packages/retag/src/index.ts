@@ -33,7 +33,7 @@ import {
 } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
-    logUncaughtErrors(main);
+  logUncaughtErrors(main);
 }
 
 async function main() {
