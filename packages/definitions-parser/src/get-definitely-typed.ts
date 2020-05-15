@@ -2,7 +2,7 @@ import { ensureDir } from "fs-extra";
 import { DiskFS, downloadAndExtractFile, LoggerWithErrors, FS, exec } from "@definitelytyped/utils";
 
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
-import type { ExecException } from "child_process";
+import { ExecException } from "child_process";
 
 /** Settings that may be determined dynamically. */
 export interface ParseDefinitionsOptions {
