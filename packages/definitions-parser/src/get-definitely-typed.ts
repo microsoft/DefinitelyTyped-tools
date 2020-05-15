@@ -2,6 +2,7 @@ import { ensureDir } from "fs-extra";
 import { DiskFS, downloadAndExtractFile, LoggerWithErrors, FS, exec } from "@definitelytyped/utils";
 
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
+import { ExecException } from "child_process";
 
 /** Settings that may be determined dynamically. */
 export interface ParseDefinitionsOptions {
@@ -25,7 +26,7 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
   }
   const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
   if (error) {
-    throw error;
+    throw new Error(error.message + ": " + (error as ExecException).cmd);
   }
   if (stderr) {
     throw new Error(stderr);
