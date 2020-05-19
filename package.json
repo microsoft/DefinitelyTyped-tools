@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "test": "jest",
-    "build": "tsc -b tsconfig.all.json",
+    "build": "tsc -b .",
     "retag": "node packages/retag/lib/retag.js"
   },
   "devDependencies": {
