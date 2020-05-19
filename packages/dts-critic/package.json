@@ -1,6 +1,6 @@
 {
     "name": "dts-critic",
-    "version": "3.2.1",
+    "version": "3.2.2",
     "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
     "dependencies": {
