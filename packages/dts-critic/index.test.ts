@@ -99,6 +99,15 @@ The JavaScript module exports a property named 'foo', which is missing from the 
             }
         ]));
     },
+    noMissingWebpackProperty() {
+        expect(checkSource(
+            "missingJsProperty",
+            "testsource/webpackPropertyNames.d.ts",
+            "testsource/webpackPropertyNames.js",
+            allErrors,
+            false,
+        )).toHaveLength(0);
+    },
     missingDtsProperty() {
         expect(checkSource(
             "missingDtsProperty",

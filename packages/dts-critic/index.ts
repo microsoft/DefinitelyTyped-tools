@@ -699,7 +699,7 @@ function getDtsDefaultExport(sourceFile: ts.SourceFile, moduleType: InferenceRes
     return undefined;
 }
 
-const ignoredProperties = ["__esModule", "prototype", "default"];
+const ignoredProperties = ["__esModule", "prototype", "default", "F", "G", "S", "P", "B", "W", "U", "R"];
 
 function ignoreProperty(property: ts.Symbol): boolean {
     const name = property.getName();
