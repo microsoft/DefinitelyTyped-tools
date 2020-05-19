@@ -48,6 +48,8 @@ actions-on-google
 activex-helpers
 adal-node
 ajv
+algoliasearch
+algoliasearch-helper
 anydb-sql
 aphrodite
 apollo-client
@@ -99,6 +101,7 @@ final-form
 flatpickr
 form-data
 glaze
+globby
 google-auth-library
 google-gax
 graphql
