@@ -4,6 +4,7 @@ import fs = require("fs");
 import cp = require("child_process");
 import path = require("path");
 import semver = require("semver");
+import rimraf = require("rimraf");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 import * as tmp from "tmp";
@@ -109,7 +110,12 @@ If you want to check the declaration against the JavaScript source code, you mus
                 packagePath = downloadNpmPackage(name, npmVersion, tempDirName)
                 sourceEntry = require.resolve(path.resolve(packagePath));
             }
-            return checkSource(name, dtsPath, sourceEntry, options.errors, debug);
+            const errors = checkSource(name, dtsPath, sourceEntry, options.errors, debug);
+            if (packagePath) {
+                // Delete the source afterward to avoid running out of space
+                rimraf.sync(packagePath)
+            }
+            return errors;
         }
 
         return [];
