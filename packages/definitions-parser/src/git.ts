@@ -6,7 +6,7 @@ import {
   formatDependencyVersion,
   getDependencyFromFile,
   AllPackages,
-  NotNeededPackage,
+  NotNeededPackage
 } from "./packages";
 import {
   Logger,
@@ -18,7 +18,7 @@ import {
   assertDefined,
   Semver,
   UncachedNpmInfoClient,
-  NpmInfo,
+  NpmInfo
 } from "@definitelytyped/utils";
 import { getAffectedPackages } from "./get-affected-packages";
 
@@ -71,7 +71,6 @@ export function gitChanges(diffs: GitDiff[]): PackageId[] {
   const changedPackages = new Map<string, Map<string, DependencyVersion>>();
 
   for (const diff of diffs) {
-    if (diff.status === "D") continue;
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const versions = changedPackages.get(dep.name);
@@ -95,7 +94,7 @@ export async function getAffectedPackagesFromDiff(
 ) {
   const allPackages = await AllPackages.read(dt);
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
-  if (diffs.find(d => d.file === "notNeededPackages.json")) {
+  if (diffs.find(d => d.status === "D" || d.file === "notNeededPackages.json")) {
     const uncached = new UncachedNpmInfoClient();
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
       const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
@@ -109,14 +108,14 @@ export async function getAffectedPackagesFromDiff(
       ? {
           changedPackages: allPackages.allTypings(),
           dependentPackages: [],
-          allPackages,
+          allPackages
         }
       : selection === "affected"
-      ? getAffectedPackages(allPackages, gitChanges(diffs))
+      ? getAffectedPackages(allPackages, gitChanges(diffs.filter(d => d.status !== "D")))
       : {
           changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)),
           dependentPackages: [],
-          allPackages,
+          allPackages
         };
 
   console.log(
@@ -136,25 +135,31 @@ export async function getAffectedPackagesFromDiff(
  * 1. find all the deleted files and group by toplevel
  * 2. Make sure that there are no packages left with deleted entries
  * 3. make sure that each toplevel deleted has a matching entry in notNeededPackages
+ *   a. Non-toplevel directories can be deleted as long as all files in the directory are deleted.
  */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]): Iterable<NotNeededPackage> {
   const deletedPackages = new Set(
     diffs
       .filter(d => d.status === "D")
-      .map(
-        d =>
-          assertDefined(
-            getDependencyFromFile(d.file),
-            `Unexpected file deleted: ${d.file}
+      .map(d =>
+        assertDefined(
+          getDependencyFromFile(d.file),
+          `Unexpected file deleted: ${d.file}
 When removing packages, you should only delete files that are a part of removed packages.`
-          ).name
+        )
       )
   );
   return mapIterable(deletedPackages, p => {
-    if (allPackages.hasTypingFor({ name: p, version: "*" })) {
-      throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
+    if (p.version !== "*") {
+      // it's .. ok ?
     }
-    return assertDefined(allPackages.getNotNeededPackage(p), `Deleted package ${p} is not in notNeededPackages.json.`);
+    if (allPackages.hasTypingFor(p)) {
+      throw new Error(`Please delete all files in ${p.name} when adding it to notNeededPackages.json.`);
+    }
+    return assertDefined(
+      allPackages.getNotNeededPackage(p.name),
+      `Deleted package ${p.name} is not in notNeededPackages.json.`
+    );
   });
 }
 
