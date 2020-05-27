@@ -4,7 +4,9 @@ import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
-  CrashRecoveryState
+  CrashRecoveryState,
+  installAllTypeScriptVersions,
+  installTypeScriptNext
 } from "@definitelytyped/utils";
 import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
 import { RunDTSLintOptions } from "./types";
@@ -44,6 +46,14 @@ export async function runDTSLint({
   const { packageNames, dependents } = onlyRunAffectedPackages
     ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
     : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
+
+  if (!noInstall && !localTypeScriptPath) {
+    if (onlyTestTsNext) {
+      await installTypeScriptNext();
+    } else {
+      await installAllTypeScriptVersions();
+    }
+  }
 
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages);
