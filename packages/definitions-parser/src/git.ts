@@ -6,7 +6,7 @@ import {
   formatDependencyVersion,
   getDependencyFromFile,
   AllPackages,
-  NotNeededPackage
+  NotNeededPackage,
 } from "./packages";
 import {
   Logger,
@@ -18,7 +18,7 @@ import {
   assertDefined,
   Semver,
   UncachedNpmInfoClient,
-  NpmInfo
+  NpmInfo,
 } from "@definitelytyped/utils";
 import { getAffectedPackages } from "./get-affected-packages";
 
@@ -71,7 +71,7 @@ export function gitChanges(diffs: GitDiff[]): PackageId[] {
   const changedPackages = new Map<string, Map<string, DependencyVersion>>();
 
   for (const diff of diffs) {
-      if (diff.status === "D") continue
+    if (diff.status === "D") continue;
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const versions = changedPackages.get(dep.name);
@@ -106,13 +106,17 @@ export async function getAffectedPackagesFromDiff(
 
   const affected =
     selection === "all"
-      ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
+      ? {
+          changedPackages: allPackages.allTypings(),
+          dependentPackages: [],
+          allPackages,
+        }
       : selection === "affected"
       ? getAffectedPackages(allPackages, gitChanges(diffs))
       : {
           changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)),
           dependentPackages: [],
-          allPackages
+          allPackages,
         };
 
   console.log(
