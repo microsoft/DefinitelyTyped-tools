@@ -71,6 +71,7 @@ export function gitChanges(diffs: GitDiff[]): PackageId[] {
   const changedPackages = new Map<string, Map<string, DependencyVersion>>();
 
   for (const diff of diffs) {
+      if (diff.status === "D") continue
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const versions = changedPackages.get(dep.name);
