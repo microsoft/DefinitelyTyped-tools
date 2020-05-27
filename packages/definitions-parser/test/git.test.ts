@@ -1,6 +1,6 @@
 import { NpmInfo } from "@definitelytyped/utils";
 import { createTypingsVersionRaw, testo } from "./utils";
-import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
+import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../src/git";
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 
 const typesData: TypesDataFile = {
@@ -9,7 +9,7 @@ const typesData: TypesDataFile = {
   "known-test": createTypingsVersionRaw("known-test", [], ["jquery"]),
   "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", version: "*" }], []),
   unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", version: { major: 1 } }], []),
-  "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"])
+  "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"]),
 };
 
 const jestNotNeeded = [
@@ -17,15 +17,15 @@ const jestNotNeeded = [
     typingsPackageName: "jest",
     libraryName: "jest",
     asOfVersion: "100.0.0",
-    sourceRepoURL: "jest.com"
-  })
+    sourceRepoURL: "jest.com",
+  }),
 ];
 const allPackages = AllPackages.from(typesData, jestNotNeeded);
 
 const deleteJestDiffs: GitDiff[] = [
   { status: "M", file: "notNeededPackages.json" },
   { status: "D", file: "types/jest/index.d.ts" },
-  { status: "D", file: "types/jest/jest-tests.d.ts" }
+  { status: "D", file: "types/jest/jest-tests.d.ts" },
 ];
 
 testo({
@@ -53,7 +53,7 @@ testo({
         { status: "A", file: "oooooooooooops.txt" },
         { status: "M", file: "notNeededPackages.json" },
         { status: "D", file: "types/jest/index.d.ts" },
-        { status: "D", file: "types/jest/jest-tests.d.ts" }
+        { status: "D", file: "types/jest/jest-tests.d.ts" },
       ])
     );
   },
@@ -72,13 +72,22 @@ testo({
             typingsPackageName: "ember__object",
             libraryName: "@ember/object",
             asOfVersion: "1.0.0",
-            sourceRepoURL: "ember.js"
-          })
+            sourceRepoURL: "ember.js",
+          }),
         ]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     );
-  }
+  },
+  removingOldVersionsIsAllowed() {
+    expect(
+      gitChanges([
+        { status: "D", file: "types/zoolander/v1/index.d.ts" },
+        { status: "D", file: "types/zoolander/v1/zoolander-tests.ts" },
+        { status: "D", file: "types/zoolander/v1/tslint.json" },
+      ])
+    ).toHaveLength(0);
+  },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
 });
@@ -86,7 +95,7 @@ testo({
 const empty: NpmInfo = {
   distTags: new Map(),
   versions: new Map(),
-  time: new Map()
+  time: new Map(),
 };
 testo({
   missingSource() {
@@ -109,7 +118,7 @@ testo({
       checkNotNeededPackage(jestNotNeeded[0], empty, {
         distTags: new Map([["latest", "100.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
 it is supposed to replace, 100.0.0 of @types/jest.`);
@@ -119,7 +128,7 @@ it is supposed to replace, 100.0.0 of @types/jest.`);
       checkNotNeededPackage(jestNotNeeded[0], empty, {
         distTags: new Map([["latest", "999.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
 it is supposed to replace, 999.0.0 of @types/jest.`);
@@ -129,7 +138,7 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
       checkNotNeededPackage(jestNotNeeded[0], empty, {
         distTags: new Map([["latest", "4.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow("The specified version 100.0.0 of jest is not on npm.");
   },
@@ -148,5 +157,5 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
       { distTags: new Map(), versions: new Map([["100.0.0", {}]]), time: new Map([["modified", ""]]) },
       { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), time: new Map([["modified", ""]]) }
     );
-  }
+  },
 });
