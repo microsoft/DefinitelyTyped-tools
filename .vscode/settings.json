@@ -1,5 +1,3 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "typescript.tsdk": "/Developer/microsoft/TypeScript/built/local",
-  "typescript.tsserver.log": "verbose"
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
