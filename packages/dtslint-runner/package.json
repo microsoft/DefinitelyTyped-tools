@@ -28,6 +28,10 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
-    "@types/stats-lite": "^2.2.0"
+    "@types/stats-lite": "^2.2.0",
+    "dtslint": "latest"
+  },
+  "peerDependencies": {
+      "dtslint": "*"
   }
 }
