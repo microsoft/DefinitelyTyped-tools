@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/utils",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/DefinitelyTyped/tools#readme",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "url": "https://github.com/DefinitelyTyped/tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-versions": "^0.0.35",
+    "@definitelytyped/typescript-versions": "^0.0.36",
     "@types/node": "^12.12.29",
     "charm": "^1.0.2",
     "fs-extra": "^8.1.0",
