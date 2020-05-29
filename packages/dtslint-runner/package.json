@@ -22,7 +22,6 @@
   "dependencies": {
     "@definitelytyped/definitions-parser": "^0.0.35",
     "@definitelytyped/utils": "^0.0.35",
-    "dtslint": "latest",
     "fs-extra": "^9.0.0",
     "stats-lite": "^2.2.0",
     "yargs": "^15.3.1"
