@@ -1,6 +1,6 @@
 {
     "name": "dts-critic",
-    "version": "3.2.3",
+    "version": "3.2.4",
     "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
     "dependencies": {
@@ -9,8 +9,31 @@
         "rimraf": "^3.0.2",
         "semver": "^6.2.0",
         "tmp": "^0.2.1",
-        "typescript": "^3.9.2",
         "yargs": "^12.0.5"
+    },
+    "peerDependencies": {
+        "typescript": "*"
+    },
+    "devDependencies": {
+        "@types/command-exists": "^1.2.0",
+        "@types/jest": "^24.0.0",
+        "@types/node": "~10.17.0",
+        "@types/rimraf": "^3.0.0",
+        "@types/semver": "^6.0.1",
+        "@types/strip-json-comments": "0.0.30",
+        "@types/tmp": "^0.2.0",
+        "@types/yargs": "^12.0.8",
+        "@typescript-eslint/eslint-plugin": "^2.3.2",
+        "@typescript-eslint/experimental-utils": "^2.3.2",
+        "@typescript-eslint/parser": "^2.3.2",
+        "eslint": "^6.5.1",
+        "eslint-formatter-autolinkable-stylish": "^1.0.3",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-jsdoc": "^15.9.9",
+        "eslint-plugin-no-null": "^1.0.2",
+        "jest": "^24.7.1",
+        "strip-json-comments": "^2.0.1",
+        "typescript": "*"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -35,26 +58,6 @@
         "url": "https://github.com/sandersn/dts-critic/issues"
     },
     "homepage": "https://github.com/sandersn/dts-critic#readme",
-    "devDependencies": {
-        "@types/command-exists": "^1.2.0",
-        "@types/jest": "^24.0.0",
-        "@types/node": "~10.17.0",
-        "@types/rimraf": "^3.0.0",
-        "@types/semver": "^6.0.1",
-        "@types/strip-json-comments": "0.0.30",
-        "@types/tmp": "^0.2.0",
-        "@types/yargs": "^12.0.8",
-        "@typescript-eslint/eslint-plugin": "^2.3.2",
-        "@typescript-eslint/experimental-utils": "^2.3.2",
-        "@typescript-eslint/parser": "^2.3.2",
-        "eslint": "^6.5.1",
-        "eslint-formatter-autolinkable-stylish": "^1.0.3",
-        "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-jsdoc": "^15.9.9",
-        "eslint-plugin-no-null": "^1.0.2",
-        "jest": "^24.7.1",
-        "strip-json-comments": "^2.0.1"
-    },
     "engines": {
         "node": ">=10.17.0"
     }
