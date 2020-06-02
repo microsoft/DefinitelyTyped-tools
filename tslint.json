@@ -1,0 +1,6 @@
+{
+    "extends": ["tslint-microsoft-contrib/recommended"],
+    "linterOptions": {
+        "exclude": ["packages/*/node_modules/**"]
+    }
+}
