@@ -1,6 +1,16 @@
 {
     "extends": ["tslint-microsoft-contrib/recommended"],
-    "linterOptions": {
-        "exclude": ["packages/*/node_modules/**"]
+    "rules": {
+        "prefer-type-cast": false,
+        "no-angle-bracket-type-assertion": true,
+        "no-relative-imports": false,
+        "no-single-line-block-comment": false,
+        "no-backbone-get-set-outside-model": false,
+        "function-name": [
+            true, {
+                "static-method-regex": "^[a-z][\\w\\d]+$"
+            }
+        ],
+        "export-name": false
     }
 }
