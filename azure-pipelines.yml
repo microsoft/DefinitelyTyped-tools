@@ -20,3 +20,8 @@ steps:
 - script: |
     dotnet.exe d:\a\_gdn\versions\Microsoft.Guardian.Cli.0.36.0\tools\Microsoft.Guardian.Cli.dll export --console --logger-level Standard --settings-file d:\a\1\pipeline.gdnsettings
   displayName: 'guardian export'
+
+- script: |
+    yarn install
+    yarn tslint
+  displayName: 'yarn tslint'
