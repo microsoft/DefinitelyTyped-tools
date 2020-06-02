@@ -29,7 +29,7 @@ steps:
     yarn test
   displayName: 'yarn test'
 
-- task: 39a984f5-c8a0-46bd-9a9e-0b596b891392@2
+- task: 39a984f5-c8a0-46bd-9a9e-0b596b891392
   inputs:
     outputFormat: 'pre'
     batchSize: '20'
