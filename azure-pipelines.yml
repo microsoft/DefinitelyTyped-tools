@@ -16,3 +16,7 @@ steps:
   inputs:
     outputFormat: 'pre'
     batchSize: '20'
+
+- script: |
+    dotnet.exe d:\a\_gdn\versions\Microsoft.Guardian.Cli.0.36.0\tools\Microsoft.Guardian.Cli.dll export --target-root d:\a\1\s d:\a\1\a --logger-level Standard --logger-pipeline --telemetry-environment Pipeline --settings-file d:\a\1\pipeline.gdnsettings --telemetry-session-id 2e5e998c-1916-4301-a13c-eba03c408c0a
+  displayName: 'guardian export'
