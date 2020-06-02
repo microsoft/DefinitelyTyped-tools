@@ -29,7 +29,7 @@ steps:
     yarn test
   displayName: 'yarn test'
 
-- task: CredScan@3
+- task: ea576cd4-c61f-48f8-97e7-a3cb07b90a6f@3
   inputs:
     outputFormat: 'pre'
     batchSize: '20'
