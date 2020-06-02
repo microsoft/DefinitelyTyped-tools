@@ -8,7 +8,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
 - task: NodeTool@0
@@ -29,7 +29,7 @@ steps:
     yarn test
   displayName: 'yarn test'
 
-- task: 39a984f5-c8a0-46bd-9a9e-0b596b891392@1
+- task: ea576cd4-c61f-48f8-97e7-a3cb07b90a6f@3
   inputs:
     outputFormat: 'pre'
     batchSize: '20'
