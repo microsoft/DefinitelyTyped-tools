@@ -345,12 +345,12 @@ The script `npm run make-server-run` will trigger the local webhook just like Gi
 * Add a hook:
 	* Go to https://github.com/your/dummy-repo/settings/hooks
 	* Payload URL = url copied from ngrok
-	* Secret = swordfish
+	* Secret = make up a word here
 
 * Start the server:
 	* Change `settings.json`:
 		"sourceRepository": "https://github.com/your/dummy-repo"
-	* Set the `GITHUB_SECRET` environment variable to `swordfish`
+	* Set the `GITHUB_SECRET` environment variable to the secret you made up in the previous step
 	* `npm install; npm run build`
 	* `npm run webhook-dry`
 
