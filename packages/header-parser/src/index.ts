@@ -149,7 +149,6 @@ function contributorsParser(strict: boolean): pm.Parser<readonly Author[]> {
   return pm.sepBy1(contributor, separator);
 }
 
-// TODO: Should we do something with the URL?
 const definitionsParser = pm.regexp(/\r?\n\/\/ Definitions: [^\r\n]+/);
 
 function parseLabel(strict: boolean): pm.Parser<Label> {

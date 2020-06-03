@@ -1,4 +1,5 @@
 declare module "fstream" {
+  // tslint:disable-next-line:function-name
   export function Reader(options: ReaderOptions): NodeJS.ReadableStream;
   interface ReaderOptions {
     path: string;

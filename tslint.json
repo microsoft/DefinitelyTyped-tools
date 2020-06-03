@@ -11,6 +11,19 @@
                 "static-method-regex": "^[a-z][\\w\\d]+$"
             }
         ],
-        "export-name": false
+        "export-name": false,
+        "import-name": false,
+        "prefer-array-literal": [
+            true, {
+                "allow-size-argument": true
+            }
+        ],
+        "no-constant-condition": [
+            true, {
+                "checkLoops": false
+            }
+        ],
+        "no-function-expression": false,
+        "max-func-body-length": false
     }
 }

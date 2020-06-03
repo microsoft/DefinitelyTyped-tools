@@ -18,7 +18,6 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
     if (dependency !== packageName) {
       dependencies.add(dependency);
     }
-    // TODO: else throw new Error(`Package ${packageName} references itself. (via ${src.fileName})`);
   }
 
   for (const sourceFile of all.values()) {
@@ -162,6 +161,7 @@ export function allReferencedFiles(
     seenReferences.add(text);
 
     const resolvedFilename = exact ? text : resolveModule(text, fs);
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(resolvedFilename)) {
       const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
       if (resolvedFilename.endsWith(".d.ts")) {
@@ -186,12 +186,15 @@ function resolveModule(importSpecifier: string, fs: FS): string {
     ? importSpecifier.slice(0, importSpecifier.length - 1)
     : importSpecifier;
   if (importSpecifier !== "." && importSpecifier !== "..") {
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(importSpecifier + ".d.ts")) {
       return importSpecifier + ".d.ts";
     }
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(importSpecifier + ".ts")) {
       return importSpecifier + ".ts";
     }
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(importSpecifier + ".tsx")) {
       return importSpecifier + ".tsx";
     }
@@ -394,7 +397,7 @@ export function getTestDependencies(
     isModule =
       hasImports ||
       (() => {
-        // FIXME: This results in files without imports to be walked twice,
+        // Note that this results in files without imports to be walked twice,
         // once in the `imports(...)` function, and once more here:
         for (const node of sourceFile.statements) {
           if (node.kind === ts.SyntaxKind.ExportAssignment || node.kind === ts.SyntaxKind.ExportDeclaration) {

@@ -76,6 +76,7 @@ export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
       );
     }
 
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     const ls = fs.readdir(directoryName);
     const data: TypingsDataRaw = {
       libraryVersionDirectoryName: formatTypingVersion(directoryVersion),
@@ -203,10 +204,11 @@ function combineDataForAllTypesVersions(
     )
   );
 
+  // Note that only the first project is collected right now
   return {
     libraryName,
     typingsPackageName,
-    projectName: projects[0], // TODO: collect multiple project names
+    projectName: projects[0],
     contributors,
     libraryMajorVersion,
     libraryMinorVersion,
@@ -214,7 +216,6 @@ function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    // TODO: Explicit type arguments shouldn't be necessary. https://github.com/Microsoft/TypeScript/issues/27507
     dependencies: getAllUniqueValues<"dependencies", PackageId>(allTypesVersions, "dependencies"),
     testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"),
     pathMappings: getAllUniqueValues<"pathMappings", PathMapping>(allTypesVersions, "pathMappings"),
@@ -266,6 +267,7 @@ function getTypingDataForSingleTypesVersion(
   const otherFiles =
     ls.indexOf(unusedFilesName) > -1
       ? fs
+          // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
           .readFile(unusedFilesName)
           .split(/\r?\n/g)
           .filter(Boolean)
@@ -273,6 +275,7 @@ function getTypingDataForSingleTypesVersion(
   checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
   for (const untestedTypeFile of filter(otherFiles, name => name.endsWith(".d.ts"))) {
     // add d.ts files from OTHER_FILES.txt in order get their dependencies
+    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     types.set(untestedTypeFile, createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile)));
   }
 
@@ -531,6 +534,7 @@ function hash(files: readonly string[], tsconfigPathsForHash: readonly string[],
 }
 
 export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
+  // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
   const text = fs.readFile(fileName);
   if (text.charCodeAt(0) === 0xfeff) {
     const commands = ["npm install -g strip-bom-cli", `strip-bom ${fileName} > fix`, `mv fix ${fileName}`];

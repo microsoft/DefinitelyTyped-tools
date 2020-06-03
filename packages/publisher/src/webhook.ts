@@ -1,4 +1,4 @@
-import appInsights = require("applicationinsights");
+import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 import { getSecret, Secret } from "./lib/secrets";
 import webhookServer from "./lib/webhook-server";
@@ -19,7 +19,7 @@ export default async function main(): Promise<void> {
   } else {
     console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
     if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-      appInsights.setup().start();
+      applicationinsights.setup().start();
       console.log("Done initialising App Insights");
     }
     const fetcher = new Fetcher();
@@ -32,7 +32,7 @@ export default async function main(): Promise<void> {
       console.log(`Listening on port ${port}`);
       s.listen(port);
     } catch (e) {
-      appInsights.defaultClient.trackEvent({
+      applicationinsights.defaultClient.trackEvent({
         name: "crash",
         properties: {
           error: e.toString()

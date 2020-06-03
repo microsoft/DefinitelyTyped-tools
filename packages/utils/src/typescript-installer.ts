@@ -54,6 +54,7 @@ function installDir(version: TsVersion | "next"): string {
 
 /** Run a command and return the stdout, or if there was an error, throw. */
 async function execAndThrowErrors(cmd: string, cwd?: string): Promise<void> {
+  // tslint:disable-next-line:promise-must-complete
   return new Promise<void>((resolve, reject) => {
     exec(cmd, { encoding: "utf8", cwd }, (err, _stdout, stderr) => {
       if (stderr) {

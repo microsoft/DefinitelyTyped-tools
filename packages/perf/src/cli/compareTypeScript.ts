@@ -57,6 +57,7 @@ export interface CompareTypeScriptOptions {
 
 function convertArgs({ file, ...args }: Args): CompareTypeScriptOptions {
   if (file) {
+    // tslint:disable-next-line:non-literal-require -- filename comes from Azure artifact
     const jsonContent = require(path.resolve(assertString(file, "file")));
     return {
       ...convertArgs({ ...args, ...jsonContent.options }),
@@ -80,7 +81,7 @@ function convertArgs({ file, ...args }: Args): CompareTypeScriptOptions {
     upload: assertBoolean(withDefault(args.upload, true), "upload"),
     outFile: args.outFile ? assertString(args.outFile, "outFile") : undefined,
     agentCount: args.agentCount ? assertNumber(args.agentCount, "agentCount") : undefined,
-    agentIndex: typeof args.agentIndex !== "undefined" ? assertNumber(args.agentIndex, "agentIndex") : undefined
+    agentIndex: args.agentIndex !== undefined ? assertNumber(args.agentIndex, "agentIndex") : undefined
   };
 }
 
