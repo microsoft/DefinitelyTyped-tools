@@ -23,5 +23,5 @@ steps:
 
 - script: |
     yarn install
-    yarn tslint
-  displayName: 'yarn tslint'
+    node node_modules/tslint/lib/tslintCli.js -c security/tslint.json 'packages/*/src/**/*.ts'
+  displayName: 'tslint'
