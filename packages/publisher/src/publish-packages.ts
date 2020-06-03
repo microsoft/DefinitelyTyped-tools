@@ -1,4 +1,4 @@
-import appInsights = require("applicationinsights");
+import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
@@ -153,7 +153,7 @@ export default async function publishPackages(
       if (dry) {
         log("(dry) Not logging latency");
       } else {
-        appInsights.defaultClient.trackEvent({
+        applicationinsights.defaultClient.trackEvent({
           name: "publish package",
           properties: {
             name: cp.pkg.desc,
@@ -163,8 +163,8 @@ export default async function publishPackages(
             pr: latestPr.toString()
           }
         });
-        appInsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-        appInsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
+        applicationinsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
+        applicationinsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
         log("Done logging latency");
       }
     }

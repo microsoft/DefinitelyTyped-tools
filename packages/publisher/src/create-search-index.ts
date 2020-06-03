@@ -51,7 +51,7 @@ async function createSearchRecords(
   packages: readonly TypingsData[],
   client: UncachedNpmInfoClient
 ): Promise<readonly SearchRecord[]> {
-  // TODO: Would like to just use pkg.unescapedName unconditionally, but npm doesn't allow scoped packages.
+  // Can't search for pkg.unescapedName because npm doesn't search scoped packages.
   const dl = await client.getDownloads(
     packages.map((pkg, i) => (pkg.name === pkg.unescapedName ? pkg.name : `dummy${i}`))
   );

@@ -9,7 +9,7 @@ export interface PostTypeScriptComparisonResultsOptions {
 }
 
 export async function postTypeScriptComparisonResults({ comparisons }: PostTypeScriptComparisonResultsOptions) {
-  const message = comparisons
+  return comparisons
     .map(([baseline, head]) =>
       [
         `### ${toPackageKey(baseline.body.packageName, baseline.body.packageVersion)}`,
@@ -17,6 +17,4 @@ export async function postTypeScriptComparisonResults({ comparisons }: PostTypeS
       ].join("\n")
     )
     .join("\n\n");
-
-  return message;
 }

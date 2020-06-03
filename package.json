@@ -1,7 +1,9 @@
 {
   "name": "definitelytyped-tools",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "prepare": "lerna bootstrap --no-ci",
     "pretest": "yarn build",
@@ -26,6 +28,8 @@
     "lerna": "^3.20.2",
     "prettier": "^1.19.1",
     "ts-jest": "^25.2.1",
+    "tslint": "^6.1.2",
+    "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.8.3"
   }
 }

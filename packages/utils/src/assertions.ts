@@ -14,8 +14,8 @@ type AnyFunction = (...args: never[]) => void;
 export function fail(message?: string, stackCrawlMark?: AnyFunction): never {
   debugger;
   const e = new Error(message ? `Debug Failure. ${message}` : "Debug Failure.");
-  if ((<any>Error).captureStackTrace) {
-    (<any>Error).captureStackTrace(e, stackCrawlMark || fail);
+  if ((Error as any).captureStackTrace) {
+    (Error as any).captureStackTrace(e, stackCrawlMark || fail);
   }
   throw e;
 }
