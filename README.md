@@ -1,12 +1,14 @@
 # DefinitelyTyped-tools
 
-_✨ Under construction ✨_
-
 A monorepo for formerly disparate DefinitelyTyped-related tools:
 
-- [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser)
 - [definitions-parser](packages/definitions-parser): the part of [microsoft/types-publisher](https://github.com/microsoft/types-publisher) that reads DefinitelyTyped repository data
+- [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner)
+- [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser)
+- [perf](packages/perf): [andrewbranch/definitely-not-slow](https://github.com/andrewbranch/definitely-not-slow)
 - [publisher](packages/publisher): the rest of [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
+- [retag](packages/retag): [DefinitelyTyped/dt-retag](https://github.com/DefinitelyTyped/dt-retag)
+- [typescript-versions]: the part of [definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser) that tracked which TypeScript versions are published to npm and supported on DefinitelyTyped
 - [utils](packages/utils): shared utilities, mostly extracted from [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
 
 ## Disclaimer
@@ -15,31 +17,14 @@ These tools are not intended for public consumption, so we may break the API whe
 
 ## Development
 
-This is a monorepo managed with [lerna](https://github.com/lerna/lerna). After cloning, run `npm install`. `lerna bootstrap` will be run automatically to install dependencies in each of the individual packages.
-
-### Adding/updating dependencies
-
-Rather than using `npm install` in individual packages, use [`lerna add`](https://github.com/lerna/lerna/tree/master/commands/add#readme) from the root. Examples:
-
-```sh
-# To add `glob` to definitions-parser:
-lerna add glob packages/definitions-parser
-
-# To add testdouble as a devDependency to publisher:
-lerna add --dev testdouble packages/publisher
-
-# To add typescript to all packages:
-lerna add typescript
-```
-
-The exception to this rule is devDependencies that are shared between all packages: those can added to the root package.json with `npm` directly.
+This is a monorepo managed with [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces) and [lerna](https://github.com/lerna/lerna). After cloning, run `yarn` to install dependencies for each package and link them to each other.
 
 ### Testing
 
-All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `npm test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
+All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `yarn test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
 
 ```sh
-npm test -- packages/utils
+yarn test packages/utils
 ```
 
 ## Contributing
