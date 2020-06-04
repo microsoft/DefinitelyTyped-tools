@@ -17,10 +17,6 @@ steps:
     outputFormat: 'pre'
     batchSize: '20'
 
-- task: SdtReport@2
-  inputs:
-    GdnExportAllTools: true
-
 - task: PostAnalysis@2
   inputs:
     GdnBreakAllTools: true
