@@ -17,9 +17,9 @@ steps:
     outputFormat: 'pre'
     batchSize: '20'
 
-- task: PostAnalysis@2
-  inputs:
-    GdnBreakAllTools: true
+- script: |
+    dotnet.exe d:\a\_gdn\versions\Microsoft.Guardian.Cli.0.*.0\tools\Microsoft.Guardian.Cli.dll export --console --logger-level Standard --settings-file d:\a\1\pipeline.gdnsettings
+  displayName: 'guardian export'
 
 - script: |
     yarn install
