@@ -24,7 +24,7 @@ export async function prepareAffectedPackages({
     parseInParallel: nProcesses > 1
   };
   const dt = await getDefinitelyTyped(options, log);
-  await parseDefinitions(dt, { definitelyTypedPath, nProcesses }, log);
+  await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
   try {
     await checkParseResults(/*includeNpmChecks*/ false, dt, options);
   } catch (err) {
