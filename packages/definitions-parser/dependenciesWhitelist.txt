@@ -5,6 +5,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@elastic/elasticsearch
 @electron/get
 @emotion/core
 @emotion/serialize
@@ -43,6 +44,7 @@
 @types/wonder-frp
 @uirouter/angularjs
 @vue/test-utils
+@wordpress/element
 abort-controller
 actions-on-google
 activex-helpers
@@ -100,6 +102,7 @@ fastify
 final-form
 flatpickr
 form-data
+gl-matrix
 glaze
 globby
 google-auth-library
