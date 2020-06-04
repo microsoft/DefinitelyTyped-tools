@@ -232,17 +232,15 @@ async function getPackagesToTestAndPriorResults(
   packageList?: PackageId[]
 ) {
   const iterator: AsyncIterable<FeedResponse<QueryResult<Document<PackageBenchmarkSummary>>>> = await container.items
-    .query(
-      {
-        query:
-          `SELECT * FROM ${config.database.packageBenchmarksContainerId} b` +
-          `  WHERE b.body.typeScriptVersionMajorMinor = @typeScriptVersion` +
-          (packageList
-            ? `  AND b.body.packageName IN (${packageList!.map(({ name }) => `"${name}"`).join(", ")})` // Couldn’t figure out how to do this with parameters
-            : ""),
-        parameters: [{ name: "@typeScriptVersion", value: typeScriptVersion }]
-      }
-    )
+    .query({
+      query:
+        `SELECT * FROM ${config.database.packageBenchmarksContainerId} b` +
+        `  WHERE b.body.typeScriptVersionMajorMinor = @typeScriptVersion` +
+        (packageList
+          ? `  AND b.body.packageName IN (${packageList!.map(({ name }) => `"${name}"`).join(", ")})` // Couldn’t figure out how to do this with parameters
+          : ""),
+      parameters: [{ name: "@typeScriptVersion", value: typeScriptVersion }]
+    })
     .getAsyncIterator();
 
   const packageKeys = packageList && packageList.map(toPackageKey);
