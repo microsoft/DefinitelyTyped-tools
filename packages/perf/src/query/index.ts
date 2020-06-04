@@ -15,7 +15,7 @@ export async function getLatestBenchmark({
   typeScriptVersionMajorMinor
 }: GetLatestBenchmarkOptions): Promise<QueryResult<Document<PackageBenchmarkSummary>> | undefined> {
   const response = await container.items
-    .query(
+    .query<QueryResult<Document<PackageBenchmarkSummary>>>(
       {
         query:
           `SELECT TOP 1 * FROM ${config.database.packageBenchmarksContainerId} b` +
@@ -29,9 +29,7 @@ export async function getLatestBenchmark({
           { name: "@tsVersion", value: typeScriptVersionMajorMinor }
         ]
       },
-      { enableCrossPartitionQuery: true }
     )
-    .current();
-
-  return response.result;
+    .fetchNext();
+  return response.resources[0];
 }
