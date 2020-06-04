@@ -89,7 +89,10 @@ async function generateTypingPackage(
   dt: FS
 ): Promise<void> {
   const typesDirectory = dt.subDir("types").subDir(typing.name);
-  const packageFS = typing.isLatest ? typesDirectory : typesDirectory.subDir(typing.versionDirectoryName!);
+  const packageFS =
+    typing.isLatest || !typing.versionDirectoryName
+      ? typesDirectory
+      : typesDirectory.subDir(typing.versionDirectoryName);
 
   await writeCommonOutputs(
     typing,

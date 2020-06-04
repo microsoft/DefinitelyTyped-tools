@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "calculate-versions.js",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/bin/calculate-versions.js",
+            "program": "${workspaceFolder}/dist/calculate-versions.js",
             "args": [],
             "sourceMaps": true
         },
@@ -18,9 +18,18 @@
             "request": "launch",
             "name": "publish-packages.js --dry",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/bin/publish-packages.js",
+            "program": "${workspaceFolder}/dist/publish-packages.js",
             "args": ["--dry"],
             "sourceMaps": true
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "generate-packages.js",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/dist/generate-packages.js",
+            "args": [],
+            "sourceMaps": true
+        },
     ]
 }
