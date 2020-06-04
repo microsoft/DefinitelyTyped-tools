@@ -7,7 +7,6 @@ import createSearchIndex from "./create-search-index";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
-import uploadBlobsAndUpdateIssue from "./upload-blobs";
 import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
 import {
   Fetcher,
@@ -17,7 +16,7 @@ import {
   assertDefined,
   UncachedNpmInfoClient
 } from "@definitelytyped/utils";
-import { currentTimeStamp, numberOfOsProcesses } from "./util/util";
+import { numberOfOsProcesses } from "./util/util";
 import validate from "./validate";
 import { defaultLocalOptions } from "./lib/common";
 
@@ -28,20 +27,12 @@ if (!module.parent) {
   }
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
-    full(
-      dry,
-      currentTimeStamp(),
-      process.env.GH_API_TOKEN || "",
-      new Fetcher(),
-      defaultLocalOptions,
-      loggerWithErrors()[0]
-    )
+    full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0])
   );
 }
 
 export default async function full(
   dry: boolean,
-  timeStamp: string,
   githubAccessToken: string,
   fetcher: Fetcher,
   options: ParseDefinitionsOptions,
@@ -63,7 +54,4 @@ export default async function full(
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
   await publishRegistry(dt, allPackages, dry, infoClient);
   await validate(dt);
-  if (!dry) {
-    await uploadBlobsAndUpdateIssue(timeStamp);
-  }
 }
