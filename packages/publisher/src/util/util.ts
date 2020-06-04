@@ -11,4 +11,4 @@ export function outputDirectory(pkg: AnyPackage) {
   return joinPaths(outputDirPath, pkg.desc);
 }
 
-export const numberOfOsProcesses = process.env.TRAVIS === "true" ? 2 : os.cpus().length;
+export const numberOfOsProcesses = os.cpus().length;
