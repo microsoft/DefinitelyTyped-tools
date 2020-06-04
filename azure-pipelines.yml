@@ -18,10 +18,11 @@ steps:
     batchSize: '20'
 
 - script: |
-    dotnet.exe d:\a\_gdn\versions\Microsoft.Guardian.Cli.0.36.0\tools\Microsoft.Guardian.Cli.dll export --console --logger-level Standard --settings-file d:\a\1\pipeline.gdnsettings
+    for /f "delims=" %%a in ('dir /s /ad /b d:\a\_gdn\versions\Microsoft.Guardian.Cli.*') do dotnet.exe %%a\tools\Microsoft.Guardian.Cli.dll export --console --logger-level Standard --settings-file d:\a\1\pipeline.gdnsettings
   displayName: 'guardian export'
 
 - script: |
     yarn install
     node node_modules/tslint/lib/tslintCli.js -c security/tslint.json 'packages/*/src/**/*.ts'
   displayName: 'tslint'
+
