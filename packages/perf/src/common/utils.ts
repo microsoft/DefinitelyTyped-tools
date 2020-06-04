@@ -17,6 +17,7 @@ export const pathExists = promisify(fs.exists);
 
 export function ensureExists(...pathNames: string[]): string {
   for (const pathName of pathNames) {
+    // tslint:disable-next-line:non-literal-fs-path -- filename comes from Azure artifact
     if (fs.existsSync(pathName)) {
       return pathName;
     }
@@ -80,7 +81,7 @@ export function assertBoolean(input: any, name?: string): boolean {
 }
 
 export function withDefault<T>(input: T, defaultValue: T): T {
-  return typeof input === "undefined" ? defaultValue : input;
+  return input === undefined ? defaultValue : input;
 }
 
 export function getSystemInfo(): SystemInfo {
@@ -128,7 +129,7 @@ export async function getChangedPackages({
 export function packageIdsAreEqual(a: PackageId): (b: PackageId) => boolean;
 export function packageIdsAreEqual(a: PackageId, b: PackageId): boolean;
 export function packageIdsAreEqual(a: PackageId, b?: PackageId): boolean | ((b: PackageId) => boolean) {
-  return typeof b === "undefined" ? equalsA : equalsA(b);
+  return b === undefined ? equalsA : equalsA(b);
   function equalsA(b: PackageId) {
     return a.name === b.name && a.version === b.version;
   }

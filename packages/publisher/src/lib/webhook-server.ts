@@ -154,7 +154,6 @@ function checkSignature(
 ): boolean {
   const signature = headers["x-hub-signature"];
   const expected = expectedSignature(key, data);
-  // tslint:disable-next-line strict-type-predicates (TODO: tslint bug)
   if (typeof signature === "string" && stringEqualsConstantTime(signature, expected)) {
     return true;
   }

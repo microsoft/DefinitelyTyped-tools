@@ -269,7 +269,7 @@ export class NotNeededPackage extends PackageBase {
     return this.version.minor;
   }
 
-  // A not-needed package has no other versions. (TODO: allow that?)
+  // A not-needed package has no other versions. (that would be possible to allow but nobody has really needed it yet)
   get isLatest(): boolean {
     return true;
   }
@@ -433,7 +433,7 @@ export interface PathMapping {
   readonly version: TypingVersion;
 }
 
-// TODO: support BSD -- but must choose a *particular* BSD license from the list at https://spdx.org/licenses/
+// Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
 export const enum License {
   MIT = "MIT",
   Apache20 = "Apache-2.0"

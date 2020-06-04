@@ -1,0 +1,29 @@
+{
+    "extends": ["tslint-microsoft-contrib/recommended"],
+    "rules": {
+        "prefer-type-cast": false,
+        "no-angle-bracket-type-assertion": true,
+        "no-relative-imports": false,
+        "no-single-line-block-comment": false,
+        "no-backbone-get-set-outside-model": false,
+        "function-name": [
+            true, {
+                "static-method-regex": "^[a-z][\\w\\d]+$"
+            }
+        ],
+        "export-name": false,
+        "import-name": false,
+        "prefer-array-literal": [
+            true, {
+                "allow-size-argument": true
+            }
+        ],
+        "no-constant-condition": [
+            true, {
+                "checkLoops": false
+            }
+        ],
+        "no-function-expression": false,
+        "max-func-body-length": false
+    }
+}

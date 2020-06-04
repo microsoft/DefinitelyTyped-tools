@@ -39,6 +39,7 @@ export interface BenchmarkPackageOptions {
 
 function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
   if (file) {
+    // tslint:disable-next-line:non-literal-require -- filename comes from Azure artifact
     const fileContents = require(path.resolve(assertString(file, "file")));
     if (fileContents.system.hash !== currentSystem.hash) {
       console.warn("Systems mismatch; requested:");
@@ -55,7 +56,7 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
 
   return {
     package: args.package ? assertString(args.package) : undefined,
-    agentIndex: typeof args.agentIndex !== "undefined" ? assertNumber(args.agentIndex, "agentIndex") : undefined,
+    agentIndex: args.agentIndex !== undefined ? assertNumber(args.agentIndex, "agentIndex") : undefined,
     upload: assertBoolean(withDefault(args.upload, true), "upload"),
     tsVersion: withDefault(args.tsVersion, "next").toString(),
     progress: assertBoolean(withDefault(args.progress, false), "progress"),

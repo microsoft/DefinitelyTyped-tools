@@ -38,6 +38,7 @@ export default class BlobWriter {
   }
 
   createBlobFromFile(blobName: string, fileName: string): Promise<void> {
+    // tslint:disable-next-line:non-literal-fs-path -- just reading from local disk, nothing secret there
     return this.createBlobFromStream(blobName, fs.createReadStream(fileName));
   }
 

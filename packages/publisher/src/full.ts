@@ -1,4 +1,4 @@
-import appInsights = require("applicationinsights");
+import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import calculateVersions from "./calculate-versions";
@@ -23,8 +23,8 @@ import { defaultLocalOptions } from "./lib/common";
 
 if (!module.parent) {
   if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-    appInsights.setup();
-    appInsights.start();
+    applicationinsights.setup();
+    applicationinsights.start();
   }
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
