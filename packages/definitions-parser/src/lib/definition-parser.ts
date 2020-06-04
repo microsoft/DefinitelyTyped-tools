@@ -325,11 +325,11 @@ an old version of types that have since been moved to the source repo.
 For example, if package *P* used to have types on Definitely Typed at @types/P,
 but now has its own types, a dependent package *D* will need to use package.json
 to refer to @types/P if it relies on old versions of P's types.
-In this case, please make a pull request to types-publisher adding @types/P to \`dependenciesWhitelist.txt\`.`
+In this case, please make a pull request to microsoft/DefinitelyTyped-tools adding @types/P to \`packages/definitions-parser/dependenciesWhitelist.txt\`.`
         : `Dependency ${dependencyName} not in whitelist.
 If you are depending on another \`@types\` package, do *not* add it to a \`package.json\`. Path mapping should make the import work.
 For namespaced dependencies you then have to add a \`paths\` mapping from \`@namespace/library\` to \`namespace__library\` in \`tsconfig.json\`.
-If this is an external library that provides typings,  please make a pull request to types-publisher adding it to \`dependenciesWhitelist.txt\`.`;
+If this is an external library that provides typings,  please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/dependenciesWhitelist.txt\`.`;
       throw new Error(`In ${path}: ${msg}`);
     }
 
