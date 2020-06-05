@@ -27,7 +27,7 @@ import {
   TypeScriptComparisonRun,
   getSourceVersion
 } from "../common";
-import { Container, Response } from "@azure/cosmos";
+import { Container, FeedResponse } from "@azure/cosmos";
 import { benchmarkPackage } from "./benchmark";
 import { getTypeScript } from "../measure/getTypeScript";
 import { postTypeScriptComparisonResults } from "../github/postTypeScriptComparisonResult";
@@ -231,55 +231,53 @@ async function getPackagesToTestAndPriorResults(
   getAllPackages: ReturnType<typeof createGetAllPackages>,
   packageList?: PackageId[]
 ) {
-  const iterator: AsyncIterable<Response<QueryResult<Document<PackageBenchmarkSummary>>>> = await container.items
-    .query(
-      {
-        query:
-          `SELECT * FROM ${config.database.packageBenchmarksContainerId} b` +
-          `  WHERE b.body.typeScriptVersionMajorMinor = @typeScriptVersion` +
-          (packageList
-            ? `  AND b.body.packageName IN (${packageList!.map(({ name }) => `"${name}"`).join(", ")})` // Couldn’t figure out how to do this with parameters
-            : ""),
-        parameters: [{ name: "@typeScriptVersion", value: typeScriptVersion }]
-      },
-      {
-        enableCrossPartitionQuery: true
-      }
-    )
+  const iterator: AsyncIterable<FeedResponse<QueryResult<Document<PackageBenchmarkSummary>>>> = await container.items
+    .query({
+      query:
+        `SELECT * FROM ${config.database.packageBenchmarksContainerId} b` +
+        `  WHERE b.body.typeScriptVersionMajorMinor = @typeScriptVersion` +
+        (packageList
+          ? `  AND b.body.packageName IN (${packageList!.map(({ name }) => `"${name}"`).join(", ")})` // Couldn’t figure out how to do this with parameters
+          : ""),
+      parameters: [{ name: "@typeScriptVersion", value: typeScriptVersion }]
+    })
     .getAsyncIterator();
 
   const packageKeys = packageList && packageList.map(toPackageKey);
   const packages = new Map<string, QueryResult<Document<PackageBenchmarkSummary>>>();
-  for await (const { result } of iterator) {
-    if (!result) continue;
-    const packageKey = toPackageKey(result.body.packageName, result.body.packageVersion);
-    if (packageKeys && !packageKeys.includes(packageKey)) {
-      continue;
-    }
 
-    const candidate = packages.get(packageKey);
-    if (candidate && candidate.createdAt > result.createdAt) {
-      continue;
-    }
-
-    const packageId: PackageId = {
-      name: result.body.packageName,
-      version: parseVersionFromDirectoryName(result.body.packageVersion) || ("*" as const)
-    };
-    const changedPackages = await getChangedPackages({ diffTo: result.body.sourceVersion, definitelyTypedPath });
-    if (changedPackages && changedPackages.some(packageIdsAreEqual(packageId))) {
-      console.log(`Skipping ${packageKey} because it changed`);
-      continue;
-    } else if (changedPackages) {
-      const { allPackages } = await getAllPackages();
-      const dependencies = allPackages.getTypingsData(packageId).dependencies;
-      if (dependencies.some(dep => changedPackages.some(packageIdsAreEqual(dep)))) {
-        console.log(`Skipping ${packageKey} because one or more of its dependencies changed`);
+  for await (const x of iterator) {
+    for (const result of x.resources) {
+      if (!result) continue;
+      const packageKey = toPackageKey(result.body.packageName, result.body.packageVersion);
+      if (packageKeys && !packageKeys.includes(packageKey)) {
         continue;
       }
-    }
 
-    packages.set(packageKey, result);
+      const candidate = packages.get(packageKey);
+      if (candidate && candidate.createdAt > result.createdAt) {
+        continue;
+      }
+
+      const packageId: PackageId = {
+        name: result.body.packageName,
+        version: parseVersionFromDirectoryName(result.body.packageVersion) || ("*" as const)
+      };
+      const changedPackages = await getChangedPackages({ diffTo: result.body.sourceVersion, definitelyTypedPath });
+      if (changedPackages && changedPackages.some(packageIdsAreEqual(packageId))) {
+        console.log(`Skipping ${packageKey} because it changed`);
+        continue;
+      } else if (changedPackages) {
+        const { allPackages } = await getAllPackages();
+        const dependencies = allPackages.getTypingsData(packageId).dependencies;
+        if (dependencies.some(dep => changedPackages.some(packageIdsAreEqual(dep)))) {
+          console.log(`Skipping ${packageKey} because one or more of its dependencies changed`);
+          continue;
+        }
+      }
+
+      packages.set(packageKey, result);
+    }
   }
 
   return packages;
