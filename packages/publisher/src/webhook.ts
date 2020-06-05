@@ -27,7 +27,7 @@ export default async function main(): Promise<void> {
       const s = await webhookServer(key, githubAccessToken, dry, fetcher, {
         definitelyTypedPath: undefined,
         progress: false,
-        parseInParallel: false
+        parseInParallel: true
       });
       console.log(`Listening on port ${port}`);
       s.listen(port);

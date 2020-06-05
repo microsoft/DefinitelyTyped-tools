@@ -27,7 +27,7 @@ export async function parseDefinitions(
 
   const start = Date.now();
   if (parallel) {
-    log.info("Parsing in parallel...");
+    log.info(`Parsing in ${parallel.nProcesses} child process(es)...`);
     await runWithChildProcesses({
       inputs: packageNames,
       commandLineArgs: [`${parallel.definitelyTypedPath}/types`],
@@ -38,7 +38,7 @@ export async function parseDefinitions(
       }
     });
   } else {
-    log.info("Parsing non-parallel...");
+    log.info("Parsing in main process...");
     for (const packageName of packageNames) {
       typings[packageName] = getTypingInfo(packageName, typesFS.subDir(packageName));
     }
