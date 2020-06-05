@@ -21,11 +21,11 @@
     "@definitelytyped/definitions-parser": "^0.0.39-next.1",
     "@definitelytyped/typescript-versions": "^0.0.38",
     "@definitelytyped/utils": "^0.0.38",
-    "yargs": "^12.0.5"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@types/node": "^10.17.21",
-    "@types/yargs": "^12.0.8"
+    "@types/yargs": "^15.0.5"
   },
   "main": "dist/index.js",
   "bin": {
