@@ -37,7 +37,6 @@ export async function getDatabase(
   const { container: packageBenchmarks } = await database.containers.createIfNotExists({
     id: config.database.packageBenchmarksContainerId,
     partitionKey: {
-      kind: "Hash",
       paths: ["/body/packageName"]
     }
   });
