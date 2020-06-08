@@ -24,6 +24,7 @@
 @sentry/browser
 @storybook/addons
 @storybook/react
+@testing-library/dom
 @types/base-x
 @types/expect
 @types/firebase
