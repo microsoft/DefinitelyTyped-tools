@@ -16,7 +16,7 @@ If you don't like the contents of a given definition, file an issue (or pull req
 
 # Manually running
 
-Normally, types-publisher is run through its webhook, but to test it out you can do it yourself.
+Normally, types-publisher is run on a loop every 2,000 seconds (33 minutes), but to test it out you can do it yourself.
 You will need to see the "Environment variables" section first.
 
 ```
@@ -58,7 +58,6 @@ To update the types packages, the following steps must be performed:
 	* Generate packages on disk
 	* Create a search index
 	* Publish packages on disk
-	* Upload blobs to Azure
 
 Importantly, each of these steps is *idempotent*.
 Running the entire sequence twice should not have any different results unless one of the inputs has changed.
@@ -317,62 +316,6 @@ Scripts should save this log under a unique filename so any errors may be review
 This step publishes the `types-registry` package on NPM, which keeps a list of all `@types` packages.
 This step only happens if there are some new packages to register.
 
-# Upload blobs
-
-This uploads the `data` and `logs` directories to Azure.
-`data` always overwrites any old data, while `logs` has a timestamp prepended so old logs can still be viewed.
-Blobs can be viewed [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html)
-or on [Azure](https://ms.portal.azure.com/?flight=1#resource/subscriptions/99160d5b-9289-4b66-8074-ed268e739e8e/resourceGroups/types-publisher/providers/Microsoft.Storage/storageAccounts/typespublisher).
-
-# Testing the webhook
-
-(Since this is a test, make sure you are not logged in to npm (`npm logout`), and use the `--dry` flag.)
-
-### Testing the webhook without a repository
-
-The script `npm run make-server-run` will trigger the local webhook just like Github would.
-(For the production server, use `npm run make-production-server-run`.)
-
-### Testing the webhook with a repository
-
-* Create a dummy repository (e.g. `https://github.com/your/dummy-repo`)
-
-* Set up forwarding:
-	* Install [ngrok](https://ngrok.com)
-	* `ngrok http 80` (or whatever `PORT` environment variable you're using)
-	* Copy the forwarding URL (Looks like: http://deadbeef.ngrok.io)
-
-* Add a hook:
-	* Go to https://github.com/your/dummy-repo/settings/hooks
-	* Payload URL = url copied from ngrok
-	* Secret = make up a word here
-
-* Start the server:
-	* Change `settings.json`:
-		"sourceRepository": "https://github.com/your/dummy-repo"
-	* Set the `GITHUB_SECRET` environment variable to the secret you made up in the previous step
-	* `npm install; npm run build`
-	* `npm run webhook-dry`
-
-* Make a test change:
-	* git clone https://github.com/your/dummy-repo.git
-	* Copy the name of the `sourceBranch` from `types-publisher/settings.json`
-	* `git checkout -b branch_name`
-	* `git push -u origin branch_name`
-	* To test again in future, just:
-		* `echo "different text" > README.md`
-		* `git add --all`
-		* `git commit --amend -m "first commit"`
-		* `git push -f`
-
-# Using the webhook
-
-```sh
-npm run webhook-dry
-```
-
-This requires environment variables to be set; see the "Environment variables" section.
-
 # Settings
 
 This file contains settings used by the publisher.
@@ -408,31 +351,11 @@ Optional. Example value `latest`
 
 If present, packages are published with the provided version tag.
 
-### azureStorageAccount
-
-Name of the Azure storage account.
-
-### azureContainer
-
-Name of the Azure container.
-
-### errorsIssue
-
-GitHub issue to use to report errors from the webhook.
-
 ## Environment variables
 
 #### `TYPES_PUBLISHER_CLIENT_ID` and `TYPES_PUBLISHER_CLIENT_SECRET`
 
 These are needed to access all other secrets. See `src/lib/secrets.ts`.
-
-#### `WEBHOOK_FORCE_DRY`
-
-This lets you run the webhook in dry mode in Azure, without needing command line flags.
-
-#### `PORT`
-
-This is the port the webhook uses for GET requests.
 
 ### `LONGJOHN`
 
@@ -464,21 +387,6 @@ will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
 
-
-# Publishing to azure
-
-Azure is set up to listen to the `production` branch, which is like `master` but includes `bin/`.
-
-## Update production branch
-
-```sh
-npm run push-production
-```
-
-This script merges changes from master into production and updates the `bin/` directory.
-Azure is listening for changes to `production` and should restart itself.
-The server also serves a simple web page [here](http://typespublisher.azurewebsites.net).
-
 ## Debugging Azure
 
 While the server is running, you can view logs live:
@@ -496,9 +404,3 @@ You can view the full server logs at [ftp](ftp://waws-prod-bay-011.ftp.azurewebs
 For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
 You can also download a ZIP using the azure-cli command `azure site log download`.
 The most useful logs are in LogFiles/Application.
-
-## Testing Azure
-
-Instead of waiting for someone to push to DefinitelyTyped,
-you should test out your new deployment by running `npm run make-production-server-run`,
-which will trigger a full build .

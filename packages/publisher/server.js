@@ -1,1 +1,3 @@
-require("./dist/webhook.js").default().catch(console.error);
+require("./dist/main.js")
+  .default()
+  .catch(console.error);
