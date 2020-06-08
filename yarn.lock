@@ -3243,7 +3243,7 @@ dts-critic@latest:
     tmp "^0.2.1"
     yargs "^15.3.1"
 
-dtslint@3.6.11:
+dtslint@latest:
   version "3.6.11"
   resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.11.tgz#6d8c412cd7fe43acf74ec81721e5a015ca71ce48"
   integrity sha512-EOJN7vcncgIBY35g8DghuxNOQ/tKDEwVv0p1WtEYsbDVRje2kH1qBMD3gQGzxSb6R6nnyvGudiHQtYVIwDQZug==
