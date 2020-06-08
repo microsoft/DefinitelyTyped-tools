@@ -20,39 +20,33 @@ export default async function main(): Promise<void> {
     const fetcher = new Fetcher();
 
     try {
-      const fullOne = updateOneAtATime(async (log, timestamp) => {
+      const log = loggerWithErrors()[0];
+      const fullOne = updateOneAtATime(async () => {
         log.info("");
         log.info("");
-        log.info(`# ${timestamp}`);
+        log.info(`# ${currentTimeStamp()}`);
         log.info("");
         log.info("Starting full...");
-        await full(
-          dry,
-          githubAccessToken,
-          fetcher,
-          {
-            definitelyTypedPath: undefined,
-            parseInParallel: true,
-            progress: false
-          },
-          log
-        );
+        try {
+          await full(
+            dry,
+            githubAccessToken,
+            fetcher,
+            {
+              definitelyTypedPath: undefined,
+              parseInParallel: true,
+              progress: false
+            },
+            log
+          );
+        } catch (err) {
+          log.info(err.toString());
+          console.error(err);
+        }
       });
-      setInterval(
-        (log, timestamp) => {
-          const result = fullOne(log, timestamp);
-          if (!result) {
-            return;
-          } // already working, so do nothing.
-          result.catch(e => {
-            log.info(e.toString());
-            console.error(e);
-          });
-        },
-        2_000_000,
-        loggerWithErrors()[0],
-        currentTimeStamp()
-      );
+
+      setInterval(fullOne, 2_000_000, log);
+      await fullOne(log);
     } catch (e) {
       applicationinsights.defaultClient.trackEvent({
         name: "crash",
@@ -65,13 +59,11 @@ export default async function main(): Promise<void> {
   }
 }
 
-// Even if there are many changes to DefinitelyTyped in a row, we only perform one update at a time.
-function updateOneAtATime(
-  doOnce: (log: LoggerWithErrors, timeStamp: string) => Promise<void>
-): (log: LoggerWithErrors, timeStamp: string) => Promise<void> | undefined {
+// If an update is still running after 2000 seconds, don’t start a new one
+function updateOneAtATime(doOnce: () => Promise<void>) {
   let working = false;
 
-  return (log, timeStamp) => {
+  return (log: LoggerWithErrors) => {
     if (working) {
       log.info("Not starting update, because already performing one.");
       return undefined;
@@ -82,7 +74,7 @@ function updateOneAtATime(
       log.info("Starting update");
       working = true;
       try {
-        await doOnce(log, timeStamp);
+        await doOnce();
       } catch (e) {
         log.info(e.toString());
       } finally {
