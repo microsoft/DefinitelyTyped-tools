@@ -3253,32 +3253,31 @@ dotenv@^5.0.1:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
   integrity sha512-4As8uPrjfwb7VXC+WnLCbXK7y+Ueb2B3zgNCePYfhxS1PYeaO1YTeplffTEcbfLhvFNGLAz90VvJs9yomG7bow==
 
-dts-critic@^3.2.3:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.4.tgz#88e0473d3db7eb07e14c08b9e84e7dc23ea3e2df"
-  integrity sha512-KdW/qVKydHF8HkFBe3hNqXRIDUwSqioTOxVAUS7tbo0++vlRNq7wluCfTgi5J26bS1L4ybJvN22BBVRR5Cp2wQ==
+dts-critic@latest:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.6.tgz#48ac170ff3e787230888a9677942ecf3af1c70af"
+  integrity sha512-8O07RoGrTzlNxE5Y6x+YPC5iDDhOj00ypxPmLST2EVYWKybcrGq6ubXM3X6poB1LE0cNtrW15MLP7SrU+m4WtQ==
   dependencies:
     "@definitelytyped/header-parser" "0.0.34"
     command-exists "^1.2.8"
     rimraf "^3.0.2"
     semver "^6.2.0"
     tmp "^0.2.1"
-    yargs "^12.0.5"
+    yargs "^15.3.1"
 
-dtslint@latest:
-  version "3.6.8"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.8.tgz#f49f9cd3d060e72adf5272add09a264323da3ce3"
-  integrity sha512-Ubud6gbbtp/RLoROwP4dDX5eTCjseBHt9v89zyBpUnpXqkPeeUaPNmV+AN0QsA8jVXmMSX3fTy1nKWoxIPJ++A==
+dtslint@3.6.11:
+  version "3.6.11"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.11.tgz#6d8c412cd7fe43acf74ec81721e5a015ca71ce48"
+  integrity sha512-EOJN7vcncgIBY35g8DghuxNOQ/tKDEwVv0p1WtEYsbDVRje2kH1qBMD3gQGzxSb6R6nnyvGudiHQtYVIwDQZug==
   dependencies:
     "@definitelytyped/header-parser" latest
     "@definitelytyped/typescript-versions" latest
     "@definitelytyped/utils" latest
-    dts-critic "^3.2.3"
+    dts-critic latest
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
     strip-json-comments "^2.0.1"
     tslint "5.14.0"
-    typescript next
     yargs "^15.1.0"
 
 duplexer3@^0.1.4:
@@ -6904,7 +6903,7 @@ os-locale@^2.0.0:
     lcid "^1.0.0"
     mem "^1.1.0"
 
-os-locale@^3.0.0, os-locale@^3.1.0:
+os-locale@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/os-locale/-/os-locale-3.1.0.tgz#a802a6ee17f24c10483ab9935719cef4ed16bf1a"
   integrity sha512-Z8l3R4wYWM40/52Z+S265okfFj8Kt2cC2MKY+xNi3kFs+XGI7WXu/I309QQQYbRW4ijiZ+yxs9pqEhJh0DqW3Q==
@@ -9463,7 +9462,7 @@ y18n@^3.2.1:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
   integrity sha1-bRX7qITAhnnA136I53WegR4H+kE=
 
-"y18n@^3.2.1 || ^4.0.0", y18n@^4.0.0:
+y18n@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
   integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
@@ -9492,14 +9491,6 @@ yargs-parser@^10.0.0:
   integrity sha512-VCIyR1wJoEBZUqk5PA+oOBF6ypbwh5aNB3I50guxAL/quggdfs4TtNHQrSazFA3fYZ+tEqfs0zIGlv0c/rgjbQ==
   dependencies:
     camelcase "^4.1.0"
-
-yargs-parser@^11.1.1:
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-11.1.1.tgz#879a0865973bca9f6bab5cbdf3b1c67ec7d3bcf4"
-  integrity sha512-C6kB/WJDiaxONLJQnF8ccx9SEeoTTLek8RVbaOIsrAUS8VrBEXfmeSnCZxygc+XC2sNMBIwOOnfcxiynjHsVSQ==
-  dependencies:
-    camelcase "^5.0.0"
-    decamelize "^1.2.0"
 
 yargs-parser@^15.0.1:
   version "15.0.1"
@@ -9557,24 +9548,6 @@ yargs@^11.0.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
-
-yargs@^12.0.5:
-  version "12.0.5"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-12.0.5.tgz#05f5997b609647b64f66b81e3b4b10a368e7ad13"
-  integrity sha512-Lhz8TLaYnxq/2ObqHDql8dX8CJi97oHxrjUcYtzKbbykPtVW9WB+poxI+NM2UIzsMgNCZTIf0AQwsjK5yMAqZw==
-  dependencies:
-    cliui "^4.0.0"
-    decamelize "^1.2.0"
-    find-up "^3.0.0"
-    get-caller-file "^1.0.1"
-    os-locale "^3.0.0"
-    require-directory "^2.1.1"
-    require-main-filename "^1.0.1"
-    set-blocking "^2.0.0"
-    string-width "^2.0.0"
-    which-module "^2.0.0"
-    y18n "^3.2.1 || ^4.0.0"
-    yargs-parser "^11.1.1"
 
 yargs@^14.2.2:
   version "14.2.3"
