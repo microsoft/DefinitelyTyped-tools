@@ -34,7 +34,7 @@ export default async function main(): Promise<void> {
             fetcher,
             {
               definitelyTypedPath: undefined,
-              parseInParallel: true,
+              parseInParallel: false,
               progress: false
             },
             log
