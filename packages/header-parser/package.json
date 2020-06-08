@@ -21,8 +21,10 @@
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "^0.0.38",
-    "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/parsimmon": "^1.10.1"
   },
   "publishConfig": {
     "access": "public"
