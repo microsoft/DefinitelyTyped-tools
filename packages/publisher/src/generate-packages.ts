@@ -217,7 +217,7 @@ function getDependencies(
     // A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
     if (
       !packageJsonDependencies.some(d => d.name === name || d.name === typesDependency) &&
-        allPackages.hasTypingFor({ name, version })
+      allPackages.hasTypingFor({ name, version })
     ) {
       dependencies[typesDependency] = dependencySemver(version);
     }

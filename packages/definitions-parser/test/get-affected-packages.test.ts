@@ -4,9 +4,9 @@ import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
   jquery: createTypingsVersionRaw("jquery", {}, []),
-  known: createTypingsVersionRaw("known", { "jquery": { major: 1 } }, []),
+  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, []),
   "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"]),
-  "most-recent": createTypingsVersionRaw("most-recent", { "jquery": "*" }, []),
+  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, []),
   unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, []),
   "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"])
 };

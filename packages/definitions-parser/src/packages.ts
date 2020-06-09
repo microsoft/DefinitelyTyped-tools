@@ -119,7 +119,7 @@ export class AllPackages {
 
   /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
-    for (const [ name, version ] of Object.entries(pkg.dependencies)) {
+    for (const [name, version] of Object.entries(pkg.dependencies)) {
       const versions = this.data.get(getMangledNameForScopedPackage(name));
       if (versions) {
         yield versions.get(version);
@@ -572,7 +572,7 @@ export class TypingsData extends PackageBase {
     return this.data.pathMappings;
   }
 
-  get dependencies(): { readonly [name: string]: DependencyVersion }  {
+  get dependencies(): { readonly [name: string]: DependencyVersion } {
     return this.data.dependencies;
   }
 

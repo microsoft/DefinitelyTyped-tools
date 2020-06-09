@@ -388,7 +388,7 @@ interface TsConfig {
 
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
 interface DependenciesAndPathMappings {
-  readonly dependencies:  { readonly [name: string]: DependencyVersion };
+  readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly pathMappings: readonly PathMapping[];
 }
 function calculateDependencies(

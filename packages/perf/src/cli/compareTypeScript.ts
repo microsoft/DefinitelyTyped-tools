@@ -270,7 +270,11 @@ async function getPackagesToTestAndPriorResults(
       } else if (changedPackages) {
         const { allPackages } = await getAllPackages();
         const dependencies = allPackages.getTypingsData(packageId).dependencies;
-        if (Object.entries(dependencies).some(([name, version]) => changedPackages.some(packageIdsAreEqual({ name, version })))) {
+        if (
+          Object.entries(dependencies).some(([name, version]) =>
+            changedPackages.some(packageIdsAreEqual({ name, version }))
+          )
+        ) {
           console.log(`Skipping ${packageKey} because one or more of its dependencies changed`);
           continue;
         }
