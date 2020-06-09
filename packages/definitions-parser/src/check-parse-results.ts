@@ -43,8 +43,8 @@ export async function checkParseResults(
   const packages = allPackages.allPackages();
   for (const pkg of packages) {
     if (pkg instanceof TypingsData) {
-      for (const dep of pkg.dependencies) {
-        dependedOn.add(dep.name);
+      for (const dep of Object.keys(pkg.dependencies)) {
+        dependedOn.add(dep);
       }
       for (const dep of pkg.testDependencies) {
         dependedOn.add(dep);

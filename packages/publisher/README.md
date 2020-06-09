@@ -112,12 +112,9 @@ This file is a key/value mapping used by other steps in the process.
                 "misc.d.ts"
             ],
             "license": "MIT",
-            "dependencies": [
-                {
-                    "name": "sizzle",
-                    "version": "*"
-                }
-            ],
+            "dependencies": {
+                "sizzle": "*"
+            }
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],

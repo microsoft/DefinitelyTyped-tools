@@ -1,4 +1,4 @@
-import { TypingsVersionsRaw, License, PackageId } from "../src/packages";
+import { TypingsVersionsRaw, License, DependencyVersion } from "../src/packages";
 
 export function testo(o: { [s: string]: () => void }) {
   for (const k of Object.keys(o)) {
@@ -8,7 +8,7 @@ export function testo(o: { [s: string]: () => void }) {
 
 export function createTypingsVersionRaw(
   name: string,
-  dependencies: PackageId[],
+  dependencies: { readonly [name: string]: DependencyVersion },
   testDependencies: string[]
 ): TypingsVersionsRaw {
   return {
