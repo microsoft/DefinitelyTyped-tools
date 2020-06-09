@@ -21,7 +21,7 @@ function createRawPackage(license: License): TypingsDataRaw {
   return {
     libraryName: "jquery",
     typingsPackageName: "jquery",
-    dependencies: [{ name: "madeira", version: { major: 1 } }],
+    dependencies: { madeira: { major: 1 } },
     testDependencies: [],
     pathMappings: [],
     contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],

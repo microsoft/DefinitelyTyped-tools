@@ -3,12 +3,12 @@ import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", [], []),
-  known: createTypingsVersionRaw("known", [{ name: "jquery", version: { major: 1 } }], []),
-  "known-test": createTypingsVersionRaw("known-test", [], ["jquery"]),
-  "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", version: "*" }], []),
-  unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", version: { major: 1 } }], []),
-  "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"])
+  jquery: createTypingsVersionRaw("jquery", {}, []),
+  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, []),
+  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"]),
+  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, []),
+  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, []),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"])
 };
 
 const notNeeded = [

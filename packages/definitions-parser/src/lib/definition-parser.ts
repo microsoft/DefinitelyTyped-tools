@@ -2,9 +2,9 @@ import * as ts from "typescript";
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
 import {
+  DependencyVersion,
   formatTypingVersion,
   getLicenseFromPackageJson,
-  PackageId,
   PackageJsonDependency,
   PathMapping,
   TypingsDataRaw,
@@ -216,7 +216,7 @@ function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    dependencies: getAllUniqueValues<"dependencies", PackageId>(allTypesVersions, "dependencies"),
+    dependencies: Object.assign({}, ...allTypesVersions.map(v => v.dependencies)),
     testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"),
     pathMappings: getAllUniqueValues<"pathMappings", PathMapping>(allTypesVersions, "pathMappings"),
     packageJsonDependencies,
@@ -237,7 +237,7 @@ function getAllUniqueValues<K extends string, T>(records: readonly Record<K, rea
 interface TypingDataFromIndividualTypeScriptVersion {
   /** Undefined for root (which uses `// TypeScript Version: ` comment instead) */
   readonly typescriptVersion: TypeScriptVersion | undefined;
-  readonly dependencies: readonly PackageId[];
+  readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly testDependencies: readonly string[];
   readonly pathMappings: readonly PathMapping[];
   readonly declFiles: readonly string[];
@@ -388,7 +388,7 @@ interface TsConfig {
 
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
 interface DependenciesAndPathMappings {
-  readonly dependencies: readonly PackageId[];
+  readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly pathMappings: readonly PathMapping[];
 }
 function calculateDependencies(
@@ -399,7 +399,7 @@ function calculateDependencies(
 ): DependenciesAndPathMappings {
   const paths = (tsconfig.compilerOptions && tsconfig.compilerOptions.paths) || {};
 
-  const dependencies: PackageId[] = [];
+  const dependencies: { [name: string]: DependencyVersion } = {};
   const pathMappings: PathMapping[] = [];
 
   for (const dependencyName of Object.keys(paths)) {
@@ -440,7 +440,7 @@ function calculateDependencies(
       }
     } else {
       if (dependencyNames.has(dependencyName)) {
-        dependencies.push({ name: dependencyName, version: pathMappingVersion });
+        dependencies[dependencyName] = pathMappingVersion;
       }
     }
     // Else, the path mapping may be necessary if it is for a transitive dependency. We will check this in check-parse-results.
@@ -457,8 +457,8 @@ function calculateDependencies(
   }
 
   for (const dependency of dependencyNames) {
-    if (!dependencies.some(d => d.name === dependency) && !nodeBuiltins.has(dependency)) {
-      dependencies.push({ name: dependency, version: "*" });
+    if (!dependencies[dependency] && !nodeBuiltins.has(dependency)) {
+      dependencies[dependency] = "*";
     }
   }
 

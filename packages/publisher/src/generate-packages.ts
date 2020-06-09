@@ -212,14 +212,14 @@ function getDependencies(
     dependencies[name] = version;
   }
 
-  for (const dependency of typing.dependencies) {
-    const typesDependency = getFullNpmName(dependency.name);
+  for (const [name, version] of Object.entries(typing.dependencies)) {
+    const typesDependency = getFullNpmName(name);
     // A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
     if (
-      !packageJsonDependencies.some(d => d.name === dependency.name || d.name === typesDependency) &&
-      allPackages.hasTypingFor(dependency)
+      !packageJsonDependencies.some(d => d.name === name || d.name === typesDependency) &&
+      allPackages.hasTypingFor({ name, version })
     ) {
-      dependencies[typesDependency] = dependencySemver(dependency.version);
+      dependencies[typesDependency] = dependencySemver(version);
     }
   }
   return sortObjectKeys(dependencies);
@@ -274,7 +274,7 @@ export function createReadme(typing: TypingsData): string {
   lines.push("");
   lines.push("### Additional Details");
   lines.push(` * Last updated: ${new Date().toUTCString()}`);
-  const dependencies = Array.from(typing.dependencies).map(d => getFullNpmName(d.name));
+  const dependencies = Object.keys(typing.dependencies).map(getFullNpmName);
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map(d => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"

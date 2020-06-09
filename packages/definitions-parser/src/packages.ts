@@ -119,7 +119,7 @@ export class AllPackages {
 
   /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
-    for (const { name, version } of pkg.dependencies) {
+    for (const [name, version] of Object.entries(pkg.dependencies)) {
       const versions = this.data.get(getMangledNameForScopedPackage(name));
       if (versions) {
         yield versions.get(version);
@@ -327,7 +327,7 @@ export interface TypingsDataRaw extends BaseRaw {
    *
    * These will refer to *package names*, not *folder names*.
    */
-  readonly dependencies: readonly PackageId[];
+  readonly dependencies: { readonly [name: string]: DependencyVersion };
 
   /**
    * Other definitions, that exist in the same typings repo, that the tests, but not the types, of this package depend on.
@@ -572,7 +572,7 @@ export class TypingsData extends PackageBase {
     return this.data.pathMappings;
   }
 
-  get dependencies(): readonly PackageId[] {
+  get dependencies(): { readonly [name: string]: DependencyVersion } {
     return this.data.dependencies;
   }
 
