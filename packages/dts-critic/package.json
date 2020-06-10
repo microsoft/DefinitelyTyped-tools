@@ -40,7 +40,8 @@
     "scripts": {
         "test": "npm run build && jest",
         "build": "tsc",
-        "dt": "node dist/dt.js"
+        "dt": "node dist/dt.js",
+        "prepublishOnly": "npm run build && npm run test"
     },
     "repository": {
         "type": "git",
