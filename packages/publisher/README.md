@@ -254,13 +254,8 @@ Empty arrays may be elided in future versions of the minified files.
 This step writes all type packages to disk.
 The output folder is specified in `settings.json` (see section "Settings").
 
-You can also output a single package with e.g. `npm run generate -- --single abs`.
-(This will still require parsing every package first, as we may need information about referenced packages.)
-
 ## Arguments to `generate`
 
-Use the `--single foo` option to generate just the package named "foo".
-Use the `--all` option to generate even packages that have not changed.
 Use the `--tgz` option to create `.tgz` archives as well. These should represent what is actually uploaded to NPM.
 
 ## Outputs of `generate`
