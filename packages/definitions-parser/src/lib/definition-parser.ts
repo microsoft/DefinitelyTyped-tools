@@ -69,7 +69,7 @@ export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
     if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
       const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
       throw new Error(
-        `The latest version is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
+        `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
           (`v${latest}` === directoryName
             ? "."
             : `; since it applies to any ${latestData.libraryMajorVersion}.* version, up to and including ${latest}.`)
