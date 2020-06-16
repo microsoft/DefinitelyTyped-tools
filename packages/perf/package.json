@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/perf",
-  "version": "0.0.40-next.4",
+  "version": "0.0.40-next.5",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@azure/cosmos": "^3.6.3",
-    "@definitelytyped/definitions-parser": "^0.0.40-next.4",
+    "@definitelytyped/definitions-parser": "^0.0.40-next.5",
     "@definitelytyped/header-parser": "^0.0.39",
     "@definitelytyped/utils": "^0.0.39",
     "@octokit/rest": "^16.33.0",
