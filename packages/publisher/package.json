@@ -53,16 +53,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DefinitelyTyped/tools.git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/publisher"
   },
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/tools/issues"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
     "node": ">=6.10.0"
   },
-  "homepage": "https://github.com/DefinitelyTyped/tools#readme"
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/publisher#readme"
 }
