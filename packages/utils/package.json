@@ -2,13 +2,13 @@
   "name": "@definitelytyped/utils",
   "version": "0.0.40",
   "description": "Shared utilities for DefinitelyTyped tools",
-  "homepage": "https://github.com/DefinitelyTyped/tools#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/utils#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DefinitelyTyped/tools.git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/utils"
   },
   "scripts": {
@@ -16,7 +16,7 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/utils"
   },
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/tools/issues"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "^0.0.40",
