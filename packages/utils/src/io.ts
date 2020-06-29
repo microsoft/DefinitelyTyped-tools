@@ -184,9 +184,10 @@ export function downloadAndExtractFile(url: string): Promise<FS> {
       dir.set(baseName, content);
     }
 
-    https.get(url, response => {
+    https.get(url, { timeout: 1_000_000 }, response => {
       const extract = tarStream.extract();
       response.pipe(zlib.createGunzip()).pipe(extract);
+      response.on("error", reject);
       interface Header {
         readonly name: string;
         readonly type: "file" | "directory";
