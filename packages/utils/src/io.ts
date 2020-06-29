@@ -184,36 +184,38 @@ export function downloadAndExtractFile(url: string): Promise<FS> {
       dir.set(baseName, content);
     }
 
-    https.get(url, response => {
-      const extract = tarStream.extract();
-      response.pipe(zlib.createGunzip()).pipe(extract);
-      interface Header {
-        readonly name: string;
-        readonly type: "file" | "directory";
-      }
-      extract.on("entry", (header: Header, stream: NodeJS.ReadableStream, next: () => void) => {
-        const name = assertDefined(withoutStart(header.name, "DefinitelyTyped-master/"));
-        switch (header.type) {
-          case "file":
-            stringOfStream(stream, name)
-              .then(s => {
-                insertFile(name, s);
-                next();
-              })
-              .catch(reject);
-            break;
-          case "directory":
-            next();
-            break;
-          default:
-            throw new Error(`Unexpected file system entry kind ${header.type}`);
+    https
+      .get(url, { timeout: 1_000_000 }, response => {
+        const extract = tarStream.extract();
+        response.pipe(zlib.createGunzip()).pipe(extract);
+        interface Header {
+          readonly name: string;
+          readonly type: "file" | "directory";
         }
-      });
-      extract.on("error", reject);
-      extract.on("finish", () => {
-        resolve(new InMemoryFS(root.finish(), ""));
-      });
-    });
+        extract.on("entry", (header: Header, stream: NodeJS.ReadableStream, next: () => void) => {
+          const name = assertDefined(withoutStart(header.name, "DefinitelyTyped-master/"));
+          switch (header.type) {
+            case "file":
+              stringOfStream(stream, name)
+                .then(s => {
+                  insertFile(name, s);
+                  next();
+                })
+                .catch(reject);
+              break;
+            case "directory":
+              next();
+              break;
+            default:
+              throw new Error(`Unexpected file system entry kind ${header.type}`);
+          }
+        });
+        extract.on("error", reject);
+        extract.on("finish", () => {
+          resolve(new InMemoryFS(root.finish(), ""));
+        });
+      })
+      .on("error", reject);
   });
 }
 
