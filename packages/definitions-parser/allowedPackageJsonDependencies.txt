@@ -198,6 +198,7 @@ treat
 tslint
 ts-toolbelt
 tweetnacl
+typeorm
 typescript
 typescript-tuple
 utility-types
