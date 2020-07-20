@@ -1,3 +1,4 @@
+@apollo/client
 @babel/code-frame
 @babel/core
 @babel/generator
