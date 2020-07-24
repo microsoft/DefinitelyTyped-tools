@@ -65,6 +65,7 @@ axios
 base-x
 bignumber.js
 bookshelf
+boxen
 broadcast-channel
 cac
 cash-dom
