@@ -114,6 +114,7 @@ graphql
 graphql-tools
 grpc
 handlebars
+helmet
 hoist-non-react-statics
 hot-shots
 htmlparser2
