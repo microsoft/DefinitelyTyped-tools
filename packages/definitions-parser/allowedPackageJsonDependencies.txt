@@ -130,6 +130,7 @@ jest-mock
 jest-snapshot
 jimp
 jointjs
+jsonata
 levelup
 lit-element
 localforage
