@@ -88,6 +88,7 @@ decimal.js
 del
 dexie
 dnd-core
+domhandler
 dotenv
 egg
 electron
