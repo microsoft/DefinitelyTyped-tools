@@ -201,6 +201,7 @@ sw-toolbox
 swagger-parser
 terser
 three
+tiny-typed-emitter
 treat
 tslint
 ts-toolbelt
