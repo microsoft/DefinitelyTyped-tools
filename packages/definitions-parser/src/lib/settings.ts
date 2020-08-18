@@ -21,7 +21,7 @@ export async function getAllowedPackageJsonDependencies(): Promise<ReadonlySet<s
   if (allowedPackageJsonDependencies) {
     if (allowedPackageJsonDependenciesDownloadFailed) {
       console.error(
-        "Getting the latest allowedPackageJsonDependenices.txt from GitHub failed. Falling back to local copy."
+        "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy."
       );
     }
     return allowedPackageJsonDependencies;
