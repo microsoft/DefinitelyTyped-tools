@@ -1,4 +1,5 @@
 import { joinPaths, readFileSync } from "@definitelytyped/utils";
+import { getUrlContentsAsString } from "./utils";
 
 const root = joinPaths(__dirname, "..", "..");
 export const dataDirPath = joinPaths(root, "data");
@@ -9,9 +10,35 @@ export const typesDirectoryName = "types";
 /** URL to download the repository from. */
 export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/tar.gz/master";
 
-export const allowedPackageJsonDependencies: ReadonlySet<string> = new Set(
-  readFileSync(joinPaths(root, "allowedPackageJsonDependencies.txt")).split(/\r?\n/)
-);
-
 /** Note: this is 'types' and not '@types' */
 export const scopeName = "types";
+
+const allowedPackageJsonDependenciesUrl =
+  "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/master/packages/definitions-parser/allowedPackageJsonDependencies.txt";
+let allowedPackageJsonDependencies: Promise<ReadonlySet<string>>;
+let allowedPackageJsonDependenciesDownloadFailed = false;
+export async function getAllowedPackageJsonDependencies(): Promise<ReadonlySet<string>> {
+  if (allowedPackageJsonDependencies) {
+    const deps = await allowedPackageJsonDependencies;
+    if (allowedPackageJsonDependenciesDownloadFailed) {
+      console.error(
+        "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy."
+      );
+    }
+    return deps;
+  }
+
+  allowedPackageJsonDependencies = new Promise<ReadonlySet<string>>(async resolve => {
+    let raw = readFileSync(joinPaths(root, "allowedPackageJsonDependencies.txt"));
+    if (process.env.NODE_ENV !== "test") {
+      try {
+        raw = await getUrlContentsAsString(allowedPackageJsonDependenciesUrl);
+      } catch (err) {
+        allowedPackageJsonDependenciesDownloadFailed = true;
+      }
+    }
+    resolve(new Set(raw.split(/\r?\n/)));
+  });
+
+  return getAllowedPackageJsonDependencies();
+}
