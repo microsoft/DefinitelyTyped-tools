@@ -5,12 +5,12 @@ import { TypingsVersions } from "../src/packages";
 describe(TypingsVersions, () => {
   let versions: TypingsVersions;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1");
     dt.addOldVersionOfPackage("jquery", "2");
     dt.addOldVersionOfPackage("jquery", "2.5");
-    versions = new TypingsVersions(getTypingInfo("jquery", dt.pkgFS("jquery")));
+    versions = new TypingsVersions(await getTypingInfo("jquery", dt.pkgFS("jquery")));
   });
 
   it("sorts the data from latest to oldest version", () => {
