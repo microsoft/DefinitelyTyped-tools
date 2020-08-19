@@ -14,7 +14,10 @@ if (!module.parent) {
     // tslint:disable-next-line no-async-without-await
     logUncaughtErrors(async () => {
       for (const packageName of message as readonly string[]) {
-        const data = getTypingInfo(packageName, getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName));
+        const data = await getTypingInfo(
+          packageName,
+          getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName)
+        );
         process.send!({ data, packageName });
       }
     });

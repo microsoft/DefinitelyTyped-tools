@@ -11,7 +11,7 @@ import {
   TypingsVersionsRaw,
   TypingVersion
 } from "../packages";
-import { allowedPackageJsonDependencies } from "./settings";
+import { getAllowedPackageJsonDependencies } from "./settings";
 import {
   FS,
   split,
@@ -42,7 +42,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw) {
 }
 
 /** @param fs Rooted at the package's directory, e.g. `DefinitelyTyped/types/abs` */
-export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
+export async function getTypingInfo(packageName: string, fs: FS): Promise<TypingsVersionsRaw> {
   if (packageName !== packageName.toLowerCase()) {
     throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
   }
@@ -62,41 +62,43 @@ export function getTypingInfo(packageName: string, fs: FS): TypingsVersionsRaw {
 
   const latestData: TypingsDataRaw = {
     libraryVersionDirectoryName: undefined,
-    ...combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined)
+    ...(await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined))
   };
 
-  const older = olderVersionDirectories.map(({ directoryName, version: directoryVersion }) => {
-    if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
-      const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
-      throw new Error(
-        `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
-          (`v${latest}` === directoryName
-            ? "."
-            : `; since it applies to any ${latestData.libraryMajorVersion}.* version, up to and including ${latest}.`)
-      );
-    }
-
-    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    const ls = fs.readdir(directoryName);
-    const data: TypingsDataRaw = {
-      libraryVersionDirectoryName: formatTypingVersion(directoryVersion),
-      ...combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), directoryVersion)
-    };
-
-    if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
-      if (considerLibraryMinorVersion) {
+  const older = await Promise.all(
+    olderVersionDirectories.map(async ({ directoryName, version: directoryVersion }) => {
+      if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
+        const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
         throw new Error(
-          `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor}, ` +
-            `but header indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`
+          `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
+            (`v${latest}` === directoryName
+              ? "."
+              : `; since it applies to any ${latestData.libraryMajorVersion}.* version, up to and including ${latest}.`)
         );
       }
-      throw new Error(
-        `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
-          data.libraryMajorVersion.toString()
-      );
-    }
-    return data;
-  });
+
+      // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
+      const ls = fs.readdir(directoryName);
+      const data: TypingsDataRaw = {
+        libraryVersionDirectoryName: formatTypingVersion(directoryVersion),
+        ...(await combineDataForAllTypesVersions(packageName, ls, fs.subDir(directoryName), directoryVersion))
+      };
+
+      if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
+        if (considerLibraryMinorVersion) {
+          throw new Error(
+            `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor}, ` +
+              `but header indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`
+          );
+        }
+        throw new Error(
+          `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
+            data.libraryMajorVersion.toString()
+        );
+      }
+      return data;
+    })
+  );
 
   const res: TypingsVersionsRaw = {};
   res[formattedLibraryVersion(latestData)] = latestData;
@@ -153,12 +155,12 @@ export function parseVersionFromDirectoryName(directoryName: string | undefined)
   };
 }
 
-function combineDataForAllTypesVersions(
+async function combineDataForAllTypesVersions(
   typingsPackageName: string,
   ls: readonly string[],
   fs: FS,
   directoryVersion: TypingVersion | undefined
-): Omit<TypingsDataRaw, "libraryVersionDirectoryName"> {
+): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName">> {
   const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
 
   // Every typesVersion has an index.d.ts, but only the root index.d.ts should have a header.
@@ -196,7 +198,7 @@ function combineDataForAllTypesVersions(
     ? (fs.readJson(packageJsonName) as { readonly license?: unknown; readonly dependencies?: unknown })
     : {};
   const license = getLicenseFromPackageJson(packageJson.license);
-  const packageJsonDependencies = checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
+  const packageJsonDependencies = await checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
 
   const files = Array.from(
     flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
@@ -306,7 +308,10 @@ function getTypingDataForSingleTypesVersion(
   };
 }
 
-function checkPackageJsonDependencies(dependencies: unknown, path: string): readonly PackageJsonDependency[] {
+async function checkPackageJsonDependencies(
+  dependencies: unknown,
+  path: string
+): Promise<readonly PackageJsonDependency[]> {
   if (dependencies === undefined) {
     // tslint:disable-line strict-type-predicates (false positive)
     return [];
@@ -320,7 +325,7 @@ function checkPackageJsonDependencies(dependencies: unknown, path: string): read
 
   for (const dependencyName of Object.keys(dependencies!)) {
     // `dependencies` cannot be null because of check above.
-    if (!allowedPackageJsonDependencies.has(dependencyName)) {
+    if (!(await getAllowedPackageJsonDependencies()).has(dependencyName)) {
       const msg = dependencyName.startsWith("@types/")
         ? `Dependency ${dependencyName} not in the allowed dependencies list.
 Don't use a 'package.json' for @types dependencies unless this package relies on

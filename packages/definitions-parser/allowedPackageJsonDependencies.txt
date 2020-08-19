@@ -64,6 +64,7 @@ aws-sdk
 axe-core
 axios
 base-x
+bee-queue
 bignumber.js
 bookshelf
 boxen
@@ -143,8 +144,10 @@ knex
 knockout
 magic-string
 mali
+metascraper
 meteor-typings
 moment
+moment-timezone
 monaco-editor
 moment-range
 mqtt
