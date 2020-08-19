@@ -42,7 +42,7 @@ export type UnsupportedTypeScriptVersion =
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on DefinitelyTyped.
  */
-export type TypeScriptVersion = "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0";
+export type TypeScriptVersion = "3.0" | "3.1" | "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0" | "4.1";
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
@@ -61,7 +61,7 @@ export namespace TypeScriptVersion {
     "3.9"
   ];
   /** Add to this list when a version is available as typescript@next */
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.0"];
+  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.0", "4.1"];
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
     "2.0",
