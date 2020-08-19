@@ -198,6 +198,22 @@ var z = y;
 `
   );
   globby.set("tsconfig.json", tsconfig(["globby-tests.ts", "test/other-tests.ts"]));
+
+  const hasDependency = dt.pkgDir("has-dependency");
+  hasDependency.set(
+    "index.d.ts",
+    `// Type definitions for has-dependency 3.3
+// Project: https://www.microsoft.com
+// Definitions by: Andrew Branch <https://github.com/andrewbranch>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 3.1
+    
+export * from "moment"`
+  );
+  hasDependency.set("has-dependency-tests.ts", "");
+  hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
+  hasDependency.set("package.json", `{ "private": true, "dependencies": { "moment": "*" } }`);
+
   const jquery = dt.pkgDir("jquery");
   jquery.set(
     "JQuery.d.ts",
@@ -225,21 +241,6 @@ console.log(jQuery);
 `
   );
   jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
-
-  const hasDependency = dt.pkgDir("has-dependency");
-  hasDependency.set(
-    "index.d.ts",
-    `// Type definitions for has-dependency 3.3
-// Project: https://www.microsoft.com
-// Definitions by: Andrew Branch <https://github.com/andrewbranch>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 3.1
-    
-export * from "moment"`
-  );
-  hasDependency.set("has-dependency-tests.ts", "");
-  hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
-  hasDependency.set("package.json", `{ "private": true, "dependencies": { "moment": "*" } }`);
 
   return dt;
 }
