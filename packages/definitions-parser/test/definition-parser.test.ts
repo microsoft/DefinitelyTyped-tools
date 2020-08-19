@@ -11,6 +11,12 @@ describe(getTypingInfo, () => {
     expect(Object.keys(info).sort()).toEqual(["1.42", "2.0", "3.3"]);
   });
 
+  it("works for a package with dependencies", async () => {
+    const dt = createMockDT();
+    const info = await getTypingInfo("has-dependency", dt.pkgFS("has-dependency"));
+    expect(info).toBeDefined();
+  });
+
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();

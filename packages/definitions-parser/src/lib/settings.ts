@@ -16,29 +16,22 @@ export const scopeName = "types";
 const allowedPackageJsonDependenciesUrl =
   "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/master/packages/definitions-parser/allowedPackageJsonDependencies.txt";
 let allowedPackageJsonDependencies: Promise<ReadonlySet<string>>;
-let allowedPackageJsonDependenciesDownloadFailed = false;
 export async function getAllowedPackageJsonDependencies(): Promise<ReadonlySet<string>> {
-  if (allowedPackageJsonDependencies) {
-    const deps = await allowedPackageJsonDependencies;
-    if (allowedPackageJsonDependenciesDownloadFailed) {
-      console.error(
-        "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy."
-      );
-    }
-    return deps;
-  }
-
-  allowedPackageJsonDependencies = new Promise<ReadonlySet<string>>(async resolve => {
-    let raw = readFileSync(joinPaths(root, "allowedPackageJsonDependencies.txt"));
-    if (process.env.NODE_ENV !== "test") {
-      try {
-        raw = await getUrlContentsAsString(allowedPackageJsonDependenciesUrl);
-      } catch (err) {
-        allowedPackageJsonDependenciesDownloadFailed = true;
+  return (
+    allowedPackageJsonDependencies ||
+    (allowedPackageJsonDependencies = new Promise<ReadonlySet<string>>(async resolve => {
+      let raw = readFileSync(joinPaths(root, "allowedPackageJsonDependencies.txt"));
+      if (process.env.NODE_ENV !== "test") {
+        try {
+          raw = await getUrlContentsAsString(allowedPackageJsonDependenciesUrl);
+        } catch (err) {
+          console.error(
+            "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy.\n" +
+              err.message
+          );
+        }
       }
-    }
-    resolve(new Set(raw.split(/\r?\n/)));
-  });
-
-  return getAllowedPackageJsonDependencies();
+      resolve(new Set(raw.split(/\r?\n/)));
+    }))
+  );
 }
