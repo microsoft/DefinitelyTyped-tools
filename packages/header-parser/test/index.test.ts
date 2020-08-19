@@ -147,11 +147,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
   });
-  it("supports 3.0", () => {
-    expect(TypeScriptVersion.isSupported("3.0")).toBeTruthy();
+  it("supports 3.1", () => {
+    expect(TypeScriptVersion.isSupported("3.1")).toBeTruthy();
   });
-  it("does not support 2.9", () => {
-    expect(!TypeScriptVersion.isSupported("2.9")).toBeTruthy();
+  it("does not support 3.0", () => {
+    expect(!TypeScriptVersion.isSupported("3.0")).toBeTruthy();
   });
 });
 
@@ -178,8 +178,7 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.0")).toEqual([
-      "ts3.0",
+    expect(TypeScriptVersion.tagsToUpdate("3.1")).toEqual([
       "ts3.1",
       "ts3.2",
       "ts3.3",
@@ -194,8 +193,8 @@ describe("tagsToUpdate", () => {
       "latest"
     ]);
   });
-  it("allows 3.0 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.0")).toEqual(
+  it("allows 3.1 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("3.1")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
   });
