@@ -1,8 +1,8 @@
-import * as http from "http";
+import * as https from "https";
 
 export function getUrlContentsAsString(url: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    http
+    https
       .get(url, res => {
         let data = "";
         res.on("data", d => (data += d));

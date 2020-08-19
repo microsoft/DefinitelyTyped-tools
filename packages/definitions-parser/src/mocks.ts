@@ -156,34 +156,7 @@ import { inane } from "boring/v1";
 untested.d.ts
 `
   );
-  boring.set(
-    "tsconfig.json",
-    `{
-    "compilerOptions": {
-        "module": "commonjs",
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "target": "es6",
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "baseUrl": "../",
-        "typeRoots": [
-            "../"
-        ],
-        "types": [],
-        "noEmit": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "files": [
-        "index.d.ts",
-        "boring-tests.ts"
-    ]
-}`
-  );
+  boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
 
   const globby = dt.pkgDir("globby");
   globby.set(
@@ -224,35 +197,7 @@ var z = x;
 var z = y;
 `
   );
-  globby.set(
-    "tsconfig.json",
-    `{
-    "compilerOptions": {
-        "module": "commonjs",
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "target": "es6",
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "baseUrl": "../",
-        "typeRoots": [
-            "../"
-        ],
-        "types": [],
-        "noEmit": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "files": [
-        "index.d.ts",
-        "globby-tests.ts",
-        "test/other-tests.ts"
-    ]
-}`
-  );
+  globby.set("tsconfig.json", tsconfig(["globby-tests.ts", "test/other-tests.ts"]));
   const jquery = dt.pkgDir("jquery");
   jquery.set(
     "JQuery.d.ts",
@@ -279,9 +224,28 @@ export = jQuery;
 console.log(jQuery);
 `
   );
-  jquery.set(
-    "tsconfig.json",
-    `{
+  jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
+
+  const hasDependency = dt.pkgDir("has-dependency");
+  hasDependency.set(
+    "index.d.ts",
+    `// Type definitions for has-dependency 3.3
+// Project: https://www.microsoft.com
+// Definitions by: Andrew Branch <https://github.com/andrewbranch>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 3.1
+    
+export * from "moment"`
+  );
+  hasDependency.set("has-dependency-tests.ts", "");
+  hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
+  hasDependency.set("package.json", `{ "private": true, "dependencies": { "moment": "*" } }`);
+
+  return dt;
+}
+
+function tsconfig(testNames: string[]) {
+  return `{
     "compilerOptions": {
         "module": "commonjs",
         "lib": [
@@ -303,12 +267,7 @@ console.log(jQuery);
     },
     "files": [
         "index.d.ts",
-        "jquery-tests.ts"
+${testNames.map(s => "        " + JSON.stringify(s)).join(",\n")}
     ]
-}
-
-`
-  );
-
-  return dt;
+}`;
 }
