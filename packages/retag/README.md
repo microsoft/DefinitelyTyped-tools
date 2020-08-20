@@ -9,10 +9,14 @@ Run this whenever an RC of Typescript is released.
 
 ## Usage
 
-From DefinitelyTyped-tools root:
+Before running
+
+1. Make sure that you have an up-to-date Definitely Typed repo next to the DefinitelyTyped-tools directory.
+2. Make sure that the NPM_TOKEN and GH_API_TOKEN environment variables are defined.
+
+Then, from DefinitelyTyped-tools root:
 
 ```
 $ node packages/retag/dist/index.js
 ```
 
-Make sure that you have an up-to-date Definitely Typed repo next to the DefinitelyTyped-tools directory.

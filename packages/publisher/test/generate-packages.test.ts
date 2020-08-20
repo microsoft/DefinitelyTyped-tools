@@ -27,7 +27,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
     libraryMajorVersion: 1,
     libraryMinorVersion: 0,
-    minTsVersion: "3.0",
+    minTsVersion: "3.1",
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
@@ -111,7 +111,7 @@ testo({
         "balzac": "~3"
     },
     "typesPublisherContentHash": "11",
-    "typeScriptVersion": "3.0"
+    "typeScriptVersion": "3.1"
 }`);
   },
   githubPackageJsonName() {
