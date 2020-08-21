@@ -121,6 +121,7 @@ hoist-non-react-statics
 hot-shots
 htmlparser2
 i18next
+immer
 immutable
 indefinite-observable
 inversify
