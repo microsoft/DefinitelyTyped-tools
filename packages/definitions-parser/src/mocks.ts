@@ -214,6 +214,32 @@ export * from "moment"`
   hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
   hasDependency.set("package.json", `{ "private": true, "dependencies": { "moment": "*" } }`);
 
+  const hasOlderTestDependency = dt.pkgDir("has-older-test-dependency");
+  hasOlderTestDependency.set(
+    "index.d.ts",
+    `// Type definitions for has-older-test-dependency
+// Project: https://github.com/baz/foo
+// Definitions by: My Self <https://github.com/me>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+`
+  );
+  hasOlderTestDependency.set(
+    "has-older-test-dependency-tests.ts",
+    `import "jquery";
+`
+  );
+  hasOlderTestDependency.set(
+    "tsconfig.json",
+    JSON.stringify({
+      compilerOptions: {
+        paths: {
+          jquery: ["jquery/v1"]
+        }
+      },
+      files: ["index.d.ts", "has-older-test-dependency-tests.ts"]
+    })
+  );
+
   const jquery = dt.pkgDir("jquery");
   jquery.set(
     "JQuery.d.ts",

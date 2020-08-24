@@ -3,12 +3,18 @@ import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", {}, []),
-  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, []),
-  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"]),
-  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, []),
-  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, []),
-  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"])
+  "has-older-test-dependency": createTypingsVersionRaw(
+    "has-older-test-dependency",
+    {},
+    ["jquery"],
+    [{ packageName: "jquery", version: { major: 1 } }]
+  ),
+  jquery: createTypingsVersionRaw("jquery", {}, [], []),
+  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, [], []),
+  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], []),
+  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], []),
+  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], []),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], [])
 };
 typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], libraryMajorVersion: 2 };
 
@@ -44,6 +50,9 @@ testo({
       { name: "jquery", version: { major: 1 } }
     ]);
     expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
-    expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "known", version: { major: 1, minor: 0 } }]);
+    expect(dependentPackages.map(({ id }) => id)).toEqual([
+      { name: "has-older-test-dependency", version: { major: 1, minor: 0 } },
+      { name: "known", version: { major: 1, minor: 0 } }
+    ]);
   }
 });
