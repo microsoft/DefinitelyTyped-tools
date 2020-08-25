@@ -46,24 +46,18 @@ describe(getTypingInfo, () => {
 
       expect(info).toEqual({
         "1.5": expect.objectContaining({
-          pathMappings: [
-            {
-              packageName: "jquery",
-              version: { major: 1, minor: 5 }
-            }
-          ]
+          pathMappings: {
+            jquery: { major: 1, minor: 5 }
+          }
         }),
         "2.0": expect.objectContaining({
-          pathMappings: [
-            {
-              packageName: "jquery",
-              version: { major: 2, minor: undefined }
-            }
-          ]
+          pathMappings: {
+            jquery: { major: 2, minor: undefined }
+          }
         }),
         "3.3": expect.objectContaining({
           // The latest version does not have path mappings of its own
-          pathMappings: []
+          pathMappings: {}
         })
       });
     });

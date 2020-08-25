@@ -1,5 +1,5 @@
 import { ParseDefinitionsOptions } from "./get-definitely-typed";
-import { TypingsData, AllPackages, TypingVersion, formatTypingVersion } from "./packages";
+import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
 import {
   assertDefined,
   best,
@@ -81,16 +81,12 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
 
 function checkPathMappings(allPackages: AllPackages): void {
   for (const pkg of allPackages.allTypings()) {
-    const pathMappings = new Map<string, TypingVersion>(pkg.pathMappings.map(p => [p.packageName, p.version]));
-    const unusedPathMappings = new Set(pathMappings.keys());
+    const unusedPathMappings = new Set(Object.keys(pkg.pathMappings));
 
     // If A depends on B, and B has path mappings, A must have the same mappings.
     for (const dependency of allPackages.allDependencyTypings(pkg)) {
-      for (const {
-        packageName: transitiveDependencyName,
-        version: transitiveDependencyVersion
-      } of dependency.pathMappings) {
-        const pathMappingVersion = pathMappings.get(transitiveDependencyName);
+      for (const [transitiveDependencyName, transitiveDependencyVersion] of Object.entries(dependency.pathMappings)) {
+        const pathMappingVersion = pkg.pathMappings[transitiveDependencyName];
         if (
           pathMappingVersion &&
           (pathMappingVersion.major !== transitiveDependencyVersion.major ||

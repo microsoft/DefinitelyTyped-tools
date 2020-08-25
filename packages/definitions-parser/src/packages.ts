@@ -347,7 +347,7 @@ export interface TypingsDataRaw extends BaseRaw {
    * Not all path mappings are direct dependencies, they may be necessary for transitive dependencies. However, where `dependencies` and
    * `pathMappings` share a key, they *must* share the same value.
    */
-  readonly pathMappings: readonly PathMapping[];
+  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
 
   /**
    * List of people that have contributed to the definitions in this package.
@@ -423,14 +423,6 @@ export interface TypingsDataRaw extends BaseRaw {
    * External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module).
    */
   readonly declaredModules: readonly string[];
-}
-
-/**
- * @see {TypingsDataRaw.pathMappings}
- */
-export interface PathMapping {
-  readonly packageName: string;
-  readonly version: TypingVersion;
 }
 
 // Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
@@ -568,7 +560,7 @@ export class TypingsData extends PackageBase {
   get globals(): readonly string[] {
     return this.data.globals;
   }
-  get pathMappings(): readonly PathMapping[] {
+  get pathMappings(): { readonly [packageName: string]: TypingVersion } {
     return this.data.pathMappings;
   }
 
