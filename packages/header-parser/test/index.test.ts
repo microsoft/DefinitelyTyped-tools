@@ -206,45 +206,45 @@ describe("makeTypesVersionsForPackageJson", () => {
   });
   it("works for one version", () => {
     expect(makeTypesVersionsForPackageJson(["3.3"])).toEqual({
-      ">=3.3.0-0": {
+      "<=3.3": {
         "*": ["ts3.3/*"]
       }
     });
   });
-  it("orders versions new to old with old-to-new input", () => {
+  it("orders versions old to new  with old-to-new input", () => {
     expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.2", "3.5", "3.6"]), undefined, 4)).toEqual(`{
-    ">=3.6.0-0": {
+    "<=3.2": {
         "*": [
-            "ts3.6/*"
+            "ts3.2/*"
         ]
     },
-    ">=3.5.0-0": {
+    "<=3.5": {
         "*": [
             "ts3.5/*"
         ]
     },
-    ">=3.2.0-0": {
+    "<=3.6": {
         "*": [
-            "ts3.2/*"
+            "ts3.6/*"
         ]
     }
 }`);
   });
-  it("orders versions new to old with new-to-old input", () => {
+  it("orders versions old to new  with new-to-old input", () => {
     expect(JSON.stringify(makeTypesVersionsForPackageJson(["3.6", "3.5", "3.2"]), undefined, 4)).toEqual(`{
-    ">=3.6.0-0": {
+    "<=3.2": {
         "*": [
-            "ts3.6/*"
+            "ts3.2/*"
         ]
     },
-    ">=3.5.0-0": {
+    "<=3.5": {
         "*": [
             "ts3.5/*"
         ]
     },
-    ">=3.2.0-0": {
+    "<=3.6": {
         "*": [
-            "ts3.2/*"
+            "ts3.6/*"
         ]
     }
 }`);
