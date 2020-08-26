@@ -41,11 +41,11 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScri
     return undefined;
   }
 
-  const newestFirst = typesVersions.slice();
-  newestFirst.sort((v1, v2) => (v1 < v2 ? 1 : v1 > v2 ? -1 : 0));
+  const oldestFirst = typesVersions.slice();
+  oldestFirst.sort((v1, v2) => (v1 > v2 ? 1 : v1 < v2 ? -1 : 0));
   const out: { [key: string]: { readonly "*": readonly string[] } } = {};
-  for (const version of newestFirst) {
-    out[`>=${version}.0-0`] = { "*": [`ts${version}/*`] };
+  for (const version of oldestFirst) {
+    out[`<=${version}`] = { "*": [`ts${version}/*`] };
   }
   return out;
 }
