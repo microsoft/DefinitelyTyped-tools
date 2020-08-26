@@ -94,6 +94,20 @@ describe(getTypingInfo, () => {
 
         return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
       });
+
+      it("checks that older versions with non-relative imports have wildcard path mappings", () => {
+        const dt = createMockDT();
+        const jquery = dt.pkgDir("jquery");
+        jquery.set(
+          "JQuery.d.ts",
+          `import "jquery/component";
+`
+        );
+        dt.addOldVersionOfPackage("jquery", "1");
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+          'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
+        );
+      });
     });
   });
 });
