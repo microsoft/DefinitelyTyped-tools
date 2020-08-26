@@ -73,7 +73,7 @@ describe(getTypingInfo, () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
           message:
             "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
             "since it applies to any 3.* version, up to and including 3.3."
@@ -84,7 +84,7 @@ describe(getTypingInfo, () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.3");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
           message: "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
         });
       });
@@ -93,7 +93,7 @@ describe(getTypingInfo, () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.0");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
       });
     });
   });
