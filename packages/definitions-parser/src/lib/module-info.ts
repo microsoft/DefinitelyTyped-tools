@@ -155,12 +155,12 @@ export function allReferencedFiles(
   return { types, tests };
 
   function recur({ text, exact }: Reference): void {
-    if (seenReferences.has(text)) {
+    const resolvedFilename = exact ? text : resolveModule(text, fs);
+    if (seenReferences.has(resolvedFilename)) {
       return;
     }
-    seenReferences.add(text);
+    seenReferences.add(resolvedFilename);
 
-    const resolvedFilename = exact ? text : resolveModule(text, fs);
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(resolvedFilename)) {
       const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
@@ -241,16 +241,15 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
 
   function addReference(ref: Reference): void {
     // `path.normalize` may add windows slashes
-    const full = normalizeSlashes(
+    let full = normalizeSlashes(
       path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text)))
     );
     // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
     if (full.startsWith("../" + packageName + "/")) {
-      ref.text = full.slice(packageName.length + 4);
-      refs.push(ref);
-      return;
-    }
-    if (
+      full = full.slice(packageName.length + 4);
+    } else if (baseDirectory && full.startsWith("../" + baseDirectory + "/")) {
+      full = full.slice(baseDirectory.length + 4);
+    } else if (
       full.startsWith("..") &&
       (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))
     ) {

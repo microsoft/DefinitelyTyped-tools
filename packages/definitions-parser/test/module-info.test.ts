@@ -145,7 +145,7 @@ testo({
     );
     const memFS = new InMemoryFS(ts20, "types/mock/ts2.0");
     const { types, tests } = allReferencedFiles(["index.d.ts"], memFS, "mock", "types/mock");
-    expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "../ts2.0/component.d.ts"]);
+    expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
   getTestDependenciesWorks() {
