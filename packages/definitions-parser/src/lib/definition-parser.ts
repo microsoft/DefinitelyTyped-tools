@@ -200,9 +200,15 @@ async function combineDataForAllTypesVersions(
   const license = getLicenseFromPackageJson(packageJson.license);
   const packageJsonDependencies = await checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
 
-  const files = Array.from(
+  const files = unique(
     flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
-      declFiles.map(file => (typescriptVersion === undefined ? file : `ts${typescriptVersion}/${file}`))
+      declFiles.map(file =>
+        typescriptVersion === undefined
+          ? file
+          : file.startsWith("../")
+          ? file.slice(3)
+          : `ts${typescriptVersion}/${file}`
+      )
     )
   );
 
