@@ -197,6 +197,7 @@ safe-buffer
 should
 smooth-scrollbar
 scroll-into-view-if-needed
+ssim.js
 source-map
 styled-components
 sw-toolbox
