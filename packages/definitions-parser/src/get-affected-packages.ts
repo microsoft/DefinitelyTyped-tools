@@ -1,4 +1,4 @@
-import { mapDefined, mapIterable, sort } from "@definitelytyped/utils";
+import { flatMapIterable, mapDefined, sort } from "@definitelytyped/utils";
 import {
   TypingsData,
   AllPackages,
@@ -19,9 +19,11 @@ export function getAffectedPackages(allPackages: AllPackages, changedPackageIds:
   const resolved = changedPackageIds.map(id => allPackages.tryResolve(id));
   // If a package doesn't exist, that's because it was deleted.
   const changed = mapDefined(resolved, id => allPackages.tryGetTypingsData(id));
-  const dependent = mapIterable(collectDependers(resolved, getReverseDependencies(allPackages, resolved)), p =>
-    allPackages.getTypingsData(p)
-  );
+  const dependent = collectDependers(resolved, getReverseDependencies(allPackages, resolved));
+  // Don't include the original changed packages, just their dependers
+  for (const original of changed) {
+    dependent.delete(original);
+  }
   return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
 }
 
@@ -33,13 +35,12 @@ export function allDependencies(allPackages: AllPackages, packages: Iterable<Typ
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
 function collectDependers(
   changedPackages: PackageId[],
-  reverseDependencies: Map<PackageId, Set<PackageId>>
-): Set<PackageId> {
-  const dependers = transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []);
-  // Don't include the original changed packages, just their dependers
-  for (const original of changedPackages) {
-    dependers.delete(original);
-  }
+  reverseDependencies: Map<string, TypingsData[]>
+): Set<TypingsData> {
+  const dependers = transitiveClosure(
+    flatMapIterable(changedPackages, id => reverseDependencies.get(packageIdToKey(id)) || []),
+    ({ id }) => reverseDependencies.get(packageIdToKey(id)) || []
+  );
   return dependers;
 }
 
@@ -73,35 +74,32 @@ function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item:
 }
 
 /** Generate a map from a package to packages that depend on it. */
-function getReverseDependencies(
-  allPackages: AllPackages,
-  changedPackages: PackageId[]
-): Map<PackageId, Set<PackageId>> {
-  const map = new Map<string, [PackageId, Set<PackageId>]>();
+function getReverseDependencies(allPackages: AllPackages, changedPackages: PackageId[]): Map<string, TypingsData[]> {
+  const map = new Map<string, TypingsData[]>();
   for (const changed of changedPackages) {
-    map.set(packageIdToKey(changed), [changed, new Set()]);
+    map.set(packageIdToKey(changed), []);
   }
   for (const typing of allPackages.allTypings()) {
     if (!map.has(packageIdToKey(typing.id))) {
-      map.set(packageIdToKey(typing.id), [typing.id, new Set()]);
+      map.set(packageIdToKey(typing.id), []);
     }
   }
   for (const typing of allPackages.allTypings()) {
     for (const [name, version] of Object.entries(typing.dependencies)) {
       const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name, version })));
       if (dependencies) {
-        dependencies[1].add(typing.id);
+        dependencies.push(typing);
       }
     }
     for (const dependencyName of typing.testDependencies) {
       const version = typing.pathMappings[dependencyName] || "*";
       const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: dependencyName, version })));
       if (dependencies) {
-        dependencies[1].add(typing.id);
+        dependencies.push(typing);
       }
     }
   }
-  return new Map(map.values());
+  return map;
 }
 
 function packageIdToKey(pkg: PackageId): string {
