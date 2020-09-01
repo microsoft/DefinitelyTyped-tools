@@ -3,6 +3,7 @@ import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
+  "dependent-of-dependent": createTypingsVersionRaw("dependent-of-dependent", { "most-recent": "*" }, [], {}),
   "has-older-test-dependency": createTypingsVersionRaw("has-older-test-dependency", {}, ["jquery"], {
     jquery: { major: 1 }
   }),
@@ -33,6 +34,7 @@ testo({
     expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 2, minor: 0 } }]);
     expect((changedPackages[0] as any).data).toEqual(typesData.jquery["2.0"]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([
+      { name: "dependent-of-dependent", version: { major: 1, minor: 0 } },
       { name: "known-test", version: { major: 1, minor: 0 } },
       { name: "most-recent", version: { major: 1, minor: 0 } }
     ]);
