@@ -133,6 +133,7 @@ jest-mock
 jest-snapshot
 jimp
 jointjs
+jose
 jsonata
 levelup
 lit-element
