@@ -10,6 +10,7 @@ const typesData: TypesDataFile = {
   unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, []),
   "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"])
 };
+typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], libraryMajorVersion: 2 };
 
 const notNeeded = [
   new NotNeededPackage({
@@ -24,12 +25,11 @@ const allPackages = AllPackages.from(typesData, notNeeded);
 testo({
   updatedPackage() {
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
-      { name: "jquery", version: { major: 1 } }
+      { name: "jquery", version: { major: 2 } }
     ]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
-    expect((changedPackages[0] as any).data).toEqual(typesData.jquery["1.0.0"]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 2, minor: 0 } }]);
+    expect((changedPackages[0] as any).data).toEqual(typesData.jquery["2.0"]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([
-      { name: "known", version: { major: 1, minor: 0 } },
       { name: "known-test", version: { major: 1, minor: 0 } },
       { name: "most-recent", version: { major: 1, minor: 0 } }
     ]);
@@ -38,5 +38,12 @@ testo({
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [{ name: "WAT", version: "*" }]);
     expect(changedPackages.map(({ id }) => id)).toEqual([]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "unknown-test", version: { major: 1, minor: 0 } }]);
+  },
+  olderVersion() {
+    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
+      { name: "jquery", version: { major: 1 } }
+    ]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
+    expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "known", version: { major: 1, minor: 0 } }]);
   }
 });
