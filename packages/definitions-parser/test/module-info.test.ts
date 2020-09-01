@@ -133,5 +133,19 @@ testo({
     const i = getModuleInfo("boring", types);
     const d = getTestDependencies("boring", types, tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"));
     expect(d).toEqual(new Set(["super-big-fun-hus"]));
+  },
+  getTestDependenciesIgnoresRelativeTypeReferences() {
+    const pkg = new Dir(undefined);
+    pkg.set(
+      "mock-tests.ts",
+      `/// <reference types="./addon.pdf" />
+`
+    );
+    pkg.set("addon.pdf.d.ts", "");
+    const memFS = new InMemoryFS(pkg, "types/mock");
+    const { types, tests } = allReferencedFiles(["mock-tests.ts"], memFS, "mock", "types/mock");
+    const { dependencies } = getModuleInfo("mock", types);
+    const testDependencies = getTestDependencies("mock", types, tests.keys(), dependencies, memFS);
+    expect(Array.from(testDependencies)).toEqual([]);
   }
 });
