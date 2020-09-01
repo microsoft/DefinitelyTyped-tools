@@ -23,14 +23,20 @@ const allPackages = AllPackages.from(typesData, notNeeded);
 
 testo({
   updatedPackage() {
-    const affected = getAffectedPackages(allPackages, [{ name: "jquery", version: { major: 1 } }]);
-    expect(affected.changedPackages.length).toEqual(1);
-    expect((affected.changedPackages[0] as any).data).toEqual(typesData.jquery["1.0.0"]);
-    expect(affected.dependentPackages.length).toEqual(3);
+    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
+      { name: "jquery", version: { major: 1 } }
+    ]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
+    expect((changedPackages[0] as any).data).toEqual(typesData.jquery["1.0.0"]);
+    expect(dependentPackages.map(({ id }) => id)).toEqual([
+      { name: "known", version: { major: 1, minor: 0 } },
+      { name: "known-test", version: { major: 1, minor: 0 } },
+      { name: "most-recent", version: { major: 1, minor: 0 } }
+    ]);
   },
   deletedPackage() {
-    const affected = getAffectedPackages(allPackages, [{ name: "WAT", version: "*" }]);
-    expect(affected.changedPackages.length).toEqual(0);
-    expect(affected.dependentPackages.length).toEqual(1);
+    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [{ name: "WAT", version: "*" }]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([]);
+    expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "unknown-test", version: { major: 1, minor: 0 } }]);
   }
 });
