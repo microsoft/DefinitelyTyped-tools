@@ -373,7 +373,8 @@ export function getTestDependencies(
     for (const { fileName: ref } of referencedFiles) {
       throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
     }
-    for (const { fileName: referencedPackage } of typeReferenceDirectives) {
+    for (const { fileName: ref } of typeReferenceDirectives) {
+      const referencedPackage = rootName(ref, typeFiles, packageName);
       if (dependencies.has(referencedPackage)) {
         throw new Error(
           `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`
