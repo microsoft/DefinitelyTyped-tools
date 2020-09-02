@@ -4,6 +4,7 @@ import * as ts from "typescript";
 import { sort, joinPaths, FS, normalizeSlashes, hasWindowsSlashes } from "@definitelytyped/utils";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
+import { getMangledNameForScopedPackage } from "../packages";
 
 export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFile>): ModuleInfo {
   const dependencies = new Set<string>();
@@ -15,7 +16,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
       return;
     }
     const dependency = rootName(ref, all, packageName);
-    if (dependency !== packageName) {
+    if (getMangledNameForScopedPackage(dependency) !== packageName) {
       dependencies.add(dependency);
     }
   }
@@ -381,14 +382,15 @@ export function getTestDependencies(
       }
       if (referencedPackage === packageName) {
         referencesSelf = true;
+      } else {
+        testDependencies.add(referencedPackage);
       }
-      testDependencies.add(referencedPackage);
     }
     for (const imported of imports(sourceFile)) {
       hasImports = true;
       if (!imported.startsWith(".")) {
         const dep = rootName(imported, typeFiles, packageName);
-        if (!dependencies.has(dep) && dep !== packageName) {
+        if (!dependencies.has(dep) && getMangledNameForScopedPackage(dep) !== packageName) {
           testDependencies.add(dep);
         }
       }
