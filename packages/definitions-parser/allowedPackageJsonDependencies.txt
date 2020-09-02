@@ -6,6 +6,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@chakra-ui/vue
 @elastic/elasticsearch
 @electron/get
 @emotion/core
