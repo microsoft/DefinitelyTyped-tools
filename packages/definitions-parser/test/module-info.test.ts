@@ -91,6 +91,18 @@ testo({
     const i = getModuleInfo("globby", types);
     expect(i.dependencies).toEqual(new Set(["andere"]));
   },
+  getModuleInfoIgnoresScopedSelf() {
+    const scoped = new Dir(undefined);
+    scoped.set(
+      "index.d.ts",
+      `import "@ember/object";
+`
+    );
+    const memFS = new InMemoryFS(scoped, "types/ember__object");
+    const { types } = allReferencedFiles(["index.d.ts"], memFS, "ember__object", "types/ember__object");
+    const { dependencies } = getModuleInfo("ember__object", types);
+    expect(Array.from(dependencies)).toEqual([]);
+  },
   versionTypeRefThrows() {
     const fail = new Dir(undefined);
     const memFS = new InMemoryFS(fail, "typeref-fails");
