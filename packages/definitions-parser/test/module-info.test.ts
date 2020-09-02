@@ -135,3 +135,42 @@ testo({
     expect(d).toEqual(new Set(["super-big-fun-hus"]));
   }
 });
+
+describe.each([
+  [
+    "excludes self type references",
+    `/// <reference types="mock" />
+`,
+    "mock"
+  ],
+  [
+    "excludes self imports",
+    `import "mock";
+`,
+    "mock"
+  ],
+  [
+    "excludes self imports in scoped packages",
+    `import "@ember/object";
+`,
+    "ember__object"
+  ]
+])("%s", (_name, text, mangled) => {
+  test("from dependencies", () => {
+    const pkg = new Dir(undefined);
+    pkg.set("index.d.ts", text);
+    const memFS = new InMemoryFS(pkg, `types/${mangled}`);
+    const { types } = allReferencedFiles(["index.d.ts"], memFS, mangled, `types/${mangled}`);
+    const { dependencies } = getModuleInfo(mangled, types);
+    expect(Array.from(dependencies)).toEqual([]);
+  });
+  test("from test dependencies", () => {
+    const pkg = new Dir(undefined);
+    pkg.set(`${mangled}-tests.ts`, text);
+    const memFS = new InMemoryFS(pkg, `types/${mangled}`);
+    const { types, tests } = allReferencedFiles([`${mangled}-tests.ts`], memFS, mangled, `types/${mangled}`);
+    const { dependencies } = getModuleInfo(mangled, types);
+    const testDependencies = getTestDependencies(mangled, types, tests.keys(), dependencies, memFS);
+    expect(Array.from(testDependencies)).toEqual([]);
+  });
+});
