@@ -58,8 +58,7 @@ if (!module.parent) {
         group: "dtslint options",
         description: "Run dtslint only with typescript@next instead of all supported TypeScript versions.",
         type: "boolean",
-        conflicts: "localTypeScriptPath",
-        default: false
+        conflicts: "localTypeScriptPath"
       },
       expectOnly: {
         group: "dtslint options",
@@ -89,8 +88,8 @@ if (!module.parent) {
     onlyRunAffectedPackages: args.selection === "affected",
     nProcesses: args.nProcesses,
     shard: args.shardCount ? { id: assertDefined(args.shardId), count: args.shardCount } : undefined,
-    localTypeScriptPath: args.localTypeScriptPath,
-    onlyTestTsNext: args.onlyTestTsNext,
+    localTypeScriptPath: !args.onlyTestTsNext ? args.localTypeScriptPath : undefined,
+    onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
     noInstall: args.noInstall
   };
