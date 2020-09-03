@@ -4,6 +4,7 @@ import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData: TypesDataFile = {
   "dependent-of-dependent": createTypingsVersionRaw("dependent-of-dependent", { "most-recent": "*" }, [], {}),
+  "dependent-of-test-dependent": createTypingsVersionRaw("dependent-of-test-dependent", { "known-test": "*" }, [], {}),
   "has-older-test-dependency": createTypingsVersionRaw("has-older-test-dependency", {}, ["jquery"], {
     jquery: { major: 1 }
   }),
@@ -11,6 +12,13 @@ const typesData: TypesDataFile = {
   known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, [], {}),
   "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], {}),
   "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], {}),
+  "test-dependent-of-dependent": createTypingsVersionRaw("test-dependent-of-dependent", {}, ["most-recent"], {}),
+  "test-dependent-of-test-dependent": createTypingsVersionRaw(
+    "test-dependent-of-test-dependent",
+    {},
+    ["known-test"],
+    {}
+  ),
   unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], {}),
   "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {})
 };
@@ -36,7 +44,8 @@ testo({
     expect(dependentPackages.map(({ id }) => id)).toEqual([
       { name: "dependent-of-dependent", version: { major: 1, minor: 0 } },
       { name: "known-test", version: { major: 1, minor: 0 } },
-      { name: "most-recent", version: { major: 1, minor: 0 } }
+      { name: "most-recent", version: { major: 1, minor: 0 } },
+      { name: "test-dependent-of-dependent", version: { major: 1, minor: 0 } }
     ]);
   },
   deletedPackage() {
