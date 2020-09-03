@@ -20,8 +20,7 @@ if (!module.parent) {
         group: "DefinitelyTyped acquisition",
         description: "Path to local DefinitelyTyped clone.",
         conflicts: "clone",
-        type: "string",
-        default: "../DefinitelyTyped"
+        type: "string"
       },
       selection: {
         group: "Package selection",
@@ -85,7 +84,7 @@ if (!module.parent) {
         }
       : {
           kind: "local",
-          path: args.path
+          path: args.path || "../DefinitelyTyped"
         },
     onlyRunAffectedPackages: args.selection === "affected",
     nProcesses: args.nProcesses,
