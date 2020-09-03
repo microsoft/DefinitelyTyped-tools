@@ -26,35 +26,6 @@ export function ensureExists(...pathNames: string[]): string {
   throw new Error(`File or directory does not exist: ${pathNamesPrint}`);
 }
 
-export interface Args {
-  [key: string]: string | boolean | number;
-}
-
-export function deserializeArgs(args: string[]): Args {
-  const obj: Args = {};
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg.startsWith("--")) {
-      const nextArg = args[i + 1];
-      if (!nextArg || nextArg.startsWith("--")) {
-        obj[arg.slice(2)] = true;
-      } else {
-        const numberArg = parseFloat(nextArg);
-        const boolArg = nextArg === "true" ? true : nextArg === "false" ? false : undefined;
-        obj[arg.slice(2)] = typeof boolArg === "boolean" ? boolArg : isNaN(numberArg) ? nextArg : numberArg;
-        i++;
-      }
-    }
-  }
-  return obj;
-}
-
-export function serializeArgs(args: Args): string {
-  return Object.keys(args)
-    .map(arg => `--${arg}` + (args[arg] === true ? "" : args[arg].toString()))
-    .join(" ");
-}
-
 export function compact<T>(arr: (T | null | undefined)[]): T[] {
   return arr.filter((elem): elem is T => elem !== null && elem !== undefined);
 }
@@ -71,17 +42,6 @@ export function assertNumber(input: any, name?: string): number {
     throw new Error(`Expected a number for input${name ? ` '${name}'` : ""} but received ${typeof input}`);
   }
   return input;
-}
-
-export function assertBoolean(input: any, name?: string): boolean {
-  if (typeof input !== "boolean") {
-    throw new Error(`Expected a boolean for input${name ? ` '${name}'` : ""} but received ${typeof input}`);
-  }
-  return input;
-}
-
-export function withDefault<T>(input: T, defaultValue: T): T {
-  return input === undefined ? defaultValue : input;
 }
 
 export function getSystemInfo(): SystemInfo {
