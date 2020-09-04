@@ -1,4 +1,4 @@
-import { getAffectedPackages } from "../src/get-affected-packages";
+import { allDependencies, getAffectedPackages } from "../src/get-affected-packages";
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
@@ -50,6 +50,36 @@ testo({
     expect(dependentPackages.map(({ id }) => id)).toEqual([
       { name: "has-older-test-dependency", version: { major: 1, minor: 0 } },
       { name: "known", version: { major: 1, minor: 0 } }
+    ]);
+  },
+  allDependencies() {
+    const typesData = {
+      dependency: createTypingsVersionRaw(
+        "dependency",
+        { "dependency-of-dependency": "*" },
+        ["test-dependency-of-dependency"],
+        {}
+      ),
+      "dependency-of-dependency": createTypingsVersionRaw("dependency-of-dependency", {}, [], {}),
+      "dependency-of-test-dependency": createTypingsVersionRaw("dependency-of-test-dependency", {}, [], {}),
+      self: createTypingsVersionRaw("self", { dependency: "*" }, ["test-dependency"], {}),
+      "test-dependency": createTypingsVersionRaw(
+        "test-dependency",
+        { "dependency-of-test-dependency": "*" },
+        ["test-dependency-of-test-dependency"],
+        {}
+      ),
+      "test-dependency-of-dependency": createTypingsVersionRaw("test-dependency-of-dependency", {}, [], {}),
+      "test-dependency-of-test-dependency": createTypingsVersionRaw("test-dependency-of-test-dependency", {}, [], {})
+    };
+    const allPackages = AllPackages.from(typesData, []);
+    const self = allPackages.getTypingsData({ name: "self", version: "*" });
+    expect(allDependencies(allPackages, [self]).map(({ id }) => id)).toEqual([
+      { name: "dependency", version: { major: 1, minor: 0 } },
+      { name: "dependency-of-dependency", version: { major: 1, minor: 0 } },
+      { name: "dependency-of-test-dependency", version: { major: 1, minor: 0 } },
+      { name: "self", version: { major: 1, minor: 0 } },
+      { name: "test-dependency", version: { major: 1, minor: 0 } }
     ]);
   }
 });
