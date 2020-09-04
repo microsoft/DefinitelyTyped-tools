@@ -1,4 +1,4 @@
-import { mapDefined, mapIterable, sort } from "@definitelytyped/utils";
+import { flatMapIterable, mapDefined, mapIterable, sort } from "@definitelytyped/utils";
 import {
   TypingsData,
   AllPackages,
@@ -27,7 +27,24 @@ export function getAffectedPackages(allPackages: AllPackages, changedPackageIds:
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
 export function allDependencies(allPackages: AllPackages, packages: Iterable<TypingsData>): TypingsData[] {
-  return sortPackages(transitiveClosure(packages, pkg => allPackages.allDependencyTypings(pkg)));
+  // Packages and their immediate test dependencies
+  const initialItems = [
+    ...packages,
+    ...flatMapIterable(packages, pkg =>
+      mapDefined(pkg.testDependencies, name => {
+        const version = pkg.pathMappings[name] || "*";
+        return allPackages.tryGetTypingsData({ name, version });
+      })
+    )
+  ];
+  // Transitive non-test dependencies of all those
+  return sortPackages(
+    transitiveClosure(initialItems, pkg =>
+      mapDefined(Object.entries(pkg.dependencies), ([name, version]) =>
+        allPackages.tryGetTypingsData({ name, version })
+      )
+    )
+  );
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
