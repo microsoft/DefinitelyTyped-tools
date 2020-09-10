@@ -142,6 +142,7 @@ log4js
 logform
 loglevel
 logrocket
+lottie-web
 knex
 knockout
 magic-string
