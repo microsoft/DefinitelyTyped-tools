@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "3.1",
+      typeScriptVersion: "3.2",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "3.1",
+      typeScriptVersion: "3.2",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -147,11 +147,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
   });
-  it("supports 3.1", () => {
-    expect(TypeScriptVersion.isSupported("3.1")).toBeTruthy();
+  it("supports 3.2", () => {
+    expect(TypeScriptVersion.isSupported("3.2")).toBeTruthy();
   });
-  it("does not support 3.0", () => {
-    expect(!TypeScriptVersion.isSupported("3.0")).toBeTruthy();
+  it("does not support 3.1", () => {
+    expect(!TypeScriptVersion.isSupported("3.1")).toBeTruthy();
   });
 });
 
@@ -178,8 +178,7 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.1")).toEqual([
-      "ts3.1",
+    expect(TypeScriptVersion.tagsToUpdate("3.2")).toEqual([
       "ts3.2",
       "ts3.3",
       "ts3.4",
@@ -193,8 +192,8 @@ describe("tagsToUpdate", () => {
       "latest"
     ]);
   });
-  it("allows 3.1 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.1")).toEqual(
+  it("allows 3.2 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("3.2")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
   });

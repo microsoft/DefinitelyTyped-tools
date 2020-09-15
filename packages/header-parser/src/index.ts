@@ -230,7 +230,7 @@ const typeScriptVersionLineParser: pm.Parser<AllTypeScriptVersion> = pm
 const typeScriptVersionParser: pm.Parser<AllTypeScriptVersion> = pm
   .regexp(/\r?\n/)
   .then(typeScriptVersionLineParser)
-  .fallback<TypeScriptVersion>("3.1");
+  .fallback<TypeScriptVersion>(TypeScriptVersion.shipped[0]);
 
 export function parseTypeScriptVersionLine(line: string): AllTypeScriptVersion {
   const result = typeScriptVersionLineParser.parse(line);
