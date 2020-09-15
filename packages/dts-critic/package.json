@@ -1,10 +1,10 @@
 {
     "name": "dts-critic",
-    "version": "3.3.0",
+    "version": "3.3.1",
     "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
     "dependencies": {
-        "@definitelytyped/header-parser": "0.0.47",
+        "@definitelytyped/header-parser": "latest",
         "command-exists": "^1.2.8",
         "rimraf": "^3.0.2",
         "semver": "^6.2.0",
