@@ -14,11 +14,7 @@ import {
   toPackageKey,
   parsePackageKey,
   createDocument,
-  Args,
   assertString,
-  withDefault,
-  assertNumber,
-  assertBoolean,
   getSystemInfo,
   systemsAreCloseEnough,
   JSONDocument,
@@ -43,58 +39,53 @@ const writeFile = promisify(fs.writeFile);
 const currentSystem = getSystemInfo();
 
 export interface CompareTypeScriptOptions {
-  compareAgainstMajorMinor: string;
+  compareAgainstVersion: string;
   definitelyTypedPath: string;
   packages?: PackageId[];
   maxRunSeconds?: number;
-  typeScriptPath: string;
+  localTypeScriptPath: string;
   outFile?: string;
   groups?: { [key: string]: QueryResult<JSONDocument<PackageBenchmarkSummary>> }[];
   agentCount?: number;
   agentIndex?: number;
-  upload: boolean;
+  upload?: boolean;
 }
 
-function convertArgs({ file, ...args }: Args): CompareTypeScriptOptions {
+export interface CompareTypeScriptCLIArgs {
+  file?: string;
+  compareAgainstVersion: string;
+  definitelyTypedPath: string;
+  localTypeScriptPath: string;
+  maxRunSeconds?: number;
+  outFile?: string;
+  upload?: boolean;
+  packages?: PackageId[];
+}
+
+function convertArgs({ file, ...args }: CompareTypeScriptCLIArgs): CompareTypeScriptOptions {
   if (file) {
     // tslint:disable-next-line:non-literal-require -- filename comes from Azure artifact
     const jsonContent = require(path.resolve(assertString(file, "file")));
     return {
-      ...convertArgs({ ...args, ...jsonContent.options }),
+      ...args,
+      ...jsonContent.options,
       groups: jsonContent.groups
     };
   }
 
-  return {
-    compareAgainstMajorMinor: assertDefined(args.compareAgainstMajorMinor, "compareAgainstMajorMinor").toString(),
-    definitelyTypedPath: assertString(args.definitelyTypedPath, "definitelyTypedPath"),
-    typeScriptPath: assertString(withDefault(args.typeScriptPath, path.resolve("built/local")), "typeScriptPath"),
-    packages:
-      args.packages === true
-        ? undefined
-        : args.packages
-        ? assertString(args.packages, "packages")
-            .split(",")
-            .map(p => parsePackageKey(p.trim()))
-        : undefined,
-    maxRunSeconds: args.maxRunSeconds ? assertNumber(args.maxRunSeconds, "maxRunSeconds") : undefined,
-    upload: assertBoolean(withDefault(args.upload, true), "upload"),
-    outFile: args.outFile ? assertString(args.outFile, "outFile") : undefined,
-    agentCount: args.agentCount ? assertNumber(args.agentCount, "agentCount") : undefined,
-    agentIndex: args.agentIndex !== undefined ? assertNumber(args.agentIndex, "agentIndex") : undefined
-  };
+  return args;
 }
 
-export function compareTypeScriptCLI(args: Args) {
+export function compareTypeScriptCLI(args: CompareTypeScriptCLIArgs) {
   return compareTypeScript(convertArgs(args));
 }
 
 export async function compareTypeScript({
-  compareAgainstMajorMinor,
+  compareAgainstVersion,
   definitelyTypedPath,
   packages,
   maxRunSeconds,
-  typeScriptPath,
+  localTypeScriptPath: typeScriptPath,
   upload,
   outFile,
   groups,
@@ -111,7 +102,7 @@ export async function compareTypeScript({
       )
     : await getPackagesToTestAndPriorResults(
         packageBenchmarks,
-        compareAgainstMajorMinor,
+        compareAgainstVersion,
         definitelyTypedPath,
         getAllPackages,
         packages
@@ -122,7 +113,7 @@ export async function compareTypeScript({
     const fileContent = JSON.stringify(
       {
         options: {
-          compareAgainstMajorMinor,
+          compareAgainstVersion,
           definitelyTypedPath,
           maxRunSeconds,
           typeScriptPath,
@@ -145,7 +136,7 @@ export async function compareTypeScript({
     return writeFile(outFile, fileContent, "utf8");
   }
 
-  await getTypeScript(compareAgainstMajorMinor);
+  await getTypeScript(compareAgainstVersion);
   const packagesToTest = packages
     ? packages.map(p => `${p.name}/v${formatDependencyVersion(p.version)}`)
     : Array.from(priorResults.keys());
@@ -167,11 +158,11 @@ export async function compareTypeScript({
       const benchmark = await benchmarkPackage(name, formatDependencyVersion(version), now, {
         definitelyTypedPath,
         iterations: config.benchmarks.languageServiceIterations,
-        tsVersion: compareAgainstMajorMinor,
+        tsVersion: compareAgainstVersion,
         nProcesses: os.cpus().length,
         printSummary: true,
         progress: false,
-        upload,
+        upload: !!upload,
         installTypeScript: false,
         failOnErrors: false,
         maxRunSeconds
