@@ -128,6 +128,26 @@ testo({
     const i = getModuleInfo("fail", types);
     expect(i.dependencies).toEqual(new Set([]));
   },
+  selfInTypesVersionsParent() {
+    const pkg = new Dir(undefined);
+    const ts20 = pkg.subdir("ts2.0");
+    ts20.set(
+      "index.d.ts",
+      `/// <reference path="../ts1.0/index.d.ts" />
+`
+    );
+    ts20.set("component.d.ts", "");
+    const ts10 = pkg.subdir("ts1.0");
+    ts10.set(
+      "index.d.ts",
+      `import "mock/component";
+`
+    );
+    const memFS = new InMemoryFS(ts20, "types/mock/ts2.0");
+    const { types, tests } = allReferencedFiles(["index.d.ts"], memFS, "mock", "types/mock");
+    expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
+    expect(Array.from(tests.keys())).toEqual([]);
+  },
   getTestDependenciesWorks() {
     const { types, tests } = getBoringReferences();
     const i = getModuleInfo("boring", types);
