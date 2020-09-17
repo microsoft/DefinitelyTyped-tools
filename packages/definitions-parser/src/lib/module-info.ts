@@ -4,6 +4,7 @@ import * as ts from "typescript";
 import { sort, joinPaths, FS, normalizeSlashes, hasWindowsSlashes } from "@definitelytyped/utils";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
+import { getMangledNameForScopedPackage } from "../packages";
 
 export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFile>): ModuleInfo {
   const dependencies = new Set<string>();
@@ -235,8 +236,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
   for (const ref of imports(src)) {
     if (ref.startsWith(".")) {
       addReference({ text: ref, exact: false });
-    }
-    if (ref.startsWith(packageName + "/")) {
+    } else if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
       addReference({ text: convertToRelativeReference(ref), exact: false });
       hasNonRelativeImports = true;
     }

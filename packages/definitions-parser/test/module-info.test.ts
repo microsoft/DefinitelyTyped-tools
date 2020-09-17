@@ -128,6 +128,24 @@ testo({
     const i = getModuleInfo("fail", types);
     expect(i.dependencies).toEqual(new Set([]));
   },
+  selfInScopedPackage() {
+    const scoped = new Dir(undefined);
+    scoped.set(
+      "index.d.ts",
+      `import "@rdfjs/to-ntriples/component";
+`
+    );
+    scoped.set("component.d.ts", "");
+    const memFS = new InMemoryFS(scoped, "types/rdfjs__to-ntriples");
+    const { types, tests } = allReferencedFiles(
+      ["index.d.ts"],
+      memFS,
+      "rdfjs__to-ntriples",
+      "types/rdfjs__to-ntriples"
+    );
+    expect(Array.from(types.keys())).toEqual(["index.d.ts", "component.d.ts"]);
+    expect(Array.from(tests.keys())).toEqual([]);
+  },
   selfInTypesVersionsParent() {
     const pkg = new Dir(undefined);
     const ts20 = pkg.subdir("ts2.0");
