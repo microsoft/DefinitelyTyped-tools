@@ -67,27 +67,40 @@ describe(getTypingInfo, () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
-          message:
-            "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+          "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
             "since it applies to any 3.* version, up to and including 3.3."
-        });
+        );
       });
 
       it("throws if a directory exists for the latest minor version", () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.3");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toMatchObject({
-          message: "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
-        });
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+          "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
+        );
       });
 
       it("does not throw when a minor version is older than the latest", () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.0");
 
-        expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
+      });
+
+      it("checks that older versions with non-relative imports have wildcard path mappings", () => {
+        const dt = createMockDT();
+        const jquery = dt.pkgDir("jquery");
+        jquery.set(
+          "JQuery.d.ts",
+          `import "jquery/component";
+`
+        );
+        dt.addOldVersionOfPackage("jquery", "1");
+        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+          'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
+        );
       });
     });
   });

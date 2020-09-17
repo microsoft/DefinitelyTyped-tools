@@ -147,12 +147,13 @@ export function allReferencedFiles(
   fs: FS,
   packageName: string,
   baseDirectory: string
-): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile> } {
+): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
+  let hasNonRelativeImports = false;
   entryFilenames.forEach(text => recur({ text, exact: true }));
-  return { types, tests };
+  return { types, tests, hasNonRelativeImports };
 
   function recur({ text, exact }: Reference): void {
     const resolvedFilename = exact ? text : resolveModule(text, fs);
@@ -170,13 +171,14 @@ export function allReferencedFiles(
         tests.set(resolvedFilename, src);
       }
 
-      const refs = findReferencedFiles(
+      const { refs, hasNonRelativeImports: result } = findReferencedFiles(
         src,
         packageName,
         path.dirname(resolvedFilename),
         normalizeSlashes(path.relative(baseDirectory, fs.debugPath()))
       );
       refs.forEach(recur);
+      hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
 }
@@ -215,6 +217,7 @@ interface Reference {
  */
 function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirectory: string, baseDirectory: string) {
   const refs: Reference[] = [];
+  let hasNonRelativeImports = false;
 
   for (const ref of src.referencedFiles) {
     // Any <reference path="foo"> is assumed to be local
@@ -235,9 +238,10 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
     }
     if (ref.startsWith(packageName + "/")) {
       addReference({ text: convertToRelativeReference(ref), exact: false });
+      hasNonRelativeImports = true;
     }
   }
-  return refs;
+  return { refs, hasNonRelativeImports };
 
   function addReference(ref: Reference): void {
     // `path.normalize` may add windows slashes

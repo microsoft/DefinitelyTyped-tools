@@ -263,7 +263,12 @@ function getTypingDataForSingleTypesVersion(
 ): TypingDataFromIndividualTypeScriptVersion {
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
-  const { types, tests } = allReferencedFiles(tsconfig.files!, fs, packageName, packageDirectory);
+  const { types, tests, hasNonRelativeImports } = allReferencedFiles(
+    tsconfig.files!,
+    fs,
+    packageName,
+    packageDirectory
+  );
   const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
   const otherFiles =
     ls.indexOf(unusedFilesName) > -1
@@ -287,6 +292,16 @@ function getTypingDataForSingleTypesVersion(
   const testDependencies = Array.from(
     filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m))
   );
+
+  const { paths } = tsconfig.compilerOptions;
+  if (directoryVersion && hasNonRelativeImports && !(paths && `${packageName}/*` in paths)) {
+    const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}/*`]);
+    throw new Error(
+      `${packageName}: Older version ${formatTypingVersion(
+        directoryVersion
+      )} must have a "paths" entry of "${packageName}/*": ${mapping}`
+    );
+  }
 
   const { dependencies, pathMappings } = calculateDependencies(
     packageName,
