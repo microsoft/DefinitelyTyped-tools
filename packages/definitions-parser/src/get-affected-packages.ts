@@ -94,7 +94,7 @@ function getReverseDependencies(
       }
     }
     for (const dependencyName of typing.testDependencies) {
-      const version = typing.pathMappings.find(({ packageName }) => packageName === dependencyName)?.version || "*";
+      const version = typing.pathMappings[dependencyName] || "*";
       const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: dependencyName, version })));
       if (dependencies) {
         dependencies[1].add(typing.id);
