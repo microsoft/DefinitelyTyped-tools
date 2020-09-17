@@ -6,11 +6,8 @@ import {
   config,
   getParsedPackages,
   assertString,
-  assertBoolean,
-  withDefault,
   assertNumber,
-  getSystemInfo,
-  Args
+  getSystemInfo
 } from "../common";
 import { getTypeScript } from "../measure/getTypeScript";
 import { insertDocument } from "../write";
@@ -20,6 +17,7 @@ import { PackageId, formatDependencyVersion, parseVersionFromDirectoryName } fro
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
+  file?: string;
   groups?: PackageId[][];
   agentIndex?: number;
   package?: string;
@@ -37,7 +35,7 @@ export interface BenchmarkPackageOptions {
   reverse?: boolean;
 }
 
-function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
+function convertArgs({ file, ...args }: BenchmarkPackageOptions): BenchmarkPackageOptions {
   if (file) {
     // tslint:disable-next-line:non-literal-require -- filename comes from Azure artifact
     const fileContents = require(path.resolve(assertString(file, "file")));
@@ -49,35 +47,16 @@ function convertArgs({ file, ...args }: Args): BenchmarkPackageOptions {
     }
     return {
       groups: fileContents.groups,
-      ...convertArgs({ ...fileContents.options, ...args }),
+      ...fileContents.options,
+      ...args,
       failOnErrors: false
     };
   }
 
-  return {
-    package: args.package ? assertString(args.package) : undefined,
-    agentIndex: args.agentIndex !== undefined ? assertNumber(args.agentIndex, "agentIndex") : undefined,
-    upload: assertBoolean(withDefault(args.upload, true), "upload"),
-    tsVersion: withDefault(args.tsVersion, "next").toString(),
-    progress: assertBoolean(withDefault(args.progress, false), "progress"),
-    iterations: assertNumber(withDefault(args.iterations, 5), "iterations"),
-    nProcesses: assertNumber(withDefault(args.nProcesses, os.cpus().length), "nProcesses"),
-    maxRunSeconds: args.maxRunSeconds ? assertNumber(args.maxRunSeconds, "maxRunSeconds") : undefined,
-    printSummary: assertBoolean(withDefault(args.printSummary, true), "printSummary"),
-    definitelyTypedPath: path.resolve(
-      assertString(withDefault(args.definitelyTypedPath, process.cwd()), "definitelyTypedPath")
-    ),
-    failOnErrors: true,
-    installTypeScript: true,
-    localTypeScriptPath: assertString(
-      withDefault(args.localTypeScriptPath, path.resolve("built/local")),
-      "localTypeScriptPath"
-    ),
-    reverse: !!args.reverse
-  };
+  return args;
 }
 
-export async function benchmark(args: Args) {
+export async function benchmark(args: BenchmarkPackageOptions) {
   const options = convertArgs(args);
   const time = new Date();
   if (options.groups) {

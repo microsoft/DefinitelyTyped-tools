@@ -6,7 +6,6 @@ import {
   formatTypingVersion,
   getLicenseFromPackageJson,
   PackageJsonDependency,
-  PathMapping,
   TypingsDataRaw,
   TypingsVersionsRaw,
   TypingVersion
@@ -220,7 +219,7 @@ async function combineDataForAllTypesVersions(
     license,
     dependencies: Object.assign({}, ...allTypesVersions.map(v => v.dependencies)),
     testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"),
-    pathMappings: getAllUniqueValues<"pathMappings", PathMapping>(allTypesVersions, "pathMappings"),
+    pathMappings: Object.assign({}, ...allTypesVersions.map(v => v.pathMappings)),
     packageJsonDependencies,
     contentHash: hash(
       hasPackageJson ? [...files, packageJsonName] : files,
@@ -241,7 +240,7 @@ interface TypingDataFromIndividualTypeScriptVersion {
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly testDependencies: readonly string[];
-  readonly pathMappings: readonly PathMapping[];
+  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
   readonly declFiles: readonly string[];
   readonly tsconfigPathsForHash: string | undefined;
   readonly globals: readonly string[];
@@ -264,7 +263,12 @@ function getTypingDataForSingleTypesVersion(
 ): TypingDataFromIndividualTypeScriptVersion {
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
-  const { types, tests } = allReferencedFiles(tsconfig.files!, fs, packageName, packageDirectory);
+  const { types, tests, hasNonRelativeImports } = allReferencedFiles(
+    tsconfig.files!,
+    fs,
+    packageName,
+    packageDirectory
+  );
   const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
   const otherFiles =
     ls.indexOf(unusedFilesName) > -1
@@ -288,6 +292,16 @@ function getTypingDataForSingleTypesVersion(
   const testDependencies = Array.from(
     filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m))
   );
+
+  const { paths } = tsconfig.compilerOptions;
+  if (directoryVersion && hasNonRelativeImports && !(paths && `${packageName}/*` in paths)) {
+    const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}/*`]);
+    throw new Error(
+      `${packageName}: Older version ${formatTypingVersion(
+        directoryVersion
+      )} must have a "paths" entry of "${packageName}/*": ${mapping}`
+    );
+  }
 
   const { dependencies, pathMappings } = calculateDependencies(
     packageName,
@@ -394,7 +408,7 @@ interface TsConfig {
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
 interface DependenciesAndPathMappings {
   readonly dependencies: { readonly [name: string]: DependencyVersion };
-  readonly pathMappings: readonly PathMapping[];
+  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
 }
 function calculateDependencies(
   packageName: string,
@@ -405,7 +419,7 @@ function calculateDependencies(
   const paths = (tsconfig.compilerOptions && tsconfig.compilerOptions.paths) || {};
 
   const dependencies: { [name: string]: DependencyVersion } = {};
-  const pathMappings: PathMapping[] = [];
+  const pathMappings: { [packageName: string]: TypingVersion } = {};
 
   for (const dependencyName of Object.keys(paths)) {
     // Might have a path mapping for "foo/*" to support subdirectories
@@ -449,7 +463,7 @@ function calculateDependencies(
       }
     }
     // Else, the path mapping may be necessary if it is for a transitive dependency. We will check this in check-parse-results.
-    pathMappings.push({ packageName: dependencyName, version: pathMappingVersion });
+    pathMappings[dependencyName] = pathMappingVersion;
   }
 
   if (directoryVersion !== undefined && !(paths && packageName in paths)) {

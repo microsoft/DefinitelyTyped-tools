@@ -1,14 +1,10 @@
 import * as fs from "fs";
-import * as path from "path";
 import { promisify } from "util";
 import {
   getDatabase,
   getParsedPackages,
   DatabaseAccessLevel,
   compact,
-  Args,
-  assertNumber,
-  assertString,
   getSystemInfo,
   getChangedPackages,
   packageIdsAreEqual,
@@ -23,34 +19,27 @@ const currentSystem = getSystemInfo();
 
 export interface GetPackagesToBenchmarkOptions {
   definitelyTypedPath: string;
-  typeScriptVersionMajorMinor: string;
+  tsVersion: string;
   agentCount: number;
   outFile: string;
 }
 
-function convertArgs(args: Args): GetPackagesToBenchmarkOptions {
-  const tsVersion = (args.typeScriptVersion || "").toString();
+export async function getPackagesToBenchmark({
+  definitelyTypedPath,
+  agentCount,
+  tsVersion,
+  outFile
+}: GetPackagesToBenchmarkOptions) {
   if (tsVersion.split(".").length !== 2) {
     throw new Error(`Argument 'typeScriptVersion' must be in format 'major.minor' (e.g. '3.1')`);
   }
-  const dtPath = assertString(args.definitelyTypedPath || process.cwd(), "definitelyTypedPath");
-  const definitelyTypedPath = path.isAbsolute(dtPath) ? dtPath : path.resolve(process.cwd(), dtPath);
-  return {
-    definitelyTypedPath,
-    agentCount: assertNumber(args.agentCount, "agentCount"),
-    typeScriptVersionMajorMinor: tsVersion,
-    outFile: assertString(args.outFile, "outFile")
-  };
-}
 
-export async function getPackagesToBenchmark(args: Args) {
-  const { definitelyTypedPath, agentCount, typeScriptVersionMajorMinor, outFile } = convertArgs(args);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const changedPackages = await nAtATime(10, allPackages.allTypings(), async typingsData => {
     const result = await getLatestBenchmark({
       container,
-      typeScriptVersionMajorMinor,
+      typeScriptVersionMajorMinor: tsVersion,
       packageName: typingsData.id.name,
       packageVersion: formatDependencyVersion(typingsData.id.version)
     });
@@ -95,7 +84,7 @@ export async function getPackagesToBenchmark(args: Args) {
 
   const benchmarkOptions: Partial<BenchmarkPackageOptions> = {
     definitelyTypedPath,
-    tsVersion: typeScriptVersionMajorMinor,
+    tsVersion,
     upload: true
   };
 

@@ -148,20 +148,21 @@ export function allReferencedFiles(
   fs: FS,
   packageName: string,
   baseDirectory: string
-): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile> } {
+): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
+  let hasNonRelativeImports = false;
   entryFilenames.forEach(text => recur({ text, exact: true }));
-  return { types, tests };
+  return { types, tests, hasNonRelativeImports };
 
   function recur({ text, exact }: Reference): void {
-    if (seenReferences.has(text)) {
+    const resolvedFilename = exact ? text : resolveModule(text, fs);
+    if (seenReferences.has(resolvedFilename)) {
       return;
     }
-    seenReferences.add(text);
+    seenReferences.add(resolvedFilename);
 
-    const resolvedFilename = exact ? text : resolveModule(text, fs);
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(resolvedFilename)) {
       const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
@@ -171,13 +172,14 @@ export function allReferencedFiles(
         tests.set(resolvedFilename, src);
       }
 
-      const refs = findReferencedFiles(
+      const { refs, hasNonRelativeImports: result } = findReferencedFiles(
         src,
         packageName,
         path.dirname(resolvedFilename),
         normalizeSlashes(path.relative(baseDirectory, fs.debugPath()))
       );
       refs.forEach(recur);
+      hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
 }
@@ -216,6 +218,7 @@ interface Reference {
  */
 function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirectory: string, baseDirectory: string) {
   const refs: Reference[] = [];
+  let hasNonRelativeImports = false;
 
   for (const ref of src.referencedFiles) {
     // Any <reference path="foo"> is assumed to be local
@@ -235,22 +238,22 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
       addReference({ text: ref, exact: false });
     } else if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
       addReference({ text: convertToRelativeReference(ref), exact: false });
+      hasNonRelativeImports = true;
     }
   }
-  return refs;
+  return { refs, hasNonRelativeImports };
 
   function addReference(ref: Reference): void {
     // `path.normalize` may add windows slashes
-    const full = normalizeSlashes(
+    let full = normalizeSlashes(
       path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text)))
     );
     // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
     if (full.startsWith("../" + packageName + "/")) {
-      ref.text = full.slice(packageName.length + 4);
-      refs.push(ref);
-      return;
-    }
-    if (
+      full = full.slice(packageName.length + 4);
+    } else if (baseDirectory && full.startsWith("../" + baseDirectory + "/")) {
+      full = full.slice(baseDirectory.length + 4);
+    } else if (
       full.startsWith("..") &&
       (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))
     ) {
@@ -266,7 +269,13 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
 
   /** boring/foo -> ./foo when subDirectory === '.'; ../foo when it's === 'x'; ../../foo when it's 'x/y' */
   function convertToRelativeReference(name: string) {
-    const relative = "." + "/..".repeat(subDirectory === "." ? 0 : subDirectory.split("/").length);
+    let relative = ".";
+    if (subDirectory !== ".") {
+      relative += "/..".repeat(subDirectory.split("/").length);
+      if (baseDirectory && subDirectory.startsWith("..")) {
+        relative = relative.slice(0, -2) + baseDirectory;
+      }
+    }
     return relative + name.slice(packageName.length);
   }
 }

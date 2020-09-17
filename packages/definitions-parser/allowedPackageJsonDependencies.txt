@@ -133,6 +133,7 @@ jest-mock
 jest-snapshot
 jimp
 jointjs
+jose
 jsonata
 levelup
 lit-element
@@ -141,6 +142,7 @@ log4js
 logform
 loglevel
 logrocket
+lottie-web
 knex
 knockout
 magic-string
@@ -197,6 +199,7 @@ safe-buffer
 should
 smooth-scrollbar
 scroll-into-view-if-needed
+ssim.js
 source-map
 styled-components
 sw-toolbox
