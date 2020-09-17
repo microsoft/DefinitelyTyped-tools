@@ -1,4 +1,4 @@
-import { TypingsVersionsRaw, License, DependencyVersion } from "../src/packages";
+import { TypingsVersionsRaw, License, DependencyVersion, PathMapping } from "../src/packages";
 
 export function testo(o: { [s: string]: () => void }) {
   for (const k of Object.keys(o)) {
@@ -9,10 +9,11 @@ export function testo(o: { [s: string]: () => void }) {
 export function createTypingsVersionRaw(
   name: string,
   dependencies: { readonly [name: string]: DependencyVersion },
-  testDependencies: string[]
+  testDependencies: string[],
+  pathMappings: PathMapping[]
 ): TypingsVersionsRaw {
   return {
-    "1.0.0": {
+    "1.0": {
       libraryName: name,
       typingsPackageName: name,
       dependencies,
@@ -20,7 +21,7 @@ export function createTypingsVersionRaw(
       files: ["index.d.ts"],
       libraryMajorVersion: 1,
       libraryMinorVersion: 0,
-      pathMappings: [],
+      pathMappings,
       contributors: [{ name: "Bender", url: "futurama.com", githubUsername: "bender" }],
       minTsVersion: "2.3",
       typesVersions: [],

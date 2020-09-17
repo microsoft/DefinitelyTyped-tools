@@ -1,6 +1,26 @@
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
-import { TypingsVersions } from "../src/packages";
+import { AllPackages, TypingsVersions } from "../src/packages";
+import { parseDefinitions } from "../src/parse-definitions";
+import { quietLoggerWithErrors } from "@definitelytyped/utils";
+
+describe(AllPackages, () => {
+  let allPackages: AllPackages;
+
+  beforeAll(async () => {
+    const dt = createMockDT();
+    dt.addOldVersionOfPackage("jquery", "1");
+    const [log] = quietLoggerWithErrors();
+    allPackages = await parseDefinitions(dt.fs, undefined, log);
+  });
+
+  it("applies path mappings to test dependencies", () => {
+    const pkg = allPackages.tryGetLatestVersion("has-older-test-dependency")!;
+    expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
+      { name: "jquery", version: { major: 1, minor: 0 } }
+    ]);
+  });
+});
 
 describe(TypingsVersions, () => {
   let versions: TypingsVersions;
