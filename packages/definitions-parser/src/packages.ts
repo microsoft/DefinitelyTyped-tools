@@ -129,7 +129,7 @@ export class AllPackages {
     for (const name of pkg.testDependencies) {
       const versions = this.data.get(getMangledNameForScopedPackage(name));
       if (versions) {
-        const version = pkg.pathMappings.find(({ packageName }) => packageName === name)?.version;
+        const version = pkg.pathMappings[name];
         yield version ? versions.get(version) : versions.getLatest();
       }
     }
