@@ -107,6 +107,7 @@ fastify
 final-form
 flatpickr
 form-data
+fs-jetpack
 gl-matrix
 glaze
 globby
