@@ -102,6 +102,19 @@ describe(getTypingInfo, () => {
           'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
         );
       });
+
+      it("checks that other deep imports from older versions have wildcard path mappings", () => {
+        const dt = createMockDT();
+        const hasOlderTestDependency = dt.pkgDir("has-older-test-dependency");
+        hasOlderTestDependency.set(
+          "has-older-test-dependency-tests.ts",
+          `import "jquery/component";
+`
+        );
+        return expect(
+          getTypingInfo("has-older-test-dependency", dt.pkgFS("has-older-test-dependency"))
+        ).rejects.toThrow('has-older-test-dependency: Must have a "paths" entry of "jquery/*": ["jquery/v1/*"]');
+      });
     });
   });
 });
