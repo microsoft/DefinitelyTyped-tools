@@ -5,7 +5,6 @@ import {
   checkParseResults,
   getAffectedPackagesFromDiff,
   allDependencies,
-  AllPackages,
   TypingsData
 } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors, joinPaths, loggerWithErrors, npmInstallFlags } from "@definitelytyped/utils";
@@ -39,7 +38,7 @@ export async function prepareAffectedPackages({
   );
 
   if (!noInstall) {
-    await installDependencies(allPackages, [...changedPackages, ...dependentPackages], typesPath);
+    await installDependencies(allDependencies(allPackages, [...changedPackages, ...dependentPackages]), typesPath);
   }
 
   return {
@@ -48,15 +47,11 @@ export async function prepareAffectedPackages({
   };
 }
 
-async function installDependencies(
-  allPackages: AllPackages,
-  packages: Iterable<TypingsData>,
-  typesPath: string
-): Promise<void> {
+export async function installDependencies(packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
 
   // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
-  for (const pkg of allDependencies(allPackages, packages)) {
+  for (const pkg of packages) {
     const cwd = joinPaths(typesPath, pkg.subDirectoryPath);
     if (!(await pathExists(joinPaths(cwd, "package.json")))) {
       continue;
