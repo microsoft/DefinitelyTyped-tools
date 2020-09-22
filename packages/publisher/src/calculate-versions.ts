@@ -82,8 +82,8 @@ async function computeChangedPackages(
   const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async pkg => {
     if (!(await isAlreadyDeprecated(pkg, client, log))) {
       assertDefined(
-        await client.fetchAndCacheNpmInfo(pkg.unescapedName),
-        `To deprecate '@types/${pkg.name}', '${pkg.unescapedName}' must exist on npm.`
+        await client.fetchAndCacheNpmInfo(pkg.libraryName),
+        `To deprecate '@types/${pkg.name}', '${pkg.libraryName}' must exist on npm.`
       );
       log.info(`To be deprecated: ${pkg.name}`);
       return pkg;

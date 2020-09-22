@@ -50,7 +50,7 @@ function createTypesData(): TypesDataFile {
 }
 function createUnneededPackage() {
   return new NotNeededPackage({
-    libraryName: "absalom",
+    libraryName: "alternate",
     typingsPackageName: "absalom",
     asOfVersion: "1.1.1",
     sourceRepoURL: "https://github.com/aardwulf/absalom"
@@ -134,20 +134,20 @@ testo({
     "name": "@types/absalom",
     "version": "1.1.1",
     "typings": null,
-    "description": "Stub TypeScript definitions entry for absalom, which provides its own types definitions",
+    "description": "Stub TypeScript definitions entry for alternate, which provides its own types definitions",
     "main": "",
     "scripts": {},
     "author": "",
     "repository": "https://github.com/aardwulf/absalom",
     "license": "MIT",
     "dependencies": {
-        "absalom": "*"
+        "alternate": "*"
     }
 }`);
   },
   scopedNotNeededPackageJson() {
     const scopedUnneeded = new NotNeededPackage({
-      libraryName: "@google-cloud/pubsub",
+      libraryName: "@google-cloud/chubdub",
       typingsPackageName: "google-cloud__pubsub",
       asOfVersion: "0.26.0",
       sourceRepoURL: "https://github.com/googleapis/nodejs-storage"
@@ -157,14 +157,14 @@ testo({
     "name": "@types/google-cloud__pubsub",
     "version": "0.26.0",
     "typings": null,
-    "description": "Stub TypeScript definitions entry for @google-cloud/pubsub, which provides its own types definitions",
+    "description": "Stub TypeScript definitions entry for @google-cloud/chubdub, which provides its own types definitions",
     "main": "",
     "scripts": {},
     "author": "",
     "repository": "https://github.com/googleapis/nodejs-storage",
     "license": "MIT",
     "dependencies": {
-        "@google-cloud/pubsub": "*"
+        "@google-cloud/chubdub": "*"
     }
 }`);
   },

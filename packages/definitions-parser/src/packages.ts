@@ -288,12 +288,12 @@ export class NotNeededPackage extends PackageBase {
   }
 
   readme(): string {
-    return `This is a stub types definition for ${this.libraryName} (${this.sourceRepoURL}).\n
+    return `This is a stub types definition for ${getFullNpmName(this.name)} (${this.sourceRepoURL}).\n
 ${this.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(this.name)} installed!`;
   }
 
   deprecatedMessage(): string {
-    return `This is a stub types definition. ${this.name} provides its own type definitions, so you do not need this installed.`;
+    return `This is a stub types definition. ${this.libraryName} provides its own type definitions, so you do not need this installed.`;
   }
 }
 
