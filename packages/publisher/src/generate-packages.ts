@@ -230,7 +230,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 }
 
 export function createNotNeededPackageJSON(
-  { libraryName, license, unescapedName, fullNpmName, sourceRepoURL, version }: NotNeededPackage,
+  { libraryName, license, fullNpmName, sourceRepoURL, version }: NotNeededPackage,
   registry: Registry
 ): string {
   const out = {
@@ -245,7 +245,7 @@ export function createNotNeededPackageJSON(
     license,
     // No `typings`, that's provided by the dependency.
     dependencies: {
-      [unescapedName]: "*"
+      [libraryName]: "*"
     }
   };
   if (registry === Registry.Github) {
