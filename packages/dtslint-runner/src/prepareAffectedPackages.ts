@@ -59,7 +59,7 @@ export async function installDependencies(packages: Iterable<TypingsData>, types
 
     // Scripts may try to compile native code.
     // This doesn't work reliably on travis, and we're just installing for the types, so ignore.
-    const cmd = `npm install ${npmInstallFlags}`;
+    const cmd = `npm install ${npmInstallFlags} --tag ts${pkg.minTypeScriptVersion}`;
     console.log(`  ${cwd}: ${cmd}`);
     const stdout = await execAndThrowErrors(cmd, cwd);
     if (stdout) {
