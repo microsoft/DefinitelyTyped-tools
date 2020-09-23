@@ -92,6 +92,7 @@ dnd-core
 domhandler
 dotenv
 egg
+elasticsearch
 electron
 electron-notarize
 electron-osx-sign
