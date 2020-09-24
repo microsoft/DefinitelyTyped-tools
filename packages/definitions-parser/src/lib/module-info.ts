@@ -303,11 +303,8 @@ function imports({ statements }: ts.SourceFile): Iterable<string> {
 
       case ts.SyntaxKind.ImportType: {
         const { argument } = node as ts.ImportTypeNode;
-        if (argument.kind === ts.SyntaxKind.LiteralType) {
-          const { literal } = argument as ts.LiteralTypeNode;
-          if (literal.kind === ts.SyntaxKind.StringLiteral) {
-            result.push(literal.text);
-          }
+        if (ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal)) {
+          result.push(argument.literal.text);
         }
         break;
       }
