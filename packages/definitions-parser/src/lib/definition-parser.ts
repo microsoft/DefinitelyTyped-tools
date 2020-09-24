@@ -350,7 +350,7 @@ to refer to @types/P if it relies on old versions of P's types.
 In this case, please make a pull request to microsoft/DefinitelyTyped-tools adding @types/P to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`
         : `Dependency ${dependencyName} not in the allowed dependencies list.
 If you are depending on another \`@types\` package, do *not* add it to a \`package.json\`. Path mapping should make the import work.
-For namespaced dependencies you then have to add a \`paths\` mapping from \`@namespace/library\` to \`namespace__library\` in \`tsconfig.json\`.
+For namespaced dependencies you then have to add a \`paths\` mapping from \`@namespace/*\` to \`namespace__*\` in \`tsconfig.json\`.
 If this is an external library that provides typings,  please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
       throw new Error(`In ${path}: ${msg}`);
     }
@@ -422,26 +422,26 @@ function calculateDependencies(
   const pathMappings: { [packageName: string]: TypingVersion } = {};
 
   for (const dependencyName of Object.keys(paths)) {
-    // Might have a path mapping for "foo/*" to support subdirectories
-    const rootDirectory = withoutEnd(dependencyName, "/*");
-    if (rootDirectory !== undefined) {
-      if (!(rootDirectory in paths)) {
-        throw new Error(`In ${packageName}: found path mapping for ${dependencyName} but not for ${rootDirectory}`);
-      }
-      continue;
-    }
-
     const pathMappingList = paths[dependencyName];
     if (pathMappingList.length !== 1) {
       throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
     }
     const pathMapping = pathMappingList[0];
 
-    // Path mapping may be for "@foo/bar" -> "foo__bar".
+    // Path mapping may be for "@foo/*" -> "foo__*".
     const scopedPackageName = unmangleScopedPackage(pathMapping);
     if (scopedPackageName !== undefined) {
       if (dependencyName !== scopedPackageName) {
         throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
+      }
+      continue;
+    }
+
+    // Might have a path mapping for "foo/*" to support subdirectories
+    const rootDirectory = withoutEnd(dependencyName, "/*");
+    if (rootDirectory !== undefined) {
+      if (!(rootDirectory in paths)) {
+        throw new Error(`In ${packageName}: found path mapping for ${dependencyName} but not for ${rootDirectory}`);
       }
       continue;
     }

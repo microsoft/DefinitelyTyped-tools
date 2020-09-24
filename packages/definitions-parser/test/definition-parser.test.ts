@@ -104,4 +104,9 @@ describe(getTypingInfo, () => {
       });
     });
   });
+
+  it("allows wildcard scope path mappings", () => {
+    const dt = createMockDT();
+    return expect(getTypingInfo("wordpress__plugins", dt.pkgFS("wordpress__plugins"))).resolves.toBeDefined();
+  });
 });

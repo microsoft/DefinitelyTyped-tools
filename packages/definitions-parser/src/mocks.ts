@@ -268,6 +268,27 @@ console.log(jQuery);
   );
   jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
 
+  const scoped = dt.pkgDir("wordpress__plugins");
+  scoped.set(
+    "index.d.ts",
+    `// Type definitions for @wordpress/plguins
+// Project: https://github.com/WordPress/gutenberg/tree/master/packages/plugins/README.md
+// Definitions by: Derek Sifford <https://github.com/dsifford>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+`
+  );
+  scoped.set(
+    "tsconfig.json",
+    JSON.stringify({
+      compilerOptions: {
+        paths: {
+          "@wordpress/*": ["wordpress__*"]
+        }
+      },
+      files: ["index.d.ts"]
+    })
+  );
+
   return dt;
 }
 
