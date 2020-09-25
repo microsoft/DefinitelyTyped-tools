@@ -62,6 +62,19 @@ testo({
     expect(Array.from(types.keys())).toEqual(["merges.d.ts"]);
     expect(Array.from(tests.keys())).toEqual(["globby-tests.ts", "test/other-tests.ts"]);
   },
+  allReferencedFilesIncludesTypesImports() {
+    const pkg = new Dir(undefined);
+    pkg.set(
+      "index.d.ts",
+      `type T = import("./types");
+`
+    );
+    pkg.set("types.d.ts", "");
+    const memFS = new InMemoryFS(pkg, "types/mock");
+    const { types, tests } = allReferencedFiles(["index.d.ts"], memFS, "mock", "types/mock");
+    expect(Array.from(types.keys())).toEqual(["index.d.ts", "types.d.ts"]);
+    expect(Array.from(tests.keys())).toEqual([]);
+  },
   getModuleInfoWorksWithOtherFiles() {
     const { types } = getBoringReferences();
     // written as if it were from OTHER_FILES.txt

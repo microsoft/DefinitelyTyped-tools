@@ -284,14 +284,20 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
  * All strings referenced in `import` statements.
  * Does *not* include <reference> directives.
  */
-function* imports({ statements }: ts.SourceFile | ts.ModuleBlock): Iterable<string> {
+function imports({ statements }: ts.SourceFile): Iterable<string> {
+  const result: string[] = [];
   for (const node of statements) {
+    recur(node);
+  }
+  return result;
+
+  function recur(node: ts.Node) {
     switch (node.kind) {
       case ts.SyntaxKind.ImportDeclaration:
       case ts.SyntaxKind.ExportDeclaration: {
         const { moduleSpecifier } = node as ts.ImportDeclaration | ts.ExportDeclaration;
         if (moduleSpecifier && moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
-          yield (moduleSpecifier as ts.StringLiteral).text;
+          result.push((moduleSpecifier as ts.StringLiteral).text);
         }
         break;
       }
@@ -299,20 +305,21 @@ function* imports({ statements }: ts.SourceFile | ts.ModuleBlock): Iterable<stri
       case ts.SyntaxKind.ImportEqualsDeclaration: {
         const { moduleReference } = node as ts.ImportEqualsDeclaration;
         if (moduleReference.kind === ts.SyntaxKind.ExternalModuleReference) {
-          yield parseRequire(moduleReference);
+          result.push(parseRequire(moduleReference));
         }
         break;
       }
 
-      case ts.SyntaxKind.ModuleDeclaration: {
-        const { name, body } = node as ts.ModuleDeclaration;
-        if (name.kind === ts.SyntaxKind.StringLiteral && body) {
-          yield* imports(body as ts.ModuleBlock);
+      case ts.SyntaxKind.ImportType: {
+        const { argument } = node as ts.ImportTypeNode;
+        if (ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal)) {
+          result.push(argument.literal.text);
         }
         break;
       }
 
       default:
+        ts.forEachChild(node, recur);
     }
   }
 }
