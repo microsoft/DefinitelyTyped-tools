@@ -278,6 +278,11 @@ function getTypingDataForSingleTypesVersion(
           .split(/\r?\n/g)
           .filter(Boolean)
       : [];
+  for (const file of otherFiles) {
+    if (!isRelativePath(file)) {
+      throw new Error(`In ${packageName}: A path segment is empty or all dots ${file}`);
+    }
+  }
   checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
   for (const untestedTypeFile of filter(otherFiles, name => name.endsWith(".d.ts"))) {
     // add d.ts files from OTHER_FILES.txt in order get their dependencies
@@ -380,6 +385,9 @@ function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directo
     if (file.startsWith("./")) {
       throw new Error(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
     }
+    if (!isRelativePath(file)) {
+      throw new Error(`In ${tsconfigPath}: A path segment is empty or all dots ${file}`);
+    }
     if (file.endsWith(".d.ts") && file !== "index.d.ts") {
       throw new Error(`${packageName}: Only index.d.ts may be listed explicitly in tsconfig's "files" entry.
 Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`);
@@ -397,6 +405,10 @@ Other d.ts files must either be referenced through index.d.ts, tests, or added t
       }
     }
   }
+}
+
+function isRelativePath(path: string) {
+  return path.split(/\//).every(part => part.length > 0 && !part.match(/^\.+$|[\\\n\r]/));
 }
 
 interface TsConfig {
