@@ -91,6 +91,7 @@ dexie
 dnd-core
 domhandler
 dotenv
+downshift
 egg
 electron
 electron-notarize
