@@ -22,7 +22,8 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
   if (options.definitelyTypedPath === undefined) {
     log.info("Downloading Definitely Typed ...");
     await ensureDir(dataDirPath);
-    return downloadAndExtractFile(definitelyTypedZipUrl);
+    log.info(dataDirPath + " exists.");
+    return downloadAndExtractFile(definitelyTypedZipUrl, log);
   }
   const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
   if (error) {

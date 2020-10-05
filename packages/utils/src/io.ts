@@ -18,6 +18,7 @@ import { StringDecoder } from "string_decoder";
 import { parseJson, withoutStart, sleep } from "./miscellany";
 import { FS, Dir, InMemoryFS } from "./fs";
 import { assertDefined } from "./assertions";
+import { LoggerWithErrors } from "./logging";
 
 export async function readFile(path: string): Promise<string> {
   const res = await readFileWithEncoding(path, { encoding: "utf8" });
@@ -171,7 +172,7 @@ export async function isDirectory(path: string): Promise<boolean> {
 
 export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
 
-export function downloadAndExtractFile(url: string): Promise<FS> {
+export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Promise<FS> {
   return new Promise<FS>((resolve, reject) => {
     const root = new Dir(undefined);
     function insertFile(path: string, content: string): void {
@@ -184,8 +185,10 @@ export function downloadAndExtractFile(url: string): Promise<FS> {
       dir.set(baseName, content);
     }
 
+    log.info("Requesting " + url);
     https
       .get(url, { timeout: 1_000_000 }, response => {
+        log.info("Getting " + url);
         const extract = tarStream.extract();
         response.pipe(zlib.createGunzip()).pipe(extract);
         interface Header {
@@ -212,6 +215,7 @@ export function downloadAndExtractFile(url: string): Promise<FS> {
         });
         extract.on("error", reject);
         extract.on("finish", () => {
+          log.info("Done receiving " + url);
           resolve(new InMemoryFS(root.finish(), ""));
         });
       })
