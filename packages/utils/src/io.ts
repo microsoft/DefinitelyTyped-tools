@@ -188,9 +188,12 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
     log.info("Requesting " + url);
     https
       .get(url, { timeout: 1_000_000 }, response => {
+        if (response.statusCode !== 200) {
+          return reject(new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`));
+        }
+
         log.info("Getting " + url);
         const extract = tarStream.extract();
-        response.pipe(zlib.createGunzip()).pipe(extract);
         interface Header {
           readonly name: string;
           readonly type: "file" | "directory";
@@ -218,6 +221,8 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
           log.info("Done receiving " + url);
           resolve(new InMemoryFS(root.finish(), ""));
         });
+
+        response.pipe(zlib.createGunzip()).pipe(extract);
       })
       .on("error", reject);
   });
