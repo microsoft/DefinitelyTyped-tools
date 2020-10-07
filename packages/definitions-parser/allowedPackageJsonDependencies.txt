@@ -121,6 +121,7 @@ handlebars
 helmet
 hoist-non-react-statics
 hot-shots
+html-webpack-plugin
 htmlparser2
 i18next
 immer
