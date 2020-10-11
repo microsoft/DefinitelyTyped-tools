@@ -216,6 +216,7 @@ tweetnacl
 typeorm
 typescript
 typescript-tuple
+unified
 utility-types
 vega-typings
 vfile
