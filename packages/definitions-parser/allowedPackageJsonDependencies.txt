@@ -195,6 +195,7 @@ redux-observable
 redux-persist
 redux-saga
 redux-thunk
+remark
 rollup
 rrule
 rxjs
