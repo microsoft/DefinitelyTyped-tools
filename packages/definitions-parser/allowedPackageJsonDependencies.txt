@@ -69,6 +69,7 @@ bignumber.js
 bookshelf
 boxen
 broadcast-channel
+bson
 cac
 cash-dom
 cassandra-driver
