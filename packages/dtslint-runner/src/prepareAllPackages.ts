@@ -1,52 +1,31 @@
-import fs from "fs";
-import { pathExists } from "fs-extra";
-import { joinPaths, nAtATime, execAndThrowErrors, npmInstallFlags } from "@definitelytyped/utils";
+import {
+  AllPackages,
+  getDefinitelyTyped,
+  checkParseResults,
+  parseDefinitions
+} from "@definitelytyped/definitions-parser";
+import { joinPaths, loggerWithErrors } from "@definitelytyped/utils";
+import { installDependencies } from "./prepareAffectedPackages";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
 export async function prepareAllPackages({
   definitelyTypedPath,
-  noInstall
+  noInstall,
+  nProcesses
 }: PreparePackagesOptions): Promise<PreparePackagesResult> {
   const typesPath = joinPaths(definitelyTypedPath, "types");
-  const allPackages = await getAllPackages(typesPath);
+  const [log] = loggerWithErrors();
+  const options = {
+    definitelyTypedPath,
+    progress: false,
+    parseInParallel: nProcesses > 1
+  };
+  const dt = await getDefinitelyTyped(options, log);
+  await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
+  await checkParseResults(/*includeNpmChecks*/ false, dt, options);
+  const allPackages = await AllPackages.read(dt);
   if (!noInstall) {
-    await installAllDependencies(typesPath, allPackages);
+    await installDependencies(allPackages.allTypings(), typesPath);
   }
-  return { packageNames: allPackages, dependents: [] };
-}
-
-async function getAllPackages(typesDir: string): Promise<readonly string[]> {
-  const packageNames = await fs.promises.readdir(typesDir, { withFileTypes: true });
-  const results = await nAtATime(1, packageNames, async dir => {
-    if (!dir.isDirectory()) {
-      return [];
-    }
-    const packageDir = joinPaths(typesDir, dir.name);
-    const files = await fs.promises.readdir(packageDir);
-    const packages = [dir.name];
-    for (const file of files) {
-      if (/^v\d+$/.test(file)) {
-        packages.push(`${dir.name}/${file}`);
-      }
-    }
-    return packages;
-  });
-  return ([] as readonly string[]).concat(...results);
-}
-
-/**
- * Install all `package.json` dependencies up-front.
- * This ensures that if `types/aaa` depends on `types/zzz`, `types/zzz`'s dependencies will already be installed.
- */
-async function installAllDependencies(typesDir: string, packages: readonly string[]): Promise<void> {
-  for (const packageName of packages) {
-    const packagePath = joinPaths(typesDir, packageName);
-    if (!(await pathExists(joinPaths(packagePath, "package.json")))) {
-      continue;
-    }
-
-    const cmd = `npm install ${npmInstallFlags}`;
-    console.log(`  ${packagePath}: ${cmd}`);
-    await execAndThrowErrors(cmd, packagePath);
-  }
+  return { packageNames: allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath), dependents: [] };
 }
