@@ -3,14 +3,15 @@
   "files": [],
   "references": [
     { "path": "packages/definitions-parser" },
+    { "path": "packages/deprecate" },
     { "path": "packages/dts-critic" },
     { "path": "packages/dtslint" },
     { "path": "packages/dtslint-runner" },
     { "path": "packages/header-parser" },
     { "path": "packages/perf" },
     { "path": "packages/publisher" },
+    { "path": "packages/retag" },
     { "path": "packages/typescript-versions" },
-    { "path": "packages/utils" },
-    { "path": "packages/retag" }
+    { "path": "packages/utils" }
   ]
 }

@@ -1,0 +1,37 @@
+name: Mark removed types as deprecated
+#description: Loop over npm @types packages and mark as deprecated any that no longer exist in the DT repo.
+on:
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    - cron: 0 0 * * 0
+  workflow_call:
+    inputs:
+      dry-run:
+        type: boolean
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+jobs:
+  deprecate:
+    if: github.event_name != 'schedule' || github.repository == 'microsoft/DefinitelyTyped-tools'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - name: Parse declarations
+        run: yarn workspace @definitelytyped/publisher parse
+      - name: Mark removed types as deprecated${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
+        run: node --require source-map-support/register packages/deprecate/${{ (inputs || github.event.inputs).dry-run && ' --dry-run' || '' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}
+          path: packages/definitions-parser/data/

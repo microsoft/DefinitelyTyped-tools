@@ -1,0 +1,21 @@
+{
+  "name": "@definitelytyped/deprecate",
+  "version": "1.0.0",
+  "description": "Loop over npm @types packages and mark as deprecated any that no longer exist in the DT repo.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.121",
+    "@definitelytyped/utils": "^0.0.121",
+    "@octokit/graphql": "^4.8.0",
+    "libnpmsearch": "^5.0.3",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@types/libnpmsearch": "^2.0.3",
+    "@types/yargs": "^17.0.10"
+  }
+}

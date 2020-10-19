@@ -51,6 +51,11 @@ jobs:
     uses: ./.github/workflows/retag.yml
     with:
       dry-run: true
+  deprecate-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/deprecate.yml
+    with:
+      dry-run: true
   publish_alpha:
     name: publish alpha release
     runs-on: ubuntu-latest

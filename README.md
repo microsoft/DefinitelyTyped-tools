@@ -3,6 +3,7 @@
 A monorepo for formerly disparate DefinitelyTyped-related tools:
 
 - [definitions-parser](packages/definitions-parser): the part of [microsoft/types-publisher](https://github.com/microsoft/types-publisher) that reads DefinitelyTyped repository data
+- [deprecate](packages/publish-registry): Loop over npm @types packages and mark as deprecated any that no longer exist in the DT repo.
 - [dtslint](packages/dtslint): [microsoft/dtslint](https://github.com/microsoft/dtslint)
 - [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner)
 - [dts-critic](packages/dts-critic): [DefinitelyTyped/dts-critic](https://github.com/DefinitelyTyped/dts-critic)
