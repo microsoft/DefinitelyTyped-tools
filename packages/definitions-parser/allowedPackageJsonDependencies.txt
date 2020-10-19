@@ -29,6 +29,7 @@
 @types/base-x
 @types/expect
 @types/firebase
+@types/helmet
 @types/highcharts
 @types/hoist-non-react-statics
 @types/mkdirp-promise
