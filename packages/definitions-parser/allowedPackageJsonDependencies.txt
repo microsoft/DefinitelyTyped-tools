@@ -70,6 +70,7 @@ bookshelf
 boxen
 broadcast-channel
 bson
+bullmq
 cac
 cash-dom
 cassandra-driver
