@@ -26,6 +26,7 @@
 @storybook/addons
 @storybook/react
 @testing-library/dom
+@tweenjs/tween.js
 @types/base-x
 @types/expect
 @types/firebase
