@@ -233,9 +233,6 @@ export class NpmPublishClient {
         }
       })
     });
-    return promisifyVoid(cb => {
-      this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
-    });
   }
 
   deprecate(packageName: string, version: string, message: string): Promise<void> {
