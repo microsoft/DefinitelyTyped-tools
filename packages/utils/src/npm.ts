@@ -206,9 +206,33 @@ export class NpmPublishClient {
 
   tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
     if (dry) {
-      log(`(dry) Skip tag of ${packageName}@${distTag} as ${version}`);
-      return Promise.resolve();
+      log(`(dry) Skip tag of ${packageName}@${distTag} as ${version}, checking whether it exists:`);
+      return new Promise<void>((resolve, reject) => {
+        const obviate = { auth: this.auth }
+        this.client.request(this.registry + packageName, obviate as any, (error, _data, json) => {
+          if (error) {
+            reject(error);
+          } else if (Object.prototype.hasOwnProperty.call(json, "error")) {
+            reject(`(dry) ${packageName} missing`);
+          } else if (Object.prototype.hasOwnProperty.call(json, "versions") && !((json as any).versions[version])) {
+            reject(`(dry) ${packageName}@${version} is missing`)
+          } else {
+            resolve();
+          }
+        });
+      });
     }
+    return new Promise<void>((resolve, reject) => {
+      this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, error => {
+        if (error.message.indexOf("foo") > -1) {
+          log("Couldn't update")
+          // maybe try to recover here but probably not
+          resolve();
+        } else if (error) {
+          reject(error)
+        }
+      })
+    });
     return promisifyVoid(cb => {
       this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
     });

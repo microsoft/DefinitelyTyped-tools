@@ -42,7 +42,7 @@ async function main() {
     nProcesses: { type: "number", default: os.cpus().length },
     name: { type: "string" }
   }).argv;
-  await tag(dry, false, nProcesses, name);
+  // await tag(dry, false, nProcesses, name);
   await tag(dry, true, nProcesses, name);
 }
 
@@ -72,13 +72,13 @@ async function tag(dry: boolean, github: boolean, nProcesses: number, name?: str
       const pkg = await AllPackages.readSingle(name);
       const version = await getLatestTypingVersion(pkg, infoClient);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-      await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+      await updateLatestTag(pkg, version, publishClient, consoleLogger.info, dry);
     } else {
       await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
         // Only update tags for the latest version of the package.
         const version = await getLatestTypingVersion(pkg, infoClient);
         await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-        await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+        await updateLatestTag(pkg, version, publishClient, consoleLogger.info, dry);
       });
     }
   });
@@ -101,14 +101,14 @@ export async function updateTypeScriptVersionTags(
 }
 
 export async function updateLatestTag(
-  fullName: string,
+  pkg: AnyPackage,
   version: string,
   client: NpmPublishClient,
   log: Logger,
   dry: boolean
 ): Promise<void> {
-  log(`   but tag ${fullName}@${version} as "latest"`);
-  await client.tag(fullName, version, "latest", dry, log);
+  log(`   but tag ${pkg.fullNpmName}@${version} as "latest"`);
+  await client.tag(pkg.fullNpmName, version, "latest", dry, log);
 }
 
 export async function getLatestTypingVersion(pkg: TypingsData, client: CachedNpmInfoClient): Promise<string> {
