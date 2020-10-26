@@ -9,14 +9,15 @@ class DTMock {
     this.root = new Dir(undefined);
     this.root.set(
       "notNeededPackages.json",
-      `{
-            "packages": [{
-            "libraryName": "Angular 2",
-            "typingsPackageName": "angular",
-            "asOfVersion": "1.2.3",
-            "sourceRepoURL": "https://github.com/angular/angular2"
-          }]
-        }`
+      JSON.stringify({
+        packages: [
+          {
+            libraryName: "Angular 2",
+            typingsPackageName: "angular",
+            asOfVersion: "1.2.3"
+          }
+        ]
+      })
     );
     this.fs = new InMemoryFS(this.root, "DefinitelyTyped");
   }

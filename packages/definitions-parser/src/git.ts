@@ -129,11 +129,8 @@ export async function getAffectedPackagesFromDiff(
 
 /**
  * 1. libraryName must exist on npm (SKIPPED and preferably/optionally have been the libraryName in just-deleted header)
- * (SKIPPED 2.) sourceRepoURL must exist and be the npm homepage
- * 3. asOfVersion must be newer than `@types/name@latest` on npm
- * 4. `name@asOfVersion` must exist on npm
- *
- * I skipped (2) because the cached npm info doesn't include it. I might add it later.
+ * 2. asOfVersion must be newer than `@types/name@latest` on npm
+ * 3. `name@asOfVersion` must exist on npm
  */
 export function checkNotNeededPackage(
   unneeded: NotNeededPackage,

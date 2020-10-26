@@ -19,8 +19,7 @@ const notNeeded = [
   new NotNeededPackage({
     typingsPackageName: "jest",
     libraryName: "jest",
-    asOfVersion: "100.0.0",
-    sourceRepoURL: "jest.com"
+    asOfVersion: "100.0.0"
   })
 ];
 const allPackages = AllPackages.from(typesData, notNeeded);
