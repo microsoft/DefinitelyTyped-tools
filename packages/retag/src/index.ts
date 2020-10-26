@@ -95,12 +95,8 @@ export async function updateTypeScriptVersionTags(
   const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
   const name = pkg.fullNpmName;
   log(`Tag ${name}@${version} as ${JSON.stringify(tags)}`);
-  if (dry) {
-    log("(dry) Skip tag");
-  } else {
-    for (const tagName of tags) {
-      await client.tag(name, version, tagName, dry, log);
-    }
+  for (const tagName of tags) {
+    await client.tag(name, version, tagName, dry, log);
   }
 }
 
@@ -112,11 +108,7 @@ export async function updateLatestTag(
   dry: boolean
 ): Promise<void> {
   log(`   but tag ${fullName}@${version} as "latest"`);
-  if (dry) {
-    log('   (dry) Skip move "latest" back to newest version');
-  } else {
-    await client.tag(fullName, version, "latest", dry, log);
-  }
+  await client.tag(fullName, version, "latest", dry, log);
 }
 
 export async function getLatestTypingVersion(pkg: TypingsData, client: CachedNpmInfoClient): Promise<string> {
