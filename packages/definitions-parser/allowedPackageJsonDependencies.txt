@@ -199,6 +199,7 @@ redux-observable
 redux-persist
 redux-saga
 redux-thunk
+remark
 rollup
 rrule
 rxjs
@@ -220,6 +221,7 @@ tweetnacl
 typeorm
 typescript
 typescript-tuple
+unified
 utility-types
 vega-typings
 vfile
