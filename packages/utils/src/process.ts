@@ -1,5 +1,6 @@
 import assert from "assert";
 import { ChildProcess, exec as node_exec, fork } from "child_process";
+import { Socket } from "net";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 
@@ -39,7 +40,7 @@ export function runWithChildProcesses<In>({
   nProcesses,
   handleOutput
 }: RunWithChildProcessesOptions<In>): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const nPerProcess = Math.floor(inputs.length / nProcesses);
     let processesLeft = nProcesses;
     let rejected = false;
@@ -53,7 +54,9 @@ export function runWithChildProcesses<In>({
         processesLeft--;
         continue;
       }
-      const child = fork(workerFile, commandLineArgs);
+      const child = fork(workerFile, commandLineArgs, {
+        execArgv: await getChildProcessExecArgv(i)
+      });
       allChildren.push(child);
       child.send(inputs.slice(lo, hi));
       child.on("message", outputMessage => {
@@ -123,7 +126,7 @@ export function runWithListeningChildProcesses<In>({
   handleCrash,
   softTimeoutMs = Infinity
 }: RunWithListeningChildProcessesOptions<In>): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
     let processesLeft = nProcesses;
     let rejected = false;
@@ -162,7 +165,7 @@ export function runWithListeningChildProcesses<In>({
         }
       };
 
-      const onClose = () => {
+      const onClose = async () => {
         if (rejected || !runningChildren.has(child)) {
           return;
         }
@@ -195,10 +198,10 @@ export function runWithListeningChildProcesses<In>({
 
           switch (crashRecoveryState) {
             case CrashRecoveryState.Retry:
-              restartChild(resumeTask, process.execArgv);
+              await restartChild(resumeTask, process.execArgv);
               break;
             case CrashRecoveryState.RetryWithMoreMemory:
-              restartChild(resumeTask, [
+              await restartChild(resumeTask, [
                 ...getExecArgvWithoutMaxOldSpaceSize(),
                 `--max_old_space_size=${crashRecoveryMaxOldSpaceSize}`
               ]);
@@ -208,7 +211,7 @@ export function runWithListeningChildProcesses<In>({
               if (inputIndex === inputs.length || Date.now() - startTime > softTimeoutMs) {
                 stopChild(/*done*/ true);
               } else {
-                restartChild(nextTask, process.execArgv);
+                await restartChild(nextTask, process.execArgv);
               }
               break;
             default:
@@ -225,9 +228,9 @@ export function runWithListeningChildProcesses<In>({
         fail(err);
       };
 
-      const startChild = (taskAction: () => void, execArgv: string[]) => {
+      const startChild = async (taskAction: () => void, execArgv: string[]) => {
         try {
-          child = fork(workerFile, commandLineArgs, { cwd, execArgv });
+          child = fork(workerFile, commandLineArgs, { cwd, execArgv: await getChildProcessExecArgv(i, execArgv) });
           runningChildren.add(child);
         } catch (e) {
           fail(e);
@@ -280,12 +283,12 @@ export function runWithListeningChildProcesses<In>({
         }
       };
 
-      const restartChild = (taskAction: () => void, execArgv: string[]) => {
+      const restartChild = async (taskAction: () => void, execArgv: string[]) => {
         try {
           assert(runningChildren.has(child), `${processIndex}> Child not running`);
           console.log(`${processIndex}> Restarting...`);
           stopChild(/*done*/ false);
-          startChild(taskAction, execArgv);
+          await startChild(taskAction, execArgv);
         } catch (e) {
           onError(e);
         }
@@ -314,7 +317,7 @@ export function runWithListeningChildProcesses<In>({
         }
       };
 
-      startChild(nextTask, process.execArgv);
+      await startChild(nextTask, process.execArgv);
     }
 
     function fail(err?: Error): void {
@@ -374,4 +377,86 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
     execArgvWithoutMaxOldSpaceSize = execArgv;
   }
   return execArgvWithoutMaxOldSpaceSize;
+}
+
+async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
+  const debugArg = execArgv.findIndex(
+    arg => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+  );
+  if (debugArg < 0) return execArgv;
+
+  const port = parseInt(execArgv[debugArg].split("=")[1], 10) || 9229;
+  return [
+    ...execArgv.slice(0, debugArg),
+    `--inspect=${await findFreePort(port + 1 + portOffset, 100, 1000)}`,
+    ...execArgv.slice(debugArg + 1)
+  ];
+}
+
+// From VS Code: https://github.com/microsoft/vscode/blob/7d57a8f6f546b5e30027e7cfa87bd834eb5c7bbb/src/vs/base/node/ports.ts
+
+function findFreePort(startPort: number, giveUpAfter: number, timeout: number): Promise<number> {
+  let done = false;
+
+  return new Promise(resolve => {
+    const timeoutHandle = setTimeout(() => {
+      if (!done) {
+        done = true;
+        return resolve(0);
+      }
+    }, timeout);
+
+    doFindFreePort(startPort, giveUpAfter, port => {
+      if (!done) {
+        done = true;
+        clearTimeout(timeoutHandle);
+        return resolve(port);
+      }
+    });
+  });
+}
+
+function doFindFreePort(startPort: number, giveUpAfter: number, clb: (port: number) => void): void {
+  if (giveUpAfter === 0) {
+    return clb(0);
+  }
+
+  const client = new Socket();
+
+  // If we can connect to the port it means the port is already taken so we continue searching
+  client.once("connect", () => {
+    dispose(client);
+
+    return doFindFreePort(startPort + 1, giveUpAfter - 1, clb);
+  });
+
+  client.once("data", () => {
+    // this listener is required since node.js 8.x
+  });
+
+  client.once("error", (err: Error & { code?: string }) => {
+    dispose(client);
+
+    // If we receive any non ECONNREFUSED error, it means the port is used but we cannot connect
+    if (err.code !== "ECONNREFUSED") {
+      return doFindFreePort(startPort + 1, giveUpAfter - 1, clb);
+    }
+
+    // Otherwise it means the port is free to use!
+    return clb(startPort);
+  });
+
+  client.connect(startPort, "127.0.0.1");
+
+  function dispose(socket: Socket): void {
+    try {
+      socket.removeAllListeners("connect");
+      socket.removeAllListeners("error");
+      socket.end();
+      socket.destroy();
+      socket.unref();
+    } catch (error) {
+      console.error(error); // otherwise this error would get lost in the callback chain
+    }
+  }
 }
