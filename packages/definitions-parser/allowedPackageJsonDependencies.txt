@@ -74,6 +74,7 @@ broadcast-channel
 bson
 bullmq
 cac
+canvas
 cash-dom
 cassandra-driver
 chalk
@@ -236,4 +237,3 @@ xmlbuilder
 xpath
 zipkin
 zipkin-transport-http
-canvas
