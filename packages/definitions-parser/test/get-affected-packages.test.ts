@@ -42,6 +42,10 @@ testo({
     expect(changedPackages.map(({ id }) => id)).toEqual([]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "unknown-test", version: { major: 1, minor: 0 } }]);
   },
+  deletedVersion() {
+    const { changedPackages } = getAffectedPackages(allPackages, [{ name: "jquery", version: { major: 0 } }]);
+    expect(changedPackages).toEqual([]);
+  },
   olderVersion() {
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
       { name: "jquery", version: { major: 1 } }
