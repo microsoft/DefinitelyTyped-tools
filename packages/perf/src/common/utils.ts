@@ -195,3 +195,28 @@ export function findLast<T>(arr: T[], predicate: (element: T) => boolean): T | u
   }
   return;
 }
+
+export async function forEachWithTimeLimit<T>(
+  limitMs: number,
+  array: readonly T[],
+  inTimeAction: (item: T) => unknown,
+  outOfTimeAction: (item: T) => void
+) {
+  const startTime = Date.now();
+  let complete = true;
+  for (const item of array) {
+    if (Date.now() - startTime > limitMs) {
+      outOfTimeAction(item);
+      complete = false;
+    } else {
+      await inTimeAction(item);
+    }
+  }
+  const duration = Date.now() - startTime;
+  return {
+    startTime,
+    duration,
+    overtime: duration > limitMs,
+    complete
+  };
+}
