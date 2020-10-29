@@ -63,7 +63,7 @@ export class AllPackages {
 
   tryResolve(dep: PackageId): PackageId {
     const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
-    return versions ? versions.get(dep.version).id : dep;
+    return (versions && versions.tryGet(dep.version)?.id) || dep;
   }
 
   /** Gets the latest version of a package. E.g. getLatest(node v6) was node v10 (before node v11 came out). */
