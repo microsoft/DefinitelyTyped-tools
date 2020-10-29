@@ -19,6 +19,7 @@ export async function postInitialComparisonResults({
   dependentCount,
   dryRun
 }: PostInitialComparisonResultsOptions) {
+  let message;
   if (dryRun) {
     return getFullFirstPostMessage(
       createTablesWithAnalysesMessage(comparisons, parseInt(process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER || "")),
@@ -54,7 +55,7 @@ export async function postInitialComparisonResults({
           return;
         }
 
-        const message = getConciseUpdateMessage(
+        message = getConciseUpdateMessage(
           lastOverallChange,
           currentOverallChange,
           createTablesWithAnalysesMessage(
@@ -72,7 +73,7 @@ export async function postInitialComparisonResults({
           body: createPerfCommentBody(commentData, message)
         });
       } else {
-        const message = getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
+        message = getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
         await octokit.issues.createComment({
           ...config.github.commonParams,
           issue_number: prNumber,
@@ -85,7 +86,7 @@ export async function postInitialComparisonResults({
       throw err;
     }
   }
-  return;
+  return message;
 }
 
 function getFullFirstPostMessage(mainMessage: string, dependentCount: number): string {

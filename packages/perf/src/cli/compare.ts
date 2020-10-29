@@ -11,7 +11,8 @@ import {
   createDocument,
   shuffle,
   systemsAreCloseEnough,
-  getSystemInfo
+  getSystemInfo,
+  forEachWithTimeLimit
 } from "../common";
 import { getLatestBenchmark } from "../query";
 import { benchmarkPackage } from "./benchmark";
@@ -66,55 +67,66 @@ export async function compare({
   await getTypeScript(tsVersion);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
   const comparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
-  const startTime = Date.now();
-  for (const affectedPackage of affectedPackages.changedPackages) {
-    if ((Date.now() - startTime) / 1000 > (maxRunSeconds ?? Infinity)) {
+  const maxRunMs = (maxRunSeconds ?? Infinity) * 1000;
+  const { overtime } = await forEachWithTimeLimit(
+    maxRunMs,
+    affectedPackages.changedPackages,
+    async affectedPackage => {
+      console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
+      comparisons.push(
+        await compareBenchmarks({
+          allPackages,
+          definitelyTypedPath,
+          typeScriptVersionMajorMinor: tsVersion,
+          packageName: affectedPackage.id.name,
+          packageVersion: affectedPackage.major,
+          maxRunSeconds,
+          upload
+        })
+      );
+    },
+    affectedPackage => {
       console.log(`Skipping ${affectedPackage.id.name} because we ran out of time`);
     }
+  );
 
-    console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
-    comparisons.push(
-      await compareBenchmarks({
-        allPackages,
-        definitelyTypedPath,
-        typeScriptVersionMajorMinor: tsVersion,
-        packageName: affectedPackage.id.name,
-        packageVersion: affectedPackage.major,
-        maxRunSeconds,
-        upload
-      })
-    );
-  }
-
-  const outOfTime = (Date.now() - startTime) / 1000 > (maxRunSeconds ?? Infinity);
   const dependentsToTest =
-    runDependents && !outOfTime ? shuffle(affectedPackages.dependentPackages).slice(0, runDependents) : [];
+    runDependents && !overtime ? shuffle(affectedPackages.dependentPackages).slice(0, runDependents) : [];
   if (comparisons.length) {
     const message = await postInitialComparisonResults({
       comparisons,
       dependentCount: dependentsToTest.length,
       dryRun: !comment
     });
-    console.log("\n" + message + "\n");
+    if (message) {
+      console.log("\n" + message + "\n");
+    }
   }
 
   const dependentComparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
-  for (const affectedPackage of dependentsToTest) {
-    console.log(
-      `Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`
-    );
-    dependentComparisons.push(
-      await compareBenchmarks({
-        allPackages,
-        definitelyTypedPath,
-        typeScriptVersionMajorMinor: tsVersion,
-        packageName: affectedPackage.id.name,
-        packageVersion: affectedPackage.major,
-        maxRunSeconds,
-        upload
-      })
-    );
-  }
+  await forEachWithTimeLimit(
+    maxRunMs,
+    dependentsToTest,
+    async affectedPackage => {
+      console.log(
+        `Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`
+      );
+      dependentComparisons.push(
+        await compareBenchmarks({
+          allPackages,
+          definitelyTypedPath,
+          typeScriptVersionMajorMinor: tsVersion,
+          packageName: affectedPackage.id.name,
+          packageVersion: affectedPackage.major,
+          maxRunSeconds,
+          upload
+        })
+      );
+    },
+    affectedPackage => {
+      console.log(`Skipping ${affectedPackage.id.name} because we ran out of time`);
+    }
+  );
 
   if (dependentComparisons.length) {
     const message = await postDependentsComparisonResult({ comparisons: dependentComparisons, dryRun: !comment });
