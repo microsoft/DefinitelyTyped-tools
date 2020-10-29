@@ -17,7 +17,7 @@ If you don't like the contents of a given definition, file an issue (or pull req
 # Manually running
 
 Normally, types-publisher is run on a loop every 2,000 seconds (33 minutes), but to test it out you can do it yourself.
-You will need to see the "Environment variables" section first.
+You will need to see the [Environment variables](#environment-variables) section first.
 
 ```
 cat settings.json
