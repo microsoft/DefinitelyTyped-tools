@@ -9,8 +9,9 @@ import {
   PackageId,
   gitChanges,
   formatDependencyVersion,
-  parseVersionFromDirectoryName,
-  TypingVersion
+  TypingVersion,
+  tryParsePackageVersion,
+  PackageIdWithDefiniteVersion
 } from "@definitelytyped/definitions-parser";
 
 export const pathExists = promisify(fs.exists);
@@ -130,21 +131,18 @@ export function createDocument<T>(body: T, version: number): Document<T> {
 
 export function parsePackageKey(key: string): PackageId {
   const [name, versionString] = key.split("/");
-  const version = parseVersionFromDirectoryName(versionString);
-  return {
-    name,
-    version: version || ("*" as const)
-  };
+  const version = tryParsePackageVersion(versionString);
+  return { name, version };
 }
 
 export function toPackageKey(name: string, version: string | TypingVersion): string;
-export function toPackageKey(packageId: PackageId): string;
-export function toPackageKey(packageIdOrName: string | PackageId, version?: string | TypingVersion) {
+export function toPackageKey(packageId: PackageIdWithDefiniteVersion): string;
+export function toPackageKey(packageIdOrName: string | PackageIdWithDefiniteVersion, version?: string | TypingVersion) {
   const packageId =
     typeof packageIdOrName === "string"
       ? {
           name: packageIdOrName,
-          version: (typeof version === "string" ? parseVersionFromDirectoryName(version) : version) || ("*" as const)
+          version: (typeof version === "string" ? tryParsePackageVersion(version) : version) || ("*" as const)
         }
       : packageIdOrName;
   return `${packageId.name}/${formatDependencyVersion(packageId.version)}`;

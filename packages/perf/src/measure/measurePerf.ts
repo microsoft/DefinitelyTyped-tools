@@ -15,12 +15,12 @@ import {
   measureBatchCompilationWorkerFilename,
   MeasureBatchCompilationChildProcessResult
 } from "./measureBatchCompilationWorker";
-import { AllPackages, parseVersionFromDirectoryName } from "@definitelytyped/definitions-parser";
+import { AllPackages, formatDependencyVersion, TypingVersion } from "@definitelytyped/definitions-parser";
 import { runWithListeningChildProcesses, runWithChildProcesses, Semver } from "@definitelytyped/utils";
 
 export interface MeasurePerfOptions {
   packageName: string;
-  packageVersion: string;
+  packageVersion: TypingVersion;
   typeScriptVersion: string;
   definitelyTypedRootPath: string;
   maxRunSeconds?: number;
@@ -59,10 +59,10 @@ export async function measurePerf({
   observer.observe({ entryTypes: ["measure"] });
   performance.mark("benchmarkStart");
   const typesPath = path.join(definitelyTypedRootPath, "types");
-  const version = parseVersionFromDirectoryName(packageVersion) || "*";
+
   const typings = allPackages.getTypingsData({
     name: packageName,
-    version
+    version: packageVersion
   });
   const packagePath = path.join(typesPath, typings.subDirectoryPath);
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
@@ -78,7 +78,7 @@ export async function measurePerf({
   const testMatrix = createLanguageServiceTestMatrix(testPaths, latestTSTypesDir, commandLine.options, iterations);
   if (progress) {
     updateProgress(
-      `${toPackageKey(packageName, version)}: benchmarking over ${nProcesses} processes`,
+      `${toPackageKey(packageName, packageVersion)}: benchmarking over ${nProcesses} processes`,
       0,
       testMatrix.inputs.length
     );
@@ -101,7 +101,7 @@ export async function measurePerf({
       done++;
       if (progress) {
         updateProgress(
-          `${toPackageKey(packageName, version)}: benchmarking over ${nProcesses} processes`,
+          `${toPackageKey(packageName, packageVersion)}: benchmarking over ${nProcesses} processes`,
           done,
           testMatrix.inputs.length
         );
@@ -114,7 +114,7 @@ export async function measurePerf({
   });
 
   if (progress && done !== testMatrix.inputs.length) {
-    updateProgress(`${toPackageKey(packageName, version)}: timed out`, done, testMatrix.inputs.length);
+    updateProgress(`${toPackageKey(packageName, packageVersion)}: timed out`, done, testMatrix.inputs.length);
     process.stdout.write(os.EOL);
   }
 
@@ -147,7 +147,7 @@ export async function measurePerf({
     benchmarkDuration: duration,
     sourceVersion,
     packageName,
-    packageVersion,
+    packageVersion: formatDependencyVersion(packageVersion),
     typeScriptVersion,
     typeScriptVersionMajorMinor: ts.versionMajorMinor,
     languageServiceBenchmarks: testMatrix.getAllBenchmarks(),

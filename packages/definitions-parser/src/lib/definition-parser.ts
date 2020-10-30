@@ -154,6 +154,32 @@ export function parseVersionFromDirectoryName(directoryName: string | undefined)
   };
 }
 
+/**
+ * Like `parseVersionFromDirectoryName`, but the leading 'v' is optional,
+ * and falls back to '*' if the input format is not parseable.
+ */
+export function tryParsePackageVersion(versionString: string | undefined): DependencyVersion {
+  const match = /^v?(\d+)(\.(\d+))?$/.exec(versionString!);
+  if (match === null) {
+    return "*";
+  }
+  return {
+    major: Number(match[1]),
+    minor: match[3] !== undefined ? Number(match[3]) : undefined // tslint:disable-line strict-type-predicates (false positive)
+  };
+}
+
+/**
+ * Like `tryParsePackageVersion`, but throws if the input format is not parseable.
+ */
+export function parsePackageVersion(versionString: string): TypingVersion {
+  const version = tryParsePackageVersion(versionString);
+  if (version === "*") {
+    throw new Error(`Version string '${versionString}' is not a valid format.`);
+  }
+  return version;
+}
+
 async function combineDataForAllTypesVersions(
   typingsPackageName: string,
   ls: readonly string[],

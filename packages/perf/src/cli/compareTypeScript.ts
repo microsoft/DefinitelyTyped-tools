@@ -32,9 +32,9 @@ import {
   PackageId,
   AllPackages,
   formatDependencyVersion,
-  parseVersionFromDirectoryName
+  parsePackageVersion
 } from "@definitelytyped/definitions-parser";
-import { assertDefined, FS } from "@definitelytyped/utils";
+import { assertDefined } from "@definitelytyped/utils";
 const writeFile = promisify(fs.writeFile);
 const currentSystem = getSystemInfo();
 
@@ -91,7 +91,6 @@ export async function compareTypeScript({
   groups,
   ...opts
 }: CompareTypeScriptOptions) {
-  const getAllPackages = createGetAllPackages(definitelyTypedPath);
   const { packageBenchmarks, typeScriptComparisons } = await getDatabase(
     upload && !outFile ? DatabaseAccessLevel.Write : DatabaseAccessLevel.Read
   );
@@ -104,7 +103,7 @@ export async function compareTypeScript({
         packageBenchmarks,
         compareAgainstVersion,
         definitelyTypedPath,
-        getAllPackages,
+        (await getParsedPackages(definitelyTypedPath)).allPackages,
         packages
       );
 
@@ -219,7 +218,7 @@ async function getPackagesToTestAndPriorResults(
   container: Container,
   typeScriptVersion: string,
   definitelyTypedPath: string,
-  getAllPackages: ReturnType<typeof createGetAllPackages>,
+  allPackages: AllPackages,
   packageList?: PackageId[]
 ) {
   const iterator: AsyncIterable<FeedResponse<QueryResult<Document<PackageBenchmarkSummary>>>> = await container.items
@@ -234,7 +233,7 @@ async function getPackagesToTestAndPriorResults(
     })
     .getAsyncIterator();
 
-  const packageKeys = packageList && packageList.map(toPackageKey);
+  const packageKeys = packageList && packageList.map(id => toPackageKey(allPackages.resolve(id)));
   const packages = new Map<string, QueryResult<Document<PackageBenchmarkSummary>>>();
 
   for await (const x of iterator) {
@@ -252,14 +251,13 @@ async function getPackagesToTestAndPriorResults(
 
       const packageId: PackageId = {
         name: result.body.packageName,
-        version: parseVersionFromDirectoryName(result.body.packageVersion) || ("*" as const)
+        version: parsePackageVersion(result.body.packageVersion)
       };
       const changedPackages = await getChangedPackages({ diffTo: result.body.sourceVersion, definitelyTypedPath });
       if (changedPackages && changedPackages.some(packageIdsAreEqual(packageId))) {
         console.log(`Skipping ${packageKey} because it changed`);
         continue;
       } else if (changedPackages) {
-        const { allPackages } = await getAllPackages();
         const dependencies = allPackages.getTypingsData(packageId).dependencies;
         if (
           Object.entries(dependencies).some(([name, version]) =>
@@ -276,11 +274,4 @@ async function getPackagesToTestAndPriorResults(
   }
 
   return packages;
-}
-
-function createGetAllPackages(definitelyTypedPath: string) {
-  let result: { allPackages: AllPackages; definitelyTypedFS: FS } | undefined;
-  return async () => {
-    return result || (result = await getParsedPackages(definitelyTypedPath));
-  };
 }
