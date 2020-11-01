@@ -123,6 +123,7 @@ graphql-tools
 grpc
 handlebars
 helmet
+highlight.js
 hoist-non-react-statics
 hot-shots
 html-webpack-plugin
