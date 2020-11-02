@@ -14,7 +14,8 @@
     "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc -b ."
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"

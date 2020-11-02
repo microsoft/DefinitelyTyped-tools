@@ -130,7 +130,12 @@ export class AllPackages {
     for (const [name, version] of Object.entries(pkg.dependencies)) {
       const versions = this.data.get(getMangledNameForScopedPackage(name));
       if (versions) {
-        yield versions.get(version);
+        yield versions.get(
+          version,
+          pkg.pathMappings[name]
+            ? `${pkg.name} references this version of ${name} in its path mappings in tsconfig.json. If you are deleting this version, update ${pkg.name}’s path mappings accordingly.\n`
+            : undefined
+        );
       }
     }
 
@@ -495,8 +500,8 @@ export class TypingsVersions {
     return this.map.values();
   }
 
-  get(version: DependencyVersion): TypingsData {
-    return version === "*" ? this.getLatest() : this.getLatestMatch(version);
+  get(version: DependencyVersion, errorMessage?: string): TypingsData {
+    return version === "*" ? this.getLatest() : this.getLatestMatch(version, errorMessage);
   }
 
   tryGet(version: DependencyVersion): TypingsData | undefined {
@@ -507,10 +512,10 @@ export class TypingsVersions {
     return this.map.get(this.versions[0])!;
   }
 
-  private getLatestMatch(version: TypingVersion): TypingsData {
+  private getLatestMatch(version: TypingVersion, errorMessage?: string): TypingsData {
     const data = this.tryGetLatestMatch(version);
     if (!data) {
-      throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}`);
+      throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}. ${errorMessage || ""}`);
     }
     return data;
   }
