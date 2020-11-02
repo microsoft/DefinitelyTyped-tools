@@ -101,6 +101,7 @@ electron
 electron-notarize
 electron-osx-sign
 electron-store
+ember-cli-htmlbars
 ethers
 eventemitter2
 eventemitter3
