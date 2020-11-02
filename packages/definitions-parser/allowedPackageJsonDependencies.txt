@@ -230,6 +230,7 @@ vfile-message
 vue
 vue-router
 vuex
+webpack
 webpack-chain
 winston
 winston-transport
