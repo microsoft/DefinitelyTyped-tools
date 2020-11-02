@@ -4,7 +4,7 @@ import { FS, mapValues, assertSorted, unmangleScopedPackage, Semver } from "@def
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
-import { parseVersionFromDirectoryName } from "./parse-definitions";
+import { parseVersionFromDirectoryName } from "./lib/definition-parser";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -64,6 +64,14 @@ export class AllPackages {
   tryResolve(dep: PackageId): PackageId {
     const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
     return (versions && versions.tryGet(dep.version)?.id) || dep;
+  }
+
+  resolve(dep: PackageId): PackageIdWithDefiniteVersion {
+    const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
+    if (!versions) {
+      throw new Error(`No typings found with name '${dep.name}'.`);
+    }
+    return versions.get(dep.version).id;
   }
 
   /** Gets the latest version of a package. E.g. getLatest(node v6) was node v10 (before node v11 came out). */
@@ -220,7 +228,7 @@ export abstract class PackageBase {
   abstract readonly major: number;
   abstract readonly minor: number;
 
-  get id(): PackageId {
+  get id(): PackageIdWithDefiniteVersion {
     return { name: this.name, version: { major: this.major, minor: this.minor } };
   }
 }
@@ -583,6 +591,11 @@ export class TypingsData extends PackageBase {
 export interface PackageId {
   readonly name: string;
   readonly version: DependencyVersion;
+}
+
+export interface PackageIdWithDefiniteVersion {
+  readonly name: string;
+  readonly version: TypingVersion;
 }
 
 export interface TypesDataFile {

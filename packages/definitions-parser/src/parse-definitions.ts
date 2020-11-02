@@ -4,7 +4,7 @@ import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./packages";
 
-export { parseVersionFromDirectoryName } from "./lib/definition-parser";
+export { tryParsePackageVersion, parsePackageVersion } from "./lib/definition-parser";
 
 export interface ParallelOptions {
   readonly nProcesses: number;

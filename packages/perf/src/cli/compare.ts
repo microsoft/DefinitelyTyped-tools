@@ -20,12 +20,7 @@ import { printSummary } from "../measure";
 import { getTypeScript } from "../measure/getTypeScript";
 import { postInitialComparisonResults } from "../github/postInitialComparisonResults";
 import { postDependentsComparisonResult } from "../github/postDependentsComparisonResults";
-import {
-  AllPackages,
-  getAffectedPackages,
-  PackageId,
-  parseVersionFromDirectoryName
-} from "@definitelytyped/definitions-parser";
+import { AllPackages, DependencyVersion, getAffectedPackages, PackageId } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors } from "@definitelytyped/utils";
 const currentSystem = getSystemInfo();
 
@@ -34,7 +29,7 @@ export interface CompareOptions {
   definitelyTypedPath: string;
   typeScriptVersionMajorMinor: string;
   packageName: string;
-  packageVersion: number;
+  packageVersion: DependencyVersion;
   maxRunSeconds?: number;
   upload?: boolean;
 }
@@ -79,7 +74,7 @@ export async function compare({
           definitelyTypedPath,
           typeScriptVersionMajorMinor: tsVersion,
           packageName: affectedPackage.id.name,
-          packageVersion: affectedPackage.major,
+          packageVersion: affectedPackage.id.version,
           maxRunSeconds,
           upload
         })
@@ -117,7 +112,7 @@ export async function compare({
           definitelyTypedPath,
           typeScriptVersionMajorMinor: tsVersion,
           packageName: affectedPackage.id.name,
-          packageVersion: affectedPackage.major,
+          packageVersion: affectedPackage.id.version,
           maxRunSeconds,
           upload
         })
@@ -154,7 +149,7 @@ export async function compareBenchmarks({
   let latestBenchmark: PackageBenchmarkSummary | undefined = latestBenchmarkDocument && latestBenchmarkDocument.body;
   const packageId: PackageId = {
     name: packageName,
-    version: parseVersionFromDirectoryName(packageVersion.toString()) || "*"
+    version: packageVersion
   };
 
   const changedPackagesBetweenLastRunAndMaster =

@@ -13,7 +13,7 @@ import { getTypeScript } from "../measure/getTypeScript";
 import { insertDocument } from "../write";
 import { printSummary, measurePerf } from "../measure";
 import { summarize } from "../analysis";
-import { PackageId, formatDependencyVersion, parseVersionFromDirectoryName } from "@definitelytyped/definitions-parser";
+import { PackageId, formatDependencyVersion, tryParsePackageVersion } from "@definitelytyped/definitions-parser";
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
@@ -99,16 +99,17 @@ export async function benchmarkPackage(
     installTypeScript,
     localTypeScriptPath
   } = options;
-  const version = parseVersionFromDirectoryName(packageVersion) || "*";
+  const versionQuery = tryParsePackageVersion(packageVersion);
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
-  if (!allPackages.tryGetTypingsData({ name: packageName, version })) {
+  const typings = allPackages.tryGetTypingsData({ name: packageName, version: versionQuery });
+  if (!typings) {
     return undefined;
   }
 
   const { ts, tsPath } = await getTypeScript(tsVersion.toString(), localTypeScriptPath, installTypeScript);
   const benchmark = await measurePerf({
     packageName,
-    packageVersion: version.toString(),
+    packageVersion: typings.id.version,
     allPackages,
     iterations,
     progress,

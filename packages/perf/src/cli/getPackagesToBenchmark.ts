@@ -41,7 +41,7 @@ export async function getPackagesToBenchmark({
       container,
       typeScriptVersionMajorMinor: tsVersion,
       packageName: typingsData.id.name,
-      packageVersion: formatDependencyVersion(typingsData.id.version)
+      packageVersion: typingsData.id.version
     });
 
     // No previous run exists; run one

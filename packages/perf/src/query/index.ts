@@ -1,10 +1,11 @@
 import { Container } from "@azure/cosmos";
+import { DependencyVersion, formatDependencyVersion } from "@definitelytyped/definitions-parser";
 import { config, PackageBenchmarkSummary, Document, QueryResult } from "../common";
 
 export interface GetLatestBenchmarkOptions {
   container: Container;
   packageName: string;
-  packageVersion: string | number;
+  packageVersion: DependencyVersion;
   typeScriptVersionMajorMinor: string;
 }
 
@@ -24,7 +25,7 @@ export async function getLatestBenchmark({
         `  ORDER BY b.createdAt DESC`,
       parameters: [
         { name: "@packageName", value: packageName },
-        { name: "@packageVersion", value: packageVersion.toString() },
+        { name: "@packageVersion", value: formatDependencyVersion(packageVersion) },
         { name: "@tsVersion", value: typeScriptVersionMajorMinor }
       ]
     })
