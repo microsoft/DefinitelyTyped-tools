@@ -8,7 +8,7 @@ import assert from "assert";
 
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
   2. Update failing tests.
-  3. Publish and update dependents. Outside the monorepo, current dependents are dtslint, dts-critic and dt-retag.
+  3. Publish and update dependents. Outside the monorepo, current dependents are dtslint, dts-critic.
   4. Run dt-retag.
 
   For the release:
@@ -44,7 +44,7 @@ export type UnsupportedTypeScriptVersion =
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on DefinitelyTyped.
  */
-export type TypeScriptVersion = "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0" | "4.1";
+export type TypeScriptVersion = "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0" | "4.1" | "4.2";
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
@@ -52,7 +52,7 @@ export namespace TypeScriptVersion {
   /** Add to this list when a version actual ships.  */
   export const shipped: readonly TypeScriptVersion[] = ["3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9", "4.0"];
   /** Add to this list when a version is available as typescript@next */
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.1"];
+  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.1", "4.2"];
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
     "2.0",
