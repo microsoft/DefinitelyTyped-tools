@@ -169,10 +169,10 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9", "4.0", "4.1"]);
+    expect(TypeScriptVersion.range("3.5")).toEqual(["3.5", "3.6", "3.7", "3.8", "3.9", "4.0", "4.1", "4.2"]);
   });
-  it("includes 2.9 onwards", () => {
-    expect(TypeScriptVersion.range("3.0")).toEqual(TypeScriptVersion.supported);
+  it("includes 3.2 onwards", () => {
+    expect(TypeScriptVersion.range("3.2")).toEqual(TypeScriptVersion.supported);
   });
 });
 
@@ -189,6 +189,7 @@ describe("tagsToUpdate", () => {
       "ts3.9",
       "ts4.0",
       "ts4.1",
+      "ts4.2",
       "latest"
     ]);
   });
