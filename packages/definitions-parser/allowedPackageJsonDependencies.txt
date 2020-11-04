@@ -114,6 +114,7 @@ final-form
 flatpickr
 form-data
 fs-jetpack
+gapi.client.sheets
 gl-matrix
 glaze
 globby
