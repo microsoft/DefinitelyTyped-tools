@@ -12,7 +12,7 @@ export async function postTypeScriptComparisonResults({ comparisons }: PostTypeS
   return comparisons
     .map(([baseline, head]) =>
       [
-        `### ${toPackageKey(baseline.body.packageName, baseline.body.packageVersion)}`,
+        `### ${toPackageKey(baseline.body)}`,
         createComparisonTable(baseline, head, baseline.body.typeScriptVersion, "HEAD")
       ].join("\n")
     )

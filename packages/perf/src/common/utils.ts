@@ -3,13 +3,13 @@ import * as fs from "fs";
 import { randomBytes, createHash } from "crypto";
 import { promisify } from "util";
 import { execSync } from "child_process";
-import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult } from "./types";
+import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult, PackageBenchmark } from "./types";
 import { execAndThrowErrors } from "@definitelytyped/utils";
 import {
   PackageId,
   gitChanges,
   formatDependencyVersion,
-  TypingVersion,
+  DirectoryParsedTypingVersion,
   tryParsePackageVersion,
   PackageIdWithDefiniteVersion
 } from "@definitelytyped/definitions-parser";
@@ -129,20 +129,43 @@ export function createDocument<T>(body: T, version: number): Document<T> {
   };
 }
 
+export function isVersionedBenchmark(
+  obj: any
+): obj is Pick<PackageBenchmark, "packageVersionMajor" | "packageVersionMinor"> {
+  return typeof obj.packageVersionMajor === "number" && obj.packageVersionMinor === "number";
+}
+
+export function packageVersionsAreEqual(
+  a: PackageBenchmarkSummary | PackageBenchmark,
+  b: PackageBenchmarkSummary | PackageBenchmark
+) {
+  return a.packageVersionMajor === b.packageVersionMajor && a.packageVersionMinor === b.packageVersionMinor;
+}
+
 export function parsePackageKey(key: string): PackageId {
   const [name, versionString] = key.split("/");
   const version = tryParsePackageVersion(versionString);
   return { name, version };
 }
 
-export function toPackageKey(name: string, version: string | TypingVersion): string;
-export function toPackageKey(packageId: PackageIdWithDefiniteVersion): string;
-export function toPackageKey(packageIdOrName: string | PackageIdWithDefiniteVersion, version?: string | TypingVersion) {
+export function toPackageKey(name: string, version: string | DirectoryParsedTypingVersion): string;
+export function toPackageKey(
+  packageId: PackageIdWithDefiniteVersion | PackageBenchmark | PackageBenchmarkSummary
+): string;
+export function toPackageKey(
+  packageIdOrName: string | PackageIdWithDefiniteVersion | PackageBenchmark | PackageBenchmarkSummary,
+  version?: string | DirectoryParsedTypingVersion
+) {
   const packageId =
     typeof packageIdOrName === "string"
       ? {
           name: packageIdOrName,
           version: (typeof version === "string" ? tryParsePackageVersion(version) : version) || ("*" as const)
+        }
+      : isVersionedBenchmark(packageIdOrName)
+      ? {
+          name: packageIdOrName.packageName,
+          version: { major: packageIdOrName.packageVersionMajor, minor: packageIdOrName.packageVersionMinor }
         }
       : packageIdOrName;
   return `${packageId.name}/${formatDependencyVersion(packageId.version)}`;

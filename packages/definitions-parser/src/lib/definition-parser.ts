@@ -8,7 +8,7 @@ import {
   PackageJsonDependency,
   TypingsDataRaw,
   TypingsVersionsRaw,
-  TypingVersion
+  DirectoryParsedTypingVersion
 } from "../packages";
 import { getAllowedPackageJsonDependencies } from "./settings";
 import {
@@ -27,7 +27,11 @@ import {
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
-function matchesVersion(typingsDataRaw: TypingsDataRaw, version: TypingVersion, considerLibraryMinorVersion: boolean) {
+function matchesVersion(
+  typingsDataRaw: TypingsDataRaw,
+  version: DirectoryParsedTypingVersion,
+  considerLibraryMinorVersion: boolean
+) {
   return (
     typingsDataRaw.libraryMajorVersion === version.major &&
     (considerLibraryMinorVersion
@@ -47,7 +51,7 @@ export async function getTypingInfo(packageName: string, fs: FS): Promise<Typing
   }
   interface OlderVersionDir {
     readonly directoryName: string;
-    readonly version: TypingVersion;
+    readonly version: DirectoryParsedTypingVersion;
   }
   const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(
     fs.readdir(),
@@ -143,7 +147,9 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
  * parseVersionFromDirectoryName("v0.61") // { major: 0, minor: 61 }
  * ```
  */
-export function parseVersionFromDirectoryName(directoryName: string | undefined): TypingVersion | undefined {
+export function parseVersionFromDirectoryName(
+  directoryName: string | undefined
+): DirectoryParsedTypingVersion | undefined {
   const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName!);
   if (match === null) {
     return undefined;
@@ -172,7 +178,7 @@ export function tryParsePackageVersion(versionString: string | undefined): Depen
 /**
  * Like `tryParsePackageVersion`, but throws if the input format is not parseable.
  */
-export function parsePackageVersion(versionString: string): TypingVersion {
+export function parsePackageVersion(versionString: string): DirectoryParsedTypingVersion {
   const version = tryParsePackageVersion(versionString);
   if (version === "*") {
     throw new Error(`Version string '${versionString}' is not a valid format.`);
@@ -184,7 +190,7 @@ async function combineDataForAllTypesVersions(
   typingsPackageName: string,
   ls: readonly string[],
   fs: FS,
-  directoryVersion: TypingVersion | undefined
+  directoryVersion: DirectoryParsedTypingVersion | undefined
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName">> {
   const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
 
@@ -266,7 +272,7 @@ interface TypingDataFromIndividualTypeScriptVersion {
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly testDependencies: readonly string[];
-  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
+  readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
   readonly declFiles: readonly string[];
   readonly tsconfigPathsForHash: string | undefined;
   readonly globals: readonly string[];
@@ -285,7 +291,7 @@ function getTypingDataForSingleTypesVersion(
   packageDirectory: string,
   ls: readonly string[],
   fs: FS,
-  directoryVersion: TypingVersion | undefined
+  directoryVersion: DirectoryParsedTypingVersion | undefined
 ): TypingDataFromIndividualTypeScriptVersion {
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
@@ -446,18 +452,18 @@ interface TsConfig {
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
 interface DependenciesAndPathMappings {
   readonly dependencies: { readonly [name: string]: DependencyVersion };
-  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
+  readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
 }
 function calculateDependencies(
   packageName: string,
   tsconfig: TsConfig,
   dependencyNames: ReadonlySet<string>,
-  directoryVersion: TypingVersion | undefined
+  directoryVersion: DirectoryParsedTypingVersion | undefined
 ): DependenciesAndPathMappings {
   const paths = (tsconfig.compilerOptions && tsconfig.compilerOptions.paths) || {};
 
   const dependencies: { [name: string]: DependencyVersion } = {};
-  const pathMappings: { [packageName: string]: TypingVersion } = {};
+  const pathMappings: { [packageName: string]: DirectoryParsedTypingVersion } = {};
 
   for (const dependencyName of Object.keys(paths)) {
     const pathMappingList = paths[dependencyName];
@@ -565,7 +571,7 @@ function parseDependencyVersionFromPath(
   packageName: string,
   dependencyName: string,
   dependencyPath: string
-): TypingVersion {
+): DirectoryParsedTypingVersion {
   const versionString = withoutStart(dependencyPath, `${dependencyName}/`);
   const version = versionString === undefined ? undefined : parseVersionFromDirectoryName(versionString);
   if (version === undefined) {

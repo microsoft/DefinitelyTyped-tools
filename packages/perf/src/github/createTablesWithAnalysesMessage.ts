@@ -1,5 +1,12 @@
 import { createComparisonTable, createSingleRunTable } from "./createTable";
-import { PackageBenchmarkSummary, systemsAreCloseEnough, Document, compact, toPackageKey } from "../common";
+import {
+  PackageBenchmarkSummary,
+  systemsAreCloseEnough,
+  Document,
+  compact,
+  toPackageKey,
+  packageVersionsAreEqual
+} from "../common";
 import { getInterestingMetrics, SignificanceLevel, ComparedMetric } from "../analysis";
 
 export function createTablesWithAnalysesMessage(
@@ -22,7 +29,7 @@ export function createTablesWithAnalysesMessage(
 
       return compact([
         pairs.length > 1 || alwaysWriteHeading
-          ? `### ${after.body.packageName}/v${after.body.packageVersion}`
+          ? `### ${after.body.packageName}/v${after.body.packageVersionMajor}.${after.body.packageVersionMinor}`
           : undefined,
         getIntroMessage(before, after),
         ``,
@@ -39,16 +46,16 @@ export function createTablesWithAnalysesMessage(
 function getDetailsSummaryTitle(comparisonsCount: number, benchmark: Document<PackageBenchmarkSummary>) {
   let titleStart = "<strong>Comparison details";
   if (comparisonsCount > 1) {
-    titleStart += ` for ${toPackageKey(benchmark.body.packageName, benchmark.body.packageVersion)}`;
+    titleStart += ` for ${toPackageKey(benchmark.body)}`;
   }
   return titleStart + "</strong> 📊";
 }
 
 function getBeforeTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
-  if (before.body.packageVersion === after.body.packageVersion) {
+  if (packageVersionsAreEqual(before.body, after.body)) {
     return "master";
   }
-  return `${before.body.packageVersion}@master`;
+  return `${before.body.packageVersionMajor}.${before.body.packageVersionMinor}@master`;
 }
 
 function getAfterTitle(
@@ -56,21 +63,21 @@ function getAfterTitle(
   after: Document<PackageBenchmarkSummary>,
   prNumber: number
 ) {
-  if (before.body.packageVersion === after.body.packageVersion) {
+  if (packageVersionsAreEqual(before.body, after.body)) {
     return `#${prNumber}`;
   }
-  return `${after.body.packageVersion} in #${prNumber}`;
+  return `${after.body.packageVersionMajor}.${after.body.packageVersionMinor} in #${prNumber}`;
 }
 
 function getIntroMessage(
   before: Document<PackageBenchmarkSummary> | undefined,
   after: Document<PackageBenchmarkSummary>
 ) {
-  if (before && before.body.packageVersion === after.body.packageVersion) {
+  if (before && packageVersionsAreEqual(before.body, after.body)) {
     return;
   }
   if (before) {
-    return `These typings are for a version of ${before.body.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.body.packageVersion}.`;
+    return `These typings are for a version of ${before.body.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.body.packageVersionMajor}.${before.body.packageVersionMinor}.`;
   }
   return `These typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to ${after.body.packageName} with its source on master.`;
 }

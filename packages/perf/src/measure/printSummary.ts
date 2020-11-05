@@ -11,7 +11,7 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     const { quickInfo, completions } = benchmark;
     const { worst: worstCompletion } = completions;
     const { worst: worstQuickInfo } = quickInfo;
-    const versionString = `Version ${benchmark.packageVersion}`;
+    const versionString = `Version ${benchmark.packageVersionMajor}.${benchmark.packageVersionMinor}`;
     console.log(os.EOL + versionString);
     console.log("-".repeat(versionString.length));
     console.log("  Total duration (ms): ", benchmark.benchmarkDuration);
