@@ -36,7 +36,8 @@ Object {
   "languageServiceCrashed": false,
   "memoryUsage": 33111296,
   "packageName": "abbrev",
-  "packageVersion": "*",
+  "packageVersionMajor": 1,
+  "packageVersionMinor": 1,
   "quickInfo": Object {
     "mean": 140.33250924,
     "meanCoefficientOfVariation": 0.21107195517210994,

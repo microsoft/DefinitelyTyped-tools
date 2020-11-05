@@ -9,7 +9,8 @@
   "benchmarkDuration": 6146.653569,
   "sourceVersion": "d1039d660b82d765804f731255279f15693b43c6",
   "packageName": "abbrev",
-  "packageVersion": "*",
+  "packageVersionMajor": 1,
+  "packageVersionMinor": 1,
   "typeScriptVersion": "3.6.0-dev.20190604",
   "typeScriptVersionMajorMinor": "3.6",
   "languageServiceBenchmarks": [
