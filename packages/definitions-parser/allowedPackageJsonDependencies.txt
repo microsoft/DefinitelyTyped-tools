@@ -32,6 +32,7 @@
 @types/firebase
 @types/helmet
 @types/highcharts
+@types/highlight.js
 @types/hoist-non-react-statics
 @types/mkdirp-promise
 @types/next-redux-wrapper
