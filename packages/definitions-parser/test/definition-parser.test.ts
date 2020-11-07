@@ -1,3 +1,4 @@
+import { Dir, InMemoryFS } from "@definitelytyped/utils";
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
 
@@ -108,5 +109,26 @@ describe(getTypingInfo, () => {
   it("allows wildcard scope path mappings", () => {
     const dt = createMockDT();
     return expect(getTypingInfo("wordpress__plugins", dt.pkgFS("wordpress__plugins"))).resolves.toBeDefined();
+  });
+
+  it("allows typesVersions-parent tests in tsconfig.json", () => {
+    const pkg = new Dir(undefined);
+    pkg.set(
+      "index.d.ts",
+      `// Type definitions for mock
+// Project: https://github.com/baz/foo
+// Definitions by: My Self <https://github.com/me>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+`
+    );
+    pkg.set(
+      "tsconfig.json",
+      JSON.stringify({
+        compilerOptions: {},
+        files: ["index.d.ts", "../mock-tests.ts"]
+      })
+    );
+    const memFS = new InMemoryFS(pkg, "types/ts1.0/mock");
+    return expect(getTypingInfo("mock", memFS)).resolves.toBeDefined();
   });
 });
