@@ -1,0 +1,26 @@
+name: Update ts* tags for ATA
+
+# For testing
+on: push
+
+# For production
+on:
+  schedule:
+    # https://crontab.guru/#5_8_*_*_1
+    - cron: "5 8 * * 1"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+    - name: retag
+      run: |
+        yarn
+        yarn build
+        node packages/retag/dist/index.js
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+ 
