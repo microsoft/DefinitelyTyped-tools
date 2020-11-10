@@ -98,6 +98,7 @@ domhandler
 dotenv
 downshift
 egg
+elastic-apm-node
 electron
 electron-notarize
 electron-osx-sign
