@@ -17,7 +17,7 @@ jobs:
     - uses: actions/setup-node@v1
     - name: retag
       run: |
-        git clone https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
+        git clone --depth 1 https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
         yarn
         yarn build
         node packages/retag/dist/index.js
