@@ -1,13 +1,13 @@
 name: Update ts* tags for ATA
 
 # For testing
-on: pull_request
+# on: pull_request
 
 # For production
-# on:
-#   schedule:
-#     # https://crontab.guru/#5_8_*_*_1
-#     - cron: "5 8 * * 1"
+on:
+  schedule:
+    # https://crontab.guru/#5_8_*_*_1
+    - cron: "5 8 * * 1"
 
 jobs:
   publish:
