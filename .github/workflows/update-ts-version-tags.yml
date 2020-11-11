@@ -3,7 +3,6 @@ name: Update ts* tags for ATA
 # For testing
 on: pull_request
 
-
 # For production
 # on:
 #   schedule:
