@@ -16,8 +16,7 @@ const typesData: TypesDataFile = {
 typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], libraryMajorVersion: 2 };
 
 const notNeeded = [
-  new NotNeededPackage({
-    typingsPackageName: "jest",
+  new NotNeededPackage("jest", {
     libraryName: "jest",
     asOfVersion: "100.0.0"
   })
