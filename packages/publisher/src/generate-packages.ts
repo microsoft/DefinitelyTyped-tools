@@ -1,7 +1,7 @@
 import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
 import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
-import * as path from "path";
-import * as yargs from "yargs";
+import path = require("path");
+import yargs = require("yargs");
 
 import { defaultLocalOptions } from "./lib/common";
 import { outputDirPath, sourceBranch, cacheDirPath } from "./lib/settings";
