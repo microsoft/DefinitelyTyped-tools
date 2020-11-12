@@ -394,7 +394,7 @@ In that case, you can republish a single package to github `@types` mirror by na
 Usage:
 
 ``` sh
-$ node dist/republish-single-package.js aframe
+$ node dist/republish-single-github-mirror-package.js aframe
 ```
 
 This will fail if the github version of the package is up-to-date, so you don't need to worry about publishing extra versions by mistake.
@@ -402,7 +402,7 @@ You need to set the environment variable GH_API_TOKEN to a token with publish ri
 
 #### Why Isn't This Fixed
 
-The github mirror is not super valuable and it's only happened 3 times in the last year. And it's only noticeable when updating ATA tags.
+The github mirror is not super valuable and it's only happened 3 times in the last year. It's only noticeable when updating ATA tags.
 
 ## Debugging Azure
 
