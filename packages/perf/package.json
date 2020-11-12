@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/perf",
-  "version": "0.0.60",
+  "version": "0.0.61-next.0",
   "description": "",
   "bin": "index.js",
   "scripts": {
