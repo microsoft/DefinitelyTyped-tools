@@ -353,6 +353,12 @@ These are needed to access all other secrets. See `src/lib/secrets.ts`.
 
 Setting this variable turns on [longjohn](https://github.com/mattinsler/longjohn) stacktraces.
 
+### `NPM_TOKEN` and `GH_API_TOKEN`
+
+These are needed for running repair scripts, which should be rare.
+You could also use them for emergency local runs of the publisher, but I have never needed to do this.
+You can find these values in the secret store.
+
 ### Set environment variables in Azure
 
 * Go to https://ms.portal.azure.com
@@ -378,6 +384,25 @@ npm run validate node express jquery
 will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
+
+### Republishing Packages to Github Mirror
+
+Rarely, the publisher can crash between publishing to npm and publishing to the github mirror.
+Because it uses npm as the source of truth, it will then fail to publish to github.
+In that case, you can republish a single package to github `@types` mirror by name.
+
+Usage:
+
+``` sh
+$ node dist/republish-single-github-mirror-package.js aframe
+```
+
+This will fail if the github version of the package is up-to-date, so you don't need to worry about publishing extra versions by mistake.
+You need to set the environment variable GH_API_TOKEN to a token with publish rights to the `@types` org on github.
+
+#### Why Isn't This Fixed
+
+The github mirror is not super valuable and it's only happened 3 times in the last year. It's only noticeable when updating ATA tags.
 
 ## Debugging Azure
 
