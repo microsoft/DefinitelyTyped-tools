@@ -251,7 +251,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     sentenceName: "mean coefficient of variation of samples measured for quick info time",
     getValue: x => x.body.quickInfo.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
-    formatOptions: { percentage: true }
+    formatOptions: { percentage: true, noDiff: true }
   },
   quickInfoWorstMean: {
     columnName: "Worst duration (ms)",
