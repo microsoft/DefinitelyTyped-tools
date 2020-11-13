@@ -243,10 +243,6 @@ export function createNotNeededPackageJSON(
     author: "",
     repository: registry === Registry.NPM ? sourceRepoURL : "https://github.com/types/_definitelytypedmirror.git",
     license,
-    // No `typings`, that's provided by the dependency.
-    dependencies: {
-      [libraryName]: "*"
-    }
   };
   if (registry === Registry.Github) {
     (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };

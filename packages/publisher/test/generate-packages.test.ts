@@ -139,10 +139,7 @@ testo({
     "scripts": {},
     "author": "",
     "repository": "https://github.com/aardwulf/absalom",
-    "license": "MIT",
-    "dependencies": {
-        "alternate": "*"
-    }
+    "license": "MIT"
 }`);
   },
   scopedNotNeededPackageJson() {
@@ -162,10 +159,7 @@ testo({
     "scripts": {},
     "author": "",
     "repository": "https://github.com/googleapis/nodejs-storage",
-    "license": "MIT",
-    "dependencies": {
-        "@google-cloud/chubdub": "*"
-    }
+    "license": "MIT"
 }`);
   },
   githubNotNeededPackageJson() {
