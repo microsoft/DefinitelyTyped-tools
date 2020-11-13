@@ -10,7 +10,6 @@
         "node": true,
         "es6": true
     },
-    "extends": ["plugin:prettier/recommended"],
     "plugins": [
         "@typescript-eslint", "jsdoc", "import"
     ],
