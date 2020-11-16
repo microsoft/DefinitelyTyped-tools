@@ -1,4 +1,5 @@
 import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
+import assert = require("assert");
 import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import path = require("path");
 import yargs = require("yargs");
@@ -124,8 +125,12 @@ async function generateNotNeededPackage(
   log: Logger
 ): Promise<void> {
   pkg = skipBadPublishes(pkg, client, log);
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.NPM), pkg.readme(), Registry.NPM);
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.Github), pkg.readme(), Registry.Github);
+  const info = await client.fetchAndCacheNpmInfo(pkg.libraryName);
+  assert(info);
+  const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
+${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.NPM), readme, Registry.NPM);
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.Github), readme, Registry.Github);
 }
 
 async function writeCommonOutputs(
@@ -230,7 +235,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 }
 
 export function createNotNeededPackageJSON(
-  { libraryName, license, fullNpmName, sourceRepoURL, version }: NotNeededPackage,
+  { libraryName, license, fullNpmName, version }: NotNeededPackage,
   registry: Registry
 ): string {
   const out = {
@@ -241,7 +246,6 @@ export function createNotNeededPackageJSON(
     main: "",
     scripts: {},
     author: "",
-    repository: registry === Registry.NPM ? sourceRepoURL : "https://github.com/types/_definitelytypedmirror.git",
     license,
     // No `typings`, that's provided by the dependency.
     dependencies: {

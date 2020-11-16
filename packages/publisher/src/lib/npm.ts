@@ -22,7 +22,6 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
     return new NotNeededPackage({
       asOfVersion: plusOne.versionString,
       libraryName: pkg.libraryName,
-      sourceRepoURL: pkg.sourceRepoURL,
       typingsPackageName: pkg.name
     });
   }

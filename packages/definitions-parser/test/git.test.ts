@@ -16,8 +16,7 @@ const jestNotNeeded = [
   new NotNeededPackage({
     typingsPackageName: "jest",
     libraryName: "jest",
-    asOfVersion: "100.0.0",
-    sourceRepoURL: "jest.com"
+    asOfVersion: "100.0.0"
   })
 ];
 const allPackages = AllPackages.from(typesData, jestNotNeeded);
@@ -71,8 +70,7 @@ testo({
           new NotNeededPackage({
             typingsPackageName: "ember__object",
             libraryName: "@ember/object",
-            asOfVersion: "1.0.0",
-            sourceRepoURL: "ember.js"
+            asOfVersion: "1.0.0"
           })
         ]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]

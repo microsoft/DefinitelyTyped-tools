@@ -215,7 +215,6 @@ export abstract class PackageBase {
   }
 
   abstract readonly isLatest: boolean;
-  abstract readonly projectName: string;
   abstract readonly declaredModules: readonly string[];
   abstract readonly globals: readonly string[];
   abstract readonly minTypeScriptVersion: TypeScriptVersion;
@@ -249,8 +248,6 @@ interface NotNeededPackageRaw extends BaseRaw {
    */
   // This must be "major.minor.patch"
   readonly asOfVersion: string;
-  /** The package's own url, *not* DefinitelyTyped's. */
-  readonly sourceRepoURL: string;
 }
 
 export class NotNeededPackage extends PackageBase {
@@ -260,18 +257,15 @@ export class NotNeededPackage extends PackageBase {
     return License.MIT;
   }
 
-  readonly sourceRepoURL: string;
-
   constructor(raw: NotNeededPackageRaw) {
     super(raw);
-    this.sourceRepoURL = raw.sourceRepoURL;
 
     for (const key of Object.keys(raw)) {
       if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
         throw new Error(`Unexpected key in not-needed package: ${key}`);
       }
     }
-    assert(raw.libraryName && raw.typingsPackageName && raw.sourceRepoURL && raw.asOfVersion);
+    assert(raw.libraryName && raw.typingsPackageName && raw.asOfVersion);
 
     this.version = Semver.parse(raw.asOfVersion);
   }
@@ -287,9 +281,6 @@ export class NotNeededPackage extends PackageBase {
   get isLatest(): boolean {
     return true;
   }
-  get projectName(): string {
-    return this.sourceRepoURL;
-  }
   get declaredModules(): readonly string[] {
     return [];
   }
@@ -298,11 +289,6 @@ export class NotNeededPackage extends PackageBase {
   }
   get minTypeScriptVersion(): TypeScriptVersion {
     return TypeScriptVersion.lowest;
-  }
-
-  readme(): string {
-    return `This is a stub types definition for ${getFullNpmName(this.name)} (${this.sourceRepoURL}).\n
-${this.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(this.name)} installed!`;
   }
 
   deprecatedMessage(): string {

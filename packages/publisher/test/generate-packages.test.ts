@@ -52,8 +52,7 @@ function createUnneededPackage() {
   return new NotNeededPackage({
     libraryName: "alternate",
     typingsPackageName: "absalom",
-    asOfVersion: "1.1.1",
-    sourceRepoURL: "https://github.com/aardwulf/absalom"
+    asOfVersion: "1.1.1"
   });
 }
 testo({
@@ -138,7 +137,6 @@ testo({
     "main": "",
     "scripts": {},
     "author": "",
-    "repository": "https://github.com/aardwulf/absalom",
     "license": "MIT",
     "dependencies": {
         "alternate": "*"
@@ -149,8 +147,7 @@ testo({
     const scopedUnneeded = new NotNeededPackage({
       libraryName: "@google-cloud/chubdub",
       typingsPackageName: "google-cloud__pubsub",
-      asOfVersion: "0.26.0",
-      sourceRepoURL: "https://github.com/googleapis/nodejs-storage"
+      asOfVersion: "0.26.0"
     });
     const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
     expect(s).toEqual(`{
@@ -161,7 +158,6 @@ testo({
     "main": "",
     "scripts": {},
     "author": "",
-    "repository": "https://github.com/googleapis/nodejs-storage",
     "license": "MIT",
     "dependencies": {
         "@google-cloud/chubdub": "*"
