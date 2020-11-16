@@ -237,6 +237,8 @@
 @maxim_mazurok/gapi.client.youtube
 @maxim_mazurok/gapi.client.youtubeanalytics
 @maxim_mazurok/gapi.client.youtubereporting
+@react-navigation/native
+@react-navigation/stack
 @sentry/browser
 @storybook/addons
 @storybook/react
@@ -408,10 +410,13 @@ react-dnd
 react-dnd-touch-backend
 react-intl
 react-native-fs
+react-native-gesture-handler
 react-native-maps
 react-native-modal
+react-native-safe-area-context
 react-native-svg
 react-native-tab-view
+react-native-svg
 react-navigation
 recast
 redux
