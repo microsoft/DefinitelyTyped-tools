@@ -1,14 +1,14 @@
 {
   "name": "@definitelytyped/publisher",
   "private": true,
-  "version": "0.0.61-next.4",
+  "version": "0.0.61-next.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.61-next.4",
+    "@definitelytyped/definitions-parser": "^0.0.61-next.5",
     "@definitelytyped/header-parser": "^0.0.61-next.1",
-    "@definitelytyped/retag": "^0.0.61-next.4",
+    "@definitelytyped/retag": "^0.0.61-next.5",
     "@definitelytyped/typescript-versions": "^0.0.61-next.1",
     "@definitelytyped/utils": "^0.0.61-next.1",
     "@octokit/rest": "^16.1.0",
