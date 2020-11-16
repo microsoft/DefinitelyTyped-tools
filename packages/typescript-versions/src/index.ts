@@ -9,7 +9,6 @@ import assert from "assert";
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
   2. Update failing tests.
   3. Publish and update dependents. Outside the monorepo, current dependents are dtslint, dts-critic.
-  4. Run dt-retag.
 
   For the release:
 
@@ -17,10 +16,10 @@ import assert from "assert";
   2. Update failing tests.
   3. Publish and update dependents. (dtslint and dts-critic)
 
-  # How to deprecate versions on Definitely Typed #
+  # How to deprecate an old version on Definitely Typed #
 
-  1. Move versions from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
-  2. Move versions from `shipped` to `unsupported`.
+  1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
+  2. Move the old version from `shipped` to `unsupported`.
   4. Update failing tests.
   5. Publish and update dependents. (dtslint and dts-critic)
 
