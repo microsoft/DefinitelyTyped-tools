@@ -38,7 +38,7 @@ jobs:
         app-name: TypesPublisher
         publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
         package: packages/publisher/packed
-        slot-name: typespublisher
+        slot-name: production
     - name: upload packed directory
       uses: actions/upload-artifact@v1
       with:
