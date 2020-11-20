@@ -18,9 +18,9 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - name: install
-      run: yarn install --frozen-lockfile
-    - name: lint
-      run: yarn lint
+      run: yarn install #--frozen-lockfile
+    #- name: lint
+    #  run: yarn lint
     - name: test
       run: yarn test
   publish_alpha:
