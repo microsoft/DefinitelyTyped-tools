@@ -18,11 +18,32 @@
         "@typescript-eslint/array-type": "error",
 
         "camelcase": "off",
-        "@typescript-eslint/camelcase": ["error", { "properties": "never", "allow": ["^[A-Za-z][a-zA-Za-z]+_[A-Za-z]+$"] }],
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "interface",
+                "format": ["PascalCase"],
+                "custom": { "regex": "^I", "match": false } },
+            {
+                "selector": "class",
+                "format": ["PascalCase"]
+            },
+            {
+                "selector": ["variable", "function", "method", "accessor"],
+                "format": ["camelCase"],
+                "filter": {
+                    "regex": "Reader|DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE",
+                    "match": false
+                }
+            },
+            {
+                "selector": ["parameter"],
+                "format": ["camelCase"],
+                "leadingUnderscore": "allow"
+            }
+        ],
 
-        "@typescript-eslint/class-name-casing": "error",
         "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-        "@typescript-eslint/interface-name-prefix": "error",
         "@typescript-eslint/no-inferrable-types": "error",
         "@typescript-eslint/no-misused-new": "error",
         "@typescript-eslint/no-this-alias": "error",
