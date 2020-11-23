@@ -341,6 +341,7 @@ jimp
 jointjs
 jose
 jsonata
+juice
 levelup
 lit-element
 localforage
