@@ -106,11 +106,17 @@ selectNodeVersion
 # 2. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   pushd "$DEPLOYMENT_SOURCE"
+
   echo "Installing yarn"
   eval $NPM_CMD install --global yarn@1.19.2
+
+  echo "Removing previous node_modules"
+  rm -rf node_modules || true
+
   echo "Running yarn install --production"
   NPM_BIN=`eval $NPM_CMD --global bin`
   "$NPM_BIN/yarn" install --production
+
   popd
   exitWithMessageOnError "yarn failed"
 fi
