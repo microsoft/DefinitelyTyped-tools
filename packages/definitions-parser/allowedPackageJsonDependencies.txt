@@ -415,6 +415,7 @@ source-map
 styled-components
 sw-toolbox
 swagger-parser
+tapable
 terser
 three
 treat
