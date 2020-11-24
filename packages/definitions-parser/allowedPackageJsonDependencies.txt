@@ -239,6 +239,7 @@
 @types/rsmq
 @types/vue
 @types/webdriverio
+@types/webpack
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
