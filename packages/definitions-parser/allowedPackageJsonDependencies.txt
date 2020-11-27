@@ -411,6 +411,7 @@ safe-buffer
 should
 smooth-scrollbar
 scroll-into-view-if-needed
+semantic-ui-react
 ssim.js
 source-map
 styled-components
