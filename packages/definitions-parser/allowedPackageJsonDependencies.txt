@@ -1,4 +1,5 @@
 @apollo/client
+@azure/msal-node
 @babel/code-frame
 @babel/core
 @babel/generator
@@ -214,6 +215,7 @@
 @maxim_mazurok/gapi.client.youtube
 @maxim_mazurok/gapi.client.youtubeanalytics
 @maxim_mazurok/gapi.client.youtubereporting
+@microsoft/microsoft-graph-types
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
@@ -327,6 +329,7 @@ hoist-non-react-statics
 hot-shots
 html-webpack-plugin
 htmlparser2
+https-proxy-agent
 i18next
 immer
 immutable
@@ -362,6 +365,7 @@ moment-timezone
 monaco-editor
 moment-range
 mqtt
+msal
 next
 nock
 normalize-url
