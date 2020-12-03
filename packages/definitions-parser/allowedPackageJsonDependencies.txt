@@ -195,6 +195,7 @@
 @maxim_mazurok/gapi.client.streetviewpublish
 @maxim_mazurok/gapi.client.sts
 @maxim_mazurok/gapi.client.tagmanager
+@maxim_mazurok/gapi.client.tasks
 @maxim_mazurok/gapi.client.testing
 @maxim_mazurok/gapi.client.texttospeech
 @maxim_mazurok/gapi.client.toolresults
@@ -210,6 +211,7 @@
 @maxim_mazurok/gapi.client.webfonts
 @maxim_mazurok/gapi.client.webmasters
 @maxim_mazurok/gapi.client.websecurityscanner
+@maxim_mazurok/gapi.client.workflowexecutions
 @maxim_mazurok/gapi.client.workflows
 @maxim_mazurok/gapi.client.youtube
 @maxim_mazurok/gapi.client.youtubeanalytics
