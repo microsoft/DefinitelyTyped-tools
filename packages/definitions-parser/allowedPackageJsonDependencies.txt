@@ -421,6 +421,7 @@ styled-components
 sw-toolbox
 swagger-parser
 tapable
+tasker-types
 terser
 three
 treat
