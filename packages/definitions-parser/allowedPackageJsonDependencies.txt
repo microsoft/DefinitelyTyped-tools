@@ -375,6 +375,7 @@ opentracing
 parchment
 parse5
 path-to-regexp
+pg-types
 pkcs11js
 popper.js
 postcss
