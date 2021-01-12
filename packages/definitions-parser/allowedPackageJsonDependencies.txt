@@ -226,6 +226,7 @@
 @tweenjs/tween.js
 @types/base-x
 @types/expect
+@types/express-serve-static-core
 @types/firebase
 @types/helmet
 @types/highcharts
