@@ -345,6 +345,7 @@ jest-environment-jsdom
 jest-mock
 jest-snapshot
 jimp
+joi
 jointjs
 jose
 jsonata
