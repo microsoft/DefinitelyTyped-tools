@@ -224,6 +224,7 @@
 @storybook/react
 @testing-library/dom
 @tweenjs/tween.js
+@types/autoprefixer
 @types/base-x
 @types/expect
 @types/express-serve-static-core
