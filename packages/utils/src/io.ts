@@ -171,9 +171,12 @@ export async function isDirectory(path: string): Promise<boolean> {
 }
 
 export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
+const downloadTimeout = 1_000_000; // ms
+const connectionTimeout = 800_000; // ms
 
 export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Promise<FS> {
   return new Promise<FS>((resolve, reject) => {
+    const timeout = setTimeout(reject, downloadTimeout);
     const root = new Dir(undefined);
     function insertFile(path: string, content: string): void {
       const components = path.split("/");
@@ -187,8 +190,9 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
 
     log.info("Requesting " + url);
     https
-      .get(url, { timeout: 1_000_000 }, response => {
+      .get(url, { timeout: connectionTimeout }, response => {
         if (response.statusCode !== 200) {
+          clearTimeout(timeout);
           return reject(new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`));
         }
 
@@ -219,6 +223,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
         extract.on("error", reject);
         extract.on("finish", () => {
           log.info("Done receiving " + url);
+          clearTimeout(timeout);
           resolve(new InMemoryFS(root.finish(), ""));
         });
 
