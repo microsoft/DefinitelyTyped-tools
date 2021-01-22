@@ -180,7 +180,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
     function rejectAndClearTimeout(reason?: any) {
       clearTimeout(timeout);
       return reject(reason);
-    };
+    }
     const root = new Dir(undefined);
     function insertFile(path: string, content: string): void {
       const components = path.split("/");
@@ -196,7 +196,9 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
     https
       .get(url, { timeout: connectionTimeout }, response => {
         if (response.statusCode !== 200) {
-          return rejectAndClearTimeout(new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`));
+          return rejectAndClearTimeout(
+            new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`)
+          );
         }
 
         log.info("Getting " + url);
