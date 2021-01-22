@@ -171,9 +171,16 @@ export async function isDirectory(path: string): Promise<boolean> {
 }
 
 export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save";
+const downloadTimeout = 1_000_000; // ms
+const connectionTimeout = 800_000; // ms
 
 export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Promise<FS> {
   return new Promise<FS>((resolve, reject) => {
+    const timeout = setTimeout(reject, downloadTimeout);
+    function rejectAndClearTimeout(reason?: any) {
+      clearTimeout(timeout);
+      return reject(reason);
+    };
     const root = new Dir(undefined);
     function insertFile(path: string, content: string): void {
       const components = path.split("/");
@@ -187,9 +194,9 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
 
     log.info("Requesting " + url);
     https
-      .get(url, { timeout: 1_000_000 }, response => {
+      .get(url, { timeout: connectionTimeout }, response => {
         if (response.statusCode !== 200) {
-          return reject(new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`));
+          return rejectAndClearTimeout(new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`));
         }
 
         log.info("Getting " + url);
@@ -207,7 +214,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
                   insertFile(name, s);
                   next();
                 })
-                .catch(reject);
+                .catch(rejectAndClearTimeout);
               break;
             case "directory":
               next();
@@ -216,15 +223,16 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
               throw new Error(`Unexpected file system entry kind ${header.type}`);
           }
         });
-        extract.on("error", reject);
+        extract.on("error", rejectAndClearTimeout);
         extract.on("finish", () => {
           log.info("Done receiving " + url);
+          clearTimeout(timeout);
           resolve(new InMemoryFS(root.finish(), ""));
         });
 
         response.pipe(zlib.createGunzip()).pipe(extract);
       })
-      .on("error", reject);
+      .on("error", rejectAndClearTimeout);
   });
 }
 
