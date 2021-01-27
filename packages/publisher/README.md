@@ -34,12 +34,18 @@ npm run full
 npm run build
 npm run clean
 npm run parse
-npm run check
 npm run calculate-versions
 npm run generate
 npm run index
 npm run publish-packages
 npm run upload-blobs
+```
+
+and optionally (in production, these run once a week):
+
+```
+npm run publish-registry
+npm run validate
 ```
 
 You can run tests with
@@ -53,7 +59,6 @@ npm run test
 To update the types packages, the following steps must be performed:
 
 	* Parse the definitions
-	* Check for conflicts
 	* Calculate versions
 	* Generate packages on disk
 	* Create a search index
@@ -67,7 +72,7 @@ Running the entire sequence twice should not have any different results unless o
 First, obtain a local copy of the DefinitelyTyped repo. For running
 locally, the script assumes that it is at `../DefinitelyTyped` and
 checks to make sure that it has no outstanding changes. It does *not*
-check that it has master checked. For running in the cloud, the script
+check that it has master checked out. For running in the cloud, the script
 downloads a gzipped copy and unzips it into memory. This saves a lot
 of time if the filesystem is very slow.
 
@@ -174,27 +179,6 @@ Determine which is correct and rename the folder or the module declaration appro
 
 Nearly all package names should be lowercased to conform with NPM naming standards.
 This warning might not be appropriate; consider logging an issue.
-
-# Check for conflicts
-
-> `npm run check`
-
-This is an optional script that checks for multiple declaration packages with the same library name or same project name.
-
-### Contents of `logs/conflicts.md`
-
-> * Duplicate Library Name descriptions "Marked"
->   * marked
->   * ngwysiwyg
-
-Examine these declarations and change them to have distinct library names, if possible.
-
-> * Duplicate Project Name descriptions "https://github.com/jaredhanson/passport-facebook"
->   * passport-facebook
->   * passport-google-oauth
->   * passport-twitter
-
-Examine these declarations and change them to have distinct package names, if possible.
 
 # Calculate versions
 
