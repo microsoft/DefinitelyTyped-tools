@@ -134,7 +134,9 @@ export async function fetchTypesPackageVersionInfo(
   let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
   if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
     if (log) {
-      log.info(`Version info not cached for ${pkg.desc}@${latestVersion ? latestVersion.versionString : "(no latest version)"}`);
+      log.info(
+        `Version info not cached for ${pkg.desc}@${latestVersion ? latestVersion.versionString : "(no latest version)"}`
+      );
     }
     info = await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName);
     latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
