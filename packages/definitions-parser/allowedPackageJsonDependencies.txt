@@ -263,6 +263,7 @@ aphrodite
 apollo-client
 apollo-link
 apollo-link-http-common
+arweave
 ast-types
 async-done
 autoprefixer
