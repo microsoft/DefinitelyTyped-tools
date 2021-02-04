@@ -409,6 +409,7 @@ react-native-svg
 react-navigation
 recast
 redux
+redux-logic
 redux-observable
 redux-persist
 redux-saga
