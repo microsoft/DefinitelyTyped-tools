@@ -335,6 +335,7 @@ hoist-non-react-statics
 hot-shots
 html-webpack-plugin
 htmlparser2
+http-proxy-middleware
 i18next
 immer
 immutable
