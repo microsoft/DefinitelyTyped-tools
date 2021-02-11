@@ -380,6 +380,7 @@ opentracing
 parchment
 parse5
 path-to-regexp
+pg-protocol
 pg-types
 pkcs11js
 popper.js
