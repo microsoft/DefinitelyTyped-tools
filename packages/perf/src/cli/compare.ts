@@ -175,7 +175,7 @@ export async function compareBenchmarks({
       console.log(
         `No comparable benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`
       );
-      await execAndThrowErrors("git checkout origin/master && git clean -xdf types", definitelyTypedPath);
+      await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: false,
