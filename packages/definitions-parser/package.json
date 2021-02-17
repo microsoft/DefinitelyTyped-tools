@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/definitions-parser",
-  "version": "0.0.68-next.0",
+  "version": "0.0.68",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/definitions-parser#readme",
   "license": "MIT",
@@ -19,9 +19,9 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.67",
-    "@definitelytyped/typescript-versions": "^0.0.67",
-    "@definitelytyped/utils": "^0.0.67",
+    "@definitelytyped/header-parser": "^0.0.68",
+    "@definitelytyped/typescript-versions": "^0.0.68",
+    "@definitelytyped/utils": "^0.0.68",
     "@types/node": "^12.12.29",
     "fs-extra": "^8.1.0"
   },
