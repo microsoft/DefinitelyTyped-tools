@@ -94,14 +94,9 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
   });
 }
 
-export interface FetchOptions {
-  readonly hostname: string;
-  readonly port?: number;
-  readonly path: string;
+type FetchOptions = https.RequestOptions & {
   readonly retries?: boolean | number;
   readonly body?: string;
-  readonly method?: "GET" | "PATCH" | "POST";
-  readonly headers?: {};
 }
 export class Fetcher {
   private readonly agent = new Agent({ keepAlive: true });
@@ -146,7 +141,8 @@ function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: A
         path: `/${options.path}`,
         agent,
         method: options.method || "GET",
-        headers: options.headers
+        headers: options.headers,
+        timeout: options.timeout ?? downloadTimeout
       },
       res => {
         let text = "";
