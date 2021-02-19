@@ -97,7 +97,7 @@ export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
 type FetchOptions = https.RequestOptions & {
   readonly retries?: boolean | number;
   readonly body?: string;
-}
+};
 export class Fetcher {
   private readonly agent = new Agent({ keepAlive: true });
 
