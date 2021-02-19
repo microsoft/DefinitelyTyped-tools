@@ -100,6 +100,7 @@ export interface FetchOptions {
   readonly path: string;
   readonly retries?: boolean | number;
   readonly body?: string;
+  readonly timeout?: number;
   readonly method?: "GET" | "PATCH" | "POST";
   readonly headers?: {};
 }
@@ -146,7 +147,8 @@ function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: A
         path: `/${options.path}`,
         agent,
         method: options.method || "GET",
-        headers: options.headers
+        headers: options.headers,
+        timeout: options.timeout ?? downloadTimeout
       },
       res => {
         let text = "";
