@@ -283,6 +283,7 @@ cash-dom
 cassandra-driver
 chalk
 chokidar
+ci-info
 cids
 commander
 connect-mongo
