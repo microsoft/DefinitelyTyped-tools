@@ -30,11 +30,8 @@ export function unmangleScopedPackage(packageName: string): string | undefined {
   return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
 }
 
-export function removeVersionFromPackageName(packageName:string | undefined): string | undefined {
-	const firstSlash = packageName?.indexOf("/");
-	const lastSlash = packageName?.lastIndexOf("/");
-
-	return packageName && firstSlash !== lastSlash ? packageName.slice(firstSlash, lastSlash) : packageName;
+export function removeVersionFromPackageName(packageName: string | undefined): string | undefined {
+  return packageName?.replace(/\/v(\d){1,}$/i, "");
 }
 
 export async function sleep(seconds: number): Promise<void> {
