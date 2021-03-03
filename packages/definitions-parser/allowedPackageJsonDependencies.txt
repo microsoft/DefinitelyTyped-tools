@@ -400,6 +400,7 @@ re-resizable
 react-autosize-textarea
 react-dnd
 react-dnd-touch-backend
+react-final-form
 react-intl
 react-native-fs
 react-native-gesture-handler
