@@ -110,7 +110,7 @@ testo({
         "balzac": "~3"
     },
     "typesPublisherContentHash": "11",
-    "typeScriptVersion": "3.4"
+    "typeScriptVersion": "3.5"
 }`);
   },
   githubPackageJsonName() {
