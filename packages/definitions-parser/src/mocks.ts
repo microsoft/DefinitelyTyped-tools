@@ -1,5 +1,5 @@
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { Dir, FS, InMemoryFS, Semver } from "@definitelytyped/utils";
+import { Dir, FS, InMemoryFS, mangleScopedPackage, Semver } from "@definitelytyped/utils";
 
 class DTMock {
   public readonly fs: FS;
@@ -40,7 +40,7 @@ class DTMock {
    * @param olderVersion The older version that's to be added.
    */
   public addOldVersionOfPackage(packageName: string, olderVersion: string) {
-    const latestDir = this.pkgDir(packageName);
+    const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
     const latestHeader = parseHeaderOrFail(index);
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
@@ -57,7 +57,7 @@ class DTMock {
         compilerOptions: {
           ...tsconfig.compilerOptions,
           paths: {
-            [packageName]: [`${packageName}/v${olderVersion}`]
+            [packageName]: [`${mangleScopedPackage(packageName)}/v${olderVersion}`]
           }
         }
       })

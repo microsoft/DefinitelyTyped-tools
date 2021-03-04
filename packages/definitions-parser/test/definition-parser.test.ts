@@ -17,6 +17,57 @@ describe(getTypingInfo, () => {
     expect(info).toBeDefined();
   });
 
+  it("works for a scoped package with scoped older dependencies", async () => {
+    const dt = createMockDT();
+    const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
+    scopedWithOlderScopedDependency.set(
+      "index.d.ts",
+      `// Type definitions for @ckeditor/ckeditor-engine 25.0
+// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
+// Definitions by: Federico <https://github.com/fedemp>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+import * as utils from '@ckeditor/ckeditor5-utils';`
+    );
+
+    scopedWithOlderScopedDependency.set(
+      "tsconfig.json",
+      JSON.stringify({
+        files: ["index.d.ts"],
+        compilerOptions: {
+          paths: {
+            "@ckeditor/ckeditor5-utils": ["ckeditor__ckeditor5-utils/v10"]
+          }
+        }
+      })
+    );
+
+    const olderScopedPackage = dt.pkgDir("ckeditor__ckeditor5-utils");
+    olderScopedPackage.set(
+      "index.d.ts",
+      `// Type definitions for @ckeditor/ckeditor5-utils 25.0
+// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils
+// Definitions by: Federico <https://github.com/fedemp>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+export function myFunction(arg:string): string;
+ `
+    );
+    olderScopedPackage.set(
+      "tsconfig.json",
+      JSON.stringify({
+        files: ["index.d.ts"],
+        compilerOptions: {
+          paths: {}
+        }
+      })
+    );
+
+    dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
+
+    const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.pkgFS("ckeditor__ckeditor5-engine"));
+    expect(info).toBeDefined();
+  });
+
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();
