@@ -72,7 +72,7 @@ export async function checkParseResults(
 function checkTypeScriptVersions(allPackages: AllPackages): void {
   for (const pkg of allPackages.allTypings()) {
     for (const dep of allPackages.allDependencyTypings(pkg)) {
-      if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion) {
+      if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion && dep.name !== pkg.name) {
         throw new Error(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version.`);
       }
     }
