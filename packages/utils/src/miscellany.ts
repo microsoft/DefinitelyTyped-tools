@@ -24,10 +24,23 @@ export function computeHash(content: string): string {
   return h.digest("hex");
 }
 
+export function isScopedPackage(packageName: string): boolean {
+  return packageName.startsWith("@");
+}
+
 // Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
 export function unmangleScopedPackage(packageName: string): string | undefined {
   const separator = "__";
   return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
+}
+
+// Reverts unmangleScopedPackage.
+export function mangleScopedPackage(packageName: string): string {
+  return isScopedPackage(packageName) ? packageName.replace(/\//, "__").replace("@", "") : packageName;
+}
+
+export function removeVersionFromPackageName(packageName: string | undefined): string | undefined {
+  return packageName?.replace(/\/v(\d){1,}$/i, "");
 }
 
 export async function sleep(seconds: number): Promise<void> {

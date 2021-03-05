@@ -23,7 +23,8 @@ import {
   join,
   flatMap,
   unique,
-  unmangleScopedPackage
+  unmangleScopedPackage,
+  removeVersionFromPackageName
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
@@ -467,7 +468,7 @@ function calculateDependencies(
     const pathMapping = pathMappingList[0];
 
     // Path mapping may be for "@foo/*" -> "foo__*".
-    const scopedPackageName = unmangleScopedPackage(pathMapping);
+    const scopedPackageName = removeVersionFromPackageName(unmangleScopedPackage(pathMapping));
     if (scopedPackageName !== undefined) {
       if (dependencyName !== scopedPackageName) {
         throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
@@ -504,12 +505,13 @@ function calculateDependencies(
     pathMappings[dependencyName] = pathMappingVersion;
   }
 
-  if (directoryVersion !== undefined && !(paths && packageName in paths)) {
+  const scopedPackageName = unmangleScopedPackage(packageName) ?? packageName;
+  if (directoryVersion !== undefined && !(paths && scopedPackageName in paths)) {
     const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}`]);
     throw new Error(
-      `${packageName}: Older version ${formatTypingVersion(
+      `${scopedPackageName}: Older version ${formatTypingVersion(
         directoryVersion
-      )} must have a "paths" entry of "${packageName}": ${mapping}`
+      )} must have a "paths" entry of "${scopedPackageName}": ${mapping}`
     );
   }
 
