@@ -18,6 +18,7 @@
 @jest/environment
 @jest/fake-timers
 @jest/globals
+@jest/reporters
 @jest/transform
 @jest/types
 @loadable/component
