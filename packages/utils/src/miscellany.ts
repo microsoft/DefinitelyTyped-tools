@@ -43,6 +43,10 @@ export function removeVersionFromPackageName(packageName: string | undefined): s
   return packageName?.replace(/\/v(\d){1,}$/i, "");
 }
 
+export function hasVersionNumberInMapping(packageName: string): boolean {
+  return /\/v\d+$/.test(packageName);
+}
+
 export async function sleep(seconds: number): Promise<void> {
   return new Promise<void>(resolve => setTimeout(resolve, seconds * 1000));
 }

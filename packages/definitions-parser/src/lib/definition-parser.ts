@@ -24,7 +24,9 @@ import {
   flatMap,
   unique,
   unmangleScopedPackage,
-  removeVersionFromPackageName
+  removeVersionFromPackageName,
+  hasVersionNumberInMapping,
+  mangleScopedPackage
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
@@ -473,7 +475,9 @@ function calculateDependencies(
       if (dependencyName !== scopedPackageName) {
         throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
       }
-      continue;
+      if (!hasVersionNumberInMapping(pathMapping)) {
+        continue;
+      }
     }
 
     // Might have a path mapping for "foo/*" to support subdirectories
@@ -568,7 +572,7 @@ function parseDependencyVersionFromPath(
   dependencyName: string,
   dependencyPath: string
 ): TypingVersion {
-  const versionString = withoutStart(dependencyPath, `${dependencyName}/`);
+  const versionString = withoutStart(dependencyPath, `${mangleScopedPackage(dependencyName)}/`);
   const version = versionString === undefined ? undefined : parseVersionFromDirectoryName(versionString);
   if (version === undefined) {
     throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
