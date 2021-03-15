@@ -296,6 +296,7 @@ cropperjs
 csstype
 cypress
 date-fns
+dayjs
 decimal.js
 del
 dexie
