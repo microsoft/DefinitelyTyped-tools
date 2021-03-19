@@ -74,7 +74,7 @@ export function runWithChildProcesses<In>({
       });
       child.on("disconnect", () => {
         if (outputsLeft !== 0) {
-            fail(new Error(`disconnect with ${outputsLeft} outputs left`));
+          fail(new Error(`disconnect with ${outputsLeft} outputs left`));
         }
       });
       child.on("close", () => {
@@ -83,7 +83,7 @@ export function runWithChildProcesses<In>({
       child.on("error", fail);
     }
 
-      function fail(e: Error): void {
+    function fail(e: Error): void {
       rejected = true;
       for (const child of allChildren) {
         child.kill();
