@@ -114,29 +114,29 @@ export function myFunction(arg:string): string;
     });
 
     it("records a path mapping to the scoped version directory", async () => {
-		const dt = createMockDT();
-		const pkg = dt.pkgDir("ckeditor__ckeditor5-utils");
-		pkg.set(
-			"tsconfig.json",
-			JSON.stringify({
-				files: ["index.d.ts"],
-				compilerOptions: {
-					paths: {
-					}
-				}
-			})
-		);
-		pkg.set(
-			"index.d.ts",
-			`// Type definitions for @ckeditor/ckeditor-utils 25.0
+      const dt = createMockDT();
+      const pkg = dt.pkgDir("ckeditor__ckeditor5-utils");
+      pkg.set(
+        "tsconfig.json",
+        JSON.stringify({
+          files: ["index.d.ts"],
+          compilerOptions: {
+            paths: {}
+          }
+        })
+      );
+      pkg.set(
+        "index.d.ts",
+        `// Type definitions for @ckeditor/ckeditor-utils 25.0
 // Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
 // Definitions by: Federico <https://github.com/fedemp>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-`);
+`
+      );
 
-		dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
+      dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
-    const info = await getTypingInfo("@ckeditor/ckeditor5-utils", dt.pkgFS("ckeditor__ckeditor5-utils"));
+      const info = await getTypingInfo("@ckeditor/ckeditor5-utils", dt.pkgFS("ckeditor__ckeditor5-utils"));
       expect(info).toEqual({
         "10.0": expect.objectContaining({
           pathMappings: {
