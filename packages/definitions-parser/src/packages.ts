@@ -177,13 +177,6 @@ interface BaseRaw {
    * A human readable version, e.g. it might be "Moment.js" even though `packageName` is "moment".
    */
   readonly libraryName: string;
-
-  /**
-   * The NPM name to publish this under, e.g. "jquery".
-   *
-   * This does not include "@types".
-   */
-  readonly typingsPackageName: string;
 }
 
 /** Prefer to use `AnyPackage` instead of this. */
@@ -193,7 +186,7 @@ export abstract class PackageBase {
   }
 
   /** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
-  readonly name: string;
+  abstract readonly name: string;
   readonly libraryName: string;
 
   get unescapedName(): string {
@@ -206,7 +199,6 @@ export abstract class PackageBase {
   }
 
   constructor(data: BaseRaw) {
-    this.name = data.typingsPackageName;
     this.libraryName = data.libraryName;
   }
 
@@ -257,15 +249,15 @@ export class NotNeededPackage extends PackageBase {
     return License.MIT;
   }
 
-  constructor(raw: NotNeededPackageRaw) {
+  constructor(readonly name: string, raw: NotNeededPackageRaw) {
     super(raw);
 
     for (const key of Object.keys(raw)) {
-      if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
+      if (!["libraryName", "sourceRepoURL", "asOfVersion"].includes(key)) {
         throw new Error(`Unexpected key in not-needed package: ${key}`);
       }
     }
-    assert(raw.libraryName && raw.typingsPackageName && raw.asOfVersion);
+    assert(raw.libraryName && name && raw.asOfVersion);
 
     this.version = Semver.parse(raw.asOfVersion);
   }
@@ -322,6 +314,13 @@ export interface PackageJsonDependency {
 }
 
 export interface TypingsDataRaw extends BaseRaw {
+  /**
+   * The NPM name to publish this under, e.g. "jquery".
+   *
+   * This does not include "@types".
+   */
+  readonly typingsPackageName: string;
+
   /**
    * Other definitions, that exist in the same typings repo, that this package depends on.
    *
@@ -519,6 +518,10 @@ export class TypingsData extends PackageBase {
     super(data);
   }
 
+  get name() {
+    return this.data.typingsPackageName;
+  }
+
   get testDependencies(): readonly string[] {
     return this.data.testDependencies;
   }
@@ -598,8 +601,8 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
-  return (rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages.map(
-    raw => new NotNeededPackage(raw)
+  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map(
+    ([name, raw]) => new NotNeededPackage(name, raw)
   );
 }
 

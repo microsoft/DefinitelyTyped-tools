@@ -49,9 +49,8 @@ function createTypesData(): TypesDataFile {
   };
 }
 function createUnneededPackage() {
-  return new NotNeededPackage({
+  return new NotNeededPackage("absalom", {
     libraryName: "alternate",
-    typingsPackageName: "absalom",
     asOfVersion: "1.1.1"
   });
 }
@@ -144,9 +143,8 @@ testo({
 }`);
   },
   scopedNotNeededPackageJson() {
-    const scopedUnneeded = new NotNeededPackage({
+    const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", {
       libraryName: "@google-cloud/chubdub",
-      typingsPackageName: "google-cloud__pubsub",
       asOfVersion: "0.26.0"
     });
     const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);

@@ -13,8 +13,7 @@ const typesData: TypesDataFile = {
 };
 
 const jestNotNeeded = [
-  new NotNeededPackage({
-    typingsPackageName: "jest",
+  new NotNeededPackage("jest", {
     libraryName: "jest",
     asOfVersion: "100.0.0"
   })
@@ -67,8 +66,7 @@ testo({
     Array.from(
       getNotNeededPackages(
         AllPackages.from(typesData, [
-          new NotNeededPackage({
-            typingsPackageName: "ember__object",
+          new NotNeededPackage("ember__object", {
             libraryName: "@ember/object",
             asOfVersion: "1.0.0"
           })
