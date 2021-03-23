@@ -32,3 +32,8 @@ jobs:
         package: packages/publisher
         scm-do-build-during-deployment: true
         enable-oryx-build: true
+    - name: upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: temp
+        path: /home/runner/work/_temp
