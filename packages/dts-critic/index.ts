@@ -316,9 +316,8 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
     const npmName = dtToNpmName(name);
     const fullName = `${npmName}@${version}`;
     const cpOpts = { encoding: "utf8", maxBuffer: 100 * 1024 * 1024 } as const;
-    const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts);
-    const npmPackOut = JSON.parse(npmPack)[0];
-    const tarballName: string = npmPackOut.filename;
+    const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
+    const tarballName = npmPack.endsWith(".tgz") ? npmPack : JSON.parse(npmPack)[0].filename as string;
     const outPath = path.join(outDir, name);
     initDir(outPath);
     const args = os.platform() === "darwin"
