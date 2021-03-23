@@ -19,13 +19,14 @@ jobs:
         node-version: 14
     - name: install
       run: yarn install --frozen-lockfile
-    # - name: lint
-    #   run: yarn lint
+    - name: lint
+      run: yarn lint
     - name: test
       run: yarn test
+    - name: copy yarn.lock
+      run: cp yarn.lock packages/publisher/
     - name: deploy publisher
       uses: azure/functions-action@v1
-      continue-on-error: true
       with:
         app-name: types-publisher
         slot-name: production
@@ -34,6 +35,7 @@ jobs:
         scm-do-build-during-deployment: true
         enable-oryx-build: true
     - name: upload artifacts
+      if: always()
       uses: actions/upload-artifact@v1
       with:
         name: temp
