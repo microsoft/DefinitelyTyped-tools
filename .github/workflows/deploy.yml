@@ -19,12 +19,13 @@ jobs:
         node-version: 14
     - name: install
       run: yarn install --frozen-lockfile
-    - name: lint
-      run: yarn lint
+    # - name: lint
+    #   run: yarn lint
     - name: test
       run: yarn test
     - name: deploy publisher
       uses: azure/functions-action@v1
+      continue-on-error: true
       with:
         app-name: types-publisher
         slot-name: production
