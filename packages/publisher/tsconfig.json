@@ -1,5 +1,14 @@
 {
-    "extends": "./tsconfig.deploy.json",
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src",
+        "baseUrl": ".",
+        "paths": {
+            "*": ["src/types/*"]
+        }
+    },
+    "include": ["src"],
     "references": [
         { "path": "../definitions-parser" },
         { "path": "../header-parser" },
