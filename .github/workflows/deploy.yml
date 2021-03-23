@@ -30,3 +30,5 @@ jobs:
         slot-name: production
         publish-profile: ${{ secrets.typesPublisherFunctionsPublishProfile }}
         package: packages/publisher
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
