@@ -191,7 +191,7 @@ export function getNpmInfo(name: string): NpmInfo {
         "npm",
         ["info", npmName, "--json", "--silent", "versions", "dist-tags"],
         { encoding: "utf8" });
-    const info = JSON.parse(infoResult.stdout);
+    const info = JSON.parse(infoResult.stdout || infoResult.stderr);
     if (info.error !== undefined) {
         const error = info.error as { code?: string, summary?: string };
         if (error.code === npmNotFound) {
