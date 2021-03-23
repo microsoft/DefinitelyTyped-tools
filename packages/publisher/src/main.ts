@@ -45,7 +45,6 @@ export default async function main(): Promise<void> {
         }
       });
 
-      setInterval(fullOne, 2_000_000, log);
       await fullOne(log);
     } catch (e) {
       applicationinsights.defaultClient.trackEvent({
