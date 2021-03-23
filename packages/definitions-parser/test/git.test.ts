@@ -2,10 +2,6 @@ import { NpmInfo } from "@definitelytyped/utils";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
-// name: string,
-// dependencies: { readonly [name: string]: DependencyVersion },
-// testDependencies: string[],
-// pathMappings: { readonly [packageName: string]: TypingVersion }
 
 const typesData: TypesDataFile = {
   jquery: createTypingsVersionRaw("jquery", {}, [], {}),
