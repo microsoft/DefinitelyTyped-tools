@@ -15,12 +15,7 @@ const typesData: TypesDataFile = {
 };
 typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], libraryMajorVersion: 2 };
 
-const notNeeded = [
-  new NotNeededPackage("jest", {
-    libraryName: "jest",
-    asOfVersion: "100.0.0"
-  })
-];
+const notNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
 const allPackages = AllPackages.from(typesData, notNeeded);
 
 testo({

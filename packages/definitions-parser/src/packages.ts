@@ -249,17 +249,20 @@ export class NotNeededPackage extends PackageBase {
     return License.MIT;
   }
 
-  constructor(readonly name: string, raw: NotNeededPackageRaw) {
-    super(raw);
-
+  static fromRaw(name: string, raw: NotNeededPackageRaw) {
     for (const key of Object.keys(raw)) {
       if (!["libraryName", "sourceRepoURL", "asOfVersion"].includes(key)) {
         throw new Error(`Unexpected key in not-needed package: ${key}`);
       }
     }
-    assert(raw.libraryName && name && raw.asOfVersion);
 
-    this.version = Semver.parse(raw.asOfVersion);
+    return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
+  }
+
+  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
+    super({ libraryName });
+    assert(libraryName && name && asOfVersion);
+    this.version = Semver.parse(asOfVersion);
   }
 
   get major(): number {
@@ -601,8 +604,8 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
-  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map(
-    ([name, raw]) => new NotNeededPackage(name, raw)
+  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map(entry =>
+    NotNeededPackage.fromRaw(...entry)
   );
 }
 
