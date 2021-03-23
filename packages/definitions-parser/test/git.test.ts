@@ -4,20 +4,15 @@ import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 
 const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", [], []),
-  known: createTypingsVersionRaw("known", [{ name: "jquery", version: { major: 1 } }], []),
-  "known-test": createTypingsVersionRaw("known-test", [], ["jquery"]),
-  "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", version: "*" }], []),
-  unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", version: { major: 1 } }], []),
-  "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"])
+  jquery: createTypingsVersionRaw("jquery", {}, [], {}),
+  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, [], {}),
+  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], {}),
+  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], {}),
+  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], {}),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {})
 };
 
-const jestNotNeeded = [
-  new NotNeededPackage("jest", {
-    libraryName: "jest",
-    asOfVersion: "100.0.0"
-  })
-];
+const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
 const allPackages = AllPackages.from(typesData, jestNotNeeded);
 
 const deleteJestDiffs: GitDiff[] = [
@@ -34,7 +29,7 @@ testo({
     expect(() =>
       Array.from(
         getNotNeededPackages(
-          AllPackages.from({ jest: createTypingsVersionRaw("jest", [], []) }, jestNotNeeded),
+          AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, [], {}) }, jestNotNeeded),
           deleteJestDiffs
         )
       )
@@ -65,12 +60,7 @@ testo({
   scoped() {
     Array.from(
       getNotNeededPackages(
-        AllPackages.from(typesData, [
-          new NotNeededPackage("ember__object", {
-            libraryName: "@ember/object",
-            asOfVersion: "1.0.0"
-          })
-        ]),
+        AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     );
@@ -80,6 +70,7 @@ testo({
 });
 
 const empty: NpmInfo = {
+  homepage: "",
   distTags: new Map(),
   versions: new Map(),
   time: new Map()
@@ -103,6 +94,7 @@ testo({
   deprecatedSameVersion() {
     expect(() => {
       checkNotNeededPackage(jestNotNeeded[0], empty, {
+        homepage: "jest.com",
         distTags: new Map([["latest", "100.0.0"]]),
         versions: new Map(),
         time: new Map([["modified", ""]])
@@ -113,6 +105,7 @@ it is supposed to replace, 100.0.0 of @types/jest.`);
   deprecatedOlderVersion() {
     expect(() => {
       checkNotNeededPackage(jestNotNeeded[0], empty, {
+        homepage: "jest.com",
         distTags: new Map([["latest", "999.0.0"]]),
         versions: new Map(),
         time: new Map([["modified", ""]])
@@ -123,6 +116,7 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
   missingNpmVersion() {
     expect(() => {
       checkNotNeededPackage(jestNotNeeded[0], empty, {
+        homepage: "jest.com",
         distTags: new Map([["latest", "4.0.0"]]),
         versions: new Map(),
         time: new Map([["modified", ""]])
@@ -133,16 +127,36 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
     expect(() =>
       checkNotNeededPackage(
         jestNotNeeded[0],
-        { distTags: new Map(), versions: new Map([["50.0.0", {}]]), time: new Map([["modified", ""]]) },
-        { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), time: new Map([["modified", ""]]) }
+        {
+          homepage: "jest.com",
+          distTags: new Map(),
+          versions: new Map([["50.0.0", {}]]),
+          time: new Map([["modified", ""]])
+        },
+        {
+          homepage: "jest.com",
+          distTags: new Map([["latest", "4.0.0"]]),
+          versions: new Map(),
+          time: new Map([["modified", ""]])
+        }
       )
     ).toThrow("The specified version 100.0.0 of jest is not on npm.");
   },
   ok() {
     checkNotNeededPackage(
       jestNotNeeded[0],
-      { distTags: new Map(), versions: new Map([["100.0.0", {}]]), time: new Map([["modified", ""]]) },
-      { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), time: new Map([["modified", ""]]) }
+      {
+        homepage: "jest.com",
+        distTags: new Map(),
+        versions: new Map([["100.0.0", {}]]),
+        time: new Map([["modified", ""]])
+      },
+      {
+        homepage: "jest.com",
+        distTags: new Map([["latest", "4.0.0"]]),
+        versions: new Map(),
+        time: new Map([["modified", ""]])
+      }
     );
   }
 });

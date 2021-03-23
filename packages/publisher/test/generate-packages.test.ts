@@ -23,7 +23,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     typingsPackageName: "jquery",
     dependencies: { madeira: { major: 1 } },
     testDependencies: [],
-    pathMappings: [],
+    pathMappings: {},
     contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
     libraryMajorVersion: 1,
     libraryMinorVersion: 0,
@@ -49,10 +49,7 @@ function createTypesData(): TypesDataFile {
   };
 }
 function createUnneededPackage() {
-  return new NotNeededPackage("absalom", {
-    libraryName: "alternate",
-    asOfVersion: "1.1.1"
-  });
+  return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
 testo({
   mitLicenseText() {
@@ -143,10 +140,7 @@ testo({
 }`);
   },
   scopedNotNeededPackageJson() {
-    const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", {
-      libraryName: "@google-cloud/chubdub",
-      asOfVersion: "0.26.0"
-    });
+    const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
     const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
