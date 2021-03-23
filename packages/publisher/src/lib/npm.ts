@@ -20,7 +20,7 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
     const plusOne = new Semver(latest.major, latest.minor, latest.patch + 1);
     log(`Deprecation of ${notNeeded.versionString} failed, instead using ${plusOne.versionString}.`);
     return new NotNeededPackage(pkg.name, {
-      ...pkg,
+      libraryName: pkg.libraryName,
       asOfVersion: plusOne.versionString
     });
   }
