@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: ${{ github.events.inputs.checkout || 'master' }}
+        ref: ${{ github.event.inputs.checkout || 'master' }}
     - uses: actions/setup-node@v1
       with:
         node-version: 14
