@@ -37,6 +37,7 @@
   },
   "scripts": {
     "build": "tsc -b",
+    "oryx": "tsc -p tsconfig.deploy.json",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
