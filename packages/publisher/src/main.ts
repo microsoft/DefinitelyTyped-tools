@@ -13,10 +13,6 @@ export default async function main(): Promise<void> {
     console.log("The environment variable GITHUB_ACCESS_TOKEN must be set.");
   } else {
     console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
-    if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-      applicationinsights.setup().start();
-      console.log("Done initialising App Insights");
-    }
     const fetcher = new Fetcher();
 
     try {
