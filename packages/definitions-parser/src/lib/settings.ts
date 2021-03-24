@@ -2,7 +2,8 @@ import { joinPaths, readFileSync } from "@definitelytyped/utils";
 import { getUrlContentsAsString, withCache } from "./utils";
 
 const root = joinPaths(__dirname, "..", "..");
-export const dataDirPath = joinPaths(root, "data");
+export const storageDirPath = process.env.STORAGE_DIR || root;
+export const dataDirPath = joinPaths(storageDirPath, "data");
 
 export const sourceBranch = "master";
 export const typesDirectoryName = "types";
