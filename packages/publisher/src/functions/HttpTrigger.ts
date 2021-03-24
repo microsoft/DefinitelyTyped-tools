@@ -1,7 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { existsSync, mkdirp } from "fs-extra";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context): Promise<void> {
     context.log('HTTP trigger function processed a request.');
 
     context.log("existsSync", existsSync("/storage"));
