@@ -4,7 +4,8 @@
 
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-		"esbenp.prettier-vscode"
+		"esbenp.prettier-vscode",
+		"ms-azuretools.vscode-azurefunctions"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

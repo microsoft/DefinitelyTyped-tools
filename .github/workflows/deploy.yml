@@ -1,5 +1,10 @@
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      checkout:
+        description: ref to deploy
+        required: true
+        default: master
   repository_dispatch:
     types: [published]
 jobs:
@@ -8,39 +13,30 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: master
+        ref: ${{ github.event.inputs.checkout || 'master' }}
     - uses: actions/setup-node@v1
       with:
-        node-version: 12.15.0
+        node-version: 14
     - name: install
       run: yarn install --frozen-lockfile
     - name: lint
       run: yarn lint
     - name: test
       run: yarn test
-    - name: package
-      run: |
-        pushd packages/publisher
-        mkdir packed && cd $_
-        cp ../../../yarn.lock ./
-        cp ../package.json ./
-        cp ../tsconfig.json ./
-        cp ../server.js ./
-        cp ../IISNode.yml ./
-        cp ../LICENSE ./
-        cp ../.deployment ./
-        cp ../deploy.sh ./
-        cp -r ../dist ./
-        popd
+    - name: copy yarn.lock
+      run: cp yarn.lock packages/publisher/
     - name: deploy publisher
-      uses: azure/webapps-deploy@v2
+      uses: azure/functions-action@v1
       with:
-        app-name: TypesPublisher
-        publish-profile: ${{ secrets.typesPublisherAzurePublishProfile }}
-        package: packages/publisher/packed
+        app-name: types-publisher
         slot-name: production
-    - name: upload packed directory
+        publish-profile: ${{ secrets.typesPublisherFunctionsPublishProfile }}
+        package: packages/publisher
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
+    - name: upload artifacts
+      if: always()
       uses: actions/upload-artifact@v1
       with:
-        name: publisher
-        path: packages/publisher/packed
+        name: temp
+        path: /home/runner/work/_temp
