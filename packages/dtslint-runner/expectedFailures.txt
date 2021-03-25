@@ -2,5 +2,3 @@ electron-clipboard-extended
 electron-json-storage
 electron-notifications
 electron-notify
-mithril
-mithril-global
