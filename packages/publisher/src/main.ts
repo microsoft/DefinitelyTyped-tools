@@ -42,24 +42,27 @@ export default function main() {
   });
 }
 
-type LockFileResult = { triggered: true } | { triggered: false, timestamp: string };
+type LockFileResult = { triggered: true } | { triggered: false; timestamp: string };
 
 async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Promise<LockFileResult> {
   if (await pathExists(lockFilePath)) {
-    return { triggered: false, timestamp: await readFile(lockFilePath, "utf8")};
+    return { triggered: false, timestamp: await readFile(lockFilePath, "utf8") };
   } else {
     await writeFile(lockFilePath, currentTimeStamp());
-    cb().then(() => remove(lockFilePath), async error => {
-      await removeLock();
-      applicationinsights.defaultClient.trackEvent({
-        name: "crash",
-        properties: {
-          error: String(error)
-        }
-      });
+    cb().then(
+      () => remove(lockFilePath),
+      async error => {
+        await removeLock();
+        applicationinsights.defaultClient.trackEvent({
+          name: "crash",
+          properties: {
+            error: String(error)
+          }
+        });
 
-      process.exit(1);
-    });
+        process.exit(1);
+      }
+    );
 
     return { triggered: true };
   }
