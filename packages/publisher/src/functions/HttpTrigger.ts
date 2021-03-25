@@ -3,7 +3,9 @@ import main from "../main";
 
 const httpTrigger: AzureFunction = async function (context: Context): Promise<void> {
   context.log('HTTP trigger function processed a request.');
-  context.res = await main();
+  const res = await main();
+  context.log(res);
+  context.res = res;
 };
 
 export default httpTrigger;
