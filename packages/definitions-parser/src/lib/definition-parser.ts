@@ -469,7 +469,9 @@ function calculateDependencies(
       throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
     }
     const pathMapping = pathMappingList[0];
-    if (dependencyName === scopedPackageName && pathMapping === "./node_modules/" + scopedPackageName) {
+    if (pathMapping === "./node_modules/" + dependencyName) {
+      // allow passthrough remappings for packages like webpack that have shipped their own types,
+      // but have some dependents on DT that depend on the new types and some that depend on the old types
       continue;
     }
 
