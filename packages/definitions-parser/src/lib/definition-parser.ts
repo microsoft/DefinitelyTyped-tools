@@ -469,7 +469,7 @@ function calculateDependencies(
       throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
     }
     const pathMapping = pathMappingList[0];
-    if (dependencyName == scopedPackageName && pathMapping === "./node_modules/" + scopedPackageName) {
+    if (dependencyName === scopedPackageName && pathMapping === "./node_modules/" + scopedPackageName) {
       continue;
     }
 
