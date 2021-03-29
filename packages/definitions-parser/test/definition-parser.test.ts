@@ -120,6 +120,9 @@ const a = new webpack.AutomaticPrefetchPlugin();
         "paths": {
             "webpack": [
                 "./node_modules/webpack"
+            ],
+            "tapable": [
+                "./node_modules/tapable"
             ]
         },
         "types": [],
