@@ -16,5 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/functions/HttpTrigger.js"
+  "scriptFile": "../dist/triggers/http.js"
 }
