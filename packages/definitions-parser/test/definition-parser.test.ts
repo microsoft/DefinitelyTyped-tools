@@ -68,6 +68,75 @@ export function myFunction(arg:string): string;
     expect(info).toBeDefined();
   });
 
+  it("allows path mapping to older versions", () => {
+    // Actually, the default seup already has 'has-older-test-dependency', so probably doesn't need an explicit test
+    const dt = createMockDT();
+    dt.addOldVersionOfPackage("jquery", "1.42");
+    dt.addOldVersionOfPackage("jquery", "2");
+    // now add a dependency that maps to jquery/1.42
+  });
+  it("errors on arbitrary path mapping", () => {});
+  it("supports node_modules passthrough path mapping", async () => {
+    const dt = createMockDT();
+    const webpack = dt.pkgDir("webpack");
+    webpack.set(
+      "index.d.ts",
+      `// Type definitions for webpack 5.2
+// Project: https://github.com/webpack/webpack
+// Definitions by: Qubo <https://github.com/tkqubo>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+/// <reference types="node" />
+/* tslint:disable-next-line:no-self-import */
+import webpack = require('webpack');
+export = webpack;
+`
+    );
+    webpack.set(
+      "webpack-tests.ts",
+      `
+import webpack = require('webpack');
+const a = new webpack.AutomaticPrefetchPlugin();
+`
+    );
+    webpack.set(
+      "tsconfig.json",
+      `{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "baseUrl": "../",
+        "typeRoots": [
+            "../"
+        ],
+        "paths": {
+            "webpack": [
+                "./node_modules/webpack"
+            ]
+        },
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "webpack-tests.ts"
+    ]
+}`
+    );
+
+    const info = await getTypingInfo("webpack", dt.pkgFS("webpack"));
+    expect(info).toBeDefined();
+  });
+
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();

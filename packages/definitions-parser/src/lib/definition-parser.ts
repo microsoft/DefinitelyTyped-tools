@@ -462,17 +462,21 @@ function calculateDependencies(
   const dependencies: { [name: string]: DependencyVersion } = {};
   const pathMappings: { [packageName: string]: TypingVersion } = {};
 
+  const scopedPackageName = unmangleScopedPackage(packageName) ?? packageName;
   for (const dependencyName of Object.keys(paths)) {
     const pathMappingList = paths[dependencyName];
     if (pathMappingList.length !== 1) {
       throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
     }
     const pathMapping = pathMappingList[0];
+    if (dependencyName === scopedPackageName && pathMapping === "./node_modules/" + scopedPackageName) {
+      continue;
+    }
 
     // Path mapping may be for "@foo/*" -> "foo__*".
-    const scopedPackageName = removeVersionFromPackageName(unmangleScopedPackage(pathMapping));
-    if (scopedPackageName !== undefined) {
-      if (dependencyName !== scopedPackageName) {
+    const unversionedScopedPackageName = removeVersionFromPackageName(unmangleScopedPackage(pathMapping));
+    if (unversionedScopedPackageName !== undefined) {
+      if (dependencyName !== unversionedScopedPackageName) {
         throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
       }
       if (!hasVersionNumberInMapping(pathMapping)) {
@@ -509,7 +513,6 @@ function calculateDependencies(
     pathMappings[dependencyName] = pathMappingVersion;
   }
 
-  const scopedPackageName = unmangleScopedPackage(packageName) ?? packageName;
   if (directoryVersion !== undefined && !(paths && scopedPackageName in paths)) {
     const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}`]);
     throw new Error(
