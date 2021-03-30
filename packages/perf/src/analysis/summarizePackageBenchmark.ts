@@ -4,7 +4,8 @@ import { max, mean, median, stdDev, coefficientOfVariation } from "../measure/ut
 export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary {
   return {
     packageName: benchmark.packageName,
-    packageVersion: benchmark.packageVersion,
+    packageVersionMajor: benchmark.packageVersionMajor,
+    packageVersionMinor: benchmark.packageVersionMinor,
     typeScriptVersion: benchmark.typeScriptVersion,
     typeScriptVersionMajorMinor: benchmark.typeScriptVersionMajorMinor,
     sourceVersion: benchmark.sourceVersion,

@@ -1,6 +1,14 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, unmangleScopedPackage, Semver } from "@definitelytyped/utils";
+import {
+  FS,
+  mapValues,
+  assertSorted,
+  unmangleScopedPackage,
+  Semver,
+  assertDefined,
+  unique
+} from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
@@ -59,6 +67,16 @@ export class AllPackages {
 
   hasTypingFor(dep: PackageId): boolean {
     return this.tryGetTypingsData(dep) !== undefined;
+  }
+
+  /**
+   * Whether a package maintains multiple minor versions of typings simultaneously by
+   * using minor-versioned directories like 'react-native/v14.1'
+   */
+  hasSeparateMinorVersions(name: string) {
+    const versions = Array.from(assertDefined(this.data.get(getMangledNameForScopedPackage(name))).getAll());
+    const minors = versions.map(v => v.minor);
+    return minors.length !== unique(minors).length;
   }
 
   tryResolve(dep: PackageId): PackageId {
@@ -295,17 +313,24 @@ export interface TypingsVersionsRaw {
   [version: string]: TypingsDataRaw;
 }
 
-export interface TypingVersion {
+/** Minor may be unknown if parsed from a major-only version directory, like 'types/v15' */
+export interface DirectoryParsedTypingVersion {
   major: number;
   minor?: number;
 }
 
-export function formatTypingVersion(version: TypingVersion) {
+/** Version parsed from DT header comment, so both major and minor are known */
+export interface HeaderParsedTypingVersion {
+  major: number;
+  minor: number;
+}
+
+export function formatTypingVersion(version: DirectoryParsedTypingVersion) {
   return `${version.major}${version.minor === undefined ? "" : `.${version.minor}`}`;
 }
 
 /** If no version is specified, uses "*". */
-export type DependencyVersion = TypingVersion | "*";
+export type DependencyVersion = DirectoryParsedTypingVersion | "*";
 
 export function formatDependencyVersion(version: DependencyVersion) {
   return version === "*" ? "*" : formatTypingVersion(version);
@@ -349,7 +374,7 @@ export interface TypingsDataRaw extends BaseRaw {
    * Not all path mappings are direct dependencies, they may be necessary for transitive dependencies. However, where `dependencies` and
    * `pathMappings` share a key, they *must* share the same value.
    */
-  readonly pathMappings: { readonly [packageName: string]: TypingVersion };
+  readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
 
   /**
    * List of people that have contributed to the definitions in this package.
@@ -500,7 +525,7 @@ export class TypingsVersions {
     return this.map.get(this.versions[0])!;
   }
 
-  private getLatestMatch(version: TypingVersion, errorMessage?: string): TypingsData {
+  private getLatestMatch(version: DirectoryParsedTypingVersion, errorMessage?: string): TypingsData {
     const data = this.tryGetLatestMatch(version);
     if (!data) {
       throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}. ${errorMessage || ""}`);
@@ -508,7 +533,7 @@ export class TypingsVersions {
     return data;
   }
 
-  private tryGetLatestMatch(version: TypingVersion): TypingsData | undefined {
+  private tryGetLatestMatch(version: DirectoryParsedTypingVersion): TypingsData | undefined {
     const found = this.versions.find(
       v => v.major === version.major && (version.minor === undefined || v.minor === version.minor)
     );
@@ -566,7 +591,7 @@ export class TypingsData extends PackageBase {
   get globals(): readonly string[] {
     return this.data.globals;
   }
-  get pathMappings(): { readonly [packageName: string]: TypingVersion } {
+  get pathMappings(): { readonly [packageName: string]: DirectoryParsedTypingVersion } {
     return this.data.pathMappings;
   }
 
@@ -592,7 +617,7 @@ export interface PackageId {
 
 export interface PackageIdWithDefiniteVersion {
   readonly name: string;
-  readonly version: TypingVersion;
+  readonly version: HeaderParsedTypingVersion;
 }
 
 export interface TypesDataFile {

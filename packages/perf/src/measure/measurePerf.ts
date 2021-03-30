@@ -15,12 +15,12 @@ import {
   measureBatchCompilationWorkerFilename,
   MeasureBatchCompilationChildProcessResult
 } from "./measureBatchCompilationWorker";
-import { AllPackages, formatDependencyVersion, TypingVersion } from "@definitelytyped/definitions-parser";
+import { AllPackages, HeaderParsedTypingVersion } from "@definitelytyped/definitions-parser";
 import { runWithListeningChildProcesses, runWithChildProcesses, Semver } from "@definitelytyped/utils";
 
 export interface MeasurePerfOptions {
   packageName: string;
-  packageVersion: TypingVersion;
+  packageVersion: HeaderParsedTypingVersion;
   typeScriptVersion: string;
   definitelyTypedRootPath: string;
   maxRunSeconds?: number;
@@ -147,7 +147,8 @@ export async function measurePerf({
     benchmarkDuration: duration,
     sourceVersion,
     packageName,
-    packageVersion: formatDependencyVersion(packageVersion),
+    packageVersionMajor: packageVersion.major,
+    packageVersionMinor: packageVersion.minor,
     typeScriptVersion,
     typeScriptVersionMajorMinor: ts.versionMajorMinor,
     languageServiceBenchmarks: testMatrix.getAllBenchmarks(),

@@ -28,12 +28,7 @@ import { benchmarkPackage } from "./benchmark";
 import { getTypeScript } from "../measure/getTypeScript";
 import { postTypeScriptComparisonResults } from "../github/postTypeScriptComparisonResult";
 import { insertDocument } from "../write";
-import {
-  PackageId,
-  AllPackages,
-  formatDependencyVersion,
-  parsePackageVersion
-} from "@definitelytyped/definitions-parser";
+import { PackageId, AllPackages, formatDependencyVersion } from "@definitelytyped/definitions-parser";
 import { assertDefined } from "@definitelytyped/utils";
 const writeFile = promisify(fs.writeFile);
 const currentSystem = getSystemInfo();
@@ -239,7 +234,7 @@ async function getPackagesToTestAndPriorResults(
   for await (const x of iterator) {
     for (const result of x.resources) {
       if (!result) continue;
-      const packageKey = toPackageKey(result.body.packageName, result.body.packageVersion);
+      const packageKey = toPackageKey(result.body);
       if (packageKeys && !packageKeys.includes(packageKey)) {
         continue;
       }
@@ -251,7 +246,7 @@ async function getPackagesToTestAndPriorResults(
 
       const packageId: PackageId = {
         name: result.body.packageName,
-        version: parsePackageVersion(result.body.packageVersion)
+        version: { major: result.body.packageVersionMajor, minor: result.body.packageVersionMinor }
       };
       const changedPackages = await getChangedPackages({ diffTo: result.body.sourceVersion, definitelyTypedPath });
       if (changedPackages && changedPackages.some(packageIdsAreEqual(packageId))) {

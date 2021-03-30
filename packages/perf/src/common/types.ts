@@ -9,7 +9,8 @@ export interface RelationCacheSizes {
 export interface PackageBenchmark {
   batchRunStart: Date;
   packageName: string;
-  packageVersion: string;
+  packageVersionMajor: number;
+  packageVersionMinor: number;
   sourceVersion: string;
   typeScriptVersion: string;
   typeScriptVersionMajorMinor: string;
@@ -26,7 +27,8 @@ export interface PackageBenchmark {
 export interface PackageBenchmarkSummary {
   batchRunStart: Date;
   packageName: string;
-  packageVersion: string;
+  packageVersionMajor: number;
+  packageVersionMinor: number;
   typeScriptVersion: string;
   typeScriptVersionMajorMinor: string;
   sourceVersion: string;

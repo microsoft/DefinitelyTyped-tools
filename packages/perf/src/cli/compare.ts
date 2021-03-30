@@ -20,7 +20,13 @@ import { printSummary } from "../measure";
 import { getTypeScript } from "../measure/getTypeScript";
 import { postInitialComparisonResults } from "../github/postInitialComparisonResults";
 import { postDependentsComparisonResult } from "../github/postDependentsComparisonResults";
-import { AllPackages, DependencyVersion, getAffectedPackages, PackageId } from "@definitelytyped/definitions-parser";
+import {
+  AllPackages,
+  DependencyVersion,
+  formatDependencyVersion,
+  getAffectedPackages,
+  PackageId
+} from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors } from "@definitelytyped/utils";
 const currentSystem = getSystemInfo();
 
@@ -138,12 +144,14 @@ export async function compareBenchmarks({
   maxRunSeconds,
   upload = true
 }: CompareOptions): Promise<[Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>]> {
+  const typings = allPackages.getTypingsData({ name: packageName, version: packageVersion });
   const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
   const latestBenchmarkDocument = await getLatestBenchmark({
     container,
     typeScriptVersionMajorMinor,
     packageName,
-    packageVersion
+    packageVersion: typings.id.version,
+    matchMinor: allPackages.hasSeparateMinorVersions(packageName)
   });
 
   let latestBenchmark: PackageBenchmarkSummary | undefined = latestBenchmarkDocument && latestBenchmarkDocument.body;
@@ -173,7 +181,9 @@ export async function compareBenchmarks({
     }
     if (needsRerun) {
       console.log(
-        `No comparable benchmark for ${packageName}/v${packageVersion}. Checking out master and running one...`
+        `No comparable benchmark for ${packageName}/v${formatDependencyVersion(
+          packageVersion
+        )}. Checking out master and running one...`
       );
       await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
