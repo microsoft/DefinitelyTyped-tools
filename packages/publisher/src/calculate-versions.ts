@@ -64,7 +64,7 @@ async function computeChangedPackages(
   const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ true, log);
     if (needsPublish) {
-      log.info(`Changed: ${pkg.desc}`);
+      log.info(`Need to publish: ${pkg.desc}@${version}`);
       for (const { name } of pkg.packageJsonDependencies) {
         assertDefined(
           await client.fetchAndCacheNpmInfo(name),

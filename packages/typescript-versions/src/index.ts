@@ -9,7 +9,6 @@ import assert from "assert";
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
   2. Update failing tests.
   3. Publish and update dependents. Outside the monorepo, current dependents are dtslint, dts-critic.
-  4. Run dt-retag.
 
   For the release:
 
@@ -17,10 +16,10 @@ import assert from "assert";
   2. Update failing tests.
   3. Publish and update dependents. (dtslint and dts-critic)
 
-  # How to deprecate versions on Definitely Typed #
+  # How to deprecate an old version on Definitely Typed #
 
-  1. Move versions from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
-  2. Move versions from `shipped` to `unsupported`.
+  1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
+  2. Move the old version from `shipped` to `unsupported`.
   4. Update failing tests.
   5. Publish and update dependents. (dtslint and dts-critic)
 
@@ -39,20 +38,23 @@ export type UnsupportedTypeScriptVersion =
   | "2.8"
   | "2.9"
   | "3.0"
-  | "3.1";
+  | "3.1"
+  | "3.2"
+  | "3.3"
+  | "3.4";
 /**
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on DefinitelyTyped.
  */
-export type TypeScriptVersion = "3.2" | "3.3" | "3.4" | "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0" | "4.1" | "4.2";
+export type TypeScriptVersion = "3.5" | "3.6" | "3.7" | "3.8" | "3.9" | "4.0" | "4.1" | "4.2" | "4.3";
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actual ships.  */
-  export const shipped: readonly TypeScriptVersion[] = ["3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9", "4.0"];
+  export const shipped: readonly TypeScriptVersion[] = ["3.5", "3.6", "3.7", "3.8", "3.9", "4.0", "4.1", "4.2"];
   /** Add to this list when a version is available as typescript@next */
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.1", "4.2"];
+  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.3"];
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
     "2.0",
@@ -66,7 +68,10 @@ export namespace TypeScriptVersion {
     "2.8",
     "2.9",
     "3.0",
-    "3.1"
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4"
   ];
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];

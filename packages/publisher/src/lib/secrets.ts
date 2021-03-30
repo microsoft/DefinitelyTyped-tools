@@ -5,11 +5,6 @@ import { azureKeyvault } from "./settings";
 
 export enum Secret {
   /**
-   * Used to upload blobs.
-   * To find (or refresh) this value, go to https://ms.portal.azure.com -> All resources -> typespublisher -> General -> Access keys
-   */
-  AZURE_STORAGE_ACCESS_KEY,
-  /**
    * Lets the server update an issue (https://github.com/Microsoft/types-publisher/issues/40) on GitHub in case of an error.
    * Create a token at: https://github.com/settings/tokens
    */

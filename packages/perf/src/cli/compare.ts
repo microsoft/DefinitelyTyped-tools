@@ -185,7 +185,7 @@ export async function compareBenchmarks({
           packageVersion
         )}. Checking out master and running one...`
       );
-      await execAndThrowErrors("git checkout origin/master && git clean -xdf types", definitelyTypedPath);
+      await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
       const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
         definitelyTypedPath,
         printSummary: false,
@@ -198,7 +198,7 @@ export async function compareBenchmarks({
         installTypeScript: false,
         maxRunSeconds
       });
-      await execAndThrowErrors(`git checkout . && git checkout - && git clean -xdf types`, definitelyTypedPath);
+      await execAndThrowErrors(`git checkout -f . && git checkout - && git clean -xdf types`, definitelyTypedPath);
       latestBenchmark = latest && latest.summary;
     }
   }

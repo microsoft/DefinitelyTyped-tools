@@ -1,5 +1,5 @@
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { Dir, FS, InMemoryFS, Semver } from "@definitelytyped/utils";
+import { Dir, FS, InMemoryFS, mangleScopedPackage, Semver } from "@definitelytyped/utils";
 
 class DTMock {
   public readonly fs: FS;
@@ -9,14 +9,14 @@ class DTMock {
     this.root = new Dir(undefined);
     this.root.set(
       "notNeededPackages.json",
-      `{
-            "packages": [{
-            "libraryName": "Angular 2",
-            "typingsPackageName": "angular",
-            "asOfVersion": "1.2.3",
-            "sourceRepoURL": "https://github.com/angular/angular2"
-          }]
-        }`
+      JSON.stringify({
+        packages: {
+          angular: {
+            libraryName: "Angular 2",
+            asOfVersion: "1.2.3"
+          }
+        }
+      })
     );
     this.fs = new InMemoryFS(this.root, "DefinitelyTyped");
   }
@@ -39,7 +39,7 @@ class DTMock {
    * @param olderVersion The older version that's to be added.
    */
   public addOldVersionOfPackage(packageName: string, olderVersion: string) {
-    const latestDir = this.pkgDir(packageName);
+    const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
     const latestHeader = parseHeaderOrFail(index);
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
@@ -56,7 +56,7 @@ class DTMock {
         compilerOptions: {
           ...tsconfig.compilerOptions,
           paths: {
-            [packageName]: [`${packageName}/v${olderVersion}`]
+            [packageName]: [`${mangleScopedPackage(packageName)}/v${olderVersion}`]
           }
         }
       })

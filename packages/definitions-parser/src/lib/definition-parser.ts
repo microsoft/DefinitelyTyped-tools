@@ -23,7 +23,10 @@ import {
   join,
   flatMap,
   unique,
-  unmangleScopedPackage
+  unmangleScopedPackage,
+  removeVersionFromPackageName,
+  hasVersionNumberInMapping,
+  mangleScopedPackage
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
@@ -465,20 +468,28 @@ function calculateDependencies(
   const dependencies: { [name: string]: DependencyVersion } = {};
   const pathMappings: { [packageName: string]: DirectoryParsedTypingVersion } = {};
 
+  const scopedPackageName = unmangleScopedPackage(packageName) ?? packageName;
   for (const dependencyName of Object.keys(paths)) {
     const pathMappingList = paths[dependencyName];
     if (pathMappingList.length !== 1) {
       throw new Error(`In ${packageName}: Path mapping for ${dependencyName} may only have 1 entry.`);
     }
     const pathMapping = pathMappingList[0];
+    if (pathMapping === "./node_modules/" + dependencyName) {
+      // allow passthrough remappings for packages like webpack that have shipped their own types,
+      // but have some dependents on DT that depend on the new types and some that depend on the old types
+      continue;
+    }
 
     // Path mapping may be for "@foo/*" -> "foo__*".
-    const scopedPackageName = unmangleScopedPackage(pathMapping);
-    if (scopedPackageName !== undefined) {
-      if (dependencyName !== scopedPackageName) {
+    const unversionedScopedPackageName = removeVersionFromPackageName(unmangleScopedPackage(pathMapping));
+    if (unversionedScopedPackageName !== undefined) {
+      if (dependencyName !== unversionedScopedPackageName) {
         throw new Error(`Expected directory ${pathMapping} to be the path mapping for ${dependencyName}`);
       }
-      continue;
+      if (!hasVersionNumberInMapping(pathMapping)) {
+        continue;
+      }
     }
 
     // Might have a path mapping for "foo/*" to support subdirectories
@@ -510,12 +521,12 @@ function calculateDependencies(
     pathMappings[dependencyName] = pathMappingVersion;
   }
 
-  if (directoryVersion !== undefined && !(paths && packageName in paths)) {
+  if (directoryVersion !== undefined && !(paths && scopedPackageName in paths)) {
     const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}`]);
     throw new Error(
-      `${packageName}: Older version ${formatTypingVersion(
+      `${scopedPackageName}: Older version ${formatTypingVersion(
         directoryVersion
-      )} must have a "paths" entry of "${packageName}": ${mapping}`
+      )} must have a "paths" entry of "${scopedPackageName}": ${mapping}`
     );
   }
 
@@ -572,7 +583,7 @@ function parseDependencyVersionFromPath(
   dependencyName: string,
   dependencyPath: string
 ): DirectoryParsedTypingVersion {
-  const versionString = withoutStart(dependencyPath, `${dependencyName}/`);
+  const versionString = withoutStart(dependencyPath, `${mangleScopedPackage(dependencyName)}/`);
   const version = versionString === undefined ? undefined : parseVersionFromDirectoryName(versionString);
   if (version === undefined) {
     throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);

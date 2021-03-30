@@ -195,13 +195,6 @@ interface BaseRaw {
    * A human readable version, e.g. it might be "Moment.js" even though `packageName` is "moment".
    */
   readonly libraryName: string;
-
-  /**
-   * The NPM name to publish this under, e.g. "jquery".
-   *
-   * This does not include "@types".
-   */
-  readonly typingsPackageName: string;
 }
 
 /** Prefer to use `AnyPackage` instead of this. */
@@ -211,7 +204,7 @@ export abstract class PackageBase {
   }
 
   /** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
-  readonly name: string;
+  abstract readonly name: string;
   readonly libraryName: string;
 
   get unescapedName(): string {
@@ -224,7 +217,6 @@ export abstract class PackageBase {
   }
 
   constructor(data: BaseRaw) {
-    this.name = data.typingsPackageName;
     this.libraryName = data.libraryName;
   }
 
@@ -233,7 +225,6 @@ export abstract class PackageBase {
   }
 
   abstract readonly isLatest: boolean;
-  abstract readonly projectName: string;
   abstract readonly declaredModules: readonly string[];
   abstract readonly globals: readonly string[];
   abstract readonly minTypeScriptVersion: TypeScriptVersion;
@@ -267,8 +258,6 @@ interface NotNeededPackageRaw extends BaseRaw {
    */
   // This must be "major.minor.patch"
   readonly asOfVersion: string;
-  /** The package's own url, *not* DefinitelyTyped's. */
-  readonly sourceRepoURL: string;
 }
 
 export class NotNeededPackage extends PackageBase {
@@ -278,20 +267,20 @@ export class NotNeededPackage extends PackageBase {
     return License.MIT;
   }
 
-  readonly sourceRepoURL: string;
-
-  constructor(raw: NotNeededPackageRaw) {
-    super(raw);
-    this.sourceRepoURL = raw.sourceRepoURL;
-
+  static fromRaw(name: string, raw: NotNeededPackageRaw) {
     for (const key of Object.keys(raw)) {
-      if (!["libraryName", "typingsPackageName", "sourceRepoURL", "asOfVersion"].includes(key)) {
+      if (!["libraryName", "sourceRepoURL", "asOfVersion"].includes(key)) {
         throw new Error(`Unexpected key in not-needed package: ${key}`);
       }
     }
-    assert(raw.libraryName && raw.typingsPackageName && raw.sourceRepoURL && raw.asOfVersion);
 
-    this.version = Semver.parse(raw.asOfVersion);
+    return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
+  }
+
+  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
+    super({ libraryName });
+    assert(libraryName && name && asOfVersion);
+    this.version = Semver.parse(asOfVersion);
   }
 
   get major(): number {
@@ -305,9 +294,6 @@ export class NotNeededPackage extends PackageBase {
   get isLatest(): boolean {
     return true;
   }
-  get projectName(): string {
-    return this.sourceRepoURL;
-  }
   get declaredModules(): readonly string[] {
     return [];
   }
@@ -316,11 +302,6 @@ export class NotNeededPackage extends PackageBase {
   }
   get minTypeScriptVersion(): TypeScriptVersion {
     return TypeScriptVersion.lowest;
-  }
-
-  readme(): string {
-    return `This is a stub types definition for ${getFullNpmName(this.name)} (${this.sourceRepoURL}).\n
-${this.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(this.name)} installed!`;
   }
 
   deprecatedMessage(): string {
@@ -361,6 +342,13 @@ export interface PackageJsonDependency {
 }
 
 export interface TypingsDataRaw extends BaseRaw {
+  /**
+   * The NPM name to publish this under, e.g. "jquery".
+   *
+   * This does not include "@types".
+   */
+  readonly typingsPackageName: string;
+
   /**
    * Other definitions, that exist in the same typings repo, that this package depends on.
    *
@@ -558,6 +546,10 @@ export class TypingsData extends PackageBase {
     super(data);
   }
 
+  get name() {
+    return this.data.typingsPackageName;
+  }
+
   get testDependencies(): readonly string[] {
     return this.data.testDependencies;
   }
@@ -637,8 +629,8 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
-  return (rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages.map(
-    raw => new NotNeededPackage(raw)
+  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map(entry =>
+    NotNeededPackage.fromRaw(...entry)
   );
 }
 

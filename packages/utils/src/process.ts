@@ -1,5 +1,5 @@
 import assert from "assert";
-import { ChildProcess, exec as node_exec, fork } from "child_process";
+import { ChildProcess, exec as node_exec, fork, Serializable } from "child_process";
 import { Socket } from "net";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
@@ -74,7 +74,7 @@ export function runWithChildProcesses<In>({
       });
       child.on("disconnect", () => {
         if (outputsLeft !== 0) {
-          fail();
+          fail(new Error(`disconnect with ${outputsLeft} outputs left`));
         }
       });
       child.on("close", () => {
@@ -83,12 +83,12 @@ export function runWithChildProcesses<In>({
       child.on("error", fail);
     }
 
-    function fail(): void {
+    function fail(e: Error): void {
       rejected = true;
       for (const child of allChildren) {
         child.kill();
       }
-      reject(new Error("Parsing failed."));
+      reject(e);
     }
   });
 }
@@ -113,7 +113,7 @@ interface RunWithListeningChildProcessesOptions<In> {
   handleStart?(input: In, processIndex: number | undefined): void;
   handleCrash?(input: In, state: CrashRecoveryState, processIndex: number | undefined): void;
 }
-export function runWithListeningChildProcesses<In>({
+export function runWithListeningChildProcesses<In extends Serializable>({
   inputs,
   commandLineArgs,
   workerFile,

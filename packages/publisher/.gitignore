@@ -7,3 +7,5 @@ output/
 validateOutput/
 \#*
 .\#*
+local.settings.json
+lock.json

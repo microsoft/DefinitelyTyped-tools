@@ -23,7 +23,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     typingsPackageName: "jquery",
     dependencies: { madeira: { major: 1 } },
     testDependencies: [],
-    pathMappings: [],
+    pathMappings: {},
     contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
     libraryMajorVersion: 1,
     libraryMinorVersion: 0,
@@ -49,12 +49,7 @@ function createTypesData(): TypesDataFile {
   };
 }
 function createUnneededPackage() {
-  return new NotNeededPackage({
-    libraryName: "alternate",
-    typingsPackageName: "absalom",
-    asOfVersion: "1.1.1",
-    sourceRepoURL: "https://github.com/aardwulf/absalom"
-  });
+  return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
 testo({
   mitLicenseText() {
@@ -111,7 +106,7 @@ testo({
         "balzac": "~3"
     },
     "typesPublisherContentHash": "11",
-    "typeScriptVersion": "3.2"
+    "typeScriptVersion": "3.5"
 }`);
   },
   githubPackageJsonName() {
@@ -138,7 +133,6 @@ testo({
     "main": "",
     "scripts": {},
     "author": "",
-    "repository": "https://github.com/aardwulf/absalom",
     "license": "MIT",
     "dependencies": {
         "alternate": "*"
@@ -146,12 +140,7 @@ testo({
 }`);
   },
   scopedNotNeededPackageJson() {
-    const scopedUnneeded = new NotNeededPackage({
-      libraryName: "@google-cloud/chubdub",
-      typingsPackageName: "google-cloud__pubsub",
-      asOfVersion: "0.26.0",
-      sourceRepoURL: "https://github.com/googleapis/nodejs-storage"
-    });
+    const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
     const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
@@ -161,7 +150,6 @@ testo({
     "main": "",
     "scripts": {},
     "author": "",
-    "repository": "https://github.com/googleapis/nodejs-storage",
     "license": "MIT",
     "dependencies": {
         "@google-cloud/chubdub": "*"
