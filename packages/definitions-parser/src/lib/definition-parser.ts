@@ -299,14 +299,16 @@ function getTypingDataForSingleTypesVersion(
     packageDirectory
   );
   const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
-  const otherFiles =
-    ls.indexOf(unusedFilesName) > -1
-      ? fs
-          // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-          .readFile(unusedFilesName)
-          .split(/\r?\n/g)
-          .filter(Boolean)
-      : [];
+  const otherFiles = ls.includes(unusedFilesName)
+    ? fs
+        // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
+        .readFile(unusedFilesName)
+        .split(/\r?\n/g)
+        .filter(Boolean)
+    : [];
+  if (ls.includes(unusedFilesName) && !otherFiles.length) {
+    throw new Error(`In ${packageName}: OTHER_FILES.txt is empty.`);
+  }
   for (const file of otherFiles) {
     if (!isRelativePath(file)) {
       throw new Error(`In ${packageName}: A path segment is empty or all dots ${file}`);
