@@ -17,7 +17,6 @@ import {
   UncachedNpmInfoClient
 } from "@definitelytyped/utils";
 import { numberOfOsProcesses } from "./util/util";
-import validate from "./validate";
 import { defaultLocalOptions } from "./lib/common";
 
 if (!module.parent) {
@@ -53,5 +52,4 @@ export default async function full(
   await createSearchIndex(allPackages, infoClient);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
   await publishRegistry(dt, allPackages, dry, infoClient);
-  await validate(dt);
 }
