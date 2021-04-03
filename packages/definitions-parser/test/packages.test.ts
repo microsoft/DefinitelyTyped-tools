@@ -1,8 +1,10 @@
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
-import { AllPackages, TypingsVersions } from "../src/packages";
+import { AllPackages, TypingsVersions, TypingsData, License } from "../src/packages";
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
+import { createTypingsVersionRaw } from "./utils";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
 describe(AllPackages, () => {
   let allPackages: AllPackages;
@@ -63,5 +65,100 @@ describe(TypingsVersions, () => {
   it("formats missing version error nicely", () => {
     expect(() => versions.get({ major: 111, minor: 1001 })).toThrow("Could not find version 111.1001");
     expect(() => versions.get({ major: 111 })).toThrow("Could not find version 111.*");
+  });
+});
+
+describe(TypingsData, () => {
+  let data: TypingsData;
+
+  beforeEach(() => {
+    const versions = createTypingsVersionRaw(
+      "known",
+      {
+        "dependency-1": "*"
+      },
+      [],
+      {}
+    );
+    data = new TypingsData(versions["1.0"], true);
+  });
+
+  it("sets the correct properties", () => {
+    expect(data.name).toBe("known");
+    expect(data.testDependencies).toEqual([]);
+    expect(data.contributors).toEqual([
+      {
+        name: "Bender",
+        url: "futurama.com",
+        githubUsername: "bender"
+      }
+    ]);
+    expect(data.major).toBe(1);
+    expect(data.minor).toBe(0);
+    expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
+    expect(data.typesVersions).toEqual([]);
+    expect(data.files).toEqual(["index.d.ts"]);
+    expect(data.license).toBe(License.MIT);
+    expect(data.packageJsonDependencies).toEqual([]);
+    expect(data.contentHash).toBe("11111111111111");
+    expect(data.declaredModules).toEqual([]);
+    expect(data.projectName).toBe("zombo.com");
+    expect(data.globals).toEqual([]);
+    expect(data.pathMappings).toEqual({});
+    expect(data.dependencies).toEqual({
+      "dependency-1": "*"
+    });
+    expect(data.id).toEqual({
+      name: "known",
+      version: {
+        major: 1,
+        minor: 0
+      }
+    });
+  });
+
+  describe("unescapedName", () => {
+    it("returns the name when unscoped", () => {
+      expect(data.unescapedName).toBe("known");
+    });
+
+    it("returns scoped names correctly", () => {
+      const versions = createTypingsVersionRaw("foo__bar", {}, [], {});
+      data = new TypingsData(versions["1.0"], true);
+
+      expect(data.unescapedName).toBe("@foo/bar");
+    });
+  });
+
+  describe("desc", () => {
+    it("returns the name if latest version", () => {
+      expect(data.desc).toBe("known");
+    });
+
+    it("returns the verioned name if not latest", () => {
+      const versions = createTypingsVersionRaw("known", {}, [], {});
+      data = new TypingsData(versions["1.0"], false);
+
+      expect(data.desc).toBe("known v1.0");
+    });
+  });
+
+  describe("fullNpmName", () => {
+    it("returns scoped name", () => {
+      expect(data.fullNpmName).toBe("@types/known");
+    });
+
+    it("returns mangled name if scoped", () => {
+      const versions = createTypingsVersionRaw("@foo/bar", {}, [], {});
+      data = new TypingsData(versions["1.0"], false);
+
+      expect(data.fullNpmName).toBe("@types/foo__bar");
+    });
+  });
+
+  describe("fullEscapedNpmName", () => {
+    it("returns escaped name", () => {
+      expect(data.fullEscapedNpmName).toBe("@types%2fknown");
+    });
   });
 });
