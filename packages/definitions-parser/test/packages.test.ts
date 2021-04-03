@@ -6,7 +6,9 @@ import {
   TypingsData,
   License,
   getMangledNameForScopedPackage,
-  NotNeededPackage
+  NotNeededPackage,
+  getLicenseFromPackageJson,
+  getDependencyFromFile
 } from "../src/packages";
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
@@ -28,6 +30,31 @@ describe(AllPackages, () => {
     expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
       { name: "jquery", version: { major: 1, minor: 0 } }
     ]);
+  });
+
+  describe("getNotNeededPackage", () => {
+    it("returns specified package", () => {
+      const pkg = allPackages.getNotNeededPackage("angular");
+      expect(pkg).toBeTruthy();
+      expect(allPackages.getNotNeededPackage("non-existent")).toBe(undefined);
+    });
+  });
+
+  describe("hasTypingFor", () => {
+    it("returns true if typings exist", () => {
+      expect(
+        allPackages.hasTypingFor({
+          name: "jquery",
+          version: "*"
+        })
+      ).toBe(true);
+      expect(
+        allPackages.hasTypingFor({
+          name: "nonExistent",
+          version: "*"
+        })
+      ).toBe(false);
+    });
   });
 });
 
@@ -206,5 +233,57 @@ describe(NotNeededPackage, () => {
     expect(data.deprecatedMessage()).toBe(
       "This is a stub types definition. real-package provides its own type definitions, so you do not need this installed."
     );
+  });
+});
+
+describe(getLicenseFromPackageJson, () => {
+  it("returns MIT by default", () => {
+    expect(getLicenseFromPackageJson(undefined)).toBe(License.MIT);
+  });
+
+  it("throws if license is MIT", () => {
+    expect(() => getLicenseFromPackageJson("MIT")).toThrow();
+  });
+
+  it("returns known licenses", () => {
+    expect(getLicenseFromPackageJson(License.Apache20)).toBe(License.Apache20);
+  });
+
+  it("throws if unknown license", () => {
+    expect(() => getLicenseFromPackageJson("nonsense")).toThrow();
+  });
+});
+
+describe(getDependencyFromFile, () => {
+  it("returns undefined for unversioned paths", () => {
+    expect(getDependencyFromFile("types/a")).toBe(undefined);
+  });
+
+  it("returns undefined if not in types directory", () => {
+    expect(getDependencyFromFile("foo/bar/v3/baz")).toBe(undefined);
+  });
+
+  it("returns parsed version for versioned paths", () => {
+    expect(getDependencyFromFile("types/a/v3.5")).toEqual({
+      name: "a",
+      version: {
+        major: 3,
+        minor: 5
+      }
+    });
+    expect(getDependencyFromFile("types/a/v3")).toEqual({
+      name: "a",
+      version: {
+        major: 3,
+        minor: undefined
+      }
+    });
+  });
+
+  it("returns undefined for unversioned subpaths", () => {
+    expect(getDependencyFromFile("types/a/vnotaversion")).toEqual({
+      name: "a",
+      version: "*"
+    });
   });
 });
