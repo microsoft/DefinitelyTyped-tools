@@ -1,6 +1,13 @@
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
-import { AllPackages, TypingsVersions, TypingsData, License } from "../src/packages";
+import {
+  AllPackages,
+  TypingsVersions,
+  TypingsData,
+  License,
+  getMangledNameForScopedPackage,
+  NotNeededPackage
+} from "../src/packages";
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
@@ -115,6 +122,7 @@ describe(TypingsData, () => {
         minor: 0
       }
     });
+    expect(data.isNotNeeded()).toBe(false);
   });
 
   describe("unescapedName", () => {
@@ -160,5 +168,43 @@ describe(TypingsData, () => {
     it("returns escaped name", () => {
       expect(data.fullEscapedNpmName).toBe("@types%2fknown");
     });
+  });
+});
+
+describe(getMangledNameForScopedPackage, () => {
+  it("returns unscoped names as-is", () => {
+    expect(getMangledNameForScopedPackage("foo")).toBe("foo");
+  });
+
+  it("returns mangled names for scoped packages", () => {
+    expect(getMangledNameForScopedPackage("@foo/bar")).toBe("foo__bar");
+  });
+});
+
+describe(NotNeededPackage, () => {
+  let data: NotNeededPackage;
+
+  beforeEach(() => {
+    data = new NotNeededPackage("types-package", "real-package", "1.0.0");
+  });
+
+  it("sets the correct properties", () => {
+    expect(data.license).toBe(License.MIT);
+    expect(data.name).toBe("types-package");
+    expect(data.libraryName).toBe("real-package");
+    expect(data.version).toEqual({
+      major: 1,
+      minor: 0,
+      patch: 0
+    });
+    expect(data.major).toBe(1);
+    expect(data.minor).toBe(0);
+    expect(data.isLatest).toBe(true);
+    expect(data.isNotNeeded()).toBe(true);
+    expect(data.declaredModules).toEqual([]);
+    expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
+    expect(data.deprecatedMessage()).toBe(
+      "This is a stub types definition. real-package provides its own type definitions, so you do not need this installed."
+    );
   });
 });
