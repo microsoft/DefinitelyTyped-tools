@@ -4,7 +4,7 @@ import { randomBytes, createHash } from "crypto";
 import { promisify } from "util";
 import { execSync } from "child_process";
 import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult, PackageBenchmark } from "./types";
-import { execAndThrowErrors } from "@definitelytyped/utils";
+import { assertDefined, execAndThrowErrors } from "@definitelytyped/utils";
 import {
   PackageId,
   gitChanges,
@@ -168,6 +168,8 @@ export function toPackageKey(
           version: { major: packageIdOrName.packageVersionMajor, minor: packageIdOrName.packageVersionMinor }
         }
       : packageIdOrName;
+
+  assertDefined(packageId.version, `Could not determine package version from benchmark: ${JSON.stringify(packageIdOrName, undefined, 2)}`);
   return `${packageId.name}/${formatDependencyVersion(packageId.version)}`;
 }
 
