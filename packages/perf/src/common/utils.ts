@@ -169,7 +169,10 @@ export function toPackageKey(
         }
       : packageIdOrName;
 
-  assertDefined(packageId.version, `Could not determine package version from benchmark: ${JSON.stringify(packageIdOrName, undefined, 2)}`);
+  assertDefined(
+    packageId.version,
+    `Could not determine package version from benchmark: ${JSON.stringify(packageIdOrName, undefined, 2)}`
+  );
   return `${packageId.name}/${formatDependencyVersion(packageId.version)}`;
 }
 
