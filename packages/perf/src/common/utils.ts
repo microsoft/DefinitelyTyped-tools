@@ -132,7 +132,7 @@ export function createDocument<T>(body: T, version: number): Document<T> {
 export function isVersionedBenchmark(
   obj: any
 ): obj is Pick<PackageBenchmark, "packageVersionMajor" | "packageVersionMinor"> {
-  return typeof obj.packageVersionMajor === "number" && obj.packageVersionMinor === "number";
+  return typeof obj.packageVersionMajor === "number" && typeof obj.packageVersionMinor === "number";
 }
 
 export function packageVersionsAreEqual(
