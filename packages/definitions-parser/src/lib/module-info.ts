@@ -148,13 +148,13 @@ export function allReferencedFiles(
   fs: FS,
   packageName: string,
   baseDirectory: string
-): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
+): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; deepImports: Set<string> } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
-  let hasNonRelativeImports = false;
+  const deepImports = new Set<string>();
   entryFilenames.forEach(text => recur({ text, exact: true }));
-  return { types, tests, hasNonRelativeImports };
+  return { types, tests, deepImports };
 
   function recur({ text, exact }: Reference): void {
     const resolvedFilename = exact ? text : resolveModule(text, fs);
@@ -172,14 +172,16 @@ export function allReferencedFiles(
         tests.set(resolvedFilename, src);
       }
 
-      const { refs, hasNonRelativeImports: result } = findReferencedFiles(
+      const { refs, deepImports: result } = findReferencedFiles(
         src,
         packageName,
         path.dirname(resolvedFilename),
         normalizeSlashes(path.relative(baseDirectory, fs.debugPath()))
       );
       refs.forEach(recur);
-      hasNonRelativeImports = hasNonRelativeImports || result;
+      for (const rootName of result) {
+        deepImports.add(rootName);
+      }
     }
   }
 }
@@ -218,7 +220,7 @@ interface Reference {
  */
 function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirectory: string, baseDirectory: string) {
   const refs: Reference[] = [];
-  let hasNonRelativeImports = false;
+  const deepImports = new Set<string>();
 
   for (const ref of src.referencedFiles) {
     // Any <reference path="foo"> is assumed to be local
@@ -236,12 +238,20 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
   for (const ref of imports(src)) {
     if (ref.startsWith(".")) {
       addReference({ text: ref, exact: false });
-    } else if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
-      addReference({ text: convertToRelativeReference(ref), exact: false });
-      hasNonRelativeImports = true;
+    } else {
+      if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
+        addReference({ text: convertToRelativeReference(ref), exact: false });
+      }
+      let slash = ref.indexOf("/");
+      if (ref.startsWith("@")) {
+        slash = ref.indexOf("/", slash + 1);
+      }
+      if (slash !== -1) {
+        deepImports.add(ref.slice(0, slash));
+      }
     }
   }
-  return { refs, hasNonRelativeImports };
+  return { refs, deepImports };
 
   function addReference(ref: Reference): void {
     // `path.normalize` may add windows slashes
