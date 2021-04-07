@@ -24,7 +24,7 @@ describe(getTypingInfo, () => {
       "index.d.ts",
       `// Type definitions for @ckeditor/ckeditor-engine 25.0
 // Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
-// Definitions by: Federico <https://github.com/fedemp>
+// Definitions by: My Self <https://github.com/ñ>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 import * as utils from '@ckeditor/ckeditor5-utils';`
@@ -47,7 +47,7 @@ import * as utils from '@ckeditor/ckeditor5-utils';`
       "index.d.ts",
       `// Type definitions for @ckeditor/ckeditor5-utils 25.0
 // Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils
-// Definitions by: Federico <https://github.com/fedemp>
+// Definitions by: My Self <https://github.com/ñ>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 export function myFunction(arg:string): string;
  `
@@ -201,7 +201,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
         "index.d.ts",
         `// Type definitions for @ckeditor/ckeditor-utils 25.0
 // Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
-// Definitions by: Federico <https://github.com/fedemp>
+// Definitions by: My Self <https://github.com/ñ>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 `
       );
@@ -260,6 +260,37 @@ const a = new webpack.AutomaticPrefetchPlugin();
         dt.addOldVersionOfPackage("jquery", "1");
         return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
           'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
+        );
+      });
+
+      it("checks that scoped older versions with non-relative imports have wildcard path mappings", () => {
+        const dt = createMockDT();
+        const pkg = dt.pkgDir("ckeditor__ckeditor5-utils");
+        pkg.set(
+          "index.d.ts",
+          `// Type definitions for @ckeditor/ckeditor5-utils 25.0
+// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils
+// Definitions by: My Self <https://github.com/ñ>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+import first from "@ckeditor/ckeditor5-utils/src/first";
+ `
+        );
+        pkg.set(
+          "tsconfig.json",
+          JSON.stringify({
+            files: ["index.d.ts"],
+            compilerOptions: {
+              paths: {}
+            }
+          })
+        );
+
+        dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
+
+        return expect(
+          getTypingInfo("ckeditor__ckeditor5-utils", dt.pkgFS("ckeditor__ckeditor5-utils"))
+        ).rejects.toThrow(
+          '@ckeditor/ckeditor5-utils: Older version 10 must have a "paths" entry of "@ckeditor/ckeditor5-utils/*": ["ckeditor__ckeditor5-utils/v10/*"]'
         );
       });
     });
