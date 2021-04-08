@@ -107,7 +107,7 @@ function checkPathMappings(allPackages: AllPackages): void {
     }
 
     for (const unusedPathMapping of unusedPathMappings) {
-      if (pkg.name !== unusedPathMapping) {
+      if (pkg.name !== unusedPathMapping && pkg.unescapedName !== unusedPathMapping) {
         throw new Error(`${pkg.desc} has unused path mapping for ${unusedPathMapping}`);
       }
     }
