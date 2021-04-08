@@ -40,11 +40,11 @@ export function mangleScopedPackage(packageName: string): string {
 }
 
 export function removeVersionFromPackageName(packageName: string | undefined): string | undefined {
-  return packageName?.replace(/\/v(\d){1,}$/i, "");
+  return packageName?.replace(/\/v\d+(\/\*)?$/, "$1");
 }
 
 export function hasVersionNumberInMapping(packageName: string): boolean {
-  return /\/v\d+$/.test(packageName);
+  return /\/v\d+(\/\*)?$/.test(packageName);
 }
 
 export async function sleep(seconds: number): Promise<void> {

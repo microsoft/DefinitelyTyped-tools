@@ -336,12 +336,13 @@ function getTypingDataForSingleTypesVersion(
   );
 
   const { paths } = tsconfig.compilerOptions;
-  if (directoryVersion && hasNonRelativeImports && !(paths && `${packageName}/*` in paths)) {
+  const hydratedPackageName = unmangleScopedPackage(packageName) ?? packageName;
+  if (directoryVersion && hasNonRelativeImports && !(paths && `${hydratedPackageName}/*` in paths)) {
     const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}/*`]);
     throw new Error(
-      `${packageName}: Older version ${formatTypingVersion(
+      `${hydratedPackageName}: Older version ${formatTypingVersion(
         directoryVersion
-      )} must have a "paths" entry of "${packageName}/*": ${mapping}`
+      )} must have a "paths" entry of "${hydratedPackageName}/*": ${mapping}`
     );
   }
 
