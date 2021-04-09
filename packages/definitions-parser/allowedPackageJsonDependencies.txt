@@ -222,6 +222,7 @@
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
+@sinonjs/fake-timers
 @storybook/addons
 @storybook/react
 @testing-library/dom
