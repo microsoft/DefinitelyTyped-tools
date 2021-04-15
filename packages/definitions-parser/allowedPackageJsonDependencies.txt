@@ -253,6 +253,7 @@
 @types/wonder-frp
 @uirouter/angularjs
 @vue/test-utils
+@wordpress/api-fetch
 @wordpress/element
 abort-controller
 actions-on-google
