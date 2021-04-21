@@ -14,6 +14,7 @@
 @emotion/styled
 @hapi/boom
 @hapi/iron
+@hapi/podium
 @hapi/wreck
 @jest/environment
 @jest/fake-timers
