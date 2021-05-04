@@ -451,6 +451,8 @@ smooth-scrollbar
 scroll-into-view-if-needed
 semantic-ui-react
 ssim.js
+socket.io
+socket.io-client
 source-map
 styled-components
 sw-toolbox
