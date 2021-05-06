@@ -52,14 +52,12 @@ async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Prom
     cb().then(
       () => remove(lockFilePath),
       async error => {
-        await removeLock();
-        applicationinsights.defaultClient.trackEvent({
-          name: "crash",
-          properties: {
-            error: String(error)
-          }
+        console.error(error?.message || error);
+        applicationinsights.defaultClient.trackException({
+          exception: error,
         });
 
+        await removeLock();
         process.exit(1);
       }
     );
