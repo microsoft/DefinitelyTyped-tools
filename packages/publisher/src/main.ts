@@ -54,7 +54,7 @@ async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Prom
       async error => {
         console.error(error?.message || error);
         applicationinsights.defaultClient.trackException({
-          exception: error,
+          exception: error
         });
 
         await removeLock();
