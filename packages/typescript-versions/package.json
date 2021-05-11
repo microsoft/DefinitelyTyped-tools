@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/typescript-versions",
-  "version": "0.0.80",
+  "version": "0.0.81-next.8",
   "description": "List of supported TypeScript versions",
   "author": "Andrew Branch <andrew@wheream.io>",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
