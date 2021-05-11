@@ -169,7 +169,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("3.7")).toEqual(["3.7", "3.8", "3.9", "4.0", "4.1", "4.2", "4.3"]);
+    expect(TypeScriptVersion.range("3.7")).toEqual(["3.7", "3.8", "3.9", "4.0", "4.1", "4.2", "4.3", "4.4"]);
   });
   it("includes 3.5 onwards", () => {
     expect(TypeScriptVersion.range("3.5")).toEqual(TypeScriptVersion.supported);
@@ -178,7 +178,7 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.9")).toEqual(["ts3.9", "ts4.0", "ts4.1", "ts4.2", "ts4.3", "latest"]);
+    expect(TypeScriptVersion.tagsToUpdate("3.9")).toEqual(["ts3.9", "ts4.0", "ts4.1", "ts4.2", "ts4.3", "ts4.4", "latest"]);
   });
   it("allows 3.5 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("3.5")).toEqual(
