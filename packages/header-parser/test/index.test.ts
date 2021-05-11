@@ -178,7 +178,15 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.9")).toEqual(["ts3.9", "ts4.0", "ts4.1", "ts4.2", "ts4.3", "ts4.4", "latest"]);
+    expect(TypeScriptVersion.tagsToUpdate("3.9")).toEqual([
+      "ts3.9",
+      "ts4.0",
+      "ts4.1",
+      "ts4.2",
+      "ts4.3",
+      "ts4.4",
+      "latest"
+    ]);
   });
   it("allows 3.5 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("3.5")).toEqual(
