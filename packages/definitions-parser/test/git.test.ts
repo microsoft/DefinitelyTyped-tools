@@ -23,47 +23,41 @@ const deleteJestDiffs: GitDiff[] = [
 
 testo({
   ok() {
-    expect(Array.from(getNotNeededPackages(allPackages, deleteJestDiffs))).toEqual(jestNotNeeded);
+    expect(getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
   },
   forgotToDeleteFiles() {
     expect(() =>
-      Array.from(
-        getNotNeededPackages(
-          AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, [], {}) }, jestNotNeeded),
-          deleteJestDiffs
-        )
+      getNotNeededPackages(
+        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, [], {}) }, jestNotNeeded),
+        deleteJestDiffs
       )
     ).toThrow("Please delete all files in jest");
   },
   tooManyDeletes() {
-    expect(() => Array.from(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }]))).toThrow(
+    expect(() => getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toThrow(
       "Unexpected file deleted: oops.txt"
     );
   },
+  deleteInOtherPackage() {
+    expect(getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])).toEqual(jestNotNeeded);
+  },
   extraneousFile() {
-    Array.from(
+    expect(
       getNotNeededPackages(allPackages, [
         { status: "A", file: "oooooooooooops.txt" },
         { status: "M", file: "notNeededPackages.json" },
         { status: "D", file: "types/jest/index.d.ts" },
         { status: "D", file: "types/jest/jest-tests.d.ts" }
       ])
-    );
-  },
-  forgotToUpdateNotNeededJson() {
-    expect(() =>
-      Array.from(
-        getNotNeededPackages(AllPackages.from(typesData, []), [{ status: "D", file: "types/jest/index.d.ts" }])
-      )
-    ).toThrow("Deleted package jest is not in notNeededPackages.json.");
+    ).toEqual(jestNotNeeded)
   },
   scoped() {
-    Array.from(
+    expect(
       getNotNeededPackages(
         AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
-    );
+    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")])
   }
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
