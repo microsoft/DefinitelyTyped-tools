@@ -1,6 +1,6 @@
 import { NpmInfo } from "@definitelytyped/utils";
 import { createTypingsVersionRaw, testo } from "./utils";
-import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
+import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../src/git";
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 
 const typesData: TypesDataFile = {
@@ -64,6 +64,15 @@ testo({
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     );
+  },
+  removingOldVersionsIsAllowed() {
+    expect(
+      gitChanges([
+        { status: "D", file: "types/zoolander/v1/index.d.ts" },
+        { status: "D", file: "types/zoolander/v1/zoolander-tests.ts" },
+        { status: "D", file: "types/zoolander/v1/tslint.json" }
+      ])
+    ).toHaveLength(0);
   }
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
