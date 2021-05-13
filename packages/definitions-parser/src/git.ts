@@ -165,7 +165,7 @@ it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmN
 /**
  * 1. Find all the deleted files and group by package (error on deleted files outside a package).
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
-  */
+ */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
   const deletedPackages = new Set(
     diffs
