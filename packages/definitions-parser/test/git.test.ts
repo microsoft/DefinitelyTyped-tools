@@ -39,7 +39,9 @@ testo({
     );
   },
   deleteInOtherPackage() {
-    expect(getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])).toEqual(jestNotNeeded);
+    expect(
+      getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
+    ).toEqual(jestNotNeeded);
   },
   extraneousFile() {
     expect(
@@ -49,7 +51,7 @@ testo({
         { status: "D", file: "types/jest/index.d.ts" },
         { status: "D", file: "types/jest/jest-tests.d.ts" }
       ])
-    ).toEqual(jestNotNeeded)
+    ).toEqual(jestNotNeeded);
   },
   scoped() {
     expect(
@@ -57,7 +59,7 @@ testo({
         AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
-    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")])
+    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
   }
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc

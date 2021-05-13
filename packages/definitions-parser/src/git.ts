@@ -180,16 +180,15 @@ When removing packages, you should only delete files that are a part of removed 
       )
   );
   return mapDefined(deletedPackages, p => {
-    const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" })
-    const notNeeded = allPackages.getNotNeededPackage(p)
+    const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" });
+    const notNeeded = allPackages.getNotNeededPackage(p);
     if (hasTyping) {
       if (notNeeded) {
         throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
       }
-      return undefined
-    }
-    else {
-        return notNeeded;
+      return undefined;
+    } else {
+      return notNeeded;
     }
   });
 }
