@@ -1,15 +1,36 @@
 import crypto from "crypto";
 
-export function parseJson(text: string): object {
+export function tryParseJson<T>(text: string): unknown;
+export function tryParseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T): T | undefined;
+export function tryParseJson<T>(text: string, predicate?: (parsed: unknown) => parsed is T) {
   try {
-    return JSON.parse(text) as object;
+    return parseJson(text, predicate);
+  } catch {
+    return undefined;
+  }
+}
+
+export function parseJson<T>(text: string): unknown;
+export function parseJson<T>(text: string, predicate?: (parsed: unknown) => parsed is T): T;
+export function parseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T = (_): _ is T => true) {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
   } catch (err) {
     throw new Error(`${(err as Error).message} due to JSON: ${text}`);
   }
+  if (!predicate(parsed)) {
+    throw new Error('Parsed JSON did not match required form');
+  }
+  return parsed;
 }
 
 export function identity<T>(t: T): T {
   return t;
+}
+
+export function isObject(value: unknown): value is object {
+  return !!value && typeof value === "object";
 }
 
 export function withoutStart(s: string, start: string): string | undefined {
