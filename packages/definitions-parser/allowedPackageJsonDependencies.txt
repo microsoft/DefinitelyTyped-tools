@@ -262,6 +262,8 @@
 @types/react-native-tab-view
 @types/react-navigation
 @types/rsmq
+@types/socket.io
+@types/socket.io-client
 @types/three
 @types/vue
 @types/webdriverio
