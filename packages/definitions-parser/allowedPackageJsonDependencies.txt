@@ -351,6 +351,7 @@ glaze
 globby
 google-auth-library
 google-gax
+got
 graphql
 graphql-tools
 grpc
