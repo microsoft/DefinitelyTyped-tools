@@ -259,6 +259,7 @@
 @types/leaflet
 @types/mkdirp-promise
 @types/next-redux-wrapper
+@types/node
 @types/react-native-tab-view
 @types/react-navigation
 @types/rsmq
