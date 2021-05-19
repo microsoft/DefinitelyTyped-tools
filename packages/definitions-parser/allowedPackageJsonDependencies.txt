@@ -245,6 +245,7 @@
 @storybook/react
 @testing-library/dom
 @tweenjs/tween.js
+@types/anymatch
 @types/autoprefixer
 @types/base-x
 @types/expect
@@ -284,6 +285,7 @@ ajv
 algoliasearch
 algoliasearch-helper
 anydb-sql
+anymatch
 aphrodite
 apollo-client
 apollo-link
