@@ -275,9 +275,9 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("# Details");
   lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}.`);
 
-  if (typing.dtsFiles.length === 1) {
+  if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
     const dts = typing.dtsFiles[0]
-    lines.push("## " + path.basename(dts))
+    lines.push(`## ${typing.dtsFiles[0]}`)
     lines.push("```ts")
     lines.push(packageFS.readFile(dts))
     lines.push("```")
