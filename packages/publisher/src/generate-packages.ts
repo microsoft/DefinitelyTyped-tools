@@ -177,7 +177,7 @@ export function createPackageJSON(
     version,
     description: `TypeScript definitions for ${typing.libraryName}`,
     // keywords,
-    // homepage,
+    homepage: `https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/${typing.name}`,
     // bugs,
     license: typing.license,
     contributors: typing.contributors,
