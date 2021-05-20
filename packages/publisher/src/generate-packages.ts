@@ -277,10 +277,11 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
 
   if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
     const dts = typing.dtsFiles[0]
-    lines.push(`## ${typing.dtsFiles[0]}`)
-    lines.push("```ts")
+    const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`
+    lines.push(`## [${typing.dtsFiles[0]}](${url})`)
+    lines.push("````ts")
     lines.push(packageFS.readFile(dts))
-    lines.push("```")
+    lines.push("````")
   }
 
   lines.push("");
