@@ -15,7 +15,7 @@ import {
   createMockDT
 } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
-import { Registry } from "@definitelytyped/utils";
+import { Registry, InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
@@ -51,6 +51,19 @@ function createTypesData(): TypesDataFile {
 function createUnneededPackage() {
   return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
+
+function defaultFS(): FS {
+  const pkg = new Dir(undefined);
+  pkg.set(
+    "index.d.ts",
+    `type T = import("./types");
+`
+  );
+  pkg.set("jquery.test.ts", "// tests");
+  const memFS = new InMemoryFS(pkg, "types/mock");
+  return memFS
+}
+
 testo({
   mitLicenseText() {
     const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
@@ -62,21 +75,32 @@ testo({
   },
   basicReadme() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("This package contains type definitions for"));
+    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("This package contains type definitions for"));
   },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("jquery.org"));
+    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("jquery.org"));
   },
   readmeOneDependency() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(
+    expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
     );
   },
+  readmeContainsSingleFileDTS() {
+    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, defaultFS())).toContain("type T = import")
+  },
+  readmeContainsManyDTSFilesDoesNotAmendREADME() {
+    const rawPkg = createRawPackage(License.Apache20)
+    // @ts-expect-error - files is readonly
+    rawPkg.files = ["index.d.ts", "other.d.ts"]
+    const typing = new TypingsData(rawPkg, /*isLatest*/ true);
+    expect(createReadme(typing, defaultFS())).not.toContain("type T = import")
+  },
   readmeNoGlobals() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("Global values: none"));
+    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("Global values: none"));
   },
   basicPackageJson() {
     const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));

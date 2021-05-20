@@ -98,13 +98,13 @@ async function generateTypingPackage(
   await writeCommonOutputs(
     typing,
     createPackageJSON(typing, version, packages, Registry.NPM),
-    createReadme(typing),
+    createReadme(typing, packageFS),
     Registry.NPM
   );
   await writeCommonOutputs(
     typing,
     createPackageJSON(typing, version, packages, Registry.Github),
-    createReadme(typing),
+    createReadme(typing, packageFS),
     Registry.Github
   );
   await Promise.all(
@@ -258,7 +258,7 @@ export function createNotNeededPackageJSON(
   return JSON.stringify(out, undefined, 4);
 }
 
-export function createReadme(typing: TypingsData): string {
+export function createReadme(typing: TypingsData, packageFS: FS): string {
   const lines: string[] = [];
   lines.push("# Installation");
   lines.push(`> \`npm install --save ${typing.fullNpmName}\``);
@@ -274,6 +274,15 @@ export function createReadme(typing: TypingsData): string {
 
   lines.push("# Details");
   lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}.`);
+
+  if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
+    const dts = typing.dtsFiles[0]
+    const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`
+    lines.push(`## [${typing.dtsFiles[0]}](${url})`)
+    lines.push("````ts")
+    lines.push(packageFS.readFile(dts))
+    lines.push("````")
+  }
 
   lines.push("");
   lines.push("### Additional Details");
