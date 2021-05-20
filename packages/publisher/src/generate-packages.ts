@@ -276,12 +276,12 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}.`);
 
   if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
-    const dts = typing.dtsFiles[0]
-    const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`
-    lines.push(`## [${typing.dtsFiles[0]}](${url})`)
-    lines.push("````ts")
-    lines.push(packageFS.readFile(dts))
-    lines.push("````")
+    const dts = typing.dtsFiles[0];
+    const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`;
+    lines.push(`## [${typing.dtsFiles[0]}](${url})`);
+    lines.push("````ts");
+    lines.push(packageFS.readFile(dts));
+    lines.push("````");
   }
 
   lines.push("");

@@ -61,7 +61,7 @@ function defaultFS(): FS {
   );
   pkg.set("jquery.test.ts", "// tests");
   const memFS = new InMemoryFS(pkg, "types/mock");
-  return memFS
+  return memFS;
 }
 
 testo({
@@ -75,7 +75,9 @@ testo({
   },
   basicReadme() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("This package contains type definitions for"));
+    expect(createReadme(typing, defaultFS())).toEqual(
+      expect.stringContaining("This package contains type definitions for")
+    );
   },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
@@ -89,14 +91,14 @@ testo({
   },
   readmeContainsSingleFileDTS() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).toContain("type T = import")
+    expect(createReadme(typing, defaultFS())).toContain("type T = import");
   },
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
-    const rawPkg = createRawPackage(License.Apache20)
+    const rawPkg = createRawPackage(License.Apache20);
     // @ts-expect-error - files is readonly
-    rawPkg.files = ["index.d.ts", "other.d.ts"]
+    rawPkg.files = ["index.d.ts", "other.d.ts"];
     const typing = new TypingsData(rawPkg, /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).not.toContain("type T = import")
+    expect(createReadme(typing, defaultFS())).not.toContain("type T = import");
   },
   readmeNoGlobals() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
