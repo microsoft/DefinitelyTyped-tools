@@ -85,6 +85,7 @@ testo({
     "name": "@types/jquery",
     "version": "1.0",
     "description": "TypeScript definitions for jquery",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery",
     "license": "MIT",
     "contributors": [
         {
