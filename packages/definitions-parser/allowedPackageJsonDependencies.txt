@@ -52,6 +52,7 @@
 @maxim_mazurok/gapi.client.area120tables
 @maxim_mazurok/gapi.client.artifactregistry
 @maxim_mazurok/gapi.client.assuredworkloads
+@maxim_mazurok/gapi.client.baremetalsolution
 @maxim_mazurok/gapi.client.bigquery
 @maxim_mazurok/gapi.client.bigqueryconnection
 @maxim_mazurok/gapi.client.bigquerydatatransfer
@@ -136,6 +137,7 @@
 @maxim_mazurok/gapi.client.gkehub
 @maxim_mazurok/gapi.client.gmail
 @maxim_mazurok/gapi.client.gmailpostmastertools
+@maxim_mazurok/gapi.client.googleads
 @maxim_mazurok/gapi.client.groupsmigration
 @maxim_mazurok/gapi.client.groupssettings
 @maxim_mazurok/gapi.client.healthcare
@@ -161,6 +163,7 @@
 @maxim_mazurok/gapi.client.monitoring
 @maxim_mazurok/gapi.client.mybusinessaccountmanagement
 @maxim_mazurok/gapi.client.mybusinesslodging
+@maxim_mazurok/gapi.client.mybusinessplaceactions
 @maxim_mazurok/gapi.client.networkconnectivity
 @maxim_mazurok/gapi.client.networkmanagement
 @maxim_mazurok/gapi.client.notebooks
@@ -170,6 +173,7 @@
 @maxim_mazurok/gapi.client.osconfig
 @maxim_mazurok/gapi.client.oslogin
 @maxim_mazurok/gapi.client.pagespeedonline
+@maxim_mazurok/gapi.client.paymentsresellersubscription
 @maxim_mazurok/gapi.client.people
 @maxim_mazurok/gapi.client.playablelocations
 @maxim_mazurok/gapi.client.playcustomapp
@@ -181,6 +185,7 @@
 @maxim_mazurok/gapi.client.pubsub
 @maxim_mazurok/gapi.client.pubsublite
 @maxim_mazurok/gapi.client.realtimebidding
+@maxim_mazurok/gapi.client.recaptchaenterprise
 @maxim_mazurok/gapi.client.recommendationengine
 @maxim_mazurok/gapi.client.recommender
 @maxim_mazurok/gapi.client.redis
