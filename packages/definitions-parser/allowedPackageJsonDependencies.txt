@@ -337,6 +337,7 @@ electron-notarize
 electron-osx-sign
 electron-store
 ember-cli-htmlbars
+eris
 ethers
 eventemitter2
 eventemitter3
