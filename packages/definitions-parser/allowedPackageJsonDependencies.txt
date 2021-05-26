@@ -264,6 +264,7 @@
 @types/js-data
 @types/leaflet
 @types/mkdirp-promise
+@types/mongoose
 @types/next-redux-wrapper
 @types/node
 @types/react-native-tab-view
@@ -407,6 +408,7 @@ moment
 moment-range
 moment-timezone
 monaco-editor
+mongoose
 mqtt
 next
 nock
