@@ -12,7 +12,7 @@ class DTMock {
       JSON.stringify({
         packages: {
           angular: {
-            libraryName: "Angular 2",
+            libraryName: "angular 2",
             asOfVersion: "1.2.3"
           }
         }
