@@ -237,14 +237,16 @@ describe(NotNeededPackage, () => {
 
   describe("fromRaw", () => {
     it("throws on uppercase package name", () => {
-      expect(() => NotNeededPackage.fromRaw("noUISlider", { libraryName: "nouislider", asOfVersion: "16.0.0" }))
-        .toThrow("not-needed package 'noUISlider' must use all lower-case letters.")
-    })
+      expect(() =>
+        NotNeededPackage.fromRaw("noUISlider", { libraryName: "nouislider", asOfVersion: "16.0.0" })
+      ).toThrow("not-needed package 'noUISlider' must use all lower-case letters.");
+    });
     it("throws on uppercase library name", () => {
-      expect(() => NotNeededPackage.fromRaw("nouislider", { libraryName: "noUISlider", asOfVersion: "16.0.0" }))
-        .toThrow("not-needed package 'nouislider' must use a libraryName that is all lower-case letters.")
-    })
-  })
+      expect(() =>
+        NotNeededPackage.fromRaw("nouislider", { libraryName: "noUISlider", asOfVersion: "16.0.0" })
+      ).toThrow("not-needed package 'nouislider' must use a libraryName that is all lower-case letters.");
+    });
+  });
 });
 
 describe(getLicenseFromPackageJson, () => {
