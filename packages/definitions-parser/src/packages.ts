@@ -268,10 +268,16 @@ export class NotNeededPackage extends PackageBase {
   }
 
   static fromRaw(name: string, raw: NotNeededPackageRaw) {
+    if (name !== name.toLowerCase()) {
+      throw new Error(`not-needed package '${name}' must use all lower-case letters.`)
+    }
     for (const key of Object.keys(raw)) {
       if (!["libraryName", "sourceRepoURL", "asOfVersion"].includes(key)) {
         throw new Error(`Unexpected key in not-needed package: ${key}`);
       }
+    }
+    if (raw.libraryName !== raw.libraryName.toLowerCase()) {
+      throw new Error(`not-needed package '${name}' must use a libraryName that is all lower-case letters.`)
     }
 
     return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
