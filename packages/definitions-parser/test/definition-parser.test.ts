@@ -75,6 +75,58 @@ export function myFunction(arg:string): string;
     dt.addOldVersionOfPackage("jquery", "2");
     // now add a dependency that maps to jquery/1.42
   });
+  it("allows path mapping to node/buffer", async () => {
+    // Actually, the default seup already has 'has-older-test-dependency', so probably doesn't need an explicit test
+    const dt = createMockDT();
+    const safer = dt.pkgDir("safer");
+    safer.set(
+      "index.d.ts",
+      `// Type definitions for safer 1.0
+// Project: https://github.com/safer/safer
+// Definitions by: Noone <https://github.com/noone>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+/// <reference types="node" />
+export * from 'buffer';
+`
+    );
+    safer.set("safer-tests.ts", "");
+    safer.set(
+      "tsconfig.json",
+      `{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "baseUrl": "../",
+        "typeRoots": [
+            "../"
+        ],
+        "types": [],
+        "paths": {
+            "buffer": [
+                "node/buffer"
+            ]
+        },
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "safer-tests.ts"
+    ]
+} `
+    );
+
+    const info = await getTypingInfo("safer", dt.pkgFS("safer"));
+    expect(info).toBeDefined();
+    expect(info["1.0"].dependencies).toEqual({ node: "*" });
+  });
   it("errors on arbitrary path mapping", () => {});
   it("supports node_modules passthrough path mapping", async () => {
     const dt = createMockDT();

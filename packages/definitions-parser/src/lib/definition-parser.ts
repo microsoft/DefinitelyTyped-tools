@@ -504,6 +504,12 @@ function calculateDependencies(
       continue;
     }
 
+    // buffer -> node/buffer may be required because of the VERY REAL and NOT NODE buffer package on npm
+    if (dependencyName === "buffer" && pathMapping === "node/buffer") {
+      dependencies["node"] = "*";
+      continue;
+    }
+
     const pathMappingVersion = parseDependencyVersionFromPath(dependencyName, dependencyName, pathMapping);
     if (dependencyName === packageName) {
       if (directoryVersion === undefined) {
