@@ -410,6 +410,7 @@ moment-timezone
 monaco-editor
 mongoose
 mqtt
+msnodesqlv8
 next
 nock
 normalize-url
