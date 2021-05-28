@@ -504,7 +504,8 @@ function calculateDependencies(
       continue;
     }
 
-    // buffer -> node/buffer may be required because of the VERY REAL and NOT NODE buffer package on npm
+    // buffer -> node/buffer may be required because of the non-node 'buffer' package on npm
+    // which DT infrastructure depends on, and which resolves before node's ambient module 'buffer'
     if (dependencyName === "buffer" && pathMapping === "node/buffer") {
       dependencies["node"] = "*";
       continue;
