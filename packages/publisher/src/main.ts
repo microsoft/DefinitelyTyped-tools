@@ -45,9 +45,12 @@ export default function main() {
 type LockFileResult = { triggered: true } | { triggered: false; timestamp: string };
 
 async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Promise<LockFileResult> {
+  console.log("Checking for lock file...");
   if (await pathExists(lockFilePath)) {
+    console.log("Lock file exists; new run not triggered.");
     return { triggered: false, timestamp: await readFile(lockFilePath, "utf8") };
   } else {
+    console.log("Lock file does not exist; writing lock file and running.");
     await writeFile(lockFilePath, currentTimeStamp());
     cb().then(
       () => remove(lockFilePath),
