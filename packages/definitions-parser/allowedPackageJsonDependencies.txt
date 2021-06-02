@@ -466,6 +466,7 @@ scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
 should
+simple-markdown
 smooth-scrollbar
 socket.io
 socket.io-client

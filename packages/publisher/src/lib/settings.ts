@@ -1,5 +1,7 @@
 import { join as joinPaths } from "path";
+import { toS } from "hh-mm-ss";
 
+const hostJson = require("../../host.json");
 const root = joinPaths(__dirname, "..", "..");
 const storageDirPath = process.env.STORAGE_DIR || root;
 export const cacheDirPath = joinPaths(storageDirPath, "cache");
@@ -14,3 +16,8 @@ export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyType
 export const sourceBranch = "master";
 /** URL of azure keyvault. */
 export const azureKeyvault = "https://types-publisher-keys.vault.azure.net";
+
+let functionTimeoutSeconds: number;
+export function getFunctionTimeoutSeconds() {
+  return functionTimeoutSeconds ??= toS(hostJson.functionTimeout);
+}

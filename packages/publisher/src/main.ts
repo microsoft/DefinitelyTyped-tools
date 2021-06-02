@@ -1,11 +1,11 @@
 import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
-import { pathExists, writeFile, readFile, remove } from "fs-extra";
+import { pathExists, writeFile, remove } from "fs-extra";
 import { getSecret, Secret } from "./lib/secrets";
-import { Fetcher, loggerWithErrors } from "@definitelytyped/utils";
+import { Fetcher, loggerWithErrors, tryReadJson } from "@definitelytyped/utils";
 import { currentTimeStamp } from "./util/util";
 import full from "./full";
-import { lockFilePath } from "./lib/settings";
+import { getFunctionTimeoutSeconds, lockFilePath } from "./lib/settings";
 
 export default function main() {
   return withFileLock(lockFilePath, async () => {
@@ -44,31 +44,35 @@ export default function main() {
 
 type LockFileResult = { triggered: true } | { triggered: false; timestamp: string };
 
-async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Promise<LockFileResult> {
+export async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Promise<LockFileResult> {
   console.log("Checking for lock file...");
   if (await pathExists(lockFilePath)) {
-    console.log("Lock file exists; new run not triggered.");
-    return { triggered: false, timestamp: await readFile(lockFilePath, "utf8") };
-  } else {
-    console.log("Lock file does not exist; writing lock file and running.");
-    await writeFile(lockFilePath, currentTimeStamp());
-    cb().then(
-      () => remove(lockFilePath),
-      async error => {
-        console.error(error?.message || error);
-        applicationinsights.defaultClient.trackException({
-          exception: error
-        });
-
-        await removeLock();
-        process.exit(1);
-      }
-    );
-
-    return { triggered: true };
+    const lastRunStartTimestamp = (await tryReadJson(lockFilePath, isLockfileFormat))?.timestamp || currentTimeStamp();
+    const elapsedSeconds = (Date.now() - Date.parse(lastRunStartTimestamp)) / 1000;
+    if (elapsedSeconds < getFunctionTimeoutSeconds()) {
+      console.log("Lock file exists; new run not triggered.");
+      return { triggered: false, timestamp: lastRunStartTimestamp };
+    }
   }
 
-  async function removeLock() {
-    await remove(lockFilePath);
-  }
+  console.log("Lock file does not exist; writing lock file and running.");
+  await writeFile(lockFilePath, JSON.stringify({ timestamp: currentTimeStamp() }));
+  cb().then(
+    () => remove(lockFilePath),
+    async error => {
+      console.error(error?.stack || error?.message || error);
+      applicationinsights.defaultClient.trackException({
+        exception: error,
+      });
+
+      await remove(lockFilePath);
+      process.exit(1);
+    }
+  );
+
+  return { triggered: true };
+}
+
+function isLockfileFormat(parsed: any): parsed is { timestamp: string } {
+  return parsed && typeof parsed === "object" && "timestamp" in parsed;
 }
