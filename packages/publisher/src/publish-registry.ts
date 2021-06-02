@@ -34,7 +34,8 @@ import {
   withNpmCache,
   NpmPublishClient,
   CachedNpmInfoClient,
-  Registry as RegistryName
+  Registry as RegistryName,
+  isObject
 } from "@definitelytyped/utils";
 import { getSecret, Secret } from "./lib/secrets";
 
@@ -192,7 +193,7 @@ async function validate(log: Logger): Promise<void> {
   const output = joinPaths(registryOutputPath, "index.json");
   const nodeModules = joinPaths(validateTypesRegistryPath, "index.json");
   log(`Checking that ${output} is newer than ${nodeModules}`);
-  assertJsonNewer(await readJson(output), await readJson(nodeModules), log);
+  assertJsonNewer(await readJson(output, isObject), await readJson(nodeModules, isObject), log);
 }
 
 async function validateIsSubset(notNeeded: readonly NotNeededPackage[], log: Logger): Promise<void> {
