@@ -470,6 +470,7 @@ simple-markdown
 smooth-scrollbar
 socket.io
 socket.io-client
+sonic-boom
 source-map
 ssim.js
 styled-components
