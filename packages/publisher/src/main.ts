@@ -45,14 +45,17 @@ export default function main() {
 type LockFileResult = { triggered: true } | { triggered: false; timestamp: string };
 
 export async function withFileLock(lockFilePath: string, cb: () => Promise<void>): Promise<LockFileResult> {
+  console.log("Checking for lock file...");
   if (await pathExists(lockFilePath)) {
     const lastRunStartTimestamp = (await tryReadJson(lockFilePath, isLockfileFormat))?.timestamp || currentTimeStamp();
     const elapsedSeconds = (Date.now() - Date.parse(lastRunStartTimestamp)) / 1000;
     if (elapsedSeconds < getFunctionTimeoutSeconds()) {
+      console.log("Lock file exists; new run not triggered.");
       return { triggered: false, timestamp: lastRunStartTimestamp };
     }
   }
 
+  console.log("Lock file does not exist; writing lock file and running.");
   await writeFile(lockFilePath, JSON.stringify({ timestamp: currentTimeStamp() }));
   cb().then(
     () => remove(lockFilePath),
