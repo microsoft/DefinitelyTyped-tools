@@ -23,6 +23,7 @@ describe("miscellany", () => {
 
     it("for versioned package returns package name only", () => {
       expect(removeVersionFromPackageName("@ckeditor/ckeditor5-utils/v10")).toBe("@ckeditor/ckeditor5-utils");
+      expect(removeVersionFromPackageName("@foo/bar/v999.888")).toBe("@foo/bar");
       expect(removeVersionFromPackageName("@foo/bar/v0")).toBe("@foo/bar");
       expect(removeVersionFromPackageName("@foo/bar/V999")).toBe("@foo/bar/V999");
     });
@@ -30,11 +31,13 @@ describe("miscellany", () => {
     it("keeps wildcard path mappings for scoped versioned packages", () => {
       expect(removeVersionFromPackageName("@ckeditor/ckeditor5-utils/*")).toBe("@ckeditor/ckeditor5-utils/*");
       expect(removeVersionFromPackageName("@ckeditor/ckeditor5-utils/v10/*")).toBe("@ckeditor/ckeditor5-utils/*");
+      expect(removeVersionFromPackageName("@ckeditor/ckeditor5-utils/v10.11/*")).toBe("@ckeditor/ckeditor5-utils/*");
     });
 
     it("keeps wildcard path mappings for versioned packages", () => {
       expect(removeVersionFromPackageName("foobar/*")).toBe("foobar/*");
       expect(removeVersionFromPackageName("foobar/v10/*")).toBe("foobar/*");
+      expect(removeVersionFromPackageName("foobar/v10.110/*")).toBe("foobar/*");
     });
   });
 });
