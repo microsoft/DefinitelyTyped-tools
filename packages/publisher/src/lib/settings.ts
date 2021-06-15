@@ -19,5 +19,5 @@ export const azureKeyvault = "https://types-publisher-keys.vault.azure.net";
 
 let functionTimeoutSeconds: number;
 export function getFunctionTimeoutSeconds() {
-  return functionTimeoutSeconds ??= toS(hostJson.functionTimeout);
+  return functionTimeoutSeconds ?? (functionTimeoutSeconds = toS(hostJson.functionTimeout));
 }
