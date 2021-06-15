@@ -62,7 +62,7 @@ export async function withFileLock(lockFilePath: string, cb: () => Promise<void>
     async error => {
       console.error(error?.stack || error?.message || error);
       applicationinsights.defaultClient.trackException({
-        exception: error,
+        exception: error
       });
 
       await remove(lockFilePath);

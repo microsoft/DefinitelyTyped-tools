@@ -20,7 +20,7 @@ export function parseJson<T>(text: string, predicate: (parsed: unknown) => parse
     throw new Error(`${(err as Error).message} due to JSON: ${text}`);
   }
   if (!predicate(parsed)) {
-    throw new Error('Parsed JSON did not match required form');
+    throw new Error("Parsed JSON did not match required form");
   }
   return parsed;
 }

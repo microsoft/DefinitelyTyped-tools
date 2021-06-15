@@ -4,15 +4,22 @@ import { lockFilePath } from "../src/lib/settings";
 import { withFileLock } from "../src/main";
 
 describe("withFileLock", () => {
-
   // The file lock should be cleaned up as part of a successful test run,
   // but we clean up before and after just to make sure we don't create
   // any weird state with a failed or canceled test.
   beforeAll(() => {
-    try { return remove(lockFilePath); } catch { return; }
+    try {
+      return remove(lockFilePath);
+    } catch {
+      return;
+    }
   });
   afterAll(() => {
-    try { return remove(lockFilePath); } catch { return; }
+    try {
+      return remove(lockFilePath);
+    } catch {
+      return;
+    }
   });
 
   function getDeferred() {
@@ -44,6 +51,6 @@ describe("withFileLock", () => {
     // Resolving our promise should clean up.
     resolve();
     await promise;
-    expect(!await pathExists(lockFilePath));
+    expect(!(await pathExists(lockFilePath)));
   });
 });
