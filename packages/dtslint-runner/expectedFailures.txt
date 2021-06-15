@@ -2,3 +2,4 @@ electron-clipboard-extended
 electron-notifications
 electron-notify
 redux-orm
+vscode-webview
