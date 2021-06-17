@@ -397,6 +397,7 @@ magic-string
 mali
 metascraper
 meteor-typings
+middy
 moment
 moment-range
 moment-timezone
