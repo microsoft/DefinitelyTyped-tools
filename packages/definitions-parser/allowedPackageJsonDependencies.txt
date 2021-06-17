@@ -253,9 +253,6 @@
 @types/anymatch
 @types/autoprefixer
 @types/base-x
-@types/eslint
-@types/eslint-visitor-keys
-@types/estree
 @types/expect
 @types/express-serve-static-core
 @types/firebase
