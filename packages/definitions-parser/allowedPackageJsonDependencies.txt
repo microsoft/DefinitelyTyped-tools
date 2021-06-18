@@ -310,6 +310,7 @@ bookshelf
 boxen
 broadcast-channel
 bson
+buffer
 bullmq
 cac
 cash-dom
