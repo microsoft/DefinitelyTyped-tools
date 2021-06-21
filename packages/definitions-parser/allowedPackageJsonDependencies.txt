@@ -332,6 +332,7 @@ date-fns
 dayjs
 decimal.js
 del
+devtools-protocol
 dexie
 dnd-core
 domhandler
