@@ -355,6 +355,7 @@ express-rate-limit
 fast-glob
 fastify
 final-form
+firebase-admin
 flatpickr
 form-data
 fs-jetpack
