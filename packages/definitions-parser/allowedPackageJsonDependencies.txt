@@ -301,6 +301,7 @@ ast-types
 async-done
 autoprefixer
 aws-sdk
+aws-xray-sdk-core
 axe-core
 axios
 base-x
