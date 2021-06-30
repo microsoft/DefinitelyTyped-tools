@@ -455,6 +455,7 @@ react-native-svg
 react-native-svg
 react-native-tab-view
 react-navigation
+react-popper
 recast
 redux
 redux-logic
