@@ -1,4 +1,5 @@
 @apollo/client
+@azure/functions
 @babel/code-frame
 @babel/core
 @babel/generator
