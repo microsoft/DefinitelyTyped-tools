@@ -228,7 +228,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
     // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
     if (ref.fileName.startsWith("../" + packageName + "/")) {
       addReference({ text: ref.fileName, exact: false });
-    } else if (ref.fileName.startsWith(packageName + "/")) {
+    } else if (ref.fileName === packageName || ref.fileName.startsWith(packageName + "/")) {
       addReference({ text: convertToRelativeReference(ref.fileName), exact: false });
     }
   }
@@ -236,7 +236,10 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
   for (const ref of imports(src)) {
     if (ref.startsWith(".")) {
       addReference({ text: ref, exact: false });
-    } else if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
+    } else if (
+      getMangledNameForScopedPackage(ref) === packageName ||
+      getMangledNameForScopedPackage(ref).startsWith(packageName + "/")
+    ) {
       addReference({ text: convertToRelativeReference(ref), exact: false });
       hasNonRelativeImports = true;
     }

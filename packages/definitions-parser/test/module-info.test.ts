@@ -34,6 +34,7 @@ testo({
       "types/boring"
     );
     expect(Array.from(types.keys())).toEqual([
+      "index.d.ts",
       "secondary.d.ts",
       "quaternary.d.ts",
       "tertiary.d.ts",
