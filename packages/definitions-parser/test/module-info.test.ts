@@ -75,6 +75,19 @@ testo({
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "types.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
+  allReferencedFilesIncludesRelativeTypeReferences() {
+    const pkg = new Dir(undefined);
+    pkg.set(
+      "mock-tests.ts",
+      `/// <reference types="./addon.pdf" />
+`
+    );
+    pkg.set("addon.pdf.d.ts", "");
+    const memFS = new InMemoryFS(pkg, "types/mock");
+    const { types, tests } = allReferencedFiles(["mock-tests.ts"], memFS, "mock", "types/mock");
+    expect(Array.from(types.keys())).toEqual(["addon.pdf.d.ts"]);
+    expect(Array.from(tests.keys())).toEqual(["mock-tests.ts"]);
+  },
   getModuleInfoWorksWithOtherFiles() {
     const { types } = getBoringReferences();
     // written as if it were from OTHER_FILES.txt
