@@ -253,10 +253,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirecto
       full = full.slice(packageName.length + 4);
     } else if (baseDirectory && full.startsWith("../" + baseDirectory + "/")) {
       full = full.slice(baseDirectory.length + 4);
-    } else if (
-      full.startsWith("..") &&
-      (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))
-    ) {
+    } else if (full.startsWith(baseDirectory ? "../.." : "..")) {
       throw new Error(
         `${src.fileName}: ` +
           'Definitions must use global references to other packages, not parent ("../xxx") references.' +
