@@ -1,0 +1,21 @@
+{
+  "name": "@definitelytyped/deprecate",
+  "version": "1.0.0",
+  "description": "Loop over the @types packages in npm and mark any that no longer exist in HEAD as deprecated.",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "bin": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.58-next.6",
+    "@definitelytyped/publisher": "^0.0.58-next.6",
+    "@definitelytyped/utils": "^0.0.58-next.3",
+    "@octokit/graphql": "^4.5.6",
+    "yargs": "^16.1.0"
+  },
+  "devDependencies": {
+    "@types/libnpmsearch": "^2.0.1"
+  }
+}
