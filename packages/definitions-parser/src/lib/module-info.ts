@@ -387,7 +387,9 @@ export function getTestDependencies(
     let referencesSelf = false;
 
     for (const { fileName: ref } of referencedFiles) {
-      throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
+      if (ref.endsWith(".d.ts")) {
+        throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
+      }
     }
     for (const { fileName: referencedPackage } of typeReferenceDirectives) {
       if (dependencies.has(referencedPackage)) {
