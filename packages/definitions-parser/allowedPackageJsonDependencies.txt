@@ -499,6 +499,7 @@ utility-types
 vega-typings
 vfile
 vfile-message
+vite
 vue
 vue-router
 vuex
