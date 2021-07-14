@@ -414,6 +414,7 @@ moment
 moment-range
 moment-timezone
 monaco-editor
+mongodb
 mongoose
 mqtt
 msnodesqlv8
