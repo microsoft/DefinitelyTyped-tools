@@ -265,6 +265,7 @@
 @types/js-data
 @types/leaflet
 @types/mkdirp-promise
+@types/mongodb
 @types/mongoose
 @types/next-redux-wrapper
 @types/node
