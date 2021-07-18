@@ -471,6 +471,7 @@ rollup
 rrule
 rxjs
 safe-buffer
+scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
