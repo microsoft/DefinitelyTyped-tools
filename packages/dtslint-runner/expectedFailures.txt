@@ -1,5 +1,6 @@
 electron-clipboard-extended
 electron-notifications
 electron-notify
+ng-cordova
 redux-orm
 vscode-webview
