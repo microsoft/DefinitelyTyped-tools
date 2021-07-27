@@ -176,7 +176,8 @@ export async function isDirectory(path: string): Promise<boolean> {
   return (await stat(path)).isDirectory();
 }
 
-export const npmInstallFlags = "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save  --no-audit";
+export const npmInstallFlags =
+  "--ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links --no-save  --no-audit";
 const downloadTimeout = 1_000_000; // ms
 const connectionTimeout = 800_000; // ms
 
