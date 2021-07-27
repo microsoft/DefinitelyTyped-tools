@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/utils",
-  "version": "0.0.85",
+  "version": "0.0.86-next.10",
   "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/utils#readme",
   "license": "MIT",
