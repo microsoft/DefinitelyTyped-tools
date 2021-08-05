@@ -384,6 +384,7 @@ immer
 immutable
 indefinite-observable
 inversify
+itty-router
 jest-cucumber
 jest-diff
 jest-environment-jsdom
