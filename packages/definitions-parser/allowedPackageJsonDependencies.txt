@@ -485,6 +485,7 @@ sonic-boom
 source-map
 ssim.js
 styled-components
+svelte
 sw-toolbox
 swagger-parser
 tapable
