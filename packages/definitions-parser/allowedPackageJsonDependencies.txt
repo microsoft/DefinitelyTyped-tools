@@ -274,6 +274,7 @@
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
+@types/ssh2-streams
 @types/three
 @types/vue
 @types/webdriverio
