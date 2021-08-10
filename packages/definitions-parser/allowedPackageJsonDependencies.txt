@@ -269,6 +269,7 @@
 @types/mongoose
 @types/next-redux-wrapper
 @types/node
+@types/proposal-relative-indexing-method
 @types/react-native-tab-view
 @types/react-navigation
 @types/rsmq
