@@ -119,7 +119,7 @@ This file is a key/value mapping used by other steps in the process.
             "license": "MIT",
             "dependencies": {
                 "sizzle": "*"
-            }
+            },
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],
