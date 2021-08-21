@@ -407,6 +407,7 @@ logform
 loglevel
 logrocket
 lottie-web
+m3u8stream
 magic-string
 mali
 metascraper
