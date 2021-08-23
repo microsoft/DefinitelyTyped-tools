@@ -257,6 +257,7 @@
 @types/expect
 @types/express-serve-static-core
 @types/firebase
+@types/got
 @types/helmet
 @types/highcharts
 @types/highlight.js
