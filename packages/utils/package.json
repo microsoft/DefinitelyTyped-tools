@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/utils",
-  "version": "0.0.86",
+  "version": "0.0.87-next.1",
   "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/utils#readme",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-versions": "^0.0.86",
+    "@definitelytyped/typescript-versions": "^0.0.87-next.1",
     "@types/node": "^14.14.35",
     "charm": "^1.0.2",
     "fs-extra": "^8.1.0",
