@@ -122,7 +122,7 @@ describe("parseTypeScriptVersionLine", () => {
   });
 
   it("does not allow unallowed version tags", () => {
-    const src = "// TypeScript Version: 4.7";
+    const src = "// TypeScript Version: 5.7";
     expect(() => parseTypeScriptVersionLine(src)).toThrow(`Could not parse version: line is '${src}'`);
   });
 });
