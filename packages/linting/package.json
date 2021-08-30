@@ -1,0 +1,43 @@
+{
+  "name": "@definitelytyped/linting",
+  "version": "0.0.84",
+  "description": "Linting utilities for DefinitelyTyped",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/linting#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/linting"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "dependencies": {
+    "@definitelytyped/header-parser": "^0.0.84",
+    "@definitelytyped/typescript-versions": "^0.0.84",
+    "@definitelytyped/utils": "^0.0.84",
+    "@types/node": "^14.14.35",
+    "charm": "^1.0.2",
+    "fs-extra": "^8.1.0",
+    "fstream": "^1.0.12",
+    "npm-registry-client": "^8.6.0",
+    "strip-json-comments": "^4.0.0",
+    "tar": "^2.2.2",
+    "tar-stream": "^2.1.4",
+    "typescript": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/charm": "^1.0.1",
+    "@types/fs-extra": "^8.1.0",
+    "@types/tar": "^4.0.3",
+    "@types/tar-stream": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

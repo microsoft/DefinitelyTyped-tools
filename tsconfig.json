@@ -5,6 +5,7 @@
     { "path": "packages/definitions-parser" },
     { "path": "packages/dtslint-runner" },
     { "path": "packages/header-parser" },
+    { "path": "packages/linting" },
     { "path": "packages/perf" },
     { "path": "packages/publisher" },
     { "path": "packages/typescript-versions" },
