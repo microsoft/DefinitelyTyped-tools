@@ -270,6 +270,7 @@
 @types/mongoose
 @types/next-redux-wrapper
 @types/node
+@types/node-fetch
 @types/react-native-tab-view
 @types/react-navigation
 @types/rsmq
@@ -423,6 +424,7 @@ mqtt
 msnodesqlv8
 next
 nock
+node-fetch
 normalize-url
 objection
 opentracing
