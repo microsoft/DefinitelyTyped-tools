@@ -253,6 +253,7 @@
 @tweenjs/tween.js
 @types/anymatch
 @types/autoprefixer
+@types/babel__core
 @types/base-x
 @types/expect
 @types/express-serve-static-core
