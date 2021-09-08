@@ -243,6 +243,7 @@
 @maxim_mazurok/gapi.client.youtubeanalytics
 @maxim_mazurok/gapi.client.youtubereporting
 @popperjs/core
+@rdfjs/types
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
