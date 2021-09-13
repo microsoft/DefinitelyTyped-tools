@@ -89,6 +89,7 @@
 @maxim_mazurok/gapi.client.cloudtrace
 @maxim_mazurok/gapi.client.composer
 @maxim_mazurok/gapi.client.compute
+@maxim_mazurok/gapi.client.contactcenterinsights
 @maxim_mazurok/gapi.client.container
 @maxim_mazurok/gapi.client.containeranalysis
 @maxim_mazurok/gapi.client.content
@@ -120,8 +121,10 @@
 @maxim_mazurok/gapi.client.eventarc
 @maxim_mazurok/gapi.client.factchecktools
 @maxim_mazurok/gapi.client.fcm
+@maxim_mazurok/gapi.client.fcmdata
 @maxim_mazurok/gapi.client.file
 @maxim_mazurok/gapi.client.firebase
+@maxim_mazurok/gapi.client.firebaseappcheck
 @maxim_mazurok/gapi.client.firebasedatabase
 @maxim_mazurok/gapi.client.firebasedynamiclinks
 @maxim_mazurok/gapi.client.firebasehosting
@@ -146,9 +149,11 @@
 @maxim_mazurok/gapi.client.iam
 @maxim_mazurok/gapi.client.iamcredentials
 @maxim_mazurok/gapi.client.iap
+@maxim_mazurok/gapi.client.ideahub
 @maxim_mazurok/gapi.client.identitytoolkit
 @maxim_mazurok/gapi.client.indexing
 @maxim_mazurok/gapi.client.jobs
+@maxim_mazurok/gapi.client.keep
 @maxim_mazurok/gapi.client.kgsearch
 @maxim_mazurok/gapi.client.language
 @maxim_mazurok/gapi.client.libraryagent
@@ -163,10 +168,15 @@
 @maxim_mazurok/gapi.client.ml
 @maxim_mazurok/gapi.client.monitoring
 @maxim_mazurok/gapi.client.mybusinessaccountmanagement
+@maxim_mazurok/gapi.client.mybusinessbusinessinformation
 @maxim_mazurok/gapi.client.mybusinesslodging
+@maxim_mazurok/gapi.client.mybusinessnotifications
 @maxim_mazurok/gapi.client.mybusinessplaceactions
+@maxim_mazurok/gapi.client.mybusinessverifications
 @maxim_mazurok/gapi.client.networkconnectivity
 @maxim_mazurok/gapi.client.networkmanagement
+@maxim_mazurok/gapi.client.networksecurity
+@maxim_mazurok/gapi.client.networkservices
 @maxim_mazurok/gapi.client.notebooks
 @maxim_mazurok/gapi.client.oauth2
 @maxim_mazurok/gapi.client.ondemandscanning
@@ -178,6 +188,7 @@
 @maxim_mazurok/gapi.client.people
 @maxim_mazurok/gapi.client.playablelocations
 @maxim_mazurok/gapi.client.playcustomapp
+@maxim_mazurok/gapi.client.policyanalyzer
 @maxim_mazurok/gapi.client.policysimulator
 @maxim_mazurok/gapi.client.policytroubleshooter
 @maxim_mazurok/gapi.client.poly
@@ -190,8 +201,8 @@
 @maxim_mazurok/gapi.client.recommendationengine
 @maxim_mazurok/gapi.client.recommender
 @maxim_mazurok/gapi.client.redis
-@maxim_mazurok/gapi.client.remotebuildexecution
 @maxim_mazurok/gapi.client.reseller
+@maxim_mazurok/gapi.client.resourcesettings
 @maxim_mazurok/gapi.client.retail
 @maxim_mazurok/gapi.client.run
 @maxim_mazurok/gapi.client.runtimeconfig
