@@ -1,7 +1,6 @@
-import "./types/npm-registry-client";
 import assert = require("assert");
 import { ensureFile, pathExists, readJson, writeJson, readFile } from "fs-extra";
-import RegClient from "npm-registry-client";
+import RegClient from "@qiwi/npm-registry-client";
 import { resolve as resolveUrl } from "url";
 import { joinPaths } from "./fs";
 import { loggerWithErrors, Logger } from "./logging";
@@ -165,10 +164,12 @@ function splitToFixedSizeGroups(names: readonly string[], chunkSize: number): re
   return out;
 }
 
+type NeedToFixNpmRegistryClientTypings = any;
+
 export class NpmPublishClient {
   static async create(
     token: string,
-    config?: RegClient.Config,
+    config?: NeedToFixNpmRegistryClientTypings,
     registry: Registry = Registry.NPM
   ): Promise<NpmPublishClient> {
     switch (registry) {
@@ -183,7 +184,7 @@ export class NpmPublishClient {
 
   private constructor(
     private readonly client: RegClient,
-    private readonly auth: RegClient.Credentials,
+    private readonly auth: NeedToFixNpmRegistryClientTypings,
     private readonly registry: string
   ) {}
 
@@ -200,7 +201,7 @@ export class NpmPublishClient {
         dry
           ? undefined
           : promisifyVoid(cb => {
-              this.client.publish(this.registry, { access: "public", auth: this.auth, metadata, body }, cb);
+              this.client.publish(this.registry, { access: "public", auth: this.auth, metadata: metadata as NeedToFixNpmRegistryClientTypings, body: body as NeedToFixNpmRegistryClientTypings }, cb);
             })
       );
     });
