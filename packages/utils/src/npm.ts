@@ -201,7 +201,16 @@ export class NpmPublishClient {
         dry
           ? undefined
           : promisifyVoid(cb => {
-              this.client.publish(this.registry, { access: "public", auth: this.auth, metadata: metadata as NeedToFixNpmRegistryClientTypings, body: body as NeedToFixNpmRegistryClientTypings }, cb);
+              this.client.publish(
+                this.registry,
+                {
+                  access: "public",
+                  auth: this.auth,
+                  metadata: metadata as NeedToFixNpmRegistryClientTypings,
+                  body: body as NeedToFixNpmRegistryClientTypings
+                },
+                cb
+              );
             })
       );
     });
