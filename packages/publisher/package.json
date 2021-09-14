@@ -7,22 +7,21 @@
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
     "@azure/functions": "^1.2.3",
+    "@azure/identity": "^1.5.2",
+    "@azure/keyvault-secrets": "^4.3.0",
     "@definitelytyped/definitions-parser": "^0.0.89-next.0",
     "@definitelytyped/header-parser": "^0.0.88",
     "@definitelytyped/retag": "^0.0.89-next.0",
     "@definitelytyped/typescript-versions": "^0.0.88",
     "@definitelytyped/utils": "^0.0.89-next.0",
     "@octokit/rest": "^16.1.0",
-    "adal-node": "^0.1.22",
     "applicationinsights": "^1.0.7",
-    "azure-keyvault": "^3.0.4",
     "fs-extra": "^9.1.0",
     "fstream": "^1.0.12",
     "hh-mm-ss": "^1.2.0",
     "longjohn": "^0.2.11",
     "oboe": "^2.1.3",
     "source-map-support": "^0.4.0",
-    "travis-fold": "^0.1.2",
     "typescript": "^4.1.0",
     "yargs": "15.3.1"
   },
@@ -32,7 +31,6 @@
     "@types/mz": "^0.0.31",
     "@types/oboe": "^2.0.28",
     "@types/source-map-support": "^0.4.0",
-    "@types/travis-fold": "^0.1.0",
     "@types/yargs": "^15.0.4"
   },
   "scripts": {
