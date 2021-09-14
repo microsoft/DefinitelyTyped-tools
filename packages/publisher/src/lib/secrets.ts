@@ -1,6 +1,6 @@
-import { AuthenticationContext } from "adal-node";
-import { KeyVaultClient, KeyVaultCredentials } from "azure-keyvault";
-import { mapDefined } from "@definitelytyped/utils";
+import { DefaultAzureCredential } from "@azure/identity";
+import { SecretClient } from "@azure/keyvault-secrets";
+import { assertDefined, mapDefined } from "@definitelytyped/utils";
 import { azureKeyvault } from "./settings";
 
 export enum Secret {
@@ -31,33 +31,19 @@ export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), key => {
   return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
 });
 
-export async function getSecret(secret: Secret): Promise<string> {
-  const clientId = process.env.TYPES_PUBLISHER_CLIENT_ID;
-  const clientSecret = process.env.TYPES_PUBLISHER_CLIENT_SECRET;
-  if (!(clientId && clientSecret)) {
-    throw new Error("Must set the TYPES_PUBLISHER_CLIENT_ID and TYPES_PUBLISHER_CLIENT_SECRET environment variables.");
+export async function getSecret(secretId: Secret): Promise<string> {
+  const clientId = process.env.AZURE_CLIENT_ID;
+  const clientSecret = process.env.AZURE_CLIENT_SECRET;
+  const tenantId = process.env.AZURE_TENANT_ID;
+  if (!(clientId && clientSecret && tenantId)) {
+    throw new Error("Must set the AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, and AZURE_TENANT_ID environment variables.");
   }
 
-  // Copied from example usage at https://www.npmjs.com/package/azure-keyvault
-  const credentials = new KeyVaultCredentials((challenge, callback) => {
-    const context = new AuthenticationContext(challenge.authorization);
-    context.acquireTokenWithClientCredentials(challenge.resource, clientId, clientSecret, (error, tokenResponse) => {
-      if (error) {
-        throw error;
-      }
-      callback(undefined, `${tokenResponse!.tokenType} ${tokenResponse!.accessToken}`);
-    });
-  });
-
-  const client = new KeyVaultClient(credentials);
+  const credential = new DefaultAzureCredential();
+  const client = new SecretClient(azureKeyvault, credential);
 
   // Convert `AZURE_STORAGE_ACCESS_KEY` to `azure-storage-access-key` -- for some reason, Azure wouldn't allow secret names with underscores.
-  const azureSecretName = Secret[secret].toLowerCase().replace(/_/g, "-");
-  // console.log("Getting secret versions for: " + azureSecretName);
-  const versions = await client.getSecretVersions(azureKeyvault, azureSecretName);
-  versions.sort((a, b) => (a.attributes.created.getTime() < b.attributes.created.getTime() ? 1 : -1));
-  // console.log(versions);
-  const urlParts = versions[0].id.split("/");
-  const latest = urlParts[urlParts.length - 1];
-  return (await client.getSecret(azureKeyvault, azureSecretName, latest)).value;
+  const azureSecretName = Secret[secretId].toLowerCase().replace(/_/g, "-");
+  const secret = await client.getSecret(azureSecretName);
+  return assertDefined(secret.value);
 }
