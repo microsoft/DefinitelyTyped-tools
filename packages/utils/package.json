@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "^0.0.87",
+    "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^14.14.35",
     "charm": "^1.0.2",
     "fs-extra": "^8.1.0",
     "fstream": "^1.0.12",
-    "npm-registry-client": "^8.6.0",
     "tar": "^2.2.2",
     "tar-stream": "^2.1.4"
   },
