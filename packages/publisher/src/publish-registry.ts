@@ -177,8 +177,7 @@ async function installForValidate(log: Logger): Promise<void> {
     repository: {}
   });
 
-  const npmPath = joinPaths(__dirname, "..", "node_modules", "npm", "bin", "npm-cli.js");
-  const cmd = `node ${npmPath} install types-registry@next ${npmInstallFlags}`;
+  const cmd = `npm install types-registry@next ${npmInstallFlags}`;
   log(cmd);
   const err = (await execAndThrowErrors(cmd, validateOutputPath)).trim();
   if (err) {
