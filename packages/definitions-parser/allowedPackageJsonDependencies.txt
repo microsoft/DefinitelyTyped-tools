@@ -201,7 +201,6 @@
 @maxim_mazurok/gapi.client.recommendationengine
 @maxim_mazurok/gapi.client.recommender
 @maxim_mazurok/gapi.client.redis
-@maxim_mazurok/gapi.client.remotebuildexecution
 @maxim_mazurok/gapi.client.reseller
 @maxim_mazurok/gapi.client.resourcesettings
 @maxim_mazurok/gapi.client.retail
