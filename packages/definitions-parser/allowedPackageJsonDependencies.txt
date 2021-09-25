@@ -285,6 +285,7 @@
 @types/node-fetch
 @types/react-native-tab-view
 @types/react-navigation
+@types/react-select
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
