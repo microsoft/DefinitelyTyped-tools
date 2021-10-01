@@ -411,6 +411,7 @@ joi
 jointjs
 jose
 jsonata
+js-logger
 juice
 knex
 knockout
