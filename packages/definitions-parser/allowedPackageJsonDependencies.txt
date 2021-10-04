@@ -522,6 +522,7 @@ utility-types
 vega-typings
 vfile
 vfile-message
+victory
 vite
 vue
 vue-router
