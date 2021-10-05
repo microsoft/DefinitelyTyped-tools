@@ -468,6 +468,7 @@ react-dnd
 react-dnd-touch-backend
 react-final-form
 react-intl
+react-map-gl
 react-native-fs
 react-native-gesture-handler
 react-native-maps
