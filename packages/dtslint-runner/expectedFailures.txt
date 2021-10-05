@@ -4,4 +4,5 @@ electron-notify
 jest-environment-puppeteer
 ng-cordova
 redux-orm
+sketchapp
 vscode-webview
