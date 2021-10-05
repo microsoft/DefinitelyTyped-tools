@@ -460,6 +460,7 @@ protractor
 query-string
 quill-delta
 raven-js
+rc-tree
 rdf-js
 re-resizable
 react-autosize-textarea
