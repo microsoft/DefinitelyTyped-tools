@@ -445,6 +445,7 @@ opentracing
 parchment
 parse5
 path-to-regexp
+pdfjs-dist
 pg-protocol
 pg-types
 pkcs11js
