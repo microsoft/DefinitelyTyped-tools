@@ -480,6 +480,7 @@ react-native-tab-view
 react-navigation
 react-popper
 recast
+recharts
 redux
 redux-logic
 redux-observable
