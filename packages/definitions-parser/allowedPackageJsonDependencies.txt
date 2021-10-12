@@ -535,6 +535,7 @@ vue-router
 vuex
 webpack
 webpack-chain
+web-tree-sitter
 winston
 winston-transport
 xmlbuilder
