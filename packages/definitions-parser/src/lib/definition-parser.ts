@@ -229,7 +229,13 @@ async function combineDataForAllTypesVersions(
   const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
   const packageJson = hasPackageJson
-    ? (fs.readJson(packageJsonName) as { readonly license?: unknown; readonly dependencies?: unknown; readonly imports?: unknown; readonly exports?: unknown; readonly type?: unknown })
+    ? (fs.readJson(packageJsonName) as {
+        readonly license?: unknown;
+        readonly dependencies?: unknown;
+        readonly imports?: unknown;
+        readonly exports?: unknown;
+        readonly type?: unknown;
+      })
     : {};
   const license = getLicenseFromPackageJson(packageJson.license);
   const packageJsonDependencies = await checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
@@ -265,7 +271,7 @@ async function combineDataForAllTypesVersions(
     declaredModules: getAllUniqueValues<"declaredModules", string>(allTypesVersions, "declaredModules"),
     imports: checkPackageJsonImports(packageJson.imports, packageJsonName),
     exports: checkPackageJsonExports(packageJson.exports, packageJsonName),
-    type: checkPackageJsonType(packageJson.type, packageJsonName),
+    type: checkPackageJsonType(packageJson.type, packageJsonName)
   };
 }
 
