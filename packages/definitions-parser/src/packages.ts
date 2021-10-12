@@ -363,6 +363,21 @@ export interface TypingsDataRaw extends BaseRaw {
   readonly dependencies: { readonly [name: string]: DependencyVersion };
 
   /**
+   * Package `imports`, as read in the `package.json` file
+   */
+  readonly imports?: object;
+
+  /**
+   * Package `exports`, as read in the `package.json` file
+   */
+  readonly exports?: object | string;
+
+  /**
+   * Package `type`, as read in the `package.json` file
+   */
+  readonly type?: string;
+
+  /**
    * Other definitions, that exist in the same typings repo, that the tests, but not the types, of this package depend on.
    *
    * These are always the latest version and will not include anything already in `dependencies`.
@@ -606,6 +621,18 @@ export class TypingsData extends PackageBase {
 
   get dependencies(): { readonly [name: string]: DependencyVersion } {
     return this.data.dependencies;
+  }
+
+  get type() {
+    return this.data.type;
+  }
+
+  get imports() {
+    return this.data.imports;
+  }
+
+  get exports() {
+    return this.data.exports;
   }
 
   get versionDirectoryName() {

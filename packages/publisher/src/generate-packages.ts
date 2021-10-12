@@ -200,6 +200,18 @@ export function createPackageJSON(
   if (registry === Registry.Github) {
     (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
   }
+  const exports = typing.exports;
+  if (exports) {
+    (out as any).exports = exports;
+  }
+  const imports = typing.imports;
+  if (imports) {
+    (out as any).imports = imports;
+  }
+  const type = typing.type;
+  if (type) {
+    (out as any).type = type;
+  }
 
   return JSON.stringify(out, undefined, 4);
 }
