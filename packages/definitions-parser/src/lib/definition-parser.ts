@@ -229,7 +229,7 @@ async function combineDataForAllTypesVersions(
   const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
 
   const packageJson = hasPackageJson
-    ? (fs.readJson(packageJsonName) as { readonly license?: unknown; readonly dependencies?: unknown })
+    ? (fs.readJson(packageJsonName) as { readonly license?: unknown; readonly dependencies?: unknown; readonly imports?: unknown; readonly exports?: unknown; readonly type?: unknown })
     : {};
   const license = getLicenseFromPackageJson(packageJson.license);
   const packageJsonDependencies = await checkPackageJsonDependencies(packageJson.dependencies, packageJsonName);
@@ -262,7 +262,10 @@ async function combineDataForAllTypesVersions(
       fs
     ),
     globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
-    declaredModules: getAllUniqueValues<"declaredModules", string>(allTypesVersions, "declaredModules")
+    declaredModules: getAllUniqueValues<"declaredModules", string>(allTypesVersions, "declaredModules"),
+    imports: checkPackageJsonImports(packageJson.imports, packageJsonName),
+    exports: checkPackageJsonExports(packageJson.exports, packageJsonName),
+    type: checkPackageJsonType(packageJson.type, packageJsonName),
   };
 }
 
@@ -363,6 +366,39 @@ function getTypingDataForSingleTypesVersion(
     declFiles: sort(types.keys()),
     tsconfigPathsForHash
   };
+}
+
+function checkPackageJsonExports(exports: unknown, path: string) {
+  if (exports === undefined) return exports;
+  if (typeof exports === "string") {
+    return exports;
+  }
+  if (typeof exports !== "object") {
+    throw new Error(`Package exports at path ${path} should be an object or string.`);
+  }
+  if (exports === null) {
+    throw new Error(`Package exports at path ${path} should not be null.`);
+  }
+  return exports;
+}
+
+function checkPackageJsonImports(imports: unknown, path: string) {
+  if (imports === undefined) return imports;
+  if (typeof imports !== "object") {
+    throw new Error(`Package imports at path ${path} should be an object or string.`);
+  }
+  if (imports === null) {
+    throw new Error(`Package imports at path ${path} should not be null.`);
+  }
+  return imports;
+}
+
+function checkPackageJsonType(type: unknown, path: string) {
+  if (type === undefined) return type;
+  if (type !== "module") {
+    throw new Error(`Package type at path ${path} can only be 'module'.`);
+  }
+  return type;
 }
 
 async function checkPackageJsonDependencies(
