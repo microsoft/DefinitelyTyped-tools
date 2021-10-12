@@ -356,6 +356,7 @@ dnd-core
 domhandler
 dotenv
 downshift
+d3
 egg
 elastic-apm-node
 electron
@@ -436,6 +437,7 @@ mongodb
 mongoose
 mqtt
 msnodesqlv8
+neo4j-driver-lite
 next
 nock
 node-fetch
