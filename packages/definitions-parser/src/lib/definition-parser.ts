@@ -330,7 +330,10 @@ function getTypingDataForSingleTypesVersion(
     }
   }
   checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
-  for (const untestedTypeFile of filter(otherFiles, name => name.endsWith(".d.ts") || name.endsWith(".d.mts") || name.endsWith(".d.cts"))) {
+  for (const untestedTypeFile of filter(
+    otherFiles,
+    name => name.endsWith(".d.ts") || name.endsWith(".d.mts") || name.endsWith(".d.cts")
+  )) {
     // add d.ts files from OTHER_FILES.txt in order get their dependencies
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     types.set(untestedTypeFile, createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile)));
