@@ -595,7 +595,7 @@ export class TypingsData extends PackageBase {
     return this.data.files;
   }
   get dtsFiles(): readonly string[] {
-    return this.data.files.filter(f => f.endsWith(".d.ts"));
+    return this.data.files.filter(f => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
   }
   get license(): License {
     return this.data.license;

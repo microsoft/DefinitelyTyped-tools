@@ -166,7 +166,7 @@ export function allReferencedFiles(
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(resolvedFilename)) {
       const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
-      if (resolvedFilename.endsWith(".d.ts")) {
+      if (resolvedFilename.endsWith(".d.ts") || resolvedFilename.endsWith(".d.mts") || resolvedFilename.endsWith(".d.cts")) {
         types.set(resolvedFilename, src);
       } else {
         tests.set(resolvedFilename, src);
