@@ -111,7 +111,7 @@ interface ModuleInfo {
  * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
  */
 function properModuleName(folderName: string, fileName: string): string {
-  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtension(fileName, ".d.ts");
+  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, [".d.ts", ".d.mts", ".d.cts"]);
   return part === "." ? folderName : joinPaths(folderName, part);
 }
 
@@ -137,8 +137,9 @@ You should work with the latest version of ${root} instead.`);
   return slash === -1 ? importText : root;
 }
 
-function withoutExtension(str: string, ext: string): string {
-  assert(str.endsWith(ext));
+function withoutExtensions(str: string, exts: readonly string[]): string {
+  const ext = exts.find(e => str.endsWith(e))
+  assert(ext, `file "${str}" should end with extension ${exts.map(e => `"${e}"`).join(', ')}`);
   return str.slice(0, str.length - ext.length);
 }
 
