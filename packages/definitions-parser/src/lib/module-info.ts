@@ -116,7 +116,8 @@ extensions.set(".d.cts", ".cjs");
  * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
  */
 function properModuleName(folderName: string, fileName: string): string {
-  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
+  const part =
+    path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
   return part === "." ? folderName : joinPaths(folderName, part);
 }
 
@@ -144,8 +145,8 @@ You should work with the latest version of ${root} instead.`);
 
 function withoutExtensions(str: string, exts: typeof extensions): string {
   const entries = Array.from(exts.entries());
-  const ext = entries.find(([e, _]) => str.endsWith(e))
-  assert(ext, `file "${str}" should end with extension ${entries.map(([e, _]) => `"${e}"`).join(', ')}`);
+  const ext = entries.find(([e, _]) => str.endsWith(e));
+  assert(ext, `file "${str}" should end with extension ${entries.map(([e, _]) => `"${e}"`).join(", ")}`);
   return str.slice(0, str.length - ext[0].length) + ext[1];
 }
 
