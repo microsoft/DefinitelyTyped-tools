@@ -106,12 +106,17 @@ interface ModuleInfo {
   globals: string[];
 }
 
+const extensions: Map<string, string> = new Map();
+extensions.set(".d.ts", ""); // TODO: Inaccurate?
+extensions.set(".d.mts", ".mjs");
+extensions.set(".d.cts", ".cjs");
+
 /**
  * Given a file name, get the name of the module it declares.
  * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
  */
 function properModuleName(folderName: string, fileName: string): string {
-  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtension(fileName, ".d.ts");
+  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
   return part === "." ? folderName : joinPaths(folderName, part);
 }
 
@@ -137,9 +142,11 @@ You should work with the latest version of ${root} instead.`);
   return slash === -1 ? importText : root;
 }
 
-function withoutExtension(str: string, ext: string): string {
-  assert(str.endsWith(ext));
-  return str.slice(0, str.length - ext.length);
+function withoutExtensions(str: string, exts: typeof extensions): string {
+  const entries = Array.from(exts.entries());
+  const ext = entries.find(([e, _]) => str.endsWith(e))
+  assert(ext, `file "${str}" should end with extension ${entries.map(([e, _]) => `"${e}"`).join(', ')}`);
+  return str.slice(0, str.length - ext[0].length) + ext[1];
 }
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
