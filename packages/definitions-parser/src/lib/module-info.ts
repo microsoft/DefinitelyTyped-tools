@@ -116,7 +116,7 @@ extensions.set(".d.cts", ".cjs");
  * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
  */
 function properModuleName(folderName: string, fileName: string): string {
-  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtension(fileName, extensions);
+  const part = path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
   return part === "." ? folderName : joinPaths(folderName, part);
 }
 
