@@ -269,6 +269,7 @@
 @types/expect
 @types/express-serve-static-core
 @types/firebase
+@types/formidable
 @types/got
 @types/helmet
 @types/highcharts
