@@ -396,6 +396,7 @@ html-webpack-plugin
 htmlparser2
 http-proxy-middleware
 i18next
+iconv-lite
 immer
 immutable
 indefinite-observable
