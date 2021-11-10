@@ -283,6 +283,7 @@
 @types/next-redux-wrapper
 @types/node
 @types/node-fetch
+@types/pino
 @types/react-native-tab-view
 @types/react-navigation
 @types/react-select
