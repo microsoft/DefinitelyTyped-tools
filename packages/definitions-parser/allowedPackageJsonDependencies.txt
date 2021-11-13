@@ -267,6 +267,7 @@
 @types/autoprefixer
 @types/base-x
 @types/expect
+@types/express-handlebars
 @types/express-serve-static-core
 @types/firebase
 @types/got
