@@ -454,6 +454,7 @@ pdfjs-dist
 pg-protocol
 pg-types
 pkcs11js
+plugin-error
 polished
 popper.js
 postcss
