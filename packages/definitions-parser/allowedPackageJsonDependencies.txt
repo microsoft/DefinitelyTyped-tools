@@ -278,6 +278,7 @@
 @types/ink
 @types/js-data
 @types/leaflet
+@types/ltx
 @types/mkdirp-promise
 @types/mongodb
 @types/mongoose
