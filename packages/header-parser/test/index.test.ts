@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "3.7",
+      typeScriptVersion: "3.8",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "3.7",
+      typeScriptVersion: "3.8",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -147,11 +147,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("4.1")).toBeTruthy();
   });
-  it("supports 3.7", () => {
-    expect(TypeScriptVersion.isSupported("3.7")).toBeTruthy();
+  it("supports 3.8", () => {
+    expect(TypeScriptVersion.isSupported("3.8")).toBeTruthy();
   });
-  it("does not support 3.6", () => {
-    expect(!TypeScriptVersion.isSupported("3.6")).toBeTruthy();
+  it("does not support 3.7", () => {
+    expect(!TypeScriptVersion.isSupported("3.7")).toBeTruthy();
   });
 });
 
@@ -169,10 +169,10 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual(["4.0", "4.1", "4.2", "4.3", "4.4", "4.5"]);
+    expect(TypeScriptVersion.range("4.0")).toEqual(["4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6"]);
   });
-  it("includes 3.7 onwards", () => {
-    expect(TypeScriptVersion.range("3.7")).toEqual(TypeScriptVersion.supported);
+  it("includes 3.8 onwards", () => {
+    expect(TypeScriptVersion.range("3.8")).toEqual(TypeScriptVersion.supported);
   });
 });
 
@@ -186,11 +186,12 @@ describe("tagsToUpdate", () => {
       "ts4.3",
       "ts4.4",
       "ts4.5",
+      "ts4.6",
       "latest"
     ]);
   });
-  it("allows 3.7 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("3.7")).toEqual(
+  it("allows 3.8 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("3.8")).toEqual(
       TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
     );
   });
