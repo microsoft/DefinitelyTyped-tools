@@ -473,6 +473,7 @@ re-resizable
 react-autosize-textarea
 react-dnd
 react-dnd-touch-backend
+react-draggable
 react-final-form
 react-intl
 react-map-gl
