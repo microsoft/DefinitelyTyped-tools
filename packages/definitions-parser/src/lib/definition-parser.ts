@@ -270,7 +270,7 @@ async function combineDataForAllTypesVersions(
     globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
     declaredModules: getAllUniqueValues<"declaredModules", string>(allTypesVersions, "declaredModules"),
     imports: checkPackageJsonImports(packageJson.imports, packageJsonName),
-    exports: checkPackageJsonExports(packageJson.exports, packageJsonName),
+    exports: checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName),
     type: checkPackageJsonType(packageJson.type, packageJsonName)
   };
 }
@@ -377,7 +377,7 @@ function getTypingDataForSingleTypesVersion(
   };
 }
 
-function checkPackageJsonExports(exports: unknown, path: string) {
+function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
   if (exports === undefined) return exports;
   if (typeof exports === "string") {
     return exports;
@@ -387,6 +387,9 @@ function checkPackageJsonExports(exports: unknown, path: string) {
   }
   if (exports === null) {
     throw new Error(`Package exports at path ${path} should not be null.`);
+  }
+  if (!(exports as Record<string, unknown>)["./package.json"]) {
+    (exports as Record<string, unknown>)["./package.json"] = "./package.json";
   }
   return exports;
 }
