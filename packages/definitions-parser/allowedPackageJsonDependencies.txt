@@ -488,6 +488,7 @@ react-navigation
 react-popper
 recast
 recharts
+redis
 redux
 redux-logic
 redux-observable
