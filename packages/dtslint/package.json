@@ -23,7 +23,7 @@
     "watch": "tsc --watch",
     "build": "tsc",
     "lint": "eslint --ext ts src",
-    "test": "npm run build && node test/test.js",
+    "test": "npm run build && node test/test.js"
   },
   "dependencies": {
     "@definitelytyped/header-parser": "0.0.93",
