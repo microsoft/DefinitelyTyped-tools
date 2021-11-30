@@ -29,7 +29,7 @@
     "@definitelytyped/header-parser": "0.0.93",
     "@definitelytyped/typescript-versions": "0.0.93",
     "@definitelytyped/utils": "0.0.93",
-    "@definitelytyped/dts-critic": "0.0.94-next.1",
+    "@definitelytyped/dts-critic": "0.0.94",
     "fs-extra": "^6.0.1",
     "json-stable-stringify": "^1.0.1",
     "strip-json-comments": "^2.0.1",
