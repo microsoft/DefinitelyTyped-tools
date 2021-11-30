@@ -17,14 +17,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/dtslint.git"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git"
   },
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc",
     "lint": "eslint --ext ts src",
     "test": "npm run build && node test/test.js",
-    "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "dependencies": {
     "@definitelytyped/header-parser": "0.0.93",

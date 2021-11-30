@@ -36,7 +36,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sandersn/dts-critic.git"
+        "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
     },
     "keywords": [
         "definitely",
@@ -47,9 +47,9 @@
     ],
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/sandersn/dts-critic/issues"
+        "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
     },
-    "homepage": "https://github.com/sandersn/dts-critic#readme",
+    "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
     "engines": {
         "node": ">=10.17.0"
     }
