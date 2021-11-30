@@ -13,6 +13,7 @@ export class Rule extends Lint.Rules.AbstractRule {
         typescriptOnly: true,
     };
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING(kind: "before" | "after", token: ts.SyntaxKind) {
         return failure(
             Rule.metadata.ruleName,

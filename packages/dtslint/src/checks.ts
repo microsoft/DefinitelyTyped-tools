@@ -8,7 +8,7 @@ import { getCompilerOptions, readJson } from "./util";
 
 export async function checkPackageJson(
     dirPath: string,
-    typesVersions: ReadonlyArray<TypeScriptVersion>,
+    typesVersions: readonly TypeScriptVersion[],
 ): Promise<void> {
     const pkgJsonPath = joinPaths(dirPath, "package.json");
     const needsTypesVersions = typesVersions.length !== 0;
@@ -73,7 +73,7 @@ export async function checkTsconfig(dirPath: string, dt: DefinitelyTypedInfo | u
             types: [],
         };
 
-        for (const key of Object.getOwnPropertyNames(mustHave) as Array<keyof typeof mustHave>) {
+        for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
             const expected = mustHave[key];
             const actual = options[key];
             if (!deepEquals(expected, actual)) {

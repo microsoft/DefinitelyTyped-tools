@@ -246,7 +246,7 @@ function isNpmPackage(name: string, header?: headerParser.Header, isNpmJson: IsN
 }
 
 function main() {
-    // eslint-disable-next-line no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     yargs
         .usage("$0 <command>")
         .command("check-all", "Check source and declaration of all DT packages that are on NPM.", {

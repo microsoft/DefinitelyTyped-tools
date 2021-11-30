@@ -12,13 +12,13 @@ export class Rule extends Lint.Rules.TypedRule {
         type: "style",
         typescriptOnly: true,
     };
-
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING(typeParameter: string) {
         return failure(
             Rule.metadata.ruleName,
             `Type parameter ${typeParameter} is used only once.`);
     }
-
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING_NEVER(typeParameter: string) {
         return failure(
             Rule.metadata.ruleName,

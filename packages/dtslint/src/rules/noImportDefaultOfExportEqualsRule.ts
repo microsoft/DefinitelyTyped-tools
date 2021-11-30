@@ -13,6 +13,7 @@ export class Rule extends Lint.Rules.TypedRule {
         typescriptOnly: true,
     };
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING(importName: string, moduleName: string): string {
         return failure(
             Rule.metadata.ruleName,
@@ -43,7 +44,7 @@ function walk(ctx: Lint.WalkContext<void>, checker: ts.TypeChecker): void {
     });
 }
 
-function getStatements(decl: ts.Declaration): ReadonlyArray<ts.Statement> | undefined {
+function getStatements(decl: ts.Declaration): readonly ts.Statement[] | undefined {
     return ts.isSourceFile(decl) ? decl.statements
         : ts.isModuleDeclaration(decl) ? getModuleDeclarationStatements(decl)
         : undefined;

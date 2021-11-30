@@ -45,7 +45,7 @@ function isExportEquals(node: ts.Node): boolean {
 }
 
 /** Returns true if there is a namespace but there are no functions/classes with the name. */
-function isJustNamespace(statements: ReadonlyArray<ts.Statement>, exportEqualsName: string): boolean {
+function isJustNamespace(statements: readonly ts.Statement[], exportEqualsName: string): boolean {
     let anyNamespace = false;
 
     for (const statement of statements) {

@@ -14,7 +14,6 @@ const cacheDir = join(os.homedir(), ".dts");
 const perfDir = join(os.homedir(), ".dts", "perf");
 
 export class Rule extends Lint.Rules.TypedRule {
-    /* tslint:disable:object-literal-sort-keys */
     static metadata: Lint.IRuleMetadata = {
         ruleName: "expect",
         description: "Asserts types with $ExpectType and presence of errors with $ExpectError.",
@@ -24,12 +23,13 @@ export class Rule extends Lint.Rules.TypedRule {
         typescriptOnly: true,
         requiresTypeInfo: true,
     };
-    /* tslint:enable:object-literal-sort-keys */
 
     static FAILURE_STRING_DUPLICATE_ASSERTION = "This line has 2 $ExpectType assertions.";
     static FAILURE_STRING_ASSERTION_MISSING_NODE = "Can not match a node to this assertion.";
     static FAILURE_STRING_EXPECTED_ERROR = "Expected an error on this line, but found none.";
 
+    // TODO: If this naming convention is required by tslint, dump it when switching to eslint
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING(expectedVersion: string, expectedType: string, actualType: string): string {
         return `TypeScript@${expectedVersion} expected type to be:\n  ${expectedType}\ngot:\n  ${actualType}`;
     }
@@ -100,7 +100,7 @@ export class Rule extends Lint.Rules.TypedRule {
 export interface Options {
     readonly tsconfigPath: string;
     // These should be sorted with oldest first.
-    readonly versionsToTest: ReadonlyArray<VersionToTest>;
+    readonly versionsToTest: readonly VersionToTest[];
 }
 export interface VersionToTest {
     readonly versionName: string;
@@ -232,7 +232,7 @@ interface Assertions {
     /** Map from a line number to the expected type at that line. */
     readonly typeAssertions: Map<number, string>;
     /** Lines with more than one assertion (these are errors). */
-    readonly duplicates: ReadonlyArray<number>;
+    readonly duplicates: readonly number[];
 }
 
 function parseAssertions(sourceFile: SourceFile): Assertions {
@@ -298,7 +298,7 @@ function isFirstOnLine(text: string, lineStart: number, pos: number): boolean {
 
 interface ExpectTypeFailures {
     /** Lines with an $ExpectType, but a different type was there. */
-    readonly unmetExpectations: ReadonlyArray<{ node: TsType.Node, expected: string, actual: string }>;
+    readonly unmetExpectations: readonly { node: TsType.Node, expected: string, actual: string }[];
     /** Lines with an $ExpectType, but no node could be found. */
     readonly unusedAssertions: Iterable<number>;
 }
@@ -354,7 +354,7 @@ function getExpectTypeFailures(
         checker: TsType.TypeChecker,
         ts: typeof TsType,
         ): ExpectTypeFailures {
-    const unmetExpectations: Array<{ node: TsType.Node, expected: string, actual: string }> = [];
+    const unmetExpectations: { node: TsType.Node, expected: string, actual: string }[] = [];
     // Match assertions to the first node that appears on the line they apply to.
     // `forEachChild` isn't available as a method in older TypeScript versions, so must use `ts.forEachChild` instead.
     ts.forEachChild(sourceFile, function iterate(node) {

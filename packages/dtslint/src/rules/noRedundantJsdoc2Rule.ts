@@ -5,7 +5,6 @@ import * as Lint from "tslint";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
-    /* tslint:disable:object-literal-sort-keys */
     static metadata: Lint.IRuleMetadata = {
         ruleName: "no-redundant-jsdoc",
         description: "Forbids JSDoc which duplicates TypeScript functionality.",
@@ -15,15 +14,15 @@ export class Rule extends Lint.Rules.AbstractRule {
         type: "style",
         typescriptOnly: true,
     };
-    /* tslint:enable:object-literal-sort-keys */
-
     static readonly FAILURE_STRING_REDUNDANT_TYPE =
         "Type annotation in JSDoc is redundant in TypeScript code.";
     static readonly FAILURE_STRING_EMPTY =
         "JSDoc comment is empty.";
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING_REDUNDANT_TAG(tagName: string): string {
         return `JSDoc tag '@${tagName}' is redundant in TypeScript code.`;
     }
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static FAILURE_STRING_NO_COMMENT(tagName: string): string {
         return `'@${tagName}' is redundant in TypeScript code if it has no description.`;
     }

@@ -22,7 +22,7 @@ export class Rule extends Lint.Rules.TypedRule {
     }
 }
 
-const FAILURE_STRING = failure(
+const failureMessage = failure(
     Rule.metadata.ruleName,
     "Test file should not use a relative import. Use a global import as if this were a user of the package.");
 
@@ -38,7 +38,7 @@ function walk(ctx: Lint.WalkContext<void>, checker: ts.TypeChecker): void {
 
             for (const decl of moduleSymbol.declarations) {
                 if (decl.kind === ts.SyntaxKind.SourceFile && (decl as ts.SourceFile).isDeclarationFile) {
-                    ctx.addFailureAtNode(i, FAILURE_STRING);
+                    ctx.addFailureAtNode(i, failureMessage);
                 }
             }
         }
@@ -47,6 +47,6 @@ function walk(ctx: Lint.WalkContext<void>, checker: ts.TypeChecker): void {
 
 declare module "typescript" {
     interface SourceFile {
-        imports: ReadonlyArray<ts.StringLiteral>;
+        imports: readonly ts.StringLiteral[];
     }
 }

@@ -205,7 +205,7 @@ async function getLintConfig(
     return config;
 }
 
-function range(minVersion: TsVersion, maxVersion: TsVersion): ReadonlyArray<TsVersion> {
+function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {
     if (minVersion === "local") {
         assert(maxVersion === "local");
         return ["local"];

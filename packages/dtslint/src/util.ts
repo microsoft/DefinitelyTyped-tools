@@ -13,7 +13,7 @@ export function failure(ruleName: string, s: string): string {
     return `${s} See: https://github.com/Microsoft/dtslint/blob/master/docs/${ruleName}.md`;
 }
 
-export function getCommonDirectoryName(files: ReadonlyArray<string>): string {
+export function getCommonDirectoryName(files: readonly string[]): string {
     let minLen = 999;
     let minDir = "";
     for (const file of files) {
@@ -45,7 +45,7 @@ export function eachModuleStatement(sourceFile: ts.SourceFile, action: (statemen
     }
 }
 
-export function getModuleDeclarationStatements(node: ts.ModuleDeclaration): ReadonlyArray<ts.Statement> | undefined {
+export function getModuleDeclarationStatements(node: ts.ModuleDeclaration): readonly ts.Statement[] | undefined {
     let { body } = node;
     while (body && body.kind === ts.SyntaxKind.ModuleDeclaration) {
         body = body.body;
@@ -65,7 +65,7 @@ export function withoutPrefix(s: string, prefix: string): string | undefined {
     return s.startsWith(prefix) ? s.slice(prefix.length) : undefined;
 }
 
-export function last<T>(a: ReadonlyArray<T>): T {
+export function last<T>(a: readonly T[]): T {
     assert(a.length !== 0);
     return a[a.length - 1];
 }

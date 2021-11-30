@@ -23,14 +23,14 @@ export class Rule extends Lint.Rules.TypedRule {
     }
 }
 
-const FAILURE_STRING = failure(
+const failureMessage = failure(
     Rule.metadata.ruleName,
     "Declaration file should not use a global import of itself. Use a relative import.");
 
 function walk(ctx: Lint.WalkContext<void>, packageName: string): void {
     for (const i of ctx.sourceFile.imports) {
         if (i.text === packageName || i.text.startsWith(packageName + "/")) {
-            ctx.addFailureAtNode(i, FAILURE_STRING);
+            ctx.addFailureAtNode(i, failureMessage);
         }
     }
 }

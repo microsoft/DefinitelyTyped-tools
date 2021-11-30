@@ -20,7 +20,7 @@ type ConfigOptions = {
     singleLine?: boolean,
 } | {
     mode: Mode.Code,
-    errors: Array<[ExportErrorKind, boolean]>,
+    errors: [ExportErrorKind, boolean][],
     singleLine?: boolean,
 };
 
@@ -114,6 +114,7 @@ function parseOptions(args: unknown[]): ConfigOptions {
     }
 
     const arg = args[0] as { [prop: string]: unknown } | null | undefined;
+    // eslint-disable-next-line eqeqeq
     if (arg == null) {
         return defaultOptions;
     }
@@ -140,8 +141,8 @@ function parseOptions(args: unknown[]): ConfigOptions {
     }
 }
 
-function parseEnabledErrors(errors: unknown[]): Array<[ExportErrorKind, boolean]> {
-    const enabledChecks: Array<[ExportErrorKind, boolean]> = [];
+function parseEnabledErrors(errors: unknown[]): [ExportErrorKind, boolean][] {
+    const enabledChecks: [ExportErrorKind, boolean][] = [];
     for (const tuple of errors) {
         if (Array.isArray(tuple)
             && tuple.length === 2
@@ -302,7 +303,7 @@ export function disabler(failures: Lint.IRuleFailureJson[]): false | [true, Conf
     if ((defaultErrors as ExportErrorKind[]).every(error => disabledErrors.has(error))) {
         return [true, { mode: Mode.NameOnly }];
     }
-    const errors: Array<[ExportErrorKind, boolean]> = [];
+    const errors: [ExportErrorKind, boolean][] = [];
     disabledErrors.forEach(error => errors.push([error, false]));
     return [true, { mode: Mode.Code, errors }];
 }
