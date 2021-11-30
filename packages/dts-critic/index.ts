@@ -699,7 +699,7 @@ function getDtsDefaultExport(sourceFile: ts.SourceFile, moduleType: InferenceRes
     }
 
     const exportDefault = moduleType.result.getProperty("default");
-    if (exportDefault) {
+    if (exportDefault?.declarations) {
         return {
             start: exportDefault.declarations[0].getStart(),
             length: exportDefault.declarations[0].getWidth(),

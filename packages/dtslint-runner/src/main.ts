@@ -74,7 +74,7 @@ export async function runDTSLint({
       expectOnly: expectOnly || !packageNames.includes(path)
     })),
     commandLineArgs: dtslintArgs,
-    workerFile: require.resolve("dtslint"),
+    workerFile: require.resolve("@definitelytyped/dtslint"),
     nProcesses,
     cwd: typesPath,
     crashRecovery: true,

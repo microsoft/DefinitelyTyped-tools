@@ -2,7 +2,6 @@
 
 import assert = require("assert");
 import * as Lint from "tslint";
-import { canHaveJsDoc, getJsDoc } from "tsutils";
 import * as ts from "typescript";
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -38,9 +37,9 @@ function walk(ctx: Lint.WalkContext<void>): void {
     const { sourceFile } = ctx;
     // Intentionally exclude EndOfFileToken: it can have JSDoc, but it is only relevant in JavaScript files
     return sourceFile.statements.forEach(function cb(node: ts.Node): void {
-        if (canHaveJsDoc(node)) {
-            for (const jd of getJsDoc(node, sourceFile)) {
-                const { tags } = jd;
+        if (node.kind !== ts.SyntaxKind.EndOfFileToken && (ts as any).hasJSDocNodes(node)) {
+            for (const jd of (node as any).jsDoc) {
+                const { tags } = jd as ts.JSDoc;
                 if (tags === undefined || tags.length === 0) {
                     if (jd.comment === undefined) {
                         ctx.addFailureAtNode(

@@ -7,7 +7,7 @@ import {
     ExportErrorKind,
     Mode,
     parseExportErrorKind,
-    parseMode } from "dts-critic";
+    parseMode } from "@definitelytyped/dts-critic";
 import * as Lint from "tslint";
 import * as ts from "typescript";
 

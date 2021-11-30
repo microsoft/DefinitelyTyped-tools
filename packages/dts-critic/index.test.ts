@@ -121,7 +121,7 @@ The JavaScript module exports a property named 'foo', which is missing from the 
                 message: `The declaration doesn't match the JavaScript module 'missingDtsProperty'. Reason:
 The declaration module exports a property named 'foo', which is missing from the JavaScript module.`,
                 position: {
-                    start: 67,
+                    start: 65,
                     length: 11,
                 },
             }
