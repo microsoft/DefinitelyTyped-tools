@@ -23,7 +23,7 @@ export const getAllowedPackageJsonDependencies = withCache(60 * 60 * 1000, () =>
     if (process.env.NODE_ENV !== "test") {
       try {
         raw = await getUrlContentsAsString(allowedPackageJsonDependenciesUrl);
-      } catch (err: any) {
+      } catch (err) {
         console.error(
           "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy.\n" +
             err.message
