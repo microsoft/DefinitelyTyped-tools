@@ -160,7 +160,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               nextTask();
             }
           }
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -217,7 +217,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
             default:
               assert.fail(`${processIndex}> Unexpected crashRecoveryState: ${crashRecoveryState}`);
           }
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -232,7 +232,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
         try {
           child = fork(workerFile, commandLineArgs, { cwd, execArgv: await getChildProcessExecArgv(i, execArgv) });
           runningChildren.add(child);
-        } catch (e) {
+        } catch (e: any) {
           fail(e);
           return;
         }
@@ -261,7 +261,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           child.on("exit", onChildDisconnectedOrExited);
           child.on("error", onError);
           taskAction();
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -278,7 +278,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           runningChildren.delete(child);
           child.removeAllListeners();
           child.kill();
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -289,7 +289,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           console.log(`${processIndex}> Restarting...`);
           stopChild(/*done*/ false);
           await startChild(taskAction, execArgv);
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -298,7 +298,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
         try {
           assert(runningChildren.has(child), `${processIndex}> Child not running`);
           child.send(currentInput);
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };
@@ -312,7 +312,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
             handleStart(currentInput, processIndex);
           }
           child.send(currentInput);
-        } catch (e) {
+        } catch (e: any) {
           onError(e);
         }
       };

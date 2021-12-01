@@ -81,7 +81,7 @@ export default async function publishRegistry(
 
   try {
     await publishToRegistry(RegistryName.Github);
-  } catch (e) {
+  } catch (e: any) {
     // log and continue
     log("publishing to github failed: " + e.toString());
   }

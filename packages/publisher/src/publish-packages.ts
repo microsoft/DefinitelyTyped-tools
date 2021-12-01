@@ -41,7 +41,7 @@ if (!module.parent) {
           false /*dry*/,
           log
         );
-      } catch (e) {
+      } catch (e: any) {
         // log and continue
         log("publishing to github failed: " + e.toString());
       }
@@ -87,7 +87,7 @@ export default async function publishPackages(
 
     try {
       await publishTypingsPackage(ghClient, cp, dry, log, Registry.Github);
-    } catch (e) {
+    } catch (e: any) {
       // log and continue
       log("publishing to github failed: " + e.toString());
     }
@@ -177,7 +177,7 @@ export default async function publishPackages(
         const target = skipBadPublishes(n, infoClient, log);
         try {
           await publishNotNeededPackage(ghClient, target, dry, log, Registry.Github);
-        } catch (e) {
+        } catch (e: any) {
           // log and continue
           log("publishing to github failed: " + e.toString());
         }
