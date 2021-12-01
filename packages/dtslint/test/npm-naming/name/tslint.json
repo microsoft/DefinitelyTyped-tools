@@ -1,5 +1,5 @@
 {
-  "rulesDirectory": ["../../../bin/rules"],
+  "rulesDirectory": ["../../../bin/src/rules"],
   "rules": {
     "npm-naming": [true, {"mode": "name-only", "single-line": true}]
   }

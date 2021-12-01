@@ -1,6 +1,6 @@
 {
     "extends": "tslint:all",
-    "rulesDirectory": "./bin/rules",
+    "rulesDirectory": "./bin/src/rules",
     "rules": {
         // Custom rules
         "expect": true,

@@ -154,7 +154,7 @@ npm run watch
 ## Test
 
 Use `npm run test` to run all tests.
-To run a single test: `node node_modules/tslint/bin/tslint --rules-dir bin/rules --test test/expect`.
+To run a single test: `node node_modules/tslint/bin/tslint --rules-dir bin/src/rules --test test/expect`.
 
 ## Publish
 
