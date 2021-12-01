@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.98-next.0",
+  "version": "0.0.98-next.1",
   "description": "Runs tests on TypeScript definition files",
   "files": [
     "bin",
