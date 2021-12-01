@@ -168,7 +168,7 @@ function testNoTslintDisables(text: string): Err | undefined {
 
 export async function checkTslintJson(dirPath: string, dt: boolean): Promise<void> {
   const configPath = getConfigPath(dirPath);
-  const shouldExtend = `dtslint/${dt ? "dt" : "dtslint"}.json`;
+  const shouldExtend = `@definitelytyped/dtslint/${dt ? "dt" : "dtslint"}.json`;
   const validateExtends = (extend: string | string[]) =>
     extend === shouldExtend || (!dt && Array.isArray(extend) && extend.some(val => val === shouldExtend));
 
