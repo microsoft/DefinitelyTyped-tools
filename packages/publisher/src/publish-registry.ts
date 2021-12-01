@@ -83,7 +83,7 @@ export default async function publishRegistry(
     await publishToRegistry(RegistryName.Github);
   } catch (e) {
     // log and continue
-    log("publishing to github failed: " + e.toString());
+    log("publishing to github failed: " + (e as Error).toString());
   }
   await publishToRegistry(RegistryName.NPM);
   await writeLog("publish-registry.md", logResult());

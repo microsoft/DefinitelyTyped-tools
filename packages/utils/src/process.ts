@@ -161,7 +161,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
             }
           }
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -218,7 +218,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               assert.fail(`${processIndex}> Unexpected crashRecoveryState: ${crashRecoveryState}`);
           }
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -233,7 +233,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           child = fork(workerFile, commandLineArgs, { cwd, execArgv: await getChildProcessExecArgv(i, execArgv) });
           runningChildren.add(child);
         } catch (e) {
-          fail(e);
+          fail(e as Error);
           return;
         }
 
@@ -262,7 +262,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           child.on("error", onError);
           taskAction();
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -279,7 +279,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           child.removeAllListeners();
           child.kill();
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -290,7 +290,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           stopChild(/*done*/ false);
           await startChild(taskAction, execArgv);
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -299,7 +299,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           assert(runningChildren.has(child), `${processIndex}> Child not running`);
           child.send(currentInput);
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
@@ -313,7 +313,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
           }
           child.send(currentInput);
         } catch (e) {
-          onError(e);
+          onError(e as Error);
         }
       };
 
