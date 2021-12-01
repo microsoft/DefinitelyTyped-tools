@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "target": "es2019",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "declaration": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+  },
+  "exclude": [
+    "dist/*",
+    "sources/*",
+    "testsource/*",
+  ]
+}

@@ -1,0 +1,15 @@
+{
+	"extends": "./dtslint.json",
+	"rules": {
+		"dt-header": true,
+		"no-bad-reference": true,
+		"no-declare-current-package": true,
+		"no-self-import": true,
+		"no-outside-dependencies": true,
+
+		"no-redundant-jsdoc": false,
+		"no-redundant-jsdoc-2": true,
+
+		"npm-naming": [true, { "mode": "code" }]
+	}
+}

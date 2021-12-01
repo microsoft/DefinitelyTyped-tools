@@ -1,0 +1,57 @@
+{
+  "name": "@definitelytyped/dtslint",
+  "version": "0.0.94",
+  "description": "Runs tests on TypeScript definition files",
+  "files": [
+    "bin",
+    "dt.json",
+    "dtslint.json",
+    "dtslint-expect-only.json"
+  ],
+  "main": "bin",
+  "bin": "./bin/index.js",
+  "contributors": [
+    "Nathan Shively-Sanders <nathansa@microsoft.com> (https://github.com/sandersn)",
+    "Andy Hanson <andy-ms@microsoft.com> (https://github.com/andy-ms)",
+    "Dan Vanderkam <danvdk@gmail.com> (https://github.com/danvk)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git"
+  },
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint --ext ts src",
+    "test": "npm run build && node test/test.js"
+  },
+  "dependencies": {
+    "@definitelytyped/header-parser": "0.0.93",
+    "@definitelytyped/typescript-versions": "0.0.93",
+    "@definitelytyped/utils": "0.0.93",
+    "@definitelytyped/dts-critic": "0.0.94",
+    "fs-extra": "^6.0.1",
+    "json-stable-stringify": "^1.0.1",
+    "strip-json-comments": "^2.0.1",
+    "tslint": "5.14.0",
+    "yargs": "^15.1.0"
+  },
+  "peerDependencies": {
+    "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/json-stable-stringify": "^1.0.32",
+    "@types/node": "14.0.x",
+    "@types/strip-json-comments": "^0.0.28",
+    "@types/yargs": "^15.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.16.0",
+    "typescript": "next"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "license": "MIT"
+}

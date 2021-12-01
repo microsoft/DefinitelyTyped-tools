@@ -23,7 +23,7 @@
             {
                 "selector": "interface",
                 "format": ["PascalCase"],
-                "custom": { "regex": "^I", "match": false } },
+                "custom": { "regex": "^I[A-Z0-9]", "match": false } },
             {
                 "selector": "class",
                 "format": ["PascalCase"]

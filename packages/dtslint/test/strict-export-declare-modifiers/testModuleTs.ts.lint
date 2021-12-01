@@ -1,0 +1,20 @@
+export declare class C {}
+
+export function f() {}
+
+declare interface I {}
+~~~~~~~ [declare-redundant]
+
+interface J {}
+
+namespace N {
+    export const x: number;
+}
+
+declare namespace M {
+    export const x: number;
+    ~~~~~~ [export-redundant]
+}
+
+[declare-redundant]: 'declare' keyword is redundant here. See: https://github.com/Microsoft/dtslint/blob/master/docs/strict-export-declare-modifiers.md
+[export-redundant]: 'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting. See: https://github.com/Microsoft/dtslint/blob/master/docs/strict-export-declare-modifiers.md
