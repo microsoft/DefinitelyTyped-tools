@@ -89,7 +89,7 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
 
   return soleUse ? { type: "sole", soleUse } : { type: "never" };
 
-  function recur(node: ts.TypeNode): void {
+  function recur(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
       if (checker.getSymbolAtLocation(node) === typeParameterSymbol) {
         if (soleUse === undefined) {

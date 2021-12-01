@@ -309,9 +309,6 @@ export function findDtsName(dtsPath: string) {
   return path.basename(path.dirname(resolved));
 }
 
-/** Default path to store packages downloaded from npm. */
-const sourceDir = path.resolve(path.join(__dirname, "..", "sources"));
-
 /** Returns path of downloaded npm package. */
 function downloadNpmPackage(name: string, version: string, outDir: string): string {
   const npmName = dtToNpmName(name);

@@ -26,7 +26,7 @@ export const getAllowedPackageJsonDependencies = withCache(60 * 60 * 1000, () =>
       } catch (err) {
         console.error(
           "Getting the latest allowedPackageJsonDependencies.txt from GitHub failed. Falling back to local copy.\n" +
-            err.message
+            (err as Error).message
         );
       }
     }

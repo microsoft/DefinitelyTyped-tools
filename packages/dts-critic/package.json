@@ -33,7 +33,7 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "test": "npm run build && jest",
-        "build": "tsc",
+        "build": "tsc -b .",
         "dt": "node dist/dt.js",
         "prepublishOnly": "npm run build && npm run test"
     },

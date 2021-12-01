@@ -24,7 +24,7 @@
   },
   "scripts": {
     "watch": "tsc --watch",
-    "build": "tsc",
+    "build": "tsc -b .",
     "lint": "eslint --ext ts src",
     "test": "npm run build && node test/test.js",
     "prepublishOnly": "npm run build && npm run test && npm run lint"

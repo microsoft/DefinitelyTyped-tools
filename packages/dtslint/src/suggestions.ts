@@ -47,7 +47,7 @@ export function addSuggestion<T>(ctx: WalkContext<T>, message: string, start?: n
       { flag, encoding: "utf8" }
     );
   } catch (e) {
-    console.log(`Could not write suggestions for package ${packageName}. ${e.message || ""}`);
+    console.log(`Could not write suggestions for package ${packageName}. ${(e as Error).message || ""}`);
   }
 }
 

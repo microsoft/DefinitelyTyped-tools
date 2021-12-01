@@ -169,7 +169,7 @@ function doCheck(args: {
     const errors = dtsCritic(dtsPath, /* sourcePath */ undefined, opts, args.debug);
     return { package: args.package, output: errors };
   } catch (e) {
-    return { package: args.package, output: e.toString() };
+    return { package: args.package, output: (e as Error).toString() };
   }
 }
 
