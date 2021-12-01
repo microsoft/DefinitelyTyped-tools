@@ -1,5 +1,5 @@
 interface Foo {
-    bar: () => void,
+  bar: () => void;
 }
 declare const foo: Foo;
 

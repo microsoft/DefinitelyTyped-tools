@@ -1,6 +1,6 @@
 interface Exports {
-    (): void,
-    foo: () => {},
+  (): void;
+  foo: () => {};
 }
 
 declare const exp: Exports;
