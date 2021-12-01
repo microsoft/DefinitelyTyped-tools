@@ -8,7 +8,7 @@
     "dtslint.json",
     "dtslint-expect-only.json"
   ],
-  "main": "bin",
+  "main": "bin/src",
   "bin": "./bin/src/index.js",
   "publishConfig": {
     "access": "public"
