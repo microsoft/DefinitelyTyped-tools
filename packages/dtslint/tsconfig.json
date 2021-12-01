@@ -1,20 +1,15 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
         "lib": ["es2017"],
         "outDir": "bin",
-        "sourceMap": true,
-        "newLine": "lf",
-
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "strictNullChecks": true,
-        "esModuleInterop": true
+        "newLine": "lf"
     },
-    "include": ["src"]
+    "include": ["src"],
+    "references": [
+        { "path": "../dts-critic" },
+        { "path": "../header-parser" },
+        { "path": "../typescript-versions" },
+        { "path": "../utils" }
+    ]
 }
