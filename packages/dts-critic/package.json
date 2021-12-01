@@ -3,6 +3,9 @@
     "version": "0.0.95-next.0",
     "author": "Nathan Shively-Sanders",
     "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
+    "publishConfig": {
+        "access": "public"
+    },
     "dependencies": {
         "@definitelytyped/header-parser": "latest",
         "command-exists": "^1.2.8",

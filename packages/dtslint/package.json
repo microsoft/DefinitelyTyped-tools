@@ -10,6 +10,9 @@
   ],
   "main": "bin",
   "bin": "./bin/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "contributors": [
     "Nathan Shively-Sanders <nathansa@microsoft.com> (https://github.com/sandersn)",
     "Andy Hanson <andy-ms@microsoft.com> (https://github.com/andy-ms)",
