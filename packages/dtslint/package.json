@@ -26,7 +26,8 @@
     "watch": "tsc --watch",
     "build": "tsc",
     "lint": "eslint --ext ts src",
-    "test": "npm run build && node test/test.js"
+    "test": "npm run build && node test/test.js",
+    "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "dependencies": {
     "@definitelytyped/dts-critic": "^0.0.95",
