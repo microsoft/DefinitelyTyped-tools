@@ -40,7 +40,7 @@ async function main(): Promise<void> {
         lookingForTsLocal = true;
         break;
       case "--version":
-        console.log(require("../package.json").version);
+        console.log(require("../../package.json").version);
         return;
       case "--expectOnly":
         expectOnly = true;
