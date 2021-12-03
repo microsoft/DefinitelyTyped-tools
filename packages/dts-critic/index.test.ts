@@ -26,13 +26,13 @@ suite("findDtsName", {
     expect(findDtsName("jquery/index.d.ts")).toBe("jquery");
   },
   currentDirectory() {
-    expect(findDtsName("index.d.ts")).toBe("dts-critic");
+    expect(findDtsName("index.d.ts")).toBe("DefinitelyTyped-tools");
   },
   relativeCurrentDirectory() {
-    expect(findDtsName("./index.d.ts")).toBe("dts-critic");
+    expect(findDtsName("./index.d.ts")).toBe("DefinitelyTyped-tools");
   },
   emptyDirectory() {
-    expect(findDtsName("")).toBe("dts-critic");
+    expect(findDtsName("")).toBe("DefinitelyTyped-tools");
   }
 });
 suite("getNpmInfo", {
@@ -76,16 +76,22 @@ const allErrors: Map<ExportErrorKind, true> = new Map([
   [ErrorKind.JsPropertyNotInDts, true]
 ]);
 
+function testsource(filename: string) {
+  return __dirname + "/testsource/" + filename;
+}
+
 suite("checkSource", {
   noErrors() {
-    expect(checkSource("noErrors", "testsource/noErrors.d.ts", "testsource/noErrors.js", allErrors, false)).toEqual([]);
+    expect(checkSource("noErrors", testsource("noErrors.d.ts"), testsource("noErrors.js"), allErrors, false)).toEqual(
+      []
+    );
   },
   missingJsProperty() {
     expect(
       checkSource(
         "missingJsProperty",
-        "testsource/missingJsProperty.d.ts",
-        "testsource/missingJsProperty.js",
+        testsource("missingJsProperty.d.ts"),
+        testsource("missingJsProperty.js"),
         allErrors,
         false
       )
@@ -103,8 +109,8 @@ The JavaScript module exports a property named 'foo', which is missing from the 
     expect(
       checkSource(
         "missingJsProperty",
-        "testsource/webpackPropertyNames.d.ts",
-        "testsource/webpackPropertyNames.js",
+        testsource("webpackPropertyNames.d.ts"),
+        testsource("webpackPropertyNames.js"),
         allErrors,
         false
       )
@@ -114,8 +120,8 @@ The JavaScript module exports a property named 'foo', which is missing from the 
     expect(
       checkSource(
         "missingDtsProperty",
-        "testsource/missingDtsProperty.d.ts",
-        "testsource/missingDtsProperty.js",
+        testsource("missingDtsProperty.d.ts"),
+        testsource("missingDtsProperty.js"),
         allErrors,
         false
       )
@@ -135,7 +141,13 @@ The declaration module exports a property named 'foo', which is missing from the
   },
   missingDefaultExport() {
     expect(
-      checkSource("missingDefault", "testsource/missingDefault.d.ts", "testsource/missingDefault.js", allErrors, false)
+      checkSource(
+        "missingDefault",
+        testsource("missingDefault.d.ts"),
+        testsource("missingDefault.js"),
+        allErrors,
+        false
+      )
     ).toEqual(
       expect.arrayContaining([
         {
@@ -157,8 +169,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
     expect(
       checkSource(
         "missingJsSignatureExportEquals",
-        "testsource/missingJsSignatureExportEquals.d.ts",
-        "testsource/missingJsSignatureExportEquals.js",
+        testsource("missingJsSignatureExportEquals.d.ts"),
+        testsource("missingJsSignatureExportEquals.js"),
         allErrors,
         false
       )
@@ -176,8 +188,8 @@ The JavaScript module can be called or constructed, but the declaration module c
     expect(
       checkSource(
         "missingJsSignatureNoExportEquals",
-        "testsource/missingJsSignatureNoExportEquals.d.ts",
-        "testsource/missingJsSignatureNoExportEquals.js",
+        testsource("missingJsSignatureNoExportEquals.d.ts"),
+        testsource("missingJsSignatureNoExportEquals.js"),
         allErrors,
         false
       )
@@ -198,8 +210,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
     expect(
       checkSource(
         "missingDtsSignature",
-        "testsource/missingDtsSignature.d.ts",
-        "testsource/missingDtsSignature.js",
+        testsource("missingDtsSignature.d.ts"),
+        testsource("missingDtsSignature.js"),
         allErrors,
         false
       )
@@ -217,8 +229,8 @@ The declaration module can be called or constructed, but the JavaScript module c
     expect(
       checkSource(
         "missingExportEquals",
-        "testsource/missingExportEquals.d.ts",
-        "testsource/missingExportEquals.js",
+        testsource("missingExportEquals.d.ts"),
+        testsource("missingExportEquals.js"),
         allErrors,
         false
       )
@@ -237,10 +249,10 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
 });
 suite("dtsCritic", {
   noErrors() {
-    expect(dtsCritic("testsource/dts-critic.d.ts", "testsource/dts-critic.js")).toEqual([]);
+    expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
   },
   noMatchingNpmPackage() {
-    expect(dtsCritic("testsource/parseltongue.d.ts")).toEqual([
+    expect(dtsCritic(testsource("parseltongue.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmPackage,
         message: `Declaration file must have a matching npm package.
@@ -256,7 +268,7 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
     ]);
   },
   noMatchingNpmVersion() {
-    expect(dtsCritic("testsource/typescript.d.ts")).toEqual([
+    expect(dtsCritic(testsource("typescript.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmVersion,
         message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
@@ -265,7 +277,7 @@ You should copy the major and minor version from the package on npm.`)
     ]);
   },
   nonNpmHasMatchingPackage() {
-    expect(dtsCritic("testsource/tslib.d.ts")).toEqual([
+    expect(dtsCritic(testsource("tslib.d.ts"))).toEqual([
       {
         kind: ErrorKind.NonNpmHasMatchingPackage,
         message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
