@@ -9,7 +9,7 @@
     "pretest": "yarn build",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
-    "test": "jest",
+    "test": "tsc -b packages/dtslint && jest",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/retag.js"
   },
