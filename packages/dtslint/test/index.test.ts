@@ -27,7 +27,7 @@ function testSingle(testDirectory: string) {
   });
 }
 
-describe("dtslint tests", () => {
+describe("dtslint", () => {
   const tests = readdirSync(testDir).filter(x => x !== "index.test.ts");
   for (const testName of tests) {
     const testDirectory = join(testDir, testName);
