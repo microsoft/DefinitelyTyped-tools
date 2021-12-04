@@ -1,0 +1,11 @@
+{
+  "name": "big-number",
+  "baseUrl": "types",
+  "typeRoots": ["lib"],
+  "author": "Mykola Odnosumov",
+  "version": "1.0.0",
+  "types": "./lib/main.d.ts",
+  "dependencies": {
+    "types-publisher": "^0.0.1-security"
+  }
+}
