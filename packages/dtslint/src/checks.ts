@@ -82,7 +82,6 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
     }
 
     for (const key in options) {
-      // tslint:disable-line forin
       switch (key) {
         case "lib":
         case "noImplicitAny":
@@ -93,10 +92,7 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
         case "strictFunctionTypes":
         case "esModuleInterop":
         case "allowSyntheticDefaultImports":
-          // Allow any value
-          break;
         case "paths":
-          // OK. "paths" checked further by types-publisher
         case "target":
         case "jsx":
         case "jsxFactory":
