@@ -77,7 +77,11 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
       const expected = mustHave[key];
       const actual = options[key];
       if (!deepEquals(expected, actual)) {
-        throw new Error(`Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(actual)}`);
+        throw new Error(
+          `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
+            actual
+          )}`
+        );
       }
     }
 

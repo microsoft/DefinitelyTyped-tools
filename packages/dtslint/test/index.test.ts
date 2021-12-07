@@ -30,34 +30,31 @@ function testSingle(testDirectory: string) {
 
 describe("dtslint", () => {
   const base = {
-    "module": "commonjs" as any,
-    "lib": [
-      "es6"
-    ],
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "baseUrl": "../",
-    "typeRoots": [
-      "../"
-    ],
-    "types": [],
-    "noEmit": true,
-    "forceConsistentCasingInFileNames": true,
+    module: "commonjs" as any,
+    lib: ["es6"],
+    noImplicitAny: true,
+    noImplicitThis: true,
+    strictNullChecks: true,
+    strictFunctionTypes: true,
+    baseUrl: "../",
+    typeRoots: ["../"],
+    types: [],
+    noEmit: true,
+    forceConsistentCasingInFileNames: true
   };
   describe("checks", () => {
     it("disallows unknown compiler options", () => {
-      expect(() => checkTsconfig({ ...base, completelyInvented: true }, { relativeBaseUrl: "../" }))
-        .toThrow("Unexpected compiler option completelyInvented");
+      expect(() => checkTsconfig({ ...base, completelyInvented: true }, { relativeBaseUrl: "../" })).toThrow(
+        "Unexpected compiler option completelyInvented"
+      );
     });
     it("allows exactOptionalPropertyTypes: true", () => {
-      expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: true }, { relativeBaseUrl: "../" }))
-        .toBeFalsy();
+      expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: true }, { relativeBaseUrl: "../" })).toBeFalsy();
     });
     it("disallows exactOptionalPropertyTypes: false", () => {
-      expect(() => checkTsconfig({ ...base, exactOptionalPropertyTypes: false }, { relativeBaseUrl: "../" }))
-        .toThrow("When \"exactOptionalPropertyTypes\" is present, it must be set to `true`.");
+      expect(() => checkTsconfig({ ...base, exactOptionalPropertyTypes: false }, { relativeBaseUrl: "../" })).toThrow(
+        'When "exactOptionalPropertyTypes" is present, it must be set to `true`.'
+      );
     });
   });
   describe("rules", () => {
@@ -74,4 +71,3 @@ describe("dtslint", () => {
     }
   });
 });
-
