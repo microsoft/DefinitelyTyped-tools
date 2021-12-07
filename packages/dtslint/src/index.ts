@@ -9,7 +9,7 @@ import { basename, dirname, join as joinPaths, resolve } from "path";
 import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
-import { mapDefinedAsync, withoutPrefix } from "./util";
+import { getCompilerOptions, mapDefinedAsync, withoutPrefix } from "./util";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -221,8 +221,8 @@ async function testTypesVersion(
   isLatest: boolean
 ): Promise<void> {
   await checkTslintJson(dirPath, dt);
-  await checkTsconfig(
-    dirPath,
+  checkTsconfig(
+    await getCompilerOptions(dirPath),
     dt ? { relativeBaseUrl: ".." + (isOlderVersion ? "/.." : "") + (isLatest ? "" : "/..") + "/" } : undefined
   );
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);

@@ -3,8 +3,9 @@ import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
 import { pathExists } from "fs-extra";
 import { join as joinPaths } from "path";
+import { CompilerOptions } from "typescript";
 
-import { getCompilerOptions, readJson } from "./util";
+import { readJson } from "./util";
 
 export async function checkPackageJson(dirPath: string, typesVersions: readonly TypeScriptVersion[]): Promise<void> {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
@@ -59,9 +60,7 @@ export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-export async function checkTsconfig(dirPath: string, dt: DefinitelyTypedInfo | undefined): Promise<void> {
-  const options = await getCompilerOptions(dirPath);
-
+export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo | undefined): void {
   if (dt) {
     const { relativeBaseUrl } = dt;
 
@@ -78,12 +77,11 @@ export async function checkTsconfig(dirPath: string, dt: DefinitelyTypedInfo | u
       const expected = mustHave[key];
       const actual = options[key];
       if (!deepEquals(expected, actual)) {
-        throw new Error(`Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}`);
+        throw new Error(`Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(actual)}`);
       }
     }
 
     for (const key in options) {
-      // tslint:disable-line forin
       switch (key) {
         case "lib":
         case "noImplicitAny":
@@ -94,16 +92,14 @@ export async function checkTsconfig(dirPath: string, dt: DefinitelyTypedInfo | u
         case "strictFunctionTypes":
         case "esModuleInterop":
         case "allowSyntheticDefaultImports":
-          // Allow any value
-          break;
-        case "target":
         case "paths":
+        case "target":
         case "jsx":
         case "jsxFactory":
         case "experimentalDecorators":
         case "noUnusedLocals":
         case "noUnusedParameters":
-          // OK. "paths" checked further by types-publisher
+        case "exactOptionalPropertyTypes":
           break;
         default:
           if (!(key in mustHave)) {
@@ -132,6 +128,11 @@ export async function checkTsconfig(dirPath: string, dt: DefinitelyTypedInfo | u
       if (!(key in options)) {
         throw new Error(`Expected \`"${key}": true\` or \`"${key}": false\`.`);
       }
+    }
+  }
+  if ("exactOptionalPropertyTypes" in options) {
+    if (options.exactOptionalPropertyTypes !== true) {
+      throw new Error('When "exactOptionalPropertyTypes" is present, it must be set to `true`.');
     }
   }
 
