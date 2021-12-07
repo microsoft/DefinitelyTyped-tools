@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.100-next.1",
+  "version": "0.0.100",
   "description": "Runs tests on TypeScript definition files",
   "files": [
     "bin",
@@ -29,7 +29,7 @@
     "prepublishOnly": "npm run build && npm run lint"
   },
   "dependencies": {
-    "@definitelytyped/dts-critic": "^0.0.100-next.0",
+    "@definitelytyped/dts-critic": "^0.0.100",
     "@definitelytyped/header-parser": "0.0.93",
     "@definitelytyped/typescript-versions": "0.0.93",
     "@definitelytyped/utils": "0.0.93",
