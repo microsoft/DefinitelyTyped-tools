@@ -288,6 +288,7 @@
 @types/react-native-tab-view
 @types/react-navigation
 @types/react-select
+@types/redis
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
