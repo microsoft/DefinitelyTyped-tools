@@ -296,6 +296,7 @@
 @types/vue
 @types/webdriverio
 @types/webpack
+@types/webpack-dev-middleware
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
