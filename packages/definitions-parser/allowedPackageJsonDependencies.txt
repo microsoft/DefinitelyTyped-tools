@@ -502,6 +502,7 @@ remark
 rollup
 rrule
 rxjs
+sass
 safe-buffer
 scroll-behavior
 scroll-into-view-if-needed
