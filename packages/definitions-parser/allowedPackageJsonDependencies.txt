@@ -266,6 +266,7 @@
 @types/anymatch
 @types/autoprefixer
 @types/base-x
+@types/busboy
 @types/expect
 @types/express-handlebars
 @types/express-serve-static-core
