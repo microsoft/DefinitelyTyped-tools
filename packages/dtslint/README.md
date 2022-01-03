@@ -64,12 +64,12 @@ You may also have to add `"target": "es6"` if using certain language features.
 
 If you are using the default rules, this is optional.
 
-If present, this will override `dtslint`'s [default](https://github.com/Microsoft/dtslint/blob/master/dtslint.json) settings.
+If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/dtslint.json) settings.
 You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
 
 ```json5
 {
-    "extends": "dtslint/dtslint.json", // Or "dtslint/dt.json" if on DefinitelyTyped
+    "extends": "@definitelytyped/dtslint/dtslint.json", // Or "@definitelytyped/dtslint/dt.json" if on DefinitelyTyped
     "rules": {
         "semicolon": false,
         "indent": [true, "tabs"]
@@ -120,7 +120,7 @@ For bundled typings, this can go on any line (but should be near the top).
 
 ## Run tests
 
-- `npm install --save-dev dtslint`
+- `npm install --save-dev @definitelytyped/dtslint`
 - Add to your `package.json` `scripts`: `"dtslint": "dtslint types"`
 - `npm run dtslint`
 
