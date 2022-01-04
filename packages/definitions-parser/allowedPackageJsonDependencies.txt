@@ -13,6 +13,7 @@
 @emotion/react
 @emotion/serialize
 @emotion/styled
+@glimmer/interfaces
 @hapi/boom
 @hapi/iron
 @hapi/podium
