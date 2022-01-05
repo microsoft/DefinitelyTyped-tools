@@ -299,6 +299,7 @@
 @types/webdriverio
 @types/webpack
 @types/webpack-dev-middleware
+@types/webpack-dev-server
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
