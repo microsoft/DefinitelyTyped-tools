@@ -446,6 +446,7 @@ mongodb
 mongoose
 mqtt
 msnodesqlv8
+mysql2
 neo4j-driver-lite
 next
 nock
