@@ -253,6 +253,7 @@
 @maxim_mazurok/gapi.client.youtube
 @maxim_mazurok/gapi.client.youtubeanalytics
 @maxim_mazurok/gapi.client.youtubereporting
+@middy/core
 @popperjs/core
 @rdfjs/types
 @react-navigation/native
@@ -445,6 +446,7 @@ mongodb
 mongoose
 mqtt
 msnodesqlv8
+mysql2
 neo4j-driver-lite
 next
 nock
