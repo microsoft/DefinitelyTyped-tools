@@ -305,6 +305,7 @@
 @types/wonder-commonlib
 @types/wonder-frp
 @uirouter/angularjs
+@vue/reactivity
 @vue/test-utils
 @wordpress/api-fetch
 @wordpress/element
