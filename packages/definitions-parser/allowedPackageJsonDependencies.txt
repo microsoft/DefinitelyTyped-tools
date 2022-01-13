@@ -540,6 +540,7 @@ typescript
 typescript-tuple
 unified
 utility-types
+vanillajs-datepicker
 vega-typings
 vfile
 vfile-message
