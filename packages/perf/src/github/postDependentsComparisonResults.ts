@@ -36,7 +36,7 @@ export async function postDependentsComparisonResult({ comparisons, dryRun }: Po
         issue_number: prNumber,
         body: createPerfCommentBody(
           {
-            overallChange: getOverallChangeForComparisons(comparisons),
+            overallChange: getOverallChangeForComparisons(comparisons)
           },
           message
         )

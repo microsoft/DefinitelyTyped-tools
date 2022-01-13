@@ -11,10 +11,7 @@ export enum OverallChange {
   Mixed = Worse | Better
 }
 
-export function getOverallChangeForSingleComparison(
-  before: PackageBenchmarkSummary,
-  after: PackageBenchmarkSummary
-) {
+export function getOverallChangeForSingleComparison(before: PackageBenchmarkSummary, after: PackageBenchmarkSummary) {
   let change = OverallChange.Same;
   for (const { significance } of getInterestingMetrics(before, after)) {
     switch (significance) {

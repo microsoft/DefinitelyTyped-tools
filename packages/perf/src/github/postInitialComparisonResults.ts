@@ -44,7 +44,7 @@ export async function postInitialComparisonResults({
       const currentOverallChange = getOverallChangeForComparisons(comparisons);
       const mostRecentComment = findLast(comments.data, isPerfComment);
       const commentData: CommentData = {
-        overallChange: currentOverallChange,
+        overallChange: currentOverallChange
       };
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;

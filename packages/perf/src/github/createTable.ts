@@ -55,7 +55,7 @@ export function createComparisonTable(
           ),
         undefined,
         { indent: 1 }
-      ),
+      )
     ])
   );
 }
@@ -101,7 +101,7 @@ export function createSingleRunTable(benchmark: PackageBenchmarkSummary) {
           x.quickInfo.worst.line
         ),
       { indent: 1 }
-    ),
+    )
   ]);
 }
 

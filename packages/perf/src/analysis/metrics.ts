@@ -166,7 +166,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     getValue: x => x.memoryUsage / 2 ** 20,
     getSignificance: compose(
       proportionalTo("identifierCount"),
-      withThreshold(FineIf.LessThan, 65),
+      withThreshold(FineIf.LessThan, 65)
     )(getOrderOfMagnitudeSignificance)
   },
   assignabilityCacheSize: {

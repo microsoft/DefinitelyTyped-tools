@@ -1,11 +1,6 @@
 import * as os from "os";
 import * as path from "path";
-import {
-  getParsedPackages,
-  assertString,
-  assertNumber,
-  getSystemInfo
-} from "../common";
+import { getParsedPackages, assertString, assertNumber, getSystemInfo } from "../common";
 import { getTypeScript } from "../measure/getTypeScript";
 import { printSummary, measurePerf } from "../measure";
 import { summarize } from "../analysis";

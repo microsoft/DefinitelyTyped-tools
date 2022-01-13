@@ -12,11 +12,7 @@ import { printSummary } from "../measure";
 import { getTypeScript } from "../measure/getTypeScript";
 import { postInitialComparisonResults } from "../github/postInitialComparisonResults";
 import { postDependentsComparisonResult } from "../github/postDependentsComparisonResults";
-import {
-  AllPackages,
-  DependencyVersion,
-  getAffectedPackages,
-} from "@definitelytyped/definitions-parser";
+import { AllPackages, DependencyVersion, getAffectedPackages } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors } from "@definitelytyped/utils";
 
 export interface CompareOptions {
@@ -129,25 +125,27 @@ export async function compareBenchmarks({
   typeScriptVersionMajorMinor,
   packageName,
   packageVersion,
-  maxRunSeconds,
+  maxRunSeconds
 }: CompareOptions): Promise<[PackageBenchmarkSummary, PackageBenchmarkSummary]> {
   await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
-  const baseBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
-    definitelyTypedPath,
-    printSummary: false,
-    iterations: config.benchmarks.languageServiceIterations,
-    progress: false,
-    tsVersion: typeScriptVersionMajorMinor,
-    nProcesses: os.cpus().length,
-    failOnErrors: true,
-    installTypeScript: false,
-    maxRunSeconds
-  }))?.summary;
+  const baseBenchmark = (
+    await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+      definitelyTypedPath,
+      printSummary: false,
+      iterations: config.benchmarks.languageServiceIterations,
+      progress: false,
+      tsVersion: typeScriptVersionMajorMinor,
+      nProcesses: os.cpus().length,
+      failOnErrors: true,
+      installTypeScript: false,
+      maxRunSeconds
+    })
+  )?.summary;
 
   if (!baseBenchmark) {
     throw new Error(`Package ${packageName} does not exist in master so cannot be compared.`);
   }
-  
+
   await execAndThrowErrors(`git checkout -f . && git checkout - && git clean -xdf types`, definitelyTypedPath);
   const headBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
     definitelyTypedPath,
@@ -170,8 +168,5 @@ export async function compareBenchmarks({
   console.log("\nHEAD");
   console.log("====");
   console.log(printSummary([headBenchmark]));
-  return [
-    baseBenchmark,
-    headBenchmark,
-  ];
+  return [baseBenchmark, headBenchmark];
 }

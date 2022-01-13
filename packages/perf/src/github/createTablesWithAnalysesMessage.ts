@@ -1,10 +1,5 @@
 import { createComparisonTable, createSingleRunTable } from "./createTable";
-import {
-  PackageBenchmarkSummary,
-  compact,
-  toPackageKey,
-  packageVersionsAreEqual
-} from "../common";
+import { PackageBenchmarkSummary, compact, toPackageKey, packageVersionsAreEqual } from "../common";
 import { getInterestingMetrics, SignificanceLevel, ComparedMetric } from "../analysis";
 
 export function createTablesWithAnalysesMessage(
@@ -21,7 +16,7 @@ export function createTablesWithAnalysesMessage(
         before
           ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))
           : createSingleRunTable(after),
-        ``,
+        ``
       ].join("\n");
 
       return compact([
@@ -55,21 +50,14 @@ function getBeforeTitle(before: PackageBenchmarkSummary, after: PackageBenchmark
   return `${before.packageVersionMajor}.${before.packageVersionMinor}@master`;
 }
 
-function getAfterTitle(
-  before: PackageBenchmarkSummary,
-  after: PackageBenchmarkSummary,
-  prNumber: number
-) {
+function getAfterTitle(before: PackageBenchmarkSummary, after: PackageBenchmarkSummary, prNumber: number) {
   if (packageVersionsAreEqual(before, after)) {
     return `#${prNumber}`;
   }
   return `${after.packageVersionMajor}.${after.packageVersionMinor} in #${prNumber}`;
 }
 
-function getIntroMessage(
-  before: PackageBenchmarkSummary | undefined,
-  after: PackageBenchmarkSummary
-) {
+function getIntroMessage(before: PackageBenchmarkSummary | undefined, after: PackageBenchmarkSummary) {
   if (before && packageVersionsAreEqual(before, after)) {
     return;
   }
