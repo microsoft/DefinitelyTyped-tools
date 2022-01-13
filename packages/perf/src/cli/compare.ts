@@ -132,7 +132,7 @@ export async function compareBenchmarks({
   maxRunSeconds,
 }: CompareOptions): Promise<[PackageBenchmarkSummary, PackageBenchmarkSummary]> {
   await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
-  const latestBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+  const baseBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
     definitelyTypedPath,
     printSummary: false,
     iterations: config.benchmarks.languageServiceIterations,
@@ -142,10 +142,14 @@ export async function compareBenchmarks({
     failOnErrors: true,
     installTypeScript: false,
     maxRunSeconds
-  }))!.summary;
+  }))?.summary;
+
+  if (!baseBenchmark) {
+    throw new Error(`Package ${packageName} does not exist in master so cannot be compared.`);
+  }
   
   await execAndThrowErrors(`git checkout -f . && git checkout - && git clean -xdf types`, definitelyTypedPath);
-  const currentBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+  const headBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
     definitelyTypedPath,
     printSummary: true,
     iterations: config.benchmarks.languageServiceIterations,
@@ -157,17 +161,17 @@ export async function compareBenchmarks({
     maxRunSeconds
   }))!.summary;
 
-  if (latestBenchmark) {
+  if (baseBenchmark) {
     console.log("\nmaster");
     console.log("======");
-    console.log(printSummary([latestBenchmark]));
+    console.log(printSummary([baseBenchmark]));
   }
 
   console.log("\nHEAD");
   console.log("====");
-  console.log(printSummary([currentBenchmark]));
+  console.log(printSummary([headBenchmark]));
   return [
-    latestBenchmark,
-    currentBenchmark,
+    baseBenchmark,
+    headBenchmark,
   ];
 }
