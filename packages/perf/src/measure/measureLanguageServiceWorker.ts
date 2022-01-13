@@ -62,7 +62,7 @@ async function measureLanguageService(
   return {
     fileName: args.fileName,
     start: args.start,
-    ...await measureAtPosition(args.fileName, args.start)
+    ...(await measureAtPosition(args.fileName, args.start))
   };
 
   async function measureAtPosition(

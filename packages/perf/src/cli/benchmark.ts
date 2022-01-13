@@ -4,7 +4,12 @@ import { getParsedPackages, assertString, assertNumber, getSystemInfo } from "..
 import { getTypeScript } from "../measure/getTypeScript";
 import { printSummary, measurePerf } from "../measure";
 import { summarize } from "../analysis";
-import { PackageId, formatDependencyVersion, tryParsePackageVersion, AllPackages } from "@definitelytyped/definitions-parser";
+import {
+  PackageId,
+  formatDependencyVersion,
+  tryParsePackageVersion,
+  AllPackages
+} from "@definitelytyped/definitions-parser";
 const currentSystem = getSystemInfo();
 
 export interface BenchmarkPackageOptions {
@@ -88,7 +93,7 @@ export async function benchmarkPackage(
     failOnErrors,
     installTypeScript,
     localTypeScriptPath,
-    allPackages = (await getParsedPackages(definitelyTypedPath)).allPackages,
+    allPackages = (await getParsedPackages(definitelyTypedPath)).allPackages
   } = options;
   const versionQuery = tryParsePackageVersion(packageVersion);
   const typings = allPackages.tryGetTypingsData({ name: packageName, version: versionQuery });
