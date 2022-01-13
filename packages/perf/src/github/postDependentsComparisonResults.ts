@@ -1,11 +1,11 @@
-import { PackageBenchmarkSummary, Document, config, compact } from "../common";
+import { PackageBenchmarkSummary, config, compact } from "../common";
 import { getOctokit } from "./getOctokit";
 import { createTablesWithAnalysesMessage } from "./createTablesWithAnalysesMessage";
 import { createPerfCommentBody } from "./comment";
 import { getOverallChangeForComparisons } from "../analysis";
 import { assertDefined } from "@definitelytyped/utils";
 
-type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
+type BeforeAndAfter = [PackageBenchmarkSummary, PackageBenchmarkSummary];
 
 export interface PostDependentsComparisonResultOptions {
   comparisons: BeforeAndAfter[];
@@ -37,7 +37,6 @@ export async function postDependentsComparisonResult({ comparisons, dryRun }: Po
         body: createPerfCommentBody(
           {
             overallChange: getOverallChangeForComparisons(comparisons),
-            benchmarks: comparisons.map(([, b]) => ({ createdAt: b.createdAt }))
           },
           message
         )

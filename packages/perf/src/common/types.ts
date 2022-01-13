@@ -87,35 +87,3 @@ export interface SystemInfo {
   hash: string;
   nodeVersion: string;
 }
-
-export interface Document<T> {
-  version: number;
-  createdAt: Date;
-  system: SystemInfo;
-  body: T;
-}
-
-type Serialized<T extends {}> = {
-  [K in keyof T]: T[K] extends string
-    ? string
-    : T[K] extends number
-    ? number
-    : T[K] extends boolean
-    ? boolean
-    : T[K] extends Date
-    ? string
-    : T[K] extends readonly (infer U)[]
-    ? Serialized<U>[]
-    : T[K] extends {}
-    ? Serialized<T[K]>
-    : never;
-};
-
-export interface JSONDocument<T extends {}> {
-  version: number;
-  createdAt: string;
-  system: SystemInfo;
-  body: Serialized<T>;
-}
-
-export type QueryResult<T extends {}> = T & { id: string };

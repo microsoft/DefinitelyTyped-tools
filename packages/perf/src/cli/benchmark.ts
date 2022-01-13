@@ -1,16 +1,12 @@
 import * as os from "os";
 import * as path from "path";
 import {
-  getDatabase,
-  DatabaseAccessLevel,
-  config,
   getParsedPackages,
   assertString,
   assertNumber,
   getSystemInfo
 } from "../common";
 import { getTypeScript } from "../measure/getTypeScript";
-import { insertDocument } from "../write";
 import { printSummary, measurePerf } from "../measure";
 import { summarize } from "../analysis";
 import { PackageId, formatDependencyVersion, tryParsePackageVersion } from "@definitelytyped/definitions-parser";
@@ -21,7 +17,6 @@ export interface BenchmarkPackageOptions {
   groups?: PackageId[][];
   agentIndex?: number;
   package?: string;
-  upload: boolean;
   tsVersion: string;
   progress: boolean;
   iterations: number;
@@ -87,7 +82,6 @@ export async function benchmarkPackage(
   options: BenchmarkPackageOptions
 ) {
   const {
-    upload,
     progress,
     iterations,
     nProcesses,
@@ -127,17 +121,6 @@ export async function benchmarkPackage(
 
   if (shouldPrintSummary) {
     printSummary([summary]);
-  }
-
-  if (upload) {
-    const { packageBenchmarks } = await getDatabase(DatabaseAccessLevel.Write);
-    const item = await insertDocument(
-      summary,
-      config.database.packageBenchmarksDocumentSchemaVersion,
-      packageBenchmarks
-    );
-
-    return { benchmark, summary, id: item.id };
   }
 
   return { benchmark, summary, id: undefined };

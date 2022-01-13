@@ -14,9 +14,6 @@ function assertCommentSafe(str: string) {
 
 export interface CommentData {
   overallChange?: OverallChange;
-  benchmarks: {
-    createdAt: Date;
-  }[];
 }
 
 export function createPerfCommentBody(data: CommentData, body: string): string {

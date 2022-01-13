@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { randomBytes, createHash } from "crypto";
 import { promisify } from "util";
 import { execSync } from "child_process";
-import { SystemInfo, Document, JSONDocument, PackageBenchmarkSummary, QueryResult, PackageBenchmark } from "./types";
+import { SystemInfo, PackageBenchmarkSummary, PackageBenchmark } from "./types";
 import { assertDefined, execAndThrowErrors } from "@definitelytyped/utils";
 import {
   PackageId,
@@ -104,31 +104,6 @@ export function isWithin(actual: number, expected: number, tolerance: number): b
   return Math.abs(getPercentDiff(actual, expected)) <= tolerance;
 }
 
-export function systemsAreCloseEnough(a: SystemInfo, b: SystemInfo, cpuSpeedTolerance = 0.1): boolean {
-  if (a.hash === b.hash) {
-    return true;
-  }
-  return (
-    a.arch === b.arch &&
-    a.platform === b.platform &&
-    a.nodeVersion === b.nodeVersion &&
-    a.cpus.length === b.cpus.length &&
-    a.cpus.every((cpu, index) => {
-      const otherCPU = b.cpus[index];
-      return cpu.model === otherCPU.model && isWithin(cpu.speed, otherCPU.speed, cpuSpeedTolerance);
-    })
-  );
-}
-
-export function createDocument<T>(body: T, version: number): Document<T> {
-  return {
-    version,
-    createdAt: new Date(),
-    system: getSystemInfo(),
-    body
-  };
-}
-
 export function isVersionedBenchmark(
   obj: any
 ): obj is Pick<PackageBenchmark, "packageVersionMajor" | "packageVersionMinor"> {
@@ -174,20 +149,6 @@ export function toPackageKey(
     `Could not determine package version from benchmark: ${JSON.stringify(packageIdOrName, undefined, 2)}`
   );
   return `${packageId.name}/${formatDependencyVersion(packageId.version)}`;
-}
-
-export function deserializeSummary(
-  doc: QueryResult<JSONDocument<PackageBenchmarkSummary>>
-): QueryResult<Document<PackageBenchmarkSummary>>;
-export function deserializeSummary(doc: JSONDocument<PackageBenchmarkSummary>): Document<PackageBenchmarkSummary> {
-  return {
-    ...doc,
-    createdAt: new Date(doc.createdAt),
-    body: {
-      ...doc.body,
-      batchRunStart: new Date(doc.body.batchRunStart)
-    }
-  };
 }
 
 export function getSourceVersion(cwd: string) {
