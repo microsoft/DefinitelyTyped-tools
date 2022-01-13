@@ -1,4 +1,4 @@
-import { PackageBenchmarkSummary, Document, config, compact, findLast } from "../common";
+import { PackageBenchmarkSummary, config, compact, findLast } from "../common";
 import { getOctokit } from "./getOctokit";
 import { createTablesWithAnalysesMessage } from "./createTablesWithAnalysesMessage";
 import { isPerfComment, createPerfCommentBody, getCommentData, CommentData } from "./comment";
@@ -6,7 +6,7 @@ import { OverallChange, getOverallChangeForComparisons } from "../analysis";
 import { setLabels } from "./setLabels";
 import { assertDefined } from "@definitelytyped/utils";
 
-type BeforeAndAfter = [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>];
+type BeforeAndAfter = [PackageBenchmarkSummary, PackageBenchmarkSummary];
 
 export interface PostInitialComparisonResultsOptions {
   comparisons: BeforeAndAfter[];
@@ -45,7 +45,6 @@ export async function postInitialComparisonResults({
       const mostRecentComment = findLast(comments.data, isPerfComment);
       const commentData: CommentData = {
         overallChange: currentOverallChange,
-        benchmarks: comparisons.map(([, b]) => ({ createdAt: b.createdAt }))
       };
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
@@ -64,7 +63,7 @@ export async function postInitialComparisonResults({
             /*alwaysWriteHeader*/ false,
             /*alwaysCollapseDetails*/ true
           ),
-          comparisons[0][1].body.sourceVersion
+          comparisons[0][1].sourceVersion
         );
 
         await octokit.issues.createComment({

@@ -3,10 +3,7 @@ import path from "path";
 import process from "process";
 import yargs from "yargs";
 import { benchmark } from "./benchmark";
-import { getPackagesToBenchmark } from "./getPackagesToBenchmark";
 import { compare } from "./compare";
-import { compareTypeScriptCLI } from "./compareTypeScript";
-import { parsePackageKey } from "../common";
 
 const maxRunSeconds = {
   type: "number",
@@ -92,33 +89,6 @@ void yargs
     benchmark
   )
   .command(
-    "getPackagesToBenchmark",
-    "generates a benchmark manifest file to be run by multiple agents",
-    {
-      definitelyTypedPath: {
-        ...definitelyTypedPath,
-        coerce: (dtPath: string) => (path.isAbsolute(dtPath) ? dtPath : path.resolve(process.cwd(), dtPath))
-      },
-      agentCount: {
-        type: "number",
-        requiresArg: true,
-        description: "the number of agents that will run the benchmarks",
-        demandOption: true
-      },
-      tsVersion: {
-        ...tsVersion,
-        demandOption: true
-      },
-      outFile: {
-        type: "string",
-        requiresArg: true,
-        description: "the path to the manifest file to be written",
-        demandOption: true
-      }
-    },
-    getPackagesToBenchmark
-  )
-  .command(
     "compare",
     "compare packages modified in a PR to those packages in the main branch",
     {
@@ -146,29 +116,6 @@ void yargs
       }
     },
     compare
-  )
-  .command(
-    "compareTypeScript",
-    "compare packages’ performance between different TypeScript versions",
-    {
-      file,
-      compareAgainstVersion: {
-        type: "string",
-        requiresArg: true,
-        description: "the TypeScript major/minor version to compare against",
-        demandOption: true
-      },
-      packages: {
-        type: ("array" as unknown) as undefined, // yargs seems to have a problem with "array" + `coerce`
-        description: "list of packages to benchmark",
-        requiresArg: true,
-        coerce: (packages: string[]) => packages.map(parsePackageKey)
-      },
-      maxRunSeconds,
-      definitelyTypedPath,
-      localTypeScriptPath
-    },
-    compareTypeScriptCLI
   )
   .help().argv;
 

@@ -15,7 +15,6 @@
     "url": "git://github.com/andrewbranch/definitely-not-slow.git"
   },
   "dependencies": {
-    "@azure/cosmos": "^3.6.3",
     "@definitelytyped/definitions-parser": "^0.0.101-next.7",
     "@definitelytyped/header-parser": "^0.0.100",
     "@definitelytyped/utils": "^0.0.100",

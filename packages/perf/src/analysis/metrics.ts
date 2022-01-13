@@ -1,5 +1,5 @@
 import { mean } from "../measure/utils";
-import { PackageBenchmarkSummary, Document, config, getPercentDiff, supportsMemoryUsage, not } from "../common";
+import { PackageBenchmarkSummary, config, getPercentDiff } from "../common";
 import { assertNever } from "@definitelytyped/utils";
 
 export interface FormatOptions {
@@ -19,8 +19,8 @@ export type GetSignificance = (
   percentDiff: number,
   beforeValue: number,
   afterValue: number,
-  beforeDoc: Document<PackageBenchmarkSummary>,
-  afterDoc: Document<PackageBenchmarkSummary>
+  beforeDoc: PackageBenchmarkSummary,
+  afterDoc: PackageBenchmarkSummary
 ) => SignificanceLevel | undefined;
 
 export type CreateGetSignificance = (getSignificance: GetSignificance) => GetSignificance;
@@ -29,7 +29,7 @@ export interface Metric {
   columnName: string;
   sentenceName: string;
   formatOptions?: FormatOptions;
-  getValue: (x: Document<PackageBenchmarkSummary>) => number | undefined;
+  getValue: (x: PackageBenchmarkSummary) => number | undefined;
   getSignificance: GetSignificance;
 }
 
@@ -139,21 +139,6 @@ function withThreshold(fineIf: FineIf, threshold: number) {
   };
 }
 
-function ignoreIfEitherBenchmark(predicate: (document: Document<PackageBenchmarkSummary>) => boolean) {
-  return (getSignificance: GetSignificance): GetSignificance => (
-    percentDiff,
-    beforeValue,
-    afterValue,
-    beforeDoc,
-    afterDoc
-  ) => {
-    if (predicate(beforeDoc) || predicate(afterDoc)) {
-      return undefined;
-    }
-    return getSignificance(percentDiff, beforeValue, afterValue, beforeDoc, afterDoc);
-  };
-}
-
 function compose(x: CreateGetSignificance, ...xs: CreateGetSignificance[]): CreateGetSignificance {
   return getSignificance => {
     let current = x(getSignificance);
@@ -169,7 +154,7 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: "Type count",
     sentenceName: "type count",
     formatOptions: { precision: 0 },
-    getValue: x => x.body.typeCount,
+    getValue: x => x.typeCount,
     getSignificance: compose(
       proportionalTo("identifierCount"),
       withThreshold(FineIf.LessThan, 5000)
@@ -178,18 +163,17 @@ export const metrics: { [K in MetricName]: Metric } = {
   memoryUsage: {
     columnName: "Memory usage (MiB)",
     sentenceName: "memory usage",
-    getValue: x => x.body.memoryUsage / 2 ** 20,
+    getValue: x => x.memoryUsage / 2 ** 20,
     getSignificance: compose(
       proportionalTo("identifierCount"),
       withThreshold(FineIf.LessThan, 65),
-      ignoreIfEitherBenchmark(not(supportsMemoryUsage))
     )(getOrderOfMagnitudeSignificance)
   },
   assignabilityCacheSize: {
     columnName: "Assignability cache size",
     sentenceName: "assignability cache size",
     formatOptions: { precision: 0 },
-    getValue: x => x.body.relationCacheSizes && x.body.relationCacheSizes.assignable,
+    getValue: x => x.relationCacheSizes && x.relationCacheSizes.assignable,
     getSignificance: compose(
       proportionalTo("identifierCount"),
       withThreshold(FineIf.LessThan, 1000)
@@ -199,64 +183,64 @@ export const metrics: { [K in MetricName]: Metric } = {
     columnName: "Samples taken",
     sentenceName: "number of samples taken",
     formatOptions: { precision: 0 },
-    getValue: x => Math.max(x.body.completions.trials, x.body.quickInfo.trials),
+    getValue: x => Math.max(x.completions.trials, x.quickInfo.trials),
     getSignificance: getInsignificant
   },
   identifierCount: {
     columnName: "Identifiers in tests",
     sentenceName: "number of identifiers present in test files",
     formatOptions: { precision: 0 },
-    getValue: x => x.body.testIdentifierCount,
+    getValue: x => x.testIdentifierCount,
     getSignificance: getInsignificant
   },
   completionsMean: {
     columnName: "Mean duration (ms)",
     sentenceName: "mean duration for getting completions at a position",
-    getValue: x => x.body.completions.mean,
+    getValue: x => x.completions.mean,
     getSignificance: withThreshold(FineIf.LessThan, 150)(getDefaultSignificance)
   },
   completionsStdDev: {
     columnName: "Std. deviation (ms)",
     sentenceName: "standard deviation of the durations for getting completions at a position",
-    getValue: x => x.body.completions.standardDeviation,
+    getValue: x => x.completions.standardDeviation,
     getSignificance: getInsignificant
   },
   completionsAvgCV: {
     columnName: "Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation)",
     sentenceName: "mean coefficient of variation of samples measured for completions time",
-    getValue: x => x.body.completions.meanCoefficientOfVariation,
+    getValue: x => x.completions.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
     formatOptions: { percentage: true, noDiff: true }
   },
   completionsWorstMean: {
     columnName: "Worst duration (ms)",
     sentenceName: "worst-case duration for getting completions at a position",
-    getValue: x => mean(x.body.completions.worst.completionsDurations),
+    getValue: x => mean(x.completions.worst.completionsDurations),
     getSignificance: withThreshold(FineIf.LessThan, 200)(getDefaultSignificance)
   },
   quickInfoMean: {
     columnName: "Mean duration (ms)",
     sentenceName: "mean duration for getting quick info at a position",
-    getValue: x => x.body.quickInfo.mean,
+    getValue: x => x.quickInfo.mean,
     getSignificance: withThreshold(FineIf.LessThan, 150)(getDefaultSignificance)
   },
   quickInfoStdDev: {
     columnName: "Std. deviation (ms)",
     sentenceName: "standard deviation of the durations for getting quick info at a position",
-    getValue: x => x.body.quickInfo.standardDeviation,
+    getValue: x => x.quickInfo.standardDeviation,
     getSignificance: getInsignificant
   },
   quickInfoAvgCV: {
     columnName: "Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation)",
     sentenceName: "mean coefficient of variation of samples measured for quick info time",
-    getValue: x => x.body.quickInfo.meanCoefficientOfVariation,
+    getValue: x => x.quickInfo.meanCoefficientOfVariation,
     getSignificance: getInsignificant,
     formatOptions: { percentage: true, noDiff: true }
   },
   quickInfoWorstMean: {
     columnName: "Worst duration (ms)",
     sentenceName: "worst-case duration for getting quick info at a position",
-    getValue: x => mean(x.body.quickInfo.worst.quickInfoDurations),
+    getValue: x => mean(x.quickInfo.worst.quickInfoDurations),
     getSignificance: withThreshold(FineIf.LessThan, 200)(getDefaultSignificance)
   }
 };
@@ -268,8 +252,8 @@ export interface ComparedMetric {
 }
 
 export function getInterestingMetrics(
-  before: Document<PackageBenchmarkSummary>,
-  after: Document<PackageBenchmarkSummary>
+  before: PackageBenchmarkSummary,
+  after: PackageBenchmarkSummary
 ): ComparedMetric[] {
   return Object.values(metrics).reduce(
     (acc: { metric: Metric; percentDiff: number; significance: SignificanceLevel }[], metric) => {

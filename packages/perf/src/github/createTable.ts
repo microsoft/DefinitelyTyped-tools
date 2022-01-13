@@ -1,11 +1,11 @@
 import table from "markdown-table";
-import { PackageBenchmarkSummary, Document, config, getPercentDiff, compact, supportsMemoryUsage } from "../common";
+import { PackageBenchmarkSummary, config, getPercentDiff, compact } from "../common";
 import { metrics, Metric, FormatOptions, SignificanceLevel } from "../analysis";
 import { assertNever } from "@definitelytyped/utils";
 
 export function createComparisonTable(
-  before: Document<PackageBenchmarkSummary>,
-  after: Document<PackageBenchmarkSummary>,
+  before: PackageBenchmarkSummary,
+  after: PackageBenchmarkSummary,
   beforeTitle: string,
   afterTitle: string
 ) {
@@ -13,9 +13,7 @@ export function createComparisonTable(
     compact([
       ["", beforeTitle, afterTitle, "diff"],
       ["**Batch compilation**"],
-      supportsMemoryUsage(before) && supportsMemoryUsage(after)
-        ? createComparisonRowFromMetric(metrics.memoryUsage, before, after)
-        : undefined,
+      createComparisonRowFromMetric(metrics.memoryUsage, before, after),
       createComparisonRowFromMetric(metrics.typeCount, before, after),
       createComparisonRowFromMetric(metrics.assignabilityCacheSize, before, after),
       [],
@@ -32,10 +30,10 @@ export function createComparisonTable(
         after,
         x =>
           sourceLink(
-            x.body.completions.worst.identifierText,
-            x.body.sourceVersion,
-            x.body.completions.worst.fileName,
-            x.body.completions.worst.line
+            x.completions.worst.identifierText,
+            x.sourceVersion,
+            x.completions.worst.fileName,
+            x.completions.worst.line
           ),
         undefined,
         { indent: 1 }
@@ -50,35 +48,19 @@ export function createComparisonTable(
         after,
         x =>
           sourceLink(
-            x.body.quickInfo.worst.identifierText,
-            x.body.sourceVersion,
-            x.body.quickInfo.worst.fileName,
-            x.body.quickInfo.worst.line
+            x.quickInfo.worst.identifierText,
+            x.sourceVersion,
+            x.quickInfo.worst.fileName,
+            x.quickInfo.worst.line
           ),
         undefined,
         { indent: 1 }
       ),
-
-      // Only show system info if they’re not identical
-      ...(before.system.hash === after.system.hash
-        ? []
-        : [
-            [],
-            ["**System information**"],
-            createComparisonRow("Node version", before, after, x => x.system.nodeVersion),
-            createComparisonRow("CPU count", before, after, x => x.system.cpus.length, undefined, { precision: 0 }),
-            createComparisonRow("CPU speed", before, after, x => `${x.system.cpus[0].speed / 1000} GHz`),
-            createComparisonRow("CPU model", before, after, x => x.system.cpus[0].model),
-            createComparisonRow("CPU Architecture", before, after, x => x.system.arch),
-            createComparisonRow("Memory", before, after, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
-            createComparisonRow("Platform", before, after, x => x.system.platform),
-            createComparisonRow("Release", before, after, x => x.system.release)
-          ])
     ])
   );
 }
 
-export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary>) {
+export function createSingleRunTable(benchmark: PackageBenchmarkSummary) {
   return table([
     ["**Batch compilation**"],
     // createSingleRunRowFromMetric(metrics.memoryUsage, benchmark),
@@ -97,10 +79,10 @@ export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary
       benchmark,
       x =>
         sourceLink(
-          x.body.completions.worst.identifierText,
-          x.body.sourceVersion,
-          x.body.completions.worst.fileName,
-          x.body.completions.worst.line
+          x.completions.worst.identifierText,
+          x.sourceVersion,
+          x.completions.worst.fileName,
+          x.completions.worst.line
         ),
       { indent: 1 }
     ),
@@ -113,23 +95,13 @@ export function createSingleRunTable(benchmark: Document<PackageBenchmarkSummary
       benchmark,
       x =>
         sourceLink(
-          x.body.quickInfo.worst.identifierText,
-          x.body.sourceVersion,
-          x.body.quickInfo.worst.fileName,
-          x.body.quickInfo.worst.line
+          x.quickInfo.worst.identifierText,
+          x.sourceVersion,
+          x.quickInfo.worst.fileName,
+          x.quickInfo.worst.line
         ),
       { indent: 1 }
     ),
-    [],
-    ["**System information**"],
-    createSingleRunRow("Node version", benchmark, x => x.system.nodeVersion),
-    createSingleRunRow("CPU count", benchmark, x => x.system.cpus.length, { precision: 0 }),
-    createSingleRunRow("CPU speed", benchmark, x => `${x.system.cpus[0].speed / 1000} GHz`),
-    createSingleRunRow("CPU model", benchmark, x => x.system.cpus[0].model),
-    createSingleRunRow("CPU Architecture", benchmark, x => x.system.arch),
-    createSingleRunRow("Memory", benchmark, x => `${format(x.system.totalmem / 2 ** 30)} GiB`),
-    createSingleRunRow("Platform", benchmark, x => x.system.platform),
-    createSingleRunRow("Release", benchmark, x => x.system.release)
   ]);
 }
 
@@ -141,8 +113,8 @@ function sourceLink(text: string, sourceVersion: string, fileName: string, line:
 
 function createComparisonRowFromMetric(
   metric: Metric,
-  before: Document<PackageBenchmarkSummary>,
-  after: Document<PackageBenchmarkSummary>,
+  before: PackageBenchmarkSummary,
+  after: PackageBenchmarkSummary,
   formatOptions: FormatOptions = {}
 ) {
   const beforeValue = metric.getValue(before);
@@ -169,7 +141,7 @@ function createComparisonRowFromMetric(
 
 function createSingleRunRowFromMetric(
   metric: Metric,
-  benchmark: Document<PackageBenchmarkSummary>,
+  benchmark: PackageBenchmarkSummary,
   formatOptions?: FormatOptions
 ) {
   return createSingleRunRow(metric.columnName, benchmark, metric.getValue, {
@@ -180,9 +152,9 @@ function createSingleRunRowFromMetric(
 
 function createComparisonRow(
   title: string,
-  a: Document<PackageBenchmarkSummary>,
-  b: Document<PackageBenchmarkSummary>,
-  getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
+  a: PackageBenchmarkSummary,
+  b: PackageBenchmarkSummary,
+  getValue: (x: PackageBenchmarkSummary) => number | string | undefined,
   diff?: string,
   formatOptions: FormatOptions = {}
 ): string[] {
@@ -199,8 +171,8 @@ function createComparisonRow(
 
 function createSingleRunRow(
   title: string,
-  benchmark: Document<PackageBenchmarkSummary>,
-  getValue: (x: Document<PackageBenchmarkSummary>) => number | string | undefined,
+  benchmark: PackageBenchmarkSummary,
+  getValue: (x: PackageBenchmarkSummary) => number | string | undefined,
   formatOptions: FormatOptions = {}
 ): string[] {
   const value = getValue(benchmark);

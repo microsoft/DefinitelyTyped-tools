@@ -1,20 +1,12 @@
 import * as os from "os";
 import {
-  getDatabase,
-  DatabaseAccessLevel,
   config,
   getChangedPackages,
-  packageIdsAreEqual,
   PackageBenchmarkSummary,
   getParsedPackages,
-  Document,
-  createDocument,
   shuffle,
-  systemsAreCloseEnough,
-  getSystemInfo,
   forEachWithTimeLimit
 } from "../common";
-import { getLatestBenchmark } from "../query";
 import { benchmarkPackage } from "./benchmark";
 import { printSummary } from "../measure";
 import { getTypeScript } from "../measure/getTypeScript";
@@ -23,12 +15,9 @@ import { postDependentsComparisonResult } from "../github/postDependentsComparis
 import {
   AllPackages,
   DependencyVersion,
-  formatDependencyVersion,
   getAffectedPackages,
-  PackageId
 } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors } from "@definitelytyped/utils";
-const currentSystem = getSystemInfo();
 
 export interface CompareOptions {
   allPackages: AllPackages;
@@ -67,7 +56,7 @@ export async function compare({
 
   await getTypeScript(tsVersion);
   const affectedPackages = getAffectedPackages(allPackages, changedPackages);
-  const comparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
+  const comparisons: [PackageBenchmarkSummary, PackageBenchmarkSummary][] = [];
   const maxRunMs = (maxRunSeconds ?? Infinity) * 1000;
   const { overtime } = await forEachWithTimeLimit(
     maxRunMs,
@@ -104,7 +93,7 @@ export async function compare({
     }
   }
 
-  const dependentComparisons: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][] = [];
+  const dependentComparisons: [PackageBenchmarkSummary, PackageBenchmarkSummary][] = [];
   await forEachWithTimeLimit(
     maxRunMs,
     dependentsToTest,
@@ -136,79 +125,35 @@ export async function compare({
 }
 
 export async function compareBenchmarks({
-  allPackages,
   definitelyTypedPath,
   typeScriptVersionMajorMinor,
   packageName,
   packageVersion,
   maxRunSeconds,
-  upload = true
-}: CompareOptions): Promise<[Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>]> {
-  const typings = allPackages.getTypingsData({ name: packageName, version: packageVersion });
-  const { packageBenchmarks: container } = await getDatabase(DatabaseAccessLevel.Read);
-  const latestBenchmarkDocument = await getLatestBenchmark({
-    container,
-    typeScriptVersionMajorMinor,
-    packageName,
-    packageVersion: typings.id.version,
-    matchMinor: allPackages.hasSeparateMinorVersions(packageName)
-  });
+}: CompareOptions): Promise<[PackageBenchmarkSummary, PackageBenchmarkSummary]> {
+  await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
+  const baseBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+    definitelyTypedPath,
+    printSummary: false,
+    iterations: config.benchmarks.languageServiceIterations,
+    progress: false,
+    tsVersion: typeScriptVersionMajorMinor,
+    nProcesses: os.cpus().length,
+    failOnErrors: true,
+    installTypeScript: false,
+    maxRunSeconds
+  }))?.summary;
 
-  let latestBenchmark: PackageBenchmarkSummary | undefined = latestBenchmarkDocument && latestBenchmarkDocument.body;
-  const packageId: PackageId = {
-    name: packageName,
-    version: packageVersion
-  };
-
-  const changedPackagesBetweenLastRunAndMaster =
-    latestBenchmark &&
-    (await getChangedPackages({
-      diffFrom: "origin/master",
-      diffTo: latestBenchmark.sourceVersion,
-      definitelyTypedPath
-    }));
-
-  if (latestBenchmarkDocument && !systemsAreCloseEnough(currentSystem, latestBenchmarkDocument.system)) {
-    latestBenchmark = undefined;
+  if (!baseBenchmark) {
+    throw new Error(`Package ${packageName} does not exist in master so cannot be compared.`);
   }
-
-  if (changedPackagesBetweenLastRunAndMaster || !latestBenchmark) {
-    let needsRerun = !latestBenchmark;
-    if (changedPackagesBetweenLastRunAndMaster) {
-      const affectedPackages = getAffectedPackages(allPackages, changedPackagesBetweenLastRunAndMaster);
-      const affected = [...affectedPackages.changedPackages, ...affectedPackages.dependentPackages];
-      needsRerun = affected.some(affectedPackage => packageIdsAreEqual(packageId, affectedPackage.id));
-    }
-    if (needsRerun) {
-      console.log(
-        `No comparable benchmark for ${packageName}/v${formatDependencyVersion(
-          packageVersion
-        )}. Checking out master and running one...`
-      );
-      await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
-      const latest = await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
-        definitelyTypedPath,
-        printSummary: false,
-        iterations: config.benchmarks.languageServiceIterations,
-        progress: false,
-        upload,
-        tsVersion: typeScriptVersionMajorMinor,
-        nProcesses: os.cpus().length,
-        failOnErrors: true,
-        installTypeScript: false,
-        maxRunSeconds
-      });
-      await execAndThrowErrors(`git checkout -f . && git checkout - && git clean -xdf types`, definitelyTypedPath);
-      latestBenchmark = latest && latest.summary;
-    }
-  }
-
-  const currentBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
+  
+  await execAndThrowErrors(`git checkout -f . && git checkout - && git clean -xdf types`, definitelyTypedPath);
+  const headBenchmark = (await benchmarkPackage(packageName, packageVersion.toString(), new Date(), {
     definitelyTypedPath,
     printSummary: true,
     iterations: config.benchmarks.languageServiceIterations,
     progress: false,
-    upload: false,
     tsVersion: typeScriptVersionMajorMinor,
     nProcesses: os.cpus().length,
     failOnErrors: true,
@@ -216,18 +161,17 @@ export async function compareBenchmarks({
     maxRunSeconds
   }))!.summary;
 
-  if (latestBenchmark) {
+  if (baseBenchmark) {
     console.log("\nmaster");
     console.log("======");
-    console.log(printSummary([latestBenchmark]));
+    console.log(printSummary([baseBenchmark]));
   }
 
   console.log("\nHEAD");
   console.log("====");
-  console.log(printSummary([currentBenchmark]));
+  console.log(printSummary([headBenchmark]));
   return [
-    latestBenchmarkDocument ||
-      (latestBenchmark && createDocument(latestBenchmark, config.database.packageBenchmarksDocumentSchemaVersion)),
-    createDocument(currentBenchmark, config.database.packageBenchmarksDocumentSchemaVersion)
+    baseBenchmark,
+    headBenchmark,
   ];
 }

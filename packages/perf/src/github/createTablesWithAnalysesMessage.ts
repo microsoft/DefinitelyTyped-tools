@@ -1,8 +1,6 @@
 import { createComparisonTable, createSingleRunTable } from "./createTable";
 import {
   PackageBenchmarkSummary,
-  systemsAreCloseEnough,
-  Document,
   compact,
   toPackageKey,
   packageVersionsAreEqual
@@ -10,7 +8,7 @@ import {
 import { getInterestingMetrics, SignificanceLevel, ComparedMetric } from "../analysis";
 
 export function createTablesWithAnalysesMessage(
-  pairs: [Document<PackageBenchmarkSummary> | undefined, Document<PackageBenchmarkSummary>][],
+  pairs: [PackageBenchmarkSummary, PackageBenchmarkSummary][],
   prNumber: number,
   alwaysWriteHeading = false,
   alwaysCollapseDetails = false
@@ -24,12 +22,11 @@ export function createTablesWithAnalysesMessage(
           ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))
           : createSingleRunTable(after),
         ``,
-        before && getSystemMismatchMessage(before, after)
       ].join("\n");
 
       return compact([
         pairs.length > 1 || alwaysWriteHeading
-          ? `### ${after.body.packageName}/v${after.body.packageVersionMajor}.${after.body.packageVersionMinor}`
+          ? `### ${after.packageName}/v${after.packageVersionMajor}.${after.packageVersionMinor}`
           : undefined,
         getIntroMessage(before, after),
         ``,
@@ -43,47 +40,47 @@ export function createTablesWithAnalysesMessage(
     .join("\n\n");
 }
 
-function getDetailsSummaryTitle(comparisonsCount: number, benchmark: Document<PackageBenchmarkSummary>) {
+function getDetailsSummaryTitle(comparisonsCount: number, benchmark: PackageBenchmarkSummary) {
   let titleStart = "<strong>Comparison details";
   if (comparisonsCount > 1) {
-    titleStart += ` for ${toPackageKey(benchmark.body)}`;
+    titleStart += ` for ${toPackageKey(benchmark)}`;
   }
   return titleStart + "</strong> 📊";
 }
 
-function getBeforeTitle(before: Document<PackageBenchmarkSummary>, after: Document<PackageBenchmarkSummary>) {
-  if (packageVersionsAreEqual(before.body, after.body)) {
+function getBeforeTitle(before: PackageBenchmarkSummary, after: PackageBenchmarkSummary) {
+  if (packageVersionsAreEqual(before, after)) {
     return "master";
   }
-  return `${before.body.packageVersionMajor}.${before.body.packageVersionMinor}@master`;
+  return `${before.packageVersionMajor}.${before.packageVersionMinor}@master`;
 }
 
 function getAfterTitle(
-  before: Document<PackageBenchmarkSummary>,
-  after: Document<PackageBenchmarkSummary>,
+  before: PackageBenchmarkSummary,
+  after: PackageBenchmarkSummary,
   prNumber: number
 ) {
-  if (packageVersionsAreEqual(before.body, after.body)) {
+  if (packageVersionsAreEqual(before, after)) {
     return `#${prNumber}`;
   }
-  return `${after.body.packageVersionMajor}.${after.body.packageVersionMinor} in #${prNumber}`;
+  return `${after.packageVersionMajor}.${after.packageVersionMinor} in #${prNumber}`;
 }
 
 function getIntroMessage(
-  before: Document<PackageBenchmarkSummary> | undefined,
-  after: Document<PackageBenchmarkSummary>
+  before: PackageBenchmarkSummary | undefined,
+  after: PackageBenchmarkSummary
 ) {
-  if (before && packageVersionsAreEqual(before.body, after.body)) {
+  if (before && packageVersionsAreEqual(before, after)) {
     return;
   }
   if (before) {
-    return `These typings are for a version of ${before.body.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.body.packageVersionMajor}.${before.body.packageVersionMinor}.`;
+    return `These typings are for a version of ${before.packageName} that doesn’t yet exist on master, so I’ve compared them with v${before.packageVersionMajor}.${before.packageVersionMinor}.`;
   }
-  return `These typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to ${after.body.packageName} with its source on master.`;
+  return `These typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to ${after.packageName} with its source on master.`;
 }
 
-function getLanguageServiceCrashMessage(benchmark: Document<PackageBenchmarkSummary>) {
-  if (benchmark.body.languageServiceCrashed) {
+function getLanguageServiceCrashMessage(benchmark: PackageBenchmarkSummary) {
+  if (benchmark.languageServiceCrashed) {
     return (
       `Before we get into it, I need to mention that **the language service crashed** while taking these measurements. ` +
       `This isn’t your fault—on the contrary, you helped us find a probably TypeScript bug! But, be aware that these results ` +
@@ -92,12 +89,6 @@ function getLanguageServiceCrashMessage(benchmark: Document<PackageBenchmarkSumm
     );
   }
   return;
-}
-
-function getSystemMismatchMessage(a: Document<PackageBenchmarkSummary>, b: Document<PackageBenchmarkSummary>) {
-  return !systemsAreCloseEnough(a.system, b.system)
-    ? `First off, note that the system varied slightly between these two runs, so you’ll have to take these measurements with a grain of salt.`
-    : undefined;
 }
 
 function getInterestingMetricsMessage(interestingMetrics: readonly ComparedMetric[]) {
