@@ -1,5 +1,5 @@
 import { metrics, SignificanceLevel } from "../../src/analysis";
-import { Document, PackageBenchmarkSummary, config } from "../../src/common";
+import { PackageBenchmarkSummary, config } from "../../src/common";
 
 describe("analysis", () => {
   describe("metrics", () => {
@@ -8,8 +8,8 @@ describe("analysis", () => {
         6,
         1000,
         6000,
-        { body: { testIdentifierCount: 1000, typeCount: 1000 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 6000, typeCount: 6000 } } as Document<PackageBenchmarkSummary>
+        { testIdentifierCount: 1000, typeCount: 1000 } as PackageBenchmarkSummary,
+        { testIdentifierCount: 6000, typeCount: 6000 } as PackageBenchmarkSummary
       );
 
       expect(significance1).toBe(undefined);
@@ -18,8 +18,8 @@ describe("analysis", () => {
         6,
         1000,
         6000,
-        { body: { testIdentifierCount: 1000, typeCount: 1000 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 1000, typeCount: 6000 } } as Document<PackageBenchmarkSummary>
+        { testIdentifierCount: 1000, typeCount: 1000 } as PackageBenchmarkSummary,
+        { testIdentifierCount: 1000, typeCount: 6000 } as PackageBenchmarkSummary
       );
 
       expect(significance2).toBe(SignificanceLevel.Warning);
@@ -28,8 +28,8 @@ describe("analysis", () => {
         config.comparison.percentDiffWarningThreshold + 0.01,
         1000,
         200,
-        { body: { testIdentifierCount: 1000, typeCount: 1000 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 5000, typeCount: 2000 } } as Document<PackageBenchmarkSummary>
+        { testIdentifierCount: 1000, typeCount: 1000 } as PackageBenchmarkSummary,
+        { testIdentifierCount: 5000, typeCount: 2000 } as PackageBenchmarkSummary
       );
 
       expect(significance3).toBe(undefined);
@@ -40,8 +40,8 @@ describe("analysis", () => {
         6,
         100,
         600,
-        { body: { testIdentifierCount: 100, typeCount: 100 } } as Document<PackageBenchmarkSummary>,
-        { body: { testIdentifierCount: 600, typeCount: 600 } } as Document<PackageBenchmarkSummary>
+        { testIdentifierCount: 100, typeCount: 100 } as PackageBenchmarkSummary,
+        { testIdentifierCount: 600, typeCount: 600 } as PackageBenchmarkSummary
       );
 
       expect(significance1).toBe(undefined);
