@@ -269,6 +269,7 @@
 @types/expect
 @types/express-handlebars
 @types/express-serve-static-core
+@types/faker
 @types/firebase
 @types/got
 @types/helmet
