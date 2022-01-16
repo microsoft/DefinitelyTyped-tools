@@ -274,6 +274,7 @@
 @types/helmet
 @types/highcharts
 @types/highlight.js
+@types/history
 @types/hoist-non-react-statics
 @types/ink
 @types/js-data
