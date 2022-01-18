@@ -272,6 +272,7 @@
 @types/express-handlebars
 @types/express-rate-limit
 @types/express-serve-static-core
+@types/faker
 @types/firebase
 @types/got
 @types/helmet
