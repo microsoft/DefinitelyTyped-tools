@@ -241,7 +241,7 @@ import route = require('@ember/routing/route');
     );
 
     const info = await getTypingInfo("ember", dt.pkgFS("ember"));
-    expect(info['2.8'].testDependencies).toEqual([])
+    expect(info["2.8"].testDependencies).toEqual([]);
   });
 
   describe("concerning multiple versions", () => {
