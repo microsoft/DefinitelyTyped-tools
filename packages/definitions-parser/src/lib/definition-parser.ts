@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
+import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies, rootName } from "./module-info";
 import {
   DependencyVersion,
   formatTypingVersion,
@@ -340,11 +340,11 @@ function getTypingDataForSingleTypesVersion(
   }
 
   const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules } = getModuleInfo(packageName, types);
-  const declaredModulesSet = new Set(declaredModules);
+  const declaredRootModules = new Set(declaredModules.map(m => rootName(m, types, packageName)));
   // Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
-  const dependenciesSet = new Set(filter(dependenciesWithDeclaredModules, m => !declaredModulesSet.has(m)));
+  const dependenciesSet = new Set(filter(dependenciesWithDeclaredModules, m => !declaredRootModules.has(m)));
   const testDependencies = Array.from(
-    filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredModulesSet.has(m))
+    filter(getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs), m => !declaredRootModules.has(m))
   );
 
   const { paths } = tsconfig.compilerOptions;
