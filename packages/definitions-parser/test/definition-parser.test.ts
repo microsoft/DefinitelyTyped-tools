@@ -191,6 +191,58 @@ const a = new webpack.AutomaticPrefetchPlugin();
     const info = await getTypingInfo("webpack", dt.pkgFS("webpack"));
     expect(info).toBeDefined();
   });
+  it("omits test dependencies on modules declared in index.d.ts", async () => {
+    const dt = createMockDT();
+    const ember = dt.pkgDir("ember");
+    ember.set(
+      "index.d.ts",
+      `// Type definitions for ember 2.8
+// Project: https://github.com/ember/ember
+// Definitions by: Chris Krycho <https://github.com/chriskrycho>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+/// <reference types="jquery" />
+declare module '@ember/routing/route' {
+}
+declare module '@ember/routing/rotorooter' {
+}
+`
+    );
+    ember.set(
+      "ember-tests.ts",
+      `
+import route = require('@ember/routing/route');
+`
+    );
+    ember.set(
+      "tsconfig.json",
+      `{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "baseUrl": "../",
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "ember-tests.ts"
+    ]
+}`
+    );
+
+    const info = await getTypingInfo("ember", dt.pkgFS("ember"));
+    expect(info['2.8'].testDependencies).toEqual([])
+  });
 
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {

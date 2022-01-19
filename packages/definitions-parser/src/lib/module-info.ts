@@ -127,7 +127,7 @@ function properModuleName(folderName: string, fileName: string): string {
  * "bar/v3" because referencing old versions of *other* packages is illegal;
  * those directories won't exist in the published @types package.
  */
-function rootName(importText: string, typeFiles: Map<string, unknown>, packageName: string): string {
+export function rootName(importText: string, typeFiles: Map<string, unknown>, packageName: string): string {
   let slash = importText.indexOf("/");
   // Root of `@foo/bar/baz` is `@foo/bar`
   if (importText.startsWith("@")) {
