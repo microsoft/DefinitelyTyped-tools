@@ -263,8 +263,8 @@ function assertPathIsNotBanned(dirPath: string) {
 }
 
 export function assertPackageIsNotDeprecated(dirPath: string, notNeededPackages: string) {
-  const packageName = basename(dirPath)
-  const unneeded = JSON.parse(notNeededPackages).packages
+  const packageName = basename(dirPath);
+  const unneeded = JSON.parse(notNeededPackages).packages;
   if (Object.keys(unneeded).includes(packageName)) {
     throw new Error(`${dirPath}: notNeededPackages.json has an entry for ${packageName}.
 That means ${packageName} ships its own types, and @types/${packageName} was deprecated and removed from Definitely Typed.

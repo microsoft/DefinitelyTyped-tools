@@ -3,7 +3,7 @@ import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 import { existsSync, readdirSync } from "fs";
 import { checkTsconfig } from "../src/checks";
-import { assertPackageIsNotDeprecated } from "../src/index"
+import { assertPackageIsNotDeprecated } from "../src/index";
 
 const testDir = __dirname;
 
@@ -58,12 +58,12 @@ describe("dtslint", () => {
       );
     });
     it("disallows packages that are in notNeededPackages.json", () => {
-      expect(() => assertPackageIsNotDeprecated('types/foo', '{ "packages": { "foo": { } } }')).toThrow(
-        'notNeededPackages.json has an entry for foo.'
+      expect(() => assertPackageIsNotDeprecated("types/foo", '{ "packages": { "foo": { } } }')).toThrow(
+        "notNeededPackages.json has an entry for foo."
       );
     });
     it("allows packages that are not in notNeededPackages.json", () => {
-      expect(assertPackageIsNotDeprecated('types/foo', '{ "packages": { "bar": { } } }')).toBeUndefined()
+      expect(assertPackageIsNotDeprecated("types/foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
     });
   });
   describe("rules", () => {
