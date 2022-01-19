@@ -138,6 +138,7 @@ async function runTests(
     // so assert that we're really on DefinitelyTyped.
     assertPathIsInDefinitelyTyped(dirPath);
     assertPathIsNotBanned(dirPath);
+    assertPackageIsNotDeprecated(dirPath, await readFile("../notNeededPackages.json", "utf-8"));
   }
 
   const typesVersions = await mapDefinedAsync(await readdir(dirPath), async name => {
@@ -258,6 +259,16 @@ function assertPathIsNotBanned(dirPath: string) {
   ) {
     // Since npm won't release their banned-words list, we'll have to manually add to this list.
     throw new Error(`${dirPath}: Contains the word 'download', which is banned by npm.`);
+  }
+}
+
+export function assertPackageIsNotDeprecated(dirPath: string, notNeededPackages: string) {
+  const packageName = basename(dirPath)
+  const unneeded = JSON.parse(notNeededPackages).packages
+  if (Object.keys(unneeded).includes(packageName)) {
+    throw new Error(`${dirPath}: notNeededPackages.json has an entry for ${packageName}.
+That means ${packageName} ships its own types, and @types/${packageName} was deprecated and removed from Definitely Typed.
+If you want to re-add @types/${packageName}, please remove its entry from notNeededPackages.json.`);
   }
 }
 
