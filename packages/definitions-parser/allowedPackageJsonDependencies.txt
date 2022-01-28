@@ -550,6 +550,8 @@ vite
 vue
 vue-router
 vuex
+web3
+web3-core
 webpack
 webpack-chain
 web-tree-sitter
