@@ -413,6 +413,7 @@ immutable
 indefinite-observable
 inversify
 itty-router
+javascript-obfuscator
 jest-cucumber
 jest-diff
 jest-environment-jsdom
