@@ -81,7 +81,9 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
 
 export function checkPathMappings(allPackages: AllPackages): void {
   for (const pkg of allPackages.allTypings()) {
-    const unusedPathMappings = new Set(Object.keys(pkg.pathMappings).filter(m => m !== pkg.name && m !== pkg.unescapedName));
+    const unusedPathMappings = new Set(
+      Object.keys(pkg.pathMappings).filter(m => m !== pkg.name && m !== pkg.unescapedName)
+    );
 
     // If A depends on B, and B has path mappings, A must have the same mappings.
     for (const dependency of allPackages.allDependencyTypings(pkg)) {
@@ -107,7 +109,9 @@ export function checkPathMappings(allPackages: AllPackages): void {
     if (unusedPathMappings.size > 0) {
       throw new Error(`${pkg.desc} has unused path mappings for [${Array.from(unusedPathMappings).join(", ")}].
 If these mappings are actually used, they could be missing in a dependency's tsconfig.json instead.
-Check the path mappings for [${Array.from(allPackages.allDependencyTypings(pkg)).map(d => d.name).join(", ")}].`);
+Check the path mappings for [${Array.from(allPackages.allDependencyTypings(pkg))
+        .map(d => d.name)
+        .join(", ")}].`);
     }
   }
 }
