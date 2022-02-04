@@ -379,6 +379,7 @@ eris
 ethers
 eventemitter2
 eventemitter3
+execa
 expect
 express-graphql
 express-rate-limit
