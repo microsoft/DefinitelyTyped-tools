@@ -1,7 +1,6 @@
 electron-clipboard-extended
 electron-notifications
 electron-notify
-jest-environment-puppeteer
 ng-cordova
 redux-orm
 sketchapp
