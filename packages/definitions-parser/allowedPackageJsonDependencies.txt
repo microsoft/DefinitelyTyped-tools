@@ -454,6 +454,12 @@ msnodesqlv8
 mysql2
 neo4j-driver-lite
 next
+ngraph.events
+ngraph.fromjson
+ngraph.graph
+ngraph.merge
+ngraph.random
+ngraph.tojson
 nock
 node-fetch
 normalize-url
