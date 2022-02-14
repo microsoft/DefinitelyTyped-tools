@@ -419,6 +419,7 @@ jest-cucumber
 jest-diff
 jest-environment-jsdom
 jest-environment-node
+jest-matcher-utils
 jest-mock
 jest-snapshot
 jimp
