@@ -20,7 +20,6 @@ import {
   writeTgz,
   withNpmCache,
   UncachedNpmInfoClient,
-  Registry,
   CachedNpmInfoClient
 } from "@definitelytyped/utils";
 import {
@@ -97,24 +96,12 @@ async function generateTypingPackage(
 
   await writeCommonOutputs(
     typing,
-    createPackageJSON(typing, version, packages, Registry.NPM),
+    createPackageJSON(typing, version, packages),
     createReadme(typing, packageFS),
-    Registry.NPM
-  );
-  await writeCommonOutputs(
-    typing,
-    createPackageJSON(typing, version, packages, Registry.Github),
-    createReadme(typing, packageFS),
-    Registry.Github
   );
   await Promise.all(
     typing.files.map(async file =>
-      writeFile(await outputFilePath(typing, Registry.NPM, file), packageFS.readFile(file))
-    )
-  );
-  await Promise.all(
-    typing.files.map(async file =>
-      writeFile(await outputFilePath(typing, Registry.Github, file), packageFS.readFile(file))
+      writeFile(await outputFilePath(typing, file), packageFS.readFile(file))
     )
   );
 }
@@ -129,17 +116,16 @@ async function generateNotNeededPackage(
   assert(info);
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.NPM), readme, Registry.NPM);
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, Registry.Github), readme, Registry.Github);
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
 }
 
 async function writeCommonOutputs(
   pkg: AnyPackage,
   packageJson: string,
   readme: string,
-  registry: Registry
 ): Promise<void> {
-  await mkdir(outputDirectory(pkg) + (registry === Registry.Github ? "-github" : ""));
+  await mkdir(outputDirectory(pkg));
 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
@@ -148,12 +134,12 @@ async function writeCommonOutputs(
   ]);
 
   async function writeOutputFile(filename: string, content: string): Promise<void> {
-    await writeFile(await outputFilePath(pkg, registry, filename), content);
+    await writeFile(await outputFilePath(pkg, filename), content);
   }
 }
 
-async function outputFilePath(pkg: AnyPackage, registry: Registry, filename: string): Promise<string> {
-  const full = joinPaths(outputDirectory(pkg) + (registry === Registry.Github ? "-github" : ""), filename);
+async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string> {
+  const full = joinPaths(outputDirectory(pkg), filename);
   const dir = path.dirname(full);
   if (dir !== outputDirectory(pkg)) {
     await mkdirp(dir);
@@ -169,7 +155,6 @@ export function createPackageJSON(
   typing: TypingsData,
   version: string,
   packages: AllPackages,
-  registry: Registry
 ): string {
   // Use the ordering of fields from https://docs.npmjs.com/files/package.json
   const out: {} = {
@@ -186,10 +171,7 @@ export function createPackageJSON(
     typesVersions: makeTypesVersionsForPackageJson(typing.typesVersions),
     repository: {
       type: "git",
-      url:
-        registry === Registry.Github
-          ? "https://github.com/types/_definitelytypedmirror.git"
-          : "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      url: "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       directory: `types/${typing.name}`
     },
     scripts: {},
@@ -197,9 +179,6 @@ export function createPackageJSON(
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion
   };
-  if (registry === Registry.Github) {
-    (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
-  }
   const exports = typing.exports;
   if (exports) {
     (out as any).exports = exports;
@@ -248,7 +227,6 @@ function dependencySemver(dependency: DependencyVersion): string {
 
 export function createNotNeededPackageJSON(
   { libraryName, license, fullNpmName, version }: NotNeededPackage,
-  registry: Registry
 ): string {
   const out = {
     name: fullNpmName,
@@ -264,9 +242,6 @@ export function createNotNeededPackageJSON(
       [libraryName]: "*"
     }
   };
-  if (registry === Registry.Github) {
-    (out as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
-  }
   return JSON.stringify(out, undefined, 4);
 }
 

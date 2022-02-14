@@ -11,7 +11,6 @@ import {
   Fetcher,
   writeLog,
   NpmPublishClient,
-  Registry,
   withNpmCache,
   UncachedNpmInfoClient
 } from "@definitelytyped/utils";
@@ -30,23 +29,8 @@ if (!module.parent) {
       // Normally this should not be needed.
 
       const log = logger()[0];
-      try {
-        await deprecateNotNeededPackage(
-          await NpmPublishClient.create(
-            await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN),
-            undefined,
-            Registry.Github
-          ),
-          AllPackages.readSingleNotNeeded(deprecateName, dt),
-          false /*dry*/,
-          log
-        );
-      } catch (e) {
-        // log and continue
-        log("publishing to github failed: " + (e as Error).toString());
-      }
       await deprecateNotNeededPackage(
-        await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined, Registry.NPM),
+        await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined),
         AllPackages.readSingleNotNeeded(deprecateName, dt),
         /*dry*/ false,
         log
@@ -75,23 +59,12 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined, Registry.NPM);
-  const ghClient = await NpmPublishClient.create(
-    await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN),
-    undefined,
-    Registry.Github
-  );
+  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined);
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);
 
-    try {
-      await publishTypingsPackage(ghClient, cp, dry, log, Registry.Github);
-    } catch (e) {
-      // log and continue
-      log("publishing to github failed: " + (e as Error).toString());
-    }
-    await publishTypingsPackage(client, cp, dry, log, Registry.NPM);
+    await publishTypingsPackage(client, cp, dry, log);
 
     const commits = (await queryGithub(
       `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`,
@@ -175,13 +148,7 @@ export default async function publishPackages(
     async infoClient => {
       for (const n of changedPackages.changedNotNeededPackages) {
         const target = skipBadPublishes(n, infoClient, log);
-        try {
-          await publishNotNeededPackage(ghClient, target, dry, log, Registry.Github);
-        } catch (e) {
-          // log and continue
-          log("publishing to github failed: " + (e as Error).toString());
-        }
-        await publishNotNeededPackage(client, target, dry, log, Registry.NPM);
+        await publishNotNeededPackage(client, target, dry, log);
       }
     },
     cacheDirPath
