@@ -9,9 +9,7 @@ import { Fetcher, createTgz } from "./io";
 import { sleep, identity } from "./miscellany";
 
 export const npmRegistryHostName = "registry.npmjs.org";
-export const githubRegistryHostName = "npm.pkg.github.com";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
-export const githubRegistry = `https://${githubRegistryHostName}/`;
 export const npmApi = "api.npmjs.org";
 
 const defaultCacheDir = joinPaths(__dirname, "..", "cache");
