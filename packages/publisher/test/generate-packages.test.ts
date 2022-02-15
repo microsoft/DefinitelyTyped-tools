@@ -107,7 +107,7 @@ testo({
   basicPackageJson() {
     const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
     const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages, Registry.NPM)).toEqual(`{
+    expect(createPackageJSON(typing, "1.0", packages)).toEqual(`{
     "name": "@types/jquery",
     "version": "1.0",
     "description": "TypeScript definitions for jquery",
@@ -136,22 +136,8 @@ testo({
     "typeScriptVersion": "3.8"
 }`);
   },
-  githubPackageJsonName() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages, Registry.Github)).toEqual(
-      expect.stringContaining('"name": "@types/jquery"')
-    );
-  },
-  githubPackageJsonRegistry() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    const s = createPackageJSON(typing, "1.0", packages, Registry.Github);
-    expect(s).toEqual(expect.stringContaining("publishConfig"));
-    expect(s).toEqual(expect.stringContaining('"registry": "https://npm.pkg.github.com/"'));
-  },
   basicNotNeededPackageJson() {
-    const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.NPM);
+    const s = createNotNeededPackageJSON(createUnneededPackage());
     expect(s).toEqual(`{
     "name": "@types/absalom",
     "version": "1.1.1",
@@ -168,7 +154,7 @@ testo({
   },
   scopedNotNeededPackageJson() {
     const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
-    const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
+    const s = createNotNeededPackageJSON(scopedUnneeded);
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
     "version": "0.26.0",
@@ -183,9 +169,4 @@ testo({
     }
 }`);
   },
-  githubNotNeededPackageJson() {
-    const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.Github);
-    expect(s).toEqual(expect.stringContaining("@types"));
-    expect(s).toEqual(expect.stringContaining("npm.pkg.github.com"));
-  }
 });

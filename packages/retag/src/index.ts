@@ -20,7 +20,6 @@ import {
   mapDefined,
   loggerWithErrors,
   LoggerWithErrors,
-  Registry,
   nAtATime,
   CachedNpmInfoClient
 } from "@definitelytyped/utils";
@@ -42,8 +41,7 @@ async function main() {
     nProcesses: { type: "number", default: os.cpus().length },
     name: { type: "string" }
   }).argv;
-  await tag(dry, false, nProcesses, name);
-  await tag(dry, true, nProcesses, name);
+  await tag(dry, nProcesses, name);
 }
 
 /**
@@ -54,7 +52,7 @@ async function main() {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tag(dry: boolean, github: boolean, nProcesses: number, name?: string) {
+async function tag(dry: boolean, nProcesses: number, name?: string) {
   const log = loggerWithErrors()[0];
   const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
   await parseDefinitions(
@@ -63,10 +61,9 @@ async function tag(dry: boolean, github: boolean, nProcesses: number, name?: str
     log
   );
 
-  const registryName = github ? Registry.Github : Registry.NPM;
-  const token = (registryName === Registry.Github ? process.env.GH_API_TOKEN : process.env.NPM_TOKEN) as string;
+  const token = process.env.NPM_TOKEN as string;
 
-  const publishClient = await NpmPublishClient.create(token, {}, registryName);
+  const publishClient = await NpmPublishClient.create(token, {});
   await withNpmCache(new UncachedNpmInfoClient(), async infoClient => {
     if (name) {
       const pkg = await AllPackages.readSingle(name);

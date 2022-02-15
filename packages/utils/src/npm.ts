@@ -7,24 +7,13 @@ import { loggerWithErrors, Logger } from "./logging";
 import { mapToRecord, recordToMap } from "./collections";
 import { Fetcher, createTgz } from "./io";
 import { sleep, identity } from "./miscellany";
-import { assertNever } from "./assertions";
 
 export const npmRegistryHostName = "registry.npmjs.org";
-export const githubRegistryHostName = "npm.pkg.github.com";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
-export const githubRegistry = `https://${githubRegistryHostName}/`;
 export const npmApi = "api.npmjs.org";
 
 const defaultCacheDir = joinPaths(__dirname, "..", "cache");
 const cacheFileBasename = "npmInfo.json";
-
-/** Which registry to publish to */
-export enum Registry {
-  /** types-registry and @types/* on NPM */
-  NPM,
-  /** @definitelytyped/types-registry and @types/* on Github */
-  Github
-}
 
 export type NpmInfoCache = ReadonlyMap<string, NpmInfo>;
 
@@ -170,16 +159,8 @@ export class NpmPublishClient {
   static async create(
     token: string,
     config?: NeedToFixNpmRegistryClientTypings,
-    registry: Registry = Registry.NPM
   ): Promise<NpmPublishClient> {
-    switch (registry) {
-      case Registry.NPM:
-        return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
-      case Registry.Github:
-        return new NpmPublishClient(new RegClient(config), { token }, githubRegistry);
-      default:
-        assertNever(registry);
-    }
+      return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
   }
 
   private constructor(

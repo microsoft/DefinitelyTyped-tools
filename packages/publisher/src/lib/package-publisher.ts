@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Logger, joinPaths, readFileAndWarn, NpmPublishClient, Registry } from "@definitelytyped/utils";
+import { Logger, joinPaths, readFileAndWarn, NpmPublishClient } from "@definitelytyped/utils";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
 import { updateTypeScriptVersionTags, updateLatestTag } from "@definitelytyped/retag";
 import { ChangedTyping } from "./versions";
@@ -10,10 +10,9 @@ export async function publishTypingsPackage(
   changedTyping: ChangedTyping,
   dry: boolean,
   log: Logger,
-  registry: Registry
 ): Promise<void> {
   const { pkg, version, latestVersion } = changedTyping;
-  await common(client, pkg, log, dry, registry);
+  await common(client, pkg, log, dry);
   if (pkg.isLatest) {
     await updateTypeScriptVersionTags(pkg, version, client, log, dry);
   }
@@ -31,10 +30,9 @@ export async function publishNotNeededPackage(
   pkg: NotNeededPackage,
   dry: boolean,
   log: Logger,
-  registry: Registry
 ): Promise<void> {
   log(`Deprecating ${pkg.name}`);
-  await common(client, pkg, log, dry, registry);
+  await common(client, pkg, log, dry);
   // Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
   await deprecateNotNeededPackage(client, pkg, dry, log);
 }
@@ -44,13 +42,9 @@ async function common(
   pkg: AnyPackage,
   log: Logger,
   dry: boolean,
-  registry: Registry
 ): Promise<void> {
   const packageDir = outputDirectory(pkg);
-  const packageJson = await readFileAndWarn(
-    "generate",
-    joinPaths(packageDir + (registry === Registry.Github ? "-github" : ""), "package.json")
-  );
+  const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
   await client.publish(packageDir, packageJson, dry, log);
 }
 

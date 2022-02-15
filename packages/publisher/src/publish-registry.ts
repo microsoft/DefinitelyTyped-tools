@@ -34,7 +34,6 @@ import {
   withNpmCache,
   NpmPublishClient,
   CachedNpmInfoClient,
-  Registry as RegistryName,
   isObject
 } from "@definitelytyped/utils";
 import { getSecret, Secret } from "./lib/secrets";
@@ -79,36 +78,26 @@ export default async function publishRegistry(
   const newVersion = `0.1.${npmVersion.patch + 1}`;
   const isTimeForNewVersion = isSevenDaysAfter(lastModified);
 
-  try {
-    await publishToRegistry(RegistryName.Github);
-  } catch (e) {
-    // log and continue
-    log("publishing to github failed: " + (e as Error).toString());
-  }
-  await publishToRegistry(RegistryName.NPM);
+  await publishToRegistry();
   await writeLog("publish-registry.md", logResult());
 
-  async function publishToRegistry(registryName: RegistryName) {
-    const packageName = registryName === RegistryName.Github ? "@definitelytyped/" + typesRegistry : typesRegistry;
-    const packageJson = generatePackageJson(packageName, registryName, newVersion, newContentHash);
+  async function publishToRegistry() {
+    const packageJson = generatePackageJson(typesRegistry, newVersion, newContentHash);
     await generate(registry, packageJson);
 
-    const token =
-      registryName === RegistryName.Github
-        ? await getSecret(Secret.GITHUB_PUBLISH_ACCESS_TOKEN)
-        : await getSecret(Secret.NPM_TOKEN);
+    const token = await getSecret(Secret.NPM_TOKEN);
 
-    const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" }, registryName);
+    const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" });
     if (!highestSemverVersion.equals(npmVersion)) {
       // There was an error in the last publish and types-registry wasn't validated.
       // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
       // If so, we should just update it to "latest" now.
       log("Old version of types-registry was never tagged latest, so updating");
       await validateIsSubset(readNotNeededPackages(dt), log);
-      await (await publishClient()).tag(packageName, highestSemverVersion.versionString, "latest", dry, log);
+      await (await publishClient()).tag(typesRegistry, highestSemverVersion.versionString, "latest", dry, log);
     } else if (npmContentHash !== newContentHash && isTimeForNewVersion) {
       log("New packages have been added, so publishing a new registry.");
-      await publish(await publishClient(), packageName, packageJson, newVersion, dry, log);
+      await publish(await publishClient(), typesRegistry, packageJson, newVersion, dry, log);
     } else {
       const reason =
         npmContentHash === newContentHash ? "No new packages published" : "Was modified less than a week ago";
@@ -241,7 +230,6 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
 
 function generatePackageJson(
   name: string,
-  registryName: RegistryName,
   version: string,
   typesPublisherContentHash: string
 ): object {
@@ -251,19 +239,13 @@ function generatePackageJson(
     description: "A registry of TypeScript declaration file packages published within the @types scope.",
     repository: {
       type: "git",
-      url:
-        registryName === RegistryName.Github
-          ? "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-          : "https://github.com/Microsoft/types-publisher.git"
+      url: "https://github.com/Microsoft/types-publisher.git"
     },
     keywords: ["TypeScript", "declaration", "files", "types", "packages"],
     author: "Microsoft Corp.",
     license: "MIT",
     typesPublisherContentHash
   };
-  if (registryName === RegistryName.Github) {
-    (json as any).publishConfig = { registry: "https://npm.pkg.github.com/" };
-  }
   return json;
 }
 
