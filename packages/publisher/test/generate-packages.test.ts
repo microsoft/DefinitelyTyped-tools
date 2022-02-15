@@ -168,5 +168,5 @@ testo({
         "@google-cloud/chubdub": "*"
     }
 }`);
-  },
+  }
 });

@@ -94,15 +94,9 @@ async function generateTypingPackage(
       ? typesDirectory
       : typesDirectory.subDir(typing.versionDirectoryName);
 
-  await writeCommonOutputs(
-    typing,
-    createPackageJSON(typing, version, packages),
-    createReadme(typing, packageFS),
-  );
+  await writeCommonOutputs(typing, createPackageJSON(typing, version, packages), createReadme(typing, packageFS));
   await Promise.all(
-    typing.files.map(async file =>
-      writeFile(await outputFilePath(typing, file), packageFS.readFile(file))
-    )
+    typing.files.map(async file => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
   );
 }
 
@@ -120,11 +114,7 @@ ${pkg.libraryName} provides its own type definitions, so you don't need ${getFul
   await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
 }
 
-async function writeCommonOutputs(
-  pkg: AnyPackage,
-  packageJson: string,
-  readme: string,
-): Promise<void> {
+async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
   await mkdir(outputDirectory(pkg));
 
   await Promise.all([
@@ -151,11 +141,7 @@ interface Dependencies {
   [name: string]: string;
 }
 
-export function createPackageJSON(
-  typing: TypingsData,
-  version: string,
-  packages: AllPackages,
-): string {
+export function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): string {
   // Use the ordering of fields from https://docs.npmjs.com/files/package.json
   const out: {} = {
     name: typing.fullNpmName,
@@ -225,9 +211,7 @@ function dependencySemver(dependency: DependencyVersion): string {
   return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
 }
 
-export function createNotNeededPackageJSON(
-  { libraryName, license, fullNpmName, version }: NotNeededPackage,
-): string {
+export function createNotNeededPackageJSON({ libraryName, license, fullNpmName, version }: NotNeededPackage): string {
   const out = {
     name: fullNpmName,
     version: version.versionString,

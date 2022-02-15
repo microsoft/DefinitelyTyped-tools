@@ -156,11 +156,8 @@ function splitToFixedSizeGroups(names: readonly string[], chunkSize: number): re
 type NeedToFixNpmRegistryClientTypings = any;
 
 export class NpmPublishClient {
-  static async create(
-    token: string,
-    config?: NeedToFixNpmRegistryClientTypings,
-  ): Promise<NpmPublishClient> {
-      return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
+  static async create(token: string, config?: NeedToFixNpmRegistryClientTypings): Promise<NpmPublishClient> {
+    return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
   }
 
   private constructor(
