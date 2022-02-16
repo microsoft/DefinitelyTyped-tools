@@ -138,7 +138,7 @@ async function runTests(
     // so assert that we're really on DefinitelyTyped.
     assertPathIsInDefinitelyTyped(dirPath);
     assertPathIsNotBanned(dirPath);
-    assertPackageIsNotDeprecated(dirPath, await readFile("../notNeededPackages.json", "utf-8"));
+    assertPackageIsNotDeprecated(dirPath, await readFile(joinPaths(dirPath, "..", "..", "notNeededPackages.json"), "utf-8"));
   }
 
   const typesVersions = await mapDefinedAsync(await readdir(dirPath), async name => {
