@@ -461,6 +461,15 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@definitelytyped/header-parser@latest":
+  version "0.0.106"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.106.tgz#8dd42e6370b56d3d97d59ad659b31707221c7cda"
+  integrity sha512-qjPrS4THVZStVU0C0tcc53VpY/2qTvBBTJEFHNIC09dMqqzROVptebITcqjLraQYMOkXMyrWnu7Yu8VK/VfXRg==
+  dependencies:
+    "@definitelytyped/typescript-versions" "^0.0.106"
+    "@types/parsimmon" "^1.10.1"
+    parsimmon "^1.13.0"
+
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
