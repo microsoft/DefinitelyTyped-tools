@@ -111,7 +111,6 @@ async function generateNotNeededPackage(
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
   await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
