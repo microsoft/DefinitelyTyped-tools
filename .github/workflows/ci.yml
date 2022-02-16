@@ -17,6 +17,19 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node }}
+    - name: check dependencies
+      run: |
+        if grep "@definitelytyped/" yarn.lock; then
+          echo ""
+          echo "A package in this monorepo is depending on an older version of one of its siblings. \
+        Ensure all '@definitelytyped/*' dependencies in package.json files use the version \
+        listed in lerna.json to let lerna automatically keep them in sync."
+
+          echo ""
+          echo "yarn.lock"
+          cat yarn.lock | grep -A 5 -n "@definitelytyped/"
+          exit 1
+        fi
     - name: install
       run: yarn install --frozen-lockfile
     - name: lint

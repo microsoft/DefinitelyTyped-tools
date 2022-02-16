@@ -461,48 +461,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@definitelytyped/header-parser@0.0.93":
-  version "0.0.93"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.93.tgz#a971517d89cf659e69e83acebecb7f401e514976"
-  integrity sha512-ywrpndOfwQ1CLG6n9DVQYICDW1CPglb/XxzhKMOonYrw2qifuWMeLioszsQsOYpg5jnwCwa8V7moK2TfkI5ztQ==
-  dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.93"
-    "@types/parsimmon" "^1.10.1"
-    parsimmon "^1.13.0"
-
-"@definitelytyped/header-parser@latest":
-  version "0.0.88"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.88.tgz#0c24c162ef5eb9439580ada987bb7399140f81aa"
-  integrity sha512-2MINMR7e5fgIVILVA/A7BZpK2kfUpj8Rl5qVjIaQVVe4bm9HStG8/Rl5aPvzzPz5EJiN9/FejqSv8JS81xmHZA==
-  dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.88"
-    "@types/parsimmon" "^1.10.1"
-    parsimmon "^1.13.0"
-
-"@definitelytyped/typescript-versions@0.0.93", "@definitelytyped/typescript-versions@^0.0.93":
-  version "0.0.93"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.93.tgz#8de68a79f82db49fd23749d595260df87b7e9858"
-  integrity sha512-ymWcBsmZykBMOXy4fF4WsBnJp7qCM3rropPXDfH5V8n2Ie2cK3Ths1kAxD1k80IWCish7EdznWPP4ZRxurycBw==
-
-"@definitelytyped/typescript-versions@^0.0.88":
-  version "0.0.88"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.88.tgz#2b8e5efe6e1b72f5e99f40695c42142516225b89"
-  integrity sha512-UjZagFi/oi+8XaT1DSZBYgmT8MR4FlnRG3O9vV83KgX3jI6OlvNZTsqG/r+E5zbydLgxzaUKw+wFaq13sDheeA==
-
-"@definitelytyped/utils@0.0.93":
-  version "0.0.93"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/utils/-/utils-0.0.93.tgz#6d4778ed1f6c8ddb4d9470990d42f3637c5acc96"
-  integrity sha512-FBZhEoSxWtUTbwfwpehTssTyzgiEraAv4PBKjRr2sVVU1H3lIFTG/DlZO2ymfs3EbPr1zS5S0yt05RQFZlFjAQ==
-  dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.93"
-    "@qiwi/npm-registry-client" "^8.9.1"
-    "@types/node" "^14.14.35"
-    charm "^1.0.2"
-    fs-extra "^8.1.0"
-    fstream "^1.0.12"
-    tar "^2.2.2"
-    tar-stream "^2.1.4"
-
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
