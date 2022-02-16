@@ -19,7 +19,7 @@ jobs:
         node-version: ${{ matrix.node }}
     - name: check dependencies
       run: |
-        if cat yarn.lock | grep "@definitelytyped/"; then
+        if grep "@definitelytyped/" yarn.lock; then
           echo ""
           echo "A package in this monorepo is depending on an older version of one of its siblings. \
         Ensure all '@definitelytyped/*' dependencies in package.json files use the version \
