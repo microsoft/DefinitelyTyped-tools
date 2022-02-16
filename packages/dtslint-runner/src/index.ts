@@ -95,6 +95,7 @@ if (!module.parent) {
   };
 
   logUncaughtErrors(async () => {
+    console.log(`dtslint-runner@${require("../package.json").version}`);
     const failures = await runDTSLint(options);
     process.exit(failures);
   });

@@ -7,7 +7,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@definitelytyped/header-parser": "latest",
+        "@definitelytyped/header-parser": "^0.0.106",
         "command-exists": "^1.2.8",
         "rimraf": "^3.0.2",
         "semver": "^6.2.0",
