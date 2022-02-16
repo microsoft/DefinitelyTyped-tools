@@ -20,10 +20,10 @@ jobs:
     - name: check dependencies
       run: |
         if cat yarn.lock | grep "@definitelytyped/"; then
-          echo "\
-            A package in this monorepo is depending on an older version of one of its siblings. \
-            Ensure all '@definitelytyped/*' dependencies in package.json files use the version \
-            listed in lerna.json to let lerna automatically keep them in sync."
+          echo "A package in this monorepo is depending on an older version of one of its siblings. \
+          Ensure all '@definitelytyped/*' dependencies in package.json files use the version \
+          listed in lerna.json to let lerna automatically keep them in sync."
+
           echo ""
           echo "yarn.lock"
           cat yarn.lock | grep -A 5 -n "@definitelytyped/"
