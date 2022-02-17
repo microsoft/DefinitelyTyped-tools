@@ -58,12 +58,12 @@ describe("dtslint", () => {
       );
     });
     it("disallows packages that are in notNeededPackages.json", () => {
-      expect(() => assertPackageIsNotDeprecated("types/foo", '{ "packages": { "foo": { } } }')).toThrow(
+      expect(() => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }')).toThrow(
         "notNeededPackages.json has an entry for foo."
       );
     });
     it("allows packages that are not in notNeededPackages.json", () => {
-      expect(assertPackageIsNotDeprecated("types/foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
+      expect(assertPackageIsNotDeprecated("foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
     });
   });
   describe("rules", () => {
