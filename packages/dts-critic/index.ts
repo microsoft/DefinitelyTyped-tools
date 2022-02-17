@@ -317,8 +317,8 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
   const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
   // https://github.com/npm/cli/issues/3405
   const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
-    .replace(/^@/, '')
-    .replace(/\//, '-');
+    .replace(/^@/, "")
+    .replace(/\//, "-");
   const outPath = path.join(outDir, name);
   initDir(outPath);
   const args =
