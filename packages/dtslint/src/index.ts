@@ -138,7 +138,7 @@ async function runTests(
   if (dt) {
     // Someone may have copied text from DefinitelyTyped to their type definition and included a header,
     // so assert that we're really on DefinitelyTyped.
-    const dtRoot = findDTRoot(dirPath)
+    const dtRoot = findDTRoot(dirPath);
     const packageName = basename(dirPath);
     assertPathIsInDefinitelyTyped(dirPath, dtRoot);
     assertPathIsNotBanned(packageName);
@@ -237,9 +237,11 @@ async function testTypesVersion(
 }
 
 function findDTRoot(dirPath: string) {
-  const parent = dirname(dirPath);
-  const types = /^v\d+(\.\d+)?$/.test(basename(dirPath)) ? dirname(parent) : parent;
-  return dirname(types);
+  let path = dirPath;
+  while (basename(path) !== "types" && dirname(path) !== "." && dirname(path) !== "/") {
+    path = dirname(path);
+  }
+  return dirname(path);
 }
 
 function assertPathIsInDefinitelyTyped(dirPath: string, dtRoot: string): void {
