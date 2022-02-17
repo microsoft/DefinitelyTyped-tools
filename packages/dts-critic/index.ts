@@ -315,7 +315,10 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
   const fullName = `${npmName}@${version}`;
   const cpOpts = { encoding: "utf8", maxBuffer: 100 * 1024 * 1024 } as const;
   const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
-  const tarballName = npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string);
+  // https://github.com/npm/cli/issues/3405
+  const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
+    .replace(/^@/, '')
+    .replace(/\//, '-');
   const outPath = path.join(outDir, name);
   initDir(outPath);
   const args =
