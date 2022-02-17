@@ -552,7 +552,6 @@ typescript-tuple
 unified
 utility-types
 vega-typings
-vfile
 vfile-message
 victory
 vite
