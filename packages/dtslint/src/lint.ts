@@ -35,7 +35,7 @@ export async function lint(
     formatter: "stylish"
   };
   const linter = new Linter(lintOptions, lintProgram);
-  const configPath = expectOnly ? joinPaths(__dirname, "..", "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
+  const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
   const config = await getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
 
   for (const file of lintProgram.getSourceFiles()) {
@@ -200,7 +200,7 @@ async function getLintConfig(
   tsLocal: string | undefined
 ): Promise<IConfigurationFile> {
   const configExists = await pathExists(expectedConfigPath);
-  const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "..", "dtslint.json");
+  const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
   // Second param to `findConfiguration` doesn't matter, since config path is provided.
   const config = Configuration.findConfiguration(configPath, "").results;
   if (!config) {
