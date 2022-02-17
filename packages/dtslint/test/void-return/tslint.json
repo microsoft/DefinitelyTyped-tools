@@ -1,5 +1,5 @@
 {
-  "rulesDirectory": ["../../bin/src/rules"],
+  "rulesDirectory": ["../../dist/rules"],
   "rules": {
     "void-return": true
   }

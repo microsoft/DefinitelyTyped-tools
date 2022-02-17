@@ -19,21 +19,18 @@
     },
     "devDependencies": {
         "@types/command-exists": "^1.2.0",
-        "@types/node": "~10.17.0",
         "@types/rimraf": "^3.0.0",
         "@types/semver": "^6.0.1",
         "@types/strip-json-comments": "0.0.30",
         "@types/tmp": "^0.2.0",
-        "@types/yargs": "^12.0.8",
-        "strip-json-comments": "^2.0.1",
-        "typescript": "*"
+        "strip-json-comments": "^2.0.1"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc -b .",
         "dt": "node dist/dt.js",
-        "prepublishOnly": "npm run build"
+        "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dts-critic"
     },
     "repository": {
         "type": "git",
