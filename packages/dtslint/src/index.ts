@@ -20,7 +20,7 @@ async function main(): Promise<void> {
   let lookingForTsLocal = false;
   let tsLocal: string | undefined;
 
-  console.log(`dtslint@${require("../package.json").version}`);
+  console.log(`dtslint@${require("../../package.json").version}`);
 
   for (const arg of args) {
     if (lookingForTsLocal) {
