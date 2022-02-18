@@ -472,6 +472,7 @@ path-to-regexp
 pdfjs-dist
 pg-protocol
 pg-types
+phenomenon
 pkcs11js
 plugin-error
 polished
