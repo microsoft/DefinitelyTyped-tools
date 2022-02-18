@@ -18,6 +18,7 @@
 @hapi/podium
 @hapi/wreck
 @jest/environment
+@jest/expect
 @jest/fake-timers
 @jest/globals
 @jest/reporters
