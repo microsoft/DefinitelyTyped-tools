@@ -356,6 +356,7 @@ cordova-plugin-file
 cordova-plugin-file-transfer
 cosmiconfig
 cropperjs
+cssnano
 csstype
 cypress
 date-fns
