@@ -345,6 +345,7 @@ bullmq
 cac
 cash-dom
 cassandra-driver
+canvas
 chalk
 chokidar
 ci-info
