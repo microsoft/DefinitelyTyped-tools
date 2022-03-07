@@ -3,5 +3,3 @@ electron-notifications
 electron-notify
 ng-cordova
 redux-orm
-sketchapp
-vscode-webview
