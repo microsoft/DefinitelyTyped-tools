@@ -343,9 +343,9 @@ bson
 buffer
 bullmq
 cac
+canvas
 cash-dom
 cassandra-driver
-canvas
 chalk
 chokidar
 ci-info
