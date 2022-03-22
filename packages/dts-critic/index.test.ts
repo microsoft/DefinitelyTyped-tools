@@ -37,7 +37,7 @@ suite("findDtsName", {
 });
 suite("getNpmInfo", {
   nonNpm() {
-    expect(getNpmInfo("parseltongue")).toEqual({ isNpm: false });
+    expect(getNpmInfo("wenceslas")).toEqual({ isNpm: false });
   },
   npm() {
     expect(getNpmInfo("typescript")).toEqual({
@@ -252,7 +252,7 @@ suite("dtsCritic", {
     expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
   },
   noMatchingNpmPackage() {
-    expect(dtsCritic(testsource("parseltongue.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("wenceslas.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmPackage,
         message: `Declaration file must have a matching npm package.
@@ -261,7 +261,7 @@ To resolve this error, either:
 2. Add a Definitely Typed header with the first line
 
 
-// Type definitions for non-npm package parseltongue-browser
+// Type definitions for non-npm package wenceslas-browser
 
 Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`
       }
