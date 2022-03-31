@@ -417,6 +417,7 @@ immer
 immutable
 indefinite-observable
 inversify
+ioredis
 itty-router
 javascript-obfuscator
 jest-cucumber
