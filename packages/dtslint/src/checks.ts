@@ -38,6 +38,7 @@ export async function checkPackageJson(dirPath: string, typesVersions: readonly 
     switch (key) {
       case "private":
       case "dependencies":
+      case "devDependencies":
       case "license":
       case "imports":
       case "exports":
