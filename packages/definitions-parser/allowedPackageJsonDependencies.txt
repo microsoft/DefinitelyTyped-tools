@@ -277,6 +277,7 @@
 @types/faker
 @types/firebase
 @types/got
+@types/hapi
 @types/helmet
 @types/highcharts
 @types/highlight.js
