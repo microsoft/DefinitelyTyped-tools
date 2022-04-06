@@ -265,6 +265,7 @@
 @storybook/react
 @testing-library/dom
 @tweenjs/tween.js
+@types/acorn
 @types/anymatch
 @types/autoprefixer
 @types/base-x
