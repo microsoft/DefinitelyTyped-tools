@@ -265,7 +265,6 @@
 @storybook/react
 @testing-library/dom
 @tweenjs/tween.js
-@types/acorn
 @types/anymatch
 @types/autoprefixer
 @types/base-x
@@ -315,6 +314,7 @@
 @wordpress/api-fetch
 @wordpress/element
 abort-controller
+acorn
 actions-on-google
 activex-helpers
 adal-node
