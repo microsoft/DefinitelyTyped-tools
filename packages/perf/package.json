@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/perf",
-  "version": "0.0.112-next.7",
+  "version": "0.0.112-next.8",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "url": "git://github.com/andrewbranch/definitely-not-slow.git"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.112-next.7",
+    "@definitelytyped/definitions-parser": "^0.0.112-next.8",
     "@definitelytyped/header-parser": "^0.0.111",
     "@definitelytyped/utils": "^0.0.111",
     "@octokit/rest": "^16.33.0",
