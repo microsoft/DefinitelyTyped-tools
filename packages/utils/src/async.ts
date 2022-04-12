@@ -39,7 +39,7 @@ export async function nAtATime<T, U>(
   return results;
 }
 
-export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolean): IterableIterator<T> {
+export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => unknown): IterableIterator<T> {
   const iter = iterable[Symbol.iterator]();
   return {
     [Symbol.iterator](): IterableIterator<T> {
@@ -61,10 +61,10 @@ export type Awaitable<T> = T | Promise<T>;
 export async function filterNAtATimeOrdered<T>(
   n: number,
   inputs: readonly T[],
-  shouldKeep: (input: T) => Awaitable<boolean>,
+  shouldKeep: (input: T) => unknown,
   progress?: ProgressOptions<T, boolean>
 ): Promise<T[]> {
-  const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
+  const shouldKeeps: unknown[] = await nAtATime(n, inputs, shouldKeep, progress);
   return inputs.filter((_, idx) => shouldKeeps[idx]);
 }
 

@@ -4,9 +4,10 @@ import RegClient from "@qiwi/npm-registry-client";
 import { resolve as resolveUrl } from "url";
 import { joinPaths } from "./fs";
 import { loggerWithErrors, Logger } from "./logging";
-import { mapToRecord, recordToMap } from "./collections";
+import { best, mapToRecord, recordToMap } from "./collections";
 import { Fetcher, createTgz } from "./io";
 import { sleep, identity } from "./miscellany";
+import { Semver } from "./semver";
 
 export const npmRegistryHostName = "registry.npmjs.org";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
@@ -17,18 +18,19 @@ const cacheFileBasename = "npmInfo.json";
 
 export type NpmInfoCache = ReadonlyMap<string, NpmInfo>;
 
+// https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md
 export interface NpmInfoRaw {
   readonly "dist-tags": {
     readonly [tag: string]: string;
   };
-  readonly versions: NpmInfoRawVersions;
+  readonly versions: {
+    readonly [version: string]: NpmInfoVersion;
+  };
   readonly time: {
     readonly [s: string]: string;
   };
   readonly homepage: string;
-}
-export interface NpmInfoRawVersions {
-  readonly [version: string]: NpmInfoVersion;
+  readonly minTypedVersion?: string;
 }
 
 // Processed npm info. Intentially kept small so it can be cached.
@@ -37,10 +39,13 @@ export interface NpmInfo {
   readonly versions: Map<string, NpmInfoVersion>;
   readonly time: Map<string, string>;
   readonly homepage: string;
+  readonly minTypedVersion?: string;
 }
 export interface NpmInfoVersion {
   readonly typesPublisherContentHash?: string;
   readonly deprecated?: string;
+  readonly types?: string;
+  readonly typings?: string;
 }
 
 export interface CachedNpmInfoClient {
@@ -50,7 +55,7 @@ export interface CachedNpmInfoClient {
 
 export async function withNpmCache<T>(
   uncachedClient: UncachedNpmInfoClient,
-  cb: (client: CachedNpmInfoClient) => Promise<T>,
+  cb: (client: CachedNpmInfoClient) => T,
   cacheDir = defaultCacheDir
 ): Promise<T> {
   const log = loggerWithErrors()[0];
@@ -219,23 +224,42 @@ export class NpmPublishClient {
 
 function npmInfoFromJson(n: NpmInfoRaw): NpmInfo {
   return {
-    ...n,
     distTags: recordToMap(n["dist-tags"], identity),
     // Callback ensures we remove any other properties
     versions: recordToMap(n.versions, ({ typesPublisherContentHash, deprecated }) => ({
       typesPublisherContentHash,
       deprecated
     })),
-    time: recordToMap(n.time)
+    time: recordToMap(n.time),
+    homepage: n.homepage,
+    minTypedVersion:
+      n.minTypedVersion ||
+      (getTypes(n) &&
+        best(
+          Object.entries(n.versions)
+            .filter(([, versionInfo]) => getTypes(versionInfo))
+            .map(([version]) => Semver.parse(version)),
+          (a, b) => b.greaterThan(a)
+        )?.versionString)
   };
+}
+
+export function getTypes(raw: NpmInfoRaw | NpmInfoVersion): string | undefined {
+  const forReading = raw as typeof raw & Record<PropertyKey, never>;
+  return (
+    forReading.types ||
+    forReading.typings ||
+    (forReading.versions && getTypes(forReading.versions[forReading["dist-tags"].latest]))
+  );
 }
 
 function jsonFromNpmInfo(n: NpmInfo): NpmInfoRaw {
   return {
-    ...n,
     "dist-tags": mapToRecord(n.distTags),
     versions: mapToRecord(n.versions),
-    time: mapToRecord(n.time)
+    time: mapToRecord(n.time),
+    homepage: n.homepage,
+    minTypedVersion: n.minTypedVersion
   };
 }
 

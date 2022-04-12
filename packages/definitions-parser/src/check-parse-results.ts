@@ -1,19 +1,6 @@
 import { ParseDefinitionsOptions } from "./get-definitely-typed";
 import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
-import {
-  assertDefined,
-  best,
-  mapDefined,
-  nAtATime,
-  FS,
-  logger,
-  writeLog,
-  Logger,
-  Semver,
-  UncachedNpmInfoClient,
-  NpmInfoRawVersions,
-  NpmInfoVersion
-} from "@definitelytyped/utils";
+import { nAtATime, FS, logger, writeLog, Logger, UncachedNpmInfoClient } from "@definitelytyped/utils";
 
 export async function checkParseResults(
   includeNpmChecks: false,
@@ -126,18 +113,8 @@ async function checkNpm(
     return;
   }
 
-  const info = await client.fetchRawNpmInfo(name); // Gets info for the real package, not the @types package
-  if (!info) {
-    return;
-  }
-
-  const versions = getRegularVersions(info.versions);
-  const firstTypedVersion = best(
-    mapDefined(versions, ({ hasTypes, version }) => (hasTypes ? version : undefined)),
-    (a, b) => b.greaterThan(a)
-  );
-  // A package might have added types but removed them later, so check the latest version too
-  if (firstTypedVersion === undefined || !best(versions, (a, b) => a.version.greaterThan(b.version))!.hasTypes) {
+  const info = await client.fetchNpmInfo(name); // Gets info for the real package, not the @types package
+  if (!info?.minTypedVersion) {
     return;
   }
 
@@ -145,7 +122,7 @@ async function checkNpm(
 
   log("");
   log(
-    `Typings already defined for ${name} (${libraryName}) as of ${firstTypedVersion.versionString} (our version: ${ourVersion})`
+    `Typings already defined for ${name} (${libraryName}) as of ${info.minTypedVersion} (our version: ${ourVersion})`
   );
   const contributorUrls = contributors
     .map(c => {
@@ -155,37 +132,16 @@ async function checkNpm(
     .join(", ");
   log("  To fix this:");
   log(`  git checkout -b not-needed-${name}`);
-  const yarnargs = [name, firstTypedVersion.versionString, projectName];
+  const yarnargs = [name, info.minTypedVersion, projectName];
   if (libraryName !== name) {
     yarnargs.push(JSON.stringify(libraryName));
   }
   log("  yarn not-needed " + yarnargs.join(" "));
   log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
   log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
-  if (new Semver(major, minor, 0).greaterThan(firstTypedVersion)) {
-    log("  WARNING: our version is greater!");
-  }
   if (dependedOn.has(name)) {
     log("  WARNING: other packages depend on this!");
   }
-}
-
-export async function packageHasTypes(packageName: string, client: UncachedNpmInfoClient): Promise<boolean> {
-  const info = assertDefined(await client.fetchRawNpmInfo(packageName));
-  return versionHasTypes(info.versions[info["dist-tags"].latest]);
-}
-
-function getRegularVersions(
-  versions: NpmInfoRawVersions
-): readonly { readonly version: Semver; readonly hasTypes: boolean }[] {
-  return mapDefined(Object.entries(versions), ([versionString, info]) => {
-    const version = Semver.tryParse(versionString);
-    return version === undefined ? undefined : { version, hasTypes: versionHasTypes(info) };
-  });
-}
-
-function versionHasTypes(info: NpmInfoVersion): boolean {
-  return "types" in info || "typings" in info;
 }
 
 const notNeededExceptions: ReadonlySet<string> = new Set([

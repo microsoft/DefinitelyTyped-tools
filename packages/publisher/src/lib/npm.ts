@@ -6,10 +6,9 @@ import { Logger, assertDefined, Semver, best, CachedNpmInfoClient } from "@defin
  * So the keys of 'time' give the actual 'latest'.
  * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
  */
-export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger) {
+export function skipBadPublishes(pkg: NotNeededPackage, notNeeded: Semver, client: CachedNpmInfoClient, log: Logger) {
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
   const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
-  const notNeeded = pkg.version;
   const latest = Semver.parse(findActualLatest(info.time));
   if (
     latest.equals(notNeeded) ||
@@ -19,9 +18,9 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
   ) {
     const plusOne = new Semver(latest.major, latest.minor, latest.patch + 1);
     log(`Deprecation of ${notNeeded.versionString} failed, instead using ${plusOne.versionString}.`);
-    return new NotNeededPackage(pkg.name, pkg.libraryName, plusOne.versionString);
+    return plusOne;
   }
-  return pkg;
+  return notNeeded;
 }
 
 function findActualLatest(times: Map<string, string>) {

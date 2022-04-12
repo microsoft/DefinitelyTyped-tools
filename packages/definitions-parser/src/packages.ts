@@ -211,11 +211,6 @@ export abstract class PackageBase {
     return unmangleScopedPackage(this.name) || this.name;
   }
 
-  /** Short description for debug output. */
-  get desc(): string {
-    return this.isLatest ? this.name : `${this.name} v${this.major}.${this.minor}`;
-  }
-
   constructor(data: BaseRaw) {
     this.libraryName = data.libraryName;
   }
@@ -238,13 +233,6 @@ export abstract class PackageBase {
   get fullEscapedNpmName(): string {
     return `@${scopeName}%2f${this.name}`;
   }
-
-  abstract readonly major: number;
-  abstract readonly minor: number;
-
-  get id(): PackageIdWithDefiniteVersion {
-    return { name: this.name, version: { major: this.major, minor: this.minor } };
-  }
 }
 
 export function getFullNpmName(packageName: string): string {
@@ -257,11 +245,11 @@ interface NotNeededPackageRaw extends BaseRaw {
    * This is useful for packages that previously had DefinitelyTyped definitions but which now provide their own.
    */
   // This must be "major.minor.patch"
-  readonly asOfVersion: string;
+  readonly asOfVersion?: string;
 }
 
 export class NotNeededPackage extends PackageBase {
-  readonly version: Semver;
+  readonly version?: Semver;
 
   get license(): License.MIT {
     return License.MIT;
@@ -283,17 +271,12 @@ export class NotNeededPackage extends PackageBase {
     return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
   }
 
-  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
+  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string | undefined) {
     super({ libraryName });
-    assert(libraryName && name && asOfVersion);
-    this.version = Semver.parse(asOfVersion);
-  }
-
-  get major(): number {
-    return this.version.major;
-  }
-  get minor(): number {
-    return this.version.minor;
+    assert(libraryName && name);
+    if (asOfVersion !== undefined) {
+      this.version = Semver.parse(asOfVersion);
+    }
   }
 
   // A not-needed package has no other versions. (that would be possible to allow but nobody has really needed it yet)
@@ -571,6 +554,11 @@ export class TypingsData extends PackageBase {
     return this.data.typingsPackageName;
   }
 
+  /** Short description for debug output. */
+  get desc(): string {
+    return this.isLatest ? this.name : `${this.name} v${this.major}.${this.minor}`;
+  }
+
   get testDependencies(): readonly string[] {
     return this.data.testDependencies;
   }
@@ -582,6 +570,10 @@ export class TypingsData extends PackageBase {
   }
   get minor(): number {
     return this.data.libraryMinorVersion;
+  }
+
+  get id(): PackageIdWithDefiniteVersion {
+    return { name: this.name, version: { major: this.major, minor: this.minor } };
   }
 
   get minTypeScriptVersion(): TypeScriptVersion {

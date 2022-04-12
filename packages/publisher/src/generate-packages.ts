@@ -20,7 +20,8 @@ import {
   writeTgz,
   withNpmCache,
   UncachedNpmInfoClient,
-  CachedNpmInfoClient
+  CachedNpmInfoClient,
+  Semver
 } from "@definitelytyped/utils";
 import {
   getDefinitelyTyped,
@@ -105,12 +106,12 @@ async function generateNotNeededPackage(
   client: CachedNpmInfoClient,
   log: Logger
 ): Promise<void> {
-  pkg = skipBadPublishes(pkg, client, log);
-  const info = await client.fetchAndCacheNpmInfo(pkg.libraryName);
+  const info = client.getNpmInfoFromCache(pkg.libraryName);
   assert(info);
+  const { versionString } = skipBadPublishes(pkg, pkg.version || Semver.parse(info.minTypedVersion!), client, log);
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, versionString), readme);
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
@@ -210,10 +211,13 @@ function dependencySemver(dependency: DependencyVersion): string {
   return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
 }
 
-export function createNotNeededPackageJSON({ libraryName, license, fullNpmName, version }: NotNeededPackage): string {
+export function createNotNeededPackageJSON(
+  { libraryName, license, fullNpmName }: NotNeededPackage,
+  version: string
+): string {
   const out = {
     name: fullNpmName,
-    version: version.versionString,
+    version,
     typings: null, // tslint:disable-line no-null-keyword
     description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
     main: "",

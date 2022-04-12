@@ -224,8 +224,6 @@ describe(NotNeededPackage, () => {
       minor: 0,
       patch: 0
     });
-    expect(data.major).toBe(1);
-    expect(data.minor).toBe(0);
     expect(data.isLatest).toBe(true);
     expect(data.isNotNeeded()).toBe(true);
     expect(data.declaredModules).toEqual([]);

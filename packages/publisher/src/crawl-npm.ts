@@ -7,10 +7,11 @@ import {
   ProgressBar,
   strProgress,
   UncachedNpmInfoClient,
+  getTypes,
   npmRegistry
 } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
-import { ParseDefinitionsOptions, writeDataFile, packageHasTypes } from "@definitelytyped/definitions-parser";
+import { ParseDefinitionsOptions, writeDataFile } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
   logUncaughtErrors(main(defaultLocalOptions));
@@ -24,7 +25,7 @@ async function main(options: ParseDefinitionsOptions): Promise<void> {
   const allTyped = await filterNAtATimeOrdered(
     10,
     all,
-    pkg => packageHasTypes(pkg, client),
+    async pkg => getTypes((await client.fetchRawNpmInfo(pkg))!),
     options.progress
       ? {
           name: "Checking for types...",

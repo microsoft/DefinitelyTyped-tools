@@ -151,6 +151,9 @@ Unneeded packages have to be replaced with a package on npm.`
       `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`
     )
   );
+  if (!unneeded.version) {
+    return;
+  }
   assert(
     unneeded.version.greaterThan(latestTypings),
     `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version

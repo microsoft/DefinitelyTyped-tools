@@ -12,6 +12,7 @@ import {
   writeLog,
   NpmPublishClient,
   withNpmCache,
+  Semver,
   UncachedNpmInfoClient
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
@@ -27,11 +28,18 @@ if (!module.parent) {
     if (deprecateName !== undefined) {
       // A '--deprecate' command is available in case types-publisher got stuck *while* trying to deprecate a package.
       // Normally this should not be needed.
-
+      const notNeeded = AllPackages.readSingleNotNeeded(deprecateName, dt);
       const log = logger()[0];
       await deprecateNotNeededPackage(
         await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined),
-        AllPackages.readSingleNotNeeded(deprecateName, dt),
+        notNeeded,
+        notNeeded.version
+          ? notNeeded.version.versionString
+          : (await withNpmCache(
+              new UncachedNpmInfoClient(),
+              client => client.getNpmInfoFromCache(notNeeded.libraryName),
+              cacheDirPath
+            ))!.minTypedVersion!,
         /*dry*/ false,
         log
       );
@@ -147,8 +155,14 @@ export default async function publishPackages(
     new UncachedNpmInfoClient(),
     async infoClient => {
       for (const n of changedPackages.changedNotNeededPackages) {
-        const target = skipBadPublishes(n, infoClient, log);
-        await publishNotNeededPackage(client, target, dry, log);
+        const target = infoClient.getNpmInfoFromCache(n.libraryName);
+        const { versionString } = skipBadPublishes(
+          n,
+          n.version || Semver.parse(target!.minTypedVersion!),
+          infoClient,
+          log
+        );
+        await publishNotNeededPackage(client, n, versionString, dry, log);
       }
     },
     cacheDirPath

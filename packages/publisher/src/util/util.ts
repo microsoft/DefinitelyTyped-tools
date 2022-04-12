@@ -8,7 +8,7 @@ export function currentTimeStamp(): string {
 }
 
 export function outputDirectory(pkg: AnyPackage) {
-  return joinPaths(outputDirPath, pkg.desc);
+  return joinPaths(outputDirPath, (pkg as typeof pkg & Record<PropertyKey, never>).desc || pkg.name);
 }
 
 export const numberOfOsProcesses = os.cpus().length;

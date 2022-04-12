@@ -28,13 +28,14 @@ export async function publishTypingsPackage(
 export async function publishNotNeededPackage(
   client: NpmPublishClient,
   pkg: NotNeededPackage,
+  version: string,
   dry: boolean,
   log: Logger
 ): Promise<void> {
   log(`Deprecating ${pkg.name}`);
   await common(client, pkg, log, dry);
   // Don't use a newline in the deprecation message because it will be displayed as "\n" and not as a newline.
-  await deprecateNotNeededPackage(client, pkg, dry, log);
+  await deprecateNotNeededPackage(client, pkg, version, dry, log);
 }
 
 async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean): Promise<void> {
@@ -46,14 +47,15 @@ async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dr
 export async function deprecateNotNeededPackage(
   client: NpmPublishClient,
   pkg: NotNeededPackage,
+  version: string,
   dry = false,
   log: Logger
 ): Promise<void> {
   const name = pkg.fullNpmName;
   if (dry) {
-    log("(dry) Skip deprecate not needed package " + name + " at " + pkg.version.versionString);
+    log("(dry) Skip deprecate not needed package " + name + " at " + version);
   } else {
-    log(`Deprecating ${name} at ${pkg.version.versionString} with message: ${pkg.deprecatedMessage()}.`);
-    await client.deprecate(name, pkg.version.versionString, pkg.deprecatedMessage());
+    log(`Deprecating ${name} at ${version} with message: ${pkg.deprecatedMessage()}.`);
+    await client.deprecate(name, version, pkg.deprecatedMessage());
   }
 }
