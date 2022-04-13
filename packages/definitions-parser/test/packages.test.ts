@@ -219,7 +219,7 @@ describe(NotNeededPackage, () => {
     expect(data.license).toBe(License.MIT);
     expect(data.name).toBe("types-package");
     expect(data.libraryName).toBe("real-package");
-    expect(data.version).toEqual({
+    expect(data.version).toMatchObject({
       major: 1,
       minor: 0,
       patch: 0,

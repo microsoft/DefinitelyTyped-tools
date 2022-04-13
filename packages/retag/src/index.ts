@@ -15,9 +15,6 @@ import {
   consoleLogger,
   NpmInfoVersion,
   logUncaughtErrors,
-  Semver,
-  best,
-  mapDefined,
   loggerWithErrors,
   LoggerWithErrors,
   nAtATime,
@@ -30,6 +27,7 @@ import {
   parseDefinitions,
   getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
+import * as semver from "semver";
 
 if (!module.parent) {
   logUncaughtErrors(main);
@@ -128,19 +126,17 @@ export async function fetchTypesPackageVersionInfo(
 ): Promise<{ version: string; needsPublish: boolean }> {
   let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
   let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-  let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
+  let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion));
   if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
     if (log) {
-      log.info(
-        `Version info not cached for ${pkg.desc}@${latestVersion ? latestVersion.versionString : "(no latest version)"}`
-      );
+      log.info(`Version info not cached for ${pkg.desc}@${latestVersion || "(no latest version)"}`);
     }
     info = await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName);
     latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-    latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion.versionString));
-    if (!latestVersionInfo) {
-      return { version: versionString(pkg, /*patch*/ 0), needsPublish: true };
+    if (!latestVersion) {
+      return { version: `${pkg.major}.${pkg.minor}.0`, needsPublish: true };
     }
+    latestVersionInfo = assertDefined(info!.versions.get(latestVersion));
   }
 
   if (latestVersionInfo.deprecated) {
@@ -151,39 +147,12 @@ export async function fetchTypesPackageVersionInfo(
     );
   }
   const needsPublish = canPublish && pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
-  const patch = needsPublish
-    ? latestVersion!.minor === pkg.minor
-      ? latestVersion!.patch + 1
-      : 0
-    : latestVersion!.patch;
-  return { version: versionString(pkg, patch), needsPublish };
-}
-
-function versionString(pkg: TypingsData, patch: number): string {
-  return new Semver(pkg.major, pkg.minor, patch).versionString;
+  return { version: needsPublish ? semver.inc(latestVersion!, "patch")! : `${pkg.major}.${pkg.minor}.0`, needsPublish };
 }
 
 function getHighestVersionForMajor(
   versions: ReadonlyMap<string, NpmInfoVersion>,
   { major, minor }: TypingsData
-): Semver | undefined {
-  const patch = latestPatchMatchingMajorAndMinor(versions.keys(), major, minor);
-  return patch === undefined ? undefined : new Semver(major, minor, patch);
-}
-
-/** Finds the version with matching major/minor with the latest patch version. */
-function latestPatchMatchingMajorAndMinor(
-  versions: Iterable<string>,
-  newMajor: number,
-  newMinor: number
-): number | undefined {
-  const versionsWithTypings = mapDefined(versions, (v) => {
-    const semver = Semver.tryParse(v);
-    if (!semver) {
-      return undefined;
-    }
-    const { major, minor, patch } = semver;
-    return major === newMajor && minor === newMinor ? patch : undefined;
-  });
-  return best(versionsWithTypings, (a, b) => a > b);
+): string | null {
+  return semver.maxSatisfying([...versions.keys()], `~${major}.${minor}`);
 }

@@ -16,7 +16,9 @@ import {
   MeasureBatchCompilationChildProcessResult,
 } from "./measureBatchCompilationWorker";
 import { AllPackages, HeaderParsedTypingVersion } from "@definitelytyped/definitions-parser";
-import { runWithListeningChildProcesses, runWithChildProcesses, Semver } from "@definitelytyped/utils";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { runWithListeningChildProcesses, runWithChildProcesses } from "@definitelytyped/utils";
+import * as semver from "semver";
 
 export interface MeasurePerfOptions {
   packageName: string;
@@ -253,14 +255,12 @@ export async function measurePerf({
 }
 
 function getLatestTypesVersionForTypeScriptVersion(
-  typesVersions: readonly string[],
+  typesVersions: readonly TypeScriptVersion[],
   typeScriptVersion: string
 ): string | undefined {
-  const tsVersion = Semver.parse(typeScriptVersion.replace(/-dev.*$/, ""));
+  const tsVersion = new semver.SemVer(typeScriptVersion);
   for (let i = typesVersions.length - 1; i > 0; i--) {
-    const [major, minor] = typesVersions[i].split(".").map(Number); // e.g. '3.5'
-    const typesVersion = new Semver(major, minor, 0);
-    if (tsVersion.greaterThan(typesVersion)) {
+    if (semver.gte(tsVersion, `${typesVersions[i]}.0-`)) {
       return typesVersions[i];
     }
   }

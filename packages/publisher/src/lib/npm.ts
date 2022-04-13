@@ -1,5 +1,6 @@
 import { NotNeededPackage } from "@definitelytyped/definitions-parser";
-import { Logger, assertDefined, Semver, best, CachedNpmInfoClient } from "@definitelytyped/utils";
+import { Logger, assertDefined, CachedNpmInfoClient, max } from "@definitelytyped/utils";
+import * as semver from "semver";
 
 /**
  * When we fail to publish a deprecated package, it leaves behind an entry in the time property.
@@ -10,27 +11,19 @@ export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoCli
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
   const info = assertDefined(client.getNpmInfoFromCache(pkg.fullEscapedNpmName));
   const notNeeded = pkg.version;
-  const latest = Semver.parse(findActualLatest(info.time));
-  if (
-    latest.equals(notNeeded) ||
-    latest.greaterThan(notNeeded) ||
-    (info.versions.has(notNeeded.versionString) &&
-      !assertDefined(info.versions.get(notNeeded.versionString)).deprecated)
-  ) {
-    const plusOne = new Semver(latest.major, latest.minor, latest.patch + 1);
-    log(`Deprecation of ${notNeeded.versionString} failed, instead using ${plusOne.versionString}.`);
-    return new NotNeededPackage(pkg.name, pkg.libraryName, plusOne.versionString);
+  const latest = new semver.SemVer(findActualLatest(info.time));
+  if (semver.lte(notNeeded, latest)) {
+    const plusOne = semver.inc(latest, "patch")!;
+    log(`Deprecation of ${notNeeded} failed, instead using ${plusOne}.`);
+    return new NotNeededPackage(pkg.name, pkg.libraryName, plusOne);
   }
   return pkg;
 }
 
 function findActualLatest(times: Map<string, string>) {
-  const actual = best(times, ([k, v], [bestK, bestV]) =>
-    bestK === "modified" || bestK === "created"
-      ? true
-      : k === "modified" || k === "created"
-      ? false
-      : new Date(v).getTime() > new Date(bestV).getTime()
+  const actual = max(
+    [...times].filter(([version]) => version !== "modified" && version !== "created"),
+    ([, a], [, b]) => (new Date(a) as never) - (new Date(b) as never)
   );
   if (!actual) {
     throw new Error("failed to find actual latest");
