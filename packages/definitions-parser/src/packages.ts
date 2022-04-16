@@ -40,11 +40,11 @@ export class AllPackages {
     if (!raw) {
       throw new Error(`Can't find package ${name}`);
     }
-    const versions = Object.keys(raw);
+    const versions = Object.values(raw);
     if (versions.length > 1) {
       throw new Error(`Package ${name} has multiple versions.`);
     }
-    return new TypingsData(raw[versions[0]], /*isLatest*/ true);
+    return new TypingsData(versions[0], /*isLatest*/ true);
   }
 
   static readSingleNotNeeded(name: string, dt: FS): NotNeededPackage {
@@ -316,7 +316,7 @@ export class NotNeededPackage extends PackageBase {
 }
 
 export interface TypingsVersionsRaw {
-  [version: string]: TypingsDataRaw;
+  [version: `${number}.${number}`]: TypingsDataRaw;
 }
 
 /** Minor may be unknown if parsed from a major-only version directory, like 'types/v15' */
@@ -504,29 +504,17 @@ export class TypingsVersions {
   private readonly versions: Semver[];
 
   constructor(data: TypingsVersionsRaw) {
-    const versionMappings = new Map(
-      Object.keys(data).map(key => {
-        const version = Semver.parse(key, true);
-        if (version) {
-          return [version, key];
-        }
-        throw new Error(`Unable to parse version ${key}`);
-      })
-    );
-
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
-    this.versions = Array.from(versionMappings.keys())
+    this.versions = Object.keys(data)
+      .map(key => Semver.parse(key, true))
       .sort(Semver.compare)
       .reverse();
 
     this.map = new Map(
-      this.versions.map(version => {
-        const dataKey = versionMappings.get(version)!;
-        return [version, new TypingsData(data[dataKey], version.equals(this.versions[0]))];
-      })
+      this.versions.map((version, i) => [version, new TypingsData(data[`${version.major}.${version.minor}`], !i)])
     );
   }
 

@@ -43,7 +43,7 @@ function matchesVersion(
   );
 }
 
-function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw) {
+function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${number}` {
   return `${typingsDataRaw.libraryMajorVersion}.${typingsDataRaw.libraryMinorVersion}`;
 }
 

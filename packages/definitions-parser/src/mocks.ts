@@ -38,7 +38,7 @@ class DTMock {
    * @param packageName The package of which an old version is to be added.
    * @param olderVersion The older version that's to be added.
    */
-  public addOldVersionOfPackage(packageName: string, olderVersion: string) {
+  public addOldVersionOfPackage(packageName: string, olderVersion: `${number}`) {
     const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
     const latestHeader = parseHeaderOrFail(index);
