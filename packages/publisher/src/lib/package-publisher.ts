@@ -51,9 +51,9 @@ export async function deprecateNotNeededPackage(
 ): Promise<void> {
   const name = pkg.fullNpmName;
   if (dry) {
-    log("(dry) Skip deprecate not needed package " + name + " at " + pkg.version.versionString);
+    log("(dry) Skip deprecate not needed package " + name + " at " + pkg.version);
   } else {
-    log(`Deprecating ${name} at ${pkg.version.versionString} with message: ${pkg.deprecatedMessage()}.`);
-    await client.deprecate(name, pkg.version.versionString, pkg.deprecatedMessage());
+    log(`Deprecating ${name} at ${pkg.version} with message: ${pkg.deprecatedMessage()}.`);
+    await client.deprecate(name, String(pkg.version), pkg.deprecatedMessage());
   }
 }

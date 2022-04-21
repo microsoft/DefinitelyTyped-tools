@@ -1,15 +1,8 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import {
-  FS,
-  mapValues,
-  assertSorted,
-  unmangleScopedPackage,
-  Semver,
-  assertDefined,
-  unique,
-} from "@definitelytyped/utils";
+import { FS, mapValues, assertSorted, unmangleScopedPackage, assertDefined, unique } from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import * as semver from "semver";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
 import { parseVersionFromDirectoryName } from "./lib/definition-parser";
@@ -261,7 +254,7 @@ interface NotNeededPackageRaw extends BaseRaw {
 }
 
 export class NotNeededPackage extends PackageBase {
-  readonly version: Semver;
+  readonly version: semver.SemVer;
 
   get license(): License.MIT {
     return License.MIT;
@@ -286,7 +279,7 @@ export class NotNeededPackage extends PackageBase {
   constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
     super({ libraryName });
     assert(libraryName && name && asOfVersion);
-    this.version = Semver.parse(asOfVersion);
+    this.version = new semver.SemVer(asOfVersion);
   }
 
   get major(): number {
@@ -496,22 +489,20 @@ export function getLicenseFromPackageJson(packageJsonLicense: unknown): License 
 }
 
 export class TypingsVersions {
-  private readonly map: ReadonlyMap<Semver, TypingsData>;
+  private readonly map: ReadonlyMap<semver.SemVer, TypingsData>;
 
   /**
    * Sorted from latest to oldest.
    */
-  private readonly versions: Semver[];
+  private readonly versions: semver.SemVer[];
 
   constructor(data: TypingsVersionsRaw) {
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
-    this.versions = Object.keys(data)
-      .map((key) => Semver.parse(key, true))
-      .sort(Semver.compare)
-      .reverse();
+    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.0`));
+    this.versions.sort(semver.rcompare);
 
     this.map = new Map(
       this.versions.map((version, i) => [version, new TypingsData(data[`${version.major}.${version.minor}`], !i)])

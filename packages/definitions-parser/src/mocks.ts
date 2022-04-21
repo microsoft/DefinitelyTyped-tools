@@ -1,5 +1,6 @@
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { Dir, FS, InMemoryFS, mangleScopedPackage, Semver } from "@definitelytyped/utils";
+import { Dir, FS, InMemoryFS, mangleScopedPackage } from "@definitelytyped/utils";
+import * as semver from "semver";
 
 class DTMock {
   public readonly fs: FS;
@@ -43,7 +44,7 @@ class DTMock {
     const index = latestDir.get("index.d.ts") as string;
     const latestHeader = parseHeaderOrFail(index);
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
-    const olderVersionParsed = Semver.parse(olderVersion, true)!;
+    const olderVersionParsed = semver.coerce(olderVersion)!;
 
     const oldDir = latestDir.subdir(`v${olderVersion}`);
     const tsconfig = JSON.parse(latestDir.get("tsconfig.json") as string);

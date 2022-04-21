@@ -213,7 +213,7 @@ function dependencySemver(dependency: DependencyVersion): string {
 export function createNotNeededPackageJSON({ libraryName, license, fullNpmName, version }: NotNeededPackage): string {
   const out = {
     name: fullNpmName,
-    version: version.versionString,
+    version: String(version),
     typings: null, // tslint:disable-line no-null-keyword
     description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
     main: "",

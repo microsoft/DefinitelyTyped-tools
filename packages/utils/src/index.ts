@@ -8,5 +8,4 @@ export * from "./miscellany";
 export * from "./npm";
 export * from "./process";
 export * from "./progress";
-export * from "./semver";
 export * from "./typescript-installer";

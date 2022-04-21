@@ -205,27 +205,26 @@ export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record
   return o;
 }
 
-/**
- * Returns the input that is better than all others, or `undefined` if there are no inputs.
- * @param isBetter Returns true if `a` should be preferred over `b`.
- */
-export function best<T>(inputs: Iterable<T>, isBetter: (a: T, b: T) => boolean): T | undefined {
-  const iter = inputs[Symbol.iterator]();
+export function min<T>(array: readonly [T, ...(T | undefined)[]]): T;
+export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number): T | undefined;
+export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
+  return array.length === 0
+    ? undefined
+    : array.reduce((previousValue, currentValue) =>
+        (compare ? compare(currentValue, previousValue) < 0 : currentValue < previousValue)
+          ? currentValue
+          : previousValue
+      );
+}
 
-  const first = iter.next();
-  if (first.done) {
-    return undefined;
-  }
-
-  let res = first.value;
-  while (true) {
-    const { value, done } = iter.next();
-    if (done) {
-      break;
-    }
-    if (isBetter(value, res)) {
-      res = value;
-    }
-  }
-  return res;
+export function max<T>(array: readonly [T, ...(T | undefined)[]]): T;
+export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number): T | undefined;
+export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
+  return array.length === 0
+    ? undefined
+    : array.reduce((previousValue, currentValue) =>
+        (compare ? compare(currentValue, previousValue) > 0 : currentValue > previousValue)
+          ? currentValue
+          : previousValue
+      );
 }

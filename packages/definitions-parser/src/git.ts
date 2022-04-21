@@ -17,10 +17,10 @@ import {
   FS,
   consoleLogger,
   assertDefined,
-  Semver,
   UncachedNpmInfoClient,
   NpmInfo,
 } from "@definitelytyped/utils";
+import * as semver from "semver";
 import { getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
@@ -145,20 +145,18 @@ export function checkNotNeededPackage(
 Unneeded packages have to be replaced with a package on npm.`
   );
   typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
-  const latestTypings = Semver.parse(
-    assertDefined(
-      typings.distTags.get("latest"),
-      `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`
-    )
+  const latestTypings = assertDefined(
+    typings.distTags.get("latest"),
+    `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`
   );
   assert(
-    unneeded.version.greaterThan(latestTypings),
-    `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmName}.`
+    semver.gt(unneeded.version, latestTypings),
+    `The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
+it is supposed to replace, ${latestTypings} of ${unneeded.fullNpmName}.`
   );
   assert(
-    source.versions.has(unneeded.version.versionString),
-    `The specified version ${unneeded.version.versionString} of ${unneeded.libraryName} is not on npm.`
+    source.versions.has(String(unneeded.version)),
+    `The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`
   );
 }
 

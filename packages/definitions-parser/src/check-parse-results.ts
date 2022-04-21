@@ -2,18 +2,19 @@ import { ParseDefinitionsOptions } from "./get-definitely-typed";
 import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
 import {
   assertDefined,
-  best,
   mapDefined,
   nAtATime,
   FS,
   logger,
   writeLog,
   Logger,
-  Semver,
   UncachedNpmInfoClient,
   NpmInfoRawVersions,
   NpmInfoVersion,
+  max,
+  min,
 } from "@definitelytyped/utils";
+import * as semver from "semver";
 
 export async function checkParseResults(
   includeNpmChecks: false,
@@ -132,21 +133,19 @@ async function checkNpm(
   }
 
   const versions = getRegularVersions(info.versions);
-  const firstTypedVersion = best(
+  const firstTypedVersion = min(
     mapDefined(versions, ({ hasTypes, version }) => (hasTypes ? version : undefined)),
-    (a, b) => b.greaterThan(a)
+    semver.compare
   );
   // A package might have added types but removed them later, so check the latest version too
-  if (firstTypedVersion === undefined || !best(versions, (a, b) => a.version.greaterThan(b.version))!.hasTypes) {
+  if (firstTypedVersion === undefined || !max(versions, (a, b) => semver.compare(a.version, b.version))!.hasTypes) {
     return;
   }
 
   const ourVersion = `${major}.${minor}`;
 
   log("");
-  log(
-    `Typings already defined for ${name} (${libraryName}) as of ${firstTypedVersion.versionString} (our version: ${ourVersion})`
-  );
+  log(`Typings already defined for ${name} (${libraryName}) as of ${firstTypedVersion} (our version: ${ourVersion})`);
   const contributorUrls = contributors
     .map((c) => {
       const gh = "https://github.com/";
@@ -155,14 +154,14 @@ async function checkNpm(
     .join(", ");
   log("  To fix this:");
   log(`  git checkout -b not-needed-${name}`);
-  const yarnargs = [name, firstTypedVersion.versionString, projectName];
+  const yarnargs = [name, firstTypedVersion, projectName];
   if (libraryName !== name) {
     yarnargs.push(JSON.stringify(libraryName));
   }
   log("  yarn not-needed " + yarnargs.join(" "));
   log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
   log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
-  if (new Semver(major, minor, 0).greaterThan(firstTypedVersion)) {
+  if (semver.gt(`${major}.${minor}.0`, firstTypedVersion)) {
     log("  WARNING: our version is greater!");
   }
   if (dependedOn.has(name)) {
@@ -177,11 +176,11 @@ export async function packageHasTypes(packageName: string, client: UncachedNpmIn
 
 function getRegularVersions(
   versions: NpmInfoRawVersions
-): readonly { readonly version: Semver; readonly hasTypes: boolean }[] {
-  return mapDefined(Object.entries(versions), ([versionString, info]) => {
-    const version = Semver.tryParse(versionString);
-    return version === undefined ? undefined : { version, hasTypes: versionHasTypes(info) };
-  });
+): readonly { readonly version: semver.SemVer; readonly hasTypes: boolean }[] {
+  return Object.entries(versions).map(([versionString, info]) => ({
+    version: new semver.SemVer(versionString),
+    hasTypes: versionHasTypes(info),
+  }));
 }
 
 function versionHasTypes(info: NpmInfoVersion): boolean {

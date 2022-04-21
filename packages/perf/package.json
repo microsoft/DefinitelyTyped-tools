@@ -21,6 +21,7 @@
     "@octokit/rest": "^16.33.0",
     "@types/node": "^12.12.29",
     "markdown-table": "^1.1.3",
+    "semver": "^7.3.7",
     "typescript": "^4.1.0",
     "yargs": "^15.4.1"
   },
