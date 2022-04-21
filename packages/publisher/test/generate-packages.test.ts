@@ -41,10 +41,10 @@ function createRawPackage(license: License): TypingsDataRaw {
 function createTypesData(): TypesDataFile {
   return {
     jquery: {
-      1: createRawPackage(License.MIT)
+      "1.0": createRawPackage(License.MIT)
     },
     madeira: {
-      1: createRawPackage(License.Apache20)
+      "1.0": createRawPackage(License.Apache20)
     }
   };
 }
