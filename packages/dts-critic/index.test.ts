@@ -159,7 +159,7 @@ The most common way to resolve this error is to use 'export =' syntax instead of
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
           position: {
             start: 0,
-            length: 32,
+            length: 33,
           },
         },
       ])
