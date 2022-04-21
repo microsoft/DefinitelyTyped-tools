@@ -26,5 +26,5 @@ testo({
     expect(j!.fullNpmName).toContain("types");
     expect(j!.fullNpmName).toContain("jquery");
     expect(defs.allPackages().length).toEqual(defs.allTypings().length + defs.allNotNeeded().length);
-  }
+  },
 });

@@ -5,7 +5,7 @@ import {
   checkParseResults,
   getAffectedPackagesFromDiff,
   allDependencies,
-  TypingsData
+  TypingsData,
 } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors, joinPaths, loggerWithErrors, npmInstallFlags } from "@definitelytyped/utils";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
@@ -13,14 +13,14 @@ import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 export async function prepareAffectedPackages({
   definitelyTypedPath,
   noInstall,
-  nProcesses
+  nProcesses,
 }: PreparePackagesOptions): Promise<PreparePackagesResult> {
   const typesPath = joinPaths(definitelyTypedPath, "types");
   const log = loggerWithErrors()[0];
   const options = {
     definitelyTypedPath,
     progress: false,
-    parseInParallel: nProcesses > 1
+    parseInParallel: nProcesses > 1,
   };
   const dt = await getDefinitelyTyped(options, log);
   await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
@@ -42,8 +42,8 @@ export async function prepareAffectedPackages({
   }
 
   return {
-    packageNames: changedPackages.map(p => p.subDirectoryPath),
-    dependents: dependentPackages.map(p => p.subDirectoryPath)
+    packageNames: changedPackages.map((p) => p.subDirectoryPath),
+    dependents: dependentPackages.map((p) => p.subDirectoryPath),
   };
 }
 

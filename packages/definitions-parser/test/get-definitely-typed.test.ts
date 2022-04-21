@@ -8,7 +8,7 @@ testo({
       {
         definitelyTypedPath: undefined,
         parseInParallel: false,
-        progress: false
+        progress: false,
       },
       quietLoggerWithErrors()[0]
     );
@@ -30,5 +30,5 @@ testo({
     expect(fs.exists("file1.txt")).toBe(true);
     expect(fs.readFile("file1.txt")).toBe("ok");
     expect(fs.readFile("sub1/file2.txt")).toBe("x");
-  }
+  },
 });

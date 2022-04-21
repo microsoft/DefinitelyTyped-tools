@@ -7,13 +7,13 @@ import {
   getDefinitelyTyped,
   parseDefinitions,
   writeDataFile,
-  typesDataFilename
+  typesDataFilename,
 } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
   const { nProcesses, single: singleName } = yargs.options({
     single: { type: "string" },
-    nProcesses: { type: "number" }
+    nProcesses: { type: "number" },
   }).argv;
 
   const options = defaultLocalOptions;
@@ -28,7 +28,7 @@ if (!module.parent) {
         options.parseInParallel
           ? {
               nProcesses: nProcesses || os.cpus().length,
-              definitelyTypedPath: assertDefined(options.definitelyTypedPath)
+              definitelyTypedPath: assertDefined(options.definitelyTypedPath),
             }
           : undefined,
         log

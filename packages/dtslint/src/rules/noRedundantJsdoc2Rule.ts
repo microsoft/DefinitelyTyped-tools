@@ -12,7 +12,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     options: null,
     optionExamples: [true],
     type: "style",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
   static readonly FAILURE_STRING_REDUNDANT_TYPE = "Type annotation in JSDoc is redundant in TypeScript code.";
   static readonly FAILURE_STRING_EMPTY = "JSDoc comment is empty.";
@@ -249,5 +249,5 @@ const redundantTags = new Set([
   "property",
   "requires",
   "static",
-  "this"
+  "this",
 ]);

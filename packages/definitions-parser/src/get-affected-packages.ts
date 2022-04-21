@@ -5,7 +5,7 @@ import {
   PackageId,
   PackageBase,
   getMangledNameForScopedPackage,
-  formatDependencyVersion
+  formatDependencyVersion,
 } from "./packages";
 
 export interface Affected {
@@ -16,10 +16,10 @@ export interface Affected {
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export function getAffectedPackages(allPackages: AllPackages, changedPackageIds: PackageId[]): Affected {
-  const resolved = changedPackageIds.map(id => allPackages.tryResolve(id));
+  const resolved = changedPackageIds.map((id) => allPackages.tryResolve(id));
   // If a package doesn't exist, that's because it was deleted.
-  const changed = mapDefined(resolved, id => allPackages.tryGetTypingsData(id));
-  const dependent = mapIterable(collectDependers(resolved, getReverseDependencies(allPackages, resolved)), p =>
+  const changed = mapDefined(resolved, (id) => allPackages.tryGetTypingsData(id));
+  const dependent = mapIterable(collectDependers(resolved, getReverseDependencies(allPackages, resolved)), (p) =>
     allPackages.getTypingsData(p)
   );
   return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
@@ -27,7 +27,7 @@ export function getAffectedPackages(allPackages: AllPackages, changedPackageIds:
 
 /** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
 export function allDependencies(allPackages: AllPackages, packages: Iterable<TypingsData>): TypingsData[] {
-  return sortPackages(transitiveClosure(packages, pkg => allPackages.allDependencyTypings(pkg)));
+  return sortPackages(transitiveClosure(packages, (pkg) => allPackages.allDependencyTypings(pkg)));
 }
 
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
@@ -35,7 +35,7 @@ function collectDependers(
   changedPackages: PackageId[],
   reverseDependencies: Map<PackageId, Set<PackageId>>
 ): Set<PackageId> {
-  const dependers = transitiveClosure(changedPackages, pkg => reverseDependencies.get(pkg) || []);
+  const dependers = transitiveClosure(changedPackages, (pkg) => reverseDependencies.get(pkg) || []);
   // Don't include the original changed packages, just their dependers
   for (const original of changedPackages) {
     dependers.delete(original);

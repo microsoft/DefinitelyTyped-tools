@@ -4,7 +4,7 @@ import {
   NotNeededPackage,
   PackageId,
   TypingsData,
-  readDataFile
+  readDataFile,
 } from "@definitelytyped/definitions-parser";
 
 export const versionsFilename = "versions.json";
@@ -40,11 +40,11 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
       ({ id, version, latestVersion }): ChangedTyping => ({
         pkg: allPackages.getTypingsData(id),
         version,
-        latestVersion
+        latestVersion,
       })
     ),
-    changedNotNeededPackages: json.changedNotNeededPackages.map(id =>
+    changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>
       assertDefined(allPackages.getNotNeededPackage(id))
-    )
+    ),
   };
 }

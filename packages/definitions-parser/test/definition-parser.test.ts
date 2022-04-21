@@ -36,9 +36,9 @@ import * as utils from '@ckeditor/ckeditor5-utils';`
         files: ["index.d.ts"],
         compilerOptions: {
           paths: {
-            "@ckeditor/ckeditor5-utils": ["ckeditor__ckeditor5-utils/v10"]
-          }
-        }
+            "@ckeditor/ckeditor5-utils": ["ckeditor__ckeditor5-utils/v10"],
+          },
+        },
       })
     );
 
@@ -57,8 +57,8 @@ export function myFunction(arg:string): string;
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {
-          paths: {}
-        }
+          paths: {},
+        },
       })
     );
 
@@ -253,15 +253,15 @@ import route = require('@ember/routing/route');
 
       expect(info).toEqual({
         "1.5": expect.objectContaining({
-          libraryVersionDirectoryName: "1.5"
+          libraryVersionDirectoryName: "1.5",
         }),
         "2.0": expect.objectContaining({
-          libraryVersionDirectoryName: "2"
+          libraryVersionDirectoryName: "2",
         }),
         "3.3": expect.objectContaining({
           // The latest version does not have its own version directory
-          libraryVersionDirectoryName: undefined
-        })
+          libraryVersionDirectoryName: undefined,
+        }),
       });
     });
 
@@ -274,18 +274,18 @@ import route = require('@ember/routing/route');
       expect(info).toEqual({
         "1.5": expect.objectContaining({
           pathMappings: {
-            jquery: { major: 1, minor: 5 }
-          }
+            jquery: { major: 1, minor: 5 },
+          },
         }),
         "2.0": expect.objectContaining({
           pathMappings: {
-            jquery: { major: 2, minor: undefined }
-          }
+            jquery: { major: 2, minor: undefined },
+          },
         }),
         "3.3": expect.objectContaining({
           // The latest version does not have path mappings of its own
-          pathMappings: {}
-        })
+          pathMappings: {},
+        }),
       });
     });
 
@@ -297,8 +297,8 @@ import route = require('@ember/routing/route');
         JSON.stringify({
           files: ["index.d.ts"],
           compilerOptions: {
-            paths: {}
-          }
+            paths: {},
+          },
         })
       );
       pkg.set(
@@ -316,13 +316,13 @@ import route = require('@ember/routing/route');
       expect(info).toEqual({
         "10.0": expect.objectContaining({
           pathMappings: {
-            "@ckeditor/ckeditor5-utils": { major: 10 }
-          }
+            "@ckeditor/ckeditor5-utils": { major: 10 },
+          },
         }),
         "25.0": expect.objectContaining({
           // The latest version does not have path mappings of its own
-          pathMappings: {}
-        })
+          pathMappings: {},
+        }),
       });
     });
 
@@ -384,8 +384,8 @@ import first from "@ckeditor/ckeditor5-utils/src/first";
           JSON.stringify({
             files: ["index.d.ts"],
             compilerOptions: {
-              paths: {}
-            }
+              paths: {},
+            },
           })
         );
 

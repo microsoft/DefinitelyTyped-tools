@@ -7,7 +7,7 @@ import {
   ExportErrorKind,
   Mode,
   parseExportErrorKind,
-  parseMode
+  parseMode,
 } from "@definitelytyped/dts-critic";
 import * as Lint from "tslint";
 import * as ts from "typescript";
@@ -30,7 +30,7 @@ type ConfigOptions =
 type Options = CriticOptions & { singleLine?: boolean };
 
 const defaultOptions: ConfigOptions = {
-  mode: Mode.NameOnly
+  mode: Mode.NameOnly,
 };
 
 export class Rule extends Lint.Rules.AbstractRule {
@@ -47,21 +47,21 @@ If \`mode\` is '${Mode.Code}', then option \`errors\` can be provided.
           properties: {
             mode: {
               type: "string",
-              enum: [Mode.NameOnly]
+              enum: [Mode.NameOnly],
             },
             "single-line": {
               description: "Whether to print error messages in a single line. Used for testing.",
-              type: "boolean"
+              type: "boolean",
             },
-            required: ["mode"]
-          }
+            required: ["mode"],
+          },
         },
         {
           type: "object",
           properties: {
             mode: {
               type: "string",
-              enum: [Mode.Code]
+              enum: [Mode.Code],
             },
             errors: {
               type: "array",
@@ -71,26 +71,26 @@ If \`mode\` is '${Mode.Code}', then option \`errors\` can be provided.
                   {
                     description: "Name of the check.",
                     type: "string",
-                    enum: [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport] as ExportErrorKind[]
+                    enum: [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport] as ExportErrorKind[],
                   },
                   {
                     description: "Whether the check is enabled or disabled.",
-                    type: "boolean"
-                  }
+                    type: "boolean",
+                  },
                 ],
                 minItems: 2,
-                maxItems: 2
+                maxItems: 2,
               },
-              default: []
+              default: [],
             },
             "single-line": {
               description: "Whether to print error messages in a single line. Used for testing.",
-              type: "boolean"
+              type: "boolean",
             },
-            required: ["mode"]
-          }
-        }
-      ]
+            required: ["mode"],
+          },
+        },
+      ],
     },
     optionExamples: [
       true,
@@ -101,13 +101,13 @@ If \`mode\` is '${Mode.Code}', then option \`errors\` can be provided.
           mode: Mode.Code,
           errors: [
             [ErrorKind.NeedsExportEquals, true],
-            [ErrorKind.NoDefaultExport, false]
-          ]
-        }
-      ]
+            [ErrorKind.NoDefaultExport, false],
+          ],
+        },
+      ],
     ],
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -223,13 +223,13 @@ function toOptionsWithSuggestions(options: CriticOptions): CriticOptions {
     return options;
   }
   const optionsWithSuggestions = { mode: options.mode, errors: new Map(options.errors) };
-  enabledSuggestions.forEach(err => optionsWithSuggestions.errors.set(err, true));
+  enabledSuggestions.forEach((err) => optionsWithSuggestions.errors.set(err, true));
   return optionsWithSuggestions;
 }
 
 function filterErrors(diagnostics: CriticError[], ctx: Lint.WalkContext<Options>): CriticError[] {
   const errors: CriticError[] = [];
-  diagnostics.forEach(diagnostic => {
+  diagnostics.forEach((diagnostic) => {
     if (isSuggestion(diagnostic, ctx.options)) {
       addSuggestion(ctx, diagnostic.message, diagnostic.position?.start, diagnostic.position?.length);
     } else {
@@ -311,10 +311,10 @@ export function disabler(failures: Lint.IRuleFailureJson[]): false | [true, Conf
     }
   }
 
-  if ((defaultErrors as ExportErrorKind[]).every(error => disabledErrors.has(error))) {
+  if ((defaultErrors as ExportErrorKind[]).every((error) => disabledErrors.has(error))) {
     return [true, { mode: Mode.NameOnly }];
   }
   const errors: [ExportErrorKind, boolean][] = [];
-  disabledErrors.forEach(error => errors.push([error, false]));
+  disabledErrors.forEach((error) => errors.push([error, false]));
   return [true, { mode: Mode.Code, errors }];
 }

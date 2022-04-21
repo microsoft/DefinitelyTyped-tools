@@ -11,7 +11,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   static FAILURE_STRING = failure(
@@ -26,7 +26,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 function walk(ctx: Lint.WalkContext<void>): void {
   const {
-    sourceFile: { statements, text }
+    sourceFile: { statements, text },
   } = ctx;
   if (!statements.length) {
     return;

@@ -52,7 +52,7 @@ export function filter<T>(iterable: Iterable<T>, predicate: (value: T) => boolea
           return res;
         }
       }
-    }
+    },
   };
 }
 
@@ -69,7 +69,7 @@ export async function filterNAtATimeOrdered<T>(
 }
 
 export function logUncaughtErrors<T>(promise: Promise<T> | (() => Promise<T>)): Promise<T> {
-  return (typeof promise === "function" ? promise() : promise).catch(error => {
+  return (typeof promise === "function" ? promise() : promise).catch((error) => {
     if (error && error.stack) {
       console.error(error.stack);
     } else {

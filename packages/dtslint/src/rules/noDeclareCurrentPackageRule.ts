@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.TypedRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
@@ -19,7 +19,7 @@ export class Rule extends Lint.Rules.TypedRule {
     }
 
     const packageName = getCommonDirectoryName(program.getRootFileNames());
-    return this.applyWithFunction(sourceFile, ctx => walk(ctx, packageName));
+    return this.applyWithFunction(sourceFile, (ctx) => walk(ctx, packageName));
   }
 }
 

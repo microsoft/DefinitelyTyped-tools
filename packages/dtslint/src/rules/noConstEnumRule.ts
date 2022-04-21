@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   static FAILURE_STRING = failure(Rule.metadata.ruleName, "Use of `const enum`s is forbidden.");
@@ -25,7 +25,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
     if (
       ts.isEnumDeclaration(node) &&
       node.modifiers &&
-      node.modifiers.some(m => m.kind === ts.SyntaxKind.ConstKeyword)
+      node.modifiers.some((m) => m.kind === ts.SyntaxKind.ConstKeyword)
     ) {
       ctx.addFailureAtNode(node.name, Rule.FAILURE_STRING);
     }

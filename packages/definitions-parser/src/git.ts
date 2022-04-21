@@ -6,7 +6,7 @@ import {
   formatDependencyVersion,
   getDependencyFromFile,
   AllPackages,
-  NotNeededPackage
+  NotNeededPackage,
 } from "./packages";
 import {
   Logger,
@@ -19,7 +19,7 @@ import {
   assertDefined,
   Semver,
   UncachedNpmInfoClient,
-  NpmInfo
+  NpmInfo,
 } from "@definitelytyped/utils";
 import { getAffectedPackages } from "./get-affected-packages";
 
@@ -54,7 +54,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     // We are probably already on master, so compare to the last commit.
     diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
   }
-  return diff.split("\n").map(line => {
+  return diff.split("\n").map((line) => {
     const [status, file] = line.split(/\s+/, 2);
     return { status: status.trim(), file: file.trim() } as GitDiff;
   });
@@ -95,7 +95,7 @@ export async function getAffectedPackagesFromDiff(
 ) {
   const allPackages = await AllPackages.read(dt);
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
-  if (diffs.find(d => d.file === "notNeededPackages.json")) {
+  if (diffs.find((d) => d.file === "notNeededPackages.json")) {
     const uncached = new UncachedNpmInfoClient();
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
       const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
@@ -110,19 +110,19 @@ export async function getAffectedPackagesFromDiff(
       : selection === "affected"
       ? getAffectedPackages(allPackages, gitChanges(diffs))
       : {
-          changedPackages: allPackages.allTypings().filter(t => selection.test(t.name)),
+          changedPackages: allPackages.allTypings().filter((t) => selection.test(t.name)),
           dependentPackages: [],
-          allPackages
+          allPackages,
         };
 
   console.log(
     `Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages
-      .map(t => t.desc)
+      .map((t) => t.desc)
       .toString()}`
   );
   console.log(
     `Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages
-      .map(t => t.desc)
+      .map((t) => t.desc)
       .toString()}`
   );
   return affected;
@@ -169,9 +169,9 @@ it is supposed to replace, ${latestTypings.versionString} of ${unneeded.fullNpmN
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
   const deletedPackages = new Set(
     diffs
-      .filter(d => d.status === "D")
+      .filter((d) => d.status === "D")
       .map(
-        d =>
+        (d) =>
           assertDefined(
             getDependencyFromFile(d.file),
             `Unexpected file deleted: ${d.file}
@@ -179,7 +179,7 @@ When removing packages, you should only delete files that are a part of removed 
           ).name
       )
   );
-  return mapDefined(deletedPackages, p => {
+  return mapDefined(deletedPackages, (p) => {
     const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
     if (hasTyping) {

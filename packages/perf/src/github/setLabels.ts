@@ -27,19 +27,19 @@ export async function setLabels(prNumber: number, overallChange: OverallChange |
   const octokit = getOctokit();
   const labels = await octokit.issues.listLabelsOnIssue({
     ...config.github.commonParams,
-    issue_number: prNumber
+    issue_number: prNumber,
   });
 
   const perfLabels = labels.data.filter(isPerfLabel);
   const newLabel = toLabel(overallChange);
-  const labelsToRemove = perfLabels.filter(l => l.name !== newLabel);
-  const labelToAdd = perfLabels.some(l => l.name === newLabel) ? undefined : newLabel;
+  const labelsToRemove = perfLabels.filter((l) => l.name !== newLabel);
+  const labelToAdd = perfLabels.some((l) => l.name === newLabel) ? undefined : newLabel;
 
   for (const label of labelsToRemove) {
     await octokit.issues.removeLabel({
       ...config.github.commonParams,
       issue_number: prNumber,
-      name: label.name
+      name: label.name,
     });
   }
 
@@ -47,7 +47,7 @@ export async function setLabels(prNumber: number, overallChange: OverallChange |
     await octokit.issues.addLabels({
       ...config.github.commonParams,
       issue_number: prNumber,
-      labels: [labelToAdd]
+      labels: [labelToAdd],
     });
   }
 }

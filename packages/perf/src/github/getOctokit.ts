@@ -7,7 +7,7 @@ export function getOctokit() {
     octokit ||
     (octokit = new Octokit({
       auth: config.github.typeScriptBotAuthToken,
-      userAgent: config.github.userAgent
+      userAgent: config.github.userAgent,
     }))
   );
 }

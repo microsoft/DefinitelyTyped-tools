@@ -16,7 +16,7 @@ export function createTablesWithAnalysesMessage(
         before
           ? createComparisonTable(before, after, getBeforeTitle(before, after), getAfterTitle(before, after, prNumber))
           : createSingleRunTable(after),
-        ``
+        ``,
       ].join("\n");
 
       return compact([
@@ -29,7 +29,7 @@ export function createTablesWithAnalysesMessage(
         ``,
         shouldCollapseDetails ? details(messageBody, getDetailsSummaryTitle(pairs.length, after)) : messageBody,
         ``,
-        interestingMetrics && getInterestingMetricsMessage(interestingMetrics)
+        interestingMetrics && getInterestingMetricsMessage(interestingMetrics),
       ]).join("\n");
     })
     .join("\n\n");
@@ -95,7 +95,7 @@ function getInterestingMetricsMessage(interestingMetrics: readonly ComparedMetri
   );
   return (
     `Looks like there were a couple significant differences—take a look at ` +
-    formatListForSentence(metricsToCheck.map(m => `**${m.metric.sentenceName}**`)) +
+    formatListForSentence(metricsToCheck.map((m) => `**${m.metric.sentenceName}**`)) +
     ` to make sure everything looks ok.`
   );
 }

@@ -76,7 +76,7 @@ function packageJson(version: TsVersion | "next"): {} {
     repository: "N/A",
     license: "MIT",
     dependencies: {
-      typescript: version
-    }
+      typescript: version,
+    },
   };
 }

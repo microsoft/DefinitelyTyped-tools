@@ -25,7 +25,7 @@ export function addSuggestion<T>(ctx: WalkContext<T>, message: string, start?: n
     ruleName: ctx.ruleName,
     message,
     start,
-    width
+    width,
   };
 
   const packageName = dtPackageName(ctx.sourceFile.fileName);
@@ -59,7 +59,7 @@ function dtPackageName(filePath: string): string | undefined {
     return undefined;
   }
   const basePath = filePath.substr(dtIndex + dtPath.length);
-  const dirs = basePath.split(path.sep).filter(dir => dir !== "");
+  const dirs = basePath.split(path.sep).filter((dir) => dir !== "");
   if (dirs.length === 0) {
     return undefined;
   }

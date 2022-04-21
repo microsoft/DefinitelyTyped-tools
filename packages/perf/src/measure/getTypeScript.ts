@@ -6,7 +6,7 @@ import {
   installAllTypeScriptVersions,
   typeScriptPath,
   cleanTypeScriptInstalls,
-  installTypeScriptNext
+  installTypeScriptNext,
 } from "@definitelytyped/utils";
 const exists = promisify(fs.exists);
 
@@ -29,6 +29,6 @@ export async function getTypeScript(
   }
   return {
     ts: await import(tsPath),
-    tsPath
+    tsPath,
   };
 }

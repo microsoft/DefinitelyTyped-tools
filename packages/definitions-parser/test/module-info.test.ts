@@ -22,7 +22,7 @@ testo({
       "quaternary.d.ts",
       "tertiary.d.ts",
       "commonjs.d.ts",
-      "v1.d.ts"
+      "v1.d.ts",
     ]);
     expect(Array.from(tests.keys())).toEqual(["boring-tests.ts"]);
   },
@@ -38,7 +38,7 @@ testo({
       "quaternary.d.ts",
       "tertiary.d.ts",
       "commonjs.d.ts",
-      "v1.d.ts"
+      "v1.d.ts",
     ]);
     expect(Array.from(tests.keys())).toEqual(["boring-tests.ts"]);
   },
@@ -82,10 +82,7 @@ testo({
       "untested.d.ts",
       ts.createSourceFile(
         "untested.d.ts",
-        fs
-          .subDir("types")
-          .subDir("boring")
-          .readFile("untested.d.ts"),
+        fs.subDir("types").subDir("boring").readFile("untested.d.ts"),
         ts.ScriptTarget.Latest,
         false
       )
@@ -184,5 +181,5 @@ testo({
     const i = getModuleInfo("boring", types);
     const d = getTestDependencies("boring", types, tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"));
     expect(d).toEqual(new Set(["super-big-fun-hus"]));
-  }
+  },
 });

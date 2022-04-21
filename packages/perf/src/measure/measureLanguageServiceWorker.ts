@@ -49,7 +49,7 @@ if (!module.parent) {
     }
   });
 
-  process.on("unhandledRejection", err => {
+  process.on("unhandledRejection", (err) => {
     console.error(err);
     process.exit(1);
   });
@@ -62,7 +62,7 @@ async function measureLanguageService(
   return {
     fileName: args.fileName,
     start: args.start,
-    ...(await measureAtPosition(args.fileName, args.start))
+    ...(await measureAtPosition(args.fileName, args.start)),
   };
 
   async function measureAtPosition(
@@ -71,7 +71,7 @@ async function measureLanguageService(
   ): Promise<Pick<LanguageServiceSingleMeasurement, "quickInfoDuration" | "completionsDuration">> {
     let quickInfoDuration = NaN;
     let completionsDuration = NaN;
-    const observer = new PerformanceObserver(list => {
+    const observer = new PerformanceObserver((list) => {
       const completionsMeasurement = list.getEntriesByName("completionsMeasurement")[0];
       const quickInfoMeasurement = list.getEntriesByName("quickInfoMeasurement")[0];
       if (completionsMeasurement) {
@@ -87,14 +87,14 @@ async function measureLanguageService(
     getQuickInfoAtPosition(languageService, fileName, position);
     // Node 16 changed the PerformanceObserver callback to happen async,
     // so we have to sit here and wait for it...
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     assert.ok(!isNaN(quickInfoDuration), "No measurement was recorded for quick info");
     assert.ok(!isNaN(completionsDuration), "No measurement was recorded for completions");
     observer.disconnect();
 
     return {
       quickInfoDuration,
-      completionsDuration
+      completionsDuration,
     };
   }
 }

@@ -19,7 +19,7 @@ export class Semver {
     const versions: [number, number][] = [
       [x.major, y.major],
       [x.minor, y.minor],
-      [x.patch, y.patch]
+      [x.patch, y.patch],
     ];
     for (const [componentX, componentY] of versions) {
       if (componentX > componentY) {

@@ -7,7 +7,7 @@ import {
   dtsCritic,
   checkSource,
   ErrorKind,
-  ExportErrorKind
+  ExportErrorKind,
 } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void }) {
@@ -33,7 +33,7 @@ suite("findDtsName", {
   },
   emptyDirectory() {
     expect(findDtsName("")).toBe("DefinitelyTyped-tools");
-  }
+  },
 });
 suite("getNpmInfo", {
   nonNpm() {
@@ -43,9 +43,9 @@ suite("getNpmInfo", {
     expect(getNpmInfo("typescript")).toEqual({
       isNpm: true,
       versions: expect.arrayContaining(["3.7.5"]),
-      tags: expect.objectContaining({ latest: expect.stringContaining("") })
+      tags: expect.objectContaining({ latest: expect.stringContaining("") }),
     });
-  }
+  },
 });
 suite("dtToNpmName", {
   nonScoped() {
@@ -53,7 +53,7 @@ suite("dtToNpmName", {
   },
   scoped() {
     expect(dtToNpmName("babel__core")).toBe("@babel/core");
-  }
+  },
 });
 suite("parseExportErrorKind", {
   existent() {
@@ -64,7 +64,7 @@ suite("parseExportErrorKind", {
   },
   nonexistent() {
     expect(parseExportErrorKind("FakeError")).toBe(undefined);
-  }
+  },
 });
 
 const allErrors: Map<ExportErrorKind, true> = new Map([
@@ -73,7 +73,7 @@ const allErrors: Map<ExportErrorKind, true> = new Map([
   [ErrorKind.JsSignatureNotInDts, true],
   [ErrorKind.DtsSignatureNotInJs, true],
   [ErrorKind.DtsPropertyNotInJs, true],
-  [ErrorKind.JsPropertyNotInDts, true]
+  [ErrorKind.JsPropertyNotInDts, true],
 ]);
 
 function testsource(filename: string) {
@@ -100,8 +100,8 @@ suite("checkSource", {
         {
           kind: ErrorKind.JsPropertyNotInDts,
           message: `The declaration doesn't match the JavaScript module 'missingJsProperty'. Reason:
-The JavaScript module exports a property named 'foo', which is missing from the declaration module.`
-        }
+The JavaScript module exports a property named 'foo', which is missing from the declaration module.`,
+        },
       ])
     );
   },
@@ -133,9 +133,9 @@ The JavaScript module exports a property named 'foo', which is missing from the 
 The declaration module exports a property named 'foo', which is missing from the JavaScript module.`,
           position: {
             start: 65,
-            length: 11
-          }
-        }
+            length: 11,
+          },
+        },
       ])
     );
   },
@@ -159,9 +159,9 @@ The most common way to resolve this error is to use 'export =' syntax instead of
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
           position: {
             start: 0,
-            length: 32
-          }
-        }
+            length: 32,
+          },
+        },
       ])
     );
   },
@@ -179,8 +179,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
         {
           kind: ErrorKind.JsSignatureNotInDts,
           message: `The declaration doesn't match the JavaScript module 'missingJsSignatureExportEquals'. Reason:
-The JavaScript module can be called or constructed, but the declaration module cannot.`
-        }
+The JavaScript module can be called or constructed, but the declaration module cannot.`,
+        },
       ])
     );
   },
@@ -201,8 +201,8 @@ The JavaScript module can be called or constructed, but the declaration module c
 The JavaScript module can be called or constructed, but the declaration module cannot.
 
 The most common way to resolve this error is to use 'export =' syntax.
-To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`
-        }
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+        },
       ])
     );
   },
@@ -220,8 +220,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
         {
           kind: ErrorKind.DtsSignatureNotInJs,
           message: `The declaration doesn't match the JavaScript module 'missingDtsSignature'. Reason:
-The declaration module can be called or constructed, but the JavaScript module cannot.`
-        }
+The declaration module can be called or constructed, but the JavaScript module cannot.`,
+        },
       ])
     );
   },
@@ -241,11 +241,11 @@ The declaration module can be called or constructed, but the JavaScript module c
           message: `The declaration doesn't match the JavaScript module 'missingExportEquals'. Reason:
 The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and 'module.exports' can be called or constructed.
 
-To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`
-        }
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+        },
       ])
     );
-  }
+  },
 });
 suite("dtsCritic", {
   noErrors() {
@@ -263,8 +263,8 @@ To resolve this error, either:
 
 // Type definitions for non-npm package wenceslas-browser
 
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`
-      }
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+      },
     ]);
   },
   noMatchingNpmVersion() {
@@ -272,8 +272,8 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
       {
         kind: ErrorKind.NoMatchingNpmVersion,
         message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
-You should copy the major and minor version from the package on npm.`)
-      }
+You should copy the major and minor version from the package on npm.`),
+      },
     ]);
   },
   nonNpmHasMatchingPackage() {
@@ -284,8 +284,8 @@ You should copy the major and minor version from the package on npm.`)
 Try adding -browser to the end of the name to get
 
     tslib-browser
-`
-      }
+`,
+      },
     ]);
-  }
+  },
 });

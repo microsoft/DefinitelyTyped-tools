@@ -12,7 +12,7 @@ import {
   writeLog,
   NpmPublishClient,
   withNpmCache,
-  UncachedNpmInfoClient
+  UncachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
@@ -133,8 +133,8 @@ export default async function publishPackages(
             latency: latency.toString(),
             commitLatency: commitlatency.toString(),
             authorCommit: commits[0].sha,
-            pr: latestPr.toString()
-          }
+            pr: latestPr.toString(),
+          },
         });
         applicationinsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
         applicationinsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
@@ -145,7 +145,7 @@ export default async function publishPackages(
 
   await withNpmCache(
     new UncachedNpmInfoClient(),
-    async infoClient => {
+    async (infoClient) => {
       for (const n of changedPackages.changedNotNeededPackages) {
         const target = skipBadPublishes(n, infoClient, log);
         await publishNotNeededPackage(client, target, dry, log);
@@ -172,8 +172,8 @@ async function postGithub(path: string, data: any, githubToken: string, fetcher:
       "User-Agent": "types-publisher",
       "Content-Type": "application/json",
       Authorization: "token " + githubToken,
-      "Content-Length": Buffer.byteLength(body)
-    }
+      "Content-Length": Buffer.byteLength(body),
+    },
   });
 }
 
@@ -186,7 +186,7 @@ async function queryGithub(path: string, githubToken: string, fetcher: Fetcher) 
     path: path + "&access_token=" + githubToken,
     headers: {
       // arbitrary string, but something must be provided
-      "User-Agent": "types-publisher"
-    }
+      "User-Agent": "types-publisher",
+    },
   });
 }

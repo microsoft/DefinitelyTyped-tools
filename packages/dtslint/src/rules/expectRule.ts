@@ -21,7 +21,7 @@ export class Rule extends Lint.Rules.TypedRule {
     options: null,
     type: "functionality",
     typescriptOnly: true,
-    requiresTypeInfo: true
+    requiresTypeInfo: true,
   };
 
   static FAILURE_STRING_DUPLICATE_ASSERTION = "This line has 2 $ExpectType assertions.";
@@ -37,7 +37,7 @@ export class Rule extends Lint.Rules.TypedRule {
   applyWithProgram(sourceFile: SourceFile, lintProgram: Program): Lint.RuleFailure[] {
     const options = this.ruleArguments[0] as Options | undefined;
     if (!options) {
-      return this.applyWithFunction(sourceFile, ctx =>
+      return this.applyWithFunction(sourceFile, (ctx) =>
         walk(ctx, lintProgram, TsType, "next", /*nextHigherVersion*/ undefined)
       );
     }
@@ -51,7 +51,7 @@ export class Rule extends Lint.Rules.TypedRule {
     ) => {
       const ts = require(path);
       const program = getProgram(tsconfigPath, ts, versionName, lintProgram);
-      const failures = this.applyWithFunction(sourceFile, ctx =>
+      const failures = this.applyWithFunction(sourceFile, (ctx) =>
         walk(ctx, program, ts, versionName, nextHigherVersion)
       );
       if (writeOutput) {
@@ -60,8 +60,8 @@ export class Rule extends Lint.Rules.TypedRule {
           const d = {
             [packageName]: {
               typeCount: (program as any).getTypeCount(),
-              memory: ts.sys.getMemoryUsage ? ts.sys.getMemoryUsage() : 0
-            }
+              memory: ts.sys.getMemoryUsage ? ts.sys.getMemoryUsage() : 0,
+            },
           };
           if (!existsSync(cacheDir)) {
             mkdirSync(cacheDir);
@@ -133,11 +133,11 @@ function createProgram(configFile: string, ts: typeof TsType): Program {
   const parseConfigHost: TsType.ParseConfigHost = {
     fileExists: existsSync,
     readDirectory: ts.sys.readDirectory,
-    readFile: file => readFileSync(file, "utf8"),
-    useCaseSensitiveFileNames: true
+    readFile: (file) => readFileSync(file, "utf8"),
+    useCaseSensitiveFileNames: true,
   };
   const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, resolvePath(projectDirectory), {
-    noEmit: true
+    noEmit: true,
   });
   const host = ts.createCompilerHost(parsed.options, true);
   return ts.createProgram(parsed.fileNames, parsed.options, host);
@@ -387,7 +387,7 @@ function getExpectTypeFailures(
         ? checker.typeToString(type, /*enclosingDeclaration*/ undefined, ts.TypeFormatFlags.NoTruncation)
         : "";
 
-      if (!expected.split(/\s*\|\|\s*/).some(s => actual === s || matchReadonlyArray(actual, s))) {
+      if (!expected.split(/\s*\|\|\s*/).some((s) => actual === s || matchReadonlyArray(actual, s))) {
         unmetExpectations.push({ node, expected, actual });
       }
 
@@ -403,7 +403,7 @@ function getNodeForExpectType(node: TsType.Node, ts: typeof TsType): TsType.Node
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     // ts2.0 doesn't have `isVariableStatement`
     const {
-      declarationList: { declarations }
+      declarationList: { declarations },
     } = node as TsType.VariableStatement;
     if (declarations.length === 1) {
       const { initializer } = declarations[0];

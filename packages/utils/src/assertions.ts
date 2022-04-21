@@ -24,7 +24,7 @@ export function assertSorted(a: readonly string[]): readonly string[];
 export function assertSorted<T>(a: readonly T[], cb: (t: T) => string): readonly T[];
 export function assertSorted<T>(
   a: readonly T[],
-  cb: (t: T) => string = (t: T) => (t as unknown) as string
+  cb: (t: T) => string = (t: T) => t as unknown as string
 ): readonly T[] {
   let prev = a[0];
   for (let i = 1; i < a.length; i++) {

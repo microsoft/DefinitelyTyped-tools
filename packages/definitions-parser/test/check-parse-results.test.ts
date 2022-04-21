@@ -36,7 +36,7 @@ testo({
         { application: "*", error: "*" },
         [],
         makeMappings("application", "engine", "object", "routing", "controller", "service", "error")
-      )
+      ),
     };
     expect(checkPathMappings(AllPackages.from(typesData, []))).toBeUndefined();
   },
@@ -68,12 +68,12 @@ testo({
         { application: "*", error: "*" },
         [],
         makeMappings("application", "engine", "object", "routing", "controller", "service", "error")
-      )
+      ),
     };
     expect(() => checkPathMappings(AllPackages.from(typesData, []))).toThrow(
       `test-helper has unused path mappings for [controller, service].
 If these mappings are actually used, they could be missing in a dependency's tsconfig.json instead.
 Check the path mappings for [application, error].`
     );
-  }
+  },
 });

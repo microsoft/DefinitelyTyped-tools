@@ -8,7 +8,7 @@ import {
   PackageId,
   formatDependencyVersion,
   tryParsePackageVersion,
-  AllPackages
+  AllPackages,
 } from "@definitelytyped/definitions-parser";
 const currentSystem = getSystemInfo();
 
@@ -45,7 +45,7 @@ function convertArgs({ file, ...args }: BenchmarkPackageOptions): BenchmarkPacka
       groups: fileContents.groups,
       ...fileContents.options,
       ...args,
-      failOnErrors: false
+      failOnErrors: false,
     };
   }
 
@@ -93,7 +93,7 @@ export async function benchmarkPackage(
     failOnErrors,
     installTypeScript,
     localTypeScriptPath,
-    allPackages = (await getParsedPackages(definitelyTypedPath)).allPackages
+    allPackages = (await getParsedPackages(definitelyTypedPath)).allPackages,
   } = options;
   const versionQuery = tryParsePackageVersion(packageVersion);
   const typings = allPackages.tryGetTypingsData({ name: packageName, version: versionQuery });
@@ -115,7 +115,7 @@ export async function benchmarkPackage(
     tsPath,
     ts,
     batchRunStart,
-    failOnErrors
+    failOnErrors,
   });
 
   const summary = summarize(benchmark);

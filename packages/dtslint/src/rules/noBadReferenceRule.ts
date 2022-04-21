@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   static FAILURE_STRING = failure(

@@ -23,7 +23,7 @@ export function stdDev(xs: number[]): number {
 
 export function variance(xs: number[]): number {
   const avg = mean(xs);
-  return mean(xs.map(x => (avg - x) ** 2));
+  return mean(xs.map((x) => (avg - x) ** 2));
 }
 
 export function coefficientOfVariation(xs: number[]): number {

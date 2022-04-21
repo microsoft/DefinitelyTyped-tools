@@ -8,7 +8,7 @@ import {
   getMangledNameForScopedPackage,
   NotNeededPackage,
   getLicenseFromPackageJson,
-  getDependencyFromFile
+  getDependencyFromFile,
 } from "../src/packages";
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
@@ -28,7 +28,7 @@ describe(AllPackages, () => {
   it("applies path mappings to test dependencies", () => {
     const pkg = allPackages.tryGetLatestVersion("has-older-test-dependency")!;
     expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
-      { name: "jquery", version: { major: 1, minor: 0 } }
+      { name: "jquery", version: { major: 1, minor: 0 } },
     ]);
   });
 
@@ -45,13 +45,13 @@ describe(AllPackages, () => {
       expect(
         allPackages.hasTypingFor({
           name: "jquery",
-          version: "*"
+          version: "*",
         })
       ).toBe(true);
       expect(
         allPackages.hasTypingFor({
           name: "nonExistent",
-          version: "*"
+          version: "*",
         })
       ).toBe(false);
     });
@@ -70,7 +70,7 @@ describe(TypingsVersions, () => {
   });
 
   it("sorts the data from latest to oldest version", () => {
-    expect(Array.from(versions.getAll()).map(v => v.major)).toEqual([3, 2, 2, 1]);
+    expect(Array.from(versions.getAll()).map((v) => v.major)).toEqual([3, 2, 2, 1]);
   });
 
   it("returns the latest version", () => {
@@ -109,7 +109,7 @@ describe(TypingsData, () => {
     const versions = createTypingsVersionRaw(
       "known",
       {
-        "dependency-1": "*"
+        "dependency-1": "*",
       },
       [],
       {}
@@ -124,8 +124,8 @@ describe(TypingsData, () => {
       {
         name: "Bender",
         url: "futurama.com",
-        githubUsername: "bender"
-      }
+        githubUsername: "bender",
+      },
     ]);
     expect(data.major).toBe(1);
     expect(data.minor).toBe(0);
@@ -140,14 +140,14 @@ describe(TypingsData, () => {
     expect(data.globals).toEqual([]);
     expect(data.pathMappings).toEqual({});
     expect(data.dependencies).toEqual({
-      "dependency-1": "*"
+      "dependency-1": "*",
     });
     expect(data.id).toEqual({
       name: "known",
       version: {
         major: 1,
-        minor: 0
-      }
+        minor: 0,
+      },
     });
     expect(data.isNotNeeded()).toBe(false);
   });
@@ -222,7 +222,7 @@ describe(NotNeededPackage, () => {
     expect(data.version).toEqual({
       major: 1,
       minor: 0,
-      patch: 0
+      patch: 0,
     });
     expect(data.major).toBe(1);
     expect(data.minor).toBe(0);
@@ -281,22 +281,22 @@ describe(getDependencyFromFile, () => {
       name: "a",
       version: {
         major: 3,
-        minor: 5
-      }
+        minor: 5,
+      },
     });
     expect(getDependencyFromFile("types/a/v3")).toEqual({
       name: "a",
       version: {
         major: 3,
-        minor: undefined
-      }
+        minor: undefined,
+      },
     });
   });
 
   it("returns undefined for unversioned subpaths", () => {
     expect(getDependencyFromFile("types/a/vnotaversion")).toEqual({
       name: "a",
-      version: "*"
+      version: "*",
     });
   });
 });

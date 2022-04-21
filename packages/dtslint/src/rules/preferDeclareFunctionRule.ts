@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "style",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   static FAILURE_STRING = failure(
@@ -24,7 +24,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 function walk(ctx: Lint.WalkContext<void>): void {
-  eachModuleStatement(ctx.sourceFile, statement => {
+  eachModuleStatement(ctx.sourceFile, (statement) => {
     if (ts.isVariableStatement(statement)) {
       for (const varDecl of statement.declarationList.declarations) {
         if (varDecl.type !== undefined && varDecl.type.kind === ts.SyntaxKind.FunctionType) {

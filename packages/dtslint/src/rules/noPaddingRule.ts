@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "style",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention

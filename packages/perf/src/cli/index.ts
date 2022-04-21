@@ -8,38 +8,38 @@ import { compare } from "./compare";
 const maxRunSeconds = {
   type: "number",
   requiresArg: true,
-  description: "limits the total run time of the benchmark"
+  description: "limits the total run time of the benchmark",
 } as const;
 
 const upload = {
   type: "boolean",
   description: "uploads benchmark results to a database",
-  default: true
+  default: true,
 } as const;
 
 const file = {
   type: "string",
   requiresArg: true,
-  description: "a path to a JSON file specifying run options"
+  description: "a path to a JSON file specifying run options",
 } as const;
 
 const definitelyTypedPath = {
   type: "string",
   requiresArg: true,
   description: "the directory of the DefinitelyTyped repository",
-  default: process.cwd()
+  default: process.cwd(),
 } as const;
 
 const localTypeScriptPath = {
   type: "string",
   description: "path to a locally built TypeScript installation",
-  default: path.resolve("built/local")
+  default: path.resolve("built/local"),
 } as const;
 
 const tsVersion = {
   type: "string",
   description: "the TypeScript major/minor version to use for the measurements",
-  default: "next"
+  default: "next",
 } as const;
 
 void yargs
@@ -53,38 +53,38 @@ void yargs
       progress: {
         type: "boolean",
         description: "logs progress updates during benchmarking",
-        default: false
+        default: false,
       },
       iterations: {
         type: "number",
         requiresArg: true,
         description: "the number of times to measure the package",
-        default: 5
+        default: 5,
       },
       nProcesses: {
         type: "number",
         requiresArg: true,
         description: "splits the measurment iterations across multiple child processes",
-        default: os.cpus().length
+        default: os.cpus().length,
       },
       maxRunSeconds,
       printSummary: {
         type: "boolean",
         description: "logs a benchmark summary before exiting",
-        default: true
+        default: true,
       },
       definitelyTypedPath,
       failOnErrors: {
         type: "boolean",
         description: "exits with a non-zero code if a measurement process crashes",
-        default: true
+        default: true,
       },
       installTypeScript: {
         type: "boolean",
         description: "installs TypeScript before running measurements",
-        default: true
+        default: true,
       },
-      localTypeScriptPath
+      localTypeScriptPath,
     },
     benchmark
   )
@@ -95,13 +95,13 @@ void yargs
       definitelyTypedPath,
       tsVersion: {
         ...tsVersion,
-        demandOption: true
+        demandOption: true,
       },
       maxRunSeconds,
       upload,
       comment: {
         type: "boolean",
-        description: "leave a typescript-bot comment on the associated DefinitelyTyped PR"
+        description: "leave a typescript-bot comment on the associated DefinitelyTyped PR",
       },
       runDependents: {
         description: "also compare packages dependent upon the modified packages",
@@ -112,14 +112,14 @@ void yargs
           if (r === true) return 2;
           if (r === false) return false;
           return r;
-        }
-      }
+        },
+      },
     },
     compare
   )
   .help().argv;
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   console.error(err);
   process.exit(1);
 });

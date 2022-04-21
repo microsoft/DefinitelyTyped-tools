@@ -18,7 +18,7 @@ export async function parseDefinitions(
 ): Promise<AllPackages> {
   log.info("Parsing definitions...");
   const typesFS = dt.subDir("types");
-  const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, typesFS.readdir(), name =>
+  const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, typesFS.readdir(), (name) =>
     typesFS.isDirectory(name)
   );
   log.info(`Found ${packageNames.length} packages.`);
@@ -35,7 +35,7 @@ export async function parseDefinitions(
       nProcesses: parallel.nProcesses,
       handleOutput({ data, packageName }: { data: TypingsVersionsRaw; packageName: string }) {
         typings[packageName] = data;
-      }
+      },
     });
   } else {
     log.info("Parsing in main process...");

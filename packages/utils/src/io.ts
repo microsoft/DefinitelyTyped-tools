@@ -5,7 +5,7 @@ import {
   stat,
   writeFile as writeFileWithEncoding,
   writeJson as writeJsonRaw,
-  createWriteStream
+  createWriteStream,
 } from "fs-extra";
 import { FStreamEntry, Reader } from "fstream";
 import { Pack } from "tar";
@@ -152,9 +152,9 @@ function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: A
         agent,
         method: options.method || "GET",
         headers: options.headers,
-        timeout: options.timeout ?? downloadTimeout
+        timeout: options.timeout ?? downloadTimeout,
       },
-      res => {
+      (res) => {
         let text = "";
         res.on("data", (d: string) => {
           text += d;
@@ -201,7 +201,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
 
     log.info("Requesting " + url);
     https
-      .get(url, { timeout: connectionTimeout }, response => {
+      .get(url, { timeout: connectionTimeout }, (response) => {
         if (response.statusCode !== 200) {
           return rejectAndClearTimeout(
             new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`)
@@ -219,7 +219,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
           switch (header.type) {
             case "file":
               stringOfStream(stream, name)
-                .then(s => {
+                .then((s) => {
                   insertFile(name, s);
                   next();
                 })

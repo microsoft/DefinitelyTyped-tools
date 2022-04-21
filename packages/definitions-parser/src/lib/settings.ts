@@ -18,7 +18,7 @@ const allowedPackageJsonDependenciesUrl =
   "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/master/packages/definitions-parser/allowedPackageJsonDependencies.txt";
 
 export const getAllowedPackageJsonDependencies = withCache(60 * 60 * 1000, () => {
-  return new Promise<ReadonlySet<string>>(async resolve => {
+  return new Promise<ReadonlySet<string>>(async (resolve) => {
     let raw = readFileSync(joinPaths(root, "allowedPackageJsonDependencies.txt"));
     if (process.env.NODE_ENV !== "test") {
       try {

@@ -162,7 +162,7 @@ export class DiskFS implements FS {
   readdir(dirPath?: string): readonly string[] {
     return readdirSync(this.getPath(dirPath))
       .sort()
-      .filter(name => name !== ".DS_Store");
+      .filter((name) => name !== ".DS_Store");
   }
 
   isDirectory(dirPath: string): boolean {

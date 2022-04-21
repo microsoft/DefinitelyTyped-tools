@@ -103,7 +103,7 @@ function headerParser(strict: boolean): pm.Parser<Header> {
       nonNpm: str.endsWith("non-npm package "),
       projects,
       contributors,
-      typeScriptVersion
+      typeScriptVersion,
     })
   );
 }
@@ -206,7 +206,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
     return pm.makeSuccess<Label>(end, {
       name,
       major: intOfString(major),
-      minor: minor === "x" ? 0 : intOfString(minor)
+      minor: minor === "x" ? 0 : intOfString(minor),
     });
 
     function fail(msg?: string): pm.Reply<Label> {
@@ -221,7 +221,7 @@ function parseLabel(strict: boolean): pm.Parser<Label> {
 
 const typeScriptVersionLineParser: pm.Parser<AllTypeScriptVersion> = pm
   .regexp(/\/\/ (?:Minimum )?TypeScript Version: (\d.(\d))/, 1)
-  .chain<TypeScriptVersion>(v =>
+  .chain<TypeScriptVersion>((v) =>
     TypeScriptVersion.all.includes(v as TypeScriptVersion)
       ? pm.succeed(v as TypeScriptVersion)
       : pm.fail(`TypeScript ${v} is not yet supported.`)

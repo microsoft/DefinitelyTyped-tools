@@ -34,7 +34,7 @@ export default function main() {
         {
           definitelyTypedPath: undefined,
           parseInParallel: false,
-          progress: false
+          progress: false,
         },
         log
       );
@@ -59,10 +59,10 @@ export async function withFileLock(lockFilePath: string, cb: () => Promise<void>
   await writeFile(lockFilePath, JSON.stringify({ timestamp: currentTimeStamp() }));
   cb().then(
     () => remove(lockFilePath),
-    async error => {
+    async (error) => {
       console.error(error?.stack || error?.message || error);
       applicationinsights.defaultClient.trackException({
-        exception: error
+        exception: error,
       });
 
       await remove(lockFilePath);

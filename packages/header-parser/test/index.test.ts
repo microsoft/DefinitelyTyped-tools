@@ -20,8 +20,8 @@ describe("parse", () => {
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
         { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" }
-      ]
+        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
+      ],
     });
   });
 
@@ -45,8 +45,8 @@ describe("parse", () => {
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
         { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" }
-      ]
+        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
+      ],
     });
   });
 
@@ -70,8 +70,8 @@ describe("parse", () => {
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
         { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" }
-      ]
+        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
+      ],
     });
   });
 
@@ -82,7 +82,7 @@ describe("parse", () => {
             // Definitions by: Bad Url <sptth://hubgit.moc/em>
             // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped`;
     expect(parseHeaderOrFail(src).contributors).toStrictEqual([
-      { name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined }
+      { name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
     ]);
   });
 
@@ -188,12 +188,12 @@ describe("tagsToUpdate", () => {
       "ts4.5",
       "ts4.6",
       "ts4.7",
-      "latest"
+      "latest",
     ]);
   });
   it("allows 3.9 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("3.9")).toEqual(
-      TypeScriptVersion.supported.map(s => "ts" + s).concat("latest")
+      TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
     );
   });
 });
@@ -205,8 +205,8 @@ describe("makeTypesVersionsForPackageJson", () => {
   it("works for one version", () => {
     expect(makeTypesVersionsForPackageJson(["4.0"])).toEqual({
       "<=4.0": {
-        "*": ["ts4.0/*"]
-      }
+        "*": ["ts4.0/*"],
+      },
     });
   });
   it("orders versions old to new  with old-to-new input", () => {

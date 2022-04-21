@@ -6,7 +6,7 @@ const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
-  return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>(resolve => {
+  return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
     const maxBuffer = 1024 * 1024 * 1; // Max = 1 MiB, default is 200 KiB
@@ -38,7 +38,7 @@ export function runWithChildProcesses<In>({
   commandLineArgs,
   workerFile,
   nProcesses,
-  handleOutput
+  handleOutput,
 }: RunWithChildProcessesOptions<In>): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const nPerProcess = Math.floor(inputs.length / nProcesses);
@@ -55,11 +55,11 @@ export function runWithChildProcesses<In>({
         continue;
       }
       const child = fork(workerFile, commandLineArgs, {
-        execArgv: await getChildProcessExecArgv(i)
+        execArgv: await getChildProcessExecArgv(i),
       });
       allChildren.push(child);
       child.send(inputs.slice(lo, hi));
-      child.on("message", outputMessage => {
+      child.on("message", (outputMessage) => {
         handleOutput(outputMessage as unknown);
         assert(outputsLeft > 0);
         outputsLeft--;
@@ -97,7 +97,7 @@ export const enum CrashRecoveryState {
   Normal,
   Retry,
   RetryWithMoreMemory,
-  Crashed
+  Crashed,
 }
 
 interface RunWithListeningChildProcessesOptions<In> {
@@ -124,7 +124,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   crashRecoveryMaxOldSpaceSize = DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE,
   handleStart,
   handleCrash,
-  softTimeoutMs = Infinity
+  softTimeoutMs = Infinity,
 }: RunWithListeningChildProcessesOptions<In>): Promise<void> {
   return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
@@ -203,7 +203,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
             case CrashRecoveryState.RetryWithMoreMemory:
               await restartChild(resumeTask, [
                 ...getExecArgvWithoutMaxOldSpaceSize(),
-                `--max_old_space_size=${crashRecoveryMaxOldSpaceSize}`
+                `--max_old_space_size=${crashRecoveryMaxOldSpaceSize}`,
               ]);
               break;
             case CrashRecoveryState.Crashed:
@@ -381,7 +381,7 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
 
 async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
   const debugArg = execArgv.findIndex(
-    arg => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
   );
   if (debugArg < 0) return execArgv;
 
@@ -389,7 +389,7 @@ async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execAr
   return [
     ...execArgv.slice(0, debugArg),
     `--inspect=${await findFreePort(port + 1 + portOffset, 100, 1000)}`,
-    ...execArgv.slice(debugArg + 1)
+    ...execArgv.slice(debugArg + 1),
   ];
 }
 
@@ -398,7 +398,7 @@ async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execAr
 function findFreePort(startPort: number, giveUpAfter: number, timeout: number): Promise<number> {
   let done = false;
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const timeoutHandle = setTimeout(() => {
       if (!done) {
         done = true;
@@ -406,7 +406,7 @@ function findFreePort(startPort: number, giveUpAfter: number, timeout: number): 
       }
     }, timeout);
 
-    doFindFreePort(startPort, giveUpAfter, port => {
+    doFindFreePort(startPort, giveUpAfter, (port) => {
       if (!done) {
         done = true;
         clearTimeout(timeoutHandle);

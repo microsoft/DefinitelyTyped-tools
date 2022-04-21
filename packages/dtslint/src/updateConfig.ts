@@ -29,24 +29,24 @@ function main() {
     .option("package", {
       describe: "Path of DT package.",
       type: "string",
-      conflicts: "dt"
+      conflicts: "dt",
     })
     .option("dt", {
       describe: "Path of local DefinitelyTyped repository.",
       type: "string",
-      conflicts: "package"
+      conflicts: "package",
     })
     .option("rules", {
       describe: "Names of the rules to be updated. Leave this empty to update all rules.",
       type: "array",
       string: true,
-      default: [] as string[]
+      default: [] as string[],
     })
-    .check(arg => {
+    .check((arg) => {
       if (!arg.package && !arg.dt) {
         throw new Error("You must provide either argument 'package' or 'dt'.");
       }
-      const unsupportedRules = arg.rules.filter(rule => ignoredRules.includes(rule));
+      const unsupportedRules = arg.rules.filter((rule) => ignoredRules.includes(rule));
       if (unsupportedRules.length > 0) {
         throw new Error(`Rules ${unsupportedRules.join(", ")} are not supported at the moment.`);
       }
@@ -89,7 +89,7 @@ function updatePackage(pkgPath: string, baseConfig: Config.IConfigurationFile): 
   const packages = walkPackageDir(pkgPath);
 
   const linterOpts: ILinterOptions = {
-    fix: false
+    fix: false,
   };
 
   for (const pkg of packages) {
@@ -106,7 +106,7 @@ function installDependencies(pkgPath: string): void {
   if (fs.existsSync(path.join(pkgPath, "package.json"))) {
     cp.execSync("npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links", {
       encoding: "utf8",
-      cwd: pkgPath
+      cwd: pkgPath,
     });
   }
 }
@@ -172,7 +172,7 @@ class LintPackage {
   updateConfig(config: Config.RawConfigFile): void {
     fs.writeFileSync(path.join(this.rootDir, "tslint.json"), stringify(config, { space: 4 }), {
       encoding: "utf8",
-      flag: "w"
+      flag: "w",
     });
   }
 }

@@ -8,7 +8,7 @@ export enum OverallChange {
   Same = 0,
   Worse = 1 << 0,
   Better = 1 << 1,
-  Mixed = Worse | Better
+  Mixed = Worse | Better,
 }
 
 export function getOverallChangeForSingleComparison(before: PackageBenchmarkSummary, after: PackageBenchmarkSummary) {

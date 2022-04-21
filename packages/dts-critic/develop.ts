@@ -14,7 +14,7 @@ import {
   checkSource,
   findDtsName,
   CheckOptions,
-  parseMode
+  parseMode,
 } from "./index";
 
 const sourcesDir = "sources";
@@ -102,7 +102,7 @@ function getUnpopularNpmPackages(count: number, dtPath: string): string[] {
 function getDtNpmPackages(dtPath: string): string[] {
   const dtPackages = fs.readdirSync(getDtTypesPath(dtPath));
   const isNpmJson = getAllIsNpm(dtPath);
-  return dtPackages.filter(pkg => isNpmPackage(pkg, /* header */ undefined, isNpmJson));
+  return dtPackages.filter((pkg) => isNpmPackage(pkg, /* header */ undefined, isNpmJson));
 }
 
 function getNonNpm(args: { dtPath: string }): void {
@@ -122,7 +122,7 @@ function getNonNpm(args: { dtPath: string }): void {
       nonNpm.push(item);
     }
   }
-  console.log(`List of non-npm packages on DT:\n${nonNpm.map(name => `DT name: ${name}\n`).join("")}`);
+  console.log(`List of non-npm packages on DT:\n${nonNpm.map((name) => `DT name: ${name}\n`).join("")}`);
 }
 
 interface CommonArgs {
@@ -147,7 +147,7 @@ function checkUnpopular(args: { count: number } & CommonArgs): void {
 }
 
 function checkPackages(args: { packages: string[] } & CommonArgs): void {
-  const results = args.packages.map(pkg => doCheck({ package: pkg, ...args }));
+  const results = args.packages.map((pkg) => doCheck({ package: pkg, ...args }));
   printResults(results, args.json);
 }
 
@@ -196,7 +196,7 @@ function getEnabledErrors(errorNames: string[]): Map<ExportErrorKind, boolean> {
     }
     errors.push(error);
   }
-  return new Map(errors.map(err => [err, true]));
+  return new Map(errors.map((err) => [err, true]));
 }
 
 function checkFile(args: { jsFile: string; dtsFile: string; debug: boolean }): void {
@@ -261,29 +261,29 @@ function main() {
         dtPath: {
           type: "string",
           default: "../DefinitelyTyped",
-          describe: "Path of DT repository cloned locally."
+          describe: "Path of DT repository cloned locally.",
         },
         mode: {
           type: "string",
           required: true,
           choices: [Mode.NameOnly, Mode.Code],
-          describe: "Mode that defines which group of checks will be made."
+          describe: "Mode that defines which group of checks will be made.",
         },
         enableError: {
           type: "array",
           string: true,
-          describe: "Enable checking for a specific export error."
+          describe: "Enable checking for a specific export error.",
         },
         debug: {
           type: "boolean",
           default: false,
-          describe: "Turn debug logging on."
+          describe: "Turn debug logging on.",
         },
         json: {
           type: "boolean",
           default: false,
-          describe: "Format output result as json."
-        }
+          describe: "Format output result as json.",
+        },
       },
       checkAll
     )
@@ -295,34 +295,34 @@ function main() {
           alias: "c",
           type: "number",
           required: true,
-          describe: "Number of packages to be checked."
+          describe: "Number of packages to be checked.",
         },
         dtPath: {
           type: "string",
           default: "../DefinitelyTyped",
-          describe: "Path of DT repository cloned locally."
+          describe: "Path of DT repository cloned locally.",
         },
         mode: {
           type: "string",
           required: true,
           choices: [Mode.NameOnly, Mode.Code],
-          describe: "Mode that defines which group of checks will be made."
+          describe: "Mode that defines which group of checks will be made.",
         },
         enableError: {
           type: "array",
           string: true,
-          describe: "Enable checking for a specific export error."
+          describe: "Enable checking for a specific export error.",
         },
         debug: {
           type: "boolean",
           default: false,
-          describe: "Turn debug logging on."
+          describe: "Turn debug logging on.",
         },
         json: {
           type: "boolean",
           default: false,
-          describe: "Format output result as json."
-        }
+          describe: "Format output result as json.",
+        },
       },
       checkPopular
     )
@@ -334,34 +334,34 @@ function main() {
           alias: "c",
           type: "number",
           required: true,
-          describe: "Number of packages to be checked."
+          describe: "Number of packages to be checked.",
         },
         dtPath: {
           type: "string",
           default: "../DefinitelyTyped",
-          describe: "Path of DT repository cloned locally."
+          describe: "Path of DT repository cloned locally.",
         },
         mode: {
           type: "string",
           required: true,
           choices: [Mode.NameOnly, Mode.Code],
-          describe: "Mode that defines which group of checks will be made."
+          describe: "Mode that defines which group of checks will be made.",
         },
         enableError: {
           type: "array",
           string: true,
-          describe: "Enable checking for a specific export error."
+          describe: "Enable checking for a specific export error.",
         },
         debug: {
           type: "boolean",
           default: false,
-          describe: "Turn debug logging on."
+          describe: "Turn debug logging on.",
         },
         json: {
           type: "boolean",
           default: false,
-          describe: "Format output result as json."
-        }
+          describe: "Format output result as json.",
+        },
       },
       checkUnpopular
     )
@@ -373,34 +373,34 @@ function main() {
           alias: "p",
           type: "string",
           required: true,
-          describe: "DT name of a package."
+          describe: "DT name of a package.",
         },
         dtPath: {
           type: "string",
           default: "../DefinitelyTyped",
-          describe: "Path of DT repository cloned locally."
+          describe: "Path of DT repository cloned locally.",
         },
         mode: {
           type: "string",
           required: true,
           choices: [Mode.NameOnly, Mode.Code],
-          describe: "Mode that defines which group of checks will be made."
+          describe: "Mode that defines which group of checks will be made.",
         },
         enableError: {
           type: "array",
           string: true,
-          describe: "Enable checking for a specific export error."
+          describe: "Enable checking for a specific export error.",
         },
         debug: {
           type: "boolean",
           default: false,
-          describe: "Turn debug logging on."
+          describe: "Turn debug logging on.",
         },
         json: {
           type: "boolean",
           default: false,
-          describe: "Format output result as json."
-        }
+          describe: "Format output result as json.",
+        },
       },
       checkPackage
     )
@@ -412,19 +412,19 @@ function main() {
           alias: "j",
           type: "string",
           required: true,
-          describe: "Path of JavaScript file."
+          describe: "Path of JavaScript file.",
         },
         dtsFile: {
           alias: "d",
           type: "string",
           required: true,
-          describe: "Path of declaration file."
+          describe: "Path of declaration file.",
         },
         debug: {
           type: "boolean",
           default: false,
-          describe: "Turn debug logging on."
-        }
+          describe: "Turn debug logging on.",
+        },
       },
       checkFile
     )
@@ -435,8 +435,8 @@ function main() {
         dtPath: {
           type: "string",
           default: "../DefinitelyTyped",
-          describe: "Path of DT repository cloned locally."
-        }
+          describe: "Path of DT repository cloned locally.",
+        },
       },
       getNonNpm
     )

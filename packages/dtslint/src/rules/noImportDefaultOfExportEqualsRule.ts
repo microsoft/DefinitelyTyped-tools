@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.TypedRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -22,12 +22,12 @@ export class Rule extends Lint.Rules.TypedRule {
   }
 
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, ctx => walk(ctx, program.getTypeChecker()));
+    return this.applyWithFunction(sourceFile, (ctx) => walk(ctx, program.getTypeChecker()));
   }
 }
 
 function walk(ctx: Lint.WalkContext<void>, checker: ts.TypeChecker): void {
-  eachModuleStatement(ctx.sourceFile, statement => {
+  eachModuleStatement(ctx.sourceFile, (statement) => {
     if (!ts.isImportDeclaration(statement)) {
       return;
     }
@@ -39,9 +39,9 @@ function walk(ctx: Lint.WalkContext<void>, checker: ts.TypeChecker): void {
     if (
       sym &&
       sym.declarations &&
-      sym.declarations.some(d => {
+      sym.declarations.some((d) => {
         const statements = getStatements(d);
-        return statements !== undefined && statements.some(s => ts.isExportAssignment(s) && !!s.isExportEquals);
+        return statements !== undefined && statements.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals);
       })
     ) {
       ctx.addFailureAtNode(defaultName, Rule.FAILURE_STRING(defaultName.text, statement.moduleSpecifier.getText()));

@@ -18,11 +18,11 @@ export enum Secret {
    *
    * We only need one token in existence, so delete old tokens at: https://www.npmjs.com/settings/tokens
    */
-  NPM_TOKEN
+  NPM_TOKEN,
 }
 
-export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), key => {
-  const value = ((Secret as unknown) as { [key: string]: unknown })[key];
+export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), (key) => {
+  const value = (Secret as unknown as { [key: string]: unknown })[key];
   return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
 });
 

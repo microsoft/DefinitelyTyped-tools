@@ -2,7 +2,7 @@ import { assertDefined } from "@definitelytyped/utils";
 
 export const config = {
   benchmarks: {
-    languageServiceIterations: 5
+    languageServiceIterations: 5,
   },
   github: {
     userAgent: "definitely-not-slow",
@@ -15,12 +15,12 @@ export const config = {
     },
     commonParams: {
       owner: "DefinitelyTyped",
-      repo: "DefinitelyTyped"
-    }
+      repo: "DefinitelyTyped",
+    },
   },
   comparison: {
     percentDiffWarningThreshold: 0.2,
     percentDiffAlertThreshold: 1,
-    percentDiffAwesomeThreshold: -0.25
-  }
+    percentDiffAwesomeThreshold: -0.25,
+  },
 };

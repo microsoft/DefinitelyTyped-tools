@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.TypedRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   applyWithProgram(_sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {

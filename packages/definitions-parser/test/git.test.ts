@@ -9,7 +9,7 @@ const typesData: TypesDataFile = {
   "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], {}),
   "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], {}),
   unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], {}),
-  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {})
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {}),
 };
 
 const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
@@ -18,7 +18,7 @@ const allPackages = AllPackages.from(typesData, jestNotNeeded);
 const deleteJestDiffs: GitDiff[] = [
   { status: "M", file: "notNeededPackages.json" },
   { status: "D", file: "types/jest/index.d.ts" },
-  { status: "D", file: "types/jest/jest-tests.d.ts" }
+  { status: "D", file: "types/jest/jest-tests.d.ts" },
 ];
 
 testo({
@@ -49,7 +49,7 @@ testo({
         { status: "A", file: "oooooooooooops.txt" },
         { status: "M", file: "notNeededPackages.json" },
         { status: "D", file: "types/jest/index.d.ts" },
-        { status: "D", file: "types/jest/jest-tests.d.ts" }
+        { status: "D", file: "types/jest/jest-tests.d.ts" },
       ])
     ).toEqual(jestNotNeeded);
   },
@@ -60,7 +60,7 @@ testo({
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
-  }
+  },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
 });
@@ -69,7 +69,7 @@ const empty: NpmInfo = {
   homepage: "",
   distTags: new Map(),
   versions: new Map(),
-  time: new Map()
+  time: new Map(),
 };
 testo({
   missingSource() {
@@ -93,7 +93,7 @@ testo({
         homepage: "jest.com",
         distTags: new Map([["latest", "100.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
 it is supposed to replace, 100.0.0 of @types/jest.`);
@@ -104,7 +104,7 @@ it is supposed to replace, 100.0.0 of @types/jest.`);
         homepage: "jest.com",
         distTags: new Map([["latest", "999.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
 it is supposed to replace, 999.0.0 of @types/jest.`);
@@ -115,7 +115,7 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
         homepage: "jest.com",
         distTags: new Map([["latest", "4.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       });
     }).toThrow("The specified version 100.0.0 of jest is not on npm.");
   },
@@ -127,13 +127,13 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
           homepage: "jest.com",
           distTags: new Map(),
           versions: new Map([["50.0.0", {}]]),
-          time: new Map([["modified", ""]])
+          time: new Map([["modified", ""]]),
         },
         {
           homepage: "jest.com",
           distTags: new Map([["latest", "4.0.0"]]),
           versions: new Map(),
-          time: new Map([["modified", ""]])
+          time: new Map([["modified", ""]]),
         }
       )
     ).toThrow("The specified version 100.0.0 of jest is not on npm.");
@@ -145,14 +145,14 @@ it is supposed to replace, 999.0.0 of @types/jest.`);
         homepage: "jest.com",
         distTags: new Map(),
         versions: new Map([["100.0.0", {}]]),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       },
       {
         homepage: "jest.com",
         distTags: new Map([["latest", "4.0.0"]]),
         versions: new Map(),
-        time: new Map([["modified", ""]])
+        time: new Map([["modified", ""]]),
       }
     );
-  }
+  },
 });

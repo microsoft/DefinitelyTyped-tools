@@ -26,8 +26,9 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log("  Completions");
     console.log(
       "    Trials       ",
-      `${completions.trials} (sampled from ${benchmark.testIdentifierCount *
-        benchmark.requestedLanguageServiceTestIterations})`
+      `${completions.trials} (sampled from ${
+        benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations
+      })`
     );
     console.log("    Mean (ms):   ", toPrecision(completions.mean, 6));
     console.log("    Median (ms): ", toPrecision(completions.median, 6));
@@ -47,8 +48,9 @@ export function printSummary(summaries: PackageBenchmarkSummary[]) {
     console.log("  Quick Info");
     console.log(
       "    Trials       ",
-      `${quickInfo.trials} (sampled from ${benchmark.testIdentifierCount *
-        benchmark.requestedLanguageServiceTestIterations})`
+      `${quickInfo.trials} (sampled from ${
+        benchmark.testIdentifierCount * benchmark.requestedLanguageServiceTestIterations
+      })`
     );
     console.log("    Mean (ms):   ", toPrecision(quickInfo.mean, 6));
     console.log("    Median (ms): ", toPrecision(quickInfo.median, 6));

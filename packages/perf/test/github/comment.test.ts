@@ -11,7 +11,7 @@ describe("github", () => {
       expect(
         getCommentData({
           body: commentBody,
-          user: { login: config.github.typeScriptBotUsername } as IssuesListResponseItemUser
+          user: { login: config.github.typeScriptBotUsername } as IssuesListResponseItemUser,
         })
       ).toEqual(data);
     });

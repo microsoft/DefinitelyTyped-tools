@@ -14,7 +14,7 @@ import {
   loggerWithErrors,
   LoggerWithErrors,
   assertDefined,
-  UncachedNpmInfoClient
+  UncachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import { numberOfOsProcesses } from "./util/util";
 import { defaultLocalOptions } from "./lib/common";

@@ -20,7 +20,7 @@ import {
   writeTgz,
   withNpmCache,
   UncachedNpmInfoClient,
-  CachedNpmInfoClient
+  CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import {
   getDefinitelyTyped,
@@ -32,7 +32,7 @@ import {
   getFullNpmName,
   DependencyVersion,
   License,
-  formatTypingVersion
+  formatTypingVersion,
 } from "@definitelytyped/definitions-parser";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
@@ -72,7 +72,7 @@ export default async function generatePackages(
   log("## Generating deprecated packages");
   await withNpmCache(
     new UncachedNpmInfoClient(),
-    async client => {
+    async (client) => {
       for (const pkg of changedPackages.changedNotNeededPackages) {
         log(` * ${pkg.libraryName}`);
         await generateNotNeededPackage(pkg, client, log);
@@ -96,7 +96,7 @@ async function generateTypingPackage(
 
   await writeCommonOutputs(typing, createPackageJSON(typing, version, packages), createReadme(typing, packageFS));
   await Promise.all(
-    typing.files.map(async file => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
+    typing.files.map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
   );
 }
 
@@ -119,7 +119,7 @@ async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
     writeOutputFile("README.md", readme),
-    writeOutputFile("LICENSE", getLicenseFileText(pkg))
+    writeOutputFile("LICENSE", getLicenseFileText(pkg)),
   ]);
 
   async function writeOutputFile(filename: string, content: string): Promise<void> {
@@ -157,12 +157,12 @@ export function createPackageJSON(typing: TypingsData, version: string, packages
     repository: {
       type: "git",
       url: "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-      directory: `types/${typing.name}`
+      directory: `types/${typing.name}`,
     },
     scripts: {},
     dependencies: getDependencies(typing.packageJsonDependencies, typing, packages),
     typesPublisherContentHash: typing.contentHash,
-    typeScriptVersion: typing.minTypeScriptVersion
+    typeScriptVersion: typing.minTypeScriptVersion,
   };
   const exports = typing.exports;
   if (exports) {
@@ -197,7 +197,7 @@ function getDependencies(
     const typesDependency = getFullNpmName(name);
     // A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
     if (
-      !packageJsonDependencies.some(d => d.name === name || d.name === typesDependency) &&
+      !packageJsonDependencies.some((d) => d.name === name || d.name === typesDependency) &&
       allPackages.hasTypingFor({ name, version })
     ) {
       dependencies[typesDependency] = dependencySemver(version);
@@ -222,8 +222,8 @@ export function createNotNeededPackageJSON({ libraryName, license, fullNpmName, 
     license,
     // No `typings`, that's provided by the dependency.
     dependencies: {
-      [libraryName]: "*"
-    }
+      [libraryName]: "*",
+    },
   };
   return JSON.stringify(out, undefined, 4);
 }
@@ -260,10 +260,10 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   const dependencies = Object.keys(typing.dependencies).map(getFullNpmName);
   lines.push(
     ` * Dependencies: ${
-      dependencies.length ? dependencies.map(d => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
+      dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
     }`
   );
-  lines.push(` * Global values: ${typing.globals.length ? typing.globals.map(g => `\`${g}\``).join(", ") : "none"}`);
+  lines.push(` * Global values: ${typing.globals.length ? typing.globals.map((g) => `\`${g}\``).join(", ") : "none"}`);
   lines.push("");
 
   lines.push("# Credits");
@@ -290,7 +290,7 @@ export function getLicenseFileText(typing: AnyPackage): string {
 
 function apacheLicense(typing: TypingsData): string {
   const year = new Date().getFullYear();
-  const names = typing.contributors.map(c => c.name);
+  const names = typing.contributors.map((c) => c.name);
   // tslint:disable max-line-length
   return `Copyright ${year} ${names.join(", ")}
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

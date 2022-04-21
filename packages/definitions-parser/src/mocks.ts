@@ -13,9 +13,9 @@ class DTMock {
         packages: {
           angular: {
             libraryName: "angular",
-            asOfVersion: "1.2.3"
-          }
-        }
+            asOfVersion: "1.2.3",
+          },
+        },
       })
     );
     this.fs = new InMemoryFS(this.root, "DefinitelyTyped");
@@ -56,9 +56,9 @@ class DTMock {
         compilerOptions: {
           ...tsconfig.compilerOptions,
           paths: {
-            [packageName]: [`${mangleScopedPackage(packageName)}/v${olderVersion}`]
-          }
-        }
+            [packageName]: [`${mangleScopedPackage(packageName)}/v${olderVersion}`],
+          },
+        },
       })
     );
 
@@ -233,10 +233,10 @@ export * from "moment"`
     JSON.stringify({
       compilerOptions: {
         paths: {
-          jquery: ["jquery/v1"]
-        }
+          jquery: ["jquery/v1"],
+        },
       },
-      files: ["index.d.ts", "has-older-test-dependency-tests.ts"]
+      files: ["index.d.ts", "has-older-test-dependency-tests.ts"],
     })
   );
 
@@ -282,10 +282,10 @@ console.log(jQuery);
     JSON.stringify({
       compilerOptions: {
         paths: {
-          "@wordpress/*": ["wordpress__*"]
-        }
+          "@wordpress/*": ["wordpress__*"],
+        },
       },
-      files: ["index.d.ts"]
+      files: ["index.d.ts"],
     })
   );
 
@@ -315,7 +315,7 @@ function tsconfig(testNames: string[]) {
     },
     "files": [
         "index.d.ts",
-${testNames.map(s => "        " + JSON.stringify(s)).join(",\n")}
+${testNames.map((s) => "        " + JSON.stringify(s)).join(",\n")}
     ]
 }`;
 }

@@ -63,7 +63,7 @@ async function createSearchRecords(
         g: pkg.globals,
         t: pkg.name,
         m: pkg.declaredModules,
-        d: dl[i]
+        d: dl[i],
       })
     )
     .sort((a, b) => b.d - a.d);

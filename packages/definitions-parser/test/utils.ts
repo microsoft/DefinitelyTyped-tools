@@ -30,7 +30,7 @@ export function createTypingsVersionRaw(
       contentHash: "11111111111111",
       projectName: "zombo.com",
       globals: [],
-      declaredModules: []
-    }
+      declaredModules: [],
+    },
   };
 }

@@ -11,7 +11,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   static FAILURE_STRING = failure(
@@ -26,7 +26,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 function walk(ctx: Lint.WalkContext<void>): void {
   const {
-    sourceFile: { statements }
+    sourceFile: { statements },
   } = ctx;
   const exportEqualsNode = statements.find(isExportEquals) as ts.ExportAssignment | undefined;
   if (!exportEqualsNode) {
@@ -57,7 +57,7 @@ function isJustNamespace(statements: readonly ts.Statement[], exportEqualsName: 
         anyNamespace = anyNamespace || nameMatches((statement as ts.ModuleDeclaration).name);
         break;
       case ts.SyntaxKind.VariableStatement:
-        if ((statement as ts.VariableStatement).declarationList.declarations.some(d => nameMatches(d.name))) {
+        if ((statement as ts.VariableStatement).declarationList.declarations.some((d) => nameMatches(d.name))) {
           // OK. It's merged with a variable.
           return false;
         }

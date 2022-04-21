@@ -70,7 +70,7 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
       forceConsistentCasingInFileNames: true,
       baseUrl: relativeBaseUrl,
       typeRoots: [relativeBaseUrl],
-      types: []
+      types: [],
     };
 
     for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {

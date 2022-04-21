@@ -17,9 +17,9 @@ export function getParsedCommandLineForPackage(
       readDirectory: ts.sys.readDirectory,
       readFile: ts.sys.readFile,
       useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
-      onUnRecoverableConfigFileDiagnostic: diagnostic => {
+      onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
         console.error(ts.formatDiagnostic(diagnostic, formatDiagnosticsHost));
-      }
+      },
     }
   );
 

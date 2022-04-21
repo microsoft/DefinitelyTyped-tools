@@ -13,7 +13,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
-    typescriptOnly: false
+    typescriptOnly: false,
   };
 
   static FAILURE_STRING = failure(Rule.metadata.ruleName, "File has no content.");

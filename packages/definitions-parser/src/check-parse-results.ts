@@ -12,7 +12,7 @@ import {
   Semver,
   UncachedNpmInfoClient,
   NpmInfoRawVersions,
-  NpmInfoVersion
+  NpmInfoVersion,
 } from "@definitelytyped/utils";
 
 export async function checkParseResults(
@@ -56,11 +56,11 @@ export async function checkParseResults(
     await nAtATime(
       10,
       allPackages.allTypings(),
-      pkg => checkNpm(pkg, log, dependedOn, client!),
+      (pkg) => checkNpm(pkg, log, dependedOn, client!),
       options.progress
         ? {
             name: "Checking for typed packages...",
-            flavor: pkg => pkg.desc
+            flavor: (pkg) => pkg.desc,
           }
         : undefined
     );
@@ -82,7 +82,7 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
 export function checkPathMappings(allPackages: AllPackages): void {
   for (const pkg of allPackages.allTypings()) {
     const unusedPathMappings = new Set(
-      Object.keys(pkg.pathMappings).filter(m => m !== pkg.name && m !== pkg.unescapedName)
+      Object.keys(pkg.pathMappings).filter((m) => m !== pkg.name && m !== pkg.unescapedName)
     );
 
     // If A depends on B, and B has path mappings, A must have the same mappings.
@@ -110,7 +110,7 @@ export function checkPathMappings(allPackages: AllPackages): void {
       throw new Error(`${pkg.desc} has unused path mappings for [${Array.from(unusedPathMappings).join(", ")}].
 If these mappings are actually used, they could be missing in a dependency's tsconfig.json instead.
 Check the path mappings for [${Array.from(allPackages.allDependencyTypings(pkg))
-        .map(d => d.name)
+        .map((d) => d.name)
         .join(", ")}].`);
     }
   }
@@ -148,7 +148,7 @@ async function checkNpm(
     `Typings already defined for ${name} (${libraryName}) as of ${firstTypedVersion.versionString} (our version: ${ourVersion})`
   );
   const contributorUrls = contributors
-    .map(c => {
+    .map((c) => {
       const gh = "https://github.com/";
       return c.url.startsWith(gh) ? `@${c.url.slice(gh.length)}` : `${c.name} (${c.url})`;
     })
@@ -222,5 +222,5 @@ const notNeededExceptions: ReadonlySet<string> = new Set([
   "raspi-serial",
   "raspi-soft-pwm",
   // Declare "typings" but don't actually have them yet (https://github.com/stampit-org/stampit/issues/245)
-  "stampit"
+  "stampit",
 ]);

@@ -5,7 +5,7 @@ import {
   PackageBenchmarkSummary,
   getParsedPackages,
   shuffle,
-  forEachWithTimeLimit
+  forEachWithTimeLimit,
 } from "../common";
 import { benchmarkPackage } from "./benchmark";
 import { printSummary } from "../measure";
@@ -40,7 +40,7 @@ export async function compare({
   maxRunSeconds,
   runDependents,
   comment,
-  upload
+  upload,
 }: CompareArgs) {
   const { allPackages } = await getParsedPackages(definitelyTypedPath);
   const changedPackages = await getChangedPackages({ diffTo: "origin/master", definitelyTypedPath });
@@ -57,7 +57,7 @@ export async function compare({
   const { overtime } = await forEachWithTimeLimit(
     maxRunMs,
     affectedPackages.changedPackages,
-    async affectedPackage => {
+    async (affectedPackage) => {
       console.log(`Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it changed...\n\n`);
       comparisons.push(
         await compareBenchmarks({
@@ -67,11 +67,11 @@ export async function compare({
           packageName: affectedPackage.id.name,
           packageVersion: affectedPackage.id.version,
           maxRunSeconds,
-          upload
+          upload,
         })
       );
     },
-    affectedPackage => {
+    (affectedPackage) => {
       console.log(`Skipping ${affectedPackage.id.name} because we ran out of time`);
     }
   );
@@ -82,7 +82,7 @@ export async function compare({
     const message = await postInitialComparisonResults({
       comparisons,
       dependentCount: dependentsToTest.length,
-      dryRun: !comment
+      dryRun: !comment,
     });
     if (message) {
       console.log("\n" + message + "\n");
@@ -93,7 +93,7 @@ export async function compare({
   await forEachWithTimeLimit(
     maxRunMs,
     dependentsToTest,
-    async affectedPackage => {
+    async (affectedPackage) => {
       console.log(
         `Comparing ${affectedPackage.id.name}/v${affectedPackage.major} because it depends on something that changed...\n\n`
       );
@@ -105,11 +105,11 @@ export async function compare({
           packageName: affectedPackage.id.name,
           packageVersion: affectedPackage.id.version,
           maxRunSeconds,
-          upload
+          upload,
         })
       );
     },
-    affectedPackage => {
+    (affectedPackage) => {
       console.log(`Skipping ${affectedPackage.id.name} because we ran out of time`);
     }
   );
@@ -126,7 +126,7 @@ export async function compareBenchmarks({
   typeScriptVersionMajorMinor,
   packageName,
   packageVersion,
-  maxRunSeconds
+  maxRunSeconds,
 }: CompareOptions): Promise<[PackageBenchmarkSummary, PackageBenchmarkSummary]> {
   await execAndThrowErrors("git checkout -f origin/master && git clean -xdf types", definitelyTypedPath);
   const baseBenchmark = (
@@ -140,7 +140,7 @@ export async function compareBenchmarks({
       nProcesses: os.cpus().length,
       failOnErrors: true,
       installTypeScript: false,
-      maxRunSeconds
+      maxRunSeconds,
     })
   )?.summary;
 
@@ -159,7 +159,7 @@ export async function compareBenchmarks({
     nProcesses: os.cpus().length,
     failOnErrors: true,
     installTypeScript: false,
-    maxRunSeconds
+    maxRunSeconds,
   }))!.summary;
 
   if (baseBenchmark) {

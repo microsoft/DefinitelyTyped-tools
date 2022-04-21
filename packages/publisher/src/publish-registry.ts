@@ -9,7 +9,7 @@ import {
   AllPackages,
   readNotNeededPackages,
   NotNeededPackage,
-  TypingsData
+  TypingsData,
 } from "@definitelytyped/definitions-parser";
 import {
   assertDefined,
@@ -34,7 +34,7 @@ import {
   withNpmCache,
   NpmPublishClient,
   CachedNpmInfoClient,
-  isObject
+  isObject,
 } from "@definitelytyped/utils";
 import { getSecret, Secret } from "./lib/secrets";
 
@@ -70,7 +70,7 @@ export default async function publishRegistry(
   // Don't include not-needed packages in the registry.
   const registryJsonData = await withNpmCache(
     client,
-    cachedClient => generateRegistry(allPackages.allLatestTypings(), cachedClient),
+    (cachedClient) => generateRegistry(allPackages.allLatestTypings(), cachedClient),
     cacheDirPath
   );
   const registry = JSON.stringify(registryJsonData);
@@ -163,7 +163,7 @@ async function installForValidate(log: Logger): Promise<void> {
     description: "description",
     readme: "",
     license: "",
-    repository: {}
+    repository: {},
   });
 
   const cmd = `npm install types-registry@next ${npmInstallFlags}`;
@@ -190,7 +190,7 @@ async function validateIsSubset(notNeeded: readonly NotNeededPackage[], log: Log
   const actual = (await readJson(joinPaths(validateTypesRegistryPath, indexJson))) as Registry;
   const expected = (await readJson(joinPaths(registryOutputPath, indexJson))) as Registry;
   for (const key of Object.keys(actual.entries)) {
-    if (!(key in expected.entries) && !notNeeded.some(p => p.name === key)) {
+    if (!(key in expected.entries) && !notNeeded.some((p) => p.name === key)) {
       throw new Error(`Actual types-registry has unexpected key ${key}`);
     }
   }
@@ -235,12 +235,12 @@ function generatePackageJson(name: string, version: string, typesPublisherConten
     description: "A registry of TypeScript declaration file packages published within the @types scope.",
     repository: {
       type: "git",
-      url: "https://github.com/Microsoft/types-publisher.git"
+      url: "https://github.com/Microsoft/types-publisher.git",
     },
     keywords: ["TypeScript", "declaration", "files", "types", "packages"],
     author: "Microsoft Corp.",
     license: "MIT",
-    typesPublisherContentHash
+    typesPublisherContentHash,
   };
   return json;
 }
@@ -259,8 +259,8 @@ async function generateRegistry(typings: readonly TypingsData[], client: CachedN
     const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName);
     if (!info) {
       const missings = typings
-        .filter(t => !client.getNpmInfoFromCache(t.fullEscapedNpmName))
-        .map(t => t.fullEscapedNpmName);
+        .filter((t) => !client.getNpmInfoFromCache(t.fullEscapedNpmName))
+        .map((t) => t.fullEscapedNpmName);
       throw new Error(`${missings.toString()} not found in cached npm info.`);
     }
     entries[typing.name] = filterTags(info.distTags);
@@ -301,7 +301,7 @@ async function fetchAndProcessNpmInfo(
 }
 function getLatestVersion(versions: Iterable<string>): Semver {
   return best(
-    mapDefined(versions, v => Semver.tryParse(v)),
+    mapDefined(versions, (v) => Semver.tryParse(v)),
     (a, b) => a.greaterThan(b)
   )!;
 }

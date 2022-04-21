@@ -10,7 +10,7 @@ import {
   LoggerWithErrors,
   UncachedNpmInfoClient,
   withNpmCache,
-  CachedNpmInfoClient
+  CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import { cacheDirPath } from "./lib/settings";
@@ -30,7 +30,7 @@ export default async function calculateVersions(
   log.info("=== Calculating versions ===");
   return withNpmCache(
     uncachedClient,
-    async client => {
+    async (client) => {
       log.info("* Reading packages...");
       const packages = await AllPackages.read(dt);
       return computeAndSaveChangedPackages(packages, log, client);
@@ -49,7 +49,7 @@ async function computeAndSaveChangedPackages(
     changedTypings: cp.changedTypings.map(
       ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })
     ),
-    changedNotNeededPackages: cp.changedNotNeededPackages.map(p => p.name)
+    changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.name),
   };
   await writeDataFile(versionsFilename, json);
   return cp;
@@ -61,7 +61,7 @@ async function computeChangedPackages(
   client: CachedNpmInfoClient
 ): Promise<ChangedPackages> {
   log.info("# Computing changed packages...");
-  const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async pkg => {
+  const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async (pkg) => {
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
@@ -79,7 +79,7 @@ async function computeChangedPackages(
     return undefined;
   });
   log.info("# Computing deprecated packages...");
-  const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async pkg => {
+  const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async (pkg) => {
     if (!(await isAlreadyDeprecated(pkg, client, log))) {
       assertDefined(
         await client.fetchAndCacheNpmInfo(pkg.libraryName),

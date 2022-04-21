@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "style",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
 
   apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -23,7 +23,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
   const isExternal =
     sourceFile.isDeclarationFile &&
     !sourceFile.statements.some(
-      s =>
+      (s) =>
         s.kind === ts.SyntaxKind.ExportAssignment ||
         (s.kind === ts.SyntaxKind.ExportDeclaration && !!(s as ts.ExportDeclaration).exportClause)
     ) &&
@@ -86,7 +86,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
   }
 
   function mod(node: ts.Statement, kind: ts.SyntaxKind): ts.Node {
-    return node.modifiers!.find(m => m.kind === kind)!;
+    return node.modifiers!.find((m) => m.kind === kind)!;
   }
 
   function checkModule(moduleDeclaration: ts.ModuleDeclaration): void {

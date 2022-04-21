@@ -11,7 +11,7 @@ import {
   formatDependencyVersion,
   DirectoryParsedTypingVersion,
   tryParsePackageVersion,
-  PackageIdWithDefiniteVersion
+  PackageIdWithDefiniteVersion,
 } from "@definitelytyped/definitions-parser";
 
 export const pathExists = promisify(fs.exists);
@@ -23,7 +23,7 @@ export function ensureExists(...pathNames: string[]): string {
       return pathName;
     }
   }
-  const pathNamesPrint = pathNames.length > 1 ? "\n" + pathNames.map(s => ` - ${s}`).join("\n") : `'${pathNames[0]}`;
+  const pathNamesPrint = pathNames.length > 1 ? "\n" + pathNames.map((s) => ` - ${s}`).join("\n") : `'${pathNames[0]}`;
   throw new Error(`File or directory does not exist: ${pathNamesPrint}`);
 }
 
@@ -52,14 +52,12 @@ export function getSystemInfo(): SystemInfo {
     platform: os.platform(),
     release: os.release(),
     totalmem: os.totalmem(),
-    nodeVersion: process.version
+    nodeVersion: process.version,
   };
 
   return {
     ...info,
-    hash: createHash("md5")
-      .update(JSON.stringify(info))
-      .digest("hex")
+    hash: createHash("md5").update(JSON.stringify(info)).digest("hex"),
   };
 }
 
@@ -72,14 +70,14 @@ export interface GetChangedPackagesOptions {
 export async function getChangedPackages({
   diffFrom = "HEAD",
   diffTo,
-  definitelyTypedPath
+  definitelyTypedPath,
 }: GetChangedPackagesOptions) {
   const diff = await execAndThrowErrors(`git diff --name-status ${diffFrom} ${diffTo}`, definitelyTypedPath);
   if (!diff) {
     return undefined;
   }
 
-  const changes = diff.split("\n").map(line => {
+  const changes = diff.split("\n").map((line) => {
     const [status, file] = line.split(/\s+/, 2);
     return { status: status.trim() as "A" | "D" | "M", file: file.trim() };
   });
@@ -135,12 +133,12 @@ export function toPackageKey(
     typeof packageIdOrName === "string"
       ? {
           name: packageIdOrName,
-          version: (typeof version === "string" ? tryParsePackageVersion(version) : version) || ("*" as const)
+          version: (typeof version === "string" ? tryParsePackageVersion(version) : version) || ("*" as const),
         }
       : isVersionedBenchmark(packageIdOrName)
       ? {
           name: packageIdOrName.packageName,
-          version: { major: packageIdOrName.packageVersionMajor, minor: packageIdOrName.packageVersionMinor }
+          version: { major: packageIdOrName.packageVersionMajor, minor: packageIdOrName.packageVersionMinor },
         }
       : packageIdOrName;
 
@@ -204,6 +202,6 @@ export async function forEachWithTimeLimit<T>(
     startTime,
     duration,
     overtime: duration > limitMs,
-    complete
+    complete,
   };
 }

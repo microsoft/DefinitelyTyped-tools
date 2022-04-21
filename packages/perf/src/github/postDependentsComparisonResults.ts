@@ -17,7 +17,7 @@ export async function postDependentsComparisonResult({ comparisons, dryRun }: Po
     `Ok, I’m back! As promised, here are the results from dependent packages`,
     ``,
     createTablesWithAnalysesMessage(comparisons, parseInt(process.env.SYSTEM_PULLREQUEST_PULLREQUESTNUMBER || "")),
-    true
+    true,
   ]).join("\n");
 
   if (!dryRun) {
@@ -36,10 +36,10 @@ export async function postDependentsComparisonResult({ comparisons, dryRun }: Po
         issue_number: prNumber,
         body: createPerfCommentBody(
           {
-            overallChange: getOverallChangeForComparisons(comparisons)
+            overallChange: getOverallChangeForComparisons(comparisons),
           },
           message
-        )
+        ),
       });
     } catch (err) {
       console.log(message);

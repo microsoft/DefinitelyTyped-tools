@@ -102,7 +102,7 @@ export class UncachedNpmInfoClient {
     const info = (await this.fetcher.fetchJson({
       hostname: npmRegistryHostName,
       path: escapedPackageName,
-      retries: true
+      retries: true,
     })) as { readonly error: string } | NpmInfoRaw;
     if ("error" in info) {
       if (info.error === "Not found") {
@@ -128,7 +128,7 @@ export class UncachedNpmInfoClient {
       const data = (await this.fetcher.fetchJson({
         hostname: npmApi,
         path: `/downloads/point/last-month/${nameGroup.join(",")}`,
-        retries: true
+        retries: true,
       })) as { readonly error: string } | { readonly [key: string]: { readonly downloads: number } };
       if ("error" in data) {
         throw new Error(data.error as string);
@@ -178,14 +178,14 @@ export class NpmPublishClient {
       resolve(
         dry
           ? undefined
-          : promisifyVoid(cb => {
+          : promisifyVoid((cb) => {
               this.client.publish(
                 this.registry,
                 {
                   access: "public",
                   auth: this.auth,
                   metadata: metadata as NeedToFixNpmRegistryClientTypings,
-                  body: body as NeedToFixNpmRegistryClientTypings
+                  body: body as NeedToFixNpmRegistryClientTypings,
                 },
                 cb
               );
@@ -199,7 +199,7 @@ export class NpmPublishClient {
       log(`(dry) Skip tag of ${packageName}@${distTag} as ${version}`);
       return Promise.resolve();
     }
-    return promisifyVoid(cb => {
+    return promisifyVoid((cb) => {
       this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
     });
   }
@@ -209,9 +209,9 @@ export class NpmPublishClient {
     const params = {
       message,
       version,
-      auth: this.auth
+      auth: this.auth,
     };
-    return promisifyVoid(cb => {
+    return promisifyVoid((cb) => {
       this.client.deprecate(url, params, cb);
     });
   }
@@ -224,9 +224,9 @@ function npmInfoFromJson(n: NpmInfoRaw): NpmInfo {
     // Callback ensures we remove any other properties
     versions: recordToMap(n.versions, ({ typesPublisherContentHash, deprecated }) => ({
       typesPublisherContentHash,
-      deprecated
+      deprecated,
     })),
-    time: recordToMap(n.time)
+    time: recordToMap(n.time),
   };
 }
 
@@ -235,13 +235,13 @@ function jsonFromNpmInfo(n: NpmInfo): NpmInfoRaw {
     ...n,
     "dist-tags": mapToRecord(n.distTags),
     versions: mapToRecord(n.versions),
-    time: mapToRecord(n.time)
+    time: mapToRecord(n.time),
   };
 }
 
 function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => void): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    callsBack(error => {
+    callsBack((error) => {
       if (error) {
         reject(error);
       } else {

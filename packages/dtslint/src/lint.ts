@@ -32,7 +32,7 @@ export async function lint(
 
   const lintOptions: ILinterOptions = {
     fix: false,
-    formatter: "stylish"
+    formatter: "stylish",
   };
   const linter = new Linter(lintOptions, lintProgram);
   const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
@@ -76,22 +76,22 @@ function testDependencies(
   const program = getProgram(tsconfigPath, ts, version, lintProgram);
   const diagnostics = ts
     .getPreEmitDiagnostics(program)
-    .filter(d => !d.file || isExternalDependency(d.file, dirPath, program));
+    .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program));
   if (!diagnostics.length) {
     return undefined;
   }
 
   const showDiags = ts.formatDiagnostics(diagnostics, {
-    getCanonicalFileName: f => f,
+    getCanonicalFileName: (f) => f,
     getCurrentDirectory: () => dirPath,
-    getNewLine: () => "\n"
+    getNewLine: () => "\n",
   });
 
   const message = `Errors in typescript@${version} for external dependencies:\n${showDiags}`;
 
   // Add an edge-case for someone needing to `npm install` in react when they first edit a DT module which depends on it - #226
   const cannotFindDepsDiags = diagnostics.find(
-    d => d.code === 2307 && d.messageText.toString().includes("Cannot find module")
+    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module")
   );
   if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
     const path = cannotFindDepsDiags.file.fileName;
@@ -120,7 +120,7 @@ function normalizePath(file: string) {
   // replaces '\' with '/' and forces all DOS drive letters to be upper-case
   return normalize(file)
     .replace(/\\/g, "/")
-    .replace(/^[a-z](?=:)/, c => c.toUpperCase());
+    .replace(/^[a-z](?=:)/, (c) => c.toUpperCase());
 }
 
 function isTypesVersionPath(fileName: string, dirPath: string) {
@@ -170,7 +170,7 @@ export async function checkTslintJson(dirPath: string, dt: boolean): Promise<voi
   const configPath = getConfigPath(dirPath);
   const shouldExtend = `@definitelytyped/dtslint/${dt ? "dt" : "dtslint"}.json`;
   const validateExtends = (extend: string | string[]) =>
-    extend === shouldExtend || (!dt && Array.isArray(extend) && extend.some(val => val === shouldExtend));
+    extend === shouldExtend || (!dt && Array.isArray(extend) && extend.some((val) => val === shouldExtend));
 
   if (!(await pathExists(configPath))) {
     if (dt) {
@@ -212,9 +212,9 @@ async function getLintConfig(
     throw new Error("'expect' rule should be enabled, else compile errors are ignored");
   }
   if (expectRule) {
-    const versionsToTest = range(minVersion, maxVersion).map(versionName => ({
+    const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
       versionName,
-      path: typeScriptPath(versionName, tsLocal)
+      path: typeScriptPath(versionName, tsLocal),
     }));
     const expectOptions: ExpectOptions = { tsconfigPath, versionsToTest };
     expectRule.ruleArguments = [expectOptions];

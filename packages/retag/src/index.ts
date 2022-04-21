@@ -21,14 +21,14 @@ import {
   loggerWithErrors,
   LoggerWithErrors,
   nAtATime,
-  CachedNpmInfoClient
+  CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import {
   AnyPackage,
   TypingsData,
   AllPackages,
   parseDefinitions,
-  getDefinitelyTyped
+  getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
 
 if (!module.parent) {
@@ -39,7 +39,7 @@ async function main() {
   const { dry, nProcesses, name } = yargs.options({
     dry: { type: "boolean", default: false },
     nProcesses: { type: "number", default: os.cpus().length },
-    name: { type: "string" }
+    name: { type: "string" },
   }).argv;
   await tag(dry, nProcesses, name);
 }
@@ -64,14 +64,14 @@ async function tag(dry: boolean, nProcesses: number, name?: string) {
   const token = process.env.NPM_TOKEN as string;
 
   const publishClient = await NpmPublishClient.create(token, {});
-  await withNpmCache(new UncachedNpmInfoClient(), async infoClient => {
+  await withNpmCache(new UncachedNpmInfoClient(), async (infoClient) => {
     if (name) {
       const pkg = await AllPackages.readSingle(name);
       const version = await getLatestTypingVersion(pkg, infoClient);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
       await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
     } else {
-      await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
+      await nAtATime(10, await AllPackages.readLatestTypings(), async (pkg) => {
         // Only update tags for the latest version of the package.
         const version = await getLatestTypingVersion(pkg, infoClient);
         await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
@@ -177,7 +177,7 @@ function latestPatchMatchingMajorAndMinor(
   newMajor: number,
   newMinor: number
 ): number | undefined {
-  const versionsWithTypings = mapDefined(versions, v => {
+  const versionsWithTypings = mapDefined(versions, (v) => {
     const semver = Semver.tryParse(v);
     if (!semver) {
       return undefined;

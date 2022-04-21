@@ -40,7 +40,7 @@ export class ProgressBar {
 
   private doUpdate(current: number): void {
     const nCellsFilled = Math.ceil(this.width * Math.min(1, Math.max(0, current)));
-    this.console.update(c => {
+    this.console.update((c) => {
       c.write(this.name);
       c.write(" [");
       c.write("█".repeat(nCellsFilled));

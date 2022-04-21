@@ -25,7 +25,7 @@ describe("withFileLock", () => {
   function getDeferred() {
     const eventEmitter = new EventEmitter();
     const resolve = () => eventEmitter.emit("resolve");
-    const promise = new Promise<void>(resolve => {
+    const promise = new Promise<void>((resolve) => {
       eventEmitter.once("resolve", resolve);
     });
     return { resolve, promise };

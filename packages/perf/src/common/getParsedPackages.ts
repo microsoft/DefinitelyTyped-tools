@@ -4,21 +4,19 @@ import {
   typesDataFilename,
   getLocallyInstalledDefinitelyTyped,
   dataFilePath,
-  parseDefinitions
+  parseDefinitions,
 } from "@definitelytyped/definitions-parser";
 import { FS, consoleLogger } from "@definitelytyped/utils";
 import { getSourceVersion, pathExists } from "./utils";
 
 let parsedSourceVersion: string | undefined;
-export async function getParsedPackages(
-  definitelyTypedPath: string
-): Promise<{
+export async function getParsedPackages(definitelyTypedPath: string): Promise<{
   definitelyTypedFS: FS;
   allPackages: AllPackages;
 }> {
   const currentSourceVersion = await getSourceVersion(definitelyTypedPath);
   const definitelyTypedFS = getLocallyInstalledDefinitelyTyped(definitelyTypedPath);
-  const isDebugging = process.execArgv.some(arg => arg.startsWith("--inspect"));
+  const isDebugging = process.execArgv.some((arg) => arg.startsWith("--inspect"));
   const needsReparse = !parsedSourceVersion || parsedSourceVersion !== currentSourceVersion;
   if (process.env.NODE_ENV === "production" || needsReparse || !(await pathExists(dataFilePath(typesDataFilename)))) {
     await parseDefinitions(
@@ -27,7 +25,7 @@ export async function getParsedPackages(
         ? undefined
         : {
             definitelyTypedPath,
-            nProcesses: os.cpus().length
+            nProcesses: os.cpus().length,
           },
       consoleLogger
     );

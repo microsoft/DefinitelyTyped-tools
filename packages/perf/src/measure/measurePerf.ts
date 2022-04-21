@@ -8,12 +8,12 @@ import { installDependencies } from "./installDependencies";
 import { getParsedCommandLineForPackage } from "./getParsedCommandLineForPackage";
 import {
   measureLanguageServiceWorkerFilename,
-  MeasureLanguageServiceChildProcessArgs
+  MeasureLanguageServiceChildProcessArgs,
 } from "./measureLanguageServiceWorker";
 import {
   MeasureBatchCompilationChildProcessArgs,
   measureBatchCompilationWorkerFilename,
-  MeasureBatchCompilationChildProcessResult
+  MeasureBatchCompilationChildProcessResult,
 } from "./measureBatchCompilationWorker";
 import { AllPackages, HeaderParsedTypingVersion } from "@definitelytyped/definitions-parser";
 import { runWithListeningChildProcesses, runWithChildProcesses, Semver } from "@definitelytyped/utils";
@@ -47,11 +47,11 @@ export async function measurePerf({
   tsPath,
   ts,
   batchRunStart,
-  failOnErrors
+  failOnErrors,
 }: MeasurePerfOptions) {
   let duration = NaN;
   const sourceVersion = execSync("git rev-parse HEAD", { cwd: definitelyTypedRootPath, encoding: "utf8" }).trim();
-  const observer = new PerformanceObserver(list => {
+  const observer = new PerformanceObserver((list) => {
     const totalMeasurement = list.getEntriesByName("benchmark")[0];
     duration = totalMeasurement.duration;
   });
@@ -62,7 +62,7 @@ export async function measurePerf({
 
   const typings = allPackages.getTypingsData({
     name: packageName,
-    version: packageVersion
+    version: packageVersion,
   });
   const packagePath = path.join(typesPath, typings.subDirectoryPath);
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
@@ -92,7 +92,7 @@ export async function measurePerf({
     crashRecovery: !failOnErrors,
     cwd: process.cwd(),
     softTimeoutMs: maxRunSeconds * 1000,
-    handleCrash: input => {
+    handleCrash: (input) => {
       languageServiceCrashed = true;
       console.error("Failed measurement on request:", JSON.stringify(input, undefined, 2));
     },
@@ -110,7 +110,7 @@ export async function measurePerf({
         console.log(((100 * done) / testMatrix.inputs.length).toFixed(1) + "% done...");
         lastUpdate = Date.now();
       }
-    }
+    },
   });
 
   if (progress && done !== testMatrix.inputs.length) {
@@ -121,7 +121,7 @@ export async function measurePerf({
   const batchCompilationInput: MeasureBatchCompilationChildProcessArgs = {
     tsPath,
     fileNames: commandLine.fileNames,
-    options: commandLine.options
+    options: commandLine.options,
   };
 
   let batchCompilationResult: MeasureBatchCompilationChildProcessResult | undefined;
@@ -132,7 +132,7 @@ export async function measurePerf({
     nProcesses: 1,
     handleOutput: (result: MeasureBatchCompilationChildProcessResult) => {
       batchCompilationResult = result;
-    }
+    },
   });
 
   if (!batchCompilationResult) {
@@ -155,7 +155,7 @@ export async function measurePerf({
     requestedLanguageServiceTestIterations: iterations,
     languageServiceCrashed,
     testIdentifierCount: testMatrix.uniquePositionCount,
-    batchRunStart
+    batchRunStart,
   };
 
   return measurement;
@@ -173,7 +173,7 @@ export async function measurePerf({
   }
 
   function getTestFileNames(fileNames: readonly string[]) {
-    return fileNames.filter(name => {
+    return fileNames.filter((name) => {
       const ext = path.extname(name);
       return (ext === Extension.Ts || ext === Extension.Tsx) && !name.endsWith(Extension.Dts);
     });
@@ -216,7 +216,7 @@ export async function measurePerf({
               line: lineAndCharacter.line + 1,
               offset: lineAndCharacter.character + 1,
               completionsDurations: [],
-              quickInfoDurations: []
+              quickInfoDurations: [],
             };
             positionMap.set(start, benchmark);
           }
@@ -224,7 +224,7 @@ export async function measurePerf({
             fileName: testPath,
             start,
             packageDirectory,
-            tsPath
+            tsPath,
           });
         }
       }
@@ -241,13 +241,13 @@ export async function measurePerf({
         return Array.prototype.concat
           .apply(
             [],
-            Array.from(fileMap.values()).map(map => Array.from(map.values()))
+            Array.from(fileMap.values()).map((map) => Array.from(map.values()))
           )
           .filter(
             (benchmark: LanguageServiceBenchmark) =>
               benchmark.completionsDurations.length > 0 || benchmark.quickInfoDurations.length > 0
           );
-      }
+      },
     };
   }
 }

@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "style",
-    typescriptOnly: false
+    typescriptOnly: false,
   };
 
   static FAILURE_STRING_LEADING = failure(Rule.metadata.ruleName, "File should not begin with a blank line.");
@@ -26,7 +26,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 function walk(ctx: Lint.WalkContext<void>): void {
   const {
-    sourceFile: { text }
+    sourceFile: { text },
   } = ctx;
   if (text.startsWith("\r") || text.startsWith("\n")) {
     ctx.addFailureAt(0, 0, Rule.FAILURE_STRING_LEADING);

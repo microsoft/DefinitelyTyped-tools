@@ -17,7 +17,7 @@ export interface PostInitialComparisonResultsOptions {
 export async function postInitialComparisonResults({
   comparisons,
   dependentCount,
-  dryRun
+  dryRun,
 }: PostInitialComparisonResultsOptions) {
   let message;
   if (dryRun) {
@@ -38,13 +38,13 @@ export async function postInitialComparisonResults({
       const octokit = getOctokit();
       const comments = await octokit.issues.listComments({
         ...config.github.commonParams,
-        issue_number: prNumber
+        issue_number: prNumber,
       });
 
       const currentOverallChange = getOverallChangeForComparisons(comparisons);
       const mostRecentComment = findLast(comments.data, isPerfComment);
       const commentData: CommentData = {
-        overallChange: currentOverallChange
+        overallChange: currentOverallChange,
       };
       if (mostRecentComment) {
         const lastOverallChange = getCommentData(mostRecentComment)?.overallChange;
@@ -69,14 +69,14 @@ export async function postInitialComparisonResults({
         await octokit.issues.createComment({
           ...config.github.commonParams,
           issue_number: prNumber,
-          body: createPerfCommentBody(commentData, message)
+          body: createPerfCommentBody(commentData, message),
         });
       } else {
         message = getFullFirstPostMessage(createTablesWithAnalysesMessage(comparisons, prNumber), dependentCount);
         await octokit.issues.createComment({
           ...config.github.commonParams,
           issue_number: prNumber,
-          body: createPerfCommentBody(commentData, message)
+          body: createPerfCommentBody(commentData, message),
         });
       }
 
@@ -96,7 +96,7 @@ function getFullFirstPostMessage(mainMessage: string, dependentCount: number): s
     ``,
     `Let’s review the numbers, shall we?`,
     ``,
-    mainMessage
+    mainMessage,
   ]).join("\n");
 }
 
@@ -110,7 +110,7 @@ function getConciseUpdateMessage(
   return [
     `Updated numbers for you here from ${sha.slice(0, 7)}. ${gotBetter ? "Nice job, these numbers look better." : ""}`,
     ``,
-    mainMessage
+    mainMessage,
   ].join("\n");
 }
 

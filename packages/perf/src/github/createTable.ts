@@ -28,7 +28,7 @@ export function createComparisonTable(
         "Worst identifier",
         before,
         after,
-        x =>
+        (x) =>
           sourceLink(
             x.completions.worst.identifierText,
             x.sourceVersion,
@@ -46,7 +46,7 @@ export function createComparisonTable(
         "Worst identifier",
         before,
         after,
-        x =>
+        (x) =>
           sourceLink(
             x.quickInfo.worst.identifierText,
             x.sourceVersion,
@@ -55,7 +55,7 @@ export function createComparisonTable(
           ),
         undefined,
         { indent: 1 }
-      )
+      ),
     ])
   );
 }
@@ -77,7 +77,7 @@ export function createSingleRunTable(benchmark: PackageBenchmarkSummary) {
     createSingleRunRow(
       "Worst identifier",
       benchmark,
-      x =>
+      (x) =>
         sourceLink(
           x.completions.worst.identifierText,
           x.sourceVersion,
@@ -93,7 +93,7 @@ export function createSingleRunTable(benchmark: PackageBenchmarkSummary) {
     createSingleRunRow(
       "Worst identifier",
       benchmark,
-      x =>
+      (x) =>
         sourceLink(
           x.quickInfo.worst.identifierText,
           x.sourceVersion,
@@ -101,7 +101,7 @@ export function createSingleRunTable(benchmark: PackageBenchmarkSummary) {
           x.quickInfo.worst.line
         ),
       { indent: 1 }
-    )
+    ),
   ]);
 }
 
@@ -146,7 +146,7 @@ function createSingleRunRowFromMetric(
 ) {
   return createSingleRunRow(metric.columnName, benchmark, metric.getValue, {
     ...metric.formatOptions,
-    ...formatOptions
+    ...formatOptions,
   });
 }
 
@@ -165,7 +165,7 @@ function createComparisonRow(
     indent(title, formatOptions.indent || 0),
     format(aValue, formatOptions),
     format(bValue, formatOptions),
-    diff || ""
+    diff || "",
   ];
 }
 

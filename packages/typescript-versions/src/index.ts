@@ -79,7 +79,7 @@ export namespace TypeScriptVersion {
     "3.5",
     "3.6",
     "3.7",
-    "3.8"
+    "3.8",
   ];
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
@@ -91,7 +91,7 @@ export namespace TypeScriptVersion {
   }
 
   export function range(min: TypeScriptVersion): readonly TypeScriptVersion[] {
-    return supported.filter(v => v >= min);
+    return supported.filter((v) => v >= min);
   }
 
   /** List of NPM tags that should be changed to point to the latest version. */
@@ -100,7 +100,7 @@ export namespace TypeScriptVersion {
     assert(idx !== -1);
     return supported
       .slice(idx)
-      .map(v => "ts" + v)
+      .map((v) => "ts" + v)
       .concat("latest");
   }
 

@@ -23,7 +23,7 @@ if (!module.parent) {
   process.on("message", async ([message]: MeasureBatchCompilationChildProcessArgs[]) => {
     const ts: typeof import("typescript") = await import(message.tsPath);
     const program = ts.createProgram({ rootNames: message.fileNames, options: message.options });
-    const diagnostics = program.getSemanticDiagnostics().filter(diagnostic => {
+    const diagnostics = program.getSemanticDiagnostics().filter((diagnostic) => {
       return diagnostic.code === 2307; // Cannot find module
     });
     if (diagnostics.length) {
@@ -34,13 +34,13 @@ if (!module.parent) {
     const result: MeasureBatchCompilationChildProcessResult = {
       typeCount: (program as any).getTypeCount(),
       memoryUsage: ts.sys.getMemoryUsage!(),
-      relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes()
+      relationCacheSizes: (program as any).getRelationCacheSizes && (program as any).getRelationCacheSizes(),
     };
 
     process.send!(result);
   });
 
-  process.on("unhandledRejection", err => {
+  process.on("unhandledRejection", (err) => {
     console.error(err);
     process.exit(1);
   });

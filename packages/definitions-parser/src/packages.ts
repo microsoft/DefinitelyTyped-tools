@@ -7,7 +7,7 @@ import {
   unmangleScopedPackage,
   Semver,
   assertDefined,
-  unique
+  unique,
 } from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { readDataFile } from "./data-file";
@@ -21,7 +21,7 @@ export class AllPackages {
 
   static from(data: TypesDataFile, notNeeded: readonly NotNeededPackage[]): AllPackages {
     return new AllPackages(
-      mapValues(new Map(Object.entries(data)), raw => new TypingsVersions(raw)),
+      mapValues(new Map(Object.entries(data)), (raw) => new TypingsVersions(raw)),
       notNeeded
     );
   }
@@ -49,7 +49,7 @@ export class AllPackages {
 
   static readSingleNotNeeded(name: string, dt: FS): NotNeededPackage {
     const notNeeded = readNotNeededPackages(dt);
-    const pkg = notNeeded.find(p => p.name === name);
+    const pkg = notNeeded.find((p) => p.name === name);
     if (pkg === undefined) {
       throw new Error(`Cannot find not-needed package ${name}`);
     }
@@ -62,7 +62,7 @@ export class AllPackages {
   ) {}
 
   getNotNeededPackage(name: string): NotNeededPackage | undefined {
-    return this.notNeeded.find(p => p.name === name);
+    return this.notNeeded.find((p) => p.name === name);
   }
 
   hasTypingFor(dep: PackageId): boolean {
@@ -75,7 +75,7 @@ export class AllPackages {
    */
   hasSeparateMinorVersions(name: string) {
     const versions = Array.from(assertDefined(this.data.get(getMangledNameForScopedPackage(name))).getAll());
-    const minors = versions.map(v => v.minor);
+    const minors = versions.map((v) => v.minor);
     return minors.length !== unique(minors).length;
   }
 
@@ -129,13 +129,13 @@ export class AllPackages {
 
   /** Note: this includes older version directories (`foo/v0`) */
   allTypings(): readonly TypingsData[] {
-    return assertSorted(Array.from(flattenData(this.data)), t => t.name);
+    return assertSorted(Array.from(flattenData(this.data)), (t) => t.name);
   }
 
   allLatestTypings(): readonly TypingsData[] {
     return assertSorted(
-      Array.from(this.data.values()).map(versions => versions.getLatest()),
-      t => t.name
+      Array.from(this.data.values()).map((versions) => versions.getLatest()),
+      (t) => t.name
     );
   }
 
@@ -476,7 +476,7 @@ export interface TypingsDataRaw extends BaseRaw {
 // Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
 export const enum License {
   MIT = "MIT",
-  Apache20 = "Apache-2.0"
+  Apache20 = "Apache-2.0",
 }
 const allLicenses = [License.MIT, License.Apache20];
 export function getLicenseFromPackageJson(packageJsonLicense: unknown): License {
@@ -509,7 +509,7 @@ export class TypingsVersions {
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
     this.versions = Object.keys(data)
-      .map(key => Semver.parse(key, true))
+      .map((key) => Semver.parse(key, true))
       .sort(Semver.compare)
       .reverse();
 
@@ -544,7 +544,7 @@ export class TypingsVersions {
 
   private tryGetLatestMatch(version: DirectoryParsedTypingVersion): TypingsData | undefined {
     const found = this.versions.find(
-      v => v.major === version.major && (version.minor === undefined || v.minor === version.minor)
+      (v) => v.major === version.major && (version.minor === undefined || v.minor === version.minor)
     );
     return found && this.map.get(found);
   }
@@ -583,7 +583,7 @@ export class TypingsData extends PackageBase {
     return this.data.files;
   }
   get dtsFiles(): readonly string[] {
-    return this.data.files.filter(f => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+    return this.data.files.filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
   }
   get license(): License {
     return this.data.license;
@@ -653,7 +653,7 @@ function readTypesDataFile(): Promise<TypesDataFile> {
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
-  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map(entry =>
+  return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map((entry) =>
     NotNeededPackage.fromRaw(...entry)
   );
 }

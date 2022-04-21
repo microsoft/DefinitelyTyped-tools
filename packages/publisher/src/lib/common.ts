@@ -14,11 +14,11 @@ export interface TesterOptions extends ParseDefinitionsOptions {
 export const defaultLocalOptions: TesterOptions = {
   definitelyTypedPath: "../../../DefinitelyTyped",
   progress: true,
-  parseInParallel: true
+  parseInParallel: true,
 };
 
 export const defaultRemoteOptions: ParseDefinitionsOptions = {
   definitelyTypedPath: undefined,
   progress: false,
-  parseInParallel: false
+  parseInParallel: false,
 };

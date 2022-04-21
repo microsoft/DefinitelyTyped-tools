@@ -116,11 +116,11 @@ function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNe
 
     await installationPromise;
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal)
-      .catch(e => e.stack)
-      .then(maybeError => {
+      .catch((e) => e.stack)
+      .then((maybeError) => {
         process.send!({ path, status: maybeError === undefined ? "OK" : maybeError });
       })
-      .catch(e => console.error(e.stack));
+      .catch((e) => console.error(e.stack));
   });
 }
 
@@ -145,7 +145,7 @@ async function runTests(
     assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
   }
 
-  const typesVersions = await mapDefinedAsync(await readdir(dirPath), async name => {
+  const typesVersions = await mapDefinedAsync(await readdir(dirPath), async (name) => {
     if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
       return undefined;
     }
@@ -302,7 +302,7 @@ function getMinimumTypeScriptVersionFromComment(text: string): AllTypeScriptVers
 }
 
 if (!module.parent) {
-  main().catch(err => {
+  main().catch((err) => {
     console.error(err.stack);
     process.exit(1);
   });

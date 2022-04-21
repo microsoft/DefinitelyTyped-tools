@@ -28,14 +28,14 @@ export enum ErrorKind {
   /** JavaScript module has signatures, but declaration module does not. */
   JsSignatureNotInDts = "JsSignatureNotInDts",
   /** Declaration module has signatures, but JavaScript module does not. */
-  DtsSignatureNotInJs = "DtsSignatureNotInJs"
+  DtsSignatureNotInJs = "DtsSignatureNotInJs",
 }
 
 export enum Mode {
   /** Checks based only on the package name and on the declaration's DefinitelyTyped header. */
   NameOnly = "name-only",
   /** Checks based on the source JavaScript code, in addition to the checks performed in name-only mode. */
-  Code = "code"
+  Code = "code",
 }
 
 export function parseMode(mode: string): Mode | undefined {
@@ -150,23 +150,23 @@ function main() {
     )
     .option("dts", {
       describe: "Path of declaration file to be critiqued.",
-      type: "string"
+      type: "string",
     })
     .demandOption("dts", "Please provide a path to a d.ts file for me to critique.")
     .option("js", {
       describe: "Path of JavaScript file to be used as source.",
-      type: "string"
+      type: "string",
     })
     .option("mode", {
       describe: "Mode defines what checks will be performed.",
       type: "string",
       default: Mode.NameOnly,
-      choices: [Mode.NameOnly, Mode.Code]
+      choices: [Mode.NameOnly, Mode.Code],
     })
     .option("debug", {
       describe: "Turn debug logging on.",
       type: "boolean",
-      default: false
+      default: false,
     })
     .help().argv;
 
@@ -193,7 +193,7 @@ const npmNotFound = "E404";
 export function getNpmInfo(name: string): NpmInfo {
   const npmName = dtToNpmName(name);
   const infoResult = cp.spawnSync("npm", ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
-    encoding: "utf8"
+    encoding: "utf8",
   });
   const info = JSON.parse(infoResult.stdout || infoResult.stderr);
   if (info.error !== undefined) {
@@ -209,7 +209,7 @@ export function getNpmInfo(name: string): NpmInfo {
   return {
     isNpm: true,
     versions: info.versions as string[],
-    tags: info["dist-tags"] as { [tag: string]: string | undefined }
+    tags: info["dist-tags"] as { [tag: string]: string | undefined },
   };
 }
 
@@ -224,7 +224,7 @@ function checkNonNpm(name: string, npmInfo: NpmInfo): NonNpmError | undefined {
 Try adding -browser to the end of the name to get
 
     ${name}-browser
-`
+`,
     };
   }
   return undefined;
@@ -246,7 +246,7 @@ To resolve this error, either:
 
 // Type definitions for non-npm package ${name}-browser
 
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`
+Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
     };
   }
   const target = getHeaderVersion(header);
@@ -264,7 +264,7 @@ You should copy the major and minor version from the package on npm.
 To resolve this error, change the version in the header, ${headerstring},
 to match one on npm: ${verstring}.
 
-For example, if you're trying to match the latest version, use ${lateststring}.`
+For example, if you're trying to match the latest version, use ${lateststring}.`,
     };
   }
   return npmVersion;
@@ -358,7 +358,7 @@ export function checkSource(
     console.log(formatDebug(name, diagnostics));
   }
 
-  return diagnostics.errors.filter(err => enabledErrors.get(err.kind) ?? defaultErrors.includes(err.kind));
+  return diagnostics.errors.filter((err) => enabledErrors.get(err.kind) ?? defaultErrors.includes(err.kind));
 }
 
 function formatDebug(name: string, diagnostics: ExportsDiagnostics): string {
@@ -403,13 +403,13 @@ function formatType(type: ts.Type): string {
   const properties = type.getProperties();
   if (properties.length > 0) {
     lines.push("Type's properties:");
-    lines.push(...properties.map(p => p.getName()));
+    lines.push(...properties.map((p) => p.getName()));
   }
 
   const signatures = type.getConstructSignatures().concat(type.getCallSignatures());
   if (signatures.length > 0) {
     lines.push("Type's signatures:");
-    lines.push(...signatures.map(s => checker.signatureToString(s)));
+    lines.push(...signatures.map((s) => checker.signatureToString(s)));
   }
   lines.push(`Type string: ${checker.typeToString(type)}`);
   return lines.join("\n");
@@ -422,7 +422,7 @@ const exportEqualsLink = "https://www.typescriptlang.org/docs/handbook/modules.h
  */
 function checkExports(name: string, dtsPath: string, sourcePath: string): ExportsDiagnostics {
   const tscOpts = {
-    allowJs: true
+    allowJs: true,
   };
 
   const jsProgram = ts.createProgram([sourcePath], tscOpts);
@@ -448,7 +448,7 @@ function checkExports(name: string, dtsPath: string, sourcePath: string): Export
       message: `The declaration doesn't match the JavaScript module '${name}'. Reason:
 The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and ${sourceDiagnostics.exportEquals.result.reason}.
 
-To learn more about 'export =' syntax, see ${exportEqualsLink}.`
+To learn more about 'export =' syntax, see ${exportEqualsLink}.`,
     } as const;
     errors.push(error);
   }
@@ -472,7 +472,7 @@ To learn more about 'export =' syntax, see ${exportEqualsLink}.`
 The declaration specifies 'export default' but the JavaScript source does not mention 'default' anywhere.
 
 The most common way to resolve this error is to use 'export =' syntax instead of 'export default'.
-To learn more about 'export =' syntax, see ${exportEqualsLink}.`
+To learn more about 'export =' syntax, see ${exportEqualsLink}.`,
     });
   }
 
@@ -481,7 +481,7 @@ To learn more about 'export =' syntax, see ${exportEqualsLink}.`
     jsExportType: sourceDiagnostics.exportType,
     dtsExportKind: dtsDiagnostics.exportKind,
     dtsExportType: dtsDiagnostics.exportType,
-    errors
+    errors,
   };
 }
 
@@ -616,12 +616,12 @@ function inspectDts(dtsPath: string, name: string): DtsExportDiagnostics {
 function createDtProgram(dtsPath: string): ts.Program {
   const dtsDir = path.dirname(dtsPath);
   const configPath = path.join(dtsDir, "tsconfig.json");
-  const { config } = ts.readConfigFile(configPath, p => fs.readFileSync(p, { encoding: "utf8" }));
+  const { config } = ts.readConfigFile(configPath, (p) => fs.readFileSync(p, { encoding: "utf8" }));
   const parseConfigHost: ts.ParseConfigHost = {
     fileExists: fs.existsSync,
     readDirectory: ts.sys.readDirectory,
-    readFile: file => fs.readFileSync(file, { encoding: "utf8" }),
-    useCaseSensitiveFileNames: true
+    readFile: (file) => fs.readFileSync(file, { encoding: "utf8" }),
+    useCaseSensitiveFileNames: true,
   };
   const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, path.resolve(dtsDir));
   const host = ts.createCompilerHost(parsed.options, true);
@@ -633,9 +633,9 @@ function getDtsModuleSymbol(
   checker: ts.TypeChecker,
   name: string
 ): InferenceResult<ts.Symbol> {
-  if (matches(sourceFile, node => ts.isModuleDeclaration(node))) {
+  if (matches(sourceFile, (node) => ts.isModuleDeclaration(node))) {
     const npmName = dtToNpmName(name);
-    const moduleSymbol = checker.getAmbientModules().find(symbol => symbol.getName() === `"${npmName}"`);
+    const moduleSymbol = checker.getAmbientModules().find((symbol) => symbol.getName() === `"${npmName}"`);
     if (moduleSymbol) {
       return inferenceSuccess(moduleSymbol);
     }
@@ -699,7 +699,7 @@ function getDtsDefaultExport(sourceFile: ts.SourceFile, moduleType: InferenceRes
     if (exportDefault > -1 && src.indexOf("export =") === -1 && !/declare module ['"]/.test(src)) {
       return {
         start: exportDefault,
-        length: "export default".length
+        length: "export default".length,
       };
     }
     return undefined;
@@ -709,7 +709,7 @@ function getDtsDefaultExport(sourceFile: ts.SourceFile, moduleType: InferenceRes
   if (exportDefault?.declarations) {
     return {
       start: exportDefault.declarations[0].getStart(),
-      length: exportDefault.declarations[0].getWidth()
+      length: exportDefault.declarations[0].getWidth(),
     };
   }
   return undefined;
@@ -757,7 +757,7 @@ function exportTypesCompatibility(
       errors.push({
         kind: ErrorKind.JsSignatureNotInDts,
         message: `The declaration doesn't match the JavaScript module '${name}'. Reason:
-The JavaScript module can be called or constructed, but the declaration module cannot.`
+The JavaScript module can be called or constructed, but the declaration module cannot.`,
       });
     } else {
       errors.push({
@@ -766,7 +766,7 @@ The JavaScript module can be called or constructed, but the declaration module c
 The JavaScript module can be called or constructed, but the declaration module cannot.
 
 The most common way to resolve this error is to use 'export =' syntax.
-To learn more about 'export =' syntax, see ${exportEqualsLink}.`
+To learn more about 'export =' syntax, see ${exportEqualsLink}.`,
       });
     }
   }
@@ -775,7 +775,7 @@ To learn more about 'export =' syntax, see ${exportEqualsLink}.`
     errors.push({
       kind: ErrorKind.DtsSignatureNotInJs,
       message: `The declaration doesn't match the JavaScript module '${name}'. Reason:
-The declaration module can be called or constructed, but the JavaScript module cannot.`
+The declaration module can be called or constructed, but the JavaScript module cannot.`,
     });
   }
 
@@ -784,11 +784,11 @@ The declaration module can be called or constructed, but the JavaScript module c
   for (const sourceProperty of sourceProperties) {
     // TODO: check `prototype` properties.
     if (ignoreProperty(sourceProperty)) continue;
-    if (!dtsProperties.find(s => s.getName() === sourceProperty.getName())) {
+    if (!dtsProperties.find((s) => s.getName() === sourceProperty.getName())) {
       errors.push({
         kind: ErrorKind.JsPropertyNotInDts,
         message: `The declaration doesn't match the JavaScript module '${name}'. Reason:
-The JavaScript module exports a property named '${sourceProperty.getName()}', which is missing from the declaration module.`
+The JavaScript module exports a property named '${sourceProperty.getName()}', which is missing from the declaration module.`,
       });
     }
   }
@@ -796,18 +796,18 @@ The JavaScript module exports a property named '${sourceProperty.getName()}', wh
   for (const dtsProperty of dtsProperties) {
     // TODO: check `prototype` properties.
     if (ignoreProperty(dtsProperty)) continue;
-    if (!sourceProperties.find(s => s.getName() === dtsProperty.getName())) {
+    if (!sourceProperties.find((s) => s.getName() === dtsProperty.getName())) {
       const error: MissingExport = {
         kind: ErrorKind.DtsPropertyNotInJs,
         message: `The declaration doesn't match the JavaScript module '${name}'. Reason:
-The declaration module exports a property named '${dtsProperty.getName()}', which is missing from the JavaScript module.`
+The declaration module exports a property named '${dtsProperty.getName()}', which is missing from the JavaScript module.`,
       };
       const declaration =
         dtsProperty.declarations && dtsProperty.declarations.length > 0 ? dtsProperty.declarations[0] : undefined;
       if (declaration) {
         error.position = {
           start: declaration.getStart(),
-          length: declaration.getWidth()
+          length: declaration.getWidth(),
         };
       }
       errors.push(error);
@@ -831,7 +831,7 @@ function isExportConstruct(node: ts.Node): boolean {
 
 function hasExportModifier(node: ts.Node): boolean {
   if (node.modifiers) {
-    return node.modifiers.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword);
+    return node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
   }
   return false;
 }
@@ -952,7 +952,7 @@ interface JsExportsInfo {
 
 enum JsExportKind {
   CommonJs = "CommonJs",
-  ES6 = "ES6"
+  ES6 = "ES6",
 }
 
 interface ExportEqualsDiagnostics {
@@ -962,12 +962,12 @@ interface ExportEqualsDiagnostics {
 
 enum ExportEqualsJudgement {
   Required = "Required",
-  NotRequired = "Not required"
+  NotRequired = "Not required",
 }
 
 enum DtsExportKind {
   ExportEquals = "export =",
-  ES6Like = "ES6-like"
+  ES6Like = "ES6-like",
 }
 
 interface DtsExportDiagnostics {
@@ -992,7 +992,7 @@ type InferenceResult<T> = InferenceError | InferenceSuccess<T>;
 
 enum InferenceResultKind {
   Error,
-  Success
+  Success,
 }
 
 interface InferenceError {

@@ -17,7 +17,7 @@ export function summarize(benchmark: PackageBenchmark): PackageBenchmarkSummary 
     testIdentifierCount: benchmark.testIdentifierCount,
     requestedLanguageServiceTestIterations: benchmark.requestedLanguageServiceTestIterations,
     languageServiceCrashed: benchmark.languageServiceCrashed,
-    ...summarizeStats(benchmark.languageServiceBenchmarks)
+    ...summarizeStats(benchmark.languageServiceBenchmarks),
   };
 }
 
@@ -26,7 +26,7 @@ export function summarizeStats(
 ): Pick<PackageBenchmarkSummary, "quickInfo" | "completions"> {
   return [
     ["completions", (benchmark: LanguageServiceBenchmark) => benchmark.completionsDurations] as const,
-    ["quickInfo", (benchmark: LanguageServiceBenchmark) => benchmark.quickInfoDurations] as const
+    ["quickInfo", (benchmark: LanguageServiceBenchmark) => benchmark.quickInfoDurations] as const,
   ].reduce((acc, [key, getDurations]) => {
     const [means, cvs] = benchmarks.reduce(
       (acc, b) => {
@@ -38,19 +38,19 @@ export function summarizeStats(
       [[], []] as [number[], number[]]
     );
 
-    const worst = max(benchmarks, b => mean(getDurations(b)));
+    const worst = max(benchmarks, (b) => mean(getDurations(b)));
     const stats: StatSummary<LanguageServiceBenchmark> = {
       mean: mean(means),
       median: median(means),
       standardDeviation: stdDev(means),
       meanCoefficientOfVariation: mean(cvs),
       trials: means.length,
-      worst
+      worst,
     };
 
     return {
       ...acc,
-      [key]: stats
+      [key]: stats,
     };
   }, {} as Record<"completions" | "quickInfo", StatSummary<LanguageServiceBenchmark>>);
 }

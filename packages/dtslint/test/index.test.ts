@@ -41,7 +41,7 @@ describe("dtslint", () => {
     typeRoots: ["../"],
     types: [],
     noEmit: true,
-    forceConsistentCasingInFileNames: true
+    forceConsistentCasingInFileNames: true,
   };
   describe("checks", () => {
     it("disallows unknown compiler options", () => {
@@ -67,7 +67,7 @@ describe("dtslint", () => {
     });
   });
   describe("rules", () => {
-    const tests = readdirSync(testDir).filter(x => x !== "index.test.ts");
+    const tests = readdirSync(testDir).filter((x) => x !== "index.test.ts");
     for (const testName of tests) {
       const testDirectory = join(testDir, testName);
       if (existsSync(join(testDirectory, "tslint.json"))) {

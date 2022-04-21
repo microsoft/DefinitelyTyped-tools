@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.TypedRule {
     optionsDescription: "Not configurable.",
     options: null,
     type: "style",
-    typescriptOnly: true
+    typescriptOnly: true,
   };
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static FAILURE_STRING(typeParameter: string) {
@@ -22,7 +22,7 @@ export class Rule extends Lint.Rules.TypedRule {
   }
 
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, ctx => walk(ctx, program.getTypeChecker()));
+    return this.applyWithFunction(sourceFile, (ctx) => walk(ctx, program.getTypeChecker()));
   }
 }
 

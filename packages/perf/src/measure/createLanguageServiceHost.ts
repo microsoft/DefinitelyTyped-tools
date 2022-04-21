@@ -16,7 +16,7 @@ export function createLanguageServiceHost(
     getScriptFileNames: () => testPaths,
     fileExists: ts.sys.fileExists,
     getDirectories: ts.sys.getDirectories,
-    getScriptSnapshot: fileName => ts.ScriptSnapshot.fromString(ts.sys.readFile(ensureExists(fileName))!),
-    getScriptVersion: () => (version++).toString()
+    getScriptSnapshot: (fileName) => ts.ScriptSnapshot.fromString(ts.sys.readFile(ensureExists(fileName))!),
+    getScriptVersion: () => (version++).toString(),
   };
 }

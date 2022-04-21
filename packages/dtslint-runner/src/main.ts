@@ -6,7 +6,7 @@ import {
   runWithListeningChildProcesses,
   CrashRecoveryState,
   installAllTypeScriptVersions,
-  installTypeScriptNext
+  installTypeScriptNext,
 } from "@definitelytyped/utils";
 import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
 import { RunDTSLintOptions } from "./types";
@@ -24,7 +24,7 @@ export async function runDTSLint({
   expectOnly,
   localTypeScriptPath,
   nProcesses,
-  shard
+  shard,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
   if (definitelyTypedAcquisition.kind === "clone") {
@@ -64,14 +64,14 @@ export async function runDTSLint({
   const dtslintArgs = [
     "--listen",
     ...(onlyTestTsNext ? ["--onlyTestTsNext"] : []),
-    ...(localTypeScriptPath ? ["--localTs", localTypeScriptPath] : [])
+    ...(localTypeScriptPath ? ["--localTs", localTypeScriptPath] : []),
   ];
 
   await runWithListeningChildProcesses({
-    inputs: testedPackages.map(path => ({
+    inputs: testedPackages.map((path) => ({
       path,
       onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
-      expectOnly: expectOnly || !packageNames.includes(path)
+      expectOnly: expectOnly || !packageNames.includes(path),
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),
@@ -96,7 +96,7 @@ export async function runDTSLint({
             prefix
               ? status
                   .split(/\r?\n/)
-                  .map(line => `${prefix}${line}`)
+                  .map((line) => `${prefix}${line}`)
                   .join("\n")
               : status
           );
@@ -109,7 +109,7 @@ export async function runDTSLint({
           prefix
             ? status
                 .split(/\r?\n/)
-                .map(line => `${prefix}${line}`)
+                .map((line) => `${prefix}${line}`)
                 .join("\n")
             : status
         );
@@ -131,7 +131,7 @@ export async function runDTSLint({
           break;
         default:
       }
-    }
+    },
   });
 
   console.log("\n\n=== SUGGESTIONS ===\n");
@@ -170,7 +170,7 @@ function getExpectedFailures(onlyRunAffectedPackages: boolean) {
     (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .filter(Boolean)
-      .map(s => s.trim())
+      .map((s) => s.trim())
   );
 }
 
@@ -183,7 +183,7 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
     const commands = [
       "git remote add origin https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "git fetch origin master --depth 50", // We can't clone the commit directly, so assume the commit is from
-      `git checkout ${sha}` // recent history, pull down some recent commits, then check it out
+      `git checkout ${sha}`, // recent history, pull down some recent commits, then check it out
     ];
     for (const command of commands) {
       console.log(command);

@@ -85,7 +85,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
  * A module with only imports is not a proper module; it likely just augments some other module.
  */
 function sourceFileExportsSomething({ statements }: ts.SourceFile): boolean {
-  return statements.some(statement => {
+  return statements.some((statement) => {
     switch (statement.kind) {
       case ts.SyntaxKind.ImportEqualsDeclaration:
       case ts.SyntaxKind.ImportDeclaration:
@@ -161,7 +161,7 @@ export function allReferencedFiles(
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
   let hasNonRelativeImports = false;
-  entryFilenames.forEach(text => recur({ text, exact: true }));
+  entryFilenames.forEach((text) => recur({ text, exact: true }));
   return { types, tests, hasNonRelativeImports };
 
   function recur({ text, exact }: Reference): void {

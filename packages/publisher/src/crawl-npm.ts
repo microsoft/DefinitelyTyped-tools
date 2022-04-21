@@ -7,7 +7,7 @@ import {
   ProgressBar,
   strProgress,
   UncachedNpmInfoClient,
-  npmRegistry
+  npmRegistry,
 } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 import { ParseDefinitionsOptions, writeDataFile, packageHasTypes } from "@definitelytyped/definitions-parser";
@@ -24,11 +24,11 @@ async function main(options: ParseDefinitionsOptions): Promise<void> {
   const allTyped = await filterNAtATimeOrdered(
     10,
     all,
-    pkg => packageHasTypes(pkg, client),
+    (pkg) => packageHasTypes(pkg, client),
     options.progress
       ? {
           name: "Checking for types...",
-          flavor: (name, isTyped) => (isTyped ? name : undefined)
+          flavor: (name, isTyped) => (isTyped ? name : undefined),
         }
       : undefined
   );
@@ -59,7 +59,7 @@ function allNpmPackages(): Promise<string[]> {
         progress.done();
         resolve(all);
       })
-      .fail(err => {
+      .fail((err) => {
         reject(err.thrown);
       });
   });
