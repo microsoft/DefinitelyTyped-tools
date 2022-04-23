@@ -54,7 +54,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/publisher"
   },
   "author": "Microsoft",

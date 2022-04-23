@@ -7,4 +7,4 @@ interface I {
     almost?: number | string;
 }
 
-[0]: Parameter is optional, so no need to include `undefined` in the type. See: https://github.com/Microsoft/dtslint/blob/master/docs/redundant-undefined.md
+[0]: Parameter is optional, so no need to include `undefined` in the type. See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/redundant-undefined.md

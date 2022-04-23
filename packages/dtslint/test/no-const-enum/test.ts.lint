@@ -4,4 +4,4 @@ const enum E {
 
 enum F {}
 
-[0]: Use of `const enum`s is forbidden. See: https://github.com/Microsoft/dtslint/blob/master/docs/no-const-enum.md
+[0]: Use of `const enum`s is forbidden. See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/no-const-enum.md

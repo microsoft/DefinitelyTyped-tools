@@ -26,4 +26,4 @@ function f() {
     ];
 }
 
-[0]: Don't leave a blank line %s. See: https://github.com/Microsoft/dtslint/blob/master/docs/no-padding.md
+[0]: Don't leave a blank line %s. See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/no-padding.md

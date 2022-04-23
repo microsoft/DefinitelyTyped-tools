@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/definitions-parser"
   },
   "scripts": {

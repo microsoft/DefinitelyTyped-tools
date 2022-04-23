@@ -25,8 +25,7 @@ check npm for a package with the same name as the d.ts.
 ## Mode
 
 You can run dts-critic in different modes that affect which checks will be performed:
-1. `name-only`: dts-critic will check your package name and [DefinitelyTyped header]
-(https://github.com/Microsoft/definitelytyped-header-parser) (if present) against npm packages.
+1. `name-only`: dts-critic will check your package name and [DefinitelyTyped header](../header-parser) (if present) against npm packages.
 For example, if your declaration is for an npm package called 'cool-js-package', it will check if a
 package named 'cool-js-package' actually exists in npm.
 
@@ -41,7 +40,7 @@ has a default export.
 If your declaration is for an npm package:
 
 1. An npm package with the same name of your declaration's package must exist.
-2. If your declaration has a [Definitely Typed header](https://github.com/Microsoft/definitelytyped-header-parser)
+2. If your declaration has a [Definitely Typed header](../header-parser)
 and the header specifies a target version, the npm package must have
 a matching version.
 3. If you are running under `code` mode, your declaration must also match the source JavaScript module.
@@ -50,7 +49,7 @@ a matching version.
 <!-- 2. If no local path to source is provided, an npm package with the
 same name as the d.ts must exist. -->
 If your declaration is for a non-npm package (in other words, if your declaration has a
-[Definitely Typed header](https://github.com/Microsoft/definitelytyped-header-parser) *and*
+[Definitely Typed header](../header-parser) *and*
 the header specifies that the declaration file is for a non-npm package):
 
 1. An npm package with the same name of your declaration's package **cannot** exist.

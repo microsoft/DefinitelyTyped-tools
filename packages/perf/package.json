@@ -12,7 +12,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/andrewbranch/definitely-not-slow.git"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/perf"
   },
   "dependencies": {
     "@definitelytyped/definitions-parser": "^0.0.112",

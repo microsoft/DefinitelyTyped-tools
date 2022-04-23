@@ -3,11 +3,11 @@
   "version": "0.0.112",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/retag#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/retag"
   },
   "scripts": {

@@ -10,7 +10,7 @@ export async function readJson(path: string) {
 }
 
 export function failure(ruleName: string, s: string): string {
-  return `${s} See: https://github.com/Microsoft/dtslint/blob/master/docs/${ruleName}.md`;
+  return `${s} See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/${ruleName}.md`;
 }
 
 export function getCommonDirectoryName(files: readonly string[]): string {
