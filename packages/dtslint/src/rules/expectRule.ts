@@ -25,7 +25,8 @@ export class Rule extends Lint.Rules.TypedRule {
   };
 
   static FAILURE_STRING_DUPLICATE_ASSERTION = "This line has 2 $ExpectType assertions.";
-  static FAILURE_STRING_ASSERTION_MISSING_NODE = "Can not match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.";
+  static FAILURE_STRING_ASSERTION_MISSING_NODE =
+    "Can not match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.";
   static FAILURE_STRING_EXPECTED_ERROR = "Expected an error on this line, but found none.";
 
   // TODO: If this naming convention is required by tslint, dump it when switching to eslint
