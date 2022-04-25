@@ -14,7 +14,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/dtslint"
   },
   "scripts": {
     "build": "tsc -b .",

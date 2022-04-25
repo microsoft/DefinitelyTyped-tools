@@ -1,54 +1,55 @@
 {
-    "name": "@definitelytyped/dts-critic",
-    "version": "0.0.112",
-    "author": "Nathan Shively-Sanders",
-    "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
-    "publishConfig": {
-        "access": "public"
-    },
-    "dependencies": {
-        "@definitelytyped/header-parser": "^0.0.112",
-        "command-exists": "^1.2.8",
-        "rimraf": "^3.0.2",
-        "semver": "^6.2.0",
-        "tmp": "^0.2.1",
-        "yargs": "^15.3.1"
-    },
-    "peerDependencies": {
-        "typescript": "*"
-    },
-    "devDependencies": {
-        "@types/command-exists": "^1.2.0",
-        "@types/rimraf": "^3.0.0",
-        "@types/semver": "^6.0.1",
-        "@types/strip-json-comments": "0.0.30",
-        "@types/tmp": "^0.2.0",
-        "strip-json-comments": "^2.0.1"
-    },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc -b .",
-        "dt": "node dist/dt.js",
-        "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dts-critic"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
-    },
-    "keywords": [
-        "definitely",
-        "typed",
-        "refresh",
-        "npm",
-        "tag"
-    ],
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
-    },
-    "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
-    "engines": {
-        "node": ">=10.17.0"
-    }
+  "name": "@definitelytyped/dts-critic",
+  "version": "0.0.112",
+  "author": "Nathan Shively-Sanders",
+  "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@definitelytyped/header-parser": "^0.0.112",
+    "command-exists": "^1.2.8",
+    "rimraf": "^3.0.2",
+    "semver": "^6.2.0",
+    "tmp": "^0.2.1",
+    "yargs": "^15.3.1"
+  },
+  "peerDependencies": {
+    "typescript": "*"
+  },
+  "devDependencies": {
+    "@types/command-exists": "^1.2.0",
+    "@types/rimraf": "^3.0.0",
+    "@types/semver": "^6.0.1",
+    "@types/strip-json-comments": "0.0.30",
+    "@types/tmp": "^0.2.0",
+    "strip-json-comments": "^2.0.1"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b .",
+    "dt": "node dist/dt.js",
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dts-critic"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/dts-critic"
+  },
+  "keywords": [
+    "definitely",
+    "typed",
+    "refresh",
+    "npm",
+    "tag"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dts-critic#readme",
+  "engines": {
+    "node": ">=10.17.0"
+  }
 }

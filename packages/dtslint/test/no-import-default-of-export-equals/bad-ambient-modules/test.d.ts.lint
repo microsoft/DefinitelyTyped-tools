@@ -8,4 +8,4 @@ declare module "b" {
            ~ [0]
 }
 
-[0]: The module "a" uses `export = `. Import with `import a = require("a")`. See: https://github.com/Microsoft/dtslint/blob/master/docs/no-import-default-of-export-equals.md
+[0]: The module "a" uses `export = `. Import with `import a = require("a")`. See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/no-import-default-of-export-equals.md
