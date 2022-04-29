@@ -321,8 +321,9 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
     .replace(/\//, "-");
   const outPath = path.join(outDir, name);
   initDir(outPath);
+  const isBsdTar = cp.execFileSync("tar", ["--version"], cpOpts).includes("bsdtar");
   const args =
-    os.platform() === "darwin"
+    isBsdTar
       ? ["-xz", "-f", tarballName, "-C", outPath]
       : ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"];
   cp.execFileSync("tar", args, cpOpts);
