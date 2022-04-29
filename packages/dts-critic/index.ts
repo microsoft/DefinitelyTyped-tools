@@ -1,7 +1,6 @@
 import yargs = require("yargs");
 import headerParser = require("@definitelytyped/header-parser");
 import fs = require("fs");
-import os = require("os");
 import cp = require("child_process");
 import path = require("path");
 import semver = require("semver");
