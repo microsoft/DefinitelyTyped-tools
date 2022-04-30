@@ -98,12 +98,12 @@ async function isAlreadyDeprecated(
   client: CachedNpmInfoClient,
   log: LoggerWithErrors
 ): Promise<boolean> {
-  const cachedInfo = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
+  const cachedInfo = client.getNpmInfoFromCache(pkg.fullNpmName);
   let latestVersion = cachedInfo && assertDefined(cachedInfo.distTags.get("latest"));
   let latestVersionInfo = cachedInfo && latestVersion && assertDefined(cachedInfo.versions.get(latestVersion));
   if (!latestVersionInfo || !latestVersionInfo.deprecated) {
     log.info(`Version info not cached for deprecated package ${pkg.desc}`);
-    const info = assertDefined(await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName));
+    const info = assertDefined(await client.fetchAndCacheNpmInfo(pkg.fullNpmName));
     latestVersion = assertDefined(info.distTags.get("latest"));
     latestVersionInfo = assertDefined(info.versions.get(latestVersion));
   }
