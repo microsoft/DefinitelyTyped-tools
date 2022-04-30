@@ -253,11 +253,9 @@ async function generateRegistry(typings: readonly TypingsData[], client: CachedN
   const entries: { [packageName: string]: { [distTags: string]: string } } = {};
   for (const typing of typings) {
     // Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-    const info = client.getNpmInfoFromCache(typing.fullEscapedNpmName);
+    const info = client.getNpmInfoFromCache(typing.fullNpmName);
     if (!info) {
-      const missings = typings
-        .filter((t) => !client.getNpmInfoFromCache(t.fullEscapedNpmName))
-        .map((t) => t.fullEscapedNpmName);
+      const missings = typings.filter((t) => !client.getNpmInfoFromCache(t.fullNpmName)).map((t) => t.fullNpmName);
       throw new Error(`${missings.toString()} not found in cached npm info.`);
     }
     entries[typing.name] = filterTags(info.distTags);
@@ -284,11 +282,8 @@ interface ProcessedNpmInfo {
   readonly lastModified: Date;
 }
 
-async function fetchAndProcessNpmInfo(
-  escapedPackageName: string,
-  client: UncachedNpmInfoClient
-): Promise<ProcessedNpmInfo> {
-  const info = assertDefined(await client.fetchNpmInfo(escapedPackageName));
+async function fetchAndProcessNpmInfo(packageName: string, client: UncachedNpmInfoClient): Promise<ProcessedNpmInfo> {
+  const info = assertDefined(await client.fetchNpmInfo(packageName));
   const npmVersion = new semver.SemVer(assertDefined(info.distTags.get("latest")));
   const { distTags, versions, time } = info;
   const highestSemverVersion = max(

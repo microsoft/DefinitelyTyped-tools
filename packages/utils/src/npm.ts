@@ -44,8 +44,8 @@ export interface NpmInfoVersion {
 }
 
 export interface CachedNpmInfoClient {
-  getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined;
-  fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined>;
+  getNpmInfoFromCache(packageName: string): NpmInfo | undefined;
+  fetchAndCacheNpmInfo(packageName: string): Promise<NpmInfo | undefined>;
 }
 
 export async function withNpmCache<T>(
@@ -75,15 +75,15 @@ export async function withNpmCache<T>(
   return res;
 
   /** May return old info -- caller should check that this looks up-to-date. */
-  function getNpmInfoFromCache(escapedPackageName: string): NpmInfo | undefined {
-    return unroll.get(escapedPackageName);
+  function getNpmInfoFromCache(packageName: string): NpmInfo | undefined {
+    return unroll.get(packageName);
   }
 
   /** Call this when the result of getNpmInfoFromCache looks potentially out-of-date. */
-  async function fetchAndCacheNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
-    const info = await uncachedClient.fetchNpmInfo(escapedPackageName);
+  async function fetchAndCacheNpmInfo(packageName: string): Promise<NpmInfo | undefined> {
+    const info = await uncachedClient.fetchNpmInfo(packageName);
     if (info) {
-      unroll.set(escapedPackageName, info);
+      unroll.set(packageName, info);
     }
     return info;
   }
@@ -92,23 +92,23 @@ export async function withNpmCache<T>(
 export class UncachedNpmInfoClient {
   private readonly fetcher = new Fetcher();
 
-  async fetchNpmInfo(escapedPackageName: string): Promise<NpmInfo | undefined> {
-    const raw = await this.fetchRawNpmInfo(escapedPackageName);
+  async fetchNpmInfo(packageName: string): Promise<NpmInfo | undefined> {
+    const raw = await this.fetchRawNpmInfo(packageName);
     await sleep(0.01); // If we don't do this, npm resets the connection?
     return raw === undefined ? undefined : npmInfoFromJson(raw);
   }
 
-  async fetchRawNpmInfo(escapedPackageName: string): Promise<NpmInfoRaw | undefined> {
+  async fetchRawNpmInfo(packageName: string): Promise<NpmInfoRaw | undefined> {
     const info = (await this.fetcher.fetchJson({
       hostname: npmRegistryHostName,
-      path: escapedPackageName,
+      path: packageName,
       retries: true,
     })) as { readonly error: string } | NpmInfoRaw;
     if ("error" in info) {
       if (info.error === "Not found") {
         return undefined;
       }
-      throw new Error(`Error getting version at ${escapedPackageName}: ${info.error}`);
+      throw new Error(`Error getting version at ${packageName}: ${info.error}`);
     }
     if (!info["dist-tags"] && !info.versions) {
       // Unpublished
@@ -205,7 +205,7 @@ export class NpmPublishClient {
   }
 
   deprecate(packageName: string, version: string, message: string): Promise<void> {
-    const url = resolveUrl(npmRegistry, packageName.replace("/", "%2f"));
+    const url = resolveUrl(npmRegistry, packageName);
     const params = {
       message,
       version,

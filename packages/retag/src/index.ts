@@ -124,14 +124,14 @@ export async function fetchTypesPackageVersionInfo(
   canPublish: boolean,
   log?: LoggerWithErrors
 ): Promise<{ version: string; needsPublish: boolean }> {
-  let info = client.getNpmInfoFromCache(pkg.fullEscapedNpmName);
+  let info = client.getNpmInfoFromCache(pkg.fullNpmName);
   let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
   let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion));
   if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
     if (log) {
       log.info(`Version info not cached for ${pkg.desc}@${latestVersion || "(no latest version)"}`);
     }
-    info = await client.fetchAndCacheNpmInfo(pkg.fullEscapedNpmName);
+    info = await client.fetchAndCacheNpmInfo(pkg.fullNpmName);
     latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
     if (!latestVersion) {
       return { version: `${pkg.major}.${pkg.minor}.0`, needsPublish: true };
