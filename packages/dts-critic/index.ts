@@ -321,10 +321,9 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
   const outPath = path.join(outDir, name);
   initDir(outPath);
   const isBsdTar = cp.execFileSync("tar", ["--version"], cpOpts).includes("bsdtar");
-  const args =
-    isBsdTar
-      ? ["-xz", "-f", tarballName, "-C", outPath]
-      : ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"];
+  const args = isBsdTar
+    ? ["-xz", "-f", tarballName, "-C", outPath]
+    : ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"];
   cp.execFileSync("tar", args, cpOpts);
   fs.unlinkSync(tarballName);
   return path.join(outPath, getPackageDir(outPath));
