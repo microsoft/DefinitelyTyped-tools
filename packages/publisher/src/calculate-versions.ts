@@ -1,4 +1,5 @@
-import { defaultLocalOptions } from "./lib/common";
+import process from "process";
+import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, versionsFilename } from "./lib/versions";
 import { getDefinitelyTyped, AllPackages, NotNeededPackage, writeDataFile } from "@definitelytyped/definitions-parser";
 import {
@@ -18,7 +19,11 @@ import { cacheDirPath } from "./lib/settings";
 if (!module.parent) {
   const log = loggerWithErrors()[0];
   logUncaughtErrors(async () =>
-    calculateVersions(await getDefinitelyTyped(defaultLocalOptions, log), new UncachedNpmInfoClient(), log)
+    calculateVersions(
+      await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions, log),
+      new UncachedNpmInfoClient(),
+      log
+    )
   );
 }
 

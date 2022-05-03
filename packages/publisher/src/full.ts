@@ -6,7 +6,6 @@ import { clean } from "./clean";
 import createSearchIndex from "./create-search-index";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
-import publishRegistry from "./publish-registry";
 import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
 import {
   Fetcher,
@@ -51,5 +50,4 @@ export default async function full(
   await generatePackages(dt, allPackages, changedPackages);
   await createSearchIndex(allPackages, infoClient);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
-  await publishRegistry(dt, allPackages, dry, infoClient);
 }
