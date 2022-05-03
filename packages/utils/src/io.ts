@@ -7,10 +7,10 @@ import {
   writeJson as writeJsonRaw,
   createWriteStream,
 } from "fs-extra";
-import { FStreamEntry, Reader } from "fstream";
 import { Pack } from "tar";
 import tarStream from "tar-stream";
 import https, { Agent, request } from "https";
+import { resolve, sep } from "path";
 import zlib from "zlib";
 import { request as httpRequest } from "http";
 import { Readable as ReadableStream } from "stream";
@@ -19,6 +19,7 @@ import { parseJson, withoutStart, sleep, tryParseJson, isObject } from "./miscel
 import { FS, Dir, InMemoryFS } from "./fs";
 import { assertDefined } from "./assertions";
 import { LoggerWithErrors } from "./logging";
+import { Stats } from "fs";
 
 export async function readFile(path: string): Promise<string> {
   const res = await readFileWithEncoding(path, { encoding: "utf8" });
@@ -268,20 +269,24 @@ export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.
 }
 
 function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-  const packer = Pack({ noProprietary: true, path: dir }).on("error", onError);
+  const dirSegments = resolve(dir).split(sep);
+  const parentDir = dirSegments.slice(0, dirSegments.length - 1).join(sep);
+  const entryToAdd = dirSegments[dirSegments.length - 1];
+  const packer = new Pack({ cwd: parentDir, filter: addDirectoryExecutablePermission });
+  packer.on("error", onError);
+  const stream = packer.add(entryToAdd);
+  packer.end();
 
-  return Reader({ path: dir, type: "Directory", filter: addDirectoryExecutablePermission })
-    .on("error", onError)
-    .pipe(packer);
+  return stream;
 }
 
 /**
  * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
  * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
  */
-function addDirectoryExecutablePermission(entry: FStreamEntry): boolean {
-  if (entry.props.type === "Directory") {
-    entry.props.mode = addExecutePermissionsFromReadPermissions(entry.props.mode);
+function addDirectoryExecutablePermission(_: string, stat: Stats): boolean {
+  if (stat.isDirectory()) {
+    stat.mode = addExecutePermissionsFromReadPermissions(stat.mode);
   }
   return true;
 }
