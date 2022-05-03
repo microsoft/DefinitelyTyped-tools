@@ -1,4 +1,3 @@
-import assert from "assert";
 import { sourceBranch } from "./lib/settings";
 import {
   PackageId,
@@ -20,7 +19,6 @@ import {
   cacheDir,
 } from "@definitelytyped/utils";
 import * as pacote from "pacote";
-import * as semver from "semver";
 import { getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
@@ -127,10 +125,14 @@ export async function getAffectedPackagesFromDiff(
 
 /**
  * 1. libraryName must exist on npm (SKIPPED and preferably/optionally have been the libraryName in just-deleted header)
- * 2. asOfVersion must be newer than `@types/name@latest` on npm
- * 3. `name@asOfVersion` must exist on npm
+ * 2. `name@asOfVersion` must exist on npm
  */
 export async function checkNotNeededPackage(unneeded: NotNeededPackage) {
+  await pacote.manifest(unneeded.fullNpmName, { cache: cacheDir }).catch((reason) => {
+    throw reason.code === "E404"
+      ? new Error(`Unexpected error: @types package not found for ${unneeded.fullNpmName}`, { cause: reason })
+      : reason;
+  }); // eg @types/babel__parser
   await pacote.manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: cacheDir }).catch((reason) => {
     throw reason.code === "E404"
       ? new Error(
@@ -145,16 +147,6 @@ Unneeded packages have to be replaced with a package on npm.`,
         })
       : reason;
   }); // eg @babel/parser
-  const typings = await pacote.manifest(unneeded.fullNpmName, { cache: cacheDir }).catch((reason) => {
-    throw reason.code === "E404"
-      ? new Error(`Unexpected error: @types package not found for ${unneeded.fullNpmName}`, { cause: reason })
-      : reason;
-  }); // eg @types/babel__parser
-  assert(
-    semver.gt(unneeded.version, typings.version),
-    `The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
-  );
 }
 
 /**
