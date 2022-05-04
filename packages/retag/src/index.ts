@@ -147,7 +147,7 @@ export async function fetchTypesPackageVersionInfo(
     );
   }
   const needsPublish = canPublish && pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
-  return { version: needsPublish ? semver.inc(latestVersion!, "patch")! : `${pkg.major}.${pkg.minor}.0`, needsPublish };
+  return { version: needsPublish ? semver.inc(latestVersion!, "patch")! : latestVersion!, needsPublish };
 }
 
 function getHighestVersionForMajor(
