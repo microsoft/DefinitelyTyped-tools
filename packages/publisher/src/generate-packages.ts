@@ -19,7 +19,6 @@ import {
   Logger,
   writeTgz,
   withNpmCache,
-  UncachedNpmInfoClient,
   CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import {
@@ -71,11 +70,11 @@ export default async function generatePackages(
   }
   log("## Generating deprecated packages");
   await withNpmCache(
-    new UncachedNpmInfoClient(),
-    async (client) => {
+    undefined,
+    async (offline) => {
       for (const pkg of changedPackages.changedNotNeededPackages) {
         log(` * ${pkg.libraryName}`);
-        await generateNotNeededPackage(pkg, client, log);
+        await generateNotNeededPackage(pkg, offline, log);
       }
     },
     cacheDirPath
@@ -102,11 +101,11 @@ async function generateTypingPackage(
 
 async function generateNotNeededPackage(
   pkg: NotNeededPackage,
-  client: CachedNpmInfoClient,
+  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">,
   log: Logger
 ): Promise<void> {
-  pkg = skipBadPublishes(pkg, client, log);
-  const info = await client.fetchAndCacheNpmInfo(pkg.libraryName);
+  pkg = skipBadPublishes(pkg, offline, log);
+  const info = offline.getNpmInfoFromCache(pkg.libraryName);
   assert(info);
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
