@@ -2,14 +2,7 @@ import process from "process";
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, versionsFilename } from "./lib/versions";
 import { getDefinitelyTyped, AllPackages, NotNeededPackage, writeDataFile } from "@definitelytyped/definitions-parser";
-import {
-  mapDefinedAsync,
-  logUncaughtErrors,
-  loggerWithErrors,
-  FS,
-  LoggerWithErrors,
-  cacheDir,
-} from "@definitelytyped/utils";
+import { logUncaughtErrors, loggerWithErrors, FS, LoggerWithErrors, cacheDir } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
 
@@ -47,44 +40,54 @@ async function computeAndSaveChangedPackages(
 
 async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors): Promise<ChangedPackages> {
   log.info("# Computing changed packages...");
-  const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async (pkg) => {
-    const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
-    if (needsPublish) {
-      log.info(`Need to publish: ${pkg.desc}@${version}`);
-      for (const { name } of pkg.packageJsonDependencies) {
-        // Assert that dependencies exist on npm.
-        // Also checked when we install the dependencies, in dtslint-runner.
-        await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
-          throw reason.code === "E404"
-            ? new Error(
-                `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
-                { cause: reason }
-              )
-            : reason;
-        });
-      }
-      const latestVersion = pkg.isLatest
-        ? undefined
-        : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), /*publish*/ true)).version;
-      return { pkg, version, latestVersion };
-    }
-    return undefined;
-  });
+  const changedTypings = (
+    await Promise.all(
+      allPackages.allTypings().map(async (pkg) => {
+        const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
+        if (needsPublish) {
+          log.info(`Need to publish: ${pkg.desc}@${version}`);
+          for (const { name } of pkg.packageJsonDependencies) {
+            // Assert that dependencies exist on npm.
+            // Also checked when we install the dependencies, in dtslint-runner.
+            await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
+              throw reason.code === "E404"
+                ? new Error(
+                    `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
+                    { cause: reason }
+                  )
+                : reason;
+            });
+          }
+          const latestVersion = pkg.isLatest
+            ? undefined
+            : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), /*publish*/ true)).version;
+          return { pkg, version, latestVersion };
+        }
+        return undefined;
+      })
+    )
+  ).filter((value): value is NonNullable<typeof value> => value as never);
   log.info("# Computing deprecated packages...");
-  const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async (pkg) => {
-    if (!(await isAlreadyDeprecated(pkg, log))) {
-      // Assert that dependencies (i.e. the replacement package) exist on npm.
-      // Also checked in checkNotNeededPackage().
-      await pacote.manifest(pkg.libraryName, { cache: cacheDir }).catch((reason) => {
-        throw reason.code === "E404"
-          ? new Error(`To deprecate '@types/${pkg.name}', '${pkg.libraryName}' must exist on npm.`, { cause: reason })
-          : reason;
-      });
-      log.info(`To be deprecated: ${pkg.name}`);
-      return pkg;
-    }
-    return undefined;
-  });
+  const changedNotNeededPackages = (
+    await Promise.all(
+      allPackages.allNotNeeded().map(async (pkg) => {
+        if (!(await isAlreadyDeprecated(pkg, log))) {
+          // Assert that dependencies (i.e. the replacement package) exist on npm.
+          // Also checked in checkNotNeededPackage().
+          await pacote.manifest(pkg.libraryName, { cache: cacheDir }).catch((reason) => {
+            throw reason.code === "E404"
+              ? new Error(`To deprecate '@types/${pkg.name}', '${pkg.libraryName}' must exist on npm.`, {
+                  cause: reason,
+                })
+              : reason;
+          });
+          log.info(`To be deprecated: ${pkg.name}`);
+          return pkg;
+        }
+        return undefined;
+      })
+    )
+  ).filter((value): value is NonNullable<typeof value> => value as never);
   return { changedTypings, changedNotNeededPackages };
 }
 
