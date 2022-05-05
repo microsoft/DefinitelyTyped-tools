@@ -7,9 +7,13 @@ import * as semver from "semver";
  * So the keys of 'time' give the actual 'latest'.
  * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
  */
-export function skipBadPublishes(pkg: NotNeededPackage, client: CachedNpmInfoClient, log: Logger) {
+export function skipBadPublishes(
+  pkg: NotNeededPackage,
+  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">,
+  log: Logger
+) {
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
-  const info = assertDefined(client.getNpmInfoFromCache(pkg.fullNpmName));
+  const info = assertDefined(offline.getNpmInfoFromCache(pkg.fullNpmName));
   const notNeeded = pkg.version;
   const latest = new semver.SemVer(findActualLatest(info.time));
   if (semver.lte(notNeeded, latest)) {

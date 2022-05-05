@@ -70,8 +70,8 @@ export default async function publishRegistry(
 
   // Don't include not-needed packages in the registry.
   const registryJsonData = await withNpmCache(
-    client,
-    (cachedClient) => generateRegistry(allPackages.allLatestTypings(), cachedClient),
+    undefined,
+    (offline) => generateRegistry(allPackages.allLatestTypings(), offline),
     cacheDirPath
   );
   const registry = JSON.stringify(registryJsonData);
@@ -241,13 +241,16 @@ interface Registry {
     };
   };
 }
-async function generateRegistry(typings: readonly TypingsData[], client: CachedNpmInfoClient): Promise<Registry> {
+async function generateRegistry(
+  typings: readonly TypingsData[],
+  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">
+): Promise<Registry> {
   const entries: { [packageName: string]: { [distTags: string]: string } } = {};
   for (const typing of typings) {
     // Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-    const info = client.getNpmInfoFromCache(typing.fullNpmName);
+    const info = offline.getNpmInfoFromCache(typing.fullNpmName);
     if (!info) {
-      const missings = typings.filter((t) => !client.getNpmInfoFromCache(t.fullNpmName)).map((t) => t.fullNpmName);
+      const missings = typings.filter((t) => !offline.getNpmInfoFromCache(t.fullNpmName)).map((t) => t.fullNpmName);
       throw new Error(`${missings.toString()} not found in cached npm info.`);
     }
     entries[typing.name] = filterTags(info.distTags);

@@ -12,7 +12,6 @@ import {
   writeLog,
   NpmPublishClient,
   withNpmCache,
-  UncachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
@@ -130,10 +129,10 @@ export default async function publishPackages(
   }
 
   await withNpmCache(
-    new UncachedNpmInfoClient(),
-    async (infoClient) => {
+    undefined,
+    async (offline) => {
       for (const n of changedPackages.changedNotNeededPackages) {
-        const target = skipBadPublishes(n, infoClient, log);
+        const target = skipBadPublishes(n, offline, log);
         await publishNotNeededPackage(client, target, dry, log);
       }
     },

@@ -50,7 +50,17 @@ export interface CachedNpmInfoClient {
 
 export async function withNpmCache<T>(
   uncachedClient: UncachedNpmInfoClient,
-  cb: (client: CachedNpmInfoClient) => Promise<T>,
+  cb: (client: CachedNpmInfoClient) => T,
+  cacheDir?: string
+): Promise<T>;
+export async function withNpmCache<T>(
+  uncachedClient: undefined,
+  cb: (offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">) => T,
+  cacheDir?: string
+): Promise<T>;
+export async function withNpmCache<T>(
+  uncachedClient: UncachedNpmInfoClient | undefined,
+  cb: (client: CachedNpmInfoClient) => T,
   cacheDir = defaultCacheDir
 ): Promise<T> {
   const log = loggerWithErrors()[0];
@@ -69,9 +79,12 @@ export async function withNpmCache<T>(
   }
 
   const res = await cb({ getNpmInfoFromCache, fetchAndCacheNpmInfo });
-  log.info("Writing npm cache.");
-  await ensureFile(cacheFile);
-  await writeJson(cacheFile, mapToRecord(unroll, jsonFromNpmInfo));
+  // Don't bother writing if there's no way we could have gone to the origin.
+  if (uncachedClient) {
+    log.info("Writing npm cache.");
+    await ensureFile(cacheFile);
+    await writeJson(cacheFile, mapToRecord(unroll, jsonFromNpmInfo));
+  }
   return res;
 
   /** May return old info -- caller should check that this looks up-to-date. */
@@ -81,7 +94,7 @@ export async function withNpmCache<T>(
 
   /** Call this when the result of getNpmInfoFromCache looks potentially out-of-date. */
   async function fetchAndCacheNpmInfo(packageName: string): Promise<NpmInfo | undefined> {
-    const info = await uncachedClient.fetchNpmInfo(packageName);
+    const info = await uncachedClient!.fetchNpmInfo(packageName);
     if (info) {
       unroll.set(packageName, info);
     }
