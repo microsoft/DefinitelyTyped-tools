@@ -15,7 +15,6 @@ import {
   logger,
   writeLog,
   writeFile,
-  Logger,
   cacheDir,
   writeTgz,
 } from "@definitelytyped/utils";
@@ -34,7 +33,6 @@ import {
 import * as pacote from "pacote";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
-import { skipBadPublishes } from "./lib/npm";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
@@ -68,9 +66,9 @@ export default async function generatePackages(
     log(` * ${pkg.desc}`);
   }
   log("## Generating deprecated packages");
-  for (const pkg of changedPackages.changedNotNeededPackages) {
+  for (const { pkg, version } of changedPackages.changedNotNeededPackages) {
     log(` * ${pkg.libraryName}`);
-    await generateNotNeededPackage(pkg, log);
+    await generateNotNeededPackage(pkg, version);
   }
   await writeLog("package-generator.md", logResult());
 }
@@ -92,12 +90,11 @@ async function generateTypingPackage(
   );
 }
 
-async function generateNotNeededPackage(pkg: NotNeededPackage, log: Logger): Promise<void> {
-  pkg = await skipBadPublishes(pkg, log);
+async function generateNotNeededPackage(pkg: NotNeededPackage, version: string): Promise<void> {
   const info = await pacote.manifest(pkg.libraryName, { cache: cacheDir, fullMetadata: true });
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
-  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
+  await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg, version), readme);
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
@@ -197,10 +194,10 @@ function dependencySemver(dependency: DependencyVersion): string {
   return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
 }
 
-export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
+export function createNotNeededPackageJSON(pkg: NotNeededPackage, version: string): string {
   const out = {
     name: pkg.fullNpmName,
-    version: String(pkg.version),
+    version,
     description: `Stub TypeScript definitions entry for ${pkg.libraryName}, which provides its own types definitions`,
     main: "",
     scripts: {},

@@ -1,13 +1,13 @@
 import assert = require("assert");
 import { Logger, joinPaths, readFileAndWarn, NpmPublishClient } from "@definitelytyped/utils";
-import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
+import { NotNeededPackage, AnyPackage, TypingsData } from "@definitelytyped/definitions-parser";
 import { updateTypeScriptVersionTags, updateLatestTag } from "@definitelytyped/retag";
 import { ChangedTyping } from "./versions";
 import { outputDirectory } from "../util/util";
 
 export async function publishTypingsPackage(
   client: NpmPublishClient,
-  changedTyping: ChangedTyping,
+  changedTyping: ChangedTyping<TypingsData>,
   dry: boolean,
   log: Logger
 ): Promise<void> {
