@@ -1,9 +1,10 @@
 import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
 import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import path = require("path");
+import process from "process";
 import yargs = require("yargs");
 
-import { defaultLocalOptions } from "./lib/common";
+import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { outputDirPath, sourceBranch } from "./lib/settings";
 import {
   assertNever,
@@ -42,7 +43,7 @@ if (!module.parent) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
-    const dt = await getDefinitelyTyped(defaultLocalOptions, log);
+    const dt = await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions, log);
     const allPackages = await AllPackages.read(dt);
     await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
   });

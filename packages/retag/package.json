@@ -31,9 +31,6 @@
     "@types/yargs": "^15.0.5"
   },
   "main": "dist/index.js",
-  "bin": {
-    "retag": "./dist/retag.js"
-  },
   "publishConfig": {
     "access": "public"
   }

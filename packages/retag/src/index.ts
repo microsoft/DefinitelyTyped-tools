@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import assert = require("assert");
 import yargs from "yargs";
 import process = require("process");
@@ -49,10 +47,14 @@ async function main() {
  */
 async function tag(dry: boolean, nProcesses: number, name?: string) {
   const log = loggerWithErrors()[0];
-  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
+  const options = process.env.GITHUB_ACTIONS
+    ? { definitelyTypedPath: undefined, progress: false, parseInParallel: false }
+    : { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
   await parseDefinitions(
     await getDefinitelyTyped(options, log),
-    { nProcesses: nProcesses || os.cpus().length, definitelyTypedPath: "../DefinitelyTyped" },
+    options.parseInParallel
+      ? { nProcesses: nProcesses || os.cpus().length, definitelyTypedPath: "../DefinitelyTyped" }
+      : undefined,
     log
   );
 
