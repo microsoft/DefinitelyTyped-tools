@@ -9,9 +9,9 @@ import {
   logUncaughtErrors,
   logger,
   Fetcher,
+  NpmInfoRaw,
   writeLog,
   NpmPublishClient,
-  withNpmCache,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
@@ -142,16 +142,11 @@ export default async function publishPackages(
     }
   }
 
-  await withNpmCache(
-    undefined,
-    async (offline) => {
-      for (const n of changedPackages.changedNotNeededPackages) {
-        const target = skipBadPublishes(n, offline, log);
-        await publishNotNeededPackage(client, target, dry, log);
-      }
-    },
-    cacheDirPath
-  );
+  const offline: Record<string, NpmInfoRaw> = await import(`${cacheDirPath}/npmInfo.json`);
+  for (const n of changedPackages.changedNotNeededPackages) {
+    const target = skipBadPublishes(n, offline, log);
+    await publishNotNeededPackage(client, target, dry, log);
+  }
 
   await writeLog("publishing.md", logResult());
   console.log("Done!");

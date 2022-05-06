@@ -1,5 +1,5 @@
 import { NotNeededPackage } from "@definitelytyped/definitions-parser";
-import { Logger, assertDefined, CachedNpmInfoClient, max } from "@definitelytyped/utils";
+import { Logger, NpmInfoRaw, assertDefined, max } from "@definitelytyped/utils";
 import * as semver from "semver";
 
 /**
@@ -7,13 +7,9 @@ import * as semver from "semver";
  * So the keys of 'time' give the actual 'latest'.
  * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
  */
-export function skipBadPublishes(
-  pkg: NotNeededPackage,
-  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">,
-  log: Logger
-) {
+export function skipBadPublishes(pkg: NotNeededPackage, offline: Record<string, NpmInfoRaw>, log: Logger) {
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
-  const info = assertDefined(offline.getNpmInfoFromCache(pkg.fullNpmName));
+  const info = assertDefined(offline[pkg.fullNpmName]);
   const notNeeded = pkg.version;
   const latest = new semver.SemVer(findActualLatest(info.time));
   if (semver.lte(notNeeded, latest)) {
@@ -24,9 +20,9 @@ export function skipBadPublishes(
   return pkg;
 }
 
-function findActualLatest(times: Map<string, string>) {
+function findActualLatest(times: NpmInfoRaw["time"]) {
   const actual = max(
-    [...times].filter(([version]) => version !== "modified" && version !== "created"),
+    Object.entries(times).filter(([version]) => version !== "modified" && version !== "created"),
     ([, a], [, b]) => (new Date(a) as never) - (new Date(b) as never)
   );
   if (!actual) {
