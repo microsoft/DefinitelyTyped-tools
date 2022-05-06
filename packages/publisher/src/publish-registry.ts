@@ -25,13 +25,12 @@ import {
   writeJson,
   writeFile,
   Logger,
+  NpmInfoRaw,
   sleep,
   npmInstallFlags,
   readJson,
   UncachedNpmInfoClient,
-  withNpmCache,
   NpmPublishClient,
-  CachedNpmInfoClient,
   isObject,
   max,
 } from "@definitelytyped/utils";
@@ -69,11 +68,8 @@ export default async function publishRegistry(
   assert.strictEqual(npmVersion.minor, 1);
 
   // Don't include not-needed packages in the registry.
-  const registryJsonData = await withNpmCache(
-    undefined,
-    (offline) => generateRegistry(allPackages.allLatestTypings(), offline),
-    cacheDirPath
-  );
+  const offline: Record<string, NpmInfoRaw> = await import(`${cacheDirPath}/npmInfo.json`);
+  const registryJsonData = await generateRegistry(allPackages.allLatestTypings(), offline);
   const registry = JSON.stringify(registryJsonData);
   const newContentHash = computeHash(registry);
   const newVersion = semver.inc(npmVersion, "patch")!;
@@ -243,30 +239,24 @@ interface Registry {
 }
 async function generateRegistry(
   typings: readonly TypingsData[],
-  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">
+  offline: Record<string, NpmInfoRaw>
 ): Promise<Registry> {
   const entries: { [packageName: string]: { [distTags: string]: string } } = {};
   for (const typing of typings) {
     // Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-    const info = offline.getNpmInfoFromCache(typing.fullNpmName);
+    const info = offline[typing.fullNpmName];
     if (!info) {
-      const missings = typings.filter((t) => !offline.getNpmInfoFromCache(t.fullNpmName)).map((t) => t.fullNpmName);
+      const missings = typings.filter((t) => !(t.fullNpmName in offline)).map((t) => t.fullNpmName);
       throw new Error(`${missings.toString()} not found in cached npm info.`);
     }
-    entries[typing.name] = filterTags(info.distTags);
+    entries[typing.name] = filterTags(info["dist-tags"]);
   }
   return { entries };
 
-  function filterTags(tags: Map<string, string>): { readonly [tag: string]: string } {
-    const latestTag = "latest";
-    const latestVersion = tags.get(latestTag);
-    const out: { [tag: string]: string } = {};
-    tags.forEach((value, tag) => {
-      if (tag === latestTag || value !== latestVersion) {
-        out[tag] = value;
-      }
-    });
-    return out;
+  function filterTags(tags: NpmInfoRaw["dist-tags"]): { readonly [tag: string]: string } {
+    return Object.fromEntries(
+      Object.entries(tags).filter(([tag, version]) => tag === "latest" || version !== tags.latest)
+    );
   }
 }
 

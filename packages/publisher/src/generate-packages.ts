@@ -1,5 +1,4 @@
 import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
-import assert = require("assert");
 import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import path = require("path");
 import yargs = require("yargs");
@@ -17,9 +16,8 @@ import {
   writeLog,
   writeFile,
   Logger,
+  NpmInfoRaw,
   writeTgz,
-  withNpmCache,
-  CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import {
   getDefinitelyTyped,
@@ -69,16 +67,11 @@ export default async function generatePackages(
     log(` * ${pkg.desc}`);
   }
   log("## Generating deprecated packages");
-  await withNpmCache(
-    undefined,
-    async (offline) => {
-      for (const pkg of changedPackages.changedNotNeededPackages) {
-        log(` * ${pkg.libraryName}`);
-        await generateNotNeededPackage(pkg, offline, log);
-      }
-    },
-    cacheDirPath
-  );
+  const offline: Record<string, NpmInfoRaw> = await import(`${cacheDirPath}/npmInfo.json`);
+  for (const pkg of changedPackages.changedNotNeededPackages) {
+    log(` * ${pkg.libraryName}`);
+    await generateNotNeededPackage(pkg, offline, log);
+  }
   await writeLog("package-generator.md", logResult());
 }
 async function generateTypingPackage(
@@ -101,12 +94,11 @@ async function generateTypingPackage(
 
 async function generateNotNeededPackage(
   pkg: NotNeededPackage,
-  offline: Omit<CachedNpmInfoClient, "fetchAndCacheNpmInfo">,
+  offline: Record<string, NpmInfoRaw>,
   log: Logger
 ): Promise<void> {
   pkg = skipBadPublishes(pkg, offline, log);
-  const info = offline.getNpmInfoFromCache(pkg.libraryName);
-  assert(info);
+  const info = offline[pkg.libraryName];
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
   await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
