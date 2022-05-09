@@ -17,5 +17,6 @@
   "devDependencies": {
     "@types/libnpmsearch": "^2.0.3",
     "@types/yargs": "^17.0.10"
-  }
+  },
+  "private": true
 }
