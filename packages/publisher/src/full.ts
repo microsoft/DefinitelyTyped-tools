@@ -3,7 +3,6 @@ import * as yargs from "yargs";
 
 import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
-import createSearchIndex from "./create-search-index";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
@@ -49,7 +48,6 @@ export default async function full(
   );
   const changedPackages = await calculateVersions(dt, infoClient, log);
   await generatePackages(dt, allPackages, changedPackages);
-  await createSearchIndex(allPackages, infoClient);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
   await publishRegistry(dt, allPackages, dry, infoClient);
 }

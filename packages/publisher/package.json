@@ -44,7 +44,6 @@
     "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
     "generate": "node -r source-map-support/register dist/generate-packages.js",
     "validate": "node -r source-map-support/register dist/validate.js",
-    "index": "node -r source-map-support/register dist/create-search-index.js",
     "publish-packages": "node -r source-map-support/register dist/publish-packages.js",
     "publish-packages-dry": "node -r source-map-support/register dist/publish-packages.js --dry",
     "publish-registry": "node -r source-map-support/register dist/publish-registry.js",
