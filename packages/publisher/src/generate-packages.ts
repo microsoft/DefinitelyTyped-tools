@@ -4,7 +4,7 @@ import path = require("path");
 import yargs = require("yargs");
 
 import { defaultLocalOptions } from "./lib/common";
-import { outputDirPath, sourceBranch, cacheDirPath } from "./lib/settings";
+import { outputDirPath, sourceBranch } from "./lib/settings";
 import {
   assertNever,
   joinPaths,
@@ -16,7 +16,7 @@ import {
   writeLog,
   writeFile,
   Logger,
-  NpmInfoRaw,
+  defaultCacheDir,
   writeTgz,
 } from "@definitelytyped/utils";
 import {
@@ -31,6 +31,7 @@ import {
   License,
   formatTypingVersion,
 } from "@definitelytyped/definitions-parser";
+import * as pacote from "pacote";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
 import { skipBadPublishes } from "./lib/npm";
@@ -67,10 +68,9 @@ export default async function generatePackages(
     log(` * ${pkg.desc}`);
   }
   log("## Generating deprecated packages");
-  const offline: Record<string, NpmInfoRaw> = await import(`${cacheDirPath}/npmInfo.json`);
   for (const pkg of changedPackages.changedNotNeededPackages) {
     log(` * ${pkg.libraryName}`);
-    await generateNotNeededPackage(pkg, offline, log);
+    await generateNotNeededPackage(pkg, log);
   }
   await writeLog("package-generator.md", logResult());
 }
@@ -92,13 +92,9 @@ async function generateTypingPackage(
   );
 }
 
-async function generateNotNeededPackage(
-  pkg: NotNeededPackage,
-  offline: Record<string, NpmInfoRaw>,
-  log: Logger
-): Promise<void> {
-  pkg = skipBadPublishes(pkg, offline, log);
-  const info = offline[pkg.libraryName];
+async function generateNotNeededPackage(pkg: NotNeededPackage, log: Logger): Promise<void> {
+  pkg = await skipBadPublishes(pkg, log);
+  const info = await pacote.manifest(pkg.libraryName, { cache: defaultCacheDir, fullMetadata: true });
   const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
 ${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
   await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);

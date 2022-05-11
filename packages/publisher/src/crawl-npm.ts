@@ -6,7 +6,6 @@ import {
   logUncaughtErrors,
   ProgressBar,
   strProgress,
-  UncachedNpmInfoClient,
   npmRegistry,
 } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
@@ -20,11 +19,10 @@ if (!module.parent) {
 async function main(options: ParseDefinitionsOptions): Promise<void> {
   const all = await allNpmPackages();
   await writeDataFile("all-npm-packages.json", all);
-  const client = new UncachedNpmInfoClient();
   const allTyped = await filterNAtATimeOrdered(
     10,
     all,
-    (pkg) => packageHasTypes(pkg, client),
+    (pkg) => packageHasTypes(pkg),
     options.progress
       ? {
           name: "Checking for types...",

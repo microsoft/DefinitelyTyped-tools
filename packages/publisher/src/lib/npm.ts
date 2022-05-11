@@ -1,5 +1,6 @@
 import { NotNeededPackage } from "@definitelytyped/definitions-parser";
-import { Logger, NpmInfoRaw, assertDefined, max } from "@definitelytyped/utils";
+import { Logger, defaultCacheDir } from "@definitelytyped/utils";
+import * as pacote from "pacote";
 import * as semver from "semver";
 
 /**
@@ -7,26 +8,15 @@ import * as semver from "semver";
  * So the keys of 'time' give the actual 'latest'.
  * If that's not equal to the expected latest, try again by bumping the patch version of the last attempt by 1.
  */
-export function skipBadPublishes(pkg: NotNeededPackage, offline: Record<string, NpmInfoRaw>, log: Logger) {
+export async function skipBadPublishes(pkg: NotNeededPackage, log: Logger) {
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
-  const info = assertDefined(offline[pkg.fullNpmName]);
+  const info = await pacote.packument(pkg.fullNpmName, { cache: defaultCacheDir });
   const notNeeded = pkg.version;
-  const latest = new semver.SemVer(findActualLatest(info.time));
+  const latest = semver.maxSatisfying(Object.keys(info.versions), "*")!;
   if (semver.lte(notNeeded, latest)) {
     const plusOne = semver.inc(latest, "patch")!;
     log(`Deprecation of ${notNeeded} failed, instead using ${plusOne}.`);
     return new NotNeededPackage(pkg.name, pkg.libraryName, plusOne);
   }
   return pkg;
-}
-
-function findActualLatest(times: NpmInfoRaw["time"]) {
-  const actual = max(
-    Object.entries(times).filter(([version]) => version !== "modified" && version !== "created"),
-    ([, a], [, b]) => (new Date(a) as never) - (new Date(b) as never)
-  );
-  if (!actual) {
-    throw new Error("failed to find actual latest");
-  }
-  return actual[0];
 }
