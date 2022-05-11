@@ -9,14 +9,12 @@ import {
   logUncaughtErrors,
   logger,
   Fetcher,
-  NpmInfoRaw,
   writeLog,
   NpmPublishClient,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
-import { cacheDirPath } from "./lib/settings";
 
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
@@ -128,9 +126,8 @@ export default async function publishPackages(
     }
   }
 
-  const offline: Record<string, NpmInfoRaw> = await import(`${cacheDirPath}/npmInfo.json`);
   for (const n of changedPackages.changedNotNeededPackages) {
-    const target = skipBadPublishes(n, offline, log);
+    const target = await skipBadPublishes(n, log);
     await publishNotNeededPackage(client, target, dry, log);
   }
 

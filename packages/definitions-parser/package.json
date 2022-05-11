@@ -24,10 +24,12 @@
     "@definitelytyped/utils": "^0.0.118",
     "@types/node": "^14.14.35",
     "fs-extra": "^9.1.0",
+    "pacote": "^13.6.1",
     "semver": "^7.3.7"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.8"
+    "@types/fs-extra": "^9.0.8",
+    "@types/pacote": "^11.1.5"
   },
   "peerDependencies": {
     "typescript": "*"

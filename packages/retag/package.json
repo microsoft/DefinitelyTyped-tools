@@ -21,11 +21,13 @@
     "@definitelytyped/definitions-parser": "^0.0.118",
     "@definitelytyped/typescript-versions": "^0.0.118",
     "@definitelytyped/utils": "^0.0.118",
+    "pacote": "^13.6.1",
     "semver": "^7.3.7",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@types/node": "^10.17.21",
+    "@types/pacote": "^11.1.5",
     "@types/yargs": "^15.0.5"
   },
   "main": "dist/index.js",

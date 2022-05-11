@@ -8,17 +8,13 @@ import os = require("os");
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
   Logger,
-  assertDefined,
-  withNpmCache,
   NpmPublishClient,
-  UncachedNpmInfoClient,
   consoleLogger,
-  NpmInfoVersion,
   logUncaughtErrors,
   loggerWithErrors,
   LoggerWithErrors,
+  cacheDir,
   nAtATime,
-  CachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import {
   AnyPackage,
@@ -27,6 +23,7 @@ import {
   parseDefinitions,
   getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
+import * as pacote from "pacote";
 import * as semver from "semver";
 
 if (!module.parent) {
@@ -62,21 +59,19 @@ async function tag(dry: boolean, nProcesses: number, name?: string) {
   const token = process.env.NPM_TOKEN as string;
 
   const publishClient = await NpmPublishClient.create(token, {});
-  await withNpmCache(new UncachedNpmInfoClient(), async (infoClient) => {
-    if (name) {
-      const pkg = await AllPackages.readSingle(name);
-      const version = await getLatestTypingVersion(pkg, infoClient);
+  if (name) {
+    const pkg = await AllPackages.readSingle(name);
+    const version = await getLatestTypingVersion(pkg);
+    await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+    await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+  } else {
+    await nAtATime(10, await AllPackages.readLatestTypings(), async (pkg) => {
+      // Only update tags for the latest version of the package.
+      const version = await getLatestTypingVersion(pkg);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
       await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
-    } else {
-      await nAtATime(10, await AllPackages.readLatestTypings(), async (pkg) => {
-        // Only update tags for the latest version of the package.
-        const version = await getLatestTypingVersion(pkg, infoClient);
-        await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-        await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
-      });
-    }
-  });
+    });
+  }
   // Don't tag notNeeded packages
 }
 
@@ -114,45 +109,40 @@ export async function updateLatestTag(
   }
 }
 
-export async function getLatestTypingVersion(pkg: TypingsData, client: CachedNpmInfoClient): Promise<string> {
-  return (await fetchTypesPackageVersionInfo(pkg, client, /*publish*/ false)).version;
+export async function getLatestTypingVersion(pkg: TypingsData): Promise<string> {
+  return (await fetchTypesPackageVersionInfo(pkg, /*publish*/ false)).version;
 }
 
 export async function fetchTypesPackageVersionInfo(
   pkg: TypingsData,
-  client: CachedNpmInfoClient,
   canPublish: boolean,
   log?: LoggerWithErrors
 ): Promise<{ version: string; needsPublish: boolean }> {
-  let info = client.getNpmInfoFromCache(pkg.fullNpmName);
-  let latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-  let latestVersionInfo = latestVersion && assertDefined(info!.versions.get(latestVersion));
-  if (!latestVersionInfo || latestVersionInfo.typesPublisherContentHash !== pkg.contentHash) {
+  const spec = `${pkg.fullNpmName}@~${pkg.major}.${pkg.minor}`;
+  let info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, offline: true }).catch((reason) => {
+    if (reason.code !== "ENOTCACHED" && reason.code !== "ETARGET") throw reason;
+    return undefined;
+  });
+  if (!info || info.typesPublisherContentHash !== pkg.contentHash) {
     if (log) {
-      log.info(`Version info not cached for ${pkg.desc}@${latestVersion || "(no latest version)"}`);
+      log.info(`Version info not cached for ${pkg.desc}@${info ? info.version : "(no latest version)"}`);
     }
-    info = await client.fetchAndCacheNpmInfo(pkg.fullNpmName);
-    latestVersion = info && getHighestVersionForMajor(info.versions, pkg);
-    if (!latestVersion) {
+    info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, preferOnline: true }).catch((reason) => {
+      if (reason.code !== "E404" && reason.code !== "ETARGET") throw reason;
+      return undefined;
+    });
+    if (!info) {
       return { version: `${pkg.major}.${pkg.minor}.0`, needsPublish: true };
     }
-    latestVersionInfo = assertDefined(info!.versions.get(latestVersion));
   }
 
-  if (latestVersionInfo.deprecated) {
+  if (info.deprecated) {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
     assert(
       pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
       `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
     );
   }
-  const needsPublish = canPublish && pkg.contentHash !== latestVersionInfo.typesPublisherContentHash;
-  return { version: needsPublish ? semver.inc(latestVersion!, "patch")! : latestVersion!, needsPublish };
-}
-
-function getHighestVersionForMajor(
-  versions: ReadonlyMap<string, NpmInfoVersion>,
-  { major, minor }: TypingsData
-): string | null {
-  return semver.maxSatisfying([...versions.keys()], `~${major}.${minor}`);
+  const needsPublish = canPublish && pkg.contentHash !== info.typesPublisherContentHash;
+  return { version: needsPublish ? semver.inc(info.version, "patch")! : info.version, needsPublish };
 }
