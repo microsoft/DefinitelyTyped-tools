@@ -285,6 +285,7 @@
 @types/ink
 @types/js-data
 @types/leaflet
+@types/lru-cache
 @types/mkdirp-promise
 @types/mongodb
 @types/mongoose
