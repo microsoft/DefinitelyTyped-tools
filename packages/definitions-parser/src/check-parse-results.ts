@@ -1,6 +1,6 @@
 import { ParseDefinitionsOptions } from "./get-definitely-typed";
 import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
-import { mapDefined, nAtATime, FS, logger, writeLog, Logger, cacheDir, max, min } from "@definitelytyped/utils";
+import { mapDefined, FS, logger, writeLog, Logger, ProgressBar, cacheDir, max, min } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
 
@@ -30,17 +30,17 @@ export async function checkParseResults(
   }
 
   if (includeNpmChecks) {
-    await nAtATime(
-      10,
-      allPackages.allTypings(),
-      (pkg) => checkNpm(pkg, log, dependedOn),
-      options.progress
-        ? {
-            name: "Checking for typed packages...",
-            flavor: (pkg) => pkg.desc,
-          }
-        : undefined
+    const allTypings = allPackages.allTypings();
+    const progress = options.progress && new ProgressBar({ name: "Checking for typed packages..." });
+    let i = 0;
+    await Promise.all(
+      allTypings.map((pkg) =>
+        checkNpm(pkg, log, dependedOn).then(() => {
+          if (progress) progress.update(++i / allTypings.length, pkg.desc);
+        })
+      )
     );
+    if (progress) progress.done();
   }
 
   await writeLog("conflicts.md", logResult());
