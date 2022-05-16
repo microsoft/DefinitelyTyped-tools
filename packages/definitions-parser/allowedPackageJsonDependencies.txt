@@ -260,6 +260,9 @@
 @rdfjs/types
 @react-navigation/native
 @react-navigation/stack
+@sanity/field
+@sanity/schema
+@sanity/types
 @sentry/browser
 @sinonjs/fake-timers
 @storybook/addons
