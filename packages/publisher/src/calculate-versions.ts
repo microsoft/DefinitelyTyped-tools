@@ -48,9 +48,9 @@ async function computeAndSaveChangedPackages(
 async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors): Promise<ChangedPackages> {
   log.info("# Computing changed packages...");
   const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async (pkg) => {
-    const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
-    if (needsPublish) {
-      log.info(`Need to publish: ${pkg.desc}@${version}`);
+    const { incipientVersion } = await fetchTypesPackageVersionInfo(pkg, log);
+    if (incipientVersion) {
+      log.info(`Need to publish: ${pkg.desc}@${incipientVersion}`);
       for (const { name } of pkg.packageJsonDependencies) {
         // Assert that dependencies exist on npm.
         // Also checked when we install the dependencies, in dtslint-runner.
@@ -65,8 +65,12 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
       }
       const latestVersion = pkg.isLatest
         ? undefined
-        : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), /*publish*/ true)).version;
-      return { pkg, version, latestVersion };
+        : await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), log);
+      return {
+        pkg,
+        version: incipientVersion,
+        latestVersion: latestVersion?.incipientVersion || latestVersion?.maxVersion,
+      };
     }
     return undefined;
   });

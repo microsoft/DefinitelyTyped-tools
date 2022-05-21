@@ -60,18 +60,22 @@ async function tag(dry: boolean, nProcesses: number, name?: string) {
   const publishClient = await NpmPublishClient.create(token, {});
   if (name) {
     const pkg = await AllPackages.readSingle(name);
-    const version = await getLatestTypingVersion(pkg);
-    await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-    await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+    const { maxVersion } = await fetchTypesPackageVersionInfo(pkg);
+    if (maxVersion) {
+      await updateTypeScriptVersionTags(pkg, maxVersion, publishClient, consoleLogger.info, dry);
+      await updateLatestTag(pkg.fullNpmName, maxVersion, publishClient, consoleLogger.info, dry);
+    }
   } else {
     await Promise.all(
       (
         await AllPackages.readLatestTypings()
       ).map(async (pkg) => {
         // Only update tags for the latest version of the package.
-        const version = await getLatestTypingVersion(pkg);
-        await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-        await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+        const { maxVersion } = await fetchTypesPackageVersionInfo(pkg);
+        if (maxVersion) {
+          await updateTypeScriptVersionTags(pkg, maxVersion, publishClient, consoleLogger.info, dry);
+          await updateLatestTag(pkg.fullNpmName, maxVersion, publishClient, consoleLogger.info, dry);
+        }
       })
     );
   }
@@ -112,15 +116,16 @@ export async function updateLatestTag(
   }
 }
 
-export async function getLatestTypingVersion(pkg: TypingsData): Promise<string> {
-  return (await fetchTypesPackageVersionInfo(pkg, /*publish*/ false)).version;
-}
-
+/**
+ * Used for two purposes: to determine whether a @types package has changed since it was last published, and to get a package's version in the npm registry.
+ * We ignore whether the cached metadata is fresh or stale: We always revalidate if the content hashes differ (fresh or not) and never revalidate if they match (stale or not).
+ * Because the decider is the content hash, this isn't applicable to other npm packages.
+ * Target JS packages and not-needed stubs don't have content hashes.
+ */
 export async function fetchTypesPackageVersionInfo(
   pkg: TypingsData,
-  canPublish: boolean,
   log?: LoggerWithErrors
-): Promise<{ version: string; needsPublish: boolean }> {
+): Promise<{ maxVersion?: string; incipientVersion?: string }> {
   const spec = `${pkg.fullNpmName}@~${pkg.major}.${pkg.minor}`;
   let info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED" && reason.code !== "ETARGET") throw reason;
@@ -135,7 +140,7 @@ export async function fetchTypesPackageVersionInfo(
       return undefined;
     });
     if (!info) {
-      return { version: `${pkg.major}.${pkg.minor}.0`, needsPublish: true };
+      return { incipientVersion: `${pkg.major}.${pkg.minor}.0` };
     }
   }
 
@@ -146,6 +151,10 @@ export async function fetchTypesPackageVersionInfo(
       `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
     );
   }
-  const needsPublish = canPublish && pkg.contentHash !== info.typesPublisherContentHash;
-  return { version: needsPublish ? semver.inc(info.version, "patch")! : info.version, needsPublish };
+  return {
+    maxVersion: info.version,
+    ...(((pkg.contentHash === info.typesPublisherContentHash) as {}) || {
+      incipientVersion: semver.inc(info.version, "patch")!,
+    }),
+  };
 }
