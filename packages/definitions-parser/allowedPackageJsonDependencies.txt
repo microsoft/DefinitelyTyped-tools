@@ -343,6 +343,7 @@ adal-node
 ajv
 algoliasearch
 algoliasearch-helper
+analytics
 anydb-sql
 anymatch
 aphrodite
