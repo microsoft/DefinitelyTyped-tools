@@ -276,6 +276,7 @@
 @maxim_mazurok/gapi.client.youtubereporting
 @middy/core
 @mparticle/event-models
+@npm/types
 @popperjs/core
 @rdfjs/types
 @react-navigation/native
