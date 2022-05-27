@@ -36,9 +36,7 @@ async function computeAndSaveChangedPackages(
 ): Promise<ChangedPackages> {
   const cp = await computeChangedPackages(allPackages, log);
   const json: ChangedPackagesJson = {
-    changedTypings: cp.changedTypings.map(
-      ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })
-    ),
+    changedTypings: cp.changedTypings.map(({ pkg: { id }, version }): ChangedTypingJson => ({ id, version })),
     changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.name),
   };
   await writeDataFile(versionsFilename, json);
@@ -63,10 +61,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
             : reason;
         });
       }
-      const latestVersion = pkg.isLatest
-        ? undefined
-        : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), /*publish*/ true)).version;
-      return { pkg, version, latestVersion };
+      return { pkg, version };
     }
     return undefined;
   });

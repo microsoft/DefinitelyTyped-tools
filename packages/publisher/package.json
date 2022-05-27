@@ -19,6 +19,7 @@
     "fs-extra": "^9.1.0",
     "fstream": "^1.0.12",
     "hh-mm-ss": "^1.2.0",
+    "libnpmpublish": "^6.0.4",
     "longjohn": "^0.2.11",
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
@@ -27,8 +28,10 @@
     "yargs": "15.3.1"
   },
   "devDependencies": {
+    "@npm/types": "^1.0.2",
     "@types/fs-extra": "^9.0.8",
     "@types/hh-mm-ss": "^1.2.1",
+    "@types/libnpmpublish": "^4.0.3",
     "@types/mz": "^0.0.31",
     "@types/pacote": "^11.1.5",
     "@types/source-map-support": "^0.4.0",

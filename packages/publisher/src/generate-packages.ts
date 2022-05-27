@@ -17,7 +17,6 @@ import {
   writeFile,
   Logger,
   cacheDir,
-  writeTgz,
 } from "@definitelytyped/utils";
 import {
   getDefinitelyTyped,
@@ -63,7 +62,7 @@ export default async function generatePackages(
   for (const { pkg, version } of changedPackages.changedTypings) {
     await generateTypingPackage(pkg, allPackages, version, dt);
     if (tgz) {
-      await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
+      await pacote.tarball.file(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
     log(` * ${pkg.desc}`);
   }

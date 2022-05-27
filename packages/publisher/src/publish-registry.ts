@@ -31,6 +31,8 @@ import {
   cacheDir,
   isObject,
 } from "@definitelytyped/utils";
+import { PackageJson } from "@npm/types";
+import * as libpub from "libnpmpublish";
 import * as pacote from "pacote";
 import * as semver from "semver";
 // @ts-ignore
@@ -74,17 +76,16 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
 
     const token = process.env.NPM_TOKEN!;
 
-    const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" });
     if (maxVersion !== latestVersion) {
       // There was an error in the last publish and types-registry wasn't validated.
       // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
       // If so, we should just update it to "latest" now.
       log("Old version of types-registry was never tagged latest, so updating");
       await validateIsSubset(readNotNeededPackages(dt), log);
-      await (await publishClient()).tag(typesRegistry, maxVersion, "latest", dry, log);
+      await new NpmPublishClient(token).tag(typesRegistry, maxVersion, "latest", dry, log);
     } else if (latestContentHash !== newContentHash) {
       log("New packages have been added, so publishing a new registry.");
-      await publish(await publishClient(), typesRegistry, packageJson, newVersion, dry, log);
+      await publish(new NpmPublishClient(token), packageJson, token, dry, log);
     } else {
       log("No new packages published, so no need to publish new registry.");
       // Just making sure...
@@ -114,13 +115,13 @@ async function generate(registry: string, packageJson: {}): Promise<void> {
 
 async function publish(
   client: NpmPublishClient,
-  packageName: string,
-  packageJson: {},
-  version: string,
+  packageJson: PackageJson,
+  token: string,
   dry: boolean,
   log: Logger
 ): Promise<void> {
-  await client.publish(registryOutputPath, packageJson, dry, log);
+  const tarData = await pacote.tarball(registryOutputPath);
+  if (!dry) await libpub.publish(packageJson, tarData, { defaultTag: "next", access: "public", token });
   // Sleep for 60 seconds to let NPM update.
   if (dry) {
     log("(dry) Skipping 60 second sleep...");
@@ -130,7 +131,7 @@ async function publish(
   }
   // Don't set it as "latest" until *after* it's been validated.
   await validate(log);
-  await client.tag(packageName, version, "latest", dry, log);
+  await client.tag(packageJson.name, packageJson.version, "latest", dry, log);
 }
 
 async function installForValidate(log: Logger): Promise<void> {
@@ -205,7 +206,7 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
   }
 }
 
-function generatePackageJson(name: string, version: string, typesPublisherContentHash: string): object {
+function generatePackageJson(name: string, version: string, typesPublisherContentHash: string): PackageJson {
   const json = {
     name,
     version,

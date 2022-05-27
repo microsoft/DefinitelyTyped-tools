@@ -1,16 +1,12 @@
-import "./types/fstream";
 import {
   readFile as readFileWithEncoding,
   readFileSync as readFileWithEncodingSync,
   stat,
   writeFile as writeFileWithEncoding,
   writeJson as writeJsonRaw,
-  createWriteStream,
 } from "fs-extra";
-import { Pack } from "tar";
 import tarStream from "tar-stream";
 import https, { Agent, request } from "https";
-import { resolve, sep } from "path";
 import zlib from "zlib";
 import { request as httpRequest } from "http";
 import { Readable as ReadableStream } from "stream";
@@ -19,7 +15,6 @@ import { parseJson, withoutStart, sleep, tryParseJson, isObject } from "./miscel
 import { FS, Dir, InMemoryFS } from "./fs";
 import { assertDefined } from "./assertions";
 import { LoggerWithErrors } from "./logging";
-import { Stats } from "fs";
 
 export async function readFile(path: string): Promise<string> {
   const res = await readFileWithEncoding(path, { encoding: "utf8" });
@@ -96,12 +91,6 @@ export function stringOfStream(stream: NodeJS.ReadableStream, description: strin
         resolve(body);
       }
     });
-  });
-}
-
-export function streamDone(stream: NodeJS.WritableStream): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    stream.on("error", reject).on("finish", resolve);
   });
 }
 
@@ -244,59 +233,4 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
       })
       .on("error", rejectAndClearTimeout);
   });
-}
-
-export function gzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
-  return input.pipe(zlib.createGzip());
-}
-
-export function unGzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
-  const output = zlib.createGunzip();
-  input.pipe(output);
-  return output;
-}
-
-export function writeTgz(inputDirectory: string, outFileName: string): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    resolve(streamDone(createTgz(inputDirectory, reject).pipe(createWriteStream(outFileName))));
-  });
-}
-
-// To output this for testing:
-// `require("./dist/io").createTgz("./src", err => { throw err }).pipe(fs.createWriteStream("foo.tgz"))`
-export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-  return gzip(createTar(dir, onError));
-}
-
-function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
-  const dirSegments = resolve(dir).split(sep);
-  const parentDir = dirSegments.slice(0, dirSegments.length - 1).join(sep);
-  const entryToAdd = dirSegments[dirSegments.length - 1];
-  const packer = new Pack({ cwd: parentDir, filter: addDirectoryExecutablePermission });
-  packer.on("error", onError);
-  const stream = packer.add(entryToAdd);
-  packer.end();
-
-  return stream;
-}
-
-/**
- * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
- * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
- */
-function addDirectoryExecutablePermission(_: string, stat: Stats): boolean {
-  if (stat.isDirectory()) {
-    stat.mode = addExecutePermissionsFromReadPermissions(stat.mode);
-  }
-  return true;
-}
-
-function addExecutePermissionsFromReadPermissions(mode: number): number {
-  // Constant that gives execute permissions to owner, group, and others. "+x"
-  const allExecutePermissions = 0o111;
-  // Moves the bits for read permissions into the place for execute permissions.
-  // In other words, a component will have execute permissions if it has read permissions.
-  const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions; // tslint:disable-line no-bitwise
-  // Add these additional execute permissions to the mode.
-  return mode | readPermissionsAsExecutePermissions; // tslint:disable-line no-bitwise
 }

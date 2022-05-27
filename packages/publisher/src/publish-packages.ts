@@ -42,12 +42,13 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined);
+  const token = await getSecret(Secret.NPM_TOKEN);
+  const client = new NpmPublishClient(token);
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);
 
-    await publishTypingsPackage(client, cp, dry, log);
+    await publishTypingsPackage(client, cp, token, dry, log);
 
     const commits = (await queryGithub(
       `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`,
@@ -128,7 +129,7 @@ export default async function publishPackages(
 
   for (const n of changedPackages.changedNotNeededPackages) {
     const target = await skipBadPublishes(n, log);
-    await publishNotNeededPackage(client, target, dry, log);
+    await publishNotNeededPackage(target, token, dry, log);
   }
 
   await writeLog("publishing.md", logResult());
