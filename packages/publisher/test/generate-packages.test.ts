@@ -141,15 +141,14 @@ testo({
     expect(s).toEqual(`{
     "name": "@types/absalom",
     "version": "1.1.1",
-    "typings": null,
     "description": "Stub TypeScript definitions entry for alternate, which provides its own types definitions",
     "main": "",
     "scripts": {},
-    "author": "",
     "license": "MIT",
     "dependencies": {
         "alternate": "*"
-    }
+    },
+    "deprecated": "This is a stub types definition. alternate provides its own type definitions, so you do not need this installed."
 }`);
   },
   scopedNotNeededPackageJson() {
@@ -158,15 +157,14 @@ testo({
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
     "version": "0.26.0",
-    "typings": null,
     "description": "Stub TypeScript definitions entry for @google-cloud/chubdub, which provides its own types definitions",
     "main": "",
     "scripts": {},
-    "author": "",
     "license": "MIT",
     "dependencies": {
         "@google-cloud/chubdub": "*"
-    }
+    },
+    "deprecated": "This is a stub types definition. @google-cloud/chubdub provides its own type definitions, so you do not need this installed."
 }`);
   },
 });

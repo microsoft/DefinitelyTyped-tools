@@ -2,7 +2,7 @@ import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
-import { deprecateNotNeededPackage, publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
+import { publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { getDefinitelyTyped, AllPackages } from "@definitelytyped/definitions-parser";
 import {
   loggerWithErrors,
@@ -21,28 +21,14 @@ import { cacheDirPath } from "./lib/settings";
 
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
-  const deprecateName = yargs.argv.deprecate as string | undefined;
   logUncaughtErrors(async () => {
     const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
-    if (deprecateName !== undefined) {
-      // A '--deprecate' command is available in case types-publisher got stuck *while* trying to deprecate a package.
-      // Normally this should not be needed.
-
-      const log = logger()[0];
-      await deprecateNotNeededPackage(
-        await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined),
-        AllPackages.readSingleNotNeeded(deprecateName, dt),
-        /*dry*/ false,
-        log
-      );
-    } else {
-      await publishPackages(
-        await readChangedPackages(await AllPackages.read(dt)),
-        dry,
-        process.env.GH_API_TOKEN || "",
-        new Fetcher()
-      );
-    }
+    await publishPackages(
+      await readChangedPackages(await AllPackages.read(dt)),
+      dry,
+      process.env.GH_API_TOKEN || "",
+      new Fetcher()
+    );
   });
 }
 
