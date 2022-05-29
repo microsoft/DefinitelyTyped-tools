@@ -25,6 +25,7 @@
 @jest/test-result
 @jest/transform
 @jest/types
+@khmyznikov/pwa-install
 @loadable/component
 @material-ui/core
 @material-ui/types
