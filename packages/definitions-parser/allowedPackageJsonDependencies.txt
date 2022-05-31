@@ -580,6 +580,7 @@ typeorm
 typescript
 typescript-tuple
 unified
+url-pattern
 utility-types
 vega-typings
 vfile-message
