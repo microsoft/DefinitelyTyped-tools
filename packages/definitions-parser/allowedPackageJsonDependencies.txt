@@ -32,7 +32,6 @@
 @maxim_mazurok/gapi.client.acceleratedmobilepageurl
 @maxim_mazurok/gapi.client.accessapproval
 @maxim_mazurok/gapi.client.accesscontextmanager
-@maxim_mazurok/gapi.client.adexchangebuyer
 @maxim_mazurok/gapi.client.adexchangebuyer2
 @maxim_mazurok/gapi.client.adexperiencereport
 @maxim_mazurok/gapi.client.admin
@@ -203,7 +202,6 @@
 @maxim_mazurok/gapi.client.pagespeedonline
 @maxim_mazurok/gapi.client.paymentsresellersubscription
 @maxim_mazurok/gapi.client.people
-@maxim_mazurok/gapi.client.playablelocations
 @maxim_mazurok/gapi.client.playcustomapp
 @maxim_mazurok/gapi.client.playdeveloperreporting
 @maxim_mazurok/gapi.client.playintegrity
@@ -259,14 +257,12 @@
 @maxim_mazurok/gapi.client.transcoder
 @maxim_mazurok/gapi.client.translate
 @maxim_mazurok/gapi.client.vault
-@maxim_mazurok/gapi.client.vectortile
 @maxim_mazurok/gapi.client.verifiedaccess
 @maxim_mazurok/gapi.client.versionhistory
 @maxim_mazurok/gapi.client.videointelligence
 @maxim_mazurok/gapi.client.vision
 @maxim_mazurok/gapi.client.vmmigration
 @maxim_mazurok/gapi.client.webfonts
-@maxim_mazurok/gapi.client.webmasters
 @maxim_mazurok/gapi.client.webrisk
 @maxim_mazurok/gapi.client.websecurityscanner
 @maxim_mazurok/gapi.client.workflowexecutions
