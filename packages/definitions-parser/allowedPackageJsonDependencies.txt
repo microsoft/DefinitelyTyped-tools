@@ -1,4 +1,5 @@
 @apollo/client
+@aws-sdk/client-s3
 @azure/functions
 @babel/code-frame
 @babel/core
