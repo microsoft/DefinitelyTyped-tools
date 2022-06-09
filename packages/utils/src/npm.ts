@@ -4,11 +4,12 @@ import { resolve as resolveUrl } from "url";
 import { joinPaths } from "./fs";
 import { Logger } from "./logging";
 import { createTgz } from "./io";
+import { cacheDirPath } from "./lib/settings.js";
 
 export const npmRegistryHostName = "registry.npmjs.org";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
 
-export const defaultCacheDir = joinPaths(__dirname, "..", "cache");
+export const defaultCacheDir = cacheDirPath;
 
 type NeedToFixNpmRegistryClientTypings = any;
 
