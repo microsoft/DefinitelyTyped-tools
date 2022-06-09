@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/perf",
-  "version": "0.0.115-next.1",
+  "version": "0.0.115",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -16,9 +16,9 @@
     "directory": "packages/perf"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.115-next.1",
-    "@definitelytyped/header-parser": "^0.0.114",
-    "@definitelytyped/utils": "^0.0.115-next.1",
+    "@definitelytyped/definitions-parser": "^0.0.115",
+    "@definitelytyped/header-parser": "^0.0.115",
+    "@definitelytyped/utils": "^0.0.115",
     "@octokit/rest": "^16.33.0",
     "@types/node": "^12.12.29",
     "markdown-table": "^1.1.3",
