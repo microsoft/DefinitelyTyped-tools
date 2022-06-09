@@ -7,14 +7,7 @@ import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
 import publishRegistry from "./publish-registry";
 import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
-import {
-  Fetcher,
-  logUncaughtErrors,
-  loggerWithErrors,
-  LoggerWithErrors,
-  assertDefined,
-  UncachedNpmInfoClient,
-} from "@definitelytyped/utils";
+import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors, assertDefined } from "@definitelytyped/utils";
 import { numberOfOsProcesses } from "./util/util";
 import { defaultLocalOptions } from "./lib/common";
 
@@ -36,7 +29,6 @@ export default async function full(
   options: ParseDefinitionsOptions,
   log: LoggerWithErrors
 ): Promise<void> {
-  const infoClient = new UncachedNpmInfoClient();
   clean();
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(
@@ -46,8 +38,8 @@ export default async function full(
       : undefined,
     log
   );
-  const changedPackages = await calculateVersions(dt, infoClient, log);
+  const changedPackages = await calculateVersions(dt, log);
   await generatePackages(dt, allPackages, changedPackages);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
-  await publishRegistry(dt, allPackages, dry, infoClient);
+  await publishRegistry(dt, allPackages, dry);
 }

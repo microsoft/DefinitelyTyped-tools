@@ -17,9 +17,9 @@ import {
   FS,
   consoleLogger,
   assertDefined,
-  UncachedNpmInfoClient,
-  NpmInfo,
+  defaultCacheDir,
 } from "@definitelytyped/utils";
+import * as pacote from "pacote";
 import * as semver from "semver";
 import { getAffectedPackages } from "./get-affected-packages";
 
@@ -96,11 +96,8 @@ export async function getAffectedPackagesFromDiff(
   const allPackages = await AllPackages.read(dt);
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
-    const uncached = new UncachedNpmInfoClient();
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
-      const source = await uncached.fetchNpmInfo(deleted.libraryName); // eg @babel/parser
-      const typings = await uncached.fetchNpmInfo(deleted.fullNpmName); // eg @types/babel__parser
-      checkNotNeededPackage(deleted, source, typings);
+      checkNotNeededPackage(deleted);
     }
   }
 
@@ -133,30 +130,30 @@ export async function getAffectedPackagesFromDiff(
  * 2. asOfVersion must be newer than `@types/name@latest` on npm
  * 3. `name@asOfVersion` must exist on npm
  */
-export function checkNotNeededPackage(
-  unneeded: NotNeededPackage,
-  source: NpmInfo | undefined,
-  typings: NpmInfo | undefined
-) {
-  source = assertDefined(
-    source,
-    `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
+export async function checkNotNeededPackage(unneeded: NotNeededPackage) {
+  await pacote.manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: defaultCacheDir }).catch((reason) => {
+    throw reason.code === "E404"
+      ? new Error(
+          `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
-Unneeded packages have to be replaced with a package on npm.`
-  );
-  typings = assertDefined(typings, `Unexpected error: @types package not found for ${unneeded.fullNpmName}`);
-  const latestTypings = assertDefined(
-    typings.distTags.get("latest"),
-    `Unexpected error: ${unneeded.fullNpmName} is missing the "latest" tag.`
-  );
+Unneeded packages have to be replaced with a package on npm.`,
+          { cause: reason }
+        )
+      : reason.code === "ETARGET"
+      ? new Error(`The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`, {
+          cause: reason,
+        })
+      : reason;
+  }); // eg @babel/parser
+  const typings = await pacote.manifest(unneeded.fullNpmName, { cache: defaultCacheDir }).catch((reason) => {
+    throw reason.code === "E404"
+      ? new Error(`Unexpected error: @types package not found for ${unneeded.fullNpmName}`, { cause: reason })
+      : reason;
+  }); // eg @types/babel__parser
   assert(
-    semver.gt(unneeded.version, latestTypings),
+    semver.gt(unneeded.version, typings.version),
     `The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${latestTypings} of ${unneeded.fullNpmName}.`
-  );
-  assert(
-    source.versions.has(String(unneeded.version)),
-    `The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`
+it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
   );
 }
 

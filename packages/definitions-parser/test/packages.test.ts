@@ -190,12 +190,6 @@ describe(TypingsData, () => {
       expect(data.fullNpmName).toBe("@types/foo__bar");
     });
   });
-
-  describe("fullEscapedNpmName", () => {
-    it("returns escaped name", () => {
-      expect(data.fullEscapedNpmName).toBe("@types%2fknown");
-    });
-  });
 });
 
 describe(getMangledNameForScopedPackage, () => {

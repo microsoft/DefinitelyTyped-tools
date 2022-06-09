@@ -227,11 +227,6 @@ export abstract class PackageBase {
     return getFullNpmName(this.name);
   }
 
-  /** '@types%2ffoo' for a package 'foo'. */
-  get fullEscapedNpmName(): string {
-    return `@${scopeName}%2f${this.name}`;
-  }
-
   abstract readonly major: number;
   abstract readonly minor: number;
 

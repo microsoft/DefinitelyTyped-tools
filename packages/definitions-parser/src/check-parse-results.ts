@@ -1,37 +1,13 @@
 import { ParseDefinitionsOptions } from "./get-definitely-typed";
 import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
-import {
-  assertDefined,
-  mapDefined,
-  nAtATime,
-  FS,
-  logger,
-  writeLog,
-  Logger,
-  UncachedNpmInfoClient,
-  NpmInfoRawVersions,
-  NpmInfoVersion,
-  max,
-  min,
-} from "@definitelytyped/utils";
+import { mapDefined, nAtATime, FS, logger, writeLog, Logger, defaultCacheDir, max, min } from "@definitelytyped/utils";
+import * as pacote from "pacote";
 import * as semver from "semver";
 
 export async function checkParseResults(
-  includeNpmChecks: false,
-  dt: FS,
-  options: ParseDefinitionsOptions
-): Promise<void>;
-export async function checkParseResults(
-  includeNpmChecks: true,
-  dt: FS,
-  options: ParseDefinitionsOptions,
-  client: UncachedNpmInfoClient
-): Promise<void>;
-export async function checkParseResults(
   includeNpmChecks: boolean,
   dt: FS,
-  options: ParseDefinitionsOptions,
-  client?: UncachedNpmInfoClient
+  options: ParseDefinitionsOptions
 ): Promise<void> {
   const allPackages = await AllPackages.read(dt);
   const [log, logResult] = logger();
@@ -57,7 +33,7 @@ export async function checkParseResults(
     await nAtATime(
       10,
       allPackages.allTypings(),
-      (pkg) => checkNpm(pkg, log, dependedOn, client!),
+      (pkg) => checkNpm(pkg, log, dependedOn),
       options.progress
         ? {
             name: "Checking for typed packages...",
@@ -120,14 +96,16 @@ Check the path mappings for [${Array.from(allPackages.allDependencyTypings(pkg))
 async function checkNpm(
   { major, minor, name, libraryName, projectName, contributors }: TypingsData,
   log: Logger,
-  dependedOn: ReadonlySet<string>,
-  client: UncachedNpmInfoClient
+  dependedOn: ReadonlySet<string>
 ): Promise<void> {
   if (notNeededExceptions.has(name)) {
     return;
   }
 
-  const info = await client.fetchRawNpmInfo(name); // Gets info for the real package, not the @types package
+  const info = await pacote.packument(name, { cache: defaultCacheDir, fullMetadata: true }).catch((reason) => {
+    if (reason.code !== "E404") throw reason;
+    return undefined;
+  }); // Gets info for the real package, not the @types package
   if (!info) {
     return;
   }
@@ -169,13 +147,12 @@ async function checkNpm(
   }
 }
 
-export async function packageHasTypes(packageName: string, client: UncachedNpmInfoClient): Promise<boolean> {
-  const info = assertDefined(await client.fetchRawNpmInfo(packageName));
-  return versionHasTypes(info.versions[info["dist-tags"].latest]);
+export async function packageHasTypes(packageName: string): Promise<boolean> {
+  return versionHasTypes(await pacote.manifest(packageName, { cache: defaultCacheDir, fullMetadata: true }));
 }
 
 function getRegularVersions(
-  versions: NpmInfoRawVersions
+  versions: pacote.Packument["versions"]
 ): readonly { readonly version: semver.SemVer; readonly hasTypes: boolean }[] {
   return Object.entries(versions).map(([versionString, info]) => ({
     version: new semver.SemVer(versionString),
@@ -183,7 +160,7 @@ function getRegularVersions(
   }));
 }
 
-function versionHasTypes(info: NpmInfoVersion): boolean {
+function versionHasTypes(info: pacote.Manifest): boolean {
   return "types" in info || "typings" in info;
 }
 

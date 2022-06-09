@@ -4,7 +4,6 @@ import { toS } from "hh-mm-ss";
 const hostJson = require("../../host.json");
 const root = joinPaths(__dirname, "..", "..");
 const storageDirPath = process.env.STORAGE_DIR || root;
-export const cacheDirPath = joinPaths(storageDirPath, "cache");
 export const outputDirPath = joinPaths(storageDirPath, "output");
 export const validateOutputPath = joinPaths(storageDirPath, "validateOutput");
 export const logDir = joinPaths(storageDirPath, "logs");
