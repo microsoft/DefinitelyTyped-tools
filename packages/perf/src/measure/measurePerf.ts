@@ -260,7 +260,7 @@ function getLatestTypesVersionForTypeScriptVersion(
 ): string | undefined {
   const tsVersion = new semver.SemVer(typeScriptVersion);
   for (let i = typesVersions.length - 1; i > 0; i--) {
-    if (semver.gte(tsVersion, `${typesVersions[i]}.0-0`)) {
+    if (semver.gte(tsVersion, `${typesVersions[i]}.0-`)) {
       return typesVersions[i];
     }
   }

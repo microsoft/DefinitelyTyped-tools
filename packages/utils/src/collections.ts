@@ -185,6 +185,26 @@ export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T
   return out;
 }
 
+export function recordToMap<T>(record: Record<string, T>): Map<string, T>;
+export function recordToMap<T, U>(record: Record<string, T>, cb: (t: T) => U): Map<string, U>;
+export function recordToMap<T, U>(record: Record<string, T>, cb?: (t: T) => U): Map<string, T | U> {
+  const m = new Map<string, T | U>();
+  for (const key of Object.keys(record)) {
+    m.set(key, cb ? cb(record[key]) : record[key]);
+  }
+  return m;
+}
+
+export function mapToRecord<T>(map: Map<string, T>): Record<string, T>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb: (t: T) => U): Record<string, U>;
+export function mapToRecord<T, U>(map: Map<string, T>, cb?: (t: T) => U): Record<string, T | U> {
+  const o: Record<string, T | U> = {};
+  map.forEach((value, key) => {
+    o[key] = cb ? cb(value) : value;
+  });
+  return o;
+}
+
 export function min<T>(array: readonly [T, ...(T | undefined)[]]): T;
 export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number): T | undefined;
 export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
