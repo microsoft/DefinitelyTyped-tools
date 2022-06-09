@@ -21,7 +21,6 @@
     "hh-mm-ss": "^1.2.0",
     "longjohn": "^0.2.11",
     "oboe": "^2.1.3",
-    "pacote": "^13.6.0",
     "semver": "^7.3.7",
     "source-map-support": "^0.4.0",
     "typescript": "^4.1.0",
@@ -32,7 +31,6 @@
     "@types/hh-mm-ss": "^1.2.1",
     "@types/mz": "^0.0.31",
     "@types/oboe": "^2.0.28",
-    "@types/pacote": "^11.1.4",
     "@types/source-map-support": "^0.4.0",
     "@types/yargs": "^15.0.4"
   },
