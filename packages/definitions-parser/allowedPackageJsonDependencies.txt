@@ -502,6 +502,8 @@ pdfjs-dist
 pg-protocol
 pg-types
 phenomenon
+pino
+pino-http
 pkcs11js
 plugin-error
 polished
