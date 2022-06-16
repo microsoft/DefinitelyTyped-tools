@@ -1,4 +1,5 @@
 @apollo/client
+@aws-sdk/client-s3
 @azure/functions
 @babel/code-frame
 @babel/core
@@ -501,6 +502,8 @@ pdfjs-dist
 pg-protocol
 pg-types
 phenomenon
+pino
+pino-http
 pkcs11js
 plugin-error
 polished

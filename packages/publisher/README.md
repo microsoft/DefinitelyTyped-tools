@@ -36,7 +36,6 @@ npm run clean
 npm run parse
 npm run calculate-versions
 npm run generate
-npm run index
 npm run publish-packages
 npm run upload-blobs
 ```
@@ -61,7 +60,6 @@ To update the types packages, the following steps must be performed:
 	* Parse the definitions
 	* Calculate versions
 	* Generate packages on disk
-	* Create a search index
 	* Publish packages on disk
 
 Importantly, each of these steps is *idempotent*.
@@ -188,48 +186,6 @@ This generates `versions.json` based on the last uploaded `versions.json` and by
 
 The `--forceUpdate` argument will cause a build version bump even if the `contentHash` of the originating types folder has not changed.
 This argument may be needed during development, but should not be used during routine usage.
-
-# Create a search index
-
-> `npm run index`
-
-This script creates `data/search-index-min.json`, which (in the upload step) will be uploaded to Azure and used by [TypeSearch](https://github.com/microsoft/typesearch).
-This step is not necessary for other steps in the process.
-
-### Arguments to `create-search-index`
-
-You can generate a prettier output in `data/search-index-full.json`.
-This version is for human review only and is not compatible with TypeSearch.
-
-By default, `create-search-index` fetches download counts from NPM for use in search result ranking.
-The argument `--skipDownloads` disables this behavior.
-
-### Search Entries
-
-Each `search-*.json` file consists of an array.
-An example unminified entry is:
-```js
-{
-	"projectName": "http://backgridjs.com/",
-	"libraryName": "Backgrid",
-	"globals": [
-		"Backgrid"
-	],
-	"typePackageName": "backgrid",
-	"declaredExternalModules": [
-		"backgrid"
-	],
-	"downloads": 532234
-},
-```
-These fields should hopefully be self-explanatory.
-`downloads` refers to the number in the past month.
-If `--skipDownloads` was specified, `downloads` will be -1.
-In the case where the type package name is different from the NPM package name, or no NPM package name exists, `downloads` will be 0.
-
-In the minified files, the properties are simply renamed. See `src/lib/search-index-generator.ts` for documentation.
-
-Empty arrays may be elided in future versions of the minified files.
 
 # Generate packages on disk
 
