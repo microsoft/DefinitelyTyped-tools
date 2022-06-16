@@ -36,6 +36,9 @@ jobs:
       run: yarn lint
     - name: test
       run: yarn test
+  check-parse-results:
+    needs: build_and_test
+    uses: ./.github/workflows/check-parse-results.yml
   publish_alpha:
     name: publish alpha release
     runs-on: ubuntu-latest
