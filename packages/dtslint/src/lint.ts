@@ -1,9 +1,10 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExists } from "fs-extra";
+import { pathExists, readJSON } from "fs-extra";
 import { dirname, join as joinPaths, normalize } from "path";
 import { Configuration, ILinterOptions, Linter } from "tslint";
+import { ESLint } from "eslint"
 import * as TsType from "typescript";
 type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
@@ -21,7 +22,12 @@ export async function lint(
   tsLocal: string | undefined
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
+  const eslintPath = joinPaths(dirPath, ".eslintrc.json");
+  const eslintConfig = await pathExists(eslintPath) ? await readJSON(eslintPath) : require("@definitelytyped/eslint");
   const lintProgram = Linter.createProgram(tsconfigPath);
+  const eslint = new ESLint({ baseConfig: eslintConfig })
+  const formatter = await eslint.loadFormatter("stylish")
+  console.log(formatter.format(await eslint.lintFiles(dirPath + "/**/*.ts")))
 
   for (const version of [maxVersion, minVersion]) {
     const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
