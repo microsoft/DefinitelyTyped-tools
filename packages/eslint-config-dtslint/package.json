@@ -1,5 +1,5 @@
 {
-  "name": "@definitelytyped/eslint",
+  "name": "@definitelytyped/eslint-config-dtslint",
   "version": "0.0.115",
   "description": "eslint config for dtslint",
   "main": "./index.js",
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
-    "directory": "packages/eslint"
+    "directory": "packages/eslint-config-dtslint"
   },
   "engines": {
     "node": ">=10.0.0"

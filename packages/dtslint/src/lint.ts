@@ -25,7 +25,7 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
   const eslintPath = joinPaths(dirPath, ".eslintrc.json");
-  const eslintConfig = await pathExists(eslintPath) ? await readJSON(eslintPath) : require("@definitelytyped/eslint");
+  const eslintConfig = await pathExists(eslintPath) ? await readJSON(eslintPath) : require("@definitelytyped/eslint-config-dtslint");
 
   for (const version of [maxVersion, minVersion]) {
     const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
