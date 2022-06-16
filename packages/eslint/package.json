@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/eslint",
-  "version": "0.0.113-next.17",
+  "version": "0.0.115",
   "description": "eslint config for dtslint",
   "main": "./index.js",
   "bin": "./index.js",
