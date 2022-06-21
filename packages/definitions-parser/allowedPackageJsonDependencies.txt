@@ -504,6 +504,7 @@ pg-types
 phenomenon
 pino
 pino-http
+pino-pretty
 pkcs11js
 plugin-error
 polished
