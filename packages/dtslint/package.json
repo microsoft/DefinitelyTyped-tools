@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.115",
+  "version": "0.0.116-next.1",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@definitelytyped/dts-critic": "^0.0.115",
-    "@definitelytyped/eslint-config-dtslint": "^0.0.115",
+    "@definitelytyped/eslint-config-dtslint": "^0.0.116-next.1",
     "@definitelytyped/header-parser": "^0.0.115",
     "@definitelytyped/typescript-versions": "^0.0.115",
     "@definitelytyped/utils": "^0.0.115",
