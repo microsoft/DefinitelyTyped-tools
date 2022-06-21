@@ -4,7 +4,7 @@ import assert = require("assert");
 import { pathExists, readJSON } from "fs-extra";
 import { dirname, join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
-import { ESLint } from "eslint"
+import { ESLint } from "eslint";
 import * as TsType from "typescript";
 type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
@@ -25,7 +25,9 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
   const eslintPath = joinPaths(dirPath, ".eslintrc.json");
-  const eslintConfig = await pathExists(eslintPath) ? await readJSON(eslintPath) : require("@definitelytyped/eslint-config-dtslint");
+  const eslintConfig = (await pathExists(eslintPath))
+    ? await readJSON(eslintPath)
+    : require("@definitelytyped/eslint-config-dtslint");
 
   for (const version of [maxVersion, minVersion]) {
     const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
@@ -34,12 +36,12 @@ export async function lint(
     }
   }
 
-  const linter = new Linter({ fix: false, formatter: "stylish", }, lintProgram);
+  const linter = new Linter({ fix: false, formatter: "stylish" }, lintProgram);
   const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
   const config = await getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
-  const esfiles = []
+  const esfiles = [];
 
   for (const file of lintProgram.getSourceFiles()) {
     if (lintProgram.isSourceFileDefaultLibrary(file)) {
@@ -48,7 +50,10 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err = testNoTsIgnore(text) || testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text)
+      const err =
+        testNoTsIgnore(text) ||
+        testNoLintDisables("tslint:disable", text) ||
+        testNoLintDisables("eslint-disable", text);
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
@@ -64,14 +69,14 @@ export async function lint(
     }
   }
   const result = linter.getResult();
-  const eslint = new ESLint({ baseConfig: eslintConfig })
-  const formatter = await eslint.loadFormatter("stylish")
-  const eresults = await eslint.lintFiles(esfiles)
-  console.log(formatter.format(eresults))
+  const eslint = new ESLint({ baseConfig: eslintConfig });
+  const formatter = await eslint.loadFormatter("stylish");
+  const eresults = await eslint.lintFiles(esfiles);
+  console.log(formatter.format(eresults));
 
   let output: string | undefined;
   if (result.failures.length) output = result.output;
-  if (eresults.some(r => r.errorCount)) output = (output || "") + formatter.format(eresults)
+  if (eresults.some((r) => r.errorCount)) output = (output || "") + formatter.format(eresults);
   return output;
 }
 
@@ -166,10 +171,12 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
     }
     const end = pos + disabler.length;
     const nextChar = text.charAt(end);
-    const nextChar2 = text.charAt(end + 1)
-    if (nextChar !== "-"
-      && !(disabler === "tslint:disable" && nextChar === ":")
-      && !(disabler === "eslint-disable" && nextChar === ' ' && nextChar2 === "*")) {
+    const nextChar2 = text.charAt(end + 1);
+    if (
+      nextChar !== "-" &&
+      !(disabler === "tslint:disable" && nextChar === ":") &&
+      !(disabler === "eslint-disable" && nextChar === " " && nextChar2 === "*")
+    ) {
       const message =
         `'${disabler}' is forbidden. ` +
         "Per-line and per-rule disabling is allowed, for example: " +
