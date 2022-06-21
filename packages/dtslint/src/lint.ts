@@ -1,9 +1,10 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExists } from "fs-extra";
+import { pathExists, readJSON } from "fs-extra";
 import { dirname, join as joinPaths, normalize } from "path";
-import { Configuration, ILinterOptions, Linter } from "tslint";
+import { Configuration, Linter } from "tslint";
+import { ESLint } from "eslint"
 import * as TsType from "typescript";
 type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
@@ -21,7 +22,10 @@ export async function lint(
   tsLocal: string | undefined
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
+  // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
+  const eslintPath = joinPaths(dirPath, ".eslintrc.json");
+  const eslintConfig = await pathExists(eslintPath) ? await readJSON(eslintPath) : require("@definitelytyped/eslint-config-dtslint");
 
   for (const version of [maxVersion, minVersion]) {
     const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
@@ -30,13 +34,12 @@ export async function lint(
     }
   }
 
-  const lintOptions: ILinterOptions = {
-    fix: false,
-    formatter: "stylish",
-  };
-  const linter = new Linter(lintOptions, lintProgram);
+  const linter = new Linter({ fix: false, formatter: "stylish", }, lintProgram);
   const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
+  // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
+  //   Also: expect-rule should be renamed to expect-type or check-type or something
   const config = await getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
+  const esfiles = []
 
   for (const file of lintProgram.getSourceFiles()) {
     if (lintProgram.isSourceFileDefaultLibrary(file)) {
@@ -45,7 +48,7 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err = testNoTsIgnore(text) || testNoTslintDisables(text);
+      const err = testNoTsIgnore(text) || testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text)
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
@@ -57,11 +60,19 @@ export async function lint(
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
       linter.lint(fileName, text, config);
+      esfiles.push(fileName);
     }
   }
-
   const result = linter.getResult();
-  return result.failures.length ? result.output : undefined;
+  const eslint = new ESLint({ baseConfig: eslintConfig })
+  const formatter = await eslint.loadFormatter("stylish")
+  const eresults = await eslint.lintFiles(esfiles)
+  console.log(formatter.format(eresults))
+
+  let output: string | undefined;
+  if (result.failures.length) output = result.output;
+  if (eresults.some(r => r.errorCount)) output = (output || "") + formatter.format(eresults)
+  return output;
 }
 
 function testDependencies(
@@ -145,21 +156,24 @@ function testNoTsIgnore(text: string): Err | undefined {
   const pos = text.indexOf(tsIgnore);
   return pos === -1 ? undefined : { pos, message: "'ts-ignore' is forbidden." };
 }
-function testNoTslintDisables(text: string): Err | undefined {
-  const tslintDisable = "tslint:disable";
+function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
   let lastIndex = 0;
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const pos = text.indexOf(tslintDisable, lastIndex);
+    const pos = text.indexOf(disabler, lastIndex);
     if (pos === -1) {
       return undefined;
     }
-    const end = pos + tslintDisable.length;
+    const end = pos + disabler.length;
     const nextChar = text.charAt(end);
-    if (nextChar !== "-" && nextChar !== ":") {
+    const nextChar2 = text.charAt(end + 1)
+    if (nextChar !== "-"
+      && !(disabler === "tslint:disable" && nextChar === ":")
+      && !(disabler === "eslint-disable" && nextChar === ' ' && nextChar2 === "*")) {
       const message =
-        "'tslint:disable' is forbidden. " +
-        "('tslint:disable:rulename', tslint:disable-line' and 'tslint:disable-next-line' are allowed.)";
+        `'${disabler}' is forbidden. ` +
+        "Per-line and per-rule disabling is allowed, for example: " +
+        "'tslint:disable:rulename', tslint:disable-line' and 'tslint:disable-next-line' are allowed.";
       return { pos, message };
     }
     lastIndex = end;
