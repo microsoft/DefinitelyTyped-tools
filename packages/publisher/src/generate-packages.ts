@@ -210,20 +210,19 @@ function dependencySemver(dependency: DependencyVersion): string {
   return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
 }
 
-export function createNotNeededPackageJSON({ libraryName, license, fullNpmName, version }: NotNeededPackage): string {
+export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
   const out = {
-    name: fullNpmName,
-    version: String(version),
-    typings: null, // tslint:disable-line no-null-keyword
-    description: `Stub TypeScript definitions entry for ${libraryName}, which provides its own types definitions`,
+    name: pkg.fullNpmName,
+    version: String(pkg.version),
+    description: `Stub TypeScript definitions entry for ${pkg.libraryName}, which provides its own types definitions`,
     main: "",
     scripts: {},
-    author: "",
-    license,
+    license: pkg.license,
     // No `typings`, that's provided by the dependency.
     dependencies: {
-      [libraryName]: "*",
+      [pkg.libraryName]: "*",
     },
+    deprecated: pkg.deprecatedMessage(),
   };
   return JSON.stringify(out, undefined, 4);
 }
