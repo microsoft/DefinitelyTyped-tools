@@ -1,0 +1,34 @@
+name: Publish registry
+on:
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    - cron: 0 0 * * 0
+  workflow_dispatch:
+jobs:
+  publish-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - name: Parse declarations
+        run: yarn workspace @definitelytyped/publisher parse
+      # https://github.com/microsoft/types-publisher/commit/7fa7f9c3cbd0c8bd6131398b4fea1faf9baf9665#diff-c4063aea1f6d1c21c51407252387627e9a506c735f8dbd58fbf82ae821fae128R170
+      - uses: actions/cache@v3
+        with:
+          path: packages/publisher/cache/
+          key: cache-${{ github.run_id }}
+          restore-keys: cache-
+      - name: Calculate versions
+        run: yarn workspace @definitelytyped/publisher calculate-versions
+      - name: Publish registry
+        run: yarn workspace @definitelytyped/publisher publish-registry
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          path: packages/definitions-parser/data/

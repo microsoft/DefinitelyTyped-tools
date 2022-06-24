@@ -1,7 +1,8 @@
 import os from "os";
+import process from "process";
 import yargs from "yargs";
 import { logUncaughtErrors, loggerWithErrors, assertDefined, FS } from "@definitelytyped/utils";
-import { defaultLocalOptions } from "./lib/common";
+import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { getTypingInfo } from "@definitelytyped/definitions-parser/dist/lib/definition-parser";
 import {
   getDefinitelyTyped,
@@ -16,7 +17,7 @@ if (!module.parent) {
     nProcesses: { type: "number" },
   }).argv;
 
-  const options = defaultLocalOptions;
+  const options = process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
     const dt = await getDefinitelyTyped(options, log);

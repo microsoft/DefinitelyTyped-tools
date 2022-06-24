@@ -5,7 +5,6 @@ import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
-import publishRegistry from "./publish-registry";
 import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
 import {
   Fetcher,
@@ -49,5 +48,4 @@ export default async function full(
   const changedPackages = await calculateVersions(dt, infoClient, log);
   await generatePackages(dt, allPackages, changedPackages);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
-  await publishRegistry(dt, allPackages, dry, infoClient);
 }
