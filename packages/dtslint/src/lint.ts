@@ -175,7 +175,7 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
     if (
       nextChar !== "-" &&
       !(disabler === "tslint:disable" && nextChar === ":") &&
-      !(disabler === "eslint-disable" && nextChar === " " && nextChar2 === "*")
+      !(disabler === "eslint-disable" && nextChar === " " && nextChar2 !== "*")
     ) {
       const message =
         `'${disabler}' is forbidden. ` +
