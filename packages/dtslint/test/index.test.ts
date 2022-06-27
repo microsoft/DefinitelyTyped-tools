@@ -4,6 +4,8 @@ import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 import { existsSync, readdirSync } from "fs";
 import { checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
+import { ESLintUtils } from '@typescript-eslint/utils'
+import * as noConstEnum from '../src/rules/no-const-enum'
 
 const testDir = __dirname;
 
@@ -80,3 +82,17 @@ describe("dtslint", () => {
     }
   });
 });
+describe("eslint", () => {
+  const ruleTester = new ESLintUtils.RuleTester({
+      parser: "@typescript-eslint/parser"
+  })
+  ruleTester.run('no-const-enum', noConstEnum, {
+    invalid: [{ code: ` const enum E { } `, 
+    errors: [{
+      line: 1,
+      messageId: "constEnum"
+    }]
+  }],
+  valid: [ ` enum F {}` ]
+  })
+})
