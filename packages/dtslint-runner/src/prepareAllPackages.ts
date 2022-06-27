@@ -1,10 +1,6 @@
-import {
-  AllPackages,
-  getDefinitelyTyped,
-  checkParseResults,
-  parseDefinitions,
-} from "@definitelytyped/definitions-parser";
+import { AllPackages, getDefinitelyTyped, parseDefinitions } from "@definitelytyped/definitions-parser";
 import { joinPaths, loggerWithErrors } from "@definitelytyped/utils";
+import { checkParseResults } from "./check-parse-results";
 import { installDependencies } from "./prepareAffectedPackages";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
@@ -22,7 +18,7 @@ export async function prepareAllPackages({
   };
   const dt = await getDefinitelyTyped(options, log);
   await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  await checkParseResults(/*includeNpmChecks*/ false, dt, options);
+  await checkParseResults(/*includeNpmChecks*/ false, dt);
   const allPackages = await AllPackages.read(dt);
   if (!noInstall) {
     await installDependencies(allPackages.allTypings(), typesPath);

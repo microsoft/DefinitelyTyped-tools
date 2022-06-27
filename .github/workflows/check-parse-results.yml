@@ -1,4 +1,5 @@
 name: Check parse results
+#description: Confirm check parse results and the DT repo are in sync, to avoid potential DT CI outages.
 on:
   workflow_call:
   workflow_dispatch:
@@ -12,15 +13,10 @@ jobs:
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - uses: actions/checkout@v3
-        with:
-          repository: DefinitelyTyped/DefinitelyTyped
-          path: DefinitelyTyped
-          # So we can diff the most recent commit and its parent.
-          # https://github.com/microsoft/types-publisher/pull/290
-          fetch-depth: 2
+      - name: Parse declarations
+        run: yarn workspace @definitelytyped/publisher parse
       - name: Check parse results
-        run: node --require source-map-support/register packages/dtslint-runner/ --path DefinitelyTyped/
+        run: yarn workspace @definitelytyped/dtslint-runner check-parse-results
       - if: always()
         uses: actions/upload-artifact@v3
         with:

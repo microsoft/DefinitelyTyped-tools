@@ -2,12 +2,12 @@ import { pathExists } from "fs-extra";
 import {
   getDefinitelyTyped,
   parseDefinitions,
-  checkParseResults,
   getAffectedPackagesFromDiff,
   allDependencies,
   TypingsData,
 } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors, joinPaths, loggerWithErrors, npmInstallFlags } from "@definitelytyped/utils";
+import { checkParseResults } from "./check-parse-results";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
 export async function prepareAffectedPackages({
@@ -25,7 +25,7 @@ export async function prepareAffectedPackages({
   const dt = await getDefinitelyTyped(options, log);
   await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
   try {
-    await checkParseResults(/*includeNpmChecks*/ false, dt, options);
+    await checkParseResults(/*includeNpmChecks*/ false, dt);
   } catch (err) {
     await getAffectedPackagesFromDiff(dt, definitelyTypedPath, "affected");
     throw err;
