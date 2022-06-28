@@ -18,6 +18,7 @@ const rule = createRule({
   },
   create(context) {
     return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       "TSEnumDeclaration[const]"(node) {
         context.report({
           messageId: "constEnum",
