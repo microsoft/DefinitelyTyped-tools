@@ -10,8 +10,8 @@ type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
 
 import { getProgram, Options as ExpectOptions } from "./rules/expectRule";
-
 import { readJson, withoutPrefix } from "./util";
+
 export async function lint(
   dirPath: string,
   minVersion: TsVersion,
@@ -68,13 +68,9 @@ export async function lint(
     }
   }
   const result = linter.getResult();
-  // TODO: Change cwd or some other override if I want to explicitly always look for eslintignore from the package path
-  const eslint = new ESLint({ baseConfig: eslintConfig, rulePaths: [joinPaths(__dirname, './rules/')] });
+  const eslint = new ESLint({ baseConfig: eslintConfig, rulePaths: [joinPaths(__dirname, "./rules/")] });
   const formatter = await eslint.loadFormatter("stylish");
   const eresults = await eslint.lintFiles(esfiles);
-  // TODO: Only format this once
-  // TODO: or don't even log this here, the driver program will
-  console.log(formatter.format(eresults));
 
   let output: string | undefined;
   if (result.failures.length) output = result.output;
