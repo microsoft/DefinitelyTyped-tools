@@ -4,7 +4,7 @@ import { emptyDir } from "fs-extra";
 import * as yargs from "yargs";
 
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
-import { outputDirPath, validateOutputPath, cacheDirPath } from "./lib/settings";
+import { outputDirPath, validateOutputPath } from "./lib/settings";
 import {
   getDefinitelyTyped,
   AllPackages,
@@ -13,7 +13,6 @@ import {
   TypingsData,
 } from "@definitelytyped/definitions-parser";
 import {
-  assertDefined,
   computeHash,
   execAndThrowErrors,
   joinPaths,
@@ -28,13 +27,11 @@ import {
   sleep,
   npmInstallFlags,
   readJson,
-  UncachedNpmInfoClient,
-  withNpmCache,
   NpmPublishClient,
-  CachedNpmInfoClient,
+  cacheDir,
   isObject,
-  max,
 } from "@definitelytyped/utils";
+import * as pacote from "pacote";
 import * as semver from "semver";
 // @ts-ignore
 import pkg from "../package.json";
@@ -51,32 +48,22 @@ if (!module.parent) {
       process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions,
       loggerWithErrors()[0]
     );
-    await publishRegistry(dt, await AllPackages.read(dt), dry, new UncachedNpmInfoClient());
+    await publishRegistry(dt, await AllPackages.read(dt), dry);
   });
 }
 
-export default async function publishRegistry(
-  dt: FS,
-  allPackages: AllPackages,
-  dry: boolean,
-  client: UncachedNpmInfoClient
-): Promise<void> {
+export default async function publishRegistry(dt: FS, allPackages: AllPackages, dry: boolean): Promise<void> {
   const [log, logResult] = logger();
   log("=== Publishing types-registry ===");
 
-  const { npmVersion, highestSemverVersion, npmContentHash } = await fetchAndProcessNpmInfo(typesRegistry, client);
-  assert.strictEqual(npmVersion.major, 0);
-  assert.strictEqual(npmVersion.minor, 1);
+  const { latestVersion, maxVersion, latestContentHash } = await fetchAndProcessNpmInfo(typesRegistry);
+  assert(semver.satisfies(latestVersion, "~0.1"));
 
   // Don't include not-needed packages in the registry.
-  const registryJsonData = await withNpmCache(
-    client,
-    (cachedClient) => generateRegistry(allPackages.allLatestTypings(), cachedClient),
-    cacheDirPath
-  );
+  const registryJsonData = await generateRegistry(allPackages.allLatestTypings());
   const registry = JSON.stringify(registryJsonData);
   const newContentHash = computeHash(registry);
-  const newVersion = semver.inc(npmVersion, "patch")!;
+  const newVersion = semver.inc(latestVersion, "patch")!;
 
   await publishToRegistry();
   await writeLog("publish-registry.md", logResult());
@@ -88,20 +75,18 @@ export default async function publishRegistry(
     const token = process.env.NPM_TOKEN!;
 
     const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" });
-    if (!semver.eq(highestSemverVersion, npmVersion)) {
+    if (maxVersion !== latestVersion) {
       // There was an error in the last publish and types-registry wasn't validated.
       // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
       // If so, we should just update it to "latest" now.
       log("Old version of types-registry was never tagged latest, so updating");
       await validateIsSubset(readNotNeededPackages(dt), log);
-      await (await publishClient()).tag(typesRegistry, String(highestSemverVersion), "latest", dry, log);
-    } else if (npmContentHash !== newContentHash) {
+      await (await publishClient()).tag(typesRegistry, maxVersion, "latest", dry, log);
+    } else if (latestContentHash !== newContentHash) {
       log("New packages have been added, so publishing a new registry.");
       await publish(await publishClient(), typesRegistry, packageJson, newVersion, dry, log);
     } else {
-      const reason =
-        npmContentHash === newContentHash ? "No new packages published" : "Was modified less than a week ago";
-      log(`${reason}, so no need to publish new registry.`);
+      log("No new packages published, so no need to publish new registry.");
       // Just making sure...
       await validate(log);
     }
@@ -241,47 +226,35 @@ interface Registry {
     };
   };
 }
-async function generateRegistry(typings: readonly TypingsData[], client: CachedNpmInfoClient): Promise<Registry> {
-  const entries: { [packageName: string]: { [distTags: string]: string } } = {};
-  for (const typing of typings) {
-    // Unconditionally use cached info, this should have been set in calculate-versions so should be recent enough.
-    const info = client.getNpmInfoFromCache(typing.fullNpmName);
-    if (!info) {
-      const missings = typings.filter((t) => !client.getNpmInfoFromCache(t.fullNpmName)).map((t) => t.fullNpmName);
-      throw new Error(`${missings.toString()} not found in cached npm info.`);
-    }
-    entries[typing.name] = filterTags(info.distTags);
-  }
-  return { entries };
+async function generateRegistry(typings: readonly TypingsData[]): Promise<Registry> {
+  return {
+    entries: Object.fromEntries(
+      await Promise.all(
+        typings.map(async (typing) => [
+          typing.name,
+          filterTags((await pacote.packument(typing.fullNpmName, { cache: cacheDir }))["dist-tags"]),
+        ])
+      )
+    ),
+  };
 
-  function filterTags(tags: Map<string, string>): { readonly [tag: string]: string } {
-    const latestTag = "latest";
-    const latestVersion = tags.get(latestTag);
-    const out: { [tag: string]: string } = {};
-    tags.forEach((value, tag) => {
-      if (tag === latestTag || value !== latestVersion) {
-        out[tag] = value;
-      }
-    });
-    return out;
+  function filterTags(tags: pacote.Packument["dist-tags"]): { readonly [tag: string]: string } {
+    return Object.fromEntries(
+      Object.entries(tags).filter(([tag, version]) => tag === "latest" || version !== tags.latest)
+    );
   }
 }
 
 interface ProcessedNpmInfo {
-  readonly npmVersion: semver.SemVer;
-  readonly highestSemverVersion: semver.SemVer;
-  readonly npmContentHash: string;
+  readonly latestVersion: string;
+  readonly maxVersion: string;
+  readonly latestContentHash: unknown;
 }
 
-async function fetchAndProcessNpmInfo(packageName: string, client: UncachedNpmInfoClient): Promise<ProcessedNpmInfo> {
-  const info = assertDefined(await client.fetchNpmInfo(packageName));
-  const npmVersion = new semver.SemVer(assertDefined(info.distTags.get("latest")));
-  const { distTags, versions } = info;
-  const highestSemverVersion = max(
-    Array.from(versions.keys(), (v) => new semver.SemVer(v)),
-    semver.compare
-  )!;
-  assert.strictEqual(String(highestSemverVersion), distTags.get("next"));
-  const npmContentHash = versions.get(String(npmVersion))!.typesPublisherContentHash || "";
-  return { npmVersion, highestSemverVersion, npmContentHash };
+async function fetchAndProcessNpmInfo(packageName: string): Promise<ProcessedNpmInfo> {
+  const info = await pacote.packument(packageName, { cache: cacheDir, fullMetadata: true });
+  const latestVersion = info["dist-tags"].latest;
+  const maxVersion = semver.maxSatisfying(Object.keys(info.versions), "*");
+  assert.strictEqual(maxVersion, info["dist-tags"].next);
+  return { latestVersion, maxVersion, latestContentHash: info.versions[latestVersion].typesPublisherContentHash };
 }
