@@ -43,7 +43,6 @@ npm run upload-blobs
 and optionally (in production, these run once a week):
 
 ```
-npm run publish-registry
 npm run validate
 ```
 
@@ -240,13 +239,6 @@ It also indicates any errors that may have occurred during publishing.
 
 Note that unlike other steps, this log file output is *not* idempotent.
 Scripts should save this log under a unique filename so any errors may be reviewed.
-
-# Publish registry
-
-> `npm run publish -- [--dry]`
-
-This step publishes the `types-registry` package on NPM, which keeps a list of all `@types` packages.
-This step only happens if there are some new packages to register.
 
 # Settings
 

@@ -8,9 +8,10 @@
     { "path": "packages/dtslint-runner" },
     { "path": "packages/header-parser" },
     { "path": "packages/perf" },
+    { "path": "packages/publish-registry" },
     { "path": "packages/publisher" },
+    { "path": "packages/retag" },
     { "path": "packages/typescript-versions" },
-    { "path": "packages/utils" },
-    { "path": "packages/retag" }
+    { "path": "packages/utils" }
   ]
 }
