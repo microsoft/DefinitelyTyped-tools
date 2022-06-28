@@ -90,7 +90,7 @@ describe("eslint", () => {
   ruleTester.run("no-dead-reference", noDeadReference, {
     invalid: [
       {
-          code: `
+        code: `
 export class C { }
 /// <reference types="terms" />
 `,
@@ -102,10 +102,12 @@ export class C { }
         ],
       },
     ],
-      valid: [`
+    valid: [
+      `
 /// <reference types="tones" />
 export class K {}
-`],
+`,
+    ],
   });
   ruleTester.run("no-const-enum", noConstEnum, {
     invalid: [
