@@ -16,14 +16,11 @@ jobs:
       - run: yarn build
       - name: Parse declarations
         run: yarn workspace @definitelytyped/publisher parse
-      # https://github.com/microsoft/types-publisher/commit/7fa7f9c3cbd0c8bd6131398b4fea1faf9baf9665#diff-c4063aea1f6d1c21c51407252387627e9a506c735f8dbd58fbf82ae821fae128R170
       - uses: actions/cache@v3
         with:
-          path: packages/publisher/cache/
+          path: packages/utils/cache/
           key: cache-${{ github.run_id }}
           restore-keys: cache-
-      - name: Calculate versions
-        run: yarn workspace @definitelytyped/publisher calculate-versions
       - name: Publish registry
         run: yarn workspace @definitelytyped/publisher publish-registry
         env:

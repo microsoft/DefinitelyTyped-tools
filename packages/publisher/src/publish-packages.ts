@@ -11,13 +11,10 @@ import {
   Fetcher,
   writeLog,
   NpmPublishClient,
-  withNpmCache,
-  UncachedNpmInfoClient,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
-import { cacheDirPath } from "./lib/settings";
 
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
@@ -129,16 +126,10 @@ export default async function publishPackages(
     }
   }
 
-  await withNpmCache(
-    new UncachedNpmInfoClient(),
-    async (infoClient) => {
-      for (const n of changedPackages.changedNotNeededPackages) {
-        const target = skipBadPublishes(n, infoClient, log);
-        await publishNotNeededPackage(client, target, dry, log);
-      }
-    },
-    cacheDirPath
-  );
+  for (const n of changedPackages.changedNotNeededPackages) {
+    const target = await skipBadPublishes(n, log);
+    await publishNotNeededPackage(client, target, dry, log);
+  }
 
   await writeLog("publishing.md", logResult());
   console.log("Done!");
