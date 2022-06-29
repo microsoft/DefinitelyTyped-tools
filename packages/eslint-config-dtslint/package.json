@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/eslint-config-dtslint",
-  "version": "0.0.119",
+  "version": "0.0.120-next.0",
   "description": "eslint config for dtslint",
   "main": "./index.js",
   "bin": "./index.js",
