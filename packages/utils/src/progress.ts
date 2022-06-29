@@ -77,24 +77,3 @@ class UpdatableConsole {
     this.charm.end();
   }
 }
-
-const firstLetter = "a".charCodeAt(0);
-const lastLetter = "z".charCodeAt(0);
-const charWidth = lastLetter - firstLetter;
-const strProgressTotal = charWidth * charWidth; // 2 characters
-
-/** Tracks a string's progress through the alphabet. */
-export function strProgress(str: string): number {
-  const x = charProgress(str.charCodeAt(0)) * charWidth + charProgress(str.charCodeAt(1));
-  return x / strProgressTotal;
-
-  function charProgress(ch: number): number {
-    if (Number.isNaN(ch) || ch <= firstLetter) {
-      return 0;
-    }
-    if (ch >= lastLetter) {
-      return charWidth;
-    }
-    return ch - firstLetter;
-  }
-}

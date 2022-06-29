@@ -147,10 +147,6 @@ async function checkNpm(
   }
 }
 
-export async function packageHasTypes(packageName: string): Promise<boolean> {
-  return versionHasTypes(await pacote.manifest(packageName, { cache: cacheDir, fullMetadata: true }));
-}
-
 function getRegularVersions(
   versions: pacote.Packument["versions"]
 ): readonly { readonly version: semver.SemVer; readonly hasTypes: boolean }[] {
