@@ -69,14 +69,13 @@ export async function lint(
     }
   }
   const result = linter.getResult();
-  const eslint = new ESLint({ baseConfig: eslintConfig });
+  const eslint = new ESLint({ baseConfig: eslintConfig, overrideConfig: { root: true } });
   const formatter = await eslint.loadFormatter("stylish");
   const eresults = await eslint.lintFiles(esfiles);
-  console.log(formatter.format(eresults));
 
   let output: string | undefined;
   if (result.failures.length) output = result.output;
-  if (eresults.some((r) => r.errorCount)) output = (output || "") + formatter.format(eresults);
+  output = (output || "") + formatter.format(eresults);
   return output;
 }
 
