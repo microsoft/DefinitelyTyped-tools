@@ -88,7 +88,7 @@ You can have any number of test files you want, with any names. See below on wha
 
 A test file should be a piece of sample code that tests using the library. Tests are type-checked, but not run.
 To assert that an expression is of a given type, use `$ExpectType`.
-To assert that an expression causes a compile error, use `$ExpectError`.
+To assert that an expression causes a compile error, use `@ts-expect-error`.
 (Assertions will be checked by the `expect` lint rule.)
 
 ```ts
@@ -100,7 +100,7 @@ f(1);
 // Can also write the assertion on the same line (but not if it's a multiline function call).
 f(2); // $ExpectType void
 
-// $ExpectError
+// @ts-expect-error
 f("one");
 ```
 

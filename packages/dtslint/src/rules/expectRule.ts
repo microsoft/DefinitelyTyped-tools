@@ -16,7 +16,7 @@ const perfDir = join(os.homedir(), ".dts", "perf");
 export class Rule extends Lint.Rules.TypedRule {
   static metadata: Lint.IRuleMetadata = {
     ruleName: "expect",
-    description: "Asserts types with $ExpectType and presence of errors with $ExpectError.",
+    description: "Asserts types with $ExpectType.",
     optionsDescription: "Not configurable.",
     options: null,
     type: "functionality",
@@ -27,7 +27,6 @@ export class Rule extends Lint.Rules.TypedRule {
   static FAILURE_STRING_DUPLICATE_ASSERTION = "This line has 2 $ExpectType assertions.";
   static FAILURE_STRING_ASSERTION_MISSING_NODE =
     "Can not match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.";
-  static FAILURE_STRING_EXPECTED_ERROR = "Expected an error on this line, but found none.";
 
   // TODO: If this naming convention is required by tslint, dump it when switching to eslint
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -166,34 +165,18 @@ function walk(
   const checker = program.getTypeChecker();
   // Don't care about emit errors.
   const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
-  if (sourceFile.isDeclarationFile || !/\$Expect(Type|Error)/.test(sourceFile.text)) {
+  for (const diagnostic of diagnostics) {
+    addDiagnosticFailure(diagnostic);
+  }
+  if (sourceFile.isDeclarationFile || !sourceFile.text.includes("$ExpectType")) {
     // Normal file.
-    for (const diagnostic of diagnostics) {
-      addDiagnosticFailure(diagnostic);
-    }
     return;
   }
 
-  const { errorLines, typeAssertions, duplicates } = parseAssertions(sourceFile);
+  const { typeAssertions, duplicates } = parseAssertions(sourceFile);
 
   for (const line of duplicates) {
     addFailureAtLine(line, Rule.FAILURE_STRING_DUPLICATE_ASSERTION);
-  }
-
-  const seenDiagnosticsOnLine = new Set<number>();
-
-  for (const diagnostic of diagnostics) {
-    const line = lineOfPosition(diagnostic.start!, sourceFile);
-    seenDiagnosticsOnLine.add(line);
-    if (!errorLines.has(line)) {
-      addDiagnosticFailure(diagnostic);
-    }
-  }
-
-  for (const line of errorLines) {
-    if (!seenDiagnosticsOnLine.has(line)) {
-      addFailureAtLine(line, Rule.FAILURE_STRING_EXPECTED_ERROR);
-    }
   }
 
   const { unmetExpectations, unusedAssertions } = getExpectTypeFailures(sourceFile, typeAssertions, checker, ts);
@@ -238,8 +221,6 @@ function walk(
 }
 
 interface Assertions {
-  /** Lines with an $ExpectError. */
-  readonly errorLines: ReadonlySet<number>;
   /** Map from a line number to the expected type at that line. */
   readonly typeAssertions: Map<number, string>;
   /** Lines with more than one assertion (these are errors). */
@@ -247,7 +228,6 @@ interface Assertions {
 }
 
 function parseAssertions(sourceFile: SourceFile): Assertions {
-  const errorLines = new Set<number>();
   const typeAssertions = new Map<number, string>();
   const duplicates: number[] = [];
 
@@ -264,28 +244,20 @@ function parseAssertions(sourceFile: SourceFile): Assertions {
     }
     // Match on the contents of that comment so we do nothing in a commented-out assertion,
     // i.e. `// foo; // $ExpectType number`
-    const match = /^ \$Expect((Type (.*))|Error)$/.exec(commentMatch[1]);
-    if (match === null) {
+    if (!commentMatch[1].startsWith(" $ExpectType ")) {
       continue;
     }
     const line = getLine(commentMatch.index);
-    if (match[1] === "Error") {
-      if (errorLines.has(line)) {
-        duplicates.push(line);
-      }
-      errorLines.add(line);
+    const expectedType = commentMatch[1].slice(" $ExpectType ".length);
+    // Don't bother with the assertion if there are 2 assertions on 1 line. Just fail for the duplicate.
+    if (typeAssertions.delete(line)) {
+      duplicates.push(line);
     } else {
-      const expectedType = match[3];
-      // Don't bother with the assertion if there are 2 assertions on 1 line. Just fail for the duplicate.
-      if (typeAssertions.delete(line)) {
-        duplicates.push(line);
-      } else {
-        typeAssertions.set(line, expectedType);
-      }
+      typeAssertions.set(line, expectedType);
     }
   }
 
-  return { errorLines, typeAssertions, duplicates };
+  return { typeAssertions, duplicates };
 
   function getLine(pos: number): number {
     // advance curLine to be the line preceding 'pos'
