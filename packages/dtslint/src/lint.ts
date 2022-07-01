@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExists, readJSON } from "fs-extra";
+import { pathExists } from "fs-extra";
 import { dirname, join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
@@ -23,10 +23,6 @@ export async function lint(
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
-  const eslintPath = joinPaths(dirPath, ".eslintrc.json");
-  const eslintConfig = (await pathExists(eslintPath))
-    ? await readJSON(eslintPath)
-    : require("@definitelytyped/eslint-config-dtslint");
 
   for (const version of [maxVersion, minVersion]) {
     const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
@@ -68,9 +64,14 @@ export async function lint(
     }
   }
   const result = linter.getResult();
-  const eslint = new ESLint({ baseConfig: eslintConfig, overrideConfig: { root: true }, rulePaths: [joinPaths(__dirname, "./rules/")] });
+  const cwd = process.cwd();
+  process.chdir(dirPath);
+  const eslint = new ESLint({
+    rulePaths: [joinPaths(__dirname, "./rules/")],
+  });
   const formatter = await eslint.loadFormatter("stylish");
   const eresults = await eslint.lintFiles(esfiles);
+  process.chdir(cwd);
 
   let output: string | undefined;
   if (result.failures.length) output = result.output;
