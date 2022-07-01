@@ -101,6 +101,42 @@ export class C { }
           },
         ],
       },
+      {
+        code: `
+export class C { }
+/// <reference types="terms" />
+/// <reference types="multiple" />
+`,
+        errors: [
+          {
+            line: 3,
+            messageId: "referenceAtTop",
+          },
+          {
+            line: 4,
+            messageId: "referenceAtTop",
+          },
+        ],
+      },
+      {
+        code: `
+export class C { }
+/// <reference types="terms" />
+export class D { }
+/// <reference types="multiple" />
+export class E { }
+`,
+        errors: [
+          {
+            line: 3,
+            messageId: "referenceAtTop",
+          },
+          {
+            line: 5,
+            messageId: "referenceAtTop",
+          },
+        ],
+      },
     ],
     valid: [
       `
