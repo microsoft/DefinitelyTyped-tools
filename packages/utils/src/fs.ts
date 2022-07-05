@@ -192,7 +192,7 @@ export class DiskFS implements FS {
 
 /** FS only handles simple paths like `foo/bar` or `../foo`. No `./foo` or `/foo`. */
 function validatePath(path: string): void {
-  if (path.startsWith(".") && path !== ".editorconfig" && !path.startsWith("../")) {
+  if (path.startsWith(".") && path !== ".editorconfig" && path !== ".eslintrc.json" && !path.startsWith("../")) {
     throw new Error(`${path}: filesystem doesn't support paths of the form './x'.`);
   }
   if (path.startsWith("/")) {

@@ -736,6 +736,7 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
         lsEntry.toLowerCase() !== "readme.md" &&
         lsEntry !== "NOTICE" &&
         lsEntry !== ".editorconfig" &&
+        lsEntry !== ".eslintrc.json" &&
         lsEntry !== unusedFilesName
       ) {
         throw new Error(
