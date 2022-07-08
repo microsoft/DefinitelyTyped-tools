@@ -6,11 +6,15 @@ import { AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-pa
 import { NpmPublishClient } from "@definitelytyped/utils";
 import { graphql } from "@octokit/graphql";
 import search from "libnpmsearch";
+// @ts-expect-error
+import { packages } from "typescript-dom-lib-generator/deploy/createTypesPackages.js";
 import yargs from "yargs";
 
 (async () => {
-  const { dryRun } = yargs.argv as never;
+  const { dryRun } = yargs(process.argv).argv as never;
   const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
+  // @ts-expect-error
+  const domLibs = new Set(packages.map((pkg) => pkg.name));
   const dt = await getDefinitelyTyped(options, console);
   const allPackages = await AllPackages.read(dt);
   const client = await NpmPublishClient.create(process.env.NPM_TOKEN!);
@@ -22,6 +26,8 @@ import yargs from "yargs";
     // Won't return already-deprecated packages.
     results = await search("@types", opts);
     for (const result of results) {
+      // Skip @types/web, etc.
+      if (domLibs.has(result.name)) continue;
       const types = result.name.slice("@types/".length);
       // Skip ones that exist, either in the types/ directory or in notNeededPackages.json.
       if (allPackages.tryGetLatestVersion(types) || allPackages.getNotNeededPackage(types)) continue;

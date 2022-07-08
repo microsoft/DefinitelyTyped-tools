@@ -12,11 +12,13 @@
     "@definitelytyped/utils": "^0.0.121",
     "@octokit/graphql": "^4.8.0",
     "libnpmsearch": "^5.0.3",
+    "typescript-dom-lib-generator": "https://github.com/microsoft/TypeScript-DOM-lib-generator.git",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@types/libnpmsearch": "^2.0.3",
     "@types/yargs": "^17.0.10"
   },
-  "private": true
+  "private": true,
+  "type": "module"
 }
