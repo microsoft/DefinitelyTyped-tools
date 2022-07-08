@@ -267,12 +267,12 @@ import route = require('@ember/routing/route');
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
     const info = await getTypingInfo(
-      "meteor-dburles-collection-helpers",
+      "styled-components-react-native",
       new DiskFS(
         "packages/definitions-parser/test/fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"
       )
     );
-    expect(info["1.1"].dependencies).toEqual({ meteor: "*" });
+    expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
   });
 
   describe("concerning multiple versions", () => {

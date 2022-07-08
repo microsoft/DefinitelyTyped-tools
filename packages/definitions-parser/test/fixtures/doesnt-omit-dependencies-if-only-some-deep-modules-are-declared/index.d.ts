@@ -1,9 +1,8 @@
-// Type definitions for non-npm package Atmosphere package dburles:collection-helpers 1.1
-// Project: https://github.com/dburles/meteor-collection-helpers
-// Definitions by: Artemis Kearney <https://github.com/artemiswkearney>
+// Type definitions for styled-components-react-native 5.1
+// Project: https://github.com/styled-components/styled-components
+// Definitions by: Nathan Bierema <https://github.com/Methuselah96>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// Minimum TypeScript Version: 3.7
 
-/// <reference path="./collectionHelpers.d.ts" />
-
-import { Meteor } from "meteor/meteor";
+declare module "styled-components/native" {
+  import {} from "styled-components";
+}
