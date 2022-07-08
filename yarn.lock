@@ -1762,6 +1762,11 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
+"@types/all-the-package-names@^1.3744.0":
+  version "1.3744.0"
+  resolved "https://registry.yarnpkg.com/@types/all-the-package-names/-/all-the-package-names-1.3744.0.tgz#bf137bd79262dd24ed93ea80996f6a7bef74845e"
+  integrity sha512-pHfzXywUNwg0aKYXZqkl1H0dNOjJG8j5e1PqBrhQgF3vj+jcxZVKsaW+LFkc29R2PcIkIas8D6ocFIJqy0NFXg==
+
 "@types/babel__core@^7.1.7":
   version "7.1.7"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.7.tgz#1dacad8840364a57c98d0dd4855c6dd3752c6b89"
@@ -1908,14 +1913,6 @@
   version "1.0.33"
   resolved "https://registry.yarnpkg.com/@types/json-stable-stringify/-/json-stable-stringify-1.0.33.tgz#099b0712d824d15e2660c20e1c16e6a8381f308c"
   integrity sha512-qEWiQff6q2tA5gcJGWwzplQcXdJtm+0oy6IHGHzlOf3eFAkGE/FIPXZK9ofWgNSHVp8AFFI33PJJshS0ei3Gvw==
-
-"@types/libnpmsearch@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@types/libnpmsearch/-/libnpmsearch-2.0.3.tgz#6a7bba71e533d5344cd04ceac4fe81b6b1ab9ceb"
-  integrity sha512-f/tTUDiOaUNk+m1mfvXO4/7ZasYUaKdosLgvzMdrFHNFqJENqwT9kKE+Gd6N3nsoD5kCZ7q4Pw7ApPIjXQArbA==
-  dependencies:
-    "@types/node" "*"
-    "@types/npm-registry-fetch" "*"
 
 "@types/minimatch@*", "@types/minimatch@^3.0.3":
   version "3.0.5"
@@ -2401,6 +2398,11 @@ ajv@^8.0.1:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
+
+all-the-package-names@^2.0.176:
+  version "2.0.176"
+  resolved "https://registry.yarnpkg.com/all-the-package-names/-/all-the-package-names-2.0.176.tgz#337bd76541e85985e09494d83b4734c8f02499a6"
+  integrity sha512-iDXRXto0tg4IiPHgZybugcpyusEZ8gor5ldS69OWCGIRDgEU7K+85G8iTG6IRCt+xbSj1Fz3zbwCvEJWJX7Akg==
 
 ansi-colors@^4.1.1:
   version "4.1.1"
@@ -6109,13 +6111,6 @@ libnpmpublish@^4.0.0:
     semver "^7.1.3"
     ssri "^8.0.1"
 
-libnpmsearch@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/libnpmsearch/-/libnpmsearch-5.0.3.tgz#ed502a4c2c70ea36723180455fae1357546b2184"
-  integrity sha512-Ofq76qKAPhxbiyzPf/5LPjJln26VTKwU9hIU0ACxQ6tNtBJ1CHmI7iITrdp7vNezhZc0FlkXwrIpqXjhBJZgLQ==
-  dependencies:
-    npm-registry-fetch "^13.0.0"
-
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -7008,7 +7003,7 @@ npm-registry-fetch@^11.0.0:
     minizlib "^2.0.0"
     npm-package-arg "^8.0.0"
 
-npm-registry-fetch@^13.0.0, npm-registry-fetch@^13.0.1:
+npm-registry-fetch@^13.0.1:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/npm-registry-fetch/-/npm-registry-fetch-13.1.1.tgz#26dc4b26d0a545886e807748032ba2aefaaae96b"
   integrity sha512-5p8rwe6wQPLJ8dMqeTnA57Dp9Ox6GH9H60xkyJup07FmVlu3Mk7pf/kIIpl9gaN5bM8NM+UUx3emUWvDNTt39w==

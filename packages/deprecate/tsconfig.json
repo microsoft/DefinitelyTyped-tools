@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "rootDir": "src/",
     "outDir": "dist/"
