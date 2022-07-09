@@ -6952,7 +6952,7 @@ npm-pick-manifest@^6.0.0, npm-pick-manifest@^6.1.1:
     npm-package-arg "^8.1.2"
     semver "^7.3.4"
 
-npm-pick-manifest@^7.0.0:
+npm-pick-manifest@^7.0.0, npm-pick-manifest@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/npm-pick-manifest/-/npm-pick-manifest-7.0.1.tgz#76dda30a7cd6b99be822217a935c2f5eacdaca4c"
   integrity sha512-IA8+tuv8KujbsbLQvselW2XQgmXWS47t3CB0ZrzsRZ82DbDfkcFunOaPm4X7qNuhMfq+FmV7hQT4iFVpHqV7mg==

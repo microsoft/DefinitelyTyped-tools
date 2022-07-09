@@ -36,6 +36,11 @@ jobs:
       run: yarn lint
     - name: test
       run: yarn test
+  publish-registry-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/publish-registry.yml
+    with:
+      dry-run: true
   publish_alpha:
     name: publish alpha release
     runs-on: ubuntu-latest
