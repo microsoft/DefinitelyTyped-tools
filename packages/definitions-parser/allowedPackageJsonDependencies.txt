@@ -297,7 +297,6 @@
 @maxim_mazurok/gapi.client.androidpublisher-v3
 @maxim_mazurok/gapi.client.apigateway-v1
 @maxim_mazurok/gapi.client.apigateway-v1beta
-@maxim_mazurok/gapi.client.apigee-v1
 @maxim_mazurok/gapi.client.apigeeregistry-v1
 @maxim_mazurok/gapi.client.apikeys-v2
 @maxim_mazurok/gapi.client.appengine-v1
@@ -347,7 +346,6 @@
 @maxim_mazurok/gapi.client.cloudbuild-v1alpha2
 @maxim_mazurok/gapi.client.cloudbuild-v1beta1
 @maxim_mazurok/gapi.client.cloudchannel-v1
-@maxim_mazurok/gapi.client.clouddebugger-v2
 @maxim_mazurok/gapi.client.clouddeploy-v1
 @maxim_mazurok/gapi.client.clouderrorreporting-v1beta1
 @maxim_mazurok/gapi.client.cloudfunctions-v1
