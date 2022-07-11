@@ -3,6 +3,7 @@ import { exec } from "child_process";
 import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
+import * as process from "process";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
 export type TsVersion = TypeScriptVersion | "local";
@@ -56,7 +57,11 @@ function installDir(version: TsVersion | "next"): string {
 async function execAndThrowErrors(cmd: string, cwd?: string): Promise<void> {
   // tslint:disable-next-line:promise-must-complete
   return new Promise<void>((resolve, reject) => {
-    exec(cmd, { encoding: "utf8", cwd }, (err, _stdout, stderr) => {
+    const env = { ...process.env };
+    if (env.NODE_OPTIONS && env.NODE_OPTIONS.includes("--require")) {
+      delete env.NODE_OPTIONS;
+    }
+    exec(cmd, { encoding: "utf8", cwd, env }, (err, _stdout, stderr) => {
       if (stderr) {
         console.error(stderr);
       }
