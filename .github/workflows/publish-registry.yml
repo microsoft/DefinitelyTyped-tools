@@ -1,8 +1,7 @@
 name: Publish registry
+#description: Publish the types-registry package to npm (a list of all @types packages in the DT repo).
 on:
-  schedule:
-    # https://crontab.guru/#0_0_*_*_0
-    - cron: 0 0 * * 0
+  workflow_call:
   workflow_dispatch:
 jobs:
   publish-registry:
