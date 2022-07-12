@@ -328,6 +328,7 @@
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
+@types/parse5
 @uirouter/angularjs
 @vue/reactivity
 @vue/test-utils
