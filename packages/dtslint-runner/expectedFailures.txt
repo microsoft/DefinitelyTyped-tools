@@ -14,7 +14,6 @@ keystonejs__file-adapters
 keystonejs__keystone
 keystonejs__oembed-adapters
 knex-cleaner
-knex-db-manager
 mobx-apollo
 ng-cordova
 redux-orm
