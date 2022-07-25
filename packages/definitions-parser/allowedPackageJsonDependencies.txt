@@ -865,6 +865,7 @@ mali
 metascraper
 meteor-typings
 middy
+minipass
 moment
 moment-range
 moment-timezone
