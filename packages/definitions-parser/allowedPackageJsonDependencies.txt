@@ -672,6 +672,7 @@
 @sentry/browser
 @sinonjs/fake-timers
 @storybook/addons
+@storybook/csf
 @storybook/react
 @testing-library/dom
 @tweenjs/tween.js
