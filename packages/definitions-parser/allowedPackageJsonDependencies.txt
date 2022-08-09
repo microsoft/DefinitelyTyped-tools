@@ -697,6 +697,7 @@
 @types/ink
 @types/js-data
 @types/leaflet
+@types/long
 @types/lru-cache
 @types/mkdirp-promise
 @types/mongodb
