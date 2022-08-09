@@ -169,7 +169,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual(["4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8"]);
+    expect(TypeScriptVersion.range("4.0")).toEqual(["4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9"]);
   });
   it("includes 4.0 onwards", () => {
     expect(TypeScriptVersion.range("4.0")).toEqual(TypeScriptVersion.supported);
@@ -188,6 +188,7 @@ describe("tagsToUpdate", () => {
       "ts4.6",
       "ts4.7",
       "ts4.8",
+      "ts4.9",
       "latest",
     ]);
   });
