@@ -56,10 +56,7 @@ export async function runDTSLint({
   }
 
   const allFailures: [string, string][] = [];
-  let expectedFailures = getExpectedFailures();
-  if (onlyRunAffectedPackages) {
-    expectedFailures = new Set(dependents.filter((name) => expectedFailures.has(name)));
-  }
+  const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
   const allPackages = [...packageNames, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
@@ -164,12 +161,12 @@ export async function runDTSLint({
   return allFailures.length;
 }
 
-function getExpectedFailures() {
+function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: readonly string[]) {
   return new Set(
     (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
-      .filter(Boolean)
       .map((s) => s.trim())
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.includes(line) : Boolean)
   );
 }
 
