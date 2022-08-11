@@ -9,10 +9,13 @@ const ruleTester = new ESLintUtils.RuleTester({
 ruleTester.run("export-just-namespace", exportJustNamespace, {
   invalid: [
     {
-      code: `export = stuff;`,
+      code: `
+      namespace Stuff {}
+      export = Stuff;
+      `,
       errors: [
         {
-          line: 1,
+          line: 3,
           messageId: "useTheBody",
         },
       ],
@@ -23,6 +26,12 @@ ruleTester.run("export-just-namespace", exportJustNamespace, {
     `export default class Hello {}`,
     'import * as fs from "fs";',
     "const value = 123;",
+    `export = stuff;`,
     `export = createStuff();`,
+    `
+    class Stuff {}
+    namespace Stuff {}
+    export = Stuff;
+`,
   ],
 });
