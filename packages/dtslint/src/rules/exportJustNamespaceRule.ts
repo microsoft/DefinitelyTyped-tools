@@ -28,7 +28,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
   const {
     sourceFile: { statements },
   } = ctx;
-  const exportEqualsNode = statements.find(isExportEquals) as ts.ExportAssignment | undefined;
+  const exportEqualsNode = statements.find(isExportEquals);
   if (!exportEqualsNode) {
     return;
   }
@@ -43,7 +43,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
   }
 }
 
-function isExportEquals(node: ts.Node): boolean {
+function isExportEquals(node: ts.Node): node is ts.ExportAssignment {
   return ts.isExportAssignment(node) && !!node.isExportEquals;
 }
 

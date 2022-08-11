@@ -1,7 +1,5 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-const createRule = ESLintUtils.RuleCreator(
-  (name) => `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint/src/rules/${name}.ts`
-);
+import { createRule } from "../util";
+
 const rule = createRule({
   name: "no-const-enum",
   defaultOptions: [],

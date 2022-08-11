@@ -1,8 +1,13 @@
+import { ESLintUtils } from "@typescript-eslint/utils";
 import assert = require("assert");
 import { pathExists, readFile } from "fs-extra";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
+
+export const createRule = ESLintUtils.RuleCreator(
+  (name) => `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint/src/rules/${name}.ts`
+);
 
 export async function readJson(path: string) {
   const text = await readFile(path, "utf-8");
