@@ -976,6 +976,7 @@ treat
 ts-toolbelt
 tslint
 tweetnacl
+type-fest
 typeorm
 typescript
 typescript-tuple
