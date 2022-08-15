@@ -5,19 +5,9 @@ interface ExportAssignmentWithIdentifier extends TSESTree.TSExportAssignment {
   expression: TSESTree.Identifier;
 }
 
-/*
-ESLint rule that will ban code like this:
-    export = stuff;
-    declare namespace stuff {
-        function doThings(): void;
-    }
-...in favor of code like this:
-    export function doThings(): void;
-*/
 const rule = createRule({
   name: "export-just-namespace",
   defaultOptions: [],
-  // Metadata: a bit of docs, and the possible message IDs it'll log
   meta: {
     type: "problem",
     docs: {
@@ -30,16 +20,10 @@ const rule = createRule({
     },
     schema: [],
   },
-  // Takes in an object with ESLint APIs such as report (which makes a create),
-  // and returns an object with key/value pairs:
-  //   * keys: Queries similar to CSS queries, but for AST nodes
-  //   * values: function to run on each node matching the query
-  // AST = Abstract Syntax Tree, a representation of the nodes in your code
-  //   reference: see astexplorer.net
   create(context) {
     const ast = context.getSourceCode().ast;
 
-    const exportEqualsNode = ast.body.find(isExportEquals);
+    const exportEqualsNode = ast.body.find(isExportEqualsWithIdentifier);
     if (!exportEqualsNode) {
       return {};
     }
@@ -51,16 +35,6 @@ const rule = createRule({
       });
     }
 
-    // TODO:
-    // * Make sure the identifier is a namespace
-    // * Only complain if the identifier has previously been used to declare other things
-
-    // // Each of these functions generally doesn't return anything,
-    // // but may call context.report(...) if it finds a complaint
-    // return {
-    //   // eslint-disable-next-line @typescript-eslint/naming-convention
-    //   'TSExportAssignment[expression.type="Identifier"]'(node: ExportAssignmentWithIdentifier) {},
-    // };
     return {};
   },
 });
@@ -73,32 +47,15 @@ function isJustNamespace(statements: TSESTree.ProgramStatement[], exportEqualsNa
 
   for (const statement of statements) {
     switch (statement.type) {
-      // We've found the namespace, maybe!
-      // TODO: if we just assume anyNamespace is true.. like, why do we need it?
       case AST_NODE_TYPES.TSModuleDeclaration:
-        // If the name is the same as what we're looking for, then yes, we found it
         anyNamespace ||= nameMatches(statement.id);
         break;
-      /*
-        const MyName = function () {};
-
-        namespace MyName { ... }
-
-        export = MyName;
-      */
       case AST_NODE_TYPES.VariableDeclaration:
         if (statement.declarations.some((d) => nameMatches(d.id))) {
           // OK. It's merged with a variable.
           return false;
         }
         break;
-      /*
-        class MyName { ... }
-      
-        namespace MyName { ... }
-
-        export = MyName;
-      */
       case AST_NODE_TYPES.ClassDeclaration:
       case AST_NODE_TYPES.FunctionDeclaration:
       case AST_NODE_TYPES.TSTypeAliasDeclaration:
@@ -118,7 +75,7 @@ function isJustNamespace(statements: TSESTree.ProgramStatement[], exportEqualsNa
   }
 }
 
-function isExportEquals(node: TSESTree.Node): node is ExportAssignmentWithIdentifier {
+function isExportEqualsWithIdentifier(node: TSESTree.Node): node is ExportAssignmentWithIdentifier {
   return node.type === AST_NODE_TYPES.TSExportAssignment && node.expression.type === AST_NODE_TYPES.Identifier;
 }
 

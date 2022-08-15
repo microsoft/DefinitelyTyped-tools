@@ -10,12 +10,37 @@ ruleTester.run("export-just-namespace", exportJustNamespace, {
   invalid: [
     {
       code: `
-      namespace Stuff {}
-      export = Stuff;
-      `,
+export = Stuff;
+namespace Stuff {}
+`,
+      errors: [
+        {
+          line: 2,
+          messageId: "useTheBody",
+        },
+      ],
+    },
+    {
+      code: `
+namespace Stuff {}
+export = Stuff;
+`,
       errors: [
         {
           line: 3,
+          messageId: "useTheBody",
+        },
+      ],
+    },
+    {
+      code: `
+namespace Stuff {}
+const other = "code";
+export = Stuff;
+`,
+      errors: [
+        {
+          line: 4,
           messageId: "useTheBody",
         },
       ],
@@ -29,9 +54,9 @@ ruleTester.run("export-just-namespace", exportJustNamespace, {
     `export = stuff;`,
     `export = createStuff();`,
     `
-    class Stuff {}
-    namespace Stuff {}
-    export = Stuff;
+class Stuff {}
+namespace Stuff {}
+export = Stuff;
 `,
   ],
 });
