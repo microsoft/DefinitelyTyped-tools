@@ -75,7 +75,7 @@ describe("dtslint", () => {
       const testDirectory = join(testDir, testName);
       if (existsSync(join(testDirectory, "tslint.json"))) {
         testSingle(testDirectory);
-      } else if (!statSync(testDirectory).isDirectory()) {
+      } else if (statSync(testDirectory).isDirectory()) {
         for (const subTestName of readdirSync(testDirectory)) {
           testSingle(join(testDirectory, subTestName));
         }
