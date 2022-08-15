@@ -998,5 +998,6 @@ winston
 winston-transport
 xmlbuilder
 xpath
+yup
 zipkin
 zipkin-transport-http
