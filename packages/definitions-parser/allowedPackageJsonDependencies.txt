@@ -665,6 +665,8 @@
 @maxim_mazurok/gapi.client.youtubereporting-v1
 @middy/core
 @mparticle/event-models
+@mui/material
+@mui/types
 @npm/types
 @popperjs/core
 @rdfjs/types
