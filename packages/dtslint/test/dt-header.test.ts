@@ -20,7 +20,7 @@ ruleTester.run("dt-header", dtHeader, {
           messageId: "parseError",
         },
       ],
-      filename: "types/abc/index.d.ts",
+      filename: "types/blank/index.d.ts",
     },
     {
       code: `
@@ -36,7 +36,7 @@ ruleTester.run("dt-header", dtHeader, {
           messageId: "parseError",
         },
       ],
-      filename: "types/abc/index.d.ts",
+      filename: "types/only-comment/index.d.ts",
     },
     {
       code: `// Type definitions for dt-header 1.0
@@ -54,7 +54,7 @@ ruleTester.run("dt-header", dtHeader, {
           messageId: "parseError",
         },
       ],
-      filename: "types/bad-url/index.d.ts",
+      filename: "types/bad-url-github-org/index.d.ts",
     },
     {
       code: `// Type definitions for dt-header 1.0
@@ -72,7 +72,7 @@ ruleTester.run("dt-header", dtHeader, {
           messageId: "parseError",
         },
       ],
-      filename: "types/bad-url/index.d.ts",
+      filename: "types/bad-url-space/index.d.ts",
     },
     {
       code: `// Type definitions for dt-header 1.0

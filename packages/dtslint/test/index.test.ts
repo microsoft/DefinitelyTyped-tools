@@ -67,7 +67,7 @@ describe("dtslint", () => {
     });
   });
   describe("rules", () => {
-    const tests = readdirSync(testDir); // .filter((x) => x !== "index.test.ts");
+    const tests = readdirSync(testDir);
     for (const testName of tests) {
       const testDirectory = join(testDir, testName);
       if (existsSync(join(testDirectory, "tslint.json"))) {
