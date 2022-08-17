@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("no-const-enum", dtHeader, {
+ruleTester.run("dt-header", dtHeader, {
   invalid: [
     {
       code: ``,
@@ -41,7 +41,7 @@ ruleTester.run("no-const-enum", dtHeader, {
     {
       code: `// Type definitions for dt-header 1.0
 // Project: https://github.com/bobby-headers/dt-header
-// Definitions by: Jane Doe <https://github.org/janedoe>
+// Definitions by: Jane Doe <https://github.ORG/janedoe>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 `,
       errors: [
@@ -89,7 +89,7 @@ ruleTester.run("no-const-enum", dtHeader, {
           messageId: "definitionsBy",
         },
       ],
-      filename: "types/bad-url/index.d.ts",
+      filename: "types/bad-username/index.d.ts",
     },
     {
       code: `// Type definitions for dt-header v1.0.3
