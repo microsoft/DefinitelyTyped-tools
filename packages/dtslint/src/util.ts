@@ -1,6 +1,5 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 import assert = require("assert");
-import { ESLintUtils } from "@typescript-eslint/utils";
 import { pathExists, readFile } from "fs-extra";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
