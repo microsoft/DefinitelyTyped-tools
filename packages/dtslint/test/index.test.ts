@@ -1,12 +1,9 @@
 /// <reference types="jest" />
 import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
-import { existsSync, readdirSync } from "fs";
+import { existsSync, readdirSync, statSync } from "fs";
 import { checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
-import { ESLintUtils } from "@typescript-eslint/utils";
-import * as noConstEnum from "../src/rules/no-const-enum";
-import * as noDeadReference from "../src/rules/no-dead-reference";
 
 const testDir = __dirname;
 
@@ -70,93 +67,16 @@ describe("dtslint", () => {
     });
   });
   describe("rules", () => {
-    const tests = readdirSync(testDir).filter((x) => x !== "index.test.ts");
+    const tests = readdirSync(testDir);
     for (const testName of tests) {
       const testDirectory = join(testDir, testName);
       if (existsSync(join(testDirectory, "tslint.json"))) {
         testSingle(testDirectory);
-      } else {
+      } else if (statSync(testDirectory).isDirectory()) {
         for (const subTestName of readdirSync(testDirectory)) {
           testSingle(join(testDirectory, subTestName));
         }
       }
     }
-  });
-});
-describe("eslint", () => {
-  const ruleTester = new ESLintUtils.RuleTester({
-    parser: "@typescript-eslint/parser",
-  });
-  ruleTester.run("no-dead-reference", noDeadReference, {
-    invalid: [
-      {
-        code: `
-export class C { }
-/// <reference types="terms" />
-`,
-        errors: [
-          {
-            line: 3,
-            messageId: "referenceAtTop",
-          },
-        ],
-      },
-      {
-        code: `
-export class C { }
-/// <reference types="terms" />
-/// <reference types="multiple" />
-`,
-        errors: [
-          {
-            line: 3,
-            messageId: "referenceAtTop",
-          },
-          {
-            line: 4,
-            messageId: "referenceAtTop",
-          },
-        ],
-      },
-      {
-        code: `
-export class C { }
-/// <reference types="terms" />
-export class D { }
-/// <reference types="multiple" />
-export class E { }
-`,
-        errors: [
-          {
-            line: 3,
-            messageId: "referenceAtTop",
-          },
-          {
-            line: 5,
-            messageId: "referenceAtTop",
-          },
-        ],
-      },
-    ],
-    valid: [
-      `
-/// <reference types="tones" />
-export class K {}
-`,
-    ],
-  });
-  ruleTester.run("no-const-enum", noConstEnum, {
-    invalid: [
-      {
-        code: ` const enum E { } `,
-        errors: [
-          {
-            line: 1,
-            messageId: "constEnum",
-          },
-        ],
-      },
-    ],
-    valid: [` enum F {}`],
   });
 });
