@@ -1,3 +1,4 @@
+import { ESLintUtils } from "@typescript-eslint/utils";
 import assert = require("assert");
 import { ESLintUtils } from "@typescript-eslint/utils";
 import { pathExists, readFile } from "fs-extra";
