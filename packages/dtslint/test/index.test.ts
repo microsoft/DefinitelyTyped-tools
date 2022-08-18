@@ -1,7 +1,7 @@
 /// <reference types="jest" />
 import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
-import { existsSync, readdirSync } from "fs";
+import { existsSync, readdirSync, statSync } from "fs";
 import { checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 import { ESLintUtils } from "@typescript-eslint/utils";
@@ -70,12 +70,12 @@ describe("dtslint", () => {
     });
   });
   describe("rules", () => {
-    const tests = readdirSync(testDir).filter((x) => x !== "index.test.ts");
+    const tests = readdirSync(testDir);
     for (const testName of tests) {
       const testDirectory = join(testDir, testName);
       if (existsSync(join(testDirectory, "tslint.json"))) {
         testSingle(testDirectory);
-      } else {
+      } else if (statSync(testDirectory).isDirectory()) {
         for (const subTestName of readdirSync(testDirectory)) {
           testSingle(join(testDirectory, subTestName));
         }
