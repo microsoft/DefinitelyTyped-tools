@@ -14,6 +14,7 @@
 @emotion/react
 @emotion/serialize
 @emotion/styled
+@glimmer/component
 @hapi/boom
 @hapi/iron
 @hapi/podium
@@ -664,6 +665,8 @@
 @maxim_mazurok/gapi.client.youtubereporting-v1
 @middy/core
 @mparticle/event-models
+@mui/material
+@mui/types
 @npm/types
 @popperjs/core
 @rdfjs/types
@@ -696,6 +699,7 @@
 @types/ink
 @types/js-data
 @types/leaflet
+@types/long
 @types/lru-cache
 @types/mkdirp-promise
 @types/mongodb
@@ -996,5 +1000,6 @@ winston
 winston-transport
 xmlbuilder
 xpath
+yup
 zipkin
 zipkin-transport-http
