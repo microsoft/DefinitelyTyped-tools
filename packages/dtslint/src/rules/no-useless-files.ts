@@ -16,9 +16,34 @@ const rule = createRule({
   },
   create(context) {
     const {
-      ast: { tokens },
+      ast: { tokens, comments },
     } = context.getSourceCode();
+
     if (tokens.length === 0) {
+      if (comments.length === 0) {
+        reportNoContent();
+      } else {
+        const referenceRegExp = /^\/\s*<reference\s*(types|path)\s*=\s*["|'](.*)["|']/;
+        let noReferenceFound = true;
+
+        for (const comment of comments) {
+          const referenceMatch = comment.value.match(referenceRegExp)?.[1];
+          if (!referenceMatch) {
+            continue;
+          }
+          noReferenceFound = false;
+          break;
+        }
+
+        if (noReferenceFound) {
+          reportNoContent();
+        }
+      }
+    }
+
+    return {};
+
+    function reportNoContent() {
       context.report({
         messageId: "noContent",
         loc: {
@@ -27,7 +52,6 @@ const rule = createRule({
         },
       });
     }
-    return {};
   },
 });
 

@@ -27,10 +27,16 @@ ruleTester.run("no-useless-files", noUselessFiles, {
         },
       ],
     },
-  ],
-  valid: [
     {
-      code: `export default "I am useful";`,
+      code: `/// <reference lib="baz" />`,
+      errors: [
+        {
+          column: 1,
+          line: 1,
+          messageId: "noContent",
+        },
+      ],
     },
   ],
+  valid: [`export default "I am useful";`, `/// <reference path="foo" />`, `/// <reference types="bar" />`],
 });
