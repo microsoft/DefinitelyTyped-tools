@@ -11,7 +11,6 @@
         "redundant-undefined": true,
         "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
-        "no-any-union": true,
         "no-single-declare-module": true,
         "no-unnecessary-generics": true,
         "no-useless-files": true,
