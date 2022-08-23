@@ -16,7 +16,6 @@
         "no-unnecessary-generics": true,
         "no-useless-files": true,
         "prefer-declare-function": true,
-        "trim-file": true,
         "unified-signatures": true,
         "void-return": true,
         "npm-naming": true,
