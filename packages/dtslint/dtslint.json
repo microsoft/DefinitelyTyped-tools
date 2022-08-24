@@ -14,7 +14,6 @@
         "no-any-union": true,
         "no-single-declare-module": true,
         "no-unnecessary-generics": true,
-        "no-useless-files": true,
         "prefer-declare-function": true,
         "trim-file": true,
         "unified-signatures": true,
