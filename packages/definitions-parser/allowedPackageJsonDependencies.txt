@@ -970,6 +970,7 @@ stylelint
 svelte
 sw-toolbox
 swagger-parser
+tailwindcss
 tapable
 tarn
 tasker-types
