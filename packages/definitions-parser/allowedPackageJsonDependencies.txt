@@ -957,6 +957,7 @@ scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
+shell-exec
 should
 simple-markdown
 smooth-scrollbar
