@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.0",
+      typeScriptVersion: "4.1",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.0",
+      typeScriptVersion: "4.1",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -147,11 +147,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("4.5")).toBeTruthy();
   });
-  it("supports 4.0", () => {
-    expect(TypeScriptVersion.isSupported("4.0")).toBeTruthy();
+  it("supports 4.1", () => {
+    expect(TypeScriptVersion.isSupported("4.1")).toBeTruthy();
   });
-  it("does not support 3.9", () => {
-    expect(!TypeScriptVersion.isSupported("3.9")).toBeTruthy();
+  it("does not support 4.0", () => {
+    expect(!TypeScriptVersion.isSupported("4.0")).toBeTruthy();
   });
 });
 
@@ -169,8 +169,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual([
-      "4.0",
+    expect(TypeScriptVersion.range("4.1")).toEqual([
       "4.1",
       "4.2",
       "4.3",
@@ -182,15 +181,14 @@ describe("range", () => {
       "4.9",
     ]);
   });
-  it("includes 4.0 onwards", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual(TypeScriptVersion.supported);
+  it("includes 4.1 onwards", () => {
+    expect(TypeScriptVersion.range("4.1")).toEqual(TypeScriptVersion.supported);
   });
 });
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.0")).toEqual([
-      "ts4.0",
+    expect(TypeScriptVersion.tagsToUpdate("4.1")).toEqual([
       "ts4.1",
       "ts4.2",
       "ts4.3",
@@ -203,8 +201,8 @@ describe("tagsToUpdate", () => {
       "latest",
     ]);
   });
-  it("allows 4.0 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.0")).toEqual(
+  it("allows 4.1 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("4.1")).toEqual(
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
     );
   });
@@ -215,9 +213,9 @@ describe("makeTypesVersionsForPackageJson", () => {
     expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
   });
   it("works for one version", () => {
-    expect(makeTypesVersionsForPackageJson(["4.0"])).toEqual({
-      "<=4.0": {
-        "*": ["ts4.0/*"],
+    expect(makeTypesVersionsForPackageJson(["4.3"])).toEqual({
+      "<=4.3": {
+        "*": ["ts4.3/*"],
       },
     });
   });
