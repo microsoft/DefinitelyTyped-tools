@@ -18,6 +18,4 @@ mobx-apollo
 ng-cordova
 redux-orm
 resourcejs
-sketchapp
 sparql-http-client
-vscode-webview
