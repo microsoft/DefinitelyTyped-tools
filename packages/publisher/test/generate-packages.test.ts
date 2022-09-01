@@ -89,6 +89,16 @@ testo({
       expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
     );
   },
+  readmeMultipleDependencies() {
+    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    // @ts-expect-error - dependencies is readonly
+    typing.dependencies.example = { major: 2 };
+    expect(createReadme(typing, defaultFS())).toEqual(
+      expect.stringContaining(
+        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"
+      )
+    );
+  },
   readmeContainsSingleFileDTS() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toContain("type T = import");
