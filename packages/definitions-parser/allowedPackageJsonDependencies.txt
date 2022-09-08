@@ -812,6 +812,7 @@ express-rate-limit
 fast-glob
 fastify
 final-form
+filestack-js
 firebase-admin
 flatpickr
 form-data
