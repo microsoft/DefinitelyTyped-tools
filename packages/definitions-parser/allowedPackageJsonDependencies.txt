@@ -689,6 +689,7 @@
 @types/express-rate-limit
 @types/express-serve-static-core
 @types/faker
+@types/favicons
 @types/firebase
 @types/got
 @types/hapi
