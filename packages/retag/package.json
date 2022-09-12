@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/retag",
-  "version": "0.0.128-next.1",
+  "version": "0.0.128-next.2",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/retag#readme",
@@ -18,7 +18,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.128-next.1",
+    "@definitelytyped/definitions-parser": "^0.0.128-next.2",
     "@definitelytyped/typescript-versions": "^0.0.127",
     "@definitelytyped/utils": "^0.0.127",
     "pacote": "^13.6.1",
