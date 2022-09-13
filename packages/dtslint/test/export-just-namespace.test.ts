@@ -58,13 +58,13 @@ class Stuff {}
 namespace Stuff {}
 export = Stuff;
 `,
-      `export = First
+    `export = First
 namespace First {}
 declare function First()
 `,
-      `declare namespace Second {}
+    `declare namespace Second {}
 export = Second
 declare function Second<U, S>(s: U): S
-`
+`,
   ],
 });
