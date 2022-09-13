@@ -4,7 +4,6 @@
     "rules": {
         // Custom rules
         "expect": true,
-        "export-just-namespace": true,
         "no-bad-reference": true,
         "no-import-default-of-export-equals": true,
         "no-padding": true,
