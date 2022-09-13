@@ -58,6 +58,7 @@ function isJustNamespace(statements: TSESTree.ProgramStatement[], exportEqualsNa
         break;
       case AST_NODE_TYPES.ClassDeclaration:
       case AST_NODE_TYPES.FunctionDeclaration:
+      case AST_NODE_TYPES.TSDeclareFunction:
       case AST_NODE_TYPES.TSTypeAliasDeclaration:
       case AST_NODE_TYPES.TSInterfaceDeclaration:
         if (nameMatches(statement.id)) {
@@ -70,8 +71,8 @@ function isJustNamespace(statements: TSESTree.ProgramStatement[], exportEqualsNa
 
   return anyNamespace;
 
-  function nameMatches(nameNode: TSESTree.Node | undefined): boolean {
-    return nameNode !== undefined && nameNode.type === AST_NODE_TYPES.Identifier && nameNode.name === exportEqualsName;
+  function nameMatches(nameNode: TSESTree.Node | undefined | null): boolean {
+    return !!nameNode && nameNode.type === AST_NODE_TYPES.Identifier && nameNode.name === exportEqualsName;
   }
 }
 
