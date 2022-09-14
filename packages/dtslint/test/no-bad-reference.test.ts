@@ -54,6 +54,10 @@ ruleTester.run("no-bad-reference", noBadReference, {
       filename: "types.d.ts",
     },
     {
+      code: `/// <reference path="./other" />`,
+      filename: "types.d.ts",
+    },
+    {
       code: `/// <reference path="other" />
 /// <reference path="other2" />`,
       filename: "types.d.ts",
