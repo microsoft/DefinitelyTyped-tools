@@ -669,6 +669,7 @@
 @mui/types
 @npm/types
 @popperjs/core
+@puppeteer/replay
 @rdfjs/types
 @react-navigation/native
 @react-navigation/stack
@@ -688,6 +689,7 @@
 @types/express-rate-limit
 @types/express-serve-static-core
 @types/faker
+@types/favicons
 @types/firebase
 @types/got
 @types/hapi
@@ -811,6 +813,7 @@ express-rate-limit
 fast-glob
 fastify
 final-form
+filestack-js
 firebase-admin
 flatpickr
 form-data
@@ -956,6 +959,7 @@ scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
+shell-exec
 should
 simple-markdown
 smooth-scrollbar
@@ -969,6 +973,7 @@ stylelint
 svelte
 sw-toolbox
 swagger-parser
+tailwindcss
 tapable
 tarn
 tasker-types

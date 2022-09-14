@@ -4,7 +4,6 @@
     "rules": {
         // Custom rules
         "expect": true,
-        "export-just-namespace": true,
         "no-import-default-of-export-equals": true,
         "no-padding": true,
         "redundant-undefined": true,
@@ -13,7 +12,6 @@
         "no-any-union": true,
         "no-single-declare-module": true,
         "no-unnecessary-generics": true,
-        "no-useless-files": true,
         "prefer-declare-function": true,
         "trim-file": true,
         "unified-signatures": true,
