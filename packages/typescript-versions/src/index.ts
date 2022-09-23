@@ -114,6 +114,12 @@ export namespace TypeScriptVersion {
     return index === 0 ? undefined : supported[index - 1];
   }
 
+  export function next(v: TypeScriptVersion): TypeScriptVersion | undefined {
+    const index = supported.indexOf(v);
+    assert(index !== -1);
+    return index === supported.length - 1 ? undefined : supported[index + 1];
+  }
+
   export function isRedirectable(v: TypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
