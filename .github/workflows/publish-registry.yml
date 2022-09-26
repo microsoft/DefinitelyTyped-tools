@@ -3,7 +3,14 @@ on:
   schedule:
     # https://crontab.guru/#0_0_*_*_0
     - cron: 0 0 * * 0
+  workflow_call:
+    inputs:
+      dry-run:
+        type: boolean
   workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
 jobs:
   publish-registry:
     runs-on: ubuntu-latest
@@ -21,8 +28,8 @@ jobs:
           path: packages/utils/cache/
           key: cache-${{ github.run_id }}
           restore-keys: cache-
-      - name: Publish registry
-        run: yarn workspace @definitelytyped/publisher publish-registry
+      - name: Publish registry${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
+        run: yarn workspace @definitelytyped/publisher publish-registry${{ (inputs || github.event.inputs).dry-run && ' --dry' || '' }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()

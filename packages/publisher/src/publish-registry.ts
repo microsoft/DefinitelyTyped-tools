@@ -1,6 +1,8 @@
 import assert = require("assert");
 import process from "process";
 import { emptyDir } from "fs-extra";
+// @ts-expect-error
+import pickManifest from "npm-pick-manifest";
 import * as yargs from "yargs";
 
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
@@ -230,10 +232,7 @@ async function generateRegistry(typings: readonly TypingsData[]): Promise<Regist
   return {
     entries: Object.fromEntries(
       await Promise.all(
-        typings.map(async (typing) => [
-          typing.name,
-          filterTags((await pacote.packument(typing.fullNpmName, { cache: cacheDir }))["dist-tags"]),
-        ])
+        typings.map(async (typing) => [typing.name, filterTags((await revalidate(typing))["dist-tags"])])
       )
     ),
   };
@@ -243,6 +242,27 @@ async function generateRegistry(typings: readonly TypingsData[]): Promise<Regist
       Object.entries(tags).filter(([tag, version]) => tag === "latest" || version !== tags.latest)
     );
   }
+}
+
+/** Fetch packument from the cache or the network, depending on whether the types have changed or not. */
+async function revalidate(typing: TypingsData) {
+  const offline = await pacote
+    .packument(typing.fullNpmName, { cache: cacheDir, fullMetadata: true, offline: true })
+    .catch((reason) => {
+      if (reason.code !== "ENOTCACHED") throw reason;
+      return undefined;
+    });
+  try {
+    if (
+      offline &&
+      pickManifest(offline, `~${typing.major}.${typing.minor}`).typesPublisherContentHash === typing.contentHash
+    )
+      return offline;
+    // @ts-expect-error
+  } catch (reason: {}) {
+    if (reason.code !== "ETARGET") throw reason;
+  }
+  return pacote.packument(typing.fullNpmName, { cache: cacheDir, fullMetadata: true, preferOnline: true });
 }
 
 interface ProcessedNpmInfo {
