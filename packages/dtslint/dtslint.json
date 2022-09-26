@@ -13,7 +13,6 @@
         "no-single-declare-module": true,
         "no-unnecessary-generics": true,
         "prefer-declare-function": true,
-        "trim-file": true,
         "unified-signatures": true,
         "void-return": true,
         "npm-naming": true,
