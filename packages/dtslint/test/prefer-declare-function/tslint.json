@@ -1,6 +1,0 @@
-{
-  "rulesDirectory": ["../../dist/rules"],
-  "rules": {
-    "prefer-declare-function": true
-  }
-}
