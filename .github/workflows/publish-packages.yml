@@ -1,9 +1,6 @@
-name: Publish registry
-#description: Publish the types-registry package to npm (a list of all @types packages in the DT repo).
+name: Publish packages
+#description: Find changed @types packages in the DT repo and publish them to npm.
 on:
-  schedule:
-    # https://crontab.guru/#0_0_*_*_0
-    - cron: 0 0 * * 0
   workflow_call:
     inputs:
       dry-run:
@@ -13,8 +10,7 @@ on:
       dry-run:
         type: boolean
 jobs:
-  publish-registry:
-    if: github.event_name != 'schedule' || github.repository == 'microsoft/DefinitelyTyped-tools'
+  publish-packages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,9 +26,14 @@ jobs:
           path: packages/utils/cache/
           key: cache-${{ github.run_id }}
           restore-keys: cache-
-      - name: Publish registry${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
-        run: yarn workspace @definitelytyped/publisher publish-registry${{ (inputs || github.event.inputs).dry-run && ' --dry' || '' }}
+      - name: Calculate versions
+        run: yarn workspace @definitelytyped/publisher calculate-versions
+      - name: Generate packages
+        run: yarn workspace @definitelytyped/publisher generate
+      - name: Publish packages${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
+        run: yarn workspace @definitelytyped/publisher publish-packages${{ (inputs || github.event.inputs).dry-run && ' --dry' || '' }}
         env:
+          GH_API_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()
         uses: actions/upload-artifact@v3

@@ -1,5 +1,5 @@
-name: Publish registry
-#description: Publish the types-registry package to npm (a list of all @types packages in the DT repo).
+name: Mark removed types as deprecated
+#description: Loop over npm @types packages and mark as deprecated any that no longer exist in the DT repo.
 on:
   schedule:
     # https://crontab.guru/#0_0_*_*_0
@@ -13,7 +13,7 @@ on:
       dry-run:
         type: boolean
 jobs:
-  publish-registry:
+  deprecate:
     if: github.event_name != 'schedule' || github.repository == 'microsoft/DefinitelyTyped-tools'
     runs-on: ubuntu-latest
     steps:
@@ -25,14 +25,10 @@ jobs:
       - run: yarn build
       - name: Parse declarations
         run: yarn workspace @definitelytyped/publisher parse
-      - uses: actions/cache@v3
-        with:
-          path: packages/utils/cache/
-          key: cache-${{ github.run_id }}
-          restore-keys: cache-
-      - name: Publish registry${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
-        run: yarn workspace @definitelytyped/publisher publish-registry${{ (inputs || github.event.inputs).dry-run && ' --dry' || '' }}
+      - name: Mark removed types as deprecated${{ (inputs || github.event.inputs).dry-run && ' dry run' || '' }}
+        run: node --require source-map-support/register packages/deprecate/${{ (inputs || github.event.inputs).dry-run && ' --dry-run' || '' }}
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()
         uses: actions/upload-artifact@v3

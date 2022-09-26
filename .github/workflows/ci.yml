@@ -36,6 +36,26 @@ jobs:
       run: yarn lint
     - name: test
       run: yarn test
+  publish-packages-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/publish-packages.yml
+    with:
+      dry-run: true
+  publish-registry-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/publish-registry.yml
+    with:
+      dry-run: true
+  retag-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/retag.yml
+    with:
+      dry-run: true
+  deprecate-dry-run:
+    needs: build_and_test
+    uses: ./.github/workflows/deprecate.yml
+    with:
+      dry-run: true
   publish_alpha:
     name: publish alpha release
     runs-on: ubuntu-latest

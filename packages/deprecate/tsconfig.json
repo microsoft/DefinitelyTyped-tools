@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "rootDir": "src/",
+    "outDir": "dist/"
+  },
+  "references": [{ "path": "../definitions-parser/" }, { "path": "../utils/" }]
+}

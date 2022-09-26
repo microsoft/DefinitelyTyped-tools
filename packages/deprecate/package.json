@@ -1,0 +1,26 @@
+{
+  "name": "@definitelytyped/deprecate",
+  "version": "1.0.0",
+  "description": "Loop over npm @types packages and mark as deprecated any that no longer exist in the DT repo.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@definitelytyped/definitions-parser": "^0.0.121",
+    "@definitelytyped/utils": "^0.0.121",
+    "@octokit/graphql": "^4.8.0",
+    "all-the-package-names": "^2.0.176",
+    "pacote": "^13.6.1",
+    "typescript-dom-lib-generator": "https://github.com/microsoft/TypeScript-DOM-lib-generator.git",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@types/all-the-package-names": "^1.3744.0",
+    "@types/pacote": "^11.1.5",
+    "@types/yargs": "^17.0.10"
+  },
+  "private": true,
+  "type": "module"
+}

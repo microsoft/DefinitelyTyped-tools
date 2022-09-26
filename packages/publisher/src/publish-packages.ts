@@ -1,7 +1,8 @@
+import process from "process";
 import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
-import { defaultLocalOptions } from "./lib/common";
+import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
 import { getDefinitelyTyped, AllPackages } from "@definitelytyped/definitions-parser";
 import {
@@ -19,7 +20,10 @@ import { getSecret, Secret } from "./lib/secrets";
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-    const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
+    const dt = await getDefinitelyTyped(
+      process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions,
+      loggerWithErrors()[0]
+    );
     await publishPackages(
       await readChangedPackages(await AllPackages.read(dt)),
       dry,
@@ -42,7 +46,7 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined);
+  const client = await NpmPublishClient.create(dry ? "" : await getSecret(Secret.NPM_TOKEN), undefined);
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);
