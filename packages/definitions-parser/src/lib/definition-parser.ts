@@ -474,7 +474,7 @@ function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directo
     if (file.startsWith("./")) {
       throw new Error(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
     }
-    if (!isRelativePath(file)) {
+    if (!isRelativePath(file.replace(/^(?:\.\.\/)+/, ""))) {
       throw new Error(`In ${tsconfigPath}: A path segment is empty or all dots ${file}`);
     }
     if (file.endsWith(".d.ts") && file !== "index.d.ts") {
@@ -482,7 +482,7 @@ function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directo
 Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`);
     }
 
-    if (!file.endsWith(".d.ts") && !file.startsWith("test/")) {
+    if (!file.endsWith(".d.ts") && !file.startsWith("test/") && !file.startsWith("../")) {
       const expectedName = `${packageName}-tests.ts`;
       if (file !== expectedName && file !== `${expectedName}x`) {
         const message =
