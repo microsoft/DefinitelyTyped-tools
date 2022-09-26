@@ -96,32 +96,28 @@ const nonexistentReplacementPackage = new NotNeededPackage("jest", "nonexistent"
 const nonexistentTypesPackage = new NotNeededPackage("nonexistent", "jest", "100.0.0");
 
 testo({
-  missingSource() {
-    return expect(checkNotNeededPackage(nonexistentReplacementPackage)).rejects.toThrow(
-      "The entry for @types/jest in notNeededPackages.json"
-    );
-  },
-  missingTypings() {
+  nonexistentTypesPackage() {
     return expect(checkNotNeededPackage(nonexistentTypesPackage)).rejects.toThrow(
       "@types package not found for @types/nonexistent"
     );
   },
-  deprecatedSameVersion() {
-    return expect(checkNotNeededPackage(sameVersion)).rejects
-      .toThrow(`The specified version 50.0.0 of jest must be newer than the version
-it is supposed to replace, 50.0.0 of @types/jest.`);
+  nonexistentReplacementPackage() {
+    return expect(checkNotNeededPackage(nonexistentReplacementPackage)).rejects.toThrow(
+      "The entry for @types/jest in notNeededPackages.json"
+    );
   },
-  deprecatedOlderVersion() {
-    return expect(checkNotNeededPackage(olderReplacement)).rejects
-      .toThrow(`The specified version 4.0.0 of jest must be newer than the version
-it is supposed to replace, 50.0.0 of @types/jest.`);
-  },
-  missingNpmVersion() {
+  nonexistentReplacementVersion() {
     return expect(checkNotNeededPackage(nonexistentReplacementVersion)).rejects.toThrow(
       "The specified version 999.0.0 of jest is not on npm."
     );
   },
-  ok() {
+  newerReplacement() {
     return checkNotNeededPackage(newerReplacement);
+  },
+  olderReplacement() {
+    return checkNotNeededPackage(olderReplacement);
+  },
+  sameVersion() {
+    return checkNotNeededPackage(sameVersion);
   },
 });

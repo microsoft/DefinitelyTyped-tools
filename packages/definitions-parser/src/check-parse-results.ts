@@ -139,7 +139,7 @@ async function checkNpm(
   log("  yarn not-needed " + yarnargs.join(" "));
   log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
   log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
-  if (semver.gt(`${major}.${minor}.0`, firstTypedVersion)) {
+  if (semver.gte(`${major}.${minor}.0`, firstTypedVersion)) {
     log("  WARNING: our version is greater!");
   }
   if (dependedOn.has(name)) {
