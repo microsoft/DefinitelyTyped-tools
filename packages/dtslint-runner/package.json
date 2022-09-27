@@ -15,8 +15,9 @@
     "directory": "packages/dtslint-runner"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
-    "build": "tsc -b ."
+    "build": "tsc -b .",
+    "check-parse-results": "node --require source-map-support/register dist/check-parse-results.js",
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
@@ -26,11 +27,16 @@
     "@definitelytyped/dtslint": "^0.0.132",
     "@definitelytyped/utils": "^0.0.132",
     "fs-extra": "^9.0.0",
+    "pacote": "^13.6.1",
+    "semver": "^7.3.7",
     "stats-lite": "^2.2.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
-    "@types/stats-lite": "^2.2.0"
+    "@types/pacote": "^11.1.5",
+    "@types/semver": "^7.3.10",
+    "@types/stats-lite": "^2.2.0",
+    "source-map-support": "^0.5.21"
   }
 }

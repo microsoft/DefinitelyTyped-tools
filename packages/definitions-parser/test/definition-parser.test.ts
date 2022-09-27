@@ -1,3 +1,4 @@
+import { DiskFS } from "@definitelytyped/utils";
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
 
@@ -191,6 +192,26 @@ const a = new webpack.AutomaticPrefetchPlugin();
     const info = await getTypingInfo("webpack", dt.pkgFS("webpack"));
     expect(info).toBeDefined();
   });
+
+  it("rejects references to old versions of other @types packages", () => {
+    return expect(
+      getTypingInfo(
+        "typeref-fails",
+        new DiskFS(
+          "packages/definitions-parser/test/fixtures/rejects-references-to-old-versions-of-other-types-packages/"
+        )
+      )
+    ).rejects.toThrow("do not directly import specific versions of another types package");
+  });
+
+  it("allows references to old versions of self", async () => {
+    const info = await getTypingInfo(
+      "fail",
+      new DiskFS("packages/definitions-parser/test/fixtures/allows-references-to-old-versions-of-self/")
+    );
+    expect(info).toBeDefined();
+  });
+
   it("omits test dependencies on modules declared in index.d.ts", async () => {
     const dt = createMockDT();
     const ember = dt.pkgDir("ember");
@@ -242,6 +263,16 @@ import route = require('@ember/routing/route');
 
     const info = await getTypingInfo("ember", dt.pkgFS("ember"));
     expect(info["2.8"].testDependencies).toEqual([]);
+  });
+
+  it("doesn't omit dependencies if only some deep modules are declared", async () => {
+    const info = await getTypingInfo(
+      "styled-components-react-native",
+      new DiskFS(
+        "packages/definitions-parser/test/fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"
+      )
+    );
+    expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
   });
 
   describe("concerning multiple versions", () => {

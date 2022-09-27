@@ -1,13 +1,32 @@
-import { ParseDefinitionsOptions } from "./get-definitely-typed";
-import { TypingsData, AllPackages, formatTypingVersion } from "./packages";
+import console from "console";
+import {
+  ParseDefinitionsOptions,
+  TypingsData,
+  AllPackages,
+  formatTypingVersion,
+  getDefinitelyTyped,
+} from "@definitelytyped/definitions-parser";
 import { mapDefined, FS, logger, writeLog, Logger, ProgressBar, cacheDir, max, min } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
 
+if (!module.parent) {
+  const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
+  getDefinitelyTyped(options, console).then((dt) => {
+    checkParseResults(/*includeNpmChecks*/ false, dt);
+  });
+}
+
+export async function checkParseResults(includeNpmChecks: false, dt: FS): Promise<void>;
+export async function checkParseResults(
+  includeNpmChecks: true,
+  dt: FS,
+  options: ParseDefinitionsOptions
+): Promise<void>;
 export async function checkParseResults(
   includeNpmChecks: boolean,
   dt: FS,
-  options: ParseDefinitionsOptions
+  options?: ParseDefinitionsOptions
 ): Promise<void> {
   const allPackages = await AllPackages.read(dt);
   const [log, logResult] = logger();
@@ -31,7 +50,7 @@ export async function checkParseResults(
 
   if (includeNpmChecks) {
     const allTypings = allPackages.allTypings();
-    const progress = options.progress && new ProgressBar({ name: "Checking for typed packages..." });
+    const progress = options!.progress && new ProgressBar({ name: "Checking for typed packages..." });
     let i = 0;
     await Promise.all(
       allTypings.map((pkg) =>

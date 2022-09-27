@@ -12,12 +12,8 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
   const globals = new Set<string>();
 
   function addDependency(ref: string): void {
-    if (ref.startsWith(".")) {
-      return;
-    }
-    const dependency = rootName(ref, all, packageName);
-    if (dependency !== packageName) {
-      dependencies.add(dependency);
+    if (!ref.startsWith(".")) {
+      dependencies.add(ref);
     }
   }
 
@@ -99,10 +95,11 @@ function sourceFileExportsSomething({ statements }: ts.SourceFile): boolean {
 }
 
 interface ModuleInfo {
+  /** Full (possibly deep) module specifiers of dependencies (imports, type references, etc.). */
   dependencies: Set<string>;
-  // Anything from a `declare module "foo"`
+  /** Anything from a `declare module "foo"` */
   declaredModules: string[];
-  // Every global symbol
+  /** Every global symbol */
   globals: string[];
 }
 
@@ -119,28 +116,6 @@ function properModuleName(folderName: string, fileName: string): string {
   const part =
     path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
   return part === "." ? folderName : joinPaths(folderName, part);
-}
-
-/**
- * "foo/bar/baz" -> "foo"; "@foo/bar/baz" -> "@foo/bar"
- * Note: Throws an error for references like
- * "bar/v3" because referencing old versions of *other* packages is illegal;
- * those directories won't exist in the published @types package.
- */
-export function rootName(importText: string, typeFiles: Map<string, unknown>, packageName: string): string {
-  let slash = importText.indexOf("/");
-  // Root of `@foo/bar/baz` is `@foo/bar`
-  if (importText.startsWith("@")) {
-    // Use second "/"
-    slash = importText.indexOf("/", slash + 1);
-  }
-  const root = importText.slice(0, slash);
-  const postImport = importText.slice(slash + 1);
-  if (slash > -1 && postImport.match(/v\d+$/) && !typeFiles.has(postImport + ".d.ts") && root !== packageName) {
-    throw new Error(`${importText}: do not directly import specific versions of another types package.
-You should work with the latest version of ${root} instead.`);
-  }
-  return slash === -1 ? importText : root;
 }
 
 function withoutExtensions(str: string, exts: typeof extensions): string {
@@ -383,7 +358,6 @@ function assertNoWindowsSlashes(packageName: string, fileName: string): string {
 
 export function getTestDependencies(
   packageName: string,
-  typeFiles: Map<string, unknown>,
   testFiles: Iterable<string>,
   dependencies: ReadonlySet<string>,
   fs: FS
@@ -414,11 +388,8 @@ export function getTestDependencies(
     }
     for (const imported of imports(sourceFile)) {
       hasImports = true;
-      if (!imported.startsWith(".")) {
-        const dep = rootName(imported, typeFiles, packageName);
-        if (!dependencies.has(dep) && dep !== packageName) {
-          testDependencies.add(dep);
-        }
+      if (!imported.startsWith(".") && !dependencies.has(imported)) {
+        testDependencies.add(imported);
       }
     }
 
