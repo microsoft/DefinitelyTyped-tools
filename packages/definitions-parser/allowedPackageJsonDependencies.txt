@@ -290,6 +290,7 @@
 @maxim_mazurok/gapi.client.analytics-v3
 @maxim_mazurok/gapi.client.analyticsadmin-v1alpha
 @maxim_mazurok/gapi.client.analyticsdata-v1beta
+@maxim_mazurok/gapi.client.analyticshub-v1
 @maxim_mazurok/gapi.client.analyticshub-v1beta1
 @maxim_mazurok/gapi.client.analyticsreporting-v4
 @maxim_mazurok/gapi.client.androiddeviceprovisioning-v1
@@ -308,6 +309,7 @@
 @maxim_mazurok/gapi.client.artifactregistry-v1beta1
 @maxim_mazurok/gapi.client.artifactregistry-v1beta2
 @maxim_mazurok/gapi.client.assuredworkloads-v1
+@maxim_mazurok/gapi.client.assuredworkloads-v1beta1
 @maxim_mazurok/gapi.client.authorizedbuyersmarketplace-v1
 @maxim_mazurok/gapi.client.baremetalsolution-v1
 @maxim_mazurok/gapi.client.baremetalsolution-v1alpha1
@@ -342,6 +344,7 @@
 @maxim_mazurok/gapi.client.cloudasset-v1p5beta1
 @maxim_mazurok/gapi.client.cloudasset-v1p7beta1
 @maxim_mazurok/gapi.client.cloudbilling-v1
+@maxim_mazurok/gapi.client.cloudbilling-v1beta
 @maxim_mazurok/gapi.client.cloudbuild-v1
 @maxim_mazurok/gapi.client.cloudbuild-v1alpha1
 @maxim_mazurok/gapi.client.cloudbuild-v1alpha2
@@ -380,6 +383,7 @@
 @maxim_mazurok/gapi.client.compute-beta
 @maxim_mazurok/gapi.client.compute-v1
 @maxim_mazurok/gapi.client.connectors-v1
+@maxim_mazurok/gapi.client.connectors-v2
 @maxim_mazurok/gapi.client.contactcenterinsights-v1
 @maxim_mazurok/gapi.client.container-v1
 @maxim_mazurok/gapi.client.container-v1beta1
@@ -416,6 +420,7 @@
 @maxim_mazurok/gapi.client.digitalassetlinks-v1
 @maxim_mazurok/gapi.client.discovery-v1
 @maxim_mazurok/gapi.client.displayvideo-v1
+@maxim_mazurok/gapi.client.displayvideo-v2
 @maxim_mazurok/gapi.client.dlp-v2
 @maxim_mazurok/gapi.client.dns-v1
 @maxim_mazurok/gapi.client.dns-v1beta2
@@ -433,6 +438,8 @@
 @maxim_mazurok/gapi.client.drive-v2
 @maxim_mazurok/gapi.client.drive-v3
 @maxim_mazurok/gapi.client.driveactivity-v2
+@maxim_mazurok/gapi.client.drivelabels-v2
+@maxim_mazurok/gapi.client.drivelabels-v2beta
 @maxim_mazurok/gapi.client.essentialcontacts-v1
 @maxim_mazurok/gapi.client.eventarc-v1
 @maxim_mazurok/gapi.client.eventarc-v1beta1
@@ -493,9 +500,12 @@
 @maxim_mazurok/gapi.client.iap-v1beta1
 @maxim_mazurok/gapi.client.ideahub-v1alpha
 @maxim_mazurok/gapi.client.ideahub-v1beta
+@maxim_mazurok/gapi.client.identitytoolkit-v1
+@maxim_mazurok/gapi.client.identitytoolkit-v2
 @maxim_mazurok/gapi.client.identitytoolkit-v3
 @maxim_mazurok/gapi.client.ids-v1
 @maxim_mazurok/gapi.client.indexing-v3
+@maxim_mazurok/gapi.client.integrations-v1alpha
 @maxim_mazurok/gapi.client.jobs-v3
 @maxim_mazurok/gapi.client.jobs-v3p1beta1
 @maxim_mazurok/gapi.client.jobs-v4
@@ -557,6 +567,7 @@
 @maxim_mazurok/gapi.client.policyanalyzer-v1
 @maxim_mazurok/gapi.client.policyanalyzer-v1beta1
 @maxim_mazurok/gapi.client.policysimulator-v1
+@maxim_mazurok/gapi.client.policysimulator-v1alpha
 @maxim_mazurok/gapi.client.policysimulator-v1beta1
 @maxim_mazurok/gapi.client.policytroubleshooter-v1
 @maxim_mazurok/gapi.client.policytroubleshooter-v1beta
@@ -582,7 +593,6 @@
 @maxim_mazurok/gapi.client.retail-v2alpha
 @maxim_mazurok/gapi.client.retail-v2beta
 @maxim_mazurok/gapi.client.run-v1
-@maxim_mazurok/gapi.client.run-v1alpha1
 @maxim_mazurok/gapi.client.run-v2
 @maxim_mazurok/gapi.client.runtimeconfig-v1
 @maxim_mazurok/gapi.client.runtimeconfig-v1beta1
@@ -614,7 +624,6 @@
 @maxim_mazurok/gapi.client.spanner-v1
 @maxim_mazurok/gapi.client.speech-v1
 @maxim_mazurok/gapi.client.speech-v1p1beta1
-@maxim_mazurok/gapi.client.speech-v2beta1
 @maxim_mazurok/gapi.client.sqladmin-v1
 @maxim_mazurok/gapi.client.sqladmin-v1beta4
 @maxim_mazurok/gapi.client.storage-v1
