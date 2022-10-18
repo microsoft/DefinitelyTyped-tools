@@ -774,6 +774,7 @@ boxen
 broadcast-channel
 bson
 buffer
+bull
 bullmq
 cac
 canvas
