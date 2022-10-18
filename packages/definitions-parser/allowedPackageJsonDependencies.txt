@@ -768,6 +768,7 @@ axios
 base-x
 bee-queue
 bignumber.js
+bl
 bookshelf
 boxen
 broadcast-channel
