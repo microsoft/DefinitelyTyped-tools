@@ -827,6 +827,7 @@ filestack-js
 firebase-admin
 flatpickr
 form-data
+fs-capacitor
 fs-jetpack
 gl-matrix
 glaze
