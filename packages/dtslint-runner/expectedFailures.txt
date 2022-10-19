@@ -18,8 +18,3 @@ mobx-apollo
 ng-cordova
 redux-orm
 resourcejs
-sparql-http-client
-storybook-addon-jsx
-storybook-react-router
-storybook-readme
-storybook__addon-info
