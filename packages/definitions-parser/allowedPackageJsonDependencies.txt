@@ -727,6 +727,7 @@
 @types/socket.io
 @types/socket.io-client
 @types/three
+@types/undertaker
 @types/vue
 @types/webdriverio
 @types/webpack
