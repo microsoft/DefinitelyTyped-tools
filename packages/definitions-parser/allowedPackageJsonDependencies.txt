@@ -729,6 +729,7 @@
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
+@types/svgo
 @types/three
 @types/undertaker
 @types/vue
