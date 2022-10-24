@@ -677,6 +677,9 @@
 @mui/material
 @mui/types
 @npm/types
+@pollyjs/adapter
+@pollyjs/core
+@pollyjs/persister
 @popperjs/core
 @puppeteer/replay
 @rdfjs/types
