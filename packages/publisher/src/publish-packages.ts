@@ -13,7 +13,6 @@ import {
   NpmPublishClient,
 } from "@definitelytyped/utils";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
-import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
 
 if (!module.parent) {
@@ -126,9 +125,8 @@ export default async function publishPackages(
     }
   }
 
-  for (const n of changedPackages.changedNotNeededPackages) {
-    const target = await skipBadPublishes(n, log);
-    await publishNotNeededPackage(client, target, dry, log);
+  for (const { pkg } of changedPackages.changedNotNeededPackages) {
+    await publishNotNeededPackage(client, pkg, dry, log);
   }
 
   await writeLog("publishing.md", logResult());

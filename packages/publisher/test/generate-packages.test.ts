@@ -147,7 +147,7 @@ testo({
 }`);
   },
   basicNotNeededPackageJson() {
-    const s = createNotNeededPackageJSON(createUnneededPackage());
+    const s = createNotNeededPackageJSON(createUnneededPackage(), "1.1.1");
     expect(s).toEqual(`{
     "name": "@types/absalom",
     "version": "1.1.1",
@@ -163,7 +163,7 @@ testo({
   },
   scopedNotNeededPackageJson() {
     const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
-    const s = createNotNeededPackageJSON(scopedUnneeded);
+    const s = createNotNeededPackageJSON(scopedUnneeded, "0.26.0");
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
     "version": "0.26.0",
