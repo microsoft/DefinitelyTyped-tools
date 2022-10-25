@@ -934,6 +934,7 @@ preact
 pretty-format
 probot
 prom-client
+prosemirror-view
 protobufjs
 protractor
 query-string
