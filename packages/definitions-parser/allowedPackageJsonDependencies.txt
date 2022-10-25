@@ -712,6 +712,7 @@
 @types/history
 @types/hoist-non-react-statics
 @types/ink
+@types/ioredis
 @types/js-data
 @types/leaflet
 @types/long
