@@ -724,6 +724,8 @@
 @types/node
 @types/node-fetch
 @types/pino
+@types/puppeteer
+@types/puppeteer-core
 @types/react-native-tab-view
 @types/react-navigation
 @types/react-select
@@ -937,6 +939,8 @@ prom-client
 prosemirror-view
 protobufjs
 protractor
+puppeteer
+puppeteer-core
 query-string
 quill-delta
 raven-js
