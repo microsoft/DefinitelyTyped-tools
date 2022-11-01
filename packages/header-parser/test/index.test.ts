@@ -169,7 +169,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.1")).toEqual(["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9"]);
+    expect(TypeScriptVersion.range("4.1")).toEqual(["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9", "5.0"]);
   });
   it("includes 4.1 onwards", () => {
     expect(TypeScriptVersion.range("4.1")).toEqual(TypeScriptVersion.supported);
@@ -188,6 +188,7 @@ describe("tagsToUpdate", () => {
       "ts4.7",
       "ts4.8",
       "ts4.9",
+      "ts5.0",
       "latest",
     ]);
   });
@@ -248,8 +249,8 @@ describe("makeTypesVersionsForPackageJson", () => {
 }`);
   });
   it("asserts when trying to redirect from newest version and below", () => {
-    expect(() => makeTypesVersionsForPackageJson(["4.9"])).toThrow(
-      /ts4.9 is too new: it covers all versions of typescript/
+    expect(() => makeTypesVersionsForPackageJson(["5.0"])).toThrow(
+      /ts5.0 is too new: it covers all versions of typescript/
     );
   });
 });
