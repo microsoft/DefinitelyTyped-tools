@@ -22,7 +22,7 @@ jobs:
           key: cache-${{ github.run_id }}
           restore-keys: cache-
       - name: Publish registry
-        run: yarn workspace @definitelytyped/publisher publish-registry
+        run: node --require source-map-support/register packages/publish-registry/
         env:
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()

@@ -46,7 +46,6 @@
     "validate": "node -r source-map-support/register dist/validate.js",
     "publish-packages": "node -r source-map-support/register dist/publish-packages.js",
     "publish-packages-dry": "node -r source-map-support/register dist/publish-packages.js --dry",
-    "publish-registry": "node -r source-map-support/register dist/publish-registry.js",
     "full": "node -r source-map-support/register dist/full.js",
     "full-dry": "node -r source-map-support/register dist/full.js --dry",
     "test-tsNext": "node -r source-map-support/register dist/tester/test.js --all --tsNext"
