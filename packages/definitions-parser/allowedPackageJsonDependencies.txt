@@ -714,6 +714,7 @@
 @types/ink
 @types/ioredis
 @types/js-data
+@types/keyv
 @types/leaflet
 @types/long
 @types/lru-cache
@@ -730,6 +731,7 @@
 @types/react-navigation
 @types/react-select
 @types/redis
+@types/responselike
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
