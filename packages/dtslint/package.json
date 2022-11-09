@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.137",
+  "version": "0.0.138",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -22,10 +22,10 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/dts-critic": "^0.0.137",
-    "@definitelytyped/header-parser": "^0.0.137",
-    "@definitelytyped/typescript-versions": "^0.0.137",
-    "@definitelytyped/utils": "^0.0.137",
+    "@definitelytyped/dts-critic": "^0.0.138",
+    "@definitelytyped/header-parser": "^0.0.138",
+    "@definitelytyped/typescript-versions": "^0.0.138",
+    "@definitelytyped/utils": "^0.0.138",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "@typescript-eslint/utils": "^5.30.0",
