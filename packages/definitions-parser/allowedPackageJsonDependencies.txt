@@ -692,6 +692,7 @@
 @storybook/csf
 @storybook/react
 @testing-library/dom
+@the-standard/exceptions
 @tweenjs/tween.js
 @types/anymatch
 @types/autoprefixer
