@@ -49,7 +49,7 @@ export type UnsupportedTypeScriptVersion =
   | "3.7"
   | "3.8"
   | "3.9"
-  | "4.0"
+  | "4.0";
 /**
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on Definitely Typed.
