@@ -727,6 +727,7 @@
 @types/pino
 @types/puppeteer
 @types/puppeteer-core
+@types/react
 @types/react-native-tab-view
 @types/react-navigation
 @types/react-select
