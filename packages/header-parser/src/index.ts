@@ -1,6 +1,5 @@
 import pm = require("parsimmon");
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import assert = require("assert");
 
 /*
 
@@ -46,9 +45,7 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScri
   oldestFirst.sort((v1, v2) => (v1 > v2 ? 1 : v1 < v2 ? -1 : 0));
   const out: { [key: string]: { readonly "*": readonly string[] } } = {};
   for (const version of oldestFirst) {
-    const next = TypeScriptVersion.next(version);
-    assert(!!next, `ts${version} is too new: it covers all versions of typescript`);
-    out[`<${next}.0-0`] = { "*": [`ts${version}/*`] };
+    out[`<=${version}`] = { "*": [`ts${version}/*`] };
   }
   return out;
 }
