@@ -881,6 +881,7 @@ jose
 jsonata
 js-logger
 juice
+kleur
 knex
 knockout
 levelup
