@@ -204,24 +204,24 @@ describe("makeTypesVersionsForPackageJson", () => {
   });
   it("works for one version", () => {
     expect(makeTypesVersionsForPackageJson(["4.3"])).toEqual({
-      "<4.4.0-0": {
+      "<=4.3": {
         "*": ["ts4.3/*"],
       },
     });
   });
   it("orders versions old to new  with old-to-new input", () => {
     expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.2", "4.3", "4.6"]), undefined, 4)).toEqual(`{
-    "<4.3.0-0": {
+    "<=4.2": {
         "*": [
             "ts4.2/*"
         ]
     },
-    "<4.4.0-0": {
+    "<=4.3": {
         "*": [
             "ts4.3/*"
         ]
     },
-    "<4.7.0-0": {
+    "<=4.6": {
         "*": [
             "ts4.6/*"
         ]
@@ -230,27 +230,22 @@ describe("makeTypesVersionsForPackageJson", () => {
   });
   it("orders versions old to new  with new-to-old input", () => {
     expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.6", "4.3", "4.2"]), undefined, 4)).toEqual(`{
-    "<4.3.0-0": {
+    "<=4.2": {
         "*": [
             "ts4.2/*"
         ]
     },
-    "<4.4.0-0": {
+    "<=4.3": {
         "*": [
             "ts4.3/*"
         ]
     },
-    "<4.7.0-0": {
+    "<=4.6": {
         "*": [
             "ts4.6/*"
         ]
     }
 }`);
-  });
-  it("asserts when trying to redirect from newest version and below", () => {
-    expect(() => makeTypesVersionsForPackageJson(["5.0"])).toThrow(
-      /ts5.0 is too new: it covers all versions of typescript/
-    );
   });
 });
 
