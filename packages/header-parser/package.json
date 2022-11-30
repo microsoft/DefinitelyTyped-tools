@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/header-parser",
-  "version": "0.0.141-next.1",
+  "version": "0.0.141-next.2",
   "description": "",
   "author": "Nathan Shively-Sanders <nathansa@microsoft.com>",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/header-parser#readme",
