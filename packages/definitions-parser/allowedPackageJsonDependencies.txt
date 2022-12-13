@@ -16,6 +16,7 @@
 @emotion/styled
 @glimmer/component
 @hapi/boom
+@hapi/hapi
 @hapi/iron
 @hapi/podium
 @hapi/wreck
