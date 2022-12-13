@@ -14,6 +14,7 @@
 @emotion/serialize
 @emotion/styled
 @hapi/boom
+@hapi/hapi
 @hapi/iron
 @hapi/podium
 @hapi/wreck
