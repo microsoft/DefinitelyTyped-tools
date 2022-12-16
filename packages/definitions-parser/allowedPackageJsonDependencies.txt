@@ -920,6 +920,7 @@ nock
 node-fetch
 normalize-url
 objection
+openapi-types
 opentracing
 parchment
 parse5
