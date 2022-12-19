@@ -10,6 +10,7 @@
 @babel/types
 @elastic/elasticsearch
 @electron/get
+@ember/test-helpers
 @emotion/core
 @emotion/react
 @emotion/serialize
@@ -826,6 +827,8 @@ electron-notarize
 electron-osx-sign
 electron-store
 ember-cli-htmlbars
+ember-qunit
+ember-resolver
 eris
 ethers
 eventemitter2
