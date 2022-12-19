@@ -17,6 +17,7 @@
 @glimmer/component
 @hapi/boom
 @hapi/hapi
+@hapi/hoek
 @hapi/iron
 @hapi/podium
 @hapi/wreck
