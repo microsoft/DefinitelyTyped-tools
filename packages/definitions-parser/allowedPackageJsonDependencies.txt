@@ -1037,6 +1037,7 @@ web-tree-sitter
 winston
 winston-transport
 workbox-build
+workbox-webpack-plugin
 xmlbuilder
 xpath
 yup
