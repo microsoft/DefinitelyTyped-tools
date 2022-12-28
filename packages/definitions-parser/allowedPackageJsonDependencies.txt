@@ -749,6 +749,19 @@
 @types/winston
 @types/wonder-commonlib
 @types/wonder-frp
+@types/workbox-background-sync
+@types/workbox-broadcast-update
+@types/workbox-expiration
+@types/workbox-core
+@types/workbox-expiration
+@types/workbox-navigation-preload
+@types/workbox-precaching
+@types/workbox-range-requests
+@types/workbox-routing
+@types/workbox-strategies
+@types/workbox-streams
+@types/workbox-webpack-plugin
+@types/workbox-window
 @types/parse5
 @uirouter/angularjs
 @vue/reactivity
@@ -1037,7 +1050,6 @@ web-tree-sitter
 winston
 winston-transport
 workbox-build
-workbox-webpack-plugin
 xmlbuilder
 xpath
 yup
