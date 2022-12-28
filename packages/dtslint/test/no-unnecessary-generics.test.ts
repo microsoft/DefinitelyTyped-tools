@@ -147,5 +147,6 @@ type Ctr = new<T>() => T;
     `function example<T>(a: Set<T>): T;`,
     `function example<T>(a: Set<T>, b: T[]): void;`,
     `function example<T>(a: Map<T, T>): void;`,
+    `function example<T, U extends T>(t: T, u: U): U;`,
   ],
 });
