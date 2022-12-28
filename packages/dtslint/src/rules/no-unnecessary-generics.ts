@@ -80,17 +80,17 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
     if (sig.typeParameters) {
       for (const tp of sig.typeParameters) {
         if (tp.constraint) {
-          recurse(tp.constraint);
+          recur(tp.constraint);
         }
       }
     }
     for (const param of sig.parameters) {
       if (param.type) {
-        recurse(param.type);
+        recur(param.type);
       }
     }
     if (sig.type) {
-      recurse(sig.type);
+      recur(sig.type);
     }
   } catch (err) {
     if (err === exit) {
@@ -101,7 +101,7 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
 
   return soleUse ? { type: "sole", soleUse } : { type: "never" };
 
-  function recurse(node: ts.Node): void {
+  function recur(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
       if (checker.getSymbolAtLocation(node) === typeParameterSymbol) {
         if (soleUse === undefined) {
@@ -111,7 +111,7 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
         }
       }
     } else {
-      node.forEachChild(recurse);
+      node.forEachChild(recur);
     }
   }
 }
