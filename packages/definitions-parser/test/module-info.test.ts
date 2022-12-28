@@ -88,7 +88,9 @@ testo({
       )
     );
     const i = getModuleInfo("boring", types);
-    expect(i.dependencies).toEqual(new Set(["manual", "react", "react-default", "things", "vorticon"]));
+    expect(i.dependencies).toEqual(
+      new Set(["boring/quaternary", "boring/tertiary", "manual", "react", "react-default", "things", "vorticon"])
+    );
   },
   getModuleInfoForNestedTypeReferences() {
     const { types } = allReferencedFiles(
@@ -99,44 +101,7 @@ testo({
     );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "sneaky.d.ts", "merges.d.ts"]);
     const i = getModuleInfo("globby", types);
-    expect(i.dependencies).toEqual(new Set(["andere"]));
-  },
-  versionTypeRefThrows() {
-    const fail = new Dir(undefined);
-    const memFS = new InMemoryFS(fail, "typeref-fails");
-    fail.set(
-      "index.d.ts",
-      `// Type definitionssrc/ for fail 1.0
-// Project: https://youtube.com/s-fails
-// Definitions by: Type Ref Fails <https://github.com/typeref-fails>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-/// <reference types="elser/v3" />
-`
-    );
-    const { types } = allReferencedFiles(["index.d.ts"], memFS, "typeref-fails", "types/typeref-fails");
-    expect(Array.from(types.keys())).toEqual(["index.d.ts"]);
-    expect(() => getModuleInfo("typeref-fails", types)).toThrow(
-      "do not directly import specific versions of another types package"
-    );
-  },
-  selfVersionTypeRefAllowed() {
-    const fail = new Dir(undefined);
-    const memFS = new InMemoryFS(fail, "typeref-fails");
-    fail.set(
-      "index.d.ts",
-      `// Type definitions for fail 1.0
-// Project: https://youtube.com/typeref-fails
-// Definitions by: Type Ref Fails <https://github.com/typeref-fails>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-/// <reference types="fail/v3" />
-`
-    );
-    const { types } = allReferencedFiles(["index.d.ts"], memFS, "typeref-fails", "types/typeref-fails");
-    expect(Array.from(types.keys())).toEqual(["index.d.ts"]);
-    const i = getModuleInfo("fail", types);
-    expect(i.dependencies).toEqual(new Set([]));
+    expect(i.dependencies).toEqual(new Set(["andere/snee"]));
   },
   selfInScopedPackage() {
     const scoped = new Dir(undefined);
@@ -179,7 +144,7 @@ testo({
   getTestDependenciesWorks() {
     const { types, tests } = getBoringReferences();
     const i = getModuleInfo("boring", types);
-    const d = getTestDependencies("boring", types, tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"));
-    expect(d).toEqual(new Set(["super-big-fun-hus"]));
+    const d = getTestDependencies("boring", tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"));
+    expect(d).toEqual(new Set(["boring", "boring/commonjs", "boring/secondary", "boring/v1", "super-big-fun-hus"]));
   },
 });

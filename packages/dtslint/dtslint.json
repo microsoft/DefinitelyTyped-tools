@@ -12,7 +12,6 @@
         "no-any-union": true,
         "no-single-declare-module": true,
         "no-unnecessary-generics": true,
-        "trim-file": true,
         "unified-signatures": true,
         "void-return": true,
         "npm-naming": true,
