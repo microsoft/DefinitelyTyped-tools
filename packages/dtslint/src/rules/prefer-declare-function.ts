@@ -19,7 +19,7 @@ const rule = createRule({
   create(context) {
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
+      "VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
         if (node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType) {
           context.report({
             messageId: "variableFunction",

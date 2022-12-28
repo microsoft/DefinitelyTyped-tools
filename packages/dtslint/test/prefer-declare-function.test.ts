@@ -34,6 +34,21 @@ ruleTester.run("prefer-declare-function", noConstEnum, {
         },
       ],
     },
+    {
+      code: `
+        namespace N {
+            const example: () => void;
+        }
+`,
+      errors: [
+        {
+          column: 19,
+          endColumn: 38,
+          line: 3,
+          messageId: "variableFunction",
+        },
+      ],
+    },
   ],
   valid: [`function example(): void`],
 });
