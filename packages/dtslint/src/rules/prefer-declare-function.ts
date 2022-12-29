@@ -6,7 +6,7 @@ const rule = createRule({
   defaultOptions: [],
   meta: {
     docs: {
-      description: "Forbids `export const x = () => void`.",
+      description: "Forbids `const x: () => void`.",
       recommended: "error",
     },
     messages: {
@@ -20,7 +20,10 @@ const rule = createRule({
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       "VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
-        if (node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType) {
+        if (
+          node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType &&
+          context.getFilename().endsWith(".d.ts")
+        ) {
           context.report({
             messageId: "variableFunction",
             node: node.id,

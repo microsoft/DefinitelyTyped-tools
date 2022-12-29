@@ -1,14 +1,15 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 
-import * as noConstEnum from "../src/rules/prefer-declare-function";
+import * as preferDeclareFunction from "../src/rules/prefer-declare-function";
 
 const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("prefer-declare-function", noConstEnum, {
+ruleTester.run("prefer-declare-function", preferDeclareFunction, {
   invalid: [
     {
+      filename: "index.d.ts",
       code: `export const example: () => void;`,
       errors: [
         {
@@ -20,6 +21,7 @@ ruleTester.run("prefer-declare-function", noConstEnum, {
       ],
     },
     {
+      filename: "index.d.ts",
       code: `
         namespace N {
             export const example: () => void;
@@ -35,6 +37,7 @@ ruleTester.run("prefer-declare-function", noConstEnum, {
       ],
     },
     {
+      filename: "index.d.ts",
       code: `
         namespace N {
             const example: () => void;
@@ -50,5 +53,14 @@ ruleTester.run("prefer-declare-function", noConstEnum, {
       ],
     },
   ],
-  valid: [`function example(): void`],
+  valid: [
+    {
+      filename: "index.d.ts",
+      code: `function example(): void`,
+    },
+    {
+      filename: "test.ts",
+      code: `export const example: () => void;`,
+    },
+  ],
 });
