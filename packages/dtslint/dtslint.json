@@ -9,7 +9,6 @@
         "redundant-undefined": true,
         "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
-        "no-any-union": true,
         "no-single-declare-module": true,
         "prefer-declare-function": true,
         "unified-signatures": true,
