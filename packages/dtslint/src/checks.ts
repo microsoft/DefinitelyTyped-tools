@@ -25,7 +25,7 @@ export async function checkPackageJson(dirPath: string, typesVersions: readonly 
 
   if (needsTypesVersions) {
     assert.strictEqual((pkgJson as any).types, "index", `"types" in '${pkgJsonPath}' should be "index".`);
-    const expected = makeTypesVersionsForPackageJson(typesVersions);
+    const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
     assert.deepEqual(
       (pkgJson as any).typesVersions,
       expected,

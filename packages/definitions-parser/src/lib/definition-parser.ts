@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies, rootName } from "./module-info";
+import { allReferencedFiles, createSourceFile, getModuleInfo, getTestDependencies } from "./module-info";
 import {
   DependencyVersion,
   formatTypingVersion,
@@ -340,15 +340,18 @@ function getTypingDataForSingleTypesVersion(
   }
 
   const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules } = getModuleInfo(packageName, types);
-  const declaredRootModules = new Set(declaredModules.map((m) => rootName(m, types, packageName)));
+  const declaredModulesSet = new Set(declaredModules);
   // Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
-  const dependenciesSet = new Set(filter(dependenciesWithDeclaredModules, (m) => !declaredRootModules.has(m)));
-  const testDependencies = Array.from(
-    filter(
-      getTestDependencies(packageName, types, tests.keys(), dependenciesSet, fs),
-      (m) => !declaredRootModules.has(m)
-    )
+  const dependenciesSet = new Set(
+    [...dependenciesWithDeclaredModules]
+      .filter((m) => !declaredModulesSet.has(m))
+      .map((m) => rootName(m, types, packageName))
+      .filter((dependency) => dependency !== packageName)
   );
+  const testDependencies = [...getTestDependencies(packageName, tests.keys(), dependenciesSet, fs)]
+    .filter((m) => !declaredModulesSet.has(m))
+    .map((m) => rootName(m, types, packageName))
+    .filter((dependency) => dependency !== packageName);
 
   const { paths } = tsconfig.compilerOptions;
   const hydratedPackageName = unmangleScopedPackage(packageName) ?? packageName;
@@ -378,6 +381,28 @@ function getTypingDataForSingleTypesVersion(
     declFiles: sort(types.keys()),
     tsconfigPathsForHash,
   };
+}
+
+/**
+ * "foo/bar/baz" -> "foo"; "@foo/bar/baz" -> "@foo/bar"
+ * Note: Throws an error for references like
+ * "bar/v3" because referencing old versions of *other* packages is illegal;
+ * those directories won't exist in the published @types package.
+ */
+function rootName(importText: string, typeFiles: Map<string, unknown>, packageName: string): string {
+  let slash = importText.indexOf("/");
+  // Root of `@foo/bar/baz` is `@foo/bar`
+  if (importText.startsWith("@")) {
+    // Use second "/"
+    slash = importText.indexOf("/", slash + 1);
+  }
+  const root = importText.slice(0, slash);
+  const postImport = importText.slice(slash + 1);
+  if (slash > -1 && postImport.match(/v\d+$/) && !typeFiles.has(postImport + ".d.ts") && root !== packageName) {
+    throw new Error(`${importText}: do not directly import specific versions of another types package.
+You should work with the latest version of ${root} instead.`);
+  }
+  return slash === -1 ? importText : root;
 }
 
 function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {

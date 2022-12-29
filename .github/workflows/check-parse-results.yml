@@ -1,0 +1,24 @@
+name: Check parse results
+#description: Confirm check parse results and the DT repo are in sync, to avoid potential DT CI outages.
+on:
+  workflow_call:
+  workflow_dispatch:
+jobs:
+  check-parse-results:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - name: Parse declarations
+        run: yarn workspace @definitelytyped/publisher parse
+      - name: Check parse results
+        run: yarn workspace @definitelytyped/dtslint-runner check-parse-results
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}
+          path: packages/definitions-parser/data/
