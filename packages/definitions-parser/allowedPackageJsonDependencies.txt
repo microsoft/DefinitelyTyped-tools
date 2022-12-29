@@ -751,6 +751,7 @@
 @types/wonder-frp
 @types/workbox-background-sync
 @types/workbox-broadcast-update
+@types/workbox-build
 @types/workbox-expiration
 @types/workbox-core
 @types/workbox-expiration
