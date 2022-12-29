@@ -20,4 +20,3 @@ ruleTester.run("no-any-union", noAnyUnion, {
   ],
   valid: [`export const x: any;`],
 });
-
