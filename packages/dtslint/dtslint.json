@@ -10,7 +10,6 @@
         "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
         "no-single-declare-module": true,
-        "prefer-declare-function": true,
         "unified-signatures": true,
         "void-return": true,
         "npm-naming": true,
