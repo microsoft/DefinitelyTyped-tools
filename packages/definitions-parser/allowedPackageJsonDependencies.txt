@@ -752,9 +752,10 @@
 @types/workbox-background-sync
 @types/workbox-broadcast-update
 @types/workbox-build
-@types/workbox-expiration
+@types/workbox-cacheable-response
 @types/workbox-core
 @types/workbox-expiration
+@types/workbox-google-analytics
 @types/workbox-navigation-preload
 @types/workbox-precaching
 @types/workbox-range-requests
