@@ -845,6 +845,7 @@ ember-cli-htmlbars
 ember-qunit
 ember-resolver
 eris
+esbuild
 ethers
 eventemitter2
 eventemitter3
