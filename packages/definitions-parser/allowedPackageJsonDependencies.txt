@@ -479,6 +479,7 @@
 @types/faker
 @types/favicons
 @types/firebase
+@types/generic-pool
 @types/got
 @types/hapi
 @types/helmet
@@ -633,6 +634,7 @@ flatpickr
 form-data
 fs-capacitor
 fs-jetpack
+generic-pool
 gl-matrix
 glaze
 globby
