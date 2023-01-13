@@ -772,6 +772,7 @@ redux-persist
 redux-saga
 redux-thunk
 remark
+rimraf
 rollup
 rrule
 rxjs
