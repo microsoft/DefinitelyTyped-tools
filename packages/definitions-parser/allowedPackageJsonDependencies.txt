@@ -494,6 +494,7 @@
 @types/leaflet
 @types/long
 @types/lru-cache
+@types/minimatch
 @types/mkdirp-promise
 @types/mongodb
 @types/mongoose
