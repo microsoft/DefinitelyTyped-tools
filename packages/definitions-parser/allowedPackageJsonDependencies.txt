@@ -504,6 +504,7 @@
 @types/pino
 @types/puppeteer
 @types/puppeteer-core
+@types/react-leaflet
 @types/react-native-tab-view
 @types/react-navigation
 @types/react-select
