@@ -36,4 +36,3 @@ resourcejs
 s3-download-stream
 s3-streams
 s3-upload-stream
-schwifty
