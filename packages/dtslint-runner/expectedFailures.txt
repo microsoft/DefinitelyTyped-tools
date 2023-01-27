@@ -1,6 +1,5 @@
 absinthe__socket-apollo-link
 amazon-dax-client
-avocat
 aws-param-store
 bookshelf
 dialogflow-fulfillment
@@ -11,24 +10,6 @@ electron-notifications
 electron-notify
 fhir
 graphql-resolvers
-hapi-auth-bearer-token
-hapi-server-session
-hapi__avocat
-hapi__basic
-hapi__bell
-hapi__catbox-memcached
-hapi__cookie
-hapi__crumb
-hapi__glue
-hapi__h202
-hapi__hawk
-hapi__inert
-hapi__jwt
-hapi__nes
-hapi__vision
-hapi__yar
-hapipal__schmervice
-hapipal__toys
 http-aws-es
 keystonejs__adapter-knex
 keystonejs__app-graphql
@@ -55,4 +36,3 @@ resourcejs
 s3-download-stream
 s3-streams
 s3-upload-stream
-schwifty
