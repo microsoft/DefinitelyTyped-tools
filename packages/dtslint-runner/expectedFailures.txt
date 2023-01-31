@@ -1,10 +1,7 @@
 absinthe__socket-apollo-link
-amazon-dax-client
-aws-param-store
 bookshelf
 dialogflow-fulfillment
 dynamodb-lock-client
-dynogels
 electron-clipboard-extended
 electron-notifications
 electron-notify
@@ -24,15 +21,5 @@ mobx-apollo
 mock-aws-s3
 ng-cordova
 nodecredstash
-nodemailer/v3
-nodemailer-direct-transport
-nodemailer-pickup-transport
-nodemailer-smtp-transport
-nodemailer-ses-transport
-nodemailer-stub-transport
-nodemailer-smtp-pool
 redux-orm
 resourcejs
-s3-download-stream
-s3-streams
-s3-upload-stream
