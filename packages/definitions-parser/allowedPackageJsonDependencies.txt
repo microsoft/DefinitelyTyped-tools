@@ -510,6 +510,7 @@
 @types/react-select
 @types/redis
 @types/responselike
+@types/rimraf
 @types/rsmq
 @types/socket.io
 @types/socket.io-client
