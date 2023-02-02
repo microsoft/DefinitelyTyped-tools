@@ -749,6 +749,7 @@ rc-tree
 rdf-js
 re-resizable
 react-autosize-textarea
+react-clock
 react-dnd
 react-dnd-touch-backend
 react-draggable
