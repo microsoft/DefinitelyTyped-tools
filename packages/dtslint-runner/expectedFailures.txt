@@ -1,13 +1,11 @@
 absinthe__socket-apollo-link
 bookshelf
 dialogflow-fulfillment
-dynamodb-lock-client
 electron-clipboard-extended
 electron-notifications
 electron-notify
 fhir
 graphql-resolvers
-http-aws-es
 keystonejs__adapter-knex
 keystonejs__app-graphql
 keystonejs__auth-passport
@@ -16,10 +14,7 @@ keystonejs__fields
 keystonejs__file-adapters
 keystonejs__keystone
 keystonejs__oembed-adapters
-mapbox__aws-sdk-jest
 mobx-apollo
-mock-aws-s3
 ng-cordova
-nodecredstash
 redux-orm
 resourcejs
