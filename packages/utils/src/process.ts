@@ -129,7 +129,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
     let processesLeft = nProcesses;
-    const tasksPerChild = 50;
+    const tasksPerChild = 20;
     let tasksSoFar = 0;
     let rejected = false;
     const runningChildren = new Set<ChildProcess>();
