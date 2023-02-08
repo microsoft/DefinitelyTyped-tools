@@ -58,9 +58,11 @@ function walk(ctx: Lint.WalkContext<void>): void {
   function checkTag(tag: ts.JSDocTag): void {
     const jsdocSeeTag = (ts.SyntaxKind as any).JSDocSeeTag || 0;
     const jsdocDeprecatedTag = (ts.SyntaxKind as any).JSDocDeprecatedTag || 0;
+    const jsdocThrowsTag = (ts.SyntaxKind as any).JSDocThrowsTag || 0;
     switch (tag.kind) {
       case jsdocSeeTag:
       case jsdocDeprecatedTag:
+      case jsdocThrowsTag:
       case ts.SyntaxKind.JSDocAuthorTag:
         // @deprecated and @see always have meaning
         break;

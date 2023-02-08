@@ -51,7 +51,7 @@ async function main(): Promise<void> {
         onlyTestTsNext = true;
         break;
       // Only for use by types-publisher.
-      // Listens for { path, onlyTestTsNext } messages and ouputs { path, status }.
+      // Listens for { path, onlyTestTsNext } messages and outputs { path, status }.
       case "--listen":
         shouldListen = true;
         break;
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
           arg.indexOf("@") === 0 && arg.indexOf("/") !== -1
             ? // we have a scoped module, e.g. @bla/foo
               // which should be converted to   bla__foo
-              arg.substr(1).replace("/", "__")
+              arg.slice(1).replace("/", "__")
             : arg;
         dirPath = joinPaths(dirPath, path);
       }
