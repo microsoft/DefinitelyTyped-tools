@@ -164,7 +164,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               startChild(nextTask, process.execArgv);
               tasksSoFar = 0;
             } else {
-              tasksSoFar++
+              tasksSoFar++;
               nextTask();
             }
           }
