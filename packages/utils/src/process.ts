@@ -129,6 +129,8 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
     let processesLeft = nProcesses;
+    const tasksPerChild = 50;
+    let tasksSoFar = 0;
     let rejected = false;
     const runningChildren = new Set<ChildProcess>();
     const maxOldSpaceSize = getMaxOldSpaceSize(process.execArgv) || 0;
@@ -156,10 +158,14 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               // retry attempt succeeded, restart the child for further tests.
               console.log(`${processIndex}> Restarting...`);
               restartChild(nextTask, process.execArgv);
-            } else {
+            } else if (tasksSoFar > tasksPerChild) {
+              // restart the child to avoid memory leaks.
               stopChild(/*done*/ false);
               startChild(nextTask, process.execArgv);
-              // nextTask();
+              tasksSoFar = 0;
+            } else {
+              tasksSoFar++
+              nextTask();
             }
           }
         } catch (e) {
