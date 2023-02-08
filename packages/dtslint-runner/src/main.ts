@@ -127,7 +127,7 @@ export async function runDTSLint({
           break;
         case CrashRecoveryState.Crashed:
           if (expectedFailures?.has(input.path)) {
-            console.error(`${prefix}${input.path} failed as expected: outof memory.`);
+            console.error(`${prefix}${input.path} failed as expected: out of memory.`);
           } else {
             console.error(`${prefix}${input.path} Out of memory: failed`);
             allFailures.push([input.path, "Out of memory"]);

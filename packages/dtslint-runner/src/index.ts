@@ -66,7 +66,7 @@ if (!module.parent) {
         type: "boolean",
         default: false,
       },
-      // Not sure why you’d use this, so I’m hiding it
+      // Only useful for repeated local runs, so I’m hiding it
       noInstall: {
         hidden: true,
         type: "boolean",
