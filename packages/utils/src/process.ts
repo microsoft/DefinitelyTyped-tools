@@ -157,7 +157,9 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               console.log(`${processIndex}> Restarting...`);
               restartChild(nextTask, process.execArgv);
             } else {
-              nextTask();
+              stopChild(/*done*/ false);
+              startChild(nextTask, process.execArgv);
+              // nextTask();
             }
           }
         } catch (e) {
