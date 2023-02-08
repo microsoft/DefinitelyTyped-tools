@@ -27,6 +27,7 @@ export async function runDTSLint({
   shard,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
+  console.log("Node version: ", process.version);
   if (definitelyTypedAcquisition.kind === "clone") {
     definitelyTypedPath = joinPaths(process.cwd(), "DefinitelyTyped");
     if (!noInstall) {
