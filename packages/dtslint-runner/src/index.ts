@@ -74,8 +74,9 @@ if (!module.parent) {
       },
       childRestartTaskInterval: {
         type: "number",
-        description: "How often to restart child processes, in number of tasks. Useful to work around memory leaks. Default is not to restart.",
-      }
+        description:
+          "How often to restart child processes, in number of tasks. Useful to work around memory leaks. Default is not to restart.",
+      },
     })
     .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
 
