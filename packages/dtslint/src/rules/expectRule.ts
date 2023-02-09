@@ -51,7 +51,6 @@ export class Rule extends Lint.Rules.TypedRule {
     ) => {
       const ts = require(path);
       ts.performance.enable();
-      // console.log('enabling ts.performance', ts.performance.isEnabled());
       const program = getProgram(tsconfigPath, ts, versionName, lintProgram);
       const failures = this.applyWithFunction(sourceFile, (ctx) =>
         walk(ctx, program, ts, versionName, nextHigherVersion)
