@@ -59,7 +59,7 @@ export class Rule extends Lint.Rules.TypedRule {
         const packageName = basename(dirname(tsconfigPath));
         if (!packageName.match(/v\d+/) && !packageName.match(/ts\d\.\d/)) {
           const d = {
-              [packageName]: extendedDiagnostics(ts, program),
+            [packageName]: extendedDiagnostics(ts, program),
           };
           if (!existsSync(cacheDir)) {
             mkdirSync(cacheDir);
@@ -105,58 +105,54 @@ function extendedDiagnostics(ts: typeof TsType, program: Program) {
   const perf: Record<string, number> = {
     files: program.getSourceFiles().length,
     ...countLines(ts, program),
-    "identifiers": program.getIdentifierCount(),
-    "symbols": program.getSymbolCount(),
-    "types": program.getTypeCount(),
-    "instantiations": program.getInstantiationCount(),
+    identifiers: program.getIdentifierCount(),
+    symbols: program.getSymbolCount(),
+    types: program.getTypeCount(),
+    instantiations: program.getInstantiationCount(),
     memory: ts.sys.getMemoryUsage ? ts.sys.getMemoryUsage() : 0,
     "assignability cache size": caches.assignable,
     "identity cache size": caches.identity,
     "subtype cache size": caches.subtype,
     "strict subtype cache size": caches.strictSubtype,
-  }
-  ;(ts as any).performance.forEachMeasure((name: string, duration: number) => {
-    perf[name] = duration
+  };
+  (ts as any).performance.forEachMeasure((name: string, duration: number) => {
+    perf[name] = duration;
   });
   perf["total time"] = perf.Program + perf.Bind + perf.Check; // and maybe parse?? not sure, I think it's included in Program
-  return perf
+  return perf;
 }
 function countLines(ts: typeof TsType, program: Program): Record<string, number> {
-    const counts = {
-        "library": 0,
-        "definitions": 0,
-        "typescript": 0,
-        "javascript": 0,
-        "json": 0,
-        "other": 0,
-    }
-    for (const file of program.getSourceFiles()) {
-        counts[getCountKey(ts, program, file)] += (ts as any).getLineStarts(file).length;
-    };
-    return counts;
+  const counts = {
+    library: 0,
+    definitions: 0,
+    typescript: 0,
+    javascript: 0,
+    json: 0,
+    other: 0,
+  };
+  for (const file of program.getSourceFiles()) {
+    counts[getCountKey(ts, program, file)] += (ts as any).getLineStarts(file).length;
+  }
+  return counts;
 }
 
 function getCountKey(ts: any, program: Program, file: SourceFile) {
-    if (program.isSourceFileDefaultLibrary(file)) {
-        return "library";
-    }
-    else if (file.isDeclarationFile) {
-        return "definitions";
-    }
+  if (program.isSourceFileDefaultLibrary(file)) {
+    return "library";
+  } else if (file.isDeclarationFile) {
+    return "definitions";
+  }
 
-    const path = (file as any).path;
-    if (ts.fileExtensionIsOneOf(path, ts.supportedTSExtensionsFlat)) {
-        return "typescript";
-    }
-    else if (ts.fileExtensionIsOneOf(path, ts.supportedJSExtensionsFlat)) {
-        return "javascript";
-    }
-    else if (ts.fileExtensionIs(path, ts.Extension.Json)) {
-        return "json";
-    }
-    else {
-        return "other";
-    }
+  const path = (file as any).path;
+  if (ts.fileExtensionIsOneOf(path, ts.supportedTSExtensionsFlat)) {
+    return "typescript";
+  } else if (ts.fileExtensionIsOneOf(path, ts.supportedJSExtensionsFlat)) {
+    return "javascript";
+  } else if (ts.fileExtensionIs(path, ts.Extension.Json)) {
+    return "json";
+  } else {
+    return "other";
+  }
 }
 
 export interface Options {
