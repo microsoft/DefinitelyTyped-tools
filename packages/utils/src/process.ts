@@ -3,6 +3,7 @@ import { ChildProcess, exec as node_exec, fork, Serializable } from "child_proce
 import { Socket } from "net";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
+const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
@@ -108,6 +109,7 @@ interface RunWithListeningChildProcessesOptions<In> {
   readonly cwd: string;
   readonly crashRecovery?: boolean;
   readonly crashRecoveryMaxOldSpaceSize?: number;
+  readonly childRestartTaskInterval?: number;
   readonly softTimeoutMs?: number;
   handleOutput(output: unknown, processIndex: number | undefined): void;
   handleStart?(input: In, processIndex: number | undefined): void;
@@ -122,6 +124,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   handleOutput,
   crashRecovery,
   crashRecoveryMaxOldSpaceSize = DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE,
+  childRestartTaskInterval = DEFAULT_CHILD_RESTART_TASK_INTERVAL,
   handleStart,
   handleCrash,
   softTimeoutMs = Infinity,
@@ -129,7 +132,6 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
     let processesLeft = nProcesses;
-    const tasksPerChild = 20;
     let tasksSoFar = 0;
     let rejected = false;
     const runningChildren = new Set<ChildProcess>();
@@ -148,6 +150,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
 
       const onMessage = (outputMessage: unknown) => {
         try {
+          tasksSoFar++;
           const oldCrashRecoveryState = crashRecoveryState;
           crashRecoveryState = CrashRecoveryState.Normal;
           handleOutput(outputMessage as {}, processIndex);
@@ -158,13 +161,12 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               // retry attempt succeeded, restart the child for further tests.
               console.log(`${processIndex}> Restarting...`);
               restartChild(nextTask, process.execArgv);
-            } else if (tasksSoFar > tasksPerChild) {
+            } else if (tasksSoFar >= childRestartTaskInterval) {
               // restart the child to avoid memory leaks.
               stopChild(/*done*/ false);
               startChild(nextTask, process.execArgv);
               tasksSoFar = 0;
             } else {
-              tasksSoFar++;
               nextTask();
             }
           }

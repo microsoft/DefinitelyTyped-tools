@@ -28,4 +28,5 @@ export interface RunDTSLintOptions {
   localTypeScriptPath?: string;
   nProcesses: number;
   shard?: { id: number; count: number };
+  childRestartTaskInterval?: number;
 }

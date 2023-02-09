@@ -25,6 +25,7 @@ export async function runDTSLint({
   localTypeScriptPath,
   nProcesses,
   shard,
+  childRestartTaskInterval,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
   console.log("Node version: ", process.version);
@@ -80,6 +81,7 @@ export async function runDTSLint({
     cwd: typesPath,
     crashRecovery: true,
     crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
+    childRestartTaskInterval,
     handleStart(input, processIndex) {
       const prefix = processIndex === undefined ? "" : `${processIndex}> `;
       console.log(`${prefix}${input.path} START`);
