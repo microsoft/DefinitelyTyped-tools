@@ -64,18 +64,19 @@ export async function lint(
     }
   }
   const result = linter.getResult();
-  const cwd = process.cwd();
-  process.chdir(dirPath);
-  const eslint = new ESLint({
-    rulePaths: [joinPaths(__dirname, "./rules/")],
-  });
-  const formatter = await eslint.loadFormatter("stylish");
-  const eresults = await eslint.lintFiles(esfiles);
-  process.chdir(cwd);
+  let output = result.failures.length ? result.output : "";
+  if (!expectOnly) {
+    const cwd = process.cwd();
+    process.chdir(dirPath);
+    const eslint = new ESLint({
+      rulePaths: [joinPaths(__dirname, "./rules/")],
+    });
+    const formatter = await eslint.loadFormatter("stylish");
+    const eresults = await eslint.lintFiles(esfiles);
+    output += formatter.format(eresults);
+    process.chdir(cwd);
+  }
 
-  let output: string | undefined;
-  if (result.failures.length) output = result.output;
-  output = (output || "") + formatter.format(eresults);
   return output;
 }
 
