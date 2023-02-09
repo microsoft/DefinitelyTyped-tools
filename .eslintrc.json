@@ -32,7 +32,7 @@
                 "selector": ["variable", "function", "method", "accessor"],
                 "format": ["camelCase"],
                 "filter": {
-                    "regex": "Reader|DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE",
+                    "regex": "Reader|DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE|DEFAULT_CHILD_RESTART_TASK_INTERVAL",
                     "match": false
                 }
             },
