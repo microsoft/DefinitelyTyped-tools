@@ -4,7 +4,6 @@ dialogflow-fulfillment
 electron-clipboard-extended
 electron-notifications
 electron-notify
-fhir
 graphql-resolvers
 keystonejs__adapter-knex
 keystonejs__app-graphql
