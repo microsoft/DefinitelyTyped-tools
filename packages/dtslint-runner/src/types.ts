@@ -29,4 +29,5 @@ export interface RunDTSLintOptions {
   nProcesses: number;
   shard?: { id: number; count: number };
   childRestartTaskInterval?: number;
+  writeFailures?: string;
 }

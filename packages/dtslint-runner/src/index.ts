@@ -77,6 +77,12 @@ if (!module.parent) {
         description:
           "How often to restart child processes, in number of tasks. Useful to work around memory leaks. Default is not to restart.",
       },
+      writeFailures: {
+        type: "string",
+        description:
+          "Path to which all failures will be written.",
+        default: ""
+      }
     })
     .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
 
@@ -98,6 +104,7 @@ if (!module.parent) {
     expectOnly: args.expectOnly,
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
+    writeFailures: args.writeFailures,
   };
 
   logUncaughtErrors(async () => {
