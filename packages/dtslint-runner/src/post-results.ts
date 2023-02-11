@@ -1,21 +1,39 @@
 import { Octokit } from "@octokit/rest";
 import { existsSync, readFileSync } from "fs";
 
-type Errors = [{ path: string, message: string }];
+type Errors = { path: string, message: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
+// Args: [jobs] [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
 async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsFile, branchErrorsFile] = process.argv.slice(2);
-  if (!auth) throw new Error("First argument must be a GitHub auth token.");
-  if (!buildId) throw new Error("Second argument must be a build id.");
-  if (!statusCommentId) throw new Error("Third argument must be a GitHub comment id.");
-  if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
-  if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
+  const [jobs, auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsFile, branchErrorsFile] = process.argv.slice(2);
+  if (!jobs) throw new Error("First argument must be the number of jobs.")
+  if (!auth) throw new Error("Second argument must be a GitHub auth token.");
+  if (!buildId) throw new Error("Third argument must be a build id.");
+  if (!statusCommentId) throw new Error("Fourth argument must be a GitHub comment id.");
+  if (!userToTag) throw new Error("Fifth argument must be a GitHub username.");
+  if (!issue) throw new Error("Sixth argument must be a TypeScript issue/PR number.");
 
   const gh = new Octokit({ auth });
 
-  const nightlyErrors: Errors = nightlyErrorsFile && existsSync(nightlyErrorsFile) ? JSON.parse(readFileSync(nightlyErrorsFile, "utf-8")) : [];
-  const branchErrors: Errors = branchErrorsFile && existsSync(branchErrorsFile) ? JSON.parse(readFileSync(branchErrorsFile, "utf-8")) : [];
+  const nightlyErrors: Errors = [];
+  if (nightlyErrorsFile) {
+    for (let i = 1; i <= +jobs; i++) {
+      const file = `${nightlyErrorsFile}${i}.json`;
+      if (existsSync(file)) {
+        nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
+      }
+    }
+  }
+  const branchErrors: Errors = [];
+  if (branchErrorsFile) {
+    for (let i = 1; i <= +jobs; i++) {
+      const file = `${branchErrorsFile}${i}.json`;
+      if (existsSync(file)) {
+        branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
+      }
+    }
+  }
+  
   const checkLogsMessage = `([You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
   try {
     let comment = `@${userToTag} the results of running the DT tests are ready.`;
