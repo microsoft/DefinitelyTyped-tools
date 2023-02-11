@@ -5,7 +5,7 @@ type Errors = { path: string, message: string }[];
 
 // Args: [jobs] [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
 async function main() {
-  const [jobs, auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsFile, branchErrorsFile] = process.argv.slice(2);
+  const [jobs, auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsPath, branchErrorsPath] = process.argv.slice(2);
   if (!jobs) throw new Error("First argument must be the number of jobs.")
   if (!auth) throw new Error("Second argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Third argument must be a build id.");
@@ -16,18 +16,18 @@ async function main() {
   const gh = new Octokit({ auth });
 
   const nightlyErrors: Errors = [];
-  if (nightlyErrorsFile) {
+  if (nightlyErrorsPath) {
     for (let i = 1; i <= +jobs; i++) {
-      const file = `${nightlyErrorsFile}${i}.json`;
+      const file = `${nightlyErrorsPath}/${i}.json`;
       if (existsSync(file)) {
         nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
       }
     }
   }
   const branchErrors: Errors = [];
-  if (branchErrorsFile) {
+  if (branchErrorsPath) {
     for (let i = 1; i <= +jobs; i++) {
-      const file = `${branchErrorsFile}${i}.json`;
+      const file = `${branchErrorsPath}/${i}.json`;
       if (existsSync(file)) {
         branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
       }
