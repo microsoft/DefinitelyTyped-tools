@@ -30,7 +30,8 @@
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
     "stats-lite": "^2.2.0",
-    "yargs": "^15.3.1"
+    "yargs": "^15.3.1",
+    "@octokit/rest": "^16.43.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
