@@ -21,6 +21,8 @@ export async function lint(
   tsLocal: string | undefined
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
+  const estree = await import(require.resolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }));
+  process.env.TSESTREE_SINGLE_RUN = "true";
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
@@ -74,6 +76,8 @@ export async function lint(
     const formatter = await eslint.loadFormatter("stylish");
     const eresults = await eslint.lintFiles(esfiles);
     output += formatter.format(eresults);
+    estree.clearProgramCache();
+    estree.clearCaches();
     process.chdir(cwd);
   }
 
