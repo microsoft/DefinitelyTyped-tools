@@ -206,21 +206,13 @@ function logPerformance() {
     console.log("\n\n=== PERFORMANCE ===\n");
     for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
       const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
-        [s: string]: { typeCount: number; memory: number };
+        [s: string]: { types: number; memory: number };
       };
       for (const k of Object.keys(x)) {
-        big.push([k, x[k].typeCount]);
-        types.push(x[k].typeCount);
+        big.push([k, x[k].types]);
+        types.push(x[k].types);
       }
     }
-    console.log(
-      "{" +
-        big
-          .sort((a, b) => b[1] - a[1])
-          .map(([name, count]) => ` "${name}": ${count}`)
-          .join(",") +
-        "}"
-    );
 
     console.log("  * Percentiles: ");
     console.log("99:", percentile(types, 0.99));
