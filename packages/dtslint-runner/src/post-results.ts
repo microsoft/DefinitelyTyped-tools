@@ -3,15 +3,14 @@ import { readdirSync, readFileSync } from "fs";
 
 type Errors = { path: string, message: string }[];
 
-// Args: [jobs] [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
 async function main() {
-  const [jobs, auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsPath, branchErrorsPath] = process.argv.slice(2);
-  if (!jobs) throw new Error("First argument must be the number of jobs.")
-  if (!auth) throw new Error("Second argument must be a GitHub auth token.");
-  if (!buildId) throw new Error("Third argument must be a build id.");
-  if (!statusCommentId) throw new Error("Fourth argument must be a GitHub comment id.");
-  if (!userToTag) throw new Error("Fifth argument must be a GitHub username.");
-  if (!issue) throw new Error("Sixth argument must be a TypeScript issue/PR number.");
+  const [auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsPath, branchErrorsPath] = process.argv.slice(2);
+  if (!auth) throw new Error("First argument must be a GitHub auth token.");
+  if (!buildId) throw new Error("Second argument must be a build id.");
+  if (!statusCommentId) throw new Error("Third argument must be a GitHub comment id.");
+  if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
+  if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
 
   const gh = new Octokit({ auth });
 
