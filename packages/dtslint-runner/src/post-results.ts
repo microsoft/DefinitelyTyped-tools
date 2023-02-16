@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/rest";
-import { existsSync, readFileSync } from "fs";
+import { readdirSync, readFileSync } from "fs";
 
 type Errors = { path: string, message: string }[];
 
@@ -17,20 +17,16 @@ async function main() {
 
   const nightlyErrors: Errors = [];
   if (nightlyErrorsPath) {
-    for (let i = 1; i <= +jobs; i++) {
-      const file = `${nightlyErrorsPath}/${i}.json`;
-      if (existsSync(file)) {
-        nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
-      }
+    const nightlyFiles = readdirSync(nightlyErrorsPath, { encoding: "utf-8"});
+    for (const file in nightlyFiles) {
+      nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
     }
   }
   const branchErrors: Errors = [];
   if (branchErrorsPath) {
-    for (let i = 1; i <= +jobs; i++) {
-      const file = `${branchErrorsPath}/${i}.json`;
-      if (existsSync(file)) {
-        branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
-      }
+    const branchFiles = readdirSync(branchErrorsPath, { encoding: "utf-8"});
+    for (const file in branchFiles) {
+      branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
     }
   }
   
@@ -87,10 +83,6 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
   const nightlyMap = new Map(nightly.map(error => [error.path, error]));
   const branchMap = new Map(branch.map(error => [error.path, error]));
 
-  // >> TODO: print:
-  // - only in nightly
-  // - only in branch
-  // - in both but changed
   const nightlyOnly = [];
   const bothChanged = [];
 
