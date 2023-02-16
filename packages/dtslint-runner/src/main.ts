@@ -158,6 +158,10 @@ export async function runDTSLint({
 
   logPerformance();
 
+  if (writeFailures) {
+    writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
+  }
+
   if (allFailures.length === 0) {
     return 0;
   }
@@ -166,10 +170,6 @@ export async function runDTSLint({
   for (const [path, error] of allFailures) {
     console.error(`\n\nError in ${path}`);
     console.error(error);
-  }
-
-  if (writeFailures) {
-    writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
   }
 
   return allFailures.length;
