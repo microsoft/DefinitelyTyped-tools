@@ -4,54 +4,62 @@ import glob = require("glob");
 
 type Errors = { path: string, message: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [?nightly errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [?nightly errors file] [?branch errors file]
 async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, nightlyErrorsPath, branchErrorsPath] = process.argv.slice(2);
+  const [auth, buildId, statusCommentId, userToTag, issue, status, nightlyErrorsPath, branchErrorsPath] = process.argv.slice(2);
   if (!auth) throw new Error("First argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Second argument must be a build id.");
   if (!statusCommentId) throw new Error("Third argument must be a GitHub comment id.");
   if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
   if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
+  if (!status) throw new Error("Sixth argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
-
-  const nightlyErrors: Errors = [];
-  if (nightlyErrorsPath) {
-    const nightlyFiles = glob.sync(`**/*.json`, { cwd: nightlyErrorsPath, absolute: true });
-    for (const file in nightlyFiles) {
-      nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
-    }
-  }
-  const branchErrors: Errors = [];
-  if (branchErrorsPath) {
-    const branchFiles = glob.sync(`**/*.json`, { cwd: branchErrorsPath, absolute: true });
-    for (const file in branchFiles) {
-      branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
-    }
-  }
-  
   const checkLogsMessage = `([You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
+
   try {
-    let comment = `@${userToTag} the results of running the DT tests are ready.`;
-    const diffComment = getDiffComment(nightlyErrors, branchErrors);
-    if (diffComment) {
-      comment += `\nThere were interesting changes:`
-      if (comment.length + diffComment.length + checkLogsMessage.length > 65535) {
-        comment += `\nChanges are too big to display here, please check the log.`
-      }
-      else {
-        comment += diffComment;
-      }
+    let newComment;
+    if (status === "fail") {
+      newComment = `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details.`;
     }
     else {
-      comment += "Everything looks the same!"
+      const nightlyErrors: Errors = [];
+      if (nightlyErrorsPath) {
+        const nightlyFiles = glob.sync(`**/*.json`, { cwd: nightlyErrorsPath, absolute: true });
+        for (const file in nightlyFiles) {
+          nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
+        }
+      }
+      const branchErrors: Errors = [];
+      if (branchErrorsPath) {
+        const branchFiles = glob.sync(`**/*.json`, { cwd: branchErrorsPath, absolute: true });
+        for (const file in branchFiles) {
+          branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
+        }
+      }
+
+      newComment = `Hey @${userToTag}, the results of running the DT tests are ready.\n`;
+      const diffComment = getDiffComment(nightlyErrors, branchErrors);
+      if (diffComment) {
+        newComment += `There were interesting changes:`
+        if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
+          newComment += `Changes are too big to display here, please check the log.`
+        }
+        else {
+          newComment += diffComment;
+        }
+      }
+      else {
+        newComment += "Everything looks the same!"
+      }
+      newComment += checkLogsMessage;
     }
-    comment += checkLogsMessage;
+    
     const response = await gh.issues.createComment({
       issue_number: +issue,
       owner: "Microsoft",
       repo: "TypeScript",
-      body: comment
+      body: newComment
     });
 
     const newCommentUrl = response.data.html_url;
@@ -74,12 +82,10 @@ async function main() {
       issue_number: +issue,
       owner: "Microsoft",
       repo: "TypeScript",
-      body: `Hey @${userToTag}, something went wrong when publishing results.` + checkLogsMessage // >> TODO: edit this
+      body: `Hey @${userToTag}, something went wrong when publishing results. ${checkLogsMessage}`
     });
   }
 }
-
-
 
 function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
   const nightlyMap = new Map(nightly.map(error => [error.path, error]));
