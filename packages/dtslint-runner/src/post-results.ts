@@ -20,7 +20,7 @@ async function main() {
   try {
     let newComment;
     if (status === "fail") {
-      newComment = `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details.`;
+      newComment = `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details. ${checkLogsMessage}`;
     }
     else {
       const nightlyErrors: Errors = [];
