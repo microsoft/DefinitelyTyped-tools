@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
-import { readdirSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
+import glob = require("glob");
 
 type Errors = { path: string, message: string }[];
 
@@ -16,14 +17,14 @@ async function main() {
 
   const nightlyErrors: Errors = [];
   if (nightlyErrorsPath) {
-    const nightlyFiles = readdirSync(nightlyErrorsPath, { encoding: "utf-8"});
+    const nightlyFiles = glob.sync(`**/*.json`, { cwd: nightlyErrorsPath, absolute: true });
     for (const file in nightlyFiles) {
       nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
     }
   }
   const branchErrors: Errors = [];
   if (branchErrorsPath) {
-    const branchFiles = readdirSync(branchErrorsPath, { encoding: "utf-8"});
+    const branchFiles = glob.sync(`**/*.json`, { cwd: branchErrorsPath, absolute: true });
     for (const file in branchFiles) {
       branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
     }
@@ -77,6 +78,8 @@ async function main() {
     });
   }
 }
+
+
 
 function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
   const nightlyMap = new Map(nightly.map(error => [error.path, error]));
