@@ -63,7 +63,7 @@ export async function runDTSLint({
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
   const allPackages = [...packageNames, ...dependents];
-  let testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
+  const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
 
   const dtslintArgs = [
     "--listen",
