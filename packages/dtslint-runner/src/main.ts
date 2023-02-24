@@ -64,7 +64,6 @@ export async function runDTSLint({
 
   const allPackages = [...packageNames, ...dependents];
   let testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
-  testedPackages = testedPackages.slice(0, 3); // >> TODO: remove this, using it for testing only
 
   const dtslintArgs = [
     "--listen",
