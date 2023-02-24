@@ -1,4 +1,5 @@
 import assert from "assert";
+import { relative } from "path";
 import { assertDefined } from "./assertions";
 import { pathExistsSync, readdirSync, statSync } from "fs-extra";
 import { readFileSync, readJsonSync } from "./io";
@@ -36,6 +37,18 @@ export interface FS {
   /** Representation of current location, for debugging. */
   debugPath(): string;
 }
+
+export function createModuleResolutionHost(fs: FS): import("typescript").ModuleResolutionHost {
+  return {
+    fileExists: (filename) => fs.exists(filename),
+    readFile: (filename) => fs.readFile(filename),
+    directoryExists: (directoryName) => fs.exists(directoryName),
+    getCurrentDirectory: () => "",
+    realpath: (path) => path,
+    useCaseSensitiveFileNames: () => true,
+  };
+}
+
 
 interface ReadonlyDir extends ReadonlyMap<string, ReadonlyDir | string> {
   readonly parent: Dir | undefined;
@@ -76,9 +89,17 @@ export class InMemoryFS implements FS {
 
   private tryGetEntry(path: string): ReadonlyDir | string | undefined {
     validatePath(path);
+    if (path[0] === "/") {
+      path = relative("/" + this.pathToRoot, path);
+    }
     if (path === "") {
       return this.curDir;
     }
+    const needsDir = path.endsWith("/");
+    if (needsDir) {
+      path = path.slice(0, -1);
+    }
+
     const components = path.split("/");
     const baseName = assertDefined(components.pop());
     let dir = this.curDir;
@@ -94,7 +115,8 @@ export class InMemoryFS implements FS {
       }
       dir = entry;
     }
-    return dir.get(baseName);
+    const res = dir.get(baseName);
+    return needsDir ? (res instanceof Dir ? res : undefined) : res;
   }
 
   private getEntry(path: string): ReadonlyDir | string {
@@ -156,6 +178,9 @@ export class DiskFS implements FS {
       return this.rootPrefix;
     }
     validatePath(path);
+    if (path[0] === "/") {
+      path = path.slice(1);
+    }
     return this.rootPrefix + path;
   }
 
@@ -194,11 +219,5 @@ export class DiskFS implements FS {
 function validatePath(path: string): void {
   if (path.startsWith(".") && path !== ".editorconfig" && path !== ".eslintrc.json" && !path.startsWith("../")) {
     throw new Error(`${path}: filesystem doesn't support paths of the form './x'.`);
-  }
-  if (path.startsWith("/")) {
-    throw new Error(`${path}: filesystem doesn't support paths of the form '/xxx'.`);
-  }
-  if (path.endsWith("/")) {
-    throw new Error(`${path}: filesystem doesn't support paths of the form 'xxx/'.`);
   }
 }

@@ -1,16 +1,20 @@
 import * as ts from "typescript";
-import { Dir, InMemoryFS } from "@definitelytyped/utils";
-import { createMockDT } from "../src/mocks";
+import { createModuleResolutionHost } from "@definitelytyped/utils";
+import { DTMock, createMockDT } from "../src/mocks";
 import { testo } from "./utils";
 import { allReferencedFiles, getModuleInfo, getTestDependencies } from "../src/lib/module-info";
 
 const fs = createMockDT().fs;
+const moduleResolutionHost = createModuleResolutionHost(fs);
+const compilerOptions = { module: ts.ModuleKind.CommonJS, baseUrl: "/DefinitelyTyped/types", typeRoots: ["/DefinitelyTyped/types"] };
+
 function getBoringReferences() {
   return allReferencedFiles(
     ["index.d.ts", "boring-tests.ts"],
     fs.subDir("types").subDir("boring"),
     "boring",
-    "types/boring"
+    moduleResolutionHost,
+    compilerOptions
   );
 }
 testo({
@@ -31,7 +35,8 @@ testo({
       ["boring-tests.ts"],
       fs.subDir("types").subDir("boring"),
       "boring",
-      "types/boring"
+      moduleResolutionHost,
+      compilerOptions
     );
     expect(Array.from(types.keys())).toEqual([
       "secondary.d.ts",
@@ -47,7 +52,8 @@ testo({
       ["jquery-tests.ts", "index.d.ts"],
       fs.subDir("types").subDir("jquery"),
       "jquery",
-      "types/jquery"
+      moduleResolutionHost,
+      compilerOptions
     );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "JQuery.d.ts"]);
     expect(Array.from(tests.keys())).toEqual(["jquery-tests.ts"]);
@@ -57,21 +63,22 @@ testo({
       ["globby-tests.ts", "test/other-tests.ts"],
       fs.subDir("types").subDir("globby"),
       "globby",
-      "types/globby"
+      moduleResolutionHost,
+      compilerOptions
     );
-    expect(Array.from(types.keys())).toEqual(["merges.d.ts"]);
+    expect(Array.from(types.keys())).toEqual([]);
     expect(Array.from(tests.keys())).toEqual(["globby-tests.ts", "test/other-tests.ts"]);
   },
   allReferencedFilesIncludesTypesImports() {
-    const pkg = new Dir(undefined);
+    const dtMock = new DTMock();
+    const pkg = dtMock.pkgDir("mock");
     pkg.set(
       "index.d.ts",
       `type T = import("./types");
 `
     );
     pkg.set("types.d.ts", "");
-    const memFS = new InMemoryFS(pkg, "types/mock");
-    const { types, tests } = allReferencedFiles(["index.d.ts"], memFS, "mock", "types/mock");
+    const { types, tests } = allReferencedFiles(["index.d.ts"], dtMock.fs.subDir("types/mock"), "mock", createModuleResolutionHost(dtMock.fs), compilerOptions);
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "types.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
@@ -97,32 +104,35 @@ testo({
       ["index.d.ts", "globby-tests.ts", "test/other-tests.ts"],
       fs.subDir("types").subDir("globby"),
       "globby",
-      "types/globby"
+      moduleResolutionHost,
+      compilerOptions
     );
-    expect(Array.from(types.keys())).toEqual(["index.d.ts", "sneaky.d.ts", "merges.d.ts"]);
+    expect(Array.from(types.keys())).toEqual(["index.d.ts", "sneaky.d.ts"]);
     const i = getModuleInfo("globby", types);
     expect(i.dependencies).toEqual(new Set(["andere/snee"]));
   },
   selfInScopedPackage() {
-    const scoped = new Dir(undefined);
+    const dtMock = new DTMock();
+    const scoped = dtMock.pkgDir("rdfjs__to-ntriples");
     scoped.set(
       "index.d.ts",
       `import "@rdfjs/to-ntriples/component";
 `
     );
     scoped.set("component.d.ts", "");
-    const memFS = new InMemoryFS(scoped, "types/rdfjs__to-ntriples");
     const { types, tests } = allReferencedFiles(
       ["index.d.ts"],
-      memFS,
+      dtMock.fs.subDir("types/rdfjs__to-ntriples"),
       "rdfjs__to-ntriples",
-      "types/rdfjs__to-ntriples"
+      createModuleResolutionHost(dtMock.fs),
+      { ...compilerOptions, paths: { "@rdfjs/to-ntriples/*": ["rdfjs__to-ntriples/*"] } }
     );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
   selfInTypesVersionsParent() {
-    const pkg = new Dir(undefined);
+    const dtMock = new DTMock();
+    const pkg = dtMock.pkgDir("mock");
     const ts20 = pkg.subdir("ts2.0");
     ts20.set(
       "index.d.ts",
@@ -136,15 +146,20 @@ testo({
       `import "mock/component";
 `
     );
-    const memFS = new InMemoryFS(ts20, "types/mock/ts2.0");
-    const { types, tests } = allReferencedFiles(["index.d.ts"], memFS, "mock", "types/mock");
+
+    const { types, tests } = allReferencedFiles(
+      ["index.d.ts"],
+      dtMock.fs.subDir("types/mock/ts2.0"),
+      "mock",
+      createModuleResolutionHost(dtMock.fs),
+      { ...compilerOptions, paths: { "mock/*": ["mock/ts2.0/*"] } });
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
   getTestDependenciesWorks() {
     const { types, tests } = getBoringReferences();
     const i = getModuleInfo("boring", types);
-    const d = getTestDependencies("boring", tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"));
+    const d = getTestDependencies("boring", tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"), moduleResolutionHost, compilerOptions);
     expect(d).toEqual(new Set(["boring", "boring/commonjs", "boring/secondary", "boring/v1", "super-big-fun-hus"]));
   },
 });
