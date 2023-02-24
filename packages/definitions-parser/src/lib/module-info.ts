@@ -239,7 +239,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string) {
     const resolutionMode = ts.getModeForUsageLocation(src, ref);
     if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
       addReference({ kind: "import", text: ref.text, resolutionMode });
-      hasNonRelativeImports = true;
+      hasNonRelativeImports = !ref.text.startsWith(".");
     }
   }
   return { refs, hasNonRelativeImports };

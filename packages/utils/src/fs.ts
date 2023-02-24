@@ -1,5 +1,5 @@
 import assert from "assert";
-import { relative } from "path";
+import { join, relative } from "path";
 import { assertDefined } from "./assertions";
 import { pathExistsSync, readdirSync, statSync } from "fs-extra";
 import { readFileSync, readJsonSync } from "./io";
@@ -179,7 +179,11 @@ export class DiskFS implements FS {
     }
     validatePath(path);
     if (path[0] === "/") {
-      path = path.slice(1);
+      // For '/DefinitelyTyped/types/foo', assume `rootPrefix` is the relative path to DefinitelyTyped.
+      const components = path.split("/");
+      components.shift(); // Empty
+      components.shift(); // Usually DefinitelyTyped or node_modules
+      return join(this.rootPrefix, components.join("/"));
     }
     return this.rootPrefix + path;
   }
