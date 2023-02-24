@@ -3,6 +3,7 @@ import process = require("process");
 import { logUncaughtErrors } from "@definitelytyped/utils";
 import { getLocallyInstalledDefinitelyTyped } from "../get-definitely-typed";
 import { getTypingInfo } from "./definition-parser";
+import { dirname } from "path";
 
 // This file is "called" by runWithChildProcesses from parse-definition.ts
 export const definitionParserWorkerFilename = __filename;
@@ -16,7 +17,7 @@ if (!module.parent) {
       for (const packageName of message as readonly string[]) {
         const data = await getTypingInfo(
           packageName,
-          getLocallyInstalledDefinitelyTyped(typesPath).subDir(packageName)
+          getLocallyInstalledDefinitelyTyped(dirname(typesPath))
         );
         process.send!({ data, packageName });
       }

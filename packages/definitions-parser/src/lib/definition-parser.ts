@@ -9,6 +9,7 @@ import {
   TypingsDataRaw,
   TypingsVersionsRaw,
   DirectoryParsedTypingVersion,
+  getMangledNameForScopedPackage,
 } from "../packages";
 import { getAllowedPackageJsonDependencies } from "./settings";
 import {
@@ -48,8 +49,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.libraryMajorVersion}.${typingsDataRaw.libraryMinorVersion}`;
 }
 
-/** @param fs Rooted at the package's directory, e.g. `DefinitelyTyped/types/abs` */
-export async function getTypingInfo(packageName: string, fs: FS): Promise<TypingsVersionsRaw> {
+export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw> {
   if (packageName !== packageName.toLowerCase()) {
     throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
   }
@@ -57,6 +57,8 @@ export async function getTypingInfo(packageName: string, fs: FS): Promise<Typing
     readonly directoryName: string;
     readonly version: DirectoryParsedTypingVersion;
   }
+
+  const fs = dt.subDir("types").subDir(getMangledNameForScopedPackage(packageName));
   const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(
     fs.readdir(),
     (fileOrDirectoryName) => {
@@ -65,7 +67,7 @@ export async function getTypingInfo(packageName: string, fs: FS): Promise<Typing
     }
   );
 
-  const moduleResolutionHost = createModuleResolutionHost(fs);
+  const moduleResolutionHost = createModuleResolutionHost(dt);
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
 
   const latestData: TypingsDataRaw = {

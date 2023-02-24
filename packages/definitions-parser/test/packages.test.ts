@@ -66,7 +66,7 @@ describe(TypingsVersions, () => {
     dt.addOldVersionOfPackage("jquery", "1");
     dt.addOldVersionOfPackage("jquery", "2");
     dt.addOldVersionOfPackage("jquery", "2.5");
-    versions = new TypingsVersions(await getTypingInfo("jquery", dt.pkgFS("jquery")));
+    versions = new TypingsVersions(await getTypingInfo("jquery", dt.fs));
   });
 
   it("sorts the data from latest to oldest version", () => {
