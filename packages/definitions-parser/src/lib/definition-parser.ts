@@ -31,6 +31,7 @@ import {
   createModuleResolutionHost,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import path from "path";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -317,7 +318,7 @@ function getTypingDataForSingleTypesVersion(
     useCaseSensitiveFileNames: true,
   };
 
-  const compilerOptions = ts.parseJsonConfigFileContent(tsconfig, configHost, ts.getNormalizedAbsolutePath(fs.debugPath(), "/")).options;
+  const compilerOptions = ts.parseJsonConfigFileContent(tsconfig, configHost, path.resolve("/", fs.debugPath())).options;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
 
   const { types, tests, hasNonRelativeImports } = allReferencedFiles(

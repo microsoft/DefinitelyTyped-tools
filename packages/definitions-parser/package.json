@@ -29,8 +29,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",
-    "@types/pacote": "^11.1.5",
-    "ts-expose-internals": "latest"
+    "@types/pacote": "^11.1.5"
   },
   "peerDependencies": {
     "typescript": "*"

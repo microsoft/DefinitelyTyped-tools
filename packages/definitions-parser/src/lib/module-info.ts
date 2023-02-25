@@ -136,7 +136,7 @@ export function allReferencedFiles(
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
-  const baseDirectory = ts.getNormalizedAbsolutePath(fs.debugPath(), "/");
+  const baseDirectory = path.resolve("/", fs.debugPath());
   let hasNonRelativeImports = false;
   entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
   return { types, tests, hasNonRelativeImports };
@@ -149,7 +149,7 @@ export function allReferencedFiles(
         if (containingFileName) {
           resolvedFileName = ts.resolveTripleslashReference(text, containingFileName);
         } else {
-          resolvedFileName = ts.getNormalizedAbsolutePath(text, baseDirectory);
+          resolvedFileName = path.resolve(baseDirectory, text);
         }
         break;
       case "types":
