@@ -26,7 +26,7 @@ testo({
     root.set("file1.txt", "ok");
     const dir = root.subdir("sub1");
     dir.set("file2.txt", "x");
-    const fs: FS = new InMemoryFS(root, "test/");
+    const fs: FS = new InMemoryFS(root, "/test/");
     expect(fs.exists("file1.txt")).toBe(true);
     expect(fs.readFile("file1.txt")).toBe("ok");
     expect(fs.readFile("sub1/file2.txt")).toBe("x");

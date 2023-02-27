@@ -14,7 +14,7 @@ export interface TesterOptions extends ParseDefinitionsOptions {
 export const defaultLocalOptions: TesterOptions = {
   definitelyTypedPath: "../../../DefinitelyTyped",
   progress: true,
-  parseInParallel: true,
+  parseInParallel: !process.env.VSCODE_INSPECTOR_OPTIONS,
 };
 
 export const defaultRemoteOptions: ParseDefinitionsOptions = {

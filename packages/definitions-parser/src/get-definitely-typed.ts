@@ -3,6 +3,7 @@ import { DiskFS, downloadAndExtractFile, LoggerWithErrors, FS, exec } from "@def
 
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
 import { ExecException } from "child_process";
+import path from "path";
 
 /** Settings that may be determined dynamically. */
 export interface ParseDefinitionsOptions {
@@ -36,9 +37,9 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
     throw new Error(`'git diff' should be empty. Following files changed:\n${stdout}`);
   }
   log.info(`Using local DefinitelyTyped at ${options.definitelyTypedPath}`);
-  return new DiskFS(`${options.definitelyTypedPath}/`);
+  return new DiskFS(`${path.resolve(options.definitelyTypedPath)}/`);
 }
 
-export function getLocallyInstalledDefinitelyTyped(path: string): FS {
-  return new DiskFS(`${path}/`);
+export function getLocallyInstalledDefinitelyTyped(definitelyTypedPath: string): FS {
+  return new DiskFS(`${path.resolve(definitelyTypedPath)}/`);
 }

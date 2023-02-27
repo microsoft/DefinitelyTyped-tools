@@ -60,7 +60,7 @@ function defaultFS(): FS {
 `
   );
   pkg.set("jquery.test.ts", "// tests");
-  const memFS = new InMemoryFS(pkg, "types/mock");
+  const memFS = new InMemoryFS(pkg, "/types/mock/");
   return memFS;
 }
 

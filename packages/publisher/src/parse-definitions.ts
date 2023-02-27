@@ -39,7 +39,7 @@ if (!module.parent) {
 }
 
 async function single(singleName: string, dt: FS): Promise<void> {
-  const data = await getTypingInfo(singleName, dt.subDir("types").subDir(singleName));
+  const data = await getTypingInfo(singleName, dt);
   const typings = { [singleName]: data };
   await writeDataFile(typesDataFilename, typings);
   console.log(JSON.stringify(data, undefined, 4));

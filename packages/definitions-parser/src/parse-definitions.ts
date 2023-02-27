@@ -40,7 +40,7 @@ export async function parseDefinitions(
   } else {
     log.info("Parsing in main process...");
     for (const packageName of packageNames) {
-      typings[packageName] = await getTypingInfo(packageName, typesFS.subDir(packageName));
+      typings[packageName] = await getTypingInfo(packageName, dt);
     }
   }
   log.info("Parsing took " + (Date.now() - start) / 1000 + " s");

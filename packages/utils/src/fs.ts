@@ -1,4 +1,5 @@
 import assert from "assert";
+import { relative, resolve } from "path";
 import { assertDefined } from "./assertions";
 import { pathExistsSync, readdirSync, statSync } from "fs-extra";
 import { readFileSync, readJsonSync } from "./io";
@@ -37,6 +38,18 @@ export interface FS {
   debugPath(): string;
 }
 
+export function createModuleResolutionHost(fs: FS): import("typescript").ModuleResolutionHost {
+  return {
+    fileExists: (filename) => fs.exists(filename),
+    readFile: (filename) => fs.readFile(filename),
+    directoryExists: (directoryName) => fs.exists(directoryName),
+    getCurrentDirectory: () => "",
+    realpath: (path) => path,
+    useCaseSensitiveFileNames: () => true,
+  };
+}
+
+
 interface ReadonlyDir extends ReadonlyMap<string, ReadonlyDir | string> {
   readonly parent: Dir | undefined;
 }
@@ -70,15 +83,28 @@ export class Dir extends Map<string, Dir | string> implements ReadonlyDir {
   }
 }
 
+function ensureTrailingSlash(dir: string) {
+  return dir.endsWith("/") ? dir : dir + "/";
+}
+
 export class InMemoryFS implements FS {
-  /** pathToRoot is just for debugging */
-  constructor(readonly curDir: ReadonlyDir, readonly pathToRoot: string) {}
+  constructor(readonly curDir: ReadonlyDir, readonly rootPrefix: string) {
+    this.rootPrefix = ensureTrailingSlash(rootPrefix);
+    assert(rootPrefix[0] === "/", `rootPrefix must be absolute: ${rootPrefix}`);
+  }
 
   private tryGetEntry(path: string): ReadonlyDir | string | undefined {
-    validatePath(path);
+    if (path[0] === "/") {
+      path = relative(this.rootPrefix, path);
+    }
     if (path === "") {
       return this.curDir;
     }
+    const needsDir = path.endsWith("/");
+    if (needsDir) {
+      path = path.slice(0, -1);
+    }
+
     const components = path.split("/");
     const baseName = assertDefined(components.pop());
     let dir = this.curDir;
@@ -89,18 +115,19 @@ export class InMemoryFS implements FS {
       }
       if (!(entry instanceof Dir)) {
         throw new Error(
-          `No file system entry at ${this.pathToRoot}/${path}. Siblings are: ${Array.from(dir.keys()).toString()}`
+          `No file system entry at ${this.rootPrefix}/${path}. Siblings are: ${Array.from(dir.keys()).toString()}`
         );
       }
       dir = entry;
     }
-    return dir.get(baseName);
+    const res = dir.get(baseName);
+    return needsDir ? (res instanceof Dir ? res : undefined) : res;
   }
 
   private getEntry(path: string): ReadonlyDir | string {
     const entry = this.tryGetEntry(path);
     if (entry === undefined) {
-      throw new Error(`No file system entry at ${this.pathToRoot}/${path}`);
+      throw new Error(`No file system entry at ${this.rootPrefix}/${path}`);
     }
     return entry;
   }
@@ -108,7 +135,7 @@ export class InMemoryFS implements FS {
   private getDir(dirPath: string): Dir {
     const res = this.getEntry(dirPath);
     if (!(res instanceof Dir)) {
-      throw new Error(`${this.pathToRoot}/${dirPath} is a file, not a directory.`);
+      throw new Error(`${this.rootPrefix}/${dirPath} is a file, not a directory.`);
     }
     return res;
   }
@@ -116,7 +143,7 @@ export class InMemoryFS implements FS {
   readFile(filePath: string): string {
     const res = this.getEntry(filePath);
     if (typeof res !== "string") {
-      throw new Error(`${this.pathToRoot}/${filePath} is a directory, not a file.`);
+      throw new Error(`${this.rootPrefix}/${filePath} is a directory, not a file.`);
     }
     return res;
   }
@@ -138,25 +165,23 @@ export class InMemoryFS implements FS {
   }
 
   subDir(path: string): FS {
-    return new InMemoryFS(this.getDir(path), joinPaths(this.pathToRoot, path));
+    assert(path[0] !== "/", "Cannot use absolute paths with InMemoryFS.subDir");
+    return new InMemoryFS(this.getDir(path), resolve(this.rootPrefix, path));
   }
 
   debugPath(): string {
-    return this.pathToRoot;
+    return this.rootPrefix;
   }
 }
 
 export class DiskFS implements FS {
   constructor(private readonly rootPrefix: string) {
-    assert(rootPrefix.endsWith("/"));
+    assert(rootPrefix.startsWith("/"), "DiskFS must use absolute paths");
+    this.rootPrefix = ensureTrailingSlash(rootPrefix);
   }
 
   private getPath(path: string | undefined): string {
-    if (path === undefined) {
-      return this.rootPrefix;
-    }
-    validatePath(path);
-    return this.rootPrefix + path;
+    return resolve(this.rootPrefix, path ?? "");
   }
 
   readdir(dirPath?: string): readonly string[] {
@@ -187,18 +212,5 @@ export class DiskFS implements FS {
 
   debugPath(): string {
     return this.rootPrefix.slice(0, this.rootPrefix.length - 1); // remove trailing '/'
-  }
-}
-
-/** FS only handles simple paths like `foo/bar` or `../foo`. No `./foo` or `/foo`. */
-function validatePath(path: string): void {
-  if (path.startsWith(".") && path !== ".editorconfig" && path !== ".eslintrc.json" && !path.startsWith("../")) {
-    throw new Error(`${path}: filesystem doesn't support paths of the form './x'.`);
-  }
-  if (path.startsWith("/")) {
-    throw new Error(`${path}: filesystem doesn't support paths of the form '/xxx'.`);
-  }
-  if (path.endsWith("/")) {
-    throw new Error(`${path}: filesystem doesn't support paths of the form 'xxx/'.`);
   }
 }

@@ -2,7 +2,7 @@ import { parseHeaderOrFail } from "@definitelytyped/header-parser";
 import { Dir, FS, InMemoryFS, mangleScopedPackage } from "@definitelytyped/utils";
 import * as semver from "semver";
 
-class DTMock {
+export class DTMock {
   public readonly fs: FS;
   private readonly root: Dir;
 
@@ -19,7 +19,7 @@ class DTMock {
         },
       })
     );
-    this.fs = new InMemoryFS(this.root, "DefinitelyTyped");
+    this.fs = new InMemoryFS(this.root, "/DefinitelyTyped/");
   }
 
   public pkgDir(packageName: string): Dir {
@@ -172,12 +172,7 @@ untested.d.ts
 declare var x: number
 `
   );
-  globby.set(
-    "merges.d.ts",
-    `
-declare var y: number
-`
-  );
+  
   globby.set(
     "sneaky.d.ts",
     `
@@ -194,7 +189,6 @@ var z = x;
   tests.set(
     "other-tests.ts",
     `
-/// <reference types="globby/merges" />
 var z = y;
 `
   );

@@ -1,3 +1,4 @@
+import path from "path";
 import { DiskFS } from "@definitelytyped/utils";
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
@@ -7,14 +8,14 @@ describe(getTypingInfo, () => {
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1.42");
     dt.addOldVersionOfPackage("jquery", "2");
-    const info = await getTypingInfo("jquery", dt.pkgFS("jquery"));
+    const info = await getTypingInfo("jquery", dt.fs);
 
     expect(Object.keys(info).sort()).toEqual(["1.42", "2.0", "3.3"]);
   });
 
   it("works for a package with dependencies", async () => {
     const dt = createMockDT();
-    const info = await getTypingInfo("has-dependency", dt.pkgFS("has-dependency"));
+    const info = await getTypingInfo("has-dependency", dt.fs);
     expect(info).toBeDefined();
   });
 
@@ -65,7 +66,7 @@ export function myFunction(arg:string): string;
 
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
-    const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.pkgFS("ckeditor__ckeditor5-engine"));
+    const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.fs);
     expect(info).toBeDefined();
   });
 
@@ -124,7 +125,7 @@ export * from 'buffer';
 } `
     );
 
-    const info = await getTypingInfo("safer", dt.pkgFS("safer"));
+    const info = await getTypingInfo("safer", dt.fs);
     expect(info).toBeDefined();
     expect(info["1.0"].dependencies).toEqual({ node: "*" });
   });
@@ -189,7 +190,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
 }`
     );
 
-    const info = await getTypingInfo("webpack", dt.pkgFS("webpack"));
+    const info = await getTypingInfo("webpack", dt.fs);
     expect(info).toBeDefined();
   });
 
@@ -198,7 +199,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
       getTypingInfo(
         "typeref-fails",
         new DiskFS(
-          "packages/definitions-parser/test/fixtures/rejects-references-to-old-versions-of-other-types-packages/"
+          path.resolve(__dirname, "fixtures/rejects-references-to-old-versions-of-other-types-packages/")
         )
       )
     ).rejects.toThrow("do not directly import specific versions of another types package");
@@ -207,7 +208,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
-      new DiskFS("packages/definitions-parser/test/fixtures/allows-references-to-old-versions-of-self/")
+      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/"))
     );
     expect(info).toBeDefined();
   });
@@ -261,7 +262,7 @@ import route = require('@ember/routing/route');
 }`
     );
 
-    const info = await getTypingInfo("ember", dt.pkgFS("ember"));
+    const info = await getTypingInfo("ember", dt.fs);
     expect(info["2.8"].testDependencies).toEqual([]);
   });
 
@@ -269,10 +270,19 @@ import route = require('@ember/routing/route');
     const info = await getTypingInfo(
       "styled-components-react-native",
       new DiskFS(
-        "packages/definitions-parser/test/fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"
+        path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")
       )
     );
     expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
+  });
+
+  it("rejects relative references to other packages", async () => {
+    expect(() => getTypingInfo(
+      "referencing",
+      new DiskFS(
+        path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/")
+      )
+    )).rejects.toThrow("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {
@@ -280,7 +290,7 @@ import route = require('@ember/routing/route');
       const dt = createMockDT();
       dt.addOldVersionOfPackage("jquery", "2");
       dt.addOldVersionOfPackage("jquery", "1.5");
-      const info = await getTypingInfo("jquery", dt.pkgFS("jquery"));
+      const info = await getTypingInfo("jquery", dt.fs);
 
       expect(info).toEqual({
         "1.5": expect.objectContaining({
@@ -300,7 +310,7 @@ import route = require('@ember/routing/route');
       const dt = createMockDT();
       dt.addOldVersionOfPackage("jquery", "2");
       dt.addOldVersionOfPackage("jquery", "1.5");
-      const info = await getTypingInfo("jquery", dt.pkgFS("jquery"));
+      const info = await getTypingInfo("jquery", dt.fs);
 
       expect(info).toEqual({
         "1.5": expect.objectContaining({
@@ -343,7 +353,7 @@ import route = require('@ember/routing/route');
 
       dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
-      const info = await getTypingInfo("@ckeditor/ckeditor5-utils", dt.pkgFS("ckeditor__ckeditor5-utils"));
+      const info = await getTypingInfo("@ckeditor/ckeditor5-utils", dt.fs);
       expect(info).toEqual({
         "10.0": expect.objectContaining({
           pathMappings: {
@@ -362,7 +372,7 @@ import route = require('@ember/routing/route');
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3");
 
-        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+        return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
             "since it applies to any 3.* version, up to and including 3.3."
         );
@@ -372,7 +382,7 @@ import route = require('@ember/routing/route');
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.3");
 
-        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+        return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
         );
       });
@@ -381,7 +391,7 @@ import route = require('@ember/routing/route');
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.0");
 
-        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).resolves.toBeDefined();
+        return expect(getTypingInfo("jquery", dt.fs)).resolves.toBeDefined();
       });
 
       it("checks that older versions with non-relative imports have wildcard path mappings", () => {
@@ -393,7 +403,7 @@ import route = require('@ember/routing/route');
 `
         );
         dt.addOldVersionOfPackage("jquery", "1");
-        return expect(getTypingInfo("jquery", dt.pkgFS("jquery"))).rejects.toThrow(
+        return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
         );
       });
@@ -423,7 +433,7 @@ import first from "@ckeditor/ckeditor5-utils/src/first";
         dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
         return expect(
-          getTypingInfo("ckeditor__ckeditor5-utils", dt.pkgFS("ckeditor__ckeditor5-utils"))
+          getTypingInfo("ckeditor__ckeditor5-utils", dt.fs)
         ).rejects.toThrow(
           '@ckeditor/ckeditor5-utils: Older version 10 must have a "paths" entry of "@ckeditor/ckeditor5-utils/*": ["ckeditor__ckeditor5-utils/v10/*"]'
         );
@@ -433,6 +443,6 @@ import first from "@ckeditor/ckeditor5-utils/src/first";
 
   it("allows wildcard scope path mappings", () => {
     const dt = createMockDT();
-    return expect(getTypingInfo("wordpress__plugins", dt.pkgFS("wordpress__plugins"))).resolves.toBeDefined();
+    return expect(getTypingInfo("wordpress__plugins", dt.fs)).resolves.toBeDefined();
   });
 });

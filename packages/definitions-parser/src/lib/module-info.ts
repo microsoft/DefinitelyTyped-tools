@@ -1,7 +1,7 @@
 import assert = require("assert");
 import * as path from "path";
 import * as ts from "typescript";
-import { sort, joinPaths, FS, normalizeSlashes, hasWindowsSlashes } from "@definitelytyped/utils";
+import { sort, joinPaths, FS, hasWindowsSlashes, assertDefined } from "@definitelytyped/utils";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
 import { getMangledNameForScopedPackage } from "../packages";
@@ -19,7 +19,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
 
   for (const sourceFile of all.values()) {
     for (const ref of imports(sourceFile)) {
-      addDependency(ref);
+      addDependency(ref.text);
     }
     for (const ref of sourceFile.typeReferenceDirectives) {
       addDependency(ref.fileName);
@@ -130,72 +130,97 @@ export function allReferencedFiles(
   entryFilenames: readonly string[],
   fs: FS,
   packageName: string,
-  baseDirectory: string
+  moduleResolutionHost: ts.ModuleResolutionHost,
+  compilerOptions: ts.CompilerOptions,
 ): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
+  // The directory where the tsconfig/index.d.ts is - i.e., may be a version within the package
+  const baseDirectory = path.resolve("/", fs.debugPath());
+  // The root of the package and all versions, i.e., the direct subdirectory of types/
+  const packageDirectory = baseDirectory.slice(0, baseDirectory.lastIndexOf(`types/${getMangledNameForScopedPackage(packageName)}`) + `types/${getMangledNameForScopedPackage(packageName)}`.length);
   let hasNonRelativeImports = false;
-  entryFilenames.forEach((text) => recur({ text, exact: true }));
+  entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
   return { types, tests, hasNonRelativeImports };
 
-  function recur({ text, exact }: Reference): void {
-    const resolvedFilename = exact ? text : resolveModule(text, fs);
-    if (seenReferences.has(resolvedFilename)) {
+  function recur(containingFileName: string | undefined, ref: Reference): void {
+    // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
+    const resolvedFileName = resolveReference(containingFileName, ref);
+
+    if (!resolvedFileName) {
       return;
     }
-    seenReferences.add(resolvedFilename);
+
+    if (seenReferences.has(resolvedFileName)) {
+      return;
+    }
+    seenReferences.add(resolvedFileName);
+
+    // E.g. 'index.d.ts' - suitable for lookups in `fs` and for our result
+    const relativeFileName = path.relative(baseDirectory, resolvedFileName);
+    if (path.relative(packageDirectory, resolvedFileName).startsWith("..")) {
+      throw new Error(
+        `${containingFileName ?? "tsconfig.json"}: ` +
+          'Definitions must use global references to other packages, not parent ("../xxx") references.' +
+          `(Based on reference '${ref.text}')`
+      );
+    }
 
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    if (fs.exists(resolvedFilename)) {
-      const src = createSourceFile(resolvedFilename, readFileAndThrowOnBOM(resolvedFilename, fs));
+    if (fs.exists(relativeFileName)) {
+      const src = createSourceFile(resolvedFileName, readFileAndThrowOnBOM(relativeFileName, fs), moduleResolutionHost, compilerOptions);
       if (
-        resolvedFilename.endsWith(".d.ts") ||
-        resolvedFilename.endsWith(".d.mts") ||
-        resolvedFilename.endsWith(".d.cts")
+        relativeFileName.endsWith(".d.ts") ||
+        relativeFileName.endsWith(".d.mts") ||
+        relativeFileName.endsWith(".d.cts")
       ) {
-        types.set(resolvedFilename, src);
+        types.set(relativeFileName, src);
       } else {
-        tests.set(resolvedFilename, src);
+        tests.set(relativeFileName, src);
       }
 
-      const { refs, hasNonRelativeImports: result } = findReferencedFiles(
-        src,
-        packageName,
-        path.dirname(resolvedFilename),
-        normalizeSlashes(path.relative(baseDirectory, fs.debugPath()))
-      );
-      refs.forEach(recur);
+      const { refs, hasNonRelativeImports: result } = findReferencedFiles(src, packageName);
+      refs.forEach(ref => recur(resolvedFileName, ref));
       hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
-}
 
-function resolveModule(importSpecifier: string, fs: FS): string {
-  importSpecifier = importSpecifier.endsWith("/")
-    ? importSpecifier.slice(0, importSpecifier.length - 1)
-    : importSpecifier;
-  if (importSpecifier !== "." && importSpecifier !== "..") {
-    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    if (fs.exists(importSpecifier + ".d.ts")) {
-      return importSpecifier + ".d.ts";
-    }
-    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    if (fs.exists(importSpecifier + ".ts")) {
-      return importSpecifier + ".ts";
-    }
-    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    if (fs.exists(importSpecifier + ".tsx")) {
-      return importSpecifier + ".tsx";
+  function resolveReference(containingFileName: string | undefined, { kind, text, resolutionMode }: Reference): string | undefined {
+    switch (kind) {
+      case "path":
+        if (containingFileName) {
+          return ts.resolveTripleslashReference(text, containingFileName);
+        } else {
+          return path.resolve(baseDirectory, text);
+        }
+      case "types":
+        return ts.resolveTypeReferenceDirective(
+          text,
+          assertDefined(containingFileName, "Must have a containing file to resolve a type reference directive"),
+          compilerOptions,
+          moduleResolutionHost,
+                /*redirectedReference*/ undefined,
+                /*cache*/ undefined,
+          resolutionMode).resolvedTypeReferenceDirective?.resolvedFileName;
+      case "import":
+        return ts.resolveModuleName(
+          text,
+          assertDefined(containingFileName, "Must have an containing file to resolve an import"),
+          compilerOptions,
+          moduleResolutionHost,
+                /*cache*/ undefined,
+                /*redirectedReference*/ undefined,
+          resolutionMode
+        ).resolvedModule?.resolvedFileName;
     }
   }
-  return importSpecifier === "." ? "index.d.ts" : joinPaths(importSpecifier, "index.d.ts");
 }
 
 interface Reference {
-  /** <reference path> includes exact filename, so true. import "foo" may reference "foo.d.ts" or "foo/index.d.ts", so false. */
-  readonly exact: boolean;
+  kind: "path" | "import" | "types";
   text: string;
+  resolutionMode?: ts.ModuleKind.ESNext | ts.ModuleKind.CommonJS;
 }
 
 /**
@@ -203,76 +228,40 @@ interface Reference {
  * For example, `baseDirectory` may be `react-router` and `subDirectory` may be `react-router/lib`.
  * versionsBaseDirectory may be "" when not in typesVersions or ".." when inside `react-router/ts3.1`
  */
-function findReferencedFiles(src: ts.SourceFile, packageName: string, subDirectory: string, baseDirectory: string) {
+function findReferencedFiles(src: ts.SourceFile, packageName: string) {
   const refs: Reference[] = [];
   let hasNonRelativeImports = false;
 
   for (const ref of src.referencedFiles) {
-    // Any <reference path="foo"> is assumed to be local
-    addReference({ text: ref.fileName, exact: true });
+    refs.push({
+      text: ref.fileName,
+      kind: "path",
+      resolutionMode: ref.resolutionMode,
+    });
   }
   for (const ref of src.typeReferenceDirectives) {
     // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
-    if (ref.fileName.startsWith("../" + packageName + "/")) {
-      addReference({ text: ref.fileName, exact: false });
-    } else if (ref.fileName.startsWith(packageName + "/")) {
-      addReference({ text: convertToRelativeReference(ref.fileName), exact: false });
+    if (ref.fileName.startsWith("../" + packageName + "/") || ref.fileName.startsWith(packageName + "/")) {
+      refs.push({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode });
     }
   }
 
   for (const ref of imports(src)) {
-    if (ref.startsWith(".")) {
-      addReference({ text: ref, exact: false });
-    } else if (getMangledNameForScopedPackage(ref).startsWith(packageName + "/")) {
-      addReference({ text: convertToRelativeReference(ref), exact: false });
-      hasNonRelativeImports = true;
+    const resolutionMode = ts.getModeForUsageLocation(src, ref);
+    if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
+      refs.push({ kind: "import", text: ref.text, resolutionMode });
+      hasNonRelativeImports = !ref.text.startsWith(".");
     }
   }
   return { refs, hasNonRelativeImports };
-
-  function addReference(ref: Reference): void {
-    // `path.normalize` may add windows slashes
-    let full = normalizeSlashes(
-      path.normalize(joinPaths(subDirectory, assertNoWindowsSlashes(src.fileName, ref.text)))
-    );
-    // allow files in typesVersions directories (i.e. 'ts3.1') to reference files in parent directory
-    if (full.startsWith("../" + packageName + "/")) {
-      full = full.slice(packageName.length + 4);
-    } else if (baseDirectory && full.startsWith("../" + baseDirectory + "/")) {
-      full = full.slice(baseDirectory.length + 4);
-    } else if (
-      full.startsWith("..") &&
-      (baseDirectory === "" || path.normalize(joinPaths(baseDirectory, full)).startsWith(".."))
-    ) {
-      throw new Error(
-        `${src.fileName}: ` +
-          'Definitions must use global references to other packages, not parent ("../xxx") references.' +
-          `(Based on reference '${ref.text}')`
-      );
-    }
-    ref.text = full;
-    refs.push(ref);
-  }
-
-  /** boring/foo -> ./foo when subDirectory === '.'; ../foo when it's === 'x'; ../../foo when it's 'x/y' */
-  function convertToRelativeReference(name: string) {
-    let relative = ".";
-    if (subDirectory !== ".") {
-      relative += "/..".repeat(subDirectory.split("/").length);
-      if (baseDirectory && subDirectory.startsWith("..")) {
-        relative = relative.slice(0, -2) + baseDirectory;
-      }
-    }
-    return relative + name.slice(packageName.length);
-  }
 }
 
 /**
  * All strings referenced in `import` statements.
  * Does *not* include <reference> directives.
  */
-function imports({ statements }: ts.SourceFile): Iterable<string> {
-  const result: string[] = [];
+function imports({ statements }: ts.SourceFile): Iterable<ts.StringLiteralLike> {
+  const result: ts.StringLiteralLike[] = [];
   for (const node of statements) {
     recur(node);
   }
@@ -284,7 +273,7 @@ function imports({ statements }: ts.SourceFile): Iterable<string> {
       case ts.SyntaxKind.ExportDeclaration: {
         const { moduleSpecifier } = node as ts.ImportDeclaration | ts.ExportDeclaration;
         if (moduleSpecifier && moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
-          result.push((moduleSpecifier as ts.StringLiteral).text);
+          result.push((moduleSpecifier as ts.StringLiteral));
         }
         break;
       }
@@ -300,7 +289,7 @@ function imports({ statements }: ts.SourceFile): Iterable<string> {
       case ts.SyntaxKind.ImportType: {
         const { argument } = node as ts.ImportTypeNode;
         if (ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal)) {
-          result.push(argument.literal.text);
+          result.push(argument.literal);
         }
         break;
       }
@@ -311,12 +300,12 @@ function imports({ statements }: ts.SourceFile): Iterable<string> {
   }
 }
 
-function parseRequire(reference: ts.ExternalModuleReference): string {
+function parseRequire(reference: ts.ExternalModuleReference): ts.StringLiteralLike {
   const { expression } = reference;
   if (!expression || !ts.isStringLiteral(expression)) {
     throw new Error(`Bad 'import =' reference: ${reference.getText()}`);
   }
-  return expression.text;
+  return expression;
 }
 
 function isValueNamespace(ns: ts.ModuleDeclaration): boolean {
@@ -360,12 +349,14 @@ export function getTestDependencies(
   packageName: string,
   testFiles: Iterable<string>,
   dependencies: ReadonlySet<string>,
-  fs: FS
+  fs: FS,
+  moduleResolutionHost: ts.ModuleResolutionHost,
+  compilerOptions: ts.CompilerOptions,
 ): Iterable<string> {
   const testDependencies = new Set<string>();
   for (const filename of testFiles) {
     const content = readFileAndThrowOnBOM(filename, fs);
-    const sourceFile = createSourceFile(filename, content);
+    const sourceFile = createSourceFile(filename, content, moduleResolutionHost, compilerOptions);
     const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
     const filePath = () => path.join(packageName, fileName);
     let hasImports = false;
@@ -388,8 +379,8 @@ export function getTestDependencies(
     }
     for (const imported of imports(sourceFile)) {
       hasImports = true;
-      if (!imported.startsWith(".") && !dependencies.has(imported)) {
-        testDependencies.add(imported);
+      if (!imported.text.startsWith(".") && !dependencies.has(imported.text)) {
+        testDependencies.add(imported.text);
       }
     }
 
@@ -413,6 +404,8 @@ export function getTestDependencies(
   return testDependencies;
 }
 
-export function createSourceFile(filename: string, content: string): ts.SourceFile {
-  return ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/ false);
+export function createSourceFile(filename: string, content: string, moduleResolutionHost: ts.ModuleResolutionHost, compilerOptions: ts.CompilerOptions): ts.SourceFile {
+  const file = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/ false);
+  file.impliedNodeFormat = ts.getImpliedNodeFormatForFile(filename as ts.Path, /*packageJsonInfoCache*/ undefined, moduleResolutionHost, compilerOptions);
+  return file;
 }
