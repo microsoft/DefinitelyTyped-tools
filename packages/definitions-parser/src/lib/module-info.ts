@@ -144,38 +144,9 @@ export function allReferencedFiles(
   entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
   return { types, tests, hasNonRelativeImports };
 
-  function recur(containingFileName: string | undefined, { text, kind, resolutionMode }: Reference): void {
+  function recur(containingFileName: string | undefined, ref: Reference): void {
     // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
-    let resolvedFileName: string | undefined;
-    switch (kind) {
-      case "path":
-        if (containingFileName) {
-          resolvedFileName = ts.resolveTripleslashReference(text, containingFileName);
-        } else {
-          resolvedFileName = path.resolve(baseDirectory, text);
-        }
-        break;
-      case "types":
-        resolvedFileName = ts.resolveTypeReferenceDirective(
-          text,
-          assertDefined(containingFileName, "Must have a containing file to resolve a type reference directive"),
-          compilerOptions,
-          moduleResolutionHost,
-          /*redirectedReference*/ undefined,
-          /*cache*/ undefined,
-          resolutionMode).resolvedTypeReferenceDirective?.resolvedFileName;
-        break;
-      case "import":
-        resolvedFileName = ts.resolveModuleName(
-          text,
-          assertDefined(containingFileName, "Must have an containing file to resolve an import"),
-          compilerOptions,
-          moduleResolutionHost,
-          /*cache*/ undefined,
-          /*redirectedReference*/ undefined,
-          resolutionMode
-        ).resolvedModule?.resolvedFileName;
-    }
+    const resolvedFileName = resolveReference(containingFileName, ref);
 
     if (!resolvedFileName) {
       return;
@@ -192,7 +163,7 @@ export function allReferencedFiles(
       throw new Error(
         `${containingFileName ?? "tsconfig.json"}: ` +
           'Definitions must use global references to other packages, not parent ("../xxx") references.' +
-          `(Based on reference '${text}')`
+          `(Based on reference '${ref.text}')`
       );
     }
 
@@ -214,6 +185,36 @@ export function allReferencedFiles(
       hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
+
+  function resolveReference(containingFileName: string | undefined, { kind, text, resolutionMode }: Reference): string | undefined {
+    switch (kind) {
+      case "path":
+        if (containingFileName) {
+          return ts.resolveTripleslashReference(text, containingFileName);
+        } else {
+          return path.resolve(baseDirectory, text);
+        }
+      case "types":
+        return ts.resolveTypeReferenceDirective(
+          text,
+          assertDefined(containingFileName, "Must have a containing file to resolve a type reference directive"),
+          compilerOptions,
+          moduleResolutionHost,
+                /*redirectedReference*/ undefined,
+                /*cache*/ undefined,
+          resolutionMode).resolvedTypeReferenceDirective?.resolvedFileName;
+      case "import":
+        return ts.resolveModuleName(
+          text,
+          assertDefined(containingFileName, "Must have an containing file to resolve an import"),
+          compilerOptions,
+          moduleResolutionHost,
+                /*cache*/ undefined,
+                /*redirectedReference*/ undefined,
+          resolutionMode
+        ).resolvedModule?.resolvedFileName;
+    }
+  }
 }
 
 interface Reference {
@@ -232,7 +233,7 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string) {
   let hasNonRelativeImports = false;
 
   for (const ref of src.referencedFiles) {
-    addReference({
+    refs.push({
       text: ref.fileName,
       kind: "path",
       resolutionMode: ref.resolutionMode,
@@ -241,22 +242,18 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string) {
   for (const ref of src.typeReferenceDirectives) {
     // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
     if (ref.fileName.startsWith("../" + packageName + "/") || ref.fileName.startsWith(packageName + "/")) {
-      addReference({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode });
+      refs.push({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode });
     }
   }
 
   for (const ref of imports(src)) {
     const resolutionMode = ts.getModeForUsageLocation(src, ref);
     if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
-      addReference({ kind: "import", text: ref.text, resolutionMode });
+      refs.push({ kind: "import", text: ref.text, resolutionMode });
       hasNonRelativeImports = !ref.text.startsWith(".");
     }
   }
   return { refs, hasNonRelativeImports };
-
-  function addReference(ref: Reference): void {
-    refs.push(ref);
-  }
 }
 
 /**
