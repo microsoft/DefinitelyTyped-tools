@@ -76,7 +76,6 @@ export async function lint(
     const formatter = await eslint.loadFormatter("stylish");
     const eresults = await eslint.lintFiles(esfiles);
     output += formatter.format(eresults);
-    estree.clearProgramCache();
     estree.clearCaches();
     process.chdir(cwd);
   }
