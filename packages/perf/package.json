@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@definitelytyped/definitions-parser": "^0.0.148-next.5",
+    "@definitelytyped/typescript-versions": "^0.0.147",
     "@definitelytyped/header-parser": "^0.0.147",
     "@definitelytyped/utils": "^0.0.148-next.5",
     "@octokit/rest": "^16.33.0",
