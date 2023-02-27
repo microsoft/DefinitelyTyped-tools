@@ -198,9 +198,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
     return expect(
       getTypingInfo(
         "typeref-fails",
-        new DiskFS(
-          path.resolve(__dirname, "fixtures/rejects-references-to-old-versions-of-other-types-packages/")
-        )
+        new DiskFS(path.resolve(__dirname, "fixtures/rejects-references-to-old-versions-of-other-types-packages/"))
       )
     ).rejects.toThrow("do not directly import specific versions of another types package");
   });
@@ -269,20 +267,18 @@ import route = require('@ember/routing/route');
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
     const info = await getTypingInfo(
       "styled-components-react-native",
-      new DiskFS(
-        path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")
-      )
+      new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"))
     );
     expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
   });
 
   it("rejects relative references to other packages", async () => {
-    expect(() => getTypingInfo(
-      "referencing",
-      new DiskFS(
-        path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/")
+    expect(() =>
+      getTypingInfo(
+        "referencing",
+        new DiskFS(path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/"))
       )
-    )).rejects.toThrow("Definitions must use global references to other packages");
+    ).rejects.toThrow("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {
@@ -432,9 +428,7 @@ import first from "@ckeditor/ckeditor5-utils/src/first";
 
         dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
-        return expect(
-          getTypingInfo("ckeditor__ckeditor5-utils", dt.fs)
-        ).rejects.toThrow(
+        return expect(getTypingInfo("ckeditor__ckeditor5-utils", dt.fs)).rejects.toThrow(
           '@ckeditor/ckeditor5-utils: Older version 10 must have a "paths" entry of "@ckeditor/ckeditor5-utils/*": ["ckeditor__ckeditor5-utils/v10/*"]'
         );
       });

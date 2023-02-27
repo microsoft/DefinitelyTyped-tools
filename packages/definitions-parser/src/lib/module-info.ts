@@ -131,7 +131,7 @@ export function allReferencedFiles(
   fs: FS,
   packageName: string,
   moduleResolutionHost: ts.ModuleResolutionHost,
-  compilerOptions: ts.CompilerOptions,
+  compilerOptions: ts.CompilerOptions
 ): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
@@ -139,7 +139,11 @@ export function allReferencedFiles(
   // The directory where the tsconfig/index.d.ts is - i.e., may be a version within the package
   const baseDirectory = path.resolve("/", fs.debugPath());
   // The root of the package and all versions, i.e., the direct subdirectory of types/
-  const packageDirectory = baseDirectory.slice(0, baseDirectory.lastIndexOf(`types/${getMangledNameForScopedPackage(packageName)}`) + `types/${getMangledNameForScopedPackage(packageName)}`.length);
+  const packageDirectory = baseDirectory.slice(
+    0,
+    baseDirectory.lastIndexOf(`types/${getMangledNameForScopedPackage(packageName)}`) +
+      `types/${getMangledNameForScopedPackage(packageName)}`.length
+  );
   let hasNonRelativeImports = false;
   entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
   return { types, tests, hasNonRelativeImports };
@@ -169,7 +173,12 @@ export function allReferencedFiles(
 
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(relativeFileName)) {
-      const src = createSourceFile(resolvedFileName, readFileAndThrowOnBOM(relativeFileName, fs), moduleResolutionHost, compilerOptions);
+      const src = createSourceFile(
+        resolvedFileName,
+        readFileAndThrowOnBOM(relativeFileName, fs),
+        moduleResolutionHost,
+        compilerOptions
+      );
       if (
         relativeFileName.endsWith(".d.ts") ||
         relativeFileName.endsWith(".d.mts") ||
@@ -181,12 +190,15 @@ export function allReferencedFiles(
       }
 
       const { refs, hasNonRelativeImports: result } = findReferencedFiles(src, packageName);
-      refs.forEach(ref => recur(resolvedFileName, ref));
+      refs.forEach((ref) => recur(resolvedFileName, ref));
       hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
 
-  function resolveReference(containingFileName: string | undefined, { kind, text, resolutionMode }: Reference): string | undefined {
+  function resolveReference(
+    containingFileName: string | undefined,
+    { kind, text, resolutionMode }: Reference
+  ): string | undefined {
     switch (kind) {
       case "path":
         if (containingFileName) {
@@ -200,17 +212,18 @@ export function allReferencedFiles(
           assertDefined(containingFileName, "Must have a containing file to resolve a type reference directive"),
           compilerOptions,
           moduleResolutionHost,
-                /*redirectedReference*/ undefined,
-                /*cache*/ undefined,
-          resolutionMode).resolvedTypeReferenceDirective?.resolvedFileName;
+          /*redirectedReference*/ undefined,
+          /*cache*/ undefined,
+          resolutionMode
+        ).resolvedTypeReferenceDirective?.resolvedFileName;
       case "import":
         return ts.resolveModuleName(
           text,
           assertDefined(containingFileName, "Must have an containing file to resolve an import"),
           compilerOptions,
           moduleResolutionHost,
-                /*cache*/ undefined,
-                /*redirectedReference*/ undefined,
+          /*cache*/ undefined,
+          /*redirectedReference*/ undefined,
           resolutionMode
         ).resolvedModule?.resolvedFileName;
     }
@@ -273,7 +286,7 @@ function imports({ statements }: ts.SourceFile): Iterable<ts.StringLiteralLike> 
       case ts.SyntaxKind.ExportDeclaration: {
         const { moduleSpecifier } = node as ts.ImportDeclaration | ts.ExportDeclaration;
         if (moduleSpecifier && moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
-          result.push((moduleSpecifier as ts.StringLiteral));
+          result.push(moduleSpecifier as ts.StringLiteral);
         }
         break;
       }
@@ -351,7 +364,7 @@ export function getTestDependencies(
   dependencies: ReadonlySet<string>,
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost,
-  compilerOptions: ts.CompilerOptions,
+  compilerOptions: ts.CompilerOptions
 ): Iterable<string> {
   const testDependencies = new Set<string>();
   for (const filename of testFiles) {
@@ -404,8 +417,18 @@ export function getTestDependencies(
   return testDependencies;
 }
 
-export function createSourceFile(filename: string, content: string, moduleResolutionHost: ts.ModuleResolutionHost, compilerOptions: ts.CompilerOptions): ts.SourceFile {
+export function createSourceFile(
+  filename: string,
+  content: string,
+  moduleResolutionHost: ts.ModuleResolutionHost,
+  compilerOptions: ts.CompilerOptions
+): ts.SourceFile {
   const file = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/ false);
-  file.impliedNodeFormat = ts.getImpliedNodeFormatForFile(filename as ts.Path, /*packageJsonInfoCache*/ undefined, moduleResolutionHost, compilerOptions);
+  file.impliedNodeFormat = ts.getImpliedNodeFormatForFile(
+    filename as ts.Path,
+    /*packageJsonInfoCache*/ undefined,
+    moduleResolutionHost,
+    compilerOptions
+  );
   return file;
 }

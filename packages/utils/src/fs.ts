@@ -49,7 +49,6 @@ export function createModuleResolutionHost(fs: FS): import("typescript").ModuleR
   };
 }
 
-
 interface ReadonlyDir extends ReadonlyMap<string, ReadonlyDir | string> {
   readonly parent: Dir | undefined;
 }

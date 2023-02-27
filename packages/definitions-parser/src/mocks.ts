@@ -172,7 +172,7 @@ untested.d.ts
 declare var x: number
 `
   );
-  
+
   globby.set(
     "sneaky.d.ts",
     `

@@ -6,7 +6,11 @@ import { allReferencedFiles, getModuleInfo, getTestDependencies } from "../src/l
 
 const fs = createMockDT().fs;
 const moduleResolutionHost = createModuleResolutionHost(fs);
-const compilerOptions = { module: ts.ModuleKind.CommonJS, baseUrl: "/DefinitelyTyped/types", typeRoots: ["/DefinitelyTyped/types"] };
+const compilerOptions = {
+  module: ts.ModuleKind.CommonJS,
+  baseUrl: "/DefinitelyTyped/types",
+  typeRoots: ["/DefinitelyTyped/types"],
+};
 
 function getBoringReferences() {
   return allReferencedFiles(
@@ -78,7 +82,13 @@ testo({
 `
     );
     pkg.set("types.d.ts", "");
-    const { types, tests } = allReferencedFiles(["index.d.ts"], dtMock.fs.subDir("types/mock"), "mock", createModuleResolutionHost(dtMock.fs), compilerOptions);
+    const { types, tests } = allReferencedFiles(
+      ["index.d.ts"],
+      dtMock.fs.subDir("types/mock"),
+      "mock",
+      createModuleResolutionHost(dtMock.fs),
+      compilerOptions
+    );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "types.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
@@ -152,14 +162,22 @@ testo({
       dtMock.fs.subDir("types/mock/ts2.0"),
       "mock",
       createModuleResolutionHost(dtMock.fs),
-      { ...compilerOptions, paths: { "mock/*": ["mock/ts2.0/*"] } });
+      { ...compilerOptions, paths: { "mock/*": ["mock/ts2.0/*"] } }
+    );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
   getTestDependenciesWorks() {
     const { types, tests } = getBoringReferences();
     const i = getModuleInfo("boring", types);
-    const d = getTestDependencies("boring", tests.keys(), i.dependencies, fs.subDir("types").subDir("boring"), moduleResolutionHost, compilerOptions);
+    const d = getTestDependencies(
+      "boring",
+      tests.keys(),
+      i.dependencies,
+      fs.subDir("types").subDir("boring"),
+      moduleResolutionHost,
+      compilerOptions
+    );
     expect(d).toEqual(new Set(["boring", "boring/commonjs", "boring/secondary", "boring/v1", "super-big-fun-hus"]));
   },
 });
