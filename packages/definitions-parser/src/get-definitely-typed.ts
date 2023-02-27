@@ -40,6 +40,6 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
   return new DiskFS(`${path.resolve(options.definitelyTypedPath)}/`);
 }
 
-export function getLocallyInstalledDefinitelyTyped(path: string): FS {
-  return new DiskFS(`${path}/`);
+export function getLocallyInstalledDefinitelyTyped(definitelyTypedPath: string): FS {
+  return new DiskFS(`${path.resolve(definitelyTypedPath)}/`);
 }
