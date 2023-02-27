@@ -19,7 +19,7 @@ export class DTMock {
         },
       })
     );
-    this.fs = new InMemoryFS(this.root, "DefinitelyTyped");
+    this.fs = new InMemoryFS(this.root, "/DefinitelyTyped/");
   }
 
   public pkgDir(packageName: string): Dir {

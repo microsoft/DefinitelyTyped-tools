@@ -1,3 +1,4 @@
+import path from "path";
 import { DiskFS } from "@definitelytyped/utils";
 import { createMockDT } from "../src/mocks";
 import { getTypingInfo } from "../src/lib/definition-parser";
@@ -198,7 +199,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
       getTypingInfo(
         "typeref-fails",
         new DiskFS(
-          "packages/definitions-parser/test/fixtures/rejects-references-to-old-versions-of-other-types-packages/"
+          path.resolve(__dirname, "fixtures/rejects-references-to-old-versions-of-other-types-packages/")
         )
       )
     ).rejects.toThrow("do not directly import specific versions of another types package");
@@ -207,7 +208,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
-      new DiskFS("packages/definitions-parser/test/fixtures/allows-references-to-old-versions-of-self/")
+      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/"))
     );
     expect(info).toBeDefined();
   });
@@ -269,10 +270,19 @@ import route = require('@ember/routing/route');
     const info = await getTypingInfo(
       "styled-components-react-native",
       new DiskFS(
-        "packages/definitions-parser/test/fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"
+        path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")
       )
     );
     expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
+  });
+
+  it("rejects relative references to other packages", async () => {
+    expect(() => getTypingInfo(
+      "referencing",
+      new DiskFS(
+        path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/")
+      )
+    )).rejects.toThrow("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {

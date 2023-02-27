@@ -136,7 +136,10 @@ export function allReferencedFiles(
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
+  // The directory where the tsconfig/index.d.ts is - i.e., may be a version within the package
   const baseDirectory = path.resolve("/", fs.debugPath());
+  // The root of the package and all versions, i.e., the direct subdirectory of types/
+  const packageDirectory = baseDirectory.slice(0, baseDirectory.lastIndexOf(`types/${getMangledNameForScopedPackage(packageName)}`) + `types/${getMangledNameForScopedPackage(packageName)}`.length);
   let hasNonRelativeImports = false;
   entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
   return { types, tests, hasNonRelativeImports };
@@ -185,6 +188,13 @@ export function allReferencedFiles(
 
     // E.g. 'index.d.ts' - suitable for lookups in `fs` and for our result
     const relativeFileName = path.relative(baseDirectory, resolvedFileName);
+    if (path.relative(packageDirectory, resolvedFileName).startsWith("..")) {
+      throw new Error(
+        `${containingFileName ?? "tsconfig.json"}: ` +
+          'Definitions must use global references to other packages, not parent ("../xxx") references.' +
+          `(Based on reference '${text}')`
+      );
+    }
 
     // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
     if (fs.exists(relativeFileName)) {
