@@ -38,7 +38,10 @@ export interface FS {
   debugPath(): string;
 }
 
-export function createModuleResolutionHost(fs: FS, ignoreFilesAboveDirectory?: string): import("typescript").ModuleResolutionHost {
+export function createModuleResolutionHost(
+  fs: FS,
+  ignoreFilesAboveDirectory?: string
+): import("typescript").ModuleResolutionHost {
   return {
     fileExists: (fileName) => !isIgnored(fileName) && fs.exists(fileName),
     readFile: (fileName) => (assert(!isIgnored(fileName)), fs.readFile(fileName)),
@@ -48,7 +51,11 @@ export function createModuleResolutionHost(fs: FS, ignoreFilesAboveDirectory?: s
     useCaseSensitiveFileNames: () => true,
   };
   function isIgnored(path: string): boolean {
-    return ignoreFilesAboveDirectory !== undefined && path !== ignoreFilesAboveDirectory && !path.startsWith(ignoreFilesAboveDirectory);
+    return (
+      ignoreFilesAboveDirectory !== undefined &&
+      path !== ignoreFilesAboveDirectory &&
+      !path.startsWith(ignoreFilesAboveDirectory)
+    );
   }
 }
 
