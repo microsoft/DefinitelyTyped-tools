@@ -164,9 +164,12 @@ export function allReferencedFiles(
     // E.g. 'index.d.ts' - suitable for lookups in `fs` and for our result
     const relativeFileName = path.relative(baseDirectory, resolvedFileName);
     if (path.relative(packageDirectory, resolvedFileName).startsWith("..")) {
+      // We only collected references that started with the current package name or were relative,
+      // so if we resolve an import to something outside the package, we know it was a relative
+      // import to a different package.
       throw new Error(
         `${containingFileName ?? "tsconfig.json"}: ` +
-          'Definitions must use global references to other packages, not parent ("../xxx") references.' +
+          'Definitions must use global references to other packages, not parent ("../xxx") references. ' +
           `(Based on reference '${ref.text}')`
       );
     }
