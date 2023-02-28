@@ -68,7 +68,7 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
     }
   );
 
-  const moduleResolutionHost = createModuleResolutionHost(dt);
+  const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
 
   const latestData: TypingsDataRaw = {
