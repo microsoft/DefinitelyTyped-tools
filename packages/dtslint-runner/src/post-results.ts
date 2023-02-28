@@ -93,6 +93,7 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
 
   const nightlyOnly = [];
   const bothChanged = [];
+  const branchOnly = [];
 
   for (const [path, error] of nightlyMap) {
     if (branchMap.has(path)) {
@@ -106,7 +107,6 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
     }
   }
 
-  const branchOnly = [];
   for (const [path, error] of branchMap) {
     if (nightlyMap.has(path)) {
       continue; // Already considered above
@@ -120,6 +120,13 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
     return undefined;
   }
 
+  const branchOnlyMessage =
+    branchOnly.length ? `
+<details>
+<summary>Branch only errors:</summary>
+${branchOnly.map(err => `Package: ${err.path}\nError: ${err.message}`).join("\n")}
+</details>
+` : "";
   const nightlyOnlyMessage =
     nightlyOnly.length ? `
 <details>
@@ -134,15 +141,8 @@ ${nightlyOnly.map(err => `Package: ${err.path}\nError: ${err.message}`).join("\n
 ${bothChanged.map(err => `Package: ${err.path}\nNightly error: ${err.nightly}\nBranch error: ${err.branch}`).join("\n")}
 </details>
 ` : "";
-  const branchOnlyMessage =
-    branchOnly.length ? `
-<details>
-<summary>Branch only errors:</summary>
-${branchOnly.map(err => `Package: ${err.path}\nError: ${err.message}`).join("\n")}
-</details>
-` : "";
 
-  return nightlyOnlyMessage + bothChangedMessage + branchOnlyMessage;
+  return branchOnlyMessage + bothChangedMessage + nightlyOnlyMessage;
 }
 
 main().catch(e => {
