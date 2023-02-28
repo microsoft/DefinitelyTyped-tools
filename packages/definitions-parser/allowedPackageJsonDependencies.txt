@@ -683,6 +683,7 @@ kleur
 knex
 knockout
 levelup
+lil-gui
 lit-element
 localforage
 log4js
