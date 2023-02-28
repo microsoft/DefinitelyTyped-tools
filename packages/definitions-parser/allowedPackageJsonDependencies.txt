@@ -767,6 +767,9 @@ react-native-svg
 react-native-tab-view
 react-navigation
 react-popper
+react-router
+react-router-dom
+react-router-native
 recast
 recharts
 redis

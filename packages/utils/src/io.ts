@@ -237,7 +237,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
         extract.on("finish", () => {
           log.info("Done receiving " + url);
           clearTimeout(timeout);
-          resolve(new InMemoryFS(root.finish(), ""));
+          resolve(new InMemoryFS(root.finish(), "/"));
         });
 
         response.pipe(zlib.createGunzip()).pipe(extract);
