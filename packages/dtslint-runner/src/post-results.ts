@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/rest";
 import { readFileSync } from "fs";
 import glob = require("glob");
 
-type Errors = { path: string, message: string }[];
+type Errors = { path: string, error: string }[];
 
 // Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [?nightly errors file] [?branch errors file]
 async function main() {
@@ -15,12 +15,12 @@ async function main() {
   if (!status) throw new Error("Sixth argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
-  const checkLogsMessage = `[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
+  const checkLogsMessage = `\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
 
   try {
     let newComment;
     if (status === "fail") {
-      newComment = `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details. ${checkLogsMessage}`;
+      newComment = `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details.` + checkLogsMessage;
     }
     else {
       const nightlyErrors: Errors = [];
@@ -41,7 +41,7 @@ async function main() {
       newComment = `Hey @${userToTag}, the results of running the DT tests are ready.\n`;
       const diffComment = getDiffComment(nightlyErrors, branchErrors);
       if (diffComment) {
-        newComment += `There were interesting changes:`
+        newComment += `There were interesting changes:\n`
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
           newComment += `Changes are too big to display here, please check the log.`
         }
@@ -83,7 +83,7 @@ async function main() {
       issue_number: +issue,
       owner: "Microsoft",
       repo: "TypeScript",
-      body: `Hey @${userToTag}, something went wrong when publishing results from the DT run. ${checkLogsMessage}`
+      body: `Hey @${userToTag}, something went wrong when publishing results from the DT run.` + checkLogsMessage
     });
   }
 }
@@ -99,8 +99,8 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
   for (const [path, error] of nightlyMap) {
     if (branchMap.has(path)) {
       const branchError = branchMap.get(path)!;
-      if (branchError.message !== error.message) {
-        bothChanged.push({ path, nightly: error.message, branch: branchError.message });
+      if (branchError.error !== error.error) {
+        bothChanged.push({ path, nightlyError: error.error, branchError: branchError.error });
       }
     }
     else {
@@ -125,21 +125,24 @@ function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
     branchOnly.length ? `
 <details>
 <summary>Branch only errors:</summary>
-${branchOnly.map(err => `Package: ${err.path}\nError: ${err.message}`).join("\n")}
+
+${branchOnly.map(err => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\`\`\``).join("\n\n")}
 </details>
 ` : "";
   const nightlyOnlyMessage =
     nightlyOnly.length ? `
 <details>
 <summary>Nightly only errors:</summary>
-${nightlyOnly.map(err => `Package: ${err.path}\nError: ${err.message}`).join("\n")}
+
+${nightlyOnly.map(err => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\`\`\``).join("\n\n")}
 </details>
 ` : "";
   const bothChangedMessage =
     bothChanged.length ? `
 <details>
 <summary>Errors that changed:</summary>
-${bothChanged.map(err => `Package: ${err.path}\nNightly error: ${err.nightly}\nBranch error: ${err.branch}`).join("\n")}
+
+${bothChanged.map(err => `Package: ${err.path}\nNightly error:\n\`\`\`\n${err.nightlyError}\n\`\`\`\nBranch error:\n\`\`\`\n${err.branchError}\n\`\`\``).join("\n\n")}
 </details>
 ` : "";
 
