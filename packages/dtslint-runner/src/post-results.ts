@@ -15,7 +15,7 @@ async function main() {
   if (!status) throw new Error("Sixth argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
-  const checkLogsMessage = `([You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
+  const checkLogsMessage = `[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
 
   try {
     let newComment;
@@ -78,11 +78,12 @@ async function main() {
     });
   }
   catch (e) {
+    console.error(e);
     await gh.issues.createComment({
       issue_number: +issue,
       owner: "Microsoft",
       repo: "TypeScript",
-      body: `Hey @${userToTag}, something went wrong when publishing results. ${checkLogsMessage}`
+      body: `Hey @${userToTag}, something went wrong when publishing results from the DT run. ${checkLogsMessage}`
     });
   }
 }
