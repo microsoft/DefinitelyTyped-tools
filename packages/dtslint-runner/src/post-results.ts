@@ -26,14 +26,14 @@ async function main() {
       const nightlyErrors: Errors = [];
       if (nightlyErrorsPath) {
         const nightlyFiles = glob.sync(`**/*.json`, { cwd: nightlyErrorsPath, absolute: true });
-        for (const file in nightlyFiles) {
+        for (const file of nightlyFiles) {
           nightlyErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
         }
       }
       const branchErrors: Errors = [];
       if (branchErrorsPath) {
         const branchFiles = glob.sync(`**/*.json`, { cwd: branchErrorsPath, absolute: true });
-        for (const file in branchFiles) {
+        for (const file of branchFiles) {
           branchErrors.push(...JSON.parse(readFileSync(file, "utf-8")) as Errors);
         }
       }
