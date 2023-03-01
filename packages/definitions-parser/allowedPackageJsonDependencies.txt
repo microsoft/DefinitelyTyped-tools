@@ -8,6 +8,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@dcloudio/types
 @elastic/elasticsearch
 @electron/get
 @ember/test-helpers
