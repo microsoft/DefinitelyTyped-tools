@@ -12,6 +12,7 @@ import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-ex
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
+import { writeFileSync } from "fs";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
@@ -26,6 +27,7 @@ export async function runDTSLint({
   nProcesses,
   shard,
   childRestartTaskInterval,
+  writeFailures,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
   console.log("Node version: ", process.version);
@@ -92,7 +94,7 @@ export async function runDTSLint({
       if (expectedFailures?.has(path)) {
         if (status === "OK") {
           console.error(`${prefix}${path} passed, but was expected to fail.`);
-          allFailures.push([path, status]);
+          allFailures.push([path, "Passed but was expected to fail."]);
         } else {
           console.error(`${prefix}${path} failed as expected:`);
           console.error(
@@ -154,6 +156,10 @@ export async function runDTSLint({
   console.log(`{${suggestionLines.join(",")}}`);
 
   logPerformance();
+
+  if (writeFailures) {
+    writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
+  }
 
   if (allFailures.length === 0) {
     return 0;

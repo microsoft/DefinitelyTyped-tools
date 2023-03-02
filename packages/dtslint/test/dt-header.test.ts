@@ -28,15 +28,36 @@ ruleTester.run("dt-header", dtHeader, {
       `,
       errors: [
         {
-          column: 2,
+          column: 1,
           data: {
             expected: "/\\/\\/ Type definitions for (non-npm package )?/",
           },
-          line: 1,
+          line: 2,
           messageId: "parseError",
         },
       ],
       filename: "types/only-comment/index.d.ts",
+    },
+    {
+      code: `
+// Type definitions for dt-header 0.75
+// Project: https://github.com/bobby-headers/dt-header
+// Definitions by: Jane Doe <https://github.com/janedoe>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// Minimum TypeScript Version: 3.1
+      
+`,
+      errors: [
+        {
+          column: 1,
+          data: {
+            expected: "/\\/\\/ Type definitions for (non-npm package )?/",
+          },
+          line: 2,
+          messageId: "parseError",
+        },
+      ],
+      filename: "types/start-with-whitespace/index.d.ts",
     },
     {
       code: `// Type definitions for dt-header 1.0
