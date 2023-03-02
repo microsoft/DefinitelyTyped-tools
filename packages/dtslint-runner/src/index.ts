@@ -79,10 +79,9 @@ if (!module.parent) {
       },
       writeFailures: {
         type: "string",
-        description:
-          "Path to which all failures will be written.",
-        default: ""
-      }
+        description: "Path to which all failures will be written.",
+        default: "",
+      },
     })
     .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
 
