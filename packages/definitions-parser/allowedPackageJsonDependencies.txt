@@ -547,6 +547,7 @@
 @vue/test-utils
 @wordpress/api-fetch
 @wordpress/core-data
+@wordpress/data
 @wordpress/element
 abort-controller
 acorn
