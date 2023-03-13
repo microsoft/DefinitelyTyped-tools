@@ -107,7 +107,7 @@ f("one");
 
 ## Specify a TypeScript version
 
-Normally packages will be tested using TypeScript 2.0.
+Normally packages will be tested according to [DefinitelyType's support window](https://github.com/DefinitelyTyped/DefinitelyTyped#support-window).
 To use a newer version, specify it by including a comment like so:
 
 ```ts
