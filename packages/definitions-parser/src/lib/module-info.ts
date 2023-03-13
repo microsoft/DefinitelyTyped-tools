@@ -65,6 +65,7 @@ export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFil
           case ts.SyntaxKind.ImportEqualsDeclaration:
           case ts.SyntaxKind.InterfaceDeclaration:
           case ts.SyntaxKind.TypeAliasDeclaration:
+          case ts.SyntaxKind.EmptyStatement:
             break;
           default:
             throw new Error(`Unexpected node kind ${ts.SyntaxKind[node.kind]}`);
