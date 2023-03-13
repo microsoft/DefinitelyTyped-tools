@@ -36,14 +36,13 @@ describe(getTypingInfo, () => {
       "tsconfig.json",
       JSON.stringify({
         files: ["index.d.ts"],
-        compilerOptions: {
-        },
+        compilerOptions: {},
       })
     );
 
     const info = await getTypingInfo("example", dt.fs);
     expect(info).toBeDefined();
-  })
+  });
   it("works for a scoped package with scoped older dependencies", async () => {
     const dt = createMockDT();
     const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
