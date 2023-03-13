@@ -19,6 +19,31 @@ describe(getTypingInfo, () => {
     expect(info).toBeDefined();
   });
 
+  it("works for non-module files with empty statements", async () => {
+    const dt = createMockDT();
+    const d = dt.pkgDir("example");
+    d.set(
+      "index.d.ts",
+      `// Type definitions for example 1.0
+// Project: https://github.com/example/com
+// Definitions by: My Self <https://github.com/ñ>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+;;`
+    );
+
+    d.set(
+      "tsconfig.json",
+      JSON.stringify({
+        files: ["index.d.ts"],
+        compilerOptions: {
+        },
+      })
+    );
+
+    const info = await getTypingInfo("example", dt.fs);
+    expect(info).toBeDefined();
+  })
   it("works for a scoped package with scoped older dependencies", async () => {
     const dt = createMockDT();
     const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
@@ -71,7 +96,7 @@ export function myFunction(arg:string): string;
   });
 
   it("allows path mapping to older versions", () => {
-    // Actually, the default seup already has 'has-older-test-dependency', so probably doesn't need an explicit test
+    // Actually, the default setup already has 'has-older-test-dependency', so probably doesn't need an explicit test
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1.42");
     dt.addOldVersionOfPackage("jquery", "2");
