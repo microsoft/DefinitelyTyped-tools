@@ -21,8 +21,8 @@ describe(getTypingInfo, () => {
 
   it("works for non-module files with empty statements", async () => {
     const dt = createMockDT();
-    const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
-    scopedWithOlderScopedDependency.set(
+    const d = dt.pkgDir("example");
+    d.set(
       "index.d.ts",
       `// Type definitions for example 1.0
 // Project: https://github.com/example/com
@@ -32,7 +32,7 @@ describe(getTypingInfo, () => {
 ;;`
     );
 
-    scopedWithOlderScopedDependency.set(
+    d.set(
       "tsconfig.json",
       JSON.stringify({
         files: ["index.d.ts"],
@@ -41,7 +41,7 @@ describe(getTypingInfo, () => {
       })
     );
 
-    const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.fs);
+    const info = await getTypingInfo("example", dt.fs);
     expect(info).toBeDefined();
   })
   it("works for a scoped package with scoped older dependencies", async () => {
