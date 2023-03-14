@@ -4,9 +4,9 @@ import glob = require("glob");
 
 type Errors = { path: string; error: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [?nightly errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [?main errors file] [?branch errors file]
 async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, status, nightlyErrorsPath, branchErrorsPath] =
+  const [auth, buildId, statusCommentId, userToTag, issue, status, mainErrorsPath, branchErrorsPath] =
     process.argv.slice(2);
   if (!auth) throw new Error("First argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Second argument must be a build id.");
@@ -25,11 +25,11 @@ async function main() {
         `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details.` +
         checkLogsMessage;
     } else {
-      const nightlyErrors: Errors = [];
-      if (nightlyErrorsPath) {
-        const nightlyFiles = glob.sync(`**/*.json`, { cwd: nightlyErrorsPath, absolute: true });
-        for (const file of nightlyFiles) {
-          nightlyErrors.push(...(JSON.parse(readFileSync(file, "utf-8")) as Errors));
+      const mainErrors: Errors = [];
+      if (mainErrorsPath) {
+        const mainFiles = glob.sync(`**/*.json`, { cwd: mainErrorsPath, absolute: true });
+        for (const file of mainFiles) {
+          mainErrors.push(...(JSON.parse(readFileSync(file, "utf-8")) as Errors));
         }
       }
       const branchErrors: Errors = [];
@@ -41,7 +41,7 @@ async function main() {
       }
 
       newComment = `Hey @${userToTag}, the results of running the DT tests are ready.\n`;
-      const diffComment = getDiffComment(nightlyErrors, branchErrors);
+      const diffComment = getDiffComment(mainErrors, branchErrors);
       if (diffComment) {
         newComment += `There were interesting changes:\n`;
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
@@ -87,34 +87,34 @@ async function main() {
   }
 }
 
-function getDiffComment(nightly: Errors, branch: Errors): string | undefined {
-  const nightlyMap = new Map(nightly.map((error) => [error.path, error]));
+function getDiffComment(main: Errors, branch: Errors): string | undefined {
+  const mainMap = new Map(main.map((error) => [error.path, error]));
   const branchMap = new Map(branch.map((error) => [error.path, error]));
 
-  const nightlyOnly = [];
+  const mainOnly = [];
   const bothChanged = [];
   const branchOnly = [];
 
-  for (const [path, error] of nightlyMap) {
+  for (const [path, error] of mainMap) {
     if (branchMap.has(path)) {
       const branchError = branchMap.get(path)!;
       if (branchError.error !== error.error) {
-        bothChanged.push({ path, nightlyError: error.error, branchError: branchError.error });
+        bothChanged.push({ path, mainError: error.error, branchError: branchError.error });
       }
     } else {
-      nightlyOnly.push(error);
+      mainOnly.push(error);
     }
   }
 
   for (const [path, error] of branchMap) {
-    if (nightlyMap.has(path)) {
+    if (mainMap.has(path)) {
       continue; // Already considered above
     } else {
       branchOnly.push(error);
     }
   }
 
-  if (!nightlyOnly.length && !bothChanged.length && !branchOnly.length) {
+  if (!mainOnly.length && !bothChanged.length && !branchOnly.length) {
     return undefined;
   }
 
@@ -127,31 +127,31 @@ ${branchOnly.map((err) => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\
 </details>
 `
     : "";
-  const nightlyOnlyMessage = nightlyOnly.length
+  const mainOnlyMessage = mainOnly.length
     ? `
 <details>
-<summary>Nightly only errors:</summary>
+<summary>Main only errors:</summary>
 
-${nightlyOnly.map((err) => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\`\`\``).join("\n\n")}
+${mainOnly.map((err) => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\`\`\``).join("\n\n")}
 </details>
 `
     : "";
   const bothChangedMessage = bothChanged.length
     ? `
 <details>
-<summary>Errors that changed:</summary>
+<summary>Errors that changed between main and the branch:</summary>
 
 ${bothChanged
   .map(
     (err) =>
-      `Package: ${err.path}\nNightly error:\n\`\`\`\n${err.nightlyError}\n\`\`\`\nBranch error:\n\`\`\`\n${err.branchError}\n\`\`\``
+      `Package: ${err.path}\nMain error:\n\`\`\`\n${err.mainError}\n\`\`\`\nBranch error:\n\`\`\`\n${err.branchError}\n\`\`\``
   )
   .join("\n\n")}
 </details>
 `
     : "";
 
-  return branchOnlyMessage + bothChangedMessage + nightlyOnlyMessage;
+  return branchOnlyMessage + bothChangedMessage + mainOnlyMessage;
 }
 
 main().catch((e) => {
