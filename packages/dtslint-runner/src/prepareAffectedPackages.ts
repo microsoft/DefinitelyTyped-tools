@@ -49,6 +49,7 @@ export async function prepareAffectedPackages({
 
 export async function installDependencies(packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
+  const start = Date.now();
 
   // We need to run `npm install` for all dependencies, too, so that we have dependencies' dependencies installed.
   for (const pkg of packages) {
@@ -67,4 +68,6 @@ export async function installDependencies(packages: Iterable<TypingsData>, types
       console.log(` from ${cwd}: ${stdout}`);
     }
   }
+
+  console.log(`Took ${(Date.now() - start) / 1000} s`);
 }
