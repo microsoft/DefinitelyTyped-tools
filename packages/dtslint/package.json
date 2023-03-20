@@ -28,6 +28,7 @@
     "@definitelytyped/utils": "^0.0.153",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
+    "@typescript-eslint/types": "^5.56.0",
     "@typescript-eslint/typescript-estree": "^5.55.0",
     "@typescript-eslint/utils": "^5.55.0",
     "eslint": "^8.17.0",
