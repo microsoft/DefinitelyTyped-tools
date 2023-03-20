@@ -480,6 +480,7 @@
 @types/favicons
 @types/firebase
 @types/generic-pool
+@types/glob
 @types/got
 @types/hapi
 @types/helmet
