@@ -9,7 +9,6 @@ const ruleTester = new ESLintUtils.RuleTester({
 ruleTester.run("redundant-undefined", redundantUndefined, {
   invalid: [
     {
-
       code: `function f(s?: string | undefined): void {}`,
       errors: [
         {
@@ -19,7 +18,6 @@ ruleTester.run("redundant-undefined", redundantUndefined, {
       ],
     },
     {
-
       code: `function f([a, b]?: [number, number] | undefined): void {}`,
       errors: [
         {
@@ -29,11 +27,13 @@ ruleTester.run("redundant-undefined", redundantUndefined, {
       ],
     },
   ],
-  valid: [`
+  valid: [
+    `
 interface I {
     ok?: string | undefined;
     s?: string;
     almost?: number | string;
 }
-`],
+`,
+  ],
 });
