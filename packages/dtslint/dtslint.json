@@ -6,7 +6,6 @@
         "expect": true,
         "no-import-default-of-export-equals": true,
         "no-padding": true,
-        "redundant-undefined": true,
         "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
         "no-single-declare-module": true,
