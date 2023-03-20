@@ -17,10 +17,6 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    // 1. Handle parameters
-    // 2. If it's an optional parameter
-    // 3. Check if there is a type
-    // 4. Check if the type contains the undefined keyword.
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       TSUnionType(node) {
