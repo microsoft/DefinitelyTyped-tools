@@ -148,26 +148,19 @@ export function isArray(value: any): value is readonly {}[] {
 }
 
 /**
- * Maps an array. If the mapped value is an array, it is spread into the result.
+ * Maps an array. The mapped value is spread into the result.
  *
  * @param array The array to map.
  * @param mapfn The callback used to map the result into one or more values.
  */
 export function flatMap<T, U>(
   array: readonly T[] | undefined,
-  mapfn: (x: T, i: number) => U | readonly U[] | undefined
+  mapfn: (x: T, i: number) => readonly U[]
 ): readonly U[] {
   let result: U[] | undefined;
   if (array) {
     for (let i = 0; i < array.length; i++) {
-      const v = mapfn(array[i], i);
-      if (v) {
-        if (isArray(v)) {
-          result = addRange(result, v);
-        } else {
-          result = append(result, v);
-        }
-      }
+      result = addRange(result, mapfn(array[i], i));
     }
   }
   return result || [];
