@@ -5,6 +5,7 @@
     "target": "esnext"
   },
     "files": [
-        "file.ts"
+        "file.ts",
+        "deep/import.d.ts"
     ]
 }

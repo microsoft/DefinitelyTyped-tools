@@ -1,7 +1,6 @@
 {
 	"extends": "./dtslint.json",
 	"rules": {
-		"no-declare-current-package": true,
 		"no-self-import": true,
 		"no-outside-dependencies": true,
 
