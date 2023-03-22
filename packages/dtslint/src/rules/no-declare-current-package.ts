@@ -1,6 +1,5 @@
 import { getCommonDirectoryName, createRule } from "../util";
 import { ESLintUtils, AST_NODE_TYPES } from "@typescript-eslint/utils";
-
 const rule = createRule({
   name: "no-declare-current-package",
   defaultOptions: [],
