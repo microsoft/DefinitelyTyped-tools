@@ -153,10 +153,7 @@ export function isArray(value: any): value is readonly {}[] {
  * @param array The array to map.
  * @param mapfn The callback used to map the result into one or more values.
  */
-export function flatMap<T, U>(
-  array: readonly T[] | undefined,
-  mapfn: (x: T, i: number) => readonly U[]
-): readonly U[] {
+export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: number) => readonly U[]): readonly U[] {
   let result: U[] | undefined;
   if (array) {
     for (let i = 0; i < array.length; i++) {
