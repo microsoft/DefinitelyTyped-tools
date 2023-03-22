@@ -63,7 +63,7 @@ export type CompilerOptionsRaw = {
   [K in keyof CompilerOptions]?: CompilerOptions[K] extends number | undefined
     ? string | number | undefined
     : CompilerOptions[K];
-}
+};
 
 export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
@@ -129,7 +129,10 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: DefinitelyTypedIn
   if (!("module" in options)) {
     throw new Error('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
   }
-  if (options.module?.toString().toLowerCase() !== "commonjs" && options.module?.toString().toLowerCase() !== "node16") {
+  if (
+    options.module?.toString().toLowerCase() !== "commonjs" &&
+    options.module?.toString().toLowerCase() !== "node16"
+  ) {
     throw new Error(`When "module" is present, it must be set to "commonjs" or "node16".`);
   }
 
