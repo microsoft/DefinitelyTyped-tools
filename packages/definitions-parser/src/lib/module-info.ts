@@ -427,7 +427,7 @@ export function createSourceFile(
   moduleResolutionHost: ts.ModuleResolutionHost,
   compilerOptions: ts.CompilerOptions
 ): ts.SourceFile {
-  const file = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/ false);
+  const file = ts.createSourceFile(filename, content, ts.ScriptTarget.Latest, /*setParentNodes*/ true);
   file.impliedNodeFormat = ts.getImpliedNodeFormatForFile(
     filename as ts.Path,
     /*packageJsonInfoCache*/ undefined,

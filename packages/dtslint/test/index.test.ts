@@ -2,7 +2,7 @@
 import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 import { existsSync, readdirSync, statSync } from "fs";
-import { checkTsconfig } from "../src/checks";
+import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 
 const testDir = __dirname;
@@ -30,8 +30,8 @@ function testSingle(testDirectory: string) {
 }
 
 describe("dtslint", () => {
-  const base = {
-    module: "commonjs" as any,
+  const base: CompilerOptionsRaw = {
+    module: "commonjs",
     lib: ["es6"],
     noImplicitAny: true,
     noImplicitThis: true,
@@ -51,6 +51,16 @@ describe("dtslint", () => {
     });
     it("allows exactOptionalPropertyTypes: true", () => {
       expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: true }, { relativeBaseUrl: "../" })).toBeFalsy();
+    });
+    it("allows module: node16", () => {
+      expect(checkTsconfig({ ...base, module: "node16" }, { relativeBaseUrl: "../" })).toBeFalsy();
+    });
+    it("disallows missing `module`", () => {
+      const options = { ...base };
+      delete options.module;
+      expect(() => checkTsconfig(options, { relativeBaseUrl: "../" })).toThrow(
+        'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.'
+      );
     });
     it("disallows exactOptionalPropertyTypes: false", () => {
       expect(() => checkTsconfig({ ...base, exactOptionalPropertyTypes: false }, { relativeBaseUrl: "../" })).toThrow(

@@ -7,7 +7,7 @@ import { allReferencedFiles, getModuleInfo, getTestDependencies } from "../src/l
 const fs = createMockDT().fs;
 const moduleResolutionHost = createModuleResolutionHost(fs);
 const compilerOptions = {
-  module: ts.ModuleKind.CommonJS,
+  module: ts.ModuleKind.Node16,
   baseUrl: "/DefinitelyTyped/types",
   typeRoots: ["/DefinitelyTyped/types"],
 };

@@ -56,16 +56,24 @@ export async function checkPackageJson(dirPath: string, typesVersions: readonly 
   }
 }
 
+/**
+ * numbers in `CompilerOptions` might be enum values mapped from strings
+ */
+export type CompilerOptionsRaw = {
+  [K in keyof CompilerOptions]?: CompilerOptions[K] extends number | undefined
+    ? string | number | undefined
+    : CompilerOptions[K];
+}
+
 export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo | undefined): void {
+export function checkTsconfig(options: CompilerOptionsRaw, dt: DefinitelyTypedInfo | undefined): void {
   if (dt) {
     const { relativeBaseUrl } = dt;
 
     const mustHave = {
-      module: "commonjs",
       noEmit: true,
       forceConsistentCasingInFileNames: true,
       baseUrl: relativeBaseUrl,
@@ -104,6 +112,7 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
         case "noUnusedLocals":
         case "noUnusedParameters":
         case "exactOptionalPropertyTypes":
+        case "module":
           break;
         default:
           if (!(key in mustHave)) {
@@ -115,6 +124,13 @@ export function checkTsconfig(options: CompilerOptions, dt: DefinitelyTypedInfo 
 
   if (!("lib" in options)) {
     throw new Error('Must specify "lib", usually to `"lib": ["es6"]` or `"lib": ["es6", "dom"]`.');
+  }
+
+  if (!("module" in options)) {
+    throw new Error('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
+  }
+  if (options.module?.toString().toLowerCase() !== "commonjs" && options.module?.toString().toLowerCase() !== "node16") {
+    throw new Error(`When "module" is present, it must be set to "commonjs" or "node16".`);
   }
 
   if ("strict" in options) {
