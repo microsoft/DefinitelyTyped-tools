@@ -2,7 +2,6 @@
 	"extends": "./dtslint.json",
 	"rules": {
 		"no-self-import": true,
-		"no-outside-dependencies": true,
 
 		"no-redundant-jsdoc": false,
 		"no-redundant-jsdoc-2": true,
