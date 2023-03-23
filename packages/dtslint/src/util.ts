@@ -31,33 +31,6 @@ export function getCommonDirectoryName(files: readonly string[]): string {
   return basename(minDir);
 }
 
-export function eachModuleStatement(sourceFile: ts.SourceFile, action: (statement: ts.Statement) => void): void {
-  if (!sourceFile.isDeclarationFile) {
-    return;
-  }
-
-  for (const node of sourceFile.statements) {
-    if (ts.isModuleDeclaration(node)) {
-      const statements = getModuleDeclarationStatements(node);
-      if (statements) {
-        for (const statement of statements) {
-          action(statement);
-        }
-      }
-    } else {
-      action(node);
-    }
-  }
-}
-
-export function getModuleDeclarationStatements(node: ts.ModuleDeclaration): readonly ts.Statement[] | undefined {
-  let { body } = node;
-  while (body && body.kind === ts.SyntaxKind.ModuleDeclaration) {
-    body = body.body;
-  }
-  return body && ts.isModuleBlock(body) ? body.statements : undefined;
-}
-
 export async function getCompilerOptions(dirPath: string): Promise<ts.CompilerOptions> {
   const tsconfigPath = join(dirPath, "tsconfig.json");
   if (!(await pathExists(tsconfigPath))) {
