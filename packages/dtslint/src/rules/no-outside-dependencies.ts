@@ -1,4 +1,4 @@
-import { createRule } from "../util";
+import { createRule, isMainFile } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
 const rule = createRule({
   name: "no-outside-dependencies",
@@ -15,7 +15,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (context.getFilename().endsWith("index.d.ts")) {
+    if (isMainFile(context.getFilename(), /*allowNested*/ true)) {
       const parserServices = ESLintUtils.getParserServices(context);
       const hasNodeReference = parserServices.program.getSourceFiles().some(f => f.typeReferenceDirectives.some(dir => dir.fileName === "node"));
       for (const sourceFile of parserServices.program.getSourceFiles()) {
