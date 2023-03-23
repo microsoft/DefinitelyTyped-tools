@@ -6,7 +6,7 @@ const rule = createRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Don't use an ambient module declaration of the current package; use a normal module.",
+      description: "Don't import things in `DefinitelyTyped/node_modules`.",
       recommended: "error",
     },
     messages: {
