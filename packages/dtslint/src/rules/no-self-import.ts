@@ -7,7 +7,7 @@ const rule = createRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Ensure consistency of DefinitelyTyped headers.",
+      description: "Forbids declaration files to import the current package using a global import.",
       recommended: "error",
     },
     messages: {
