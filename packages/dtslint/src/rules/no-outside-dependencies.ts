@@ -10,24 +10,28 @@ const rule = createRule({
       recommended: "error",
     },
     messages: {
-      noOutsideDependencies: `File {{fileName}} comes from a \`node_modules\` but is not declared in this type's \`package.json\`. `
+      noOutsideDependencies: `File {{fileName}} comes from a \`node_modules\` but is not declared in this type's \`package.json\`. `,
     },
     schema: [],
   },
   create(context) {
     if (isMainFile(context.getFilename(), /*allowNested*/ true)) {
       const parserServices = ESLintUtils.getParserServices(context);
-      const hasNodeReference = parserServices.program.getSourceFiles().some(f => f.typeReferenceDirectives.some(dir => dir.fileName === "node"));
+      const hasNodeReference = parserServices.program
+        .getSourceFiles()
+        .some((f) => f.typeReferenceDirectives.some((dir) => dir.fileName === "node"));
       for (const sourceFile of parserServices.program.getSourceFiles()) {
         const fileName = sourceFile.fileName;
-        if (fileName.includes("/DefinitelyTyped/node_modules/")
-          && !parserServices.program.isSourceFileDefaultLibrary(sourceFile)
-          && !(hasNodeReference && fileName.includes("buffer"))) {
+        if (
+          fileName.includes("/DefinitelyTyped/node_modules/") &&
+          !parserServices.program.isSourceFileDefaultLibrary(sourceFile) &&
+          !(hasNodeReference && fileName.includes("buffer"))
+        ) {
           context.report({
             messageId: "noOutsideDependencies",
             data: { fileName },
-            loc: { column: 0, line: 1 }
-          })
+            loc: { column: 0, line: 1 },
+          });
         }
       }
     }
