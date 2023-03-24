@@ -165,7 +165,6 @@ export * from 'buffer';
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference types="node" />
-/* tslint:disable-next-line:no-self-import */
 import webpack = require('webpack');
 export = webpack;
 `
