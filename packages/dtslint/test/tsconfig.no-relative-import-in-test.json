@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "esnext"
+  },
+  "files": [
+    "file.ts",
+    "index.test.ts",
+    "./abc.d.ts",
+    "./no-relative-import-in-test/abc.d.ts",
+    "./no-relative-import-in-test/index.d.ts",
+    "./no-relative-import-in-test/index.test.ts"
+  ]
+}

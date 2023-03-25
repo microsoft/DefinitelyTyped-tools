@@ -1,5 +1,0 @@
-import { x } from "./declarationFile.d";
-                  ~~~~~~~~~~~~~~~~~~~~~ [0]
-import { y } from "./testFile";
-
-[0]: Test file should not use a relative import. Use a global import as if this were a user of the package. See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/no-relative-import-in-test.md
