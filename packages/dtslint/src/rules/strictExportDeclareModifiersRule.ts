@@ -138,15 +138,15 @@ function isModuleDeclaration(node: ts.Node): node is ts.ModuleDeclaration {
 }
 
 function isDeclare(node: ts.Node): boolean {
-  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some(m => m.kind === ts.SyntaxKind.DeclareKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword);
 }
 
 function isExport(node: ts.Node): boolean {
-  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some(m => m.kind === ts.SyntaxKind.ExportKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 }
 
 function isDefault(node: ts.Node): boolean {
-  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some(m => m.kind === ts.SyntaxKind.DefaultKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword);
 }
 
 // tslint:disable-next-line:max-line-length

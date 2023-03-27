@@ -12,7 +12,7 @@ const rule = createRule({
       recommended: "error",
     },
     messages: {
-      noImportDefaultOfExportEquals: `The module {{moduleName}} uses \`export = \`. Import with \`import {{importName}} = require({{moduleName}})\`.`
+      noImportDefaultOfExportEquals: `The module {{moduleName}} uses \`export = \`. Import with \`import {{importName}} = require({{moduleName}})\`.`,
     },
     schema: [],
   },
@@ -21,28 +21,32 @@ const rule = createRule({
     const checker = parserServices.program.getTypeChecker();
     return {
       ImportDeclaration(node) {
-        const defaultName = node.specifiers.find(spec => spec.type === "ImportDefaultSpecifier")?.local
+        const defaultName = node.specifiers.find((spec) => spec.type === "ImportDefaultSpecifier")?.local;
         if (!defaultName) {
-          return
+          return;
         }
-        const importName = defaultName.name
-        const source = parserServices.esTreeNodeToTSNodeMap.get(node.source)
-        const sym = checker.getSymbolAtLocation(source)
-        if (sym?.declarations?.some((d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals))) {
+        const importName = defaultName.name;
+        const source = parserServices.esTreeNodeToTSNodeMap.get(node.source);
+        const sym = checker.getSymbolAtLocation(source);
+        if (
+          sym?.declarations?.some((d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals))
+        ) {
           context.report({
             messageId: "noImportDefaultOfExportEquals",
             data: { moduleName: node.source, importName },
             node: defaultName,
-          })
+          });
         }
-      }
+      },
     };
   },
 });
 
 function getStatements(decl: ts.Declaration): readonly ts.Statement[] | undefined {
-  return ts.isSourceFile(decl) ? decl.statements
-    : ts.isModuleDeclaration(decl) ? getModuleDeclarationStatements(decl)
+  return ts.isSourceFile(decl)
+    ? decl.statements
+    : ts.isModuleDeclaration(decl)
+    ? getModuleDeclarationStatements(decl)
     : undefined;
 }
 
