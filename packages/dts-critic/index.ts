@@ -829,8 +829,8 @@ function isExportConstruct(node: ts.Node): boolean {
 }
 
 function hasExportModifier(node: ts.Node): boolean {
-  if (node.modifiers) {
-    return node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
+  if (ts.canHaveModifiers(node)) {
+    return !!ts.getModifiers(node)?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
   }
   return false;
 }

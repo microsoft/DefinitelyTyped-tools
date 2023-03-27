@@ -54,7 +54,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
     // `declare global` and `declare module "foo"` OK. `declare namespace N` not OK, should be `export namespace`.
     if (!isDeclareGlobalOrExternalModuleDeclaration(node)) {
       if (isDeclare(node)) {
-        fail(mod(node, ts.SyntaxKind.DeclareKeyword), "'declare' keyword is redundant here.");
+        fail(mod(node, ts.SyntaxKind.DeclareKeyword)!, "'declare' keyword is redundant here.");
       }
       if (autoExportEnabled && !isExport(node)) {
         fail(
@@ -76,7 +76,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
         node.kind === ts.SyntaxKind.InterfaceDeclaration ||
         node.kind === ts.SyntaxKind.TypeAliasDeclaration
       ) {
-        fail(mod(node, ts.SyntaxKind.DeclareKeyword), "'declare' keyword is redundant here.");
+        fail(mod(node, ts.SyntaxKind.DeclareKeyword)!, "'declare' keyword is redundant here.");
       }
     }
   }
@@ -85,8 +85,8 @@ function walk(ctx: Lint.WalkContext<void>): void {
     ctx.addFailureAtNode(node, failure(Rule.metadata.ruleName, reason));
   }
 
-  function mod(node: ts.Statement, kind: ts.SyntaxKind): ts.Node {
-    return node.modifiers!.find((m) => m.kind === kind)!;
+  function mod(node: ts.Statement, kind: ts.SyntaxKind): ts.Node | undefined {
+    return ts.canHaveModifiers(node) ? ts.getModifiers(node)?.find((m) => m.kind === kind) : undefined;
   }
 
   function checkModule(moduleDeclaration: ts.ModuleDeclaration): void {
@@ -110,7 +110,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
       // Compiler will error for 'declare' here anyway, so just check for 'export'.
       if (isExport(s) && autoExportEnabled && !isDefault(s)) {
         fail(
-          mod(s, ts.SyntaxKind.ExportKeyword),
+          mod(s, ts.SyntaxKind.ExportKeyword)!,
           "'export' keyword is redundant here because " +
             "all declarations in this module are exported automatically. " +
             "If you have a good reason to export some declarations and not others, " +
@@ -138,15 +138,15 @@ function isModuleDeclaration(node: ts.Node): node is ts.ModuleDeclaration {
 }
 
 function isDeclare(node: ts.Node): boolean {
-  return Lint.hasModifier(node.modifiers, ts.SyntaxKind.DeclareKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword);
 }
 
 function isExport(node: ts.Node): boolean {
-  return Lint.hasModifier(node.modifiers, ts.SyntaxKind.ExportKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 }
 
 function isDefault(node: ts.Node): boolean {
-  return Lint.hasModifier(node.modifiers, ts.SyntaxKind.DefaultKeyword);
+  return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword);
 }
 
 // tslint:disable-next-line:max-line-length

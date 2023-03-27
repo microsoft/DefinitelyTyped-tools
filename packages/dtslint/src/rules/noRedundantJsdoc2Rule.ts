@@ -222,7 +222,8 @@ function removeTypeExpression(
 function isInAmbientContext(node: ts.Node): boolean {
   return ts.isSourceFile(node)
     ? node.isDeclarationFile
-    : Lint.hasModifier(node.modifiers, ts.SyntaxKind.DeclareKeyword) || isInAmbientContext(node.parent!);
+    : (ts.canHaveModifiers(node) && ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword)) ||
+        isInAmbientContext(node.parent!);
 }
 
 const redundantTags = new Set([
