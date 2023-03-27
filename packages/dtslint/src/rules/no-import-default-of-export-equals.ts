@@ -20,6 +20,7 @@ const rule = createRule({
     const parserServices = ESLintUtils.getParserServices(context);
     const checker = parserServices.program.getTypeChecker();
     return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       ImportDeclaration(node) {
         const defaultName = node.specifiers.find((spec) => spec.type === "ImportDefaultSpecifier")?.local;
         if (!defaultName) {

@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`analysis summarizePackageBenchmarks snapshot 1`] = `
-Object {
+{
   "batchRunStart": "2019-06-05T21:02:57.283Z",
   "benchmarkDuration": 6146.653569,
-  "completions": Object {
+  "completions": {
     "mean": 148.38288194,
     "meanCoefficientOfVariation": 0.23178183452633877,
     "median": 146.9316702,
     "standardDeviation": 14.526224099473964,
     "trials": 20,
-    "worst": Object {
-      "completionsDurations": Array [
+    "worst": {
+      "completionsDurations": [
         260.302261,
         161.823348,
         209.062858,
@@ -23,7 +23,7 @@ Object {
       "identifierText": "abbrev",
       "line": 12,
       "offset": 15,
-      "quickInfoDurations": Array [
+      "quickInfoDurations": [
         144.181488,
         128.053511,
         181.161561,
@@ -38,14 +38,14 @@ Object {
   "packageName": "abbrev",
   "packageVersionMajor": 1,
   "packageVersionMinor": 1,
-  "quickInfo": Object {
+  "quickInfo": {
     "mean": 140.33250924,
     "meanCoefficientOfVariation": 0.21107195517210994,
     "median": 139.3310676,
     "standardDeviation": 12.553366997435981,
     "trials": 20,
-    "worst": Object {
-      "completionsDurations": Array [
+    "worst": {
+      "completionsDurations": [
         188.397316,
         111.76699,
         154.360542,
@@ -57,7 +57,7 @@ Object {
       "identifierText": "ReadonlyArray",
       "line": 11,
       "offset": 14,
-      "quickInfoDurations": Array [
+      "quickInfoDurations": [
         209.811926,
         229.587525,
         166.220571,
@@ -67,7 +67,7 @@ Object {
       "start": 262,
     },
   },
-  "relationCacheSizes": Object {
+  "relationCacheSizes": {
     "assignable": 104,
     "identity": 0,
     "subtype": 0,
