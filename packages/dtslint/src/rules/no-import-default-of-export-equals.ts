@@ -17,9 +17,8 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    // TODO: Remember to delete tslint tests
-      const parserServices = ESLintUtils.getParserServices(context);
-      const checker = parserServices.program.getTypeChecker();
+    const parserServices = ESLintUtils.getParserServices(context);
+    const checker = parserServices.program.getTypeChecker();
     return {
       ImportDeclaration(node) {
         const defaultName = node.specifiers.find(spec => spec.type === "ImportDefaultSpecifier")?.local
