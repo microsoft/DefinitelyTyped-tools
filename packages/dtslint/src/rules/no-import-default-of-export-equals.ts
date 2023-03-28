@@ -31,7 +31,9 @@ const rule = createRule({
           const source = parserServices.esTreeNodeToTSNodeMap.get(node.source);
           const sym = checker.getSymbolAtLocation(source);
           if (
-            sym?.declarations?.some((d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals))
+            sym?.declarations?.some((d) =>
+              getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals)
+            )
           ) {
             context.report({
               messageId: "noImportDefaultOfExportEquals",
@@ -41,8 +43,7 @@ const rule = createRule({
           }
         },
       };
-    }
-    else {
+    } else {
       return {};
     }
   },
