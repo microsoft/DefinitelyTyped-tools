@@ -42,7 +42,10 @@ export async function checkPackageJson(dirPath: string, typesVersions: readonly 
       case "imports":
       case "exports":
       case "type":
+      case "name":
+      case "version":
         // "private"/"typesVersions"/"types" checked above, "dependencies" / "license" checked by types-publisher,
+        // TODO: "name"/"version" checked by types-publisher/CI.
         break;
       case "typesVersions":
       case "types":
@@ -69,15 +72,11 @@ export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-export function checkTsconfig(options: CompilerOptionsRaw, dt: DefinitelyTypedInfo | undefined): void {
+export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
   if (dt) {
-    const { relativeBaseUrl } = dt;
-
     const mustHave = {
       noEmit: true,
       forceConsistentCasingInFileNames: true,
-      baseUrl: relativeBaseUrl,
-      typeRoots: [relativeBaseUrl],
       types: [],
     };
 

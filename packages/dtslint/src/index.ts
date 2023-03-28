@@ -130,8 +130,6 @@ async function runTests(
   expectOnly: boolean,
   tsLocal: string | undefined
 ): Promise<void> {
-  const isOlderVersion = /^v(0\.)?\d+$/.test(basename(dirPath));
-
   const indexText = await readFile(joinPaths(dirPath, "index.d.ts"), "utf-8");
   // If this *is* on DefinitelyTyped, types-publisher will fail if it can't parse the header.
   const dt = indexText.includes("// Type definitions for");
@@ -173,7 +171,7 @@ async function runTests(
   ) as TypeScriptVersion;
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(dirPath, tsVersion, tsVersion, isOlderVersion, dt, expectOnly, tsLocal, /*isLatest*/ true);
+    await testTypesVersion(dirPath, tsVersion, tsVersion, dt, expectOnly, tsLocal, /*isLatest*/ true);
   } else {
     // For example, typesVersions of [3.2, 3.5, 3.6] will have
     // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -194,7 +192,7 @@ async function runTests(
       if (lows.length > 1) {
         console.log("testing from", low, "to", hi, "in", versionPath);
       }
-      await testTypesVersion(versionPath, low, hi, isOlderVersion, dt, expectOnly, undefined, isLatest);
+      await testTypesVersion(versionPath, low, hi, dt, expectOnly, undefined, isLatest);
     }
   }
 }
@@ -219,17 +217,13 @@ async function testTypesVersion(
   dirPath: string,
   lowVersion: TsVersion,
   hiVersion: TsVersion,
-  isOlderVersion: boolean,
   dt: boolean,
   expectOnly: boolean,
   tsLocal: string | undefined,
   isLatest: boolean
 ): Promise<void> {
   await checkTslintJson(dirPath, dt);
-  checkTsconfig(
-    await getCompilerOptions(dirPath),
-    dt ? { relativeBaseUrl: ".." + (isOlderVersion ? "/.." : "") + (isLatest ? "" : "/..") + "/" } : undefined
-  );
+  checkTsconfig(await getCompilerOptions(dirPath), dt);
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     throw new Error(err);
