@@ -19,27 +19,32 @@ const rule = createRule({
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context);
     const checker = parserServices.program.getTypeChecker();
-    return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      ImportDeclaration(node) {
-        const defaultName = node.specifiers.find((spec) => spec.type === "ImportDefaultSpecifier")?.local;
-        if (!defaultName) {
-          return;
-        }
-        const importName = defaultName.name;
-        const source = parserServices.esTreeNodeToTSNodeMap.get(node.source);
-        const sym = checker.getSymbolAtLocation(source);
-        if (
-          sym?.declarations?.some((d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals))
-        ) {
-          context.report({
-            messageId: "noImportDefaultOfExportEquals",
-            data: { moduleName: node.source, importName },
-            node: defaultName,
-          });
-        }
-      },
-    };
+    if (context.getFilename().endsWith(".d.ts")) {
+      return {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        ImportDeclaration(node) {
+          const defaultName = node.specifiers.find((spec) => spec.type === "ImportDefaultSpecifier")?.local;
+          if (!defaultName) {
+            return;
+          }
+          const importName = defaultName.name;
+          const source = parserServices.esTreeNodeToTSNodeMap.get(node.source);
+          const sym = checker.getSymbolAtLocation(source);
+          if (
+            sym?.declarations?.some((d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals))
+          ) {
+            context.report({
+              messageId: "noImportDefaultOfExportEquals",
+              data: { moduleName: node.source.value, importName },
+              node: defaultName,
+            });
+          }
+        },
+      };
+    }
+    else {
+      return {};
+    }
   },
 });
 
