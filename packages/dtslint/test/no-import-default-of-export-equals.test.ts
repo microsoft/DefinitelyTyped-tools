@@ -27,7 +27,7 @@ import a from "a";
         {
           line: 7,
           messageId: "noImportDefaultOfExportEquals",
-          data: { moduleName: 'a', importName: 'a' },
+          data: { moduleName: "a", importName: "a" },
         },
       ],
     },
