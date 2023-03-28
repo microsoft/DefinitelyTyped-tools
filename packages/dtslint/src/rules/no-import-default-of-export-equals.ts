@@ -34,7 +34,7 @@ const rule = createRule({
         ) {
           context.report({
             messageId: "noImportDefaultOfExportEquals",
-            data: { moduleName: node.source, importName },
+            data: { moduleName: node.source.value, importName },
             node: defaultName,
           });
         }
