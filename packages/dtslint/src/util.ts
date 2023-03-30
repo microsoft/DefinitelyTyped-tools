@@ -1,6 +1,6 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 import assert = require("assert");
-import { pathExists, readFile } from "fs-extra";
+import { pathExistsSync, readFileSync } from "fs-extra";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
@@ -9,9 +9,11 @@ export const createRule = ESLintUtils.RuleCreator(
   (name) => `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint/src/rules/${name}.ts`
 );
 
-export async function readJson(path: string) {
-  const text = await readFile(path, "utf-8");
-  return JSON.parse(stripJsonComments(text));
+export function packageNameFromPath(path: string): string {
+  return /^v\d+(\.\d+)?$/.exec(path) || /^ts\d\.\d/.exec(path) ? basename(dirname(path)) : basename(path)
+}
+export function readJson(path: string): Record<string, unknown> {
+  return JSON.parse(stripJsonComments(readFileSync(path, "utf-8")));
 }
 
 export function failure(ruleName: string, s: string): string {
@@ -31,12 +33,12 @@ export function getCommonDirectoryName(files: readonly string[]): string {
   return basename(minDir);
 }
 
-export async function getCompilerOptions(dirPath: string): Promise<ts.CompilerOptions> {
+export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
   const tsconfigPath = join(dirPath, "tsconfig.json");
-  if (!(await pathExists(tsconfigPath))) {
+  if (!pathExistsSync(tsconfigPath)) {
     throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
   }
-  return (await readJson(tsconfigPath)).compilerOptions;
+  return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
 }
 
 export function withoutPrefix(s: string, prefix: string): string | undefined {

@@ -2,7 +2,7 @@
 import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 import { existsSync, readdirSync, statSync } from "fs";
-import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
+import { CompilerOptionsRaw, checkPackageJsonContents, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 
 const testDir = __dirname;
@@ -37,43 +37,106 @@ describe("dtslint", () => {
     noImplicitThis: true,
     strictNullChecks: true,
     strictFunctionTypes: true,
-    baseUrl: "../",
-    typeRoots: ["../"],
     types: [],
     noEmit: true,
     forceConsistentCasingInFileNames: true,
   };
+  const pkgJson: Record<string, unknown> = {
+    "private": true,
+    "name": "@types/hapi",
+    "version": "18.0.0",
+    "dependencies": {
+      "@types/boom": "*",
+      "@types/catbox": "*",
+      "@types/iron": "*",
+      "@types/mimos": "*",
+      "@types/node": "*",
+      "@types/podium": "*",
+      "@types/shot": "*",
+      "joi": "^17.3.0"
+    },
+    "devDependencies": {
+      "@types/hapi": "link:."
+    }
+  }
   describe("checks", () => {
-    it("disallows unknown compiler options", () => {
-      expect(() => checkTsconfig({ ...base, completelyInvented: true }, { relativeBaseUrl: "../" })).toThrow(
-        "Unexpected compiler option completelyInvented"
-      );
+    describe("checkTsconfig", () => {
+      it("disallows unknown compiler options", () => {
+        expect(checkTsconfig({ ...base, completelyInvented: true }, true)).toEqual([
+          "Unexpected compiler option completelyInvented"
+        ]);
+      });
+      it("allows exactOptionalPropertyTypes: true", () => {
+        expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: true }, true)).toEqual([]);
+      });
+      it("allows module: node16", () => {
+        expect(checkTsconfig({ ...base, module: "node16" }, true)).toEqual([]);
+      });
+      it("disallows missing `module`", () => {
+        const options = { ...base };
+        delete options.module;
+        expect(checkTsconfig(options, true)).toEqual([
+          'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.'
+        ]);
+      });
+      it("disallows exactOptionalPropertyTypes: false", () => {
+        expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: false }, true)).toEqual([
+          'When "exactOptionalPropertyTypes" is present, it must be set to `true`.'
+        ]);
+      });
+      it("disallows `paths`", () => {
+        expect(checkTsconfig({ ...base, paths: { "c": ['.'] } }, true)).toEqual([
+          'Unexpected compiler option paths'
+        ]);
+      });
     });
-    it("allows exactOptionalPropertyTypes: true", () => {
-      expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: true }, { relativeBaseUrl: "../" })).toBeFalsy();
+    describe("checkPackageJson", () => {
+      it("requires private: true", () => {
+        const pkg = { ...pkgJson };
+        delete pkg.private;
+        expect(checkPackageJsonContents("cort-start/hapi", pkg, [])).toEqual([
+          "cort-start/hapi/package.json should have `\"private\": true`"
+        ]);
+      });
+      it("requires name", () => {
+        const pkg = { ...pkgJson };
+        delete pkg.name;
+        expect(checkPackageJsonContents("cort-start/basis", pkg, [])).toEqual([
+          "cort-start/basis/package.json should have `\"name\": \"@types/basis\"`"
+        ]);
+      });
+      it("requires name to match", () => {
+        expect(checkPackageJsonContents("cort-start/basis", pkgJson, [])).toEqual([
+          "cort-start/basis/package.json should have `\"name\": \"@types/basis\"`"
+        ]);
+      });
+      it("requires devDependencies", () => {
+        const pkg = { ...pkgJson };
+        delete pkg.devDependencies;
+        expect(checkPackageJsonContents("cort-start/hapi", pkg, [])).toEqual([
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+        ]);
+      });
+      it("requires devDependencies to contain self-package", () => {
+        expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, devDependencies: { } }, [])).toEqual([
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+        ]);
+      });
+      it("requires devDependencies to contain self-package version 'link:.'", () => {
+        expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, devDependencies: { "@types/hapi": "*" } }, [])).toEqual([
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+        ]);
+      });
     });
-    it("allows module: node16", () => {
-      expect(checkTsconfig({ ...base, module: "node16" }, { relativeBaseUrl: "../" })).toBeFalsy();
-    });
-    it("disallows missing `module`", () => {
-      const options = { ...base };
-      delete options.module;
-      expect(() => checkTsconfig(options, { relativeBaseUrl: "../" })).toThrow(
-        'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.'
-      );
-    });
-    it("disallows exactOptionalPropertyTypes: false", () => {
-      expect(() => checkTsconfig({ ...base, exactOptionalPropertyTypes: false }, { relativeBaseUrl: "../" })).toThrow(
-        'When "exactOptionalPropertyTypes" is present, it must be set to `true`.'
-      );
-    });
-    it("disallows packages that are in notNeededPackages.json", () => {
-      expect(() => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }')).toThrow(
-        "notNeededPackages.json has an entry for foo."
-      );
-    });
-    it("allows packages that are not in notNeededPackages.json", () => {
-      expect(assertPackageIsNotDeprecated("foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
+    describe("assertPackageIsNotDeprecated", () => {
+      it("disallows packages that are in notNeededPackages.json", () => {
+        expect(() => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }')).toThrow(
+          "notNeededPackages.json has an entry for foo."
+        );
+      });
+      it("allows packages that are not in notNeededPackages.json", () => {
+        expect(assertPackageIsNotDeprecated("foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
+      });
     });
   });
   describe("rules", () => {

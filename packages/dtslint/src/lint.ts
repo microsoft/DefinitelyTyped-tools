@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExists } from "fs-extra";
+import { pathExistsSync } from "fs-extra";
 import { dirname, join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
@@ -37,7 +37,7 @@ export async function lint(
   const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const config = await getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
+  const config = getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
   const esfiles = [];
 
   for (const file of lintProgram.getSourceFiles()) {
@@ -190,13 +190,13 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
   }
 }
 
-export async function checkTslintJson(dirPath: string, dt: boolean): Promise<void> {
+export function checkTslintJson(dirPath: string, dt: boolean): void {
   const configPath = getConfigPath(dirPath);
   const shouldExtend = `@definitelytyped/dtslint/${dt ? "dt" : "dtslint"}.json`;
   const validateExtends = (extend: string | string[]) =>
     extend === shouldExtend || (!dt && Array.isArray(extend) && extend.some((val) => val === shouldExtend));
 
-  if (!(await pathExists(configPath))) {
+  if (!pathExistsSync(configPath)) {
     if (dt) {
       throw new Error(
         `On DefinitelyTyped, must include \`tslint.json\` containing \`{ "extends": "${shouldExtend}" }\`.\n` +
@@ -206,8 +206,8 @@ export async function checkTslintJson(dirPath: string, dt: boolean): Promise<voi
     return;
   }
 
-  const tslintJson = await readJson(configPath);
-  if (!validateExtends(tslintJson.extends)) {
+  const tslintJson = readJson(configPath);
+  if (!validateExtends(tslintJson.extends as any)) {
     throw new Error(`If 'tslint.json' is present, it should extend "${shouldExtend}"`);
   }
 }
@@ -216,14 +216,14 @@ function getConfigPath(dirPath: string): string {
   return joinPaths(dirPath, "tslint.json");
 }
 
-async function getLintConfig(
+function getLintConfig(
   expectedConfigPath: string,
   tsconfigPath: string,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined
-): Promise<IConfigurationFile> {
-  const configExists = await pathExists(expectedConfigPath);
+): IConfigurationFile {
+  const configExists = pathExistsSync(expectedConfigPath);
   const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
   // Second param to `findConfiguration` doesn't matter, since config path is provided.
   const config = Configuration.findConfiguration(configPath, "").results;

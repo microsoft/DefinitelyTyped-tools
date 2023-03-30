@@ -1,38 +1,48 @@
 import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { pathExists } from "fs-extra";
+import { pathExistsSync } from "fs-extra";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 
-import { readJson } from "./util";
-
-export async function checkPackageJson(dirPath: string, typesVersions: readonly TypeScriptVersion[]): Promise<void> {
+import { readJson, packageNameFromPath } from "./util";
+export function checkPackageJson(dirPath: string, typesVersions: readonly TypeScriptVersion[]): string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
-  const needsTypesVersions = typesVersions.length !== 0;
-  if (!(await pathExists(pkgJsonPath))) {
-    if (needsTypesVersions) {
-      throw new Error(`${dirPath}: Must have 'package.json' for "typesVersions"`);
-    }
-    return;
+  if (!pathExistsSync(pkgJsonPath)) {
+    throw new Error(`${dirPath}: Missing 'package.json'`);
   }
+  return checkPackageJsonContents(dirPath, readJson(pkgJsonPath), typesVersions);
+}
 
-  const pkgJson = (await readJson(pkgJsonPath)) as Record<string, unknown>;
-
-  if ((pkgJson as any).private !== true) {
-    throw new Error(`${pkgJsonPath} should set \`"private": true\``);
+export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string, unknown>, typesVersions: readonly TypeScriptVersion[]): string[] {
+  const errors = []
+  const pkgJsonPath = joinPaths(dirPath, "package.json");
+  const packageName = packageNameFromPath(dirPath);
+  const needsTypesVersions = typesVersions.length !== 0;
+  if (pkgJson.private !== true) {
+    errors.push(`${pkgJsonPath} should have \`"private": true\``)
+  }
+  if (pkgJson.name !== "@types/" + packageName) {
+    errors.push(`${pkgJsonPath} should have \`"name": "@types/${packageName}"\``);
+  }
+  if (typeof pkgJson.devDependencies !== "object"
+    || pkgJson.devDependencies === null
+    || (pkgJson.devDependencies as any)["@types/" + packageName] !== "link:.") {
+    errors.push(`In ${pkgJsonPath}, devDependencies must include \`"@types/${packageName}": "link:."\``);
   }
 
   if (needsTypesVersions) {
-    assert.strictEqual((pkgJson as any).types, "index", `"types" in '${pkgJsonPath}' should be "index".`);
+    assert.strictEqual(pkgJson.types, "index", `"types" in '${pkgJsonPath}' should be "index".`);
     const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
-    assert.deepEqual(
-      (pkgJson as any).typesVersions,
-      expected,
-      `"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`
-    );
+    if (!deepEquals(pkgJson.typesVersions, expected)) {
+      errors.push(`"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`)
+    }
   }
-
+  // TODO: This needs to be much longer
+  // TODO: Add checks for name and the other new field(s)
+  // TODO: Should they be disablable, in lint rules? I mean, if we have the data right now, the answer is NO
+  // TODO: If these aren't going to be lint rules, they should collect errors instead of throwing. Fixing one thing at a time sucks.
+  // TODO: Test on a toplevel package, a scoped package, and old-version package, and an old-TS-version package
   for (const key in pkgJson) {
     // tslint:disable-line forin
     switch (key) {
@@ -44,19 +54,21 @@ export async function checkPackageJson(dirPath: string, typesVersions: readonly 
       case "type":
       case "name":
       case "version":
+      case "devDependencies":
         // "private"/"typesVersions"/"types" checked above, "dependencies" / "license" checked by types-publisher,
-        // TODO: "name"/"version" checked by types-publisher/CI.
+        // TODO: "name"/"version" checked above, plus asserts in types-publisher
         break;
       case "typesVersions":
       case "types":
         if (!needsTypesVersions) {
-          throw new Error(`${pkgJsonPath} doesn't need to set "${key}" when no 'ts3.x' directories exist.`);
+          errors.push(`${pkgJsonPath} doesn't need to set "${key}" when no 'ts3.x' directories exist.`);
         }
         break;
       default:
-        throw new Error(`${pkgJsonPath} should not include field ${key}`);
+        errors.push(`${pkgJsonPath} should not include field ${key}`);
     }
   }
+  return errors
 }
 
 /**
@@ -72,7 +84,9 @@ export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
+// TODO: Maybe check ALL of tsconfig, not just compilerOptions
+export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): string[] {
+  const errors = []
   if (dt) {
     const mustHave = {
       noEmit: true,
@@ -84,7 +98,7 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
       const expected = mustHave[key];
       const actual = options[key];
       if (!deepEquals(expected, actual)) {
-        throw new Error(
+        errors.push(
           `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
             actual
           )}`
@@ -103,7 +117,6 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
         case "strictFunctionTypes":
         case "esModuleInterop":
         case "allowSyntheticDefaultImports":
-        case "paths":
         case "target":
         case "jsx":
         case "jsxFactory":
@@ -115,29 +128,28 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
           break;
         default:
           if (!(key in mustHave)) {
-            throw new Error(`Unexpected compiler option ${key}`);
+            errors.push(`Unexpected compiler option ${key}`);
           }
       }
     }
   }
-
   if (!("lib" in options)) {
-    throw new Error('Must specify "lib", usually to `"lib": ["es6"]` or `"lib": ["es6", "dom"]`.');
+    errors.push('Must specify "lib", usually to `"lib": ["es6"]` or `"lib": ["es6", "dom"]`.');
   }
 
   if (!("module" in options)) {
-    throw new Error('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
+    errors.push('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
   }
   if (
     options.module?.toString().toLowerCase() !== "commonjs" &&
     options.module?.toString().toLowerCase() !== "node16"
   ) {
-    throw new Error(`When "module" is present, it must be set to "commonjs" or "node16".`);
+    errors.push(`When "module" is present, it must be set to "commonjs" or "node16".`);
   }
 
   if ("strict" in options) {
     if (options.strict !== true) {
-      throw new Error('When "strict" is present, it must be set to `true`.');
+      errors.push('When "strict" is present, it must be set to `true`.');
     }
 
     for (const key of ["noImplicitAny", "noImplicitThis", "strictNullChecks", "strictFunctionTypes"]) {
@@ -148,22 +160,23 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): void {
   } else {
     for (const key of ["noImplicitAny", "noImplicitThis", "strictNullChecks", "strictFunctionTypes"]) {
       if (!(key in options)) {
-        throw new Error(`Expected \`"${key}": true\` or \`"${key}": false\`.`);
+        errors.push(`Expected \`"${key}": true\` or \`"${key}": false\`.`);
       }
     }
   }
   if ("exactOptionalPropertyTypes" in options) {
     if (options.exactOptionalPropertyTypes !== true) {
-      throw new Error('When "exactOptionalPropertyTypes" is present, it must be set to `true`.');
+      errors.push('When "exactOptionalPropertyTypes" is present, it must be set to `true`.');
     }
   }
 
   if (options.types && options.types.length) {
-    throw new Error(
+    errors.push(
       'Use `/// <reference types="..." />` directives in source files and ensure ' +
         'that the "types" field in your tsconfig is an empty array.'
     );
   }
+  return errors;
 }
 
 function deepEquals(expected: unknown, actual: unknown): boolean {

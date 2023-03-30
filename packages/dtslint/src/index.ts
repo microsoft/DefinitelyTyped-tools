@@ -9,7 +9,7 @@ import { basename, dirname, join as joinPaths, resolve } from "path";
 import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
-import { getCompilerOptions, mapDefinedAsync, withoutPrefix } from "./util";
+import { getCompilerOptions, mapDefinedAsync, packageNameFromPath, withoutPrefix } from "./util";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -132,12 +132,13 @@ async function runTests(
 ): Promise<void> {
   const indexText = await readFile(joinPaths(dirPath, "index.d.ts"), "utf-8");
   // If this *is* on DefinitelyTyped, types-publisher will fail if it can't parse the header.
+  // TODO: We really shouldn't be running off DT anymore.
   const dt = indexText.includes("// Type definitions for");
   if (dt) {
     // Someone may have copied text from DefinitelyTyped to their type definition and included a header,
     // so assert that we're really on DefinitelyTyped.
     const dtRoot = findDTRoot(dirPath);
-    const packageName = basename(dirPath);
+    const packageName = packageNameFromPath(dirPath);
     assertPathIsInDefinitelyTyped(dirPath, dtRoot);
     assertPathIsNotBanned(packageName);
     assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
@@ -162,7 +163,10 @@ async function runTests(
   });
 
   if (dt) {
-    await checkPackageJson(dirPath, typesVersions);
+    const packageJsonErrors = checkPackageJson(dirPath, typesVersions);
+    if (packageJsonErrors.length > 0) {
+      throw new Error(packageJsonErrors.join("\n"))
+    }
   }
 
   const minVersion = maxVersion(
@@ -222,8 +226,11 @@ async function testTypesVersion(
   tsLocal: string | undefined,
   isLatest: boolean
 ): Promise<void> {
-  await checkTslintJson(dirPath, dt);
-  checkTsconfig(await getCompilerOptions(dirPath), dt);
+  checkTslintJson(dirPath, dt);
+  const tsconfigErrors = checkTsconfig(getCompilerOptions(dirPath), dt);
+  if (tsconfigErrors.length > 0) {
+    throw new Error(tsconfigErrors.join("\n"))
+  }
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     throw new Error(err);
