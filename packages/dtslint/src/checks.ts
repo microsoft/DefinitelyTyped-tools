@@ -47,9 +47,14 @@ export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string
       errors.push(`"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`)
     }
   }
-  // TODO: Test on a toplevel package, a scoped package, and old-version package, and an old-TS-version package
+  // NOTE: I had to install eslint-plugin-import in DT bceause DT-tools hasn't shipped a new version
+  // DONE: normal package: 3box
+  // DONE: scoped package: adeira__js
+  // DONE: old-version package: gulp/v3
+  // DONE: old-TS-version package: har-format
+  // DONE: react
+  // DONE: node
   for (const key in pkgJson) {
-    // tslint:disable-line forin
     switch (key) {
       case "private":
       case "dependencies":
@@ -189,7 +194,14 @@ function deepEquals(expected: unknown, actual: unknown): boolean {
     return (
       actual instanceof Array && actual.length === expected.length && expected.every((e, i) => deepEquals(e, actual[i]))
     );
-  } else {
+  } else if (typeof expected === "object") {
+    for (const k in expected) {
+      if (!deepEquals((expected as any)[k], (actual as any)[k])) {
+        return false;
+      }
+    }
+    return true
+  }else {
     return expected === actual;
   }
 }

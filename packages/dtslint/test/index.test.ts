@@ -144,6 +144,9 @@ describe("dtslint", () => {
           `cort-start/hapi/package.json has bad "version": must end with ".0"`
         ]);
       });
+      it("works with old-version packages", () => {
+        expect(checkPackageJsonContents("cort-start/hapi/v16", { ...pkgJson, version: "16.6.0" }, [])).toEqual([])
+      });
     });
     describe("assertPackageIsNotDeprecated", () => {
       it("disallows packages that are in notNeededPackages.json", () => {

@@ -10,7 +10,8 @@ export const createRule = ESLintUtils.RuleCreator(
 );
 
 export function packageNameFromPath(path: string): string {
-  return /^v\d+(\.\d+)?$/.exec(path) || /^ts\d\.\d/.exec(path) ? basename(dirname(path)) : basename(path)
+  const base = basename(path);
+  return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base
 }
 export function readJson(path: string): Record<string, unknown> {
   return JSON.parse(stripJsonComments(readFileSync(path, "utf-8")));
