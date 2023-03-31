@@ -270,8 +270,8 @@ async function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    dependencies: Object.assign({}, ...allTypesVersions.map((v) => v.dependencies)),
-    testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"),
+    dependencies: Object.assign({}, ...allTypesVersions.map((v) => v.dependencies)), // TODO: Get these from packageJsonDependencies instead
+    testDependencies: getAllUniqueValues<"testDependencies", string>(allTypesVersions, "testDependencies"), // TODO: Get these from packageJsonDevDependencies instead
     pathMappings: Object.assign({}, ...allTypesVersions.map((v) => v.pathMappings)),
     packageJsonDependencies,
     contentHash: hash(
@@ -372,7 +372,7 @@ function getTypingDataForSingleTypesVersion(
       createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile), moduleResolutionHost, compilerOptions)
     );
   }
-
+  // TODO: All this should be pulled from package.json instead
   const { dependencies: dependenciesWithDeclaredModules, globals, declaredModules } = getModuleInfo(packageName, types);
   const declaredModulesSet = new Set(declaredModules);
   // Don't count an import of "x" as a dependency if we saw `declare module "x"` somewhere.
@@ -444,7 +444,7 @@ You should work with the latest version of ${root} instead.`);
   }
   return slash === -1 ? importText : root;
 }
-
+// TODO: Expand these checks too, adding name and version just like dtslint
 function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
   if (exports === undefined) return exports;
   if (typeof exports === "string") {
@@ -498,19 +498,9 @@ async function checkPackageJsonDependencies(
 
   for (const dependencyName of Object.keys(dependencies!)) {
     // `dependencies` cannot be null because of check above.
-    if (!(await getAllowedPackageJsonDependencies()).has(dependencyName)) {
-      const msg = dependencyName.startsWith("@types/")
-        ? `Dependency ${dependencyName} not in the allowed dependencies list.
-Don't use a 'package.json' for @types dependencies unless this package relies on
-an old version of types that have since been moved to the source repo.
-For example, if package *P* used to have types on Definitely Typed at @types/P,
-but now has its own types, a dependent package *D* will need to use package.json
-to refer to @types/P if it relies on old versions of P's types.
-In this case, please make a pull request to microsoft/DefinitelyTyped-tools adding @types/P to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`
-        : `Dependency ${dependencyName} not in the allowed dependencies list.
-If you are depending on another \`@types\` package, do *not* add it to a \`package.json\`. Path mapping should make the import work.
-For namespaced dependencies you then have to add a \`paths\` mapping from \`@namespace/*\` to \`namespace__*\` in \`tsconfig.json\`.
-If this is an external library that provides typings,  please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
+    if (!dependencyName.startsWith("@types/") && !(await getAllowedPackageJsonDependencies()).has(dependencyName)) {
+      const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
+Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
       throw new Error(`In ${path}: ${msg}`);
     }
 
