@@ -338,8 +338,7 @@ function getTypingDataForSingleTypesVersion(
     moduleResolutionHost,
     compilerOptions
   );
-
-  const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"]);
+  const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map(f => slicePrefix(f, "node_modules/@types/" + packageName + "/")));
   const otherFiles = ls.includes(unusedFilesName)
     ? fs
         // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
@@ -355,7 +354,13 @@ function getTypingDataForSingleTypesVersion(
       throw new Error(`In ${packageName}: A path segment is empty or all dots ${file}`);
     }
   }
-  checkAllFilesUsed(ls, usedFiles, otherFiles, packageName, fs);
+  // Note: findAllUnusedFiles also modifies usedFiles and otherFiles
+  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, packageName, fs);
+  // TODO: 1. Re-use the original error
+  // 2. Don't throw here, but instead return a list of errors to be printed by ???
+  if (unusedFiles.length) {
+    throw new Error('\n\t* ' + unusedFiles.map(unused => `Unused file ${unused}`).join("\n\t* ") + `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`)
+  }
   for (const untestedTypeFile of filter(
     otherFiles,
     (name) => name.endsWith(".d.ts") || name.endsWith(".d.mts") || name.endsWith(".d.cts")
@@ -412,6 +417,10 @@ function getTypingDataForSingleTypesVersion(
     declFiles: sort(types.keys()),
     tsconfigPathsForHash,
   };
+}
+
+function slicePrefix(s: string, prefix: string): string {
+  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
 }
 
 /**
@@ -563,6 +572,10 @@ interface TsConfig {
 }
 
 /** In addition to dependencies found in source code, also get dependencies from tsconfig. */
+// So...there's nothing to do here, but to move the path mappings requirements into dtslint/checks.ts
+// TODO: Stop calculating dependencies
+// TODO: Figure out if path mappings are still needed for xxx/v12 folders (or anything else?)
+//   do this by comparing the published package.json with the currently generated one, as well as the new ones that Jake has created in DT
 interface DependenciesAndPathMappings {
   readonly dependencies: { readonly [name: string]: DependencyVersion };
   readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
@@ -703,6 +716,7 @@ function parseDependencyVersionFromPath(
   const versionString = withoutStart(dependencyPath, `${mangleScopedPackage(dependencyName)}/`);
   const version = versionString === undefined ? undefined : parseVersionFromDirectoryName(versionString);
   if (version === undefined) {
+    // TODO: This sounds like it reads path mapping, so needs to be undone
     throw new Error(`In ${packageName}, unexpected path mapping for ${dependencyName}: '${dependencyPath}'`);
   }
   return version;
@@ -736,29 +750,31 @@ export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
 
 const unusedFilesName = "OTHER_FILES.txt";
 
-function checkAllFilesUsed(
+/** Modifies usedFiles and otherFiles */
+function findAllUnusedFiles(
   ls: readonly string[],
   usedFiles: Set<string>,
   otherFiles: string[],
   packageName: string,
   fs: FS
-): void {
+): string[] {
   // Double-check that no windows "\\" broke in.
   for (const fileName of usedFiles) {
     if (hasWindowsSlashes(fileName)) {
       throw new Error(`In ${packageName}: windows slash detected in ${fileName}`);
     }
   }
-  checkAllUsedRecur(new Set(ls), usedFiles, new Set(otherFiles), fs);
+  return findAllUnusedRecur(new Set(ls), usedFiles, new Set(otherFiles), fs);
 }
 
-function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedFiles: Set<string>, fs: FS): void {
+function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherFiles: Set<string>, fs: FS): string[] {
+  const unused = []
   for (const lsEntry of ls) {
     if (usedFiles.has(lsEntry)) {
       continue;
     }
-    if (unusedFiles.has(lsEntry)) {
-      unusedFiles.delete(lsEntry);
+    if (otherFiles.has(lsEntry)) {
+      otherFiles.delete(lsEntry);
       continue;
     }
 
@@ -786,7 +802,7 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
         }
         return subdirSet;
       }
-      checkAllUsedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(unusedFiles), subdir);
+      findAllUnusedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(otherFiles), subdir);
     } else {
       if (
         lsEntry.toLowerCase() !== "readme.md" &&
@@ -795,19 +811,17 @@ function checkAllUsedRecur(ls: Iterable<string>, usedFiles: Set<string>, unusedF
         lsEntry !== ".eslintrc.json" &&
         lsEntry !== unusedFilesName
       ) {
-        throw new Error(
-          `Unused file ${fs.debugPath()}/${lsEntry} (used files: ${JSON.stringify(Array.from(usedFiles))})`
-        );
+        unused.push(`${fs.debugPath()}/${lsEntry}`);
       }
     }
   }
-
-  for (const unusedFile of unusedFiles) {
-    if (usedFiles.has(unusedFile)) {
+  for (const otherFile of otherFiles) {
+    if (usedFiles.has(otherFile)) {
       throw new Error(
-        `File ${fs.debugPath()}${unusedFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`
+        `File ${fs.debugPath()}${otherFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`
       );
     }
-    throw new Error(`File ${fs.debugPath()}/${unusedFile} listed in ${unusedFilesName} does not exist.`);
+    throw new Error(`File ${fs.debugPath()}/${otherFile} listed in ${unusedFilesName} does not exist.`);
   }
+  return unused
 }
