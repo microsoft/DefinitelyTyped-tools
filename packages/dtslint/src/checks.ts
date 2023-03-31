@@ -27,8 +27,17 @@ export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string
   }
   if (typeof pkgJson.devDependencies !== "object"
     || pkgJson.devDependencies === null
-    || (pkgJson.devDependencies as any)["@types/" + packageName] !== "link:.") {
-    errors.push(`In ${pkgJsonPath}, devDependencies must include \`"@types/${packageName}": "link:."\``);
+    || (pkgJson.devDependencies as any)["@types/" + packageName] !== "workspace:.") {
+    errors.push(`In ${pkgJsonPath}, devDependencies must include \`"@types/${packageName}": "workspace:."\``);
+  }
+  if (!pkgJson.version || typeof pkgJson.version !== "string") {
+    errors.push(`${pkgJsonPath} should have \`"version"\` matching the version of the implementation package.`);
+  }
+  else if (!/\d+\.\d+\.\d+/.exec(pkgJson.version)) {
+    errors.push(`${pkgJsonPath} has bad "version": should look like "NN.NN.0"`);
+  }
+  else if (!pkgJson.version.endsWith(".0")) {
+    errors.push(`${pkgJsonPath} has bad "version": must end with ".0"`);
   }
 
   if (needsTypesVersions) {
@@ -38,10 +47,6 @@ export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string
       errors.push(`"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`)
     }
   }
-  // TODO: This needs to be much longer
-  // TODO: Add checks for name and the other new field(s)
-  // TODO: Should they be disablable, in lint rules? I mean, if we have the data right now, the answer is NO
-  // TODO: If these aren't going to be lint rules, they should collect errors instead of throwing. Fixing one thing at a time sucks.
   // TODO: Test on a toplevel package, a scoped package, and old-version package, and an old-TS-version package
   for (const key in pkgJson) {
     // tslint:disable-line forin
@@ -55,8 +60,8 @@ export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string
       case "name":
       case "version":
       case "devDependencies":
-        // "private"/"typesVersions"/"types" checked above, "dependencies" / "license" checked by types-publisher,
-        // TODO: "name"/"version" checked above, plus asserts in types-publisher
+        // "private"/"typesVersions"/"types"/"name"/"version" checked above, "dependencies" / "license" checked by types-publisher,
+        // TODO: asserts for above in types-publisher
         break;
       case "typesVersions":
       case "types":
@@ -140,7 +145,7 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): string[
   if (!("module" in options)) {
     errors.push('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
   }
-  if (
+  else if (
     options.module?.toString().toLowerCase() !== "commonjs" &&
     options.module?.toString().toLowerCase() !== "node16"
   ) {

@@ -56,7 +56,7 @@ describe("dtslint", () => {
       "joi": "^17.3.0"
     },
     "devDependencies": {
-      "@types/hapi": "link:."
+      "@types/hapi": "workspace:."
     }
   }
   describe("checks", () => {
@@ -101,30 +101,47 @@ describe("dtslint", () => {
       it("requires name", () => {
         const pkg = { ...pkgJson };
         delete pkg.name;
-        expect(checkPackageJsonContents("cort-start/basis", pkg, [])).toEqual([
-          "cort-start/basis/package.json should have `\"name\": \"@types/basis\"`"
+        expect(checkPackageJsonContents("cort-start/hapi", pkg, [])).toEqual([
+          "cort-start/hapi/package.json should have `\"name\": \"@types/hapi\"`"
         ]);
       });
       it("requires name to match", () => {
-        expect(checkPackageJsonContents("cort-start/basis", pkgJson, [])).toEqual([
-          "cort-start/basis/package.json should have `\"name\": \"@types/basis\"`"
+        expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, name: "@types/sad" }, [])).toEqual([
+          "cort-start/hapi/package.json should have `\"name\": \"@types/hapi\"`"
         ]);
       });
       it("requires devDependencies", () => {
         const pkg = { ...pkgJson };
         delete pkg.devDependencies;
         expect(checkPackageJsonContents("cort-start/hapi", pkg, [])).toEqual([
-          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "workspace:."\``
         ]);
       });
       it("requires devDependencies to contain self-package", () => {
         expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, devDependencies: { } }, [])).toEqual([
-          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "workspace:."\``
         ]);
       });
-      it("requires devDependencies to contain self-package version 'link:.'", () => {
+      it("requires devDependencies to contain self-package version 'workspace:.'", () => {
         expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, devDependencies: { "@types/hapi": "*" } }, [])).toEqual([
-          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "link:."\``
+          `In cort-start/hapi/package.json, devDependencies must include \`"@types/hapi": "workspace:."\``
+        ]);
+      });
+      it("requires version", () => {
+        const pkg = { ...pkgJson };
+        delete pkg.version;
+        expect(checkPackageJsonContents("cort-start/hapi", pkg, [])).toEqual([
+          `cort-start/hapi/package.json should have \`"version"\` matching the version of the implementation package.`
+        ]);
+      });
+      it("requires version to be NN.NN.NN", () => {
+        expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
+          `cort-start/hapi/package.json has bad "version": should look like "NN.NN.0"`
+        ]);
+      });
+      it("requires version to end with .0", () => {
+        expect(checkPackageJsonContents("cort-start/hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
+          `cort-start/hapi/package.json has bad "version": must end with ".0"`
         ]);
       });
     });
