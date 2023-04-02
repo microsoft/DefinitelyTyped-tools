@@ -516,6 +516,7 @@
 @types/responselike
 @types/rimraf
 @types/rsmq
+@types/sharp
 @types/socket.io
 @types/socket.io-client
 @types/svgo
