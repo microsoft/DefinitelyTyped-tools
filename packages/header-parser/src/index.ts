@@ -1,6 +1,12 @@
 import pm = require("parsimmon");
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 
+// TODO: This is obsolete now.
+// 1. Delete this package.
+// 2. Port checks to checking package.json.
+// 3. Port tests to package.json too.
+// 4. Add test for header in dtslint that forbids it.
+// 5. Update dts-gen and DT README and ??? -- rest of ecosystem.
 /*
 
   # Example header format #

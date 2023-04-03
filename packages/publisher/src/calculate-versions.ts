@@ -57,9 +57,9 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
           throw reason.code === "E404"
             ? new Error(
-                `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
-                { cause: reason }
-              )
+              `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
+              { cause: reason }
+            )
             : reason;
         });
       }

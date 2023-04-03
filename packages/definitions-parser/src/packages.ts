@@ -6,6 +6,7 @@ import * as semver from "semver";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
 import { parseVersionFromDirectoryName, parsePackageSemver } from "./lib/definition-parser";
+import { slicePrefix } from "./lib/utils";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -140,12 +141,18 @@ export class AllPackages {
    * I have NO idea why it's an iterator. Surely not for efficiency. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
     for (const [ name, version ] of pkg.allPackageJsonDependencies()) {
-      const versions = this.data.get(getMangledNameForScopedPackage(name));
+      const dtName = removeTypesScope(name)
+      if (pkg.name === dtName) continue
+      const versions = this.data.get(dtName);
       if (versions) {
         yield versions.get(parsePackageSemver(version), undefined);
       }
     }
   }
+}
+
+function removeTypesScope(name: string) {
+  return slicePrefix(name, `@${scopeName}/`);
 }
 
 // Same as the function in moduleNameResolver.ts in typescript
@@ -535,11 +542,12 @@ export class TypingsData extends PackageBase {
   get license(): License {
     return this.data.license;
   }
+  // TODO: Rename this back to dependencies/devDependencies
   get packageJsonDependencies(): PackageJsonDependencies {
-    return this.data.packageJsonDependencies;
+    return this.data.packageJsonDependencies ?? {};
   }
   get packageJsonDevDependencies(): PackageJsonDependencies {
-    return this.data.packageJsonDevDependencies;
+    return this.data.packageJsonDevDependencies ?? {};
   }
   *allPackageJsonDependencies(): Iterable<[string, string]> {
     for (const [name, version] of Object.entries(this.packageJsonDependencies)) {

@@ -61,12 +61,22 @@ import * as utils from '@ckeditor/ckeditor5-utils';`
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {
-          paths: {
-            "@ckeditor/ckeditor5-utils": ["ckeditor__ckeditor5-utils/v10"],
-          },
         },
       })
     );
+    scopedWithOlderScopedDependency.set(
+      "package.json",
+      JSON.stringify({
+        "private": true,
+        "name": "@types/ckeditor__ckeditor-engine",
+        "version": "25.0.0",
+        "dependencies": {
+          "@types/ckeditor__ckeditor5-utils": "10.0.0",
+        },
+        "devDependencies": {
+          "@types/ckeditor__ckeditor-engine": "workspace:."
+        }
+      }))
 
     const olderScopedPackage = dt.pkgDir("ckeditor__ckeditor5-utils");
     olderScopedPackage.set(
@@ -83,24 +93,27 @@ export function myFunction(arg:string): string;
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {
-          paths: {},
         },
       })
     );
-
+    olderScopedPackage.set(
+      "package.json",
+      JSON.stringify({
+        "private": true,
+        "name": "@types/ckeditor__ckeditor5-utils",
+        "version": "25.0.0",
+        "dependencies": {
+        },
+        "devDependencies": {
+          "@types/ckeditor__ckeditor5-utils": "workspace:."
+        }
+      }))
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
 
     const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.fs);
     expect(info).toBeDefined();
   });
 
-  it("allows path mapping to older versions", () => {
-    // Actually, the default setup already has 'has-older-test-dependency', so probably doesn't need an explicit test
-    const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1.42");
-    dt.addOldVersionOfPackage("jquery", "2");
-    // now add a dependency that maps to jquery/1.42
-  });
   it("allows path mapping to node/buffer", async () => {
     // Actually, the default seup already has 'has-older-test-dependency', so probably doesn't need an explicit test
     const dt = createMockDT();
@@ -148,10 +161,22 @@ export * from 'buffer';
     ]
 } `
     );
+    safer.set('package.json',
+      JSON.stringify({
+        "private": true,
+        "name": "@types/safer",
+        "version": "1.0.0",
+        "dependencies": {
+          "@types/node": "*"
+        },
+        "devDependencies": {
+          "@types/safer": "workspace:."
+        }
+      }))
 
     const info = await getTypingInfo("safer", dt.fs);
     expect(info).toBeDefined();
-    expect(info["1.0"].dependencies).toEqual({ node: "*" });
+    expect(info["1.0"].packageJsonDependencies).toEqual({ "@types/node": "*" });
   });
   it("errors on arbitrary path mapping", () => {});
   it("supports node_modules passthrough path mapping", async () => {
@@ -217,15 +242,6 @@ const a = new webpack.AutomaticPrefetchPlugin();
     expect(info).toBeDefined();
   });
 
-  it("rejects references to old versions of other @types packages", () => {
-    return expect(
-      getTypingInfo(
-        "typeref-fails",
-        new DiskFS(path.resolve(__dirname, "fixtures/rejects-references-to-old-versions-of-other-types-packages/"))
-      )
-    ).rejects.toThrow("do not directly import specific versions of another types package");
-  });
-
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
@@ -282,9 +298,22 @@ import route = require('@ember/routing/route');
     ]
 }`
     );
+    ember.set(
+      "package.json",
+      `{
+    "private": true,
+    "name": "@types/ember",
+    "version": "5.1.0",
+    "dependencies": {
+        "@types/ember__routing": "*"
+    },
+    "devDependencies": {
+    }
+}`
+    )
 
     const info = await getTypingInfo("ember", dt.fs);
-    expect(info["2.8"].testDependencies).toEqual([]);
+    expect(info["2.8"].packageJsonDevDependencies).toEqual({});
   });
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
@@ -292,7 +321,7 @@ import route = require('@ember/routing/route');
       "styled-components-react-native",
       new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"))
     );
-    expect(info["5.1"].dependencies).toEqual({ "styled-components": "*" });
+    expect(info["5.1"].packageJsonDependencies).toEqual({ "@types/styled-components": "*" });
   });
 
   it("rejects relative references to other packages", async () => {
@@ -321,67 +350,6 @@ import route = require('@ember/routing/route');
         "3.3": expect.objectContaining({
           // The latest version does not have its own version directory
           libraryVersionDirectoryName: undefined,
-        }),
-      });
-    });
-
-    it("records a path mapping to the version directory", async () => {
-      const dt = createMockDT();
-      dt.addOldVersionOfPackage("jquery", "2");
-      dt.addOldVersionOfPackage("jquery", "1.5");
-      const info = await getTypingInfo("jquery", dt.fs);
-
-      expect(info).toEqual({
-        "1.5": expect.objectContaining({
-          pathMappings: {
-            jquery: { major: 1, minor: 5 },
-          },
-        }),
-        "2.0": expect.objectContaining({
-          pathMappings: {
-            jquery: { major: 2, minor: undefined },
-          },
-        }),
-        "3.3": expect.objectContaining({
-          // The latest version does not have path mappings of its own
-          pathMappings: {},
-        }),
-      });
-    });
-
-    it("records a path mapping to the scoped version directory", async () => {
-      const dt = createMockDT();
-      const pkg = dt.pkgDir("ckeditor__ckeditor5-utils");
-      pkg.set(
-        "tsconfig.json",
-        JSON.stringify({
-          files: ["index.d.ts"],
-          compilerOptions: {
-            paths: {},
-          },
-        })
-      );
-      pkg.set(
-        "index.d.ts",
-        `// Type definitions for @ckeditor/ckeditor-utils 25.0
-// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
-// Definitions by: My Self <https://github.com/ñ>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-`
-      );
-
-      dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
-
-      const info = await getTypingInfo("@ckeditor/ckeditor5-utils", dt.fs);
-      expect(info).toEqual({
-        "10.0": expect.objectContaining({
-          pathMappings: {
-            "@ckeditor/ckeditor5-utils": { major: 10 },
-          },
-        }),
-        "25.0": expect.objectContaining({
-          // The latest version does not have path mappings of its own
-          pathMappings: {},
         }),
       });
     });
@@ -424,35 +392,6 @@ import route = require('@ember/routing/route');
         dt.addOldVersionOfPackage("jquery", "1");
         return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
-        );
-      });
-
-      it("checks that scoped older versions with non-relative imports have wildcard path mappings", () => {
-        const dt = createMockDT();
-        const pkg = dt.pkgDir("ckeditor__ckeditor5-utils");
-        pkg.set(
-          "index.d.ts",
-          `// Type definitions for @ckeditor/ckeditor5-utils 25.0
-// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils
-// Definitions by: My Self <https://github.com/ñ>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-import first from "@ckeditor/ckeditor5-utils/src/first";
- `
-        );
-        pkg.set(
-          "tsconfig.json",
-          JSON.stringify({
-            files: ["index.d.ts"],
-            compilerOptions: {
-              paths: {},
-            },
-          })
-        );
-
-        dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
-
-        return expect(getTypingInfo("ckeditor__ckeditor5-utils", dt.fs)).rejects.toThrow(
-          '@ckeditor/ckeditor5-utils: Older version 10 must have a "paths" entry of "@ckeditor/ckeditor5-utils/*": ["ckeditor__ckeditor5-utils/v10/*"]'
         );
       });
     });

@@ -13,6 +13,7 @@ export function checkPackageJson(dirPath: string, typesVersions: readonly TypeSc
   }
   return checkPackageJsonContents(dirPath, readJson(pkgJsonPath), typesVersions);
 }
+// TODO: forbid triple-slash types references like "package/v1"
 
 export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string, unknown>, typesVersions: readonly TypeScriptVersion[]): string[] {
   const errors = []
@@ -30,6 +31,7 @@ export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string
     || (pkgJson.devDependencies as any)["@types/" + packageName] !== "workspace:.") {
     errors.push(`In ${pkgJsonPath}, devDependencies must include \`"@types/${packageName}": "workspace:."\``);
   }
+  // TODO: Dependencies are not allowed in devDependencies, to avoid redundancy (although this is VERY linty)
   if (!pkgJson.version || typeof pkgJson.version !== "string") {
     errors.push(`${pkgJsonPath} should have \`"version"\` matching the version of the implementation package.`);
   }

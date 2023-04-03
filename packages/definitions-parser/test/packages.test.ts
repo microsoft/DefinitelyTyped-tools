@@ -111,15 +111,15 @@ describe(TypingsData, () => {
       {
         "dependency-1": "*",
       },
-      [],
-      {}
+      {
+        "@types/known": "workspace:."
+      }
     );
     data = new TypingsData(versions["1.0"], true);
   });
 
   it("sets the correct properties", () => {
     expect(data.name).toBe("known");
-    expect(data.testDependencies).toEqual([]);
     expect(data.contributors).toEqual([
       {
         name: "Bender",
@@ -133,15 +133,15 @@ describe(TypingsData, () => {
     expect(data.typesVersions).toEqual([]);
     expect(data.files).toEqual(["index.d.ts"]);
     expect(data.license).toBe(License.MIT);
-    expect(data.packageJsonDependencies).toEqual([]);
     expect(data.contentHash).toBe("11111111111111");
-    expect(data.declaredModules).toEqual([]);
     expect(data.projectName).toBe("zombo.com");
     expect(data.globals).toEqual([]);
-    expect(data.pathMappings).toEqual({});
-    expect(data.dependencies).toEqual({
+    expect(data.packageJsonDependencies).toEqual({
       "dependency-1": "*",
     });
+    expect(data.packageJsonDevDependencies).toEqual({
+      "@types/known": "workspace:.",
+    })
     expect(data.id).toEqual({
       name: "known",
       version: {
@@ -158,7 +158,7 @@ describe(TypingsData, () => {
     });
 
     it("returns scoped names correctly", () => {
-      const versions = createTypingsVersionRaw("foo__bar", {}, [], {});
+      const versions = createTypingsVersionRaw("foo__bar", {}, {});
       data = new TypingsData(versions["1.0"], true);
 
       expect(data.unescapedName).toBe("@foo/bar");
@@ -171,7 +171,7 @@ describe(TypingsData, () => {
     });
 
     it("returns the verioned name if not latest", () => {
-      const versions = createTypingsVersionRaw("known", {}, [], {});
+      const versions = createTypingsVersionRaw("known", {}, {});
       data = new TypingsData(versions["1.0"], false);
 
       expect(data.desc).toBe("known v1.0");
@@ -184,7 +184,7 @@ describe(TypingsData, () => {
     });
 
     it("returns mangled name if scoped", () => {
-      const versions = createTypingsVersionRaw("@foo/bar", {}, [], {});
+      const versions = createTypingsVersionRaw("@foo/bar", {}, {});
       data = new TypingsData(versions["1.0"], false);
 
       expect(data.fullNpmName).toBe("@types/foo__bar");

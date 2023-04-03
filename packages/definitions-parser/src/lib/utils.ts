@@ -25,3 +25,7 @@ export function withCache<T>(expiresInMs: number, getValue: () => Promise<T>): (
     return value!;
   };
 }
+
+export function slicePrefix(s: string, prefix: string): string {
+  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
+}

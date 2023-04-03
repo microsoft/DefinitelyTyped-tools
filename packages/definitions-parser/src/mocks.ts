@@ -42,6 +42,10 @@ export class DTMock {
   public addOldVersionOfPackage(packageName: string, olderVersion: `${number}`) {
     const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
+    if (latestDir.get("package.json") === undefined) {
+      throw new Error(`Package ${packageName} does not have a package.json`);
+    }
+    const packageJson = JSON.parse(latestDir.get("package.json") as string);
     const latestHeader = parseHeaderOrFail(index);
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
     const olderVersionParsed = semver.coerce(olderVersion)!;
@@ -62,6 +66,7 @@ export class DTMock {
         },
       })
     );
+    oldDir.set("package.json", JSON.stringify({...packageJson, version: olderVersion }));
 
     latestDir.forEach((content, entry) => {
       if (
@@ -158,6 +163,7 @@ untested.d.ts
 `
   );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
+  boring.set("package.json", packageJson("boring", "1.0", {"@types/react": "*", "@types/react-default": "*", "@types/things": "*", "@types/vorticon": "*", "@types/manual": "*", "@types/super-big-fun-hus": "*"}));
 
   const globby = dt.pkgDir("globby");
   globby.set(
@@ -227,13 +233,11 @@ export * from "moment"`
     "tsconfig.json",
     JSON.stringify({
       compilerOptions: {
-        paths: {
-          jquery: ["jquery/v1"],
-        },
       },
       files: ["index.d.ts", "has-older-test-dependency-tests.ts"],
     })
   );
+  hasOlderTestDependency.set("package.json", packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" }));
 
   const jquery = dt.pkgDir("jquery");
   jquery.set(
@@ -262,6 +266,7 @@ console.log(jQuery);
 `
   );
   jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
+  jquery.set("package.json", packageJson("jquery", "3.3", {}));
 
   const scoped = dt.pkgDir("wordpress__plugins");
   scoped.set(
@@ -312,5 +317,19 @@ function tsconfig(testNames: string[]) {
         "index.d.ts",
 ${testNames.map((s) => "        " + JSON.stringify(s)).join(",\n")}
     ]
+}`;
+}
+
+function packageJson(packageName: string, version: string, dependencies: Record<string, string>) {
+  return `{
+    "private": true,
+    "name": "@types/${packageName}",
+"version": "${version}.0",
+    "dependencies": {
+        ${Object.entries(dependencies).map(([name, version]) => `        "${name}": "${version}"`).join(",\n")}
+    },
+    "devDependencies": {
+        "@types/${packageName}": "workspace:."
+    }
 }`;
 }

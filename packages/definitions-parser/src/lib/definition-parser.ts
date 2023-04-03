@@ -28,6 +28,7 @@ import {
   createModuleResolutionHost,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { slicePrefix } from "./utils";
 import path from "path";
 
 function matchesVersion(
@@ -198,6 +199,9 @@ export function parsePackageVersion(versionString: string): DirectoryParsedTypin
 }
 
 export function parsePackageSemver(version: string): DependencyVersion {
+  if (version === "workspace:.") {
+    return "*"
+  }
   const start = new semver.Range(version).set[0][0].semver
   if (start === (semver.Comparator as any).ANY) {
     return "*"
@@ -392,10 +396,6 @@ function getTypingDataForSingleTypesVersion(
     declFiles: sort(types.keys()),
     tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
   };
-}
-
-function slicePrefix(s: string, prefix: string): string {
-  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
 }
 
 // TODO: Expand these checks too, adding name and version just like dtslint
