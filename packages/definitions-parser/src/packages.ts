@@ -151,7 +151,7 @@ export class AllPackages {
   }
 }
 
-function removeTypesScope(name: string) {
+export function removeTypesScope(name: string) {
   return slicePrefix(name, `@${scopeName}/`);
 }
 

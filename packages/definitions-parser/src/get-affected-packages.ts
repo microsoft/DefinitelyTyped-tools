@@ -6,6 +6,7 @@ import {
   PackageBase,
   getMangledNameForScopedPackage,
   formatDependencyVersion,
+  removeTypesScope,
 } from "./packages";
 import { parsePackageSemver } from './lib/definition-parser';
 
@@ -89,7 +90,7 @@ function getReverseDependencies(
   }
   for (const typing of allPackages.allTypings()) {
     for (const [ name, version ] of typing.allPackageJsonDependencies()) {
-      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name, version: parsePackageSemver(version) })));
+      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: removeTypesScope(name), version: parsePackageSemver(version) })));
       if (dependencies) {
         dependencies[1].add(typing.id);
       }
