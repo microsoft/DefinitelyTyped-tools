@@ -205,7 +205,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("");
   lines.push("### Additional Details");
   lines.push(` * Last updated: ${new Date().toUTCString()}`);
-  const dependencies = Object.keys(typing.packageJsonDependencies).map(getFullNpmName).sort();
+  const dependencies = Object.keys(typing.packageJsonDependencies).sort();
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"

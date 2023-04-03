@@ -5,25 +5,18 @@ import {
   getLicenseFileText,
 } from "../src/generate-packages";
 import {
-  AllPackages,
   License,
   NotNeededPackage,
-  readNotNeededPackages,
-  TypesDataFile,
   TypingsData,
   TypingsDataRaw,
-  createMockDT,
 } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
-import { Registry, InMemoryFS, Dir, FS } from "@definitelytyped/utils";
+import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
     libraryName: "jquery",
     typingsPackageName: "jquery",
-    dependencies: { madeira: { major: 1 } },
-    testDependencies: [],
-    pathMappings: {},
     contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
     libraryMajorVersion: 1,
     libraryMinorVersion: 0,
@@ -31,23 +24,14 @@ function createRawPackage(license: License): TypingsDataRaw {
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
-    packageJsonDependencies: [{ name: "balzac", version: "~3" }],
+    packageJsonDependencies: { "@types/madeira": "^1", "balzac": "~3" },
+    packageJsonDevDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
     projectName: "jquery.org",
     globals: [],
-    declaredModules: ["jquery"],
   };
 }
-function createTypesData(): TypesDataFile {
-  return {
-    jquery: {
-      "1.0": createRawPackage(License.MIT),
-    },
-    madeira: {
-      "1.0": createRawPackage(License.Apache20),
-    },
-  };
-}
+
 function createUnneededPackage() {
   return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
@@ -91,8 +75,7 @@ testo({
   },
   readmeMultipleDependencies() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    // @ts-expect-error - dependencies is readonly
-    typing.dependencies.example = { major: 2 };
+    typing.packageJsonDependencies["@types/example"] = "*";
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining(
         "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"
@@ -115,9 +98,8 @@ testo({
     expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("Global values: none"));
   },
   basicPackageJson() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
     const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages)).toEqual(`{
+    expect(createPackageJSON(typing, "1.0")).toEqual(`{
     "name": "@types/jquery",
     "version": "1.0",
     "description": "TypeScript definitions for jquery",
