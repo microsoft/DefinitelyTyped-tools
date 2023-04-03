@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import { parseHeaderOrFail } from "@definitelytyped/header-parser";
-import { allReferencedFiles, createSourceFile } from "./module-info";
+import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
 import {
   DependencyVersion,
   formatTypingVersion,
@@ -23,6 +23,7 @@ import {
   computeHash,
   join,
   flatMap,
+  unique,
   unmangleScopedPackage,
   createModuleResolutionHost,
 } from "@definitelytyped/utils";
@@ -287,10 +288,15 @@ async function combineDataForAllTypesVersions(
       mapDefined(allTypesVersions, (a) => a.tsconfigPathsForHash),
       fs
     ),
+    globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
     imports: checkPackageJsonImports(packageJson.imports, packageJsonName),
     exports: checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName),
     type: packageJsonType,
   };
+}
+
+function getAllUniqueValues<K extends string, T>(records: readonly Record<K, readonly T[]>[], key: K): readonly T[] {
+  return unique(flatMap(records, (x) => x[key]));
 }
 
 interface TypingDataFromIndividualTypeScriptVersion {
@@ -298,6 +304,7 @@ interface TypingDataFromIndividualTypeScriptVersion {
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly declFiles: readonly string[]; // TODO: Used to map file.d.ts to ts4.1/file.d.ts -- not sure why this is needed
   readonly tsconfigPathsForHash: string | undefined;
+  readonly globals: readonly string[];
 }
 
 /**
@@ -353,8 +360,7 @@ function getTypingDataForSingleTypesVersion(
   }
   // Note: findAllUnusedFiles also modifies usedFiles and otherFiles
   const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, packageName, fs);
-  // TODO: 1. Re-use the original error
-  // 2. Don't throw here, but instead return a list of errors to be printed by ???
+  // TODO: Don't throw here, but instead return a list of errors to be printed by ???
   if (unusedFiles.length) {
     throw new Error('\n\t* ' + unusedFiles.map(unused => `Unused file ${unused}`).join("\n\t* ") + `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`)
   }
@@ -380,12 +386,11 @@ function getTypingDataForSingleTypesVersion(
       )} must have a "paths" entry of "${hydratedPackageName}/*": ${mapping}`
     );
   }
-
-  const tsconfigPathsForHash = JSON.stringify(tsconfig.compilerOptions.paths);
   return {
     typescriptVersion,
+    globals: getDeclaredGlobals(types),
     declFiles: sort(types.keys()),
-    tsconfigPathsForHash,
+    tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
   };
 }
 

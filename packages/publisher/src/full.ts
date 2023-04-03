@@ -5,9 +5,8 @@ import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
-import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
-import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors, assertDefined } from "@definitelytyped/utils";
-import { numberOfOsProcesses } from "./util/util";
+import { getDefinitelyTyped, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
+import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 
 if (!module.parent) {

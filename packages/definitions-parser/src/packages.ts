@@ -416,6 +416,13 @@ export interface TypingsDataRaw extends BaseRaw {
    * Name or URL of the project, e.g. "http://cordova.apache.org".
    */
   readonly projectName: string;
+
+  /**
+   * A list of *values* declared in the global namespace.
+   *
+   * @note This does not include *types* declared in the global namespace.
+   */
+  readonly globals: readonly string[];
 }
 
 // Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
@@ -548,7 +555,9 @@ export class TypingsData extends PackageBase {
   get projectName(): string {
     return this.data.projectName;
   }
-
+  get globals(): readonly string[] {
+    return this.data.globals;
+  }
   get type() {
     return this.data.type;
   }
