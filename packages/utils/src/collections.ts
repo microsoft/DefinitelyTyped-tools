@@ -167,14 +167,6 @@ export function unique<T>(arr: Iterable<T>): T[] {
   return [...new Set(arr)];
 }
 
-export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
-  const out = {} as T;
-  for (const key of Object.keys(data).sort()) {
-    out[key as keyof T] = data[key as keyof T];
-  }
-  return out;
-}
-
 export function min<T>(array: readonly [T, ...(T | undefined)[]]): T;
 export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number): T | undefined;
 export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number) {

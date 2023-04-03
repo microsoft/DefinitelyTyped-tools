@@ -5,7 +5,7 @@ import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typesc
 import * as semver from "semver";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
-import { parseVersionFromDirectoryName } from "./lib/definition-parser";
+import { parseVersionFromDirectoryName, parsePackageSemver } from "./lib/definition-parser";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -136,25 +136,13 @@ export class AllPackages {
     return this.notNeeded;
   }
 
-  /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies. */
+  /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies.
+   * I have NO idea why it's an iterator. Surely not for efficiency. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
-    for (const [name, version] of Object.entries(pkg.dependencies)) {
+    for (const [ name, version ] of pkg.allPackageJsonDependencies()) {
       const versions = this.data.get(getMangledNameForScopedPackage(name));
       if (versions) {
-        yield versions.get(
-          version,
-          pkg.pathMappings[name]
-            ? `${pkg.name} references this version of ${name} in its path mappings in tsconfig.json. If you are deleting this version, update ${pkg.name}’s path mappings accordingly.\n`
-            : undefined
-        );
-      }
-    }
-
-    for (const name of pkg.testDependencies) {
-      const versions = this.data.get(getMangledNameForScopedPackage(name));
-      if (versions) {
-        const version = pkg.pathMappings[name];
-        yield version ? versions.get(version) : versions.getLatest();
+        yield versions.get(parsePackageSemver(version), undefined);
       }
     }
   }
@@ -218,8 +206,6 @@ export abstract class PackageBase {
   }
 
   abstract readonly isLatest: boolean;
-  abstract readonly declaredModules: readonly string[];
-  abstract readonly globals: readonly string[];
   abstract readonly minTypeScriptVersion: TypeScriptVersion;
 
   /** '@types/foo' for a package 'foo'. */
@@ -330,10 +316,8 @@ export function formatDependencyVersion(version: DependencyVersion) {
   return version === "*" ? "*" : formatTypingVersion(version);
 }
 
-export interface PackageJsonDependency {
-  readonly name: string;
-  readonly version: string;
-}
+/** Maps name to version */
+export type PackageJsonDependencies = Record<string, string>
 
 export interface TypingsDataRaw extends BaseRaw {
   /**
@@ -342,13 +326,6 @@ export interface TypingsDataRaw extends BaseRaw {
    * This does not include "@types".
    */
   readonly typingsPackageName: string;
-
-  /**
-   * Other definitions, that exist in the same typings repo, that this package depends on.
-   *
-   * These will refer to *package names*, not *folder names*.
-   */
-  readonly dependencies: { readonly [name: string]: DependencyVersion };
 
   /**
    * Package `imports`, as read in the `package.json` file
@@ -366,24 +343,15 @@ export interface TypingsDataRaw extends BaseRaw {
   readonly type?: string;
 
   /**
-   * Other definitions, that exist in the same typings repo, that the tests, but not the types, of this package depend on.
-   *
-   * These are always the latest version and will not include anything already in `dependencies`.
+   * Packages that provide definitions that this package depends on.
+   * NOTE: Includes `@types/` packages.
    */
-  readonly testDependencies: readonly string[];
+  readonly packageJsonDependencies: PackageJsonDependencies;
 
   /**
-   * External packages, from outside the typings repo, that provide definitions that this package depends on.
+   * Packages that this package's tests or other development depends on.
    */
-  readonly packageJsonDependencies: readonly PackageJsonDependency[];
-
-  /**
-   * Represents that there was a path mapping to a package.
-   *
-   * Not all path mappings are direct dependencies, they may be necessary for transitive dependencies. However, where `dependencies` and
-   * `pathMappings` share a key, they *must* share the same value.
-   */
-  readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
+  readonly packageJsonDevDependencies: PackageJsonDependencies;
 
   /**
    * List of people that have contributed to the definitions in this package.
@@ -428,6 +396,7 @@ export interface TypingsDataRaw extends BaseRaw {
    * Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
    *
    * Does *not* include a partial `package.json` because that will not be copied directly.
+   * TODO: THis might change!
    */
   readonly files: readonly string[];
 
@@ -447,18 +416,6 @@ export interface TypingsDataRaw extends BaseRaw {
    * Name or URL of the project, e.g. "http://cordova.apache.org".
    */
   readonly projectName: string;
-
-  /**
-   * A list of *values* declared in the global namespace.
-   *
-   * @note This does not include *types* declared in the global namespace.
-   */
-  readonly globals: readonly string[];
-
-  /**
-   * External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module).
-   */
-  readonly declaredModules: readonly string[];
 }
 
 // Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
@@ -545,9 +502,6 @@ export class TypingsData extends PackageBase {
     return this.data.typingsPackageName;
   }
 
-  get testDependencies(): readonly string[] {
-    return this.data.testDependencies;
-  }
   get contributors(): readonly Author[] {
     return this.data.contributors;
   }
@@ -574,27 +528,25 @@ export class TypingsData extends PackageBase {
   get license(): License {
     return this.data.license;
   }
-  get packageJsonDependencies(): readonly PackageJsonDependency[] {
+  get packageJsonDependencies(): PackageJsonDependencies {
     return this.data.packageJsonDependencies;
+  }
+  get packageJsonDevDependencies(): PackageJsonDependencies {
+    return this.data.packageJsonDevDependencies;
+  }
+  *allPackageJsonDependencies(): Iterable<[string, string]> {
+    for (const [name, version] of Object.entries(this.packageJsonDependencies)) {
+      yield [name, version]
+    }
+    for (const [name, version] of Object.entries(this.packageJsonDevDependencies)) {
+      yield [name, version]
+    }
   }
   get contentHash(): string {
     return this.data.contentHash;
   }
-  get declaredModules(): readonly string[] {
-    return this.data.declaredModules;
-  }
   get projectName(): string {
     return this.data.projectName;
-  }
-  get globals(): readonly string[] {
-    return this.data.globals;
-  }
-  get pathMappings(): { readonly [packageName: string]: DirectoryParsedTypingVersion } {
-    return this.data.pathMappings;
-  }
-
-  get dependencies(): { readonly [name: string]: DependencyVersion } {
-    return this.data.dependencies;
   }
 
   get type() {

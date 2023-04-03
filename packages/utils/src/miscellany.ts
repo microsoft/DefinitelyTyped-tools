@@ -60,14 +60,6 @@ export function mangleScopedPackage(packageName: string): string {
   return isScopedPackage(packageName) ? packageName.replace(/\//, "__").replace("@", "") : packageName;
 }
 
-export function removeVersionFromPackageName(packageName: string | undefined): string | undefined {
-  return packageName?.replace(/\/v\d+(\.\d+)?(\/\*)?$/, "$2");
-}
-
-export function hasVersionNumberInMapping(packageName: string): boolean {
-  return /\/v\d+(\.\d+)?(\/\*)?$/.test(packageName);
-}
-
 export async function sleep(seconds: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, seconds * 1000));
 }

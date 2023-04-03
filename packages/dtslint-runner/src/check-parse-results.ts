@@ -3,7 +3,6 @@ import {
   ParseDefinitionsOptions,
   TypingsData,
   AllPackages,
-  formatTypingVersion,
   getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
 import { mapDefined, FS, logger, writeLog, Logger, ProgressBar, cacheDir, max, min } from "@definitelytyped/utils";
@@ -33,17 +32,12 @@ export async function checkParseResults(
 
   checkTypeScriptVersions(allPackages);
 
-  checkPathMappings(allPackages);
-
   const dependedOn = new Set<string>();
   const packages = allPackages.allPackages();
   for (const pkg of packages) {
     if (pkg instanceof TypingsData) {
-      for (const dep of Object.keys(pkg.dependencies)) {
-        dependedOn.add(dep);
-      }
-      for (const dep of pkg.testDependencies) {
-        dependedOn.add(dep);
+      for (const [ name ] of pkg.allPackageJsonDependencies()) {
+        dependedOn.add(name);
       }
     }
   }
@@ -71,43 +65,6 @@ function checkTypeScriptVersions(allPackages: AllPackages): void {
       if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion) {
         throw new Error(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version.`);
       }
-    }
-  }
-}
-
-export function checkPathMappings(allPackages: AllPackages): void {
-  for (const pkg of allPackages.allTypings()) {
-    const unusedPathMappings = new Set(
-      Object.keys(pkg.pathMappings).filter((m) => m !== pkg.name && m !== pkg.unescapedName)
-    );
-
-    // If A depends on B, and B has path mappings, A must have the same mappings.
-    for (const dependency of allPackages.allDependencyTypings(pkg)) {
-      for (const [transitiveDependencyName, transitiveDependencyVersion] of Object.entries(dependency.pathMappings)) {
-        const pathMappingVersion = pkg.pathMappings[transitiveDependencyName];
-        if (
-          pathMappingVersion &&
-          (pathMappingVersion.major !== transitiveDependencyVersion.major ||
-            pathMappingVersion.minor !== transitiveDependencyVersion.minor)
-        ) {
-          const expectedPathMapping = `${transitiveDependencyName}/v${formatTypingVersion(
-            transitiveDependencyVersion
-          )}`;
-          throw new Error(
-            `${pkg.desc} depends on ${dependency.desc}, which has a path mapping for ${expectedPathMapping}. ` +
-              `${pkg.desc} must have the same path mappings as its dependencies.`
-          );
-        }
-        unusedPathMappings.delete(transitiveDependencyName);
-      }
-      unusedPathMappings.delete(dependency.name);
-    }
-    if (unusedPathMappings.size > 0) {
-      throw new Error(`${pkg.desc} has unused path mappings for [${Array.from(unusedPathMappings).join(", ")}].
-If these mappings are actually used, they could be missing in a dependency's tsconfig.json instead.
-Check the path mappings for [${Array.from(allPackages.allDependencyTypings(pkg))
-        .map((d) => d.name)
-        .join(", ")}].`);
     }
   }
 }

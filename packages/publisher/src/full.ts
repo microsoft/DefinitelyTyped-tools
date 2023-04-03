@@ -30,14 +30,7 @@ export default async function full(
 ): Promise<void> {
   clean();
   const dt = await getDefinitelyTyped(options, log);
-  const allPackages = await parseDefinitions(
-    dt,
-    options.parseInParallel
-      ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
-      : undefined,
-    log
-  );
   const changedPackages = await calculateVersions(dt, log);
-  await generatePackages(dt, allPackages, changedPackages);
+  await generatePackages(dt, changedPackages);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
 }

@@ -9,7 +9,6 @@ import {
   assertNever,
   joinPaths,
   logUncaughtErrors,
-  sortObjectKeys,
   loggerWithErrors,
   FS,
   logger,
@@ -25,11 +24,8 @@ import {
   TypingsData,
   NotNeededPackage,
   AnyPackage,
-  PackageJsonDependency,
   getFullNpmName,
-  DependencyVersion,
   License,
-  formatTypingVersion,
 } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
 import { readChangedPackages, ChangedPackages } from "./lib/versions";
@@ -44,13 +40,12 @@ if (!module.parent) {
     const log = loggerWithErrors()[0];
     const dt = await getDefinitelyTyped(defaultLocalOptions, log);
     const allPackages = await AllPackages.read(dt);
-    await generatePackages(dt, allPackages, await readChangedPackages(allPackages), tgz);
+    await generatePackages(dt, await readChangedPackages(allPackages), tgz);
   });
 }
 
 export default async function generatePackages(
   dt: FS,
-  allPackages: AllPackages,
   changedPackages: ChangedPackages,
   tgz = false
 ): Promise<void> {
@@ -61,7 +56,7 @@ export default async function generatePackages(
   await emptyDir(outputDirPath);
 
   for (const { pkg, version } of changedPackages.changedTypings) {
-    await generateTypingPackage(pkg, allPackages, version, dt);
+    await generateTypingPackage(pkg, version, dt);
     if (tgz) {
       await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
@@ -76,7 +71,6 @@ export default async function generatePackages(
 }
 async function generateTypingPackage(
   typing: TypingsData,
-  packages: AllPackages,
   version: string,
   dt: FS
 ): Promise<void> {
@@ -86,7 +80,7 @@ async function generateTypingPackage(
       ? typesDirectory
       : typesDirectory.subDir(typing.versionDirectoryName);
 
-  await writeCommonOutputs(typing, createPackageJSON(typing, version, packages), createReadme(typing, packageFS));
+  await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
   await Promise.all(
     typing.files.map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
   );
@@ -123,11 +117,7 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
   return full;
 }
 
-interface Dependencies {
-  [name: string]: string;
-}
-
-export function createPackageJSON(typing: TypingsData, version: string, packages: AllPackages): string {
+export function createPackageJSON(typing: TypingsData, version: string): string {
   // Use the ordering of fields from https://docs.npmjs.com/files/package.json
   const out: {} = {
     name: typing.fullNpmName,
@@ -147,7 +137,7 @@ export function createPackageJSON(typing: TypingsData, version: string, packages
       directory: `types/${typing.name}`,
     },
     scripts: {},
-    dependencies: getDependencies(typing.packageJsonDependencies, typing, packages),
+    dependencies: typing.packageJsonDependencies,
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion,
   };
@@ -168,34 +158,6 @@ export function createPackageJSON(typing: TypingsData, version: string, packages
 }
 
 const definitelyTypedURL = "https://github.com/DefinitelyTyped/DefinitelyTyped";
-
-/** Adds inferred dependencies to `dependencies`, if they are not already specified in either `dependencies` or `peerDependencies`. */
-function getDependencies(
-  packageJsonDependencies: readonly PackageJsonDependency[],
-  typing: TypingsData,
-  allPackages: AllPackages
-): Dependencies {
-  const dependencies: Dependencies = {};
-  for (const { name, version } of packageJsonDependencies) {
-    dependencies[name] = version;
-  }
-
-  for (const [name, version] of Object.entries(typing.dependencies)) {
-    const typesDependency = getFullNpmName(name);
-    // A dependency "foo" is already handled if we already have a dependency on the package "foo" or "@types/foo".
-    if (
-      !packageJsonDependencies.some((d) => d.name === name || d.name === typesDependency) &&
-      allPackages.hasTypingFor({ name, version })
-    ) {
-      dependencies[typesDependency] = dependencySemver(version);
-    }
-  }
-  return sortObjectKeys(dependencies);
-}
-
-function dependencySemver(dependency: DependencyVersion): string {
-  return dependency === "*" ? dependency : "^" + formatTypingVersion(dependency);
-}
 
 export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
   const out = {
@@ -243,7 +205,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("");
   lines.push("### Additional Details");
   lines.push(` * Last updated: ${new Date().toUTCString()}`);
-  const dependencies = Object.keys(typing.dependencies).map(getFullNpmName).sort();
+  const dependencies = Object.keys(typing.packageJsonDependencies).map(getFullNpmName).sort();
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"

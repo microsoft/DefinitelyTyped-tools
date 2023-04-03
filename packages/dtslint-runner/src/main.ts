@@ -153,7 +153,7 @@ export async function runDTSLint({
       suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
     }
   }
-  console.log(`{${suggestionLines.join(",")}}`);
+  // console.log(`{${suggestionLines.join(",")}}`);
 
   logPerformance();
 

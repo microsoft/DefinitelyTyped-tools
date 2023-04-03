@@ -51,7 +51,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
-      for (const { name } of pkg.packageJsonDependencies) {
+      for (const [ name ] of Object.keys(pkg.packageJsonDependencies)) {
         // Assert that dependencies exist on npm.
         // Also checked when we install the dependencies, in dtslint-runner.
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {

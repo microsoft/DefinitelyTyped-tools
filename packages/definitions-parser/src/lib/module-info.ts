@@ -1,130 +1,14 @@
-import assert = require("assert");
 import * as path from "path";
 import * as ts from "typescript";
-import { sort, joinPaths, FS, hasWindowsSlashes, assertDefined } from "@definitelytyped/utils";
+import { FS, assertDefined } from "@definitelytyped/utils";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
 import { getMangledNameForScopedPackage } from "../packages";
-
-export function getModuleInfo(packageName: string, all: Map<string, ts.SourceFile>): ModuleInfo {
-  const dependencies = new Set<string>();
-  const declaredModules: string[] = [];
-  const globals = new Set<string>();
-
-  function addDependency(ref: string): void {
-    if (!ref.startsWith(".")) {
-      dependencies.add(ref);
-    }
-  }
-
-  for (const sourceFile of all.values()) {
-    for (const ref of imports(sourceFile)) {
-      addDependency(ref.text);
-    }
-    for (const ref of sourceFile.typeReferenceDirectives) {
-      addDependency(ref.fileName);
-    }
-    if (ts.isExternalModule(sourceFile)) {
-      if (sourceFileExportsSomething(sourceFile)) {
-        declaredModules.push(properModuleName(packageName, sourceFile.fileName));
-        const namespaceExport = sourceFile.statements.find(ts.isNamespaceExportDeclaration);
-        if (namespaceExport) {
-          globals.add(namespaceExport.name.text);
-        }
-      }
-    } else {
-      for (const node of sourceFile.statements) {
-        switch (node.kind) {
-          case ts.SyntaxKind.ModuleDeclaration: {
-            const decl = node as ts.ModuleDeclaration;
-            const name = decl.name.text;
-            if (decl.name.kind === ts.SyntaxKind.StringLiteral) {
-              declaredModules.push(assertNoWindowsSlashes(packageName, name));
-            } else if (isValueNamespace(decl)) {
-              globals.add(name);
-            }
-            break;
-          }
-          case ts.SyntaxKind.VariableStatement:
-            for (const decl of (node as ts.VariableStatement).declarationList.declarations) {
-              if (decl.name.kind === ts.SyntaxKind.Identifier) {
-                globals.add(decl.name.text);
-              }
-            }
-            break;
-          case ts.SyntaxKind.EnumDeclaration:
-          case ts.SyntaxKind.ClassDeclaration:
-          case ts.SyntaxKind.FunctionDeclaration: {
-            // Deliberately not doing this for types, because those won't show up in JS code and can't be used for ATA
-            const nameNode = (node as ts.EnumDeclaration | ts.ClassDeclaration | ts.FunctionDeclaration).name;
-            if (nameNode) {
-              globals.add(nameNode.text);
-            }
-            break;
-          }
-          case ts.SyntaxKind.ImportEqualsDeclaration:
-          case ts.SyntaxKind.InterfaceDeclaration:
-          case ts.SyntaxKind.TypeAliasDeclaration:
-          case ts.SyntaxKind.EmptyStatement:
-            break;
-          default:
-            throw new Error(`Unexpected node kind ${ts.SyntaxKind[node.kind]}`);
-        }
-      }
-    }
-  }
-
-  return { dependencies, declaredModules, globals: sort(globals) };
-}
-
-/**
- * A file is a proper module if it is an external module *and* it has at least one export.
- * A module with only imports is not a proper module; it likely just augments some other module.
- */
-function sourceFileExportsSomething({ statements }: ts.SourceFile): boolean {
-  return statements.some((statement) => {
-    switch (statement.kind) {
-      case ts.SyntaxKind.ImportEqualsDeclaration:
-      case ts.SyntaxKind.ImportDeclaration:
-        return false;
-      case ts.SyntaxKind.ModuleDeclaration:
-        return (statement as ts.ModuleDeclaration).name.kind === ts.SyntaxKind.Identifier;
-      default:
-        return true;
-    }
-  });
-}
-
-interface ModuleInfo {
-  /** Full (possibly deep) module specifiers of dependencies (imports, type references, etc.). */
-  dependencies: Set<string>;
-  /** Anything from a `declare module "foo"` */
-  declaredModules: string[];
-  /** Every global symbol */
-  globals: string[];
-}
 
 const extensions: Map<string, string> = new Map();
 extensions.set(".d.ts", ""); // TODO: Inaccurate?
 extensions.set(".d.mts", ".mjs");
 extensions.set(".d.cts", ".cjs");
-
-/**
- * Given a file name, get the name of the module it declares.
- * `foo/index.d.ts` declares "foo", `foo/bar.d.ts` declares "foo/bar", "foo/bar/index.d.ts" declares "foo/bar"
- */
-function properModuleName(folderName: string, fileName: string): string {
-  const part =
-    path.basename(fileName) === "index.d.ts" ? path.dirname(fileName) : withoutExtensions(fileName, extensions);
-  return part === "." ? folderName : joinPaths(folderName, part);
-}
-
-function withoutExtensions(str: string, exts: typeof extensions): string {
-  const entries = Array.from(exts.entries());
-  const ext = entries.find(([e, _]) => str.endsWith(e));
-  assert(ext, `file "${str}" should end with extension ${entries.map(([e, _]) => `"${e}"`).join(", ")}`);
-  return str.slice(0, str.length - ext[0].length) + ext[1];
-}
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
 export function allReferencedFiles(
@@ -353,72 +237,6 @@ function statementDeclaresValue(statement: ts.Statement): boolean {
     default:
       throw new Error(`Forgot to implement ambient namespace statement ${ts.SyntaxKind[statement.kind]}`);
   }
-}
-
-function assertNoWindowsSlashes(packageName: string, fileName: string): string {
-  if (hasWindowsSlashes(fileName)) {
-    throw new Error(`In ${packageName}: Use forward slash instead when referencing ${fileName}`);
-  }
-  return fileName;
-}
-
-export function getTestDependencies(
-  packageName: string,
-  testFiles: Iterable<string>,
-  dependencies: ReadonlySet<string>,
-  fs: FS,
-  moduleResolutionHost: ts.ModuleResolutionHost,
-  compilerOptions: ts.CompilerOptions
-): Iterable<string> {
-  const testDependencies = new Set<string>();
-  for (const filename of testFiles) {
-    const content = readFileAndThrowOnBOM(filename, fs);
-    const sourceFile = createSourceFile(filename, content, moduleResolutionHost, compilerOptions);
-    const { fileName, referencedFiles, typeReferenceDirectives } = sourceFile;
-    const filePath = () => path.join(packageName, fileName);
-    let hasImports = false;
-    let isModule = false;
-    let referencesSelf = false;
-
-    for (const { fileName: ref } of referencedFiles) {
-      throw new Error(`Test files should not use '<reference path="" />'. '${filePath()}' references '${ref}'.`);
-    }
-    for (const { fileName: referencedPackage } of typeReferenceDirectives) {
-      if (dependencies.has(referencedPackage)) {
-        throw new Error(
-          `'${filePath()}' unnecessarily references '${referencedPackage}', which is already referenced in the type definition.`
-        );
-      }
-      if (referencedPackage === packageName) {
-        referencesSelf = true;
-      }
-      testDependencies.add(referencedPackage);
-    }
-    for (const imported of imports(sourceFile)) {
-      hasImports = true;
-      if (!imported.text.startsWith(".") && !dependencies.has(imported.text)) {
-        testDependencies.add(imported.text);
-      }
-    }
-
-    isModule =
-      hasImports ||
-      (() => {
-        // Note that this results in files without imports to be walked twice,
-        // once in the `imports(...)` function, and once more here:
-        for (const node of sourceFile.statements) {
-          if (node.kind === ts.SyntaxKind.ExportAssignment || node.kind === ts.SyntaxKind.ExportDeclaration) {
-            return true;
-          }
-        }
-        return false;
-      })();
-
-    if (isModule && referencesSelf) {
-      throw new Error(`'${filePath()}' unnecessarily references the package. This can be removed.`);
-    }
-  }
-  return testDependencies;
 }
 
 export function createSourceFile(
