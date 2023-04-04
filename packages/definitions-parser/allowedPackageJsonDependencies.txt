@@ -826,6 +826,7 @@ tweetnacl
 typeorm
 typescript
 typescript-tuple
+types-ramda
 unified
 url-pattern
 utility-types
