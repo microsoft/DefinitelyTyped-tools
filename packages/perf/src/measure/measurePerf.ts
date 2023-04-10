@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 import { PerformanceObserver, performance } from "perf_hooks";
 import { Node, SourceFile, Extension, CompilerOptions } from "typescript";
 import { LanguageServiceBenchmark, PackageBenchmark, LanguageServiceSingleMeasurement, toPackageKey } from "../common";
-import { installDependencies } from "./installDependencies";
+import { execAndThrowErrors } from "@definitelytyped/utils";
 import { getParsedCommandLineForPackage } from "./getParsedCommandLineForPackage";
 import {
   measureLanguageServiceWorkerFilename,
@@ -67,7 +67,7 @@ export async function measurePerf({
   const packagePath = path.join(definitelyTypedRootPath, "types", typings.subDirectoryPath);
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
   const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : ".");
-  await installDependencies(definitelyTypedRootPath);
+  await execAndThrowErrors("pnpm install", definitelyTypedRootPath);
 
   const commandLine = getParsedCommandLineForPackage(ts, latestTSTypesDir);
   const testPaths = getTestFileNames(commandLine.fileNames);
