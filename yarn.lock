@@ -8330,9 +8330,9 @@ typedarray@^0.0.6:
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
 typescript@next:
-  version "5.1.0-dev.20230331"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.0-dev.20230331.tgz#81793be0b17057a5fd308a8fdd834790a483f5c1"
-  integrity sha512-PLypvuK09nEU9B7OTAx/4oG8foaYoeDTCBYlypMo5bF4L4MN54uLTy6dUwHdnw0QkTl6gjFKZQ4f/dUSZV/NFw==
+  version "5.1.0-dev.20230410"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.0-dev.20230410.tgz#f5ccbb6629c3eb817914c6c2ffed75e5c100ad11"
+  integrity sha512-7aQS6nNYt3XVJic6FBmnxasor6MZFwi5Odj0Z0UtHode4ID21KgCjFgJcdtiWrmSIZ/PLfrp6QiE179hwbB5tQ==
 
 uglify-js@^3.1.4:
   version "3.17.4"

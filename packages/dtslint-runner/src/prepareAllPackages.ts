@@ -1,5 +1,5 @@
 import { AllPackages, getDefinitelyTyped, parseDefinitions } from "@definitelytyped/definitions-parser";
-import { joinPaths, loggerWithErrors } from "@definitelytyped/utils";
+import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 import { installDependencies } from "./prepareAffectedPackages";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
@@ -9,7 +9,6 @@ export async function prepareAllPackages({
   noInstall,
   nProcesses,
 }: PreparePackagesOptions): Promise<PreparePackagesResult> {
-  const typesPath = joinPaths(definitelyTypedPath, "types");
   const [log] = loggerWithErrors();
   const options = {
     definitelyTypedPath,
@@ -21,7 +20,7 @@ export async function prepareAllPackages({
   await checkParseResults(/*includeNpmChecks*/ false, dt);
   const allPackages = await AllPackages.read(dt);
   if (!noInstall) {
-    await installDependencies(allPackages.allTypings(), typesPath);
+    await installDependencies(definitelyTypedPath);
   }
   return { packageNames: allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath), dependents: [] };
 }

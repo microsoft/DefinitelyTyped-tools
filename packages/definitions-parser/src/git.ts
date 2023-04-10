@@ -103,13 +103,12 @@ export async function getAffectedPackagesFromDiff(
 
   const affected =
     selection === "all"
-      ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
+      ? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
       : selection === "affected"
       ? getAffectedPackages(allPackages, gitChanges(diffs))
       : {
           changedPackages: allPackages.allTypings().filter((t) => selection.test(t.name)),
           dependentPackages: [],
-          allPackages,
         };
 
   console.log(

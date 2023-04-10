@@ -27,11 +27,6 @@ export function getAffectedPackages(allPackages: AllPackages, changedPackageIds:
   return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
 }
 
-/** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(allPackages: AllPackages, packages: Iterable<TypingsData>): TypingsData[] {
-  return sortPackages(transitiveClosure(packages, (pkg) => allPackages.allDependencyTypings(pkg)));
-}
-
 /** Collect all packages that depend on changed packages, and all that depend on those, etc. */
 function collectDependers(
   changedPackages: PackageId[],

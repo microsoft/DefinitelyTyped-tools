@@ -60,16 +60,14 @@ export async function measurePerf({
 
   observer.observe({ entryTypes: ["measure"] });
   performance.mark("benchmarkStart");
-  const typesPath = path.join(definitelyTypedRootPath, "types");
-
   const typings = allPackages.getTypingsData({
     name: packageName,
     version: packageVersion,
   });
-  const packagePath = path.join(typesPath, typings.subDirectoryPath);
+  const packagePath = path.join(definitelyTypedRootPath, "types", typings.subDirectoryPath);
   const typesVersion = getLatestTypesVersionForTypeScriptVersion(typings.typesVersions, typeScriptVersion);
   const latestTSTypesDir = path.resolve(packagePath, typesVersion ? `ts${typesVersion}` : ".");
-  await installDependencies(allPackages, typings.id, typesPath);
+  await installDependencies(definitelyTypedRootPath);
 
   const commandLine = getParsedCommandLineForPackage(ts, latestTSTypesDir);
   const testPaths = getTestFileNames(commandLine.fileNames);
