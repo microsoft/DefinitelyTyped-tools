@@ -27,7 +27,7 @@ import {
   createModuleResolutionHost,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { slicePrefix } from "./utils";
+import { slicePrefixes } from "./utils";
 import path from "path";
 
 function matchesVersion(
@@ -332,7 +332,7 @@ function getTypingDataForSingleTypesVersion(
     path.resolve("/", fs.debugPath())
   ).options;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
-
+  // TODO: tests should be Set<string>, not Map<string, SourceFile>
   const { types, tests } = allReferencedFiles(
     tsconfig.files!,
     fs,
@@ -340,7 +340,7 @@ function getTypingDataForSingleTypesVersion(
     moduleResolutionHost,
     compilerOptions
   );
-  const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map(f => slicePrefix(f, "node_modules/@types/" + packageName + "/")));
+  const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map(f => slicePrefixes(f, "node_modules/@types/" + packageName + "/")));
   const otherFiles = ls.includes(unusedFilesName)
     ? fs
         // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package

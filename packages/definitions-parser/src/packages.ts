@@ -6,7 +6,7 @@ import * as semver from "semver";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
 import { parseVersionFromDirectoryName, parsePackageSemver } from "./lib/definition-parser";
-import { slicePrefix } from "./lib/utils";
+import { slicePrefixes } from "./lib/utils";
 
 export class AllPackages {
   static async read(dt: FS): Promise<AllPackages> {
@@ -145,14 +145,14 @@ export class AllPackages {
       if (pkg.name === dtName) continue
       const versions = this.data.get(dtName);
       if (versions) {
-        yield versions.get(parsePackageSemver(version), undefined);
+        yield versions.get(parsePackageSemver(version), pkg.libraryName);
       }
     }
   }
 }
 
 export function removeTypesScope(name: string) {
-  return slicePrefix(name, `@${scopeName}/`);
+  return slicePrefixes(name, `@${scopeName}/`);
 }
 
 // Same as the function in moduleNameResolver.ts in typescript

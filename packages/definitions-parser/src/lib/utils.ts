@@ -26,6 +26,10 @@ export function withCache<T>(expiresInMs: number, getValue: () => Promise<T>): (
   };
 }
 
-export function slicePrefix(s: string, prefix: string): string {
-  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
+export function slicePrefixes(s: string, prefix: string): string {
+  while (s.startsWith(prefix)) {
+    s = s.slice(prefix.length)
+  }
+  return s
 }
+
