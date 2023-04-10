@@ -380,20 +380,6 @@ import route = require('@ember/routing/route');
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toBeDefined();
       });
-
-      it("checks that older versions with non-relative imports have wildcard path mappings", () => {
-        const dt = createMockDT();
-        const jquery = dt.pkgDir("jquery");
-        jquery.set(
-          "JQuery.d.ts",
-          `import "jquery/component";
-`
-        );
-        dt.addOldVersionOfPackage("jquery", "1");
-        return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
-          'jquery: Older version 1 must have a "paths" entry of "jquery/*": ["jquery/v1/*"]'
-        );
-      });
     });
   });
 

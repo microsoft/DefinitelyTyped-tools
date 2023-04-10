@@ -24,7 +24,6 @@ import {
   join,
   flatMap,
   unique,
-  unmangleScopedPackage,
   createModuleResolutionHost,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
@@ -71,7 +70,7 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
 
   const latestData: TypingsDataRaw = {
     libraryVersionDirectoryName: undefined,
-    ...(await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, undefined, moduleResolutionHost)),
+    ...(await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost)),
   };
 
   const older = await Promise.all(
@@ -94,7 +93,6 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
           packageName,
           ls,
           fs.subDir(directoryName),
-          directoryVersion,
           moduleResolutionHost
         )),
       };
@@ -215,7 +213,6 @@ async function combineDataForAllTypesVersions(
   typingsPackageName: string,
   ls: readonly string[],
   fs: FS,
-  directoryVersion: DirectoryParsedTypingVersion | undefined,
   moduleResolutionHost: ts.ModuleResolutionHost
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName">> {
   const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
@@ -246,7 +243,6 @@ async function combineDataForAllTypesVersions(
     typingsPackageName,
     remainingLs,
     fs,
-    directoryVersion,
     moduleResolutionHost
   );
   const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
@@ -256,7 +252,6 @@ async function combineDataForAllTypesVersions(
       typingsPackageName,
       subFs.readdir(),
       subFs,
-      directoryVersion,
       moduleResolutionHost
     );
   });
@@ -322,7 +317,6 @@ function getTypingDataForSingleTypesVersion(
   packageName: string,
   ls: readonly string[],
   fs: FS,
-  directoryVersion: DirectoryParsedTypingVersion | undefined,
   moduleResolutionHost: ts.ModuleResolutionHost
 ): TypingDataFromIndividualTypeScriptVersion {
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
@@ -339,7 +333,7 @@ function getTypingDataForSingleTypesVersion(
   ).options;
   checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
 
-  const { types, tests, hasNonRelativeImports } = allReferencedFiles(
+  const { types, tests } = allReferencedFiles(
     tsconfig.files!,
     fs,
     packageName,
@@ -380,16 +374,6 @@ function getTypingDataForSingleTypesVersion(
     );
   }
 
-  const { paths } = tsconfig.compilerOptions;
-  const hydratedPackageName = unmangleScopedPackage(packageName) ?? packageName;
-  if (directoryVersion && hasNonRelativeImports && !(paths && `${hydratedPackageName}/*` in paths)) {
-    const mapping = JSON.stringify([`${packageName}/v${formatTypingVersion(directoryVersion)}/*`]);
-    throw new Error(
-      `${hydratedPackageName}: Older version ${formatTypingVersion(
-        directoryVersion
-      )} must have a "paths" entry of "${hydratedPackageName}/*": ${mapping}`
-    );
-  }
   return {
     typescriptVersion,
     globals: getDeclaredGlobals(types),

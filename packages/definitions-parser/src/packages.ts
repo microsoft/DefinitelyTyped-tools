@@ -1,6 +1,6 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, unmangleScopedPackage, assertDefined, unique } from "@definitelytyped/utils";
+import { FS, mapValues, assertSorted, assertDefined, unique } from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as semver from "semver";
 import { readDataFile } from "./data-file";
@@ -194,10 +194,6 @@ export abstract class PackageBase {
   /** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
   abstract readonly name: string;
   readonly libraryName: string;
-
-  get unescapedName(): string {
-    return unmangleScopedPackage(this.name) || this.name;
-  }
 
   /** Short description for debug output. */
   get desc(): string {

@@ -152,19 +152,6 @@ describe(TypingsData, () => {
     expect(data.isNotNeeded()).toBe(false);
   });
 
-  describe("unescapedName", () => {
-    it("returns the name when unscoped", () => {
-      expect(data.unescapedName).toBe("known");
-    });
-
-    it("returns scoped names correctly", () => {
-      const versions = createTypingsVersionRaw("foo__bar", {}, {});
-      data = new TypingsData(versions["1.0"], true);
-
-      expect(data.unescapedName).toBe("@foo/bar");
-    });
-  });
-
   describe("desc", () => {
     it("returns the name if latest version", () => {
       expect(data.desc).toBe("known");

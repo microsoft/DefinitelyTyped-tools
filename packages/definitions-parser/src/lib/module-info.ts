@@ -87,7 +87,7 @@ export function allReferencedFiles(
   packageName: string,
   moduleResolutionHost: ts.ModuleResolutionHost,
   compilerOptions: ts.CompilerOptions
-): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile>; hasNonRelativeImports: boolean } {
+): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile> } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
   const tests = new Map<string, ts.SourceFile>();
@@ -99,9 +99,8 @@ export function allReferencedFiles(
     baseDirectory.lastIndexOf(`types/${getMangledNameForScopedPackage(packageName)}`) +
       `types/${getMangledNameForScopedPackage(packageName)}`.length
   );
-  let hasNonRelativeImports = false;
   entryFilenames.forEach((fileName) => recur(undefined, { text: fileName, kind: "path" }));
-  return { types, tests, hasNonRelativeImports };
+  return { types, tests };
 
   function recur(containingFileName: string | undefined, ref: Reference): void {
     // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
@@ -147,9 +146,8 @@ export function allReferencedFiles(
         tests.set(relativeFileName, src);
       }
 
-      const { refs, hasNonRelativeImports: result } = findReferencedFiles(src, packageName);
+      const refs = findReferencedFiles(src, packageName);
       refs.forEach((ref) => recur(resolvedFileName, ref));
-      hasNonRelativeImports = hasNonRelativeImports || result;
     }
   }
 
@@ -201,8 +199,6 @@ interface Reference {
  */
 function findReferencedFiles(src: ts.SourceFile, packageName: string) {
   const refs: Reference[] = [];
-  let hasNonRelativeImports = false;
-
   for (const ref of src.referencedFiles) {
     refs.push({
       text: ref.fileName,
@@ -221,10 +217,9 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string) {
     const resolutionMode = ts.getModeForUsageLocation(src, ref);
     if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
       refs.push({ kind: "import", text: ref.text, resolutionMode });
-      hasNonRelativeImports = !ref.text.startsWith(".");
     }
   }
-  return { refs, hasNonRelativeImports };
+  return refs;
 }
 
 /**

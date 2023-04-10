@@ -49,12 +49,6 @@ export function isScopedPackage(packageName: string): boolean {
   return packageName.startsWith("@");
 }
 
-// Based on `getPackageNameFromAtTypesDirectory` in TypeScript.
-export function unmangleScopedPackage(packageName: string): string | undefined {
-  const separator = "__";
-  return packageName.includes(separator) ? `@${packageName.replace(separator, "/")}` : undefined;
-}
-
 // Reverts unmangleScopedPackage.
 export function mangleScopedPackage(packageName: string): string {
   return isScopedPackage(packageName) ? packageName.replace(/\//, "__").replace("@", "") : packageName;
