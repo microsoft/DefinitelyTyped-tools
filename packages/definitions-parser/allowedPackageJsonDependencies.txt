@@ -39,6 +39,7 @@
 @maxim_mazurok/gapi.client.accessapproval-v1
 @maxim_mazurok/gapi.client.accesscontextmanager-v1
 @maxim_mazurok/gapi.client.accesscontextmanager-v1beta
+@maxim_mazurok/gapi.client.acmedns-v1
 @maxim_mazurok/gapi.client.adexchangebuyer2-v2beta1
 @maxim_mazurok/gapi.client.adexperiencereport-v1
 @maxim_mazurok/gapi.client.admin-datatransfer_v1
@@ -48,6 +49,7 @@
 @maxim_mazurok/gapi.client.admob-v1beta
 @maxim_mazurok/gapi.client.adsense-v2
 @maxim_mazurok/gapi.client.adsensehost-v4.1
+@maxim_mazurok/gapi.client.advisorynotifications-v1
 @maxim_mazurok/gapi.client.alertcenter-v1beta1
 @maxim_mazurok/gapi.client.analytics-v3
 @maxim_mazurok/gapi.client.analyticsadmin-v1alpha
@@ -165,6 +167,7 @@
 @maxim_mazurok/gapi.client.datafusion-v1
 @maxim_mazurok/gapi.client.datafusion-v1beta1
 @maxim_mazurok/gapi.client.datalabeling-v1beta1
+@maxim_mazurok/gapi.client.datalineage-v1
 @maxim_mazurok/gapi.client.datamigration-v1
 @maxim_mazurok/gapi.client.datamigration-v1beta1
 @maxim_mazurok/gapi.client.datapipelines-v1
@@ -220,6 +223,7 @@
 @maxim_mazurok/gapi.client.firebase-v1beta1
 @maxim_mazurok/gapi.client.firebaseappcheck-v1
 @maxim_mazurok/gapi.client.firebaseappcheck-v1beta
+@maxim_mazurok/gapi.client.firebaseappdistribution-v1
 @maxim_mazurok/gapi.client.firebasedatabase-v1beta
 @maxim_mazurok/gapi.client.firebasedynamiclinks-v1
 @maxim_mazurok/gapi.client.firebasehosting-v1
@@ -233,9 +237,9 @@
 @maxim_mazurok/gapi.client.firestore-v1beta2
 @maxim_mazurok/gapi.client.fitness-v1
 @maxim_mazurok/gapi.client.forms-v1
-@maxim_mazurok/gapi.client.games-v1
 @maxim_mazurok/gapi.client.games_configuration-v1configuration
 @maxim_mazurok/gapi.client.games_management-v1management
+@maxim_mazurok/gapi.client.games-v1
 @maxim_mazurok/gapi.client.gameservices-v1
 @maxim_mazurok/gapi.client.gameservices-v1beta
 @maxim_mazurok/gapi.client.genomics-v2alpha1
@@ -252,6 +256,7 @@
 @maxim_mazurok/gapi.client.googleads-v10
 @maxim_mazurok/gapi.client.googleads-v11
 @maxim_mazurok/gapi.client.googleads-v12
+@maxim_mazurok/gapi.client.googleads-v13
 @maxim_mazurok/gapi.client.googleads-v4
 @maxim_mazurok/gapi.client.googleads-v5
 @maxim_mazurok/gapi.client.googleads-v6
@@ -264,6 +269,7 @@
 @maxim_mazurok/gapi.client.healthcare-v1beta1
 @maxim_mazurok/gapi.client.homegraph-v1
 @maxim_mazurok/gapi.client.iam-v1
+@maxim_mazurok/gapi.client.iam-v2
 @maxim_mazurok/gapi.client.iam-v2beta
 @maxim_mazurok/gapi.client.iamcredentials-v1
 @maxim_mazurok/gapi.client.iap-v1
@@ -275,13 +281,13 @@
 @maxim_mazurok/gapi.client.identitytoolkit-v3
 @maxim_mazurok/gapi.client.ids-v1
 @maxim_mazurok/gapi.client.indexing-v3
-@maxim_mazurok/gapi.client.integrations-v1
 @maxim_mazurok/gapi.client.integrations-v1alpha
 @maxim_mazurok/gapi.client.jobs-v3
 @maxim_mazurok/gapi.client.jobs-v3p1beta1
 @maxim_mazurok/gapi.client.jobs-v4
 @maxim_mazurok/gapi.client.keep-v1
 @maxim_mazurok/gapi.client.kgsearch-v1
+@maxim_mazurok/gapi.client.kmsinventory-v1
 @maxim_mazurok/gapi.client.language-v1
 @maxim_mazurok/gapi.client.language-v1beta1
 @maxim_mazurok/gapi.client.language-v1beta2
@@ -299,6 +305,7 @@
 @maxim_mazurok/gapi.client.metastore-v1
 @maxim_mazurok/gapi.client.metastore-v1alpha
 @maxim_mazurok/gapi.client.metastore-v1beta
+@maxim_mazurok/gapi.client.migrationcenter-v1alpha1
 @maxim_mazurok/gapi.client.ml-v1
 @maxim_mazurok/gapi.client.monitoring-v1
 @maxim_mazurok/gapi.client.monitoring-v3
@@ -319,6 +326,7 @@
 @maxim_mazurok/gapi.client.networkservices-v1
 @maxim_mazurok/gapi.client.networkservices-v1beta1
 @maxim_mazurok/gapi.client.notebooks-v1
+@maxim_mazurok/gapi.client.notebooks-v2
 @maxim_mazurok/gapi.client.oauth2-v2
 @maxim_mazurok/gapi.client.ondemandscanning-v1
 @maxim_mazurok/gapi.client.ondemandscanning-v1beta1
@@ -340,6 +348,7 @@
 @maxim_mazurok/gapi.client.policyanalyzer-v1beta1
 @maxim_mazurok/gapi.client.policysimulator-v1
 @maxim_mazurok/gapi.client.policysimulator-v1alpha
+@maxim_mazurok/gapi.client.policysimulator-v1beta
 @maxim_mazurok/gapi.client.policysimulator-v1beta1
 @maxim_mazurok/gapi.client.policytroubleshooter-v1
 @maxim_mazurok/gapi.client.policytroubleshooter-v1beta
@@ -347,10 +356,13 @@
 @maxim_mazurok/gapi.client.privateca-v1
 @maxim_mazurok/gapi.client.privateca-v1beta1
 @maxim_mazurok/gapi.client.prod_tt_sasportal-v1alpha1
+@maxim_mazurok/gapi.client.publicca-v1alpha1
+@maxim_mazurok/gapi.client.publicca-v1beta1
 @maxim_mazurok/gapi.client.pubsub-v1
 @maxim_mazurok/gapi.client.pubsub-v1beta1a
 @maxim_mazurok/gapi.client.pubsub-v1beta2
 @maxim_mazurok/gapi.client.pubsublite-v1
+@maxim_mazurok/gapi.client.readerrevenuesubscriptionlinking-v1
 @maxim_mazurok/gapi.client.realtimebidding-v1
 @maxim_mazurok/gapi.client.realtimebidding-v1alpha
 @maxim_mazurok/gapi.client.recaptchaenterprise-v1
@@ -371,6 +383,7 @@
 @maxim_mazurok/gapi.client.safebrowsing-v4
 @maxim_mazurok/gapi.client.sasportal-v1alpha1
 @maxim_mazurok/gapi.client.script-v1
+@maxim_mazurok/gapi.client.searchads360-v0
 @maxim_mazurok/gapi.client.searchconsole-v1
 @maxim_mazurok/gapi.client.secretmanager-v1
 @maxim_mazurok/gapi.client.secretmanager-v1beta1
@@ -434,6 +447,8 @@
 @maxim_mazurok/gapi.client.vision-v1p2beta1
 @maxim_mazurok/gapi.client.vmmigration-v1
 @maxim_mazurok/gapi.client.vmmigration-v1alpha1
+@maxim_mazurok/gapi.client.vpcaccess-v1
+@maxim_mazurok/gapi.client.vpcaccess-v1beta1
 @maxim_mazurok/gapi.client.webfonts-v1
 @maxim_mazurok/gapi.client.webrisk-v1
 @maxim_mazurok/gapi.client.websecurityscanner-v1
@@ -445,8 +460,8 @@
 @maxim_mazurok/gapi.client.workflows-v1beta
 @maxim_mazurok/gapi.client.workloadmanager-v1
 @maxim_mazurok/gapi.client.workstations-v1beta
-@maxim_mazurok/gapi.client.youtube-v3
 @maxim_mazurok/gapi.client.youtube_analytics-v2
+@maxim_mazurok/gapi.client.youtube-v3
 @maxim_mazurok/gapi.client.youtubereporting-v1
 @middy/core
 @mparticle/event-models
@@ -771,7 +786,6 @@ react-native-gesture-handler
 react-native-maps
 react-native-modal
 react-native-safe-area-context
-react-native-svg
 react-native-svg
 react-native-tab-view
 react-navigation
