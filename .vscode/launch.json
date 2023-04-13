@@ -5,11 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-chrome",
+      "name": "dtslint-runner local all",
+      "program": "${workspaceFolder}/packages/dtslint-runner/dist/index.js",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}"
-    }
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "args": [
+          "--path", "../DefinitelyTyped", "--selection", "all", "--localTypeScriptPath", "../../ts/built/local",
+      ],
+
+      "type": "node"
+    },
   ]
 }
