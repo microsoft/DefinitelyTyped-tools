@@ -20,7 +20,7 @@ describe(AllPackages, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1");
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.0");
     const [log] = quietLoggerWithErrors();
     allPackages = await parseDefinitions(dt.fs, undefined, log);
   });
@@ -63,9 +63,9 @@ describe(TypingsVersions, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1");
-    dt.addOldVersionOfPackage("jquery", "2");
-    dt.addOldVersionOfPackage("jquery", "2.5");
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.0");
+    dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
+    dt.addOldVersionOfPackage("jquery", "2.5", "2.5.0");
     versions = new TypingsVersions(await getTypingInfo("jquery", dt.fs));
   });
 

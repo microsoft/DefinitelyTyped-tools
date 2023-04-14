@@ -6,8 +6,8 @@ import { getTypingInfo } from "../src/lib/definition-parser";
 describe(getTypingInfo, () => {
   it("keys data by major.minor version", async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1.42");
-    dt.addOldVersionOfPackage("jquery", "2");
+    dt.addOldVersionOfPackage("jquery", "1.42", "1.42.0");
+    dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
     const info = await getTypingInfo("jquery", dt.fs);
 
     expect(Object.keys(info).sort()).toEqual(["1.42", "2.0", "3.3"]);
@@ -24,12 +24,7 @@ describe(getTypingInfo, () => {
     const d = dt.pkgDir("example");
     d.set(
       "index.d.ts",
-      `// Type definitions for example 1.0
-// Project: https://github.com/example/com
-// Definitions by: My Self <https://github.com/ñ>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-;;`
+      `;;`
     );
 
     d.set(
@@ -39,6 +34,24 @@ describe(getTypingInfo, () => {
         compilerOptions: {},
       })
     );
+    d.set("package.json", JSON.stringify({
+        "private": true,
+        "name": "@types/example",
+        "version": "25.0.0",
+        "projects": [
+          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
+        ],
+        "contributors": [
+          {
+            "name": "Example",
+            "url": "https://github.com/example",
+            "githubUsername": "example"
+          }
+        ],
+        "devDependencies": {
+          "@types/example": "workspace:."
+        }
+      }));
 
     const info = await getTypingInfo("example", dt.fs);
     expect(info).toBeDefined();
@@ -48,12 +61,7 @@ describe(getTypingInfo, () => {
     const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
     scopedWithOlderScopedDependency.set(
       "index.d.ts",
-      `// Type definitions for @ckeditor/ckeditor-engine 25.0
-// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine
-// Definitions by: My Self <https://github.com/ñ>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-import * as utils from '@ckeditor/ckeditor5-utils';`
+      `import * as utils from '@ckeditor/ckeditor5-utils';`
     );
 
     scopedWithOlderScopedDependency.set(
@@ -68,23 +76,30 @@ import * as utils from '@ckeditor/ckeditor5-utils';`
       "package.json",
       JSON.stringify({
         "private": true,
-        "name": "@types/ckeditor__ckeditor-engine",
+        "name": "@types/ckeditor__ckeditor5-engine",
         "version": "25.0.0",
+        "projects": [
+          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
+        ],
+        "contributors": [
+          {
+            "name": "Example",
+            "url": "https://github.com/ñ",
+            "githubUsername": "ñ"
+          }
+        ],
         "dependencies": {
           "@types/ckeditor__ckeditor5-utils": "10.0.0",
         },
         "devDependencies": {
-          "@types/ckeditor__ckeditor-engine": "workspace:."
+          "@types/ckeditor__ckeditor5-engine": "workspace:."
         }
       }))
 
     const olderScopedPackage = dt.pkgDir("ckeditor__ckeditor5-utils");
     olderScopedPackage.set(
       "index.d.ts",
-      `// Type definitions for @ckeditor/ckeditor5-utils 25.0
-// Project: https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils
-// Definitions by: My Self <https://github.com/ñ>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+      `
 export function myFunction(arg:string): string;
  `
     );
@@ -102,15 +117,25 @@ export function myFunction(arg:string): string;
         "private": true,
         "name": "@types/ckeditor__ckeditor5-utils",
         "version": "25.0.0",
+        "projects": [
+          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils"
+        ],
+        "contributors": [
+          {
+            "name": "Example",
+            "url": "https://github.com/ñ",
+            "githubUsername": "ñ"
+          }
+        ],
         "dependencies": {
         },
         "devDependencies": {
           "@types/ckeditor__ckeditor5-utils": "workspace:."
         }
       }))
-    dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10");
+    dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.0");
 
-    const info = await getTypingInfo("@ckeditor/ckeditor5-engine", dt.fs);
+    const info = await getTypingInfo("ckeditor__ckeditor5-engine", dt.fs);
     expect(info).toBeDefined();
   });
 
@@ -120,11 +145,7 @@ export function myFunction(arg:string): string;
     const safer = dt.pkgDir("safer");
     safer.set(
       "index.d.ts",
-      `// Type definitions for safer 1.0
-// Project: https://github.com/safer/safer
-// Definitions by: Noone <https://github.com/noone>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
+      `
 /// <reference types="node" />
 export * from 'buffer';
 `
@@ -166,6 +187,16 @@ export * from 'buffer';
         "private": true,
         "name": "@types/safer",
         "version": "1.0.0",
+        "projects": [
+          "https://github.com/safer/safer"
+        ],
+        "contributors": [
+          {
+            "name": "Noone",
+            "url": "https://github.com/noone",
+            "githubUsername": "noone"
+          }
+        ],
         "dependencies": {
           "@types/node": "*"
         },
@@ -237,6 +268,24 @@ const a = new webpack.AutomaticPrefetchPlugin();
     ]
 }`
     );
+    webpack.set("package.json",JSON.stringify({
+        "private": true,
+        "name": "@types/webpack",
+        "version": "5.2.0",
+        "projects": [
+          "https://github.com/webpack/webpack"
+        ],
+        "contributors": [
+          {
+            "name": "Qubo",
+            "url": "https://github.com/tkqubo",
+            "githubUsername": "tkqubo"
+          }
+        ],
+        "devDependencies": {
+          "@types/webpack": "workspace:."
+        }
+    }));
 
     const info = await getTypingInfo("webpack", dt.fs);
     expect(info).toBeDefined();
@@ -255,12 +304,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
     const ember = dt.pkgDir("ember");
     ember.set(
       "index.d.ts",
-      `// Type definitions for ember 2.8
-// Project: https://github.com/ember/ember
-// Definitions by: Chris Krycho <https://github.com/chriskrycho>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-/// <reference types="jquery" />
+      `/// <reference types="jquery" />
 declare module '@ember/routing/route' {
 }
 declare module '@ember/routing/rotorooter' {
@@ -303,17 +347,28 @@ import route = require('@ember/routing/route');
       `{
     "private": true,
     "name": "@types/ember",
-    "version": "5.1.0",
+    "version": "2.8.0",
     "dependencies": {
         "@types/ember__routing": "*"
     },
     "devDependencies": {
-    }
+        "@types/ember": "workspace:."
+    },
+    "projects": [
+        "https://github.com/ember"
+    ],
+    "contributors": [
+        {
+            "name": "Chris Krycho",
+            "url": "https://github.com/chriskrycho",
+            "githubUsername": "chriskrycho"
+        }
+    ]
 }`
     )
 
     const info = await getTypingInfo("ember", dt.fs);
-    expect(info["2.8"].packageJsonDevDependencies).toEqual({});
+    expect(info["2.8"].packageJsonDevDependencies).toEqual({ "@types/ember": "workspace:." });
   });
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
@@ -336,8 +391,8 @@ import route = require('@ember/routing/route');
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();
-      dt.addOldVersionOfPackage("jquery", "2");
-      dt.addOldVersionOfPackage("jquery", "1.5");
+      dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
+      dt.addOldVersionOfPackage("jquery", "1.5", "1.5.0");
       const info = await getTypingInfo("jquery", dt.fs);
 
       expect(info).toEqual({
@@ -357,7 +412,7 @@ import route = require('@ember/routing/route');
     describe("validation thereof", () => {
       it("throws if a directory exists for the latest major version", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3");
+        dt.addOldVersionOfPackage("jquery", "3", "3.0.0");
 
         return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
@@ -367,7 +422,7 @@ import route = require('@ember/routing/route');
 
       it("throws if a directory exists for the latest minor version", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3.3");
+        dt.addOldVersionOfPackage("jquery", "3.3", "3.3.0");
 
         return expect(getTypingInfo("jquery", dt.fs)).rejects.toThrow(
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
@@ -376,7 +431,7 @@ import route = require('@ember/routing/route');
 
       it("does not throw when a minor version is older than the latest", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3.0");
+        dt.addOldVersionOfPackage("jquery", "3.0", "3.0.0");
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toBeDefined();
       });

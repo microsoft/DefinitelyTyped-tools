@@ -91,6 +91,8 @@ export namespace TypeScriptVersion {
     "4.1",
     "4.2",
   ];
+  // TODO: All the tests for this are in header-parser, but should be here
+  // because I'm going to delete header-parser
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
   /** Latest version that may be specified in a `// TypeScript Version:` header. */
@@ -126,11 +128,11 @@ export namespace TypeScriptVersion {
     return index === supported.length - 1 ? undefined : supported[index + 1];
   }
 
-  export function isRedirectable(v: TypeScriptVersion): boolean {
+  export function isRedirectable(v: AllTypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
 
-  export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+  export function isTypeScriptVersion(str: string): str is AllTypeScriptVersion {
     return all.includes(str as TypeScriptVersion);
   }
 }

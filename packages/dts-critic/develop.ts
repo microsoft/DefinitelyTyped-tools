@@ -110,15 +110,10 @@ function getNonNpm(args: { dtPath: string }): void {
   const dtTypesPath = getDtTypesPath(args.dtPath);
   const isNpmJson = getAllIsNpm(args.dtPath);
   for (const item of fs.readdirSync(dtTypesPath)) {
-    const entry = path.join(dtTypesPath, item);
-    const dts = fs.readFileSync(entry + "/index.d.ts", "utf8");
-    let header;
-    try {
-      header = headerParser.parseHeaderOrFail(dts);
-    } catch (e) {
-      header = undefined;
-    }
-    if (!isNpmPackage(item, header, isNpmJson)) {
+    const packageJsonPath = path.join(dtTypesPath, item, "package.json");
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    let header= headerParser.validatePackageJson(item, packageJsonPath, packageJson, [])
+    if (!isNpmPackage(item, Array.isArray(header) ? undefined : header, isNpmJson)) {
       nonNpm.push(item);
     }
   }

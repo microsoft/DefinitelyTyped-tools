@@ -1,0 +1,20 @@
+{
+    "private": true,
+    "name": "@types/tslib",
+    "nonNpm": true,
+    "nonNpmDescription": "tslib",
+    "version": "1.0.0",
+    "projects": [
+        "https://github.com/microsoft/TypeScript"
+    ],
+    "devDependencies": {
+        "@types/tslib": "workspace:."
+    },
+    "contributors": [
+        {
+            "name": "Typescript Bot",
+            "url": "https://github.com/typescript-bot",
+            "githubUsername": "typescript-bot"
+        }
+    ]
+}

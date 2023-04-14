@@ -1,11 +1,11 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, assertDefined, unique } from "@definitelytyped/utils";
+import { FS, mapValues, assertSorted, assertDefined, unique, parsePackageSemver } from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as semver from "semver";
 import { readDataFile } from "./data-file";
 import { scopeName, typesDirectoryName } from "./lib/settings";
-import { parseVersionFromDirectoryName, parsePackageSemver } from "./lib/definition-parser";
+import { parseVersionFromDirectoryName } from "./lib/definition-parser";
 import { slicePrefixes } from "./lib/utils";
 
 export class AllPackages {
@@ -141,11 +141,14 @@ export class AllPackages {
    * I have NO idea why it's an iterator. Surely not for efficiency. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
     for (const [ name, version ] of pkg.allPackageJsonDependencies()) {
+      // TODO: chart.js@3 has types; @types/chart.js@2.9 is the last version on DT.
+      // It shouldn't be an error to depend on chart.js@3 but it's currently ambiguous with @types/chart.js.
+      if (!name.startsWith(`@${scopeName}/`)) continue
       const dtName = removeTypesScope(name)
       if (pkg.name === dtName) continue
       const versions = this.data.get(dtName);
       if (versions) {
-        yield versions.get(parsePackageSemver(version), pkg.libraryName);
+        yield versions.get(parsePackageSemver(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
       }
     }
   }
@@ -474,7 +477,7 @@ export class TypingsVersions {
   getAll(): Iterable<TypingsData> {
     return this.map.values();
   }
-
+  // TODO: Need to use Semver instead of DependencyVersion, and getLatestMatch should use Semver ranges
   get(version: DependencyVersion, errorMessage?: string): TypingsData {
     return version === "*" ? this.getLatest() : this.getLatestMatch(version, errorMessage);
   }

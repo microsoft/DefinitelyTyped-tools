@@ -1,0 +1,18 @@
+{
+    "private": true,
+    "name": "@types/fail",
+    "version": "1.0.0",
+    "projects": [
+        "https://youtube.com/typeref-fails"
+    ],
+    "devDependencies": {
+        "@types/fail": "workspace:."
+    },
+    "contributors": [
+        {
+            "name": "Type Ref Fails",
+            "url": "https://github.com/typeref-fails",
+            "githubUsername": "typeref-fails"
+        }
+    ]
+}

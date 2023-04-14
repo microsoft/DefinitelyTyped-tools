@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { parseHeaderOrFail } from "@definitelytyped/header-parser";
+import { validatePackageJson } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
 import {
   DependencyVersion,
@@ -10,7 +10,6 @@ import {
   DirectoryParsedTypingVersion,
   getMangledNameForScopedPackage,
 } from "../packages";
-import * as semver from "semver";
 import { getAllowedPackageJsonDependencies } from "./settings";
 import {
   FS,
@@ -25,6 +24,7 @@ import {
   flatMap,
   unique,
   createModuleResolutionHost,
+  parsePackageSemver,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { slicePrefixes } from "./utils";
@@ -100,12 +100,11 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
       if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
         if (considerLibraryMinorVersion) {
           throw new Error(
-            `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor}, ` +
-              `but header indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`
-          );
+            `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor ?? "*"}, ` +
+              `but package.json indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`);
         }
         throw new Error(
-          `Directory ${directoryName} indicates major version ${directoryVersion.major}, but header indicates major version ` +
+          `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
             data.libraryMajorVersion.toString()
         );
       }
@@ -171,42 +170,11 @@ export function parseVersionFromDirectoryName(
 }
 
 /**
- * Like `parseVersionFromDirectoryName`, but the leading 'v' is optional,
- * and falls back to '*' if the input format is not parseable.
+ * TODO: Uses of this should very likely be using semver. For now I'll parse with semver and convert to major & minor | *
+ * falls back to '*' if the input format is not parseable.
  */
 export function tryParsePackageVersion(versionString: string | undefined): DependencyVersion {
-  const match = /^v?(\d+)(\.(\d+))?$/.exec(versionString!);
-  if (match === null) {
-    return "*";
-  }
-  return {
-    major: Number(match[1]),
-    minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
-  };
-}
-
-/**
- * Like `tryParsePackageVersion`, but throws if the input format is not parseable.
- */
-export function parsePackageVersion(versionString: string): DirectoryParsedTypingVersion {
-  const version = tryParsePackageVersion(versionString);
-  if (version === "*") {
-    throw new Error(`Version string '${versionString}' is not a valid format.`);
-  }
-  return version;
-}
-
-export function parsePackageSemver(version: string): DependencyVersion {
-  if (version === "workspace:.") {
-    return "*"
-  }
-  const start = new semver.Range(version).set[0][0].semver
-  if (start === (semver.Comparator as any).ANY) {
-    return "*"
-  }
-  else {
-    return { major: start.major, minor: start.minor }
-  }
+  return versionString != null ? parsePackageSemver(versionString) : "*";
 }
 
 async function combineDataForAllTypesVersions(
@@ -228,7 +196,10 @@ async function combineDataForAllTypesVersions(
     : {};
   const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
 
-  // Every typesVersion has an index.d.ts, but only the root index.d.ts should have a header.
+  const packageJsonResult = validatePackageJson(typingsPackageName, packageJsonName, packageJson, typesVersions);
+  if (Array.isArray(packageJsonResult)) {
+    throw Error(packageJsonResult.join("\n"));
+  }
   const {
     contributors,
     libraryMajorVersion,
@@ -236,7 +207,7 @@ async function combineDataForAllTypesVersions(
     typeScriptVersion: minTsVersion,
     libraryName,
     projects,
-  } = parseHeaderOrFail(readFileAndThrowOnBOM("index.d.ts", fs));
+  } = packageJsonResult
 
   const dataForRoot = getTypingDataForSingleTypesVersion(
     undefined,

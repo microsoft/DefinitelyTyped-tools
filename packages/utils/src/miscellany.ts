@@ -1,4 +1,19 @@
 import crypto from "crypto";
+import * as semver from "semver";
+
+export function parsePackageSemver(version: string): { major: number, minor?: number } | "*" {
+  if (version === "workspace:.") {
+    return "*"
+  }
+  const start = new semver.Range(version).set[0][0].semver
+  if (start === (semver.Comparator as any).ANY) {
+    return "*"
+  }
+  else {
+    // TODO: we should still use real semver but for now minor===0 => minor=undefined for compatibility
+    return { major: start.major, minor: start.minor === 0 ? undefined : start.minor }
+  }
+}
 
 export function tryParseJson<T>(text: string): unknown;
 export function tryParseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T): T | undefined;

@@ -38,6 +38,7 @@ testo({
     expect(changedPackages).toEqual([]);
   },
   olderVersion() {
+    debugger;
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
       { name: "jquery", version: { major: 1 } },
     ]);

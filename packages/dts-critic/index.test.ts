@@ -268,7 +268,7 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
     ]);
   },
   noMatchingNpmVersion() {
-    expect(dtsCritic(testsource("typescript.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("typescript/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmVersion,
         message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
@@ -277,7 +277,7 @@ You should copy the major and minor version from the package on npm.`),
     ]);
   },
   nonNpmHasMatchingPackage() {
-    expect(dtsCritic(testsource("tslib.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("tslib/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NonNpmHasMatchingPackage,
         message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.

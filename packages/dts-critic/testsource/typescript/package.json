@@ -1,0 +1,18 @@
+{
+    "private": true,
+    "name": "@types/typescript",
+    "version": "1200000.5.0",
+    "projects": [
+        "https://github.com/microsoft/TypeScript"
+    ],
+    "devDependencies": {
+        "@types/typescript": "workspace:."
+    },
+    "contributors": [
+        {
+            "name": "Typescript Bot",
+            "url": "https://github.com/typescript-bot",
+            "githubUsername": "typescript-bot"
+        }
+    ]
+}

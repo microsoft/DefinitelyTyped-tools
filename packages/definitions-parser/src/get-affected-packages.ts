@@ -8,7 +8,7 @@ import {
   formatDependencyVersion,
   removeTypesScope,
 } from "./packages";
-import { parsePackageSemver } from './lib/definition-parser';
+import { tryParsePackageVersion } from './lib/definition-parser';
 
 export interface Affected {
   readonly changedPackages: readonly TypingsData[];
@@ -85,7 +85,7 @@ function getReverseDependencies(
   }
   for (const typing of allPackages.allTypings()) {
     for (const [ name, version ] of typing.allPackageJsonDependencies()) {
-      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: removeTypesScope(name), version: parsePackageSemver(version) })));
+      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: removeTypesScope(name), version: tryParsePackageVersion(version) })));
       if (dependencies) {
         dependencies[1].add(typing.id);
       }

@@ -1,88 +1,21 @@
-import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import assert = require("assert");
+import * as header from "@definitelytyped/header-parser";
+import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { pathExistsSync } from "fs-extra";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
+import { deepEquals } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
-export function checkPackageJson(dirPath: string, typesVersions: readonly TypeScriptVersion[]): string[] {
+// TODO: forbid triple-slash types references like "package/v1"
+export function checkPackageJson(dirPath: string, typesVersions: readonly AllTypeScriptVersion[]): header.Header | string[] {
+  // TODO: Don't allow package.json except in the root dir of a package and of /v* folders one below the root.
+  // (this used to be in dt-header rule, but probably also elsewhere)
   const pkgJsonPath = joinPaths(dirPath, "package.json");
   if (!pathExistsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
-  return checkPackageJsonContents(dirPath, readJson(pkgJsonPath), typesVersions);
+  return header.validatePackageJson(packageNameFromPath(dirPath), joinPaths(dirPath, "package.json"), readJson(pkgJsonPath), typesVersions);
 }
-// TODO: forbid triple-slash types references like "package/v1"
-
-export function checkPackageJsonContents(dirPath: string, pkgJson: Record<string, unknown>, typesVersions: readonly TypeScriptVersion[]): string[] {
-  const errors = []
-  const pkgJsonPath = joinPaths(dirPath, "package.json");
-  const packageName = packageNameFromPath(dirPath);
-  const needsTypesVersions = typesVersions.length !== 0;
-  if (pkgJson.private !== true) {
-    errors.push(`${pkgJsonPath} should have \`"private": true\``)
-  }
-  if (pkgJson.name !== "@types/" + packageName) {
-    errors.push(`${pkgJsonPath} should have \`"name": "@types/${packageName}"\``);
-  }
-  if (typeof pkgJson.devDependencies !== "object"
-    || pkgJson.devDependencies === null
-    || (pkgJson.devDependencies as any)["@types/" + packageName] !== "workspace:.") {
-    errors.push(`In ${pkgJsonPath}, devDependencies must include \`"@types/${packageName}": "workspace:."\``);
-  }
-  // TODO: Dependencies are not allowed in devDependencies, to avoid redundancy (although this is VERY linty)
-  if (!pkgJson.version || typeof pkgJson.version !== "string") {
-    errors.push(`${pkgJsonPath} should have \`"version"\` matching the version of the implementation package.`);
-  }
-  else if (!/\d+\.\d+\.\d+/.exec(pkgJson.version)) {
-    errors.push(`${pkgJsonPath} has bad "version": should look like "NN.NN.0"`);
-  }
-  else if (!pkgJson.version.endsWith(".0")) {
-    errors.push(`${pkgJsonPath} has bad "version": must end with ".0"`);
-  }
-
-  if (needsTypesVersions) {
-    assert.strictEqual(pkgJson.types, "index", `"types" in '${pkgJsonPath}' should be "index".`);
-    const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
-    if (!deepEquals(pkgJson.typesVersions, expected)) {
-      errors.push(`"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`)
-    }
-  }
-  // NOTE: I had to install eslint-plugin-import in DT bceause DT-tools hasn't shipped a new version
-  // DONE: normal package: 3box
-  // DONE: scoped package: adeira__js
-  // DONE: old-version package: gulp/v3
-  // DONE: old-TS-version package: har-format
-  // DONE: react
-  // DONE: node
-  for (const key in pkgJson) {
-    switch (key) {
-      case "private":
-      case "dependencies":
-      case "license":
-      case "imports":
-      case "exports":
-      case "type":
-      case "name":
-      case "version":
-      case "devDependencies":
-        // "private"/"typesVersions"/"types"/"name"/"version" checked above, "dependencies" / "license" checked by types-publisher,
-        // TODO: asserts for above in types-publisher
-        break;
-      case "typesVersions":
-      case "types":
-        if (!needsTypesVersions) {
-          errors.push(`${pkgJsonPath} doesn't need to set "${key}" when no 'ts3.x' directories exist.`);
-        }
-        break;
-      default:
-        errors.push(`${pkgJsonPath} should not include field ${key}`);
-    }
-  }
-  return errors
-}
-
 /**
  * numbers in `CompilerOptions` might be enum values mapped from strings
  */
@@ -97,52 +30,50 @@ export interface DefinitelyTypedInfo {
   readonly relativeBaseUrl: string;
 }
 // TODO: Maybe check ALL of tsconfig, not just compilerOptions
-export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): string[] {
+export function checkTsconfig(options: CompilerOptionsRaw): string[] {
   const errors = []
-  if (dt) {
-    const mustHave = {
-      noEmit: true,
-      forceConsistentCasingInFileNames: true,
-      types: [],
-    };
+  const mustHave = {
+    noEmit: true,
+    forceConsistentCasingInFileNames: true,
+    types: [],
+  };
 
-    for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
-      const expected = mustHave[key];
-      const actual = options[key];
-      if (!deepEquals(expected, actual)) {
-        errors.push(
-          `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
-            actual
-          )}`
-        );
-      }
+  for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
+    const expected = mustHave[key];
+    const actual = options[key];
+    if (!deepEquals(expected, actual)) {
+      errors.push(
+        `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
+actual
+)}`
+      );
     }
+  }
 
-    for (const key in options) {
-      switch (key) {
-        case "lib":
-        case "noImplicitAny":
-        case "noImplicitThis":
-        case "strict":
-        case "strictNullChecks":
-        case "noUncheckedIndexedAccess":
-        case "strictFunctionTypes":
-        case "esModuleInterop":
-        case "allowSyntheticDefaultImports":
-        case "target":
-        case "jsx":
-        case "jsxFactory":
-        case "experimentalDecorators":
-        case "noUnusedLocals":
-        case "noUnusedParameters":
-        case "exactOptionalPropertyTypes":
-        case "module":
-          break;
-        default:
-          if (!(key in mustHave)) {
-            errors.push(`Unexpected compiler option ${key}`);
-          }
-      }
+  for (const key in options) {
+    switch (key) {
+      case "lib":
+      case "noImplicitAny":
+      case "noImplicitThis":
+      case "strict":
+      case "strictNullChecks":
+      case "noUncheckedIndexedAccess":
+      case "strictFunctionTypes":
+      case "esModuleInterop":
+      case "allowSyntheticDefaultImports":
+      case "target":
+      case "jsx":
+      case "jsxFactory":
+      case "experimentalDecorators":
+      case "noUnusedLocals":
+      case "noUnusedParameters":
+      case "exactOptionalPropertyTypes":
+      case "module":
+        break;
+      default:
+        if (!(key in mustHave)) {
+          errors.push(`Unexpected compiler option ${key}`);
+        }
     }
   }
   if (!("lib" in options)) {
@@ -189,21 +120,4 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: boolean): string[
     );
   }
   return errors;
-}
-
-function deepEquals(expected: unknown, actual: unknown): boolean {
-  if (expected instanceof Array) {
-    return (
-      actual instanceof Array && actual.length === expected.length && expected.every((e, i) => deepEquals(e, actual[i]))
-    );
-  } else if (typeof expected === "object") {
-    for (const k in expected) {
-      if (!deepEquals((expected as any)[k], (actual as any)[k])) {
-        return false;
-      }
-    }
-    return true
-  }else {
-    return expected === actual;
-  }
 }

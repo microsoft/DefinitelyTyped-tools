@@ -77,10 +77,10 @@ export function dtsCritic(
     );
   }
 
-  const dts = fs.readFileSync(dtsPath, "utf-8");
-  const header = parseDtHeader(dts);
-
   const name = findDtsName(dtsPath);
+  const packageJsonPath = path.join(path.dirname(path.resolve(dtsPath)), "package.json");
+  const header = parseDtHeader(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")));
+
   const npmInfo = getNpmInfo(name);
 
   if (isNonNpm(header)) {
@@ -128,12 +128,9 @@ If you want to check the declaration against the JavaScript source code, you mus
   }
 }
 
-function parseDtHeader(dts: string): headerParser.Header | undefined {
-  try {
-    return headerParser.parseHeaderOrFail(dts);
-  } catch (e) {
-    return undefined;
-  }
+function parseDtHeader(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
+  const result = headerParser.validatePackageJson(packageName, "package.json", packageJson, []);
+  return Array.isArray(result) ? undefined : result;
 }
 
 function isNonNpm(header: headerParser.Header | undefined): boolean {

@@ -17,5 +17,36 @@
 
       "type": "node"
     },
+    {
+      "name": "jest",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "args": [ "definitions-parser"],
+      "type": "node"
+    },
+    {
+      "name": "dts-critic test",
+      "program": "${workspaceFolder}/packages/dts-critic/dist/index.js",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "args": [ "--dts", "packages/dts-critic/testsource/tslib/index.d.ts", ],
+      "type": "node"
+    },
+    {
+      "name": "dtslint aframe",
+      "program": "${workspaceFolder}/packages/dtslint/dist/index.js",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "args": [ "../DefinitelyTyped/types/aframe", ],
+
+      "type": "node"
+    },
   ]
 }

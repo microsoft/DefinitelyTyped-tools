@@ -1,10 +1,10 @@
-import pm = require("parsimmon");
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import assert = require("assert");
+import { deepEquals, parsePackageSemver } from "@definitelytyped/utils";
 
-// TODO: This is obsolete now.
-// 1. Delete this package.
-// 2. Port checks to checking package.json.
-// 3. Port tests to package.json too.
+// TODO:
+// 1. Convert this package into a packageJson checker
+// 2. Move checks from dt-header into dtslint/checks.ts and remove the rule.
 // 4. Add test for header in dtslint that forbids it.
 // 5. Update dts-gen and DT README and ??? -- rest of ecosystem.
 /*
@@ -18,7 +18,7 @@ import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typesc
   // TypeScript Version: 2.1
 
 */
-
+// used in dts-critic
 export interface Header {
   readonly nonNpm: boolean;
   readonly libraryName: string;
@@ -28,13 +28,13 @@ export interface Header {
   readonly projects: readonly string[];
   readonly contributors: readonly Author[];
 }
-
+// used in definitions-parser
 export interface Author {
   readonly name: string;
   readonly url: string;
   readonly githubUsername: string | undefined;
 }
-
+// used locally
 export interface ParseError {
   readonly index: number;
   readonly line: number;
@@ -42,7 +42,7 @@ export interface ParseError {
   readonly expected: readonly string[];
 }
 
-export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScriptVersion[]): unknown {
+export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeScriptVersion[]): unknown {
   if (typesVersions.length === 0) {
     return undefined;
   }
@@ -56,230 +56,279 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScri
   return out;
 }
 
-export function parseHeaderOrFail(mainFileContent: string): Header {
-  const header = parseHeader(mainFileContent, /*strict*/ false);
-  if (isParseError(header)) {
-    throw new Error(renderParseError(header));
+export function validatePackageJson(packageName: string, packageJsonPath: string, packageJson: Record<string, unknown>, typesVersions: readonly AllTypeScriptVersion[]): Header | string[] {
+  const errors = []
+  const needsTypesVersions = typesVersions.length !== 0;
+  // NOTE: I had to install eslint-plugin-import in DT because DT-tools hasn't shipped a new version
+  // DONE: normal package: 3box
+  // DONE: scoped package: adeira__js
+  // DONE: old-version package: gulp/v3
+  // DONE: old-TS-version package: har-format
+  // DONE: react
+  // DONE: node
+  for (const key in packageJson) {
+    switch (key) {
+      case "private":
+      case "dependencies":
+      case "license":
+      case "imports":
+      case "exports":
+      case "type":
+      case "name":
+      case "version":
+      case "devDependencies":
+      case "projects":
+      case "typeScriptVersion":
+      case "contributors":
+      case "nonNpm":
+      case "nonNpmDescription":
+        // "dependencies" / "license" checked by types-publisher,
+        // TODO: asserts for other fields in types-publisher
+        break;
+      case "typesVersions":
+      case "types":
+        if (!needsTypesVersions) {
+          errors.push(`${packageJsonPath} doesn't need to set "${key}" when no 'ts4.x' directories exist.`);
+        }
+        break;
+      default:
+        errors.push(`${packageJsonPath} should not include property ${key}`);
+    }
   }
-  return header;
-}
+  // private
+  if (packageJson.private !== true) {
+    errors.push(`${packageJsonPath} has bad "private": must be \`"private": true\``)
+  }
+  // devDependencies
+  if (typeof packageJson.devDependencies !== "object"
+    || packageJson.devDependencies === null
+    || (packageJson.devDependencies as any)["@types/" + packageName] !== "workspace:.") {
+    errors.push(`${packageJsonPath} has bad "devDependencies": must include \`"@types/${packageName}": "workspace:."\``);
+  }
+  // TODO: disallow devDeps from containing dependencies (although this is VERY linty)
+  // TODO: Check that devDeps are NOT used in .d.ts files
 
-export function validate(mainFileContent: string): ParseError | undefined {
-  const h = parseHeader(mainFileContent, /*strict*/ true);
-  return isParseError(h) ? h : undefined;
-}
+  // typesVersions
+  if (needsTypesVersions) {
+    assert.strictEqual(packageJson.types, "index", `"types" in '${packageJsonPath}' should be "index".`);
+    const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
+    if (!deepEquals(packageJson.typesVersions, expected)) {
+      errors.push(`'${packageJsonPath}' has bad "typesVersions". Should be: ${JSON.stringify(expected, undefined, 4)}`)
+    }
+  }
 
-export function renderExpected(expected: readonly string[]): string {
-  return expected.length === 1 ? expected[0] : `one of\n\t${expected.join("\n\t")}`;
-}
-
-function renderParseError({ line, column, expected }: ParseError): string {
-  return `At ${line}:${column} : Expected ${renderExpected(expected)}`;
-}
-
-function isParseError(x: {}): x is ParseError {
-  // tslint:disable-next-line strict-type-predicates
-  return (x as ParseError).expected !== undefined;
-}
-
-/** @param strict If true, we allow fewer things to be parsed. Turned on by linting. */
-function parseHeader(text: string, strict: boolean): Header | ParseError {
-  const res = headerParser(strict).parse(text);
-  return res.status
-    ? res.value
-    : { index: res.index.offset, line: res.index.line, column: res.index.column, expected: res.expected };
-}
-
-function headerParser(strict: boolean): pm.Parser<Header> {
-  return pm.seqMap(
-    pm.regex(/\/\/ Type definitions for (non-npm package )?/),
-    parseLabel(strict),
-    pm.string("// Project: "),
-    projectParser,
-    pm.regexp(/\r?\n\/\/ Definitions by: /),
-    contributorsParser(strict),
-    definitionsParser,
-    typeScriptVersionParser,
-    pm.all, // Don't care about the rest of the file
-    // tslint:disable-next-line:variable-name
-    (str, label, _project, projects, _defsBy, contributors, _definitions, typeScriptVersion) => ({
-      libraryName: label.name,
-      libraryMajorVersion: label.major,
-      libraryMinorVersion: label.minor,
-      nonNpm: str.endsWith("non-npm package "),
+  // building the header object uses a monadic error pattern based on the one in the old header parser
+  // It's verbose and repetitive, but I didn't feel like writing a monadic `seq` to be used in only one place.
+  let libraryName = "ERROR"
+  let libraryMajorVersion = 0
+  let libraryMinorVersion = 0
+  let nonNpm = false
+  let typeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest
+  let projects: string[] = []
+  let contributors: Author[] = []
+  const nameResult = validateName()
+  const versionResult = validateVersion()
+  const nonNpmResult = validateNonNpm()
+  const typeScriptVersionResult = validateTypeScriptVersion()
+  const projectsResult = validateProjects()
+  const contributorsResult = validateContributors()
+  if (typeof nameResult === "object") {
+    errors.push(...nameResult.errors)
+  }
+  else {
+    libraryName = packageName;
+  }
+  if ('errors' in versionResult) {
+    errors.push(...versionResult.errors)
+  }
+  else {
+    libraryMajorVersion = versionResult.major
+    libraryMinorVersion = versionResult.minor
+  }
+  if (typeof nonNpmResult === "object") {
+    errors.push(...nonNpmResult.errors)
+  }
+  else {
+    nonNpm = nonNpmResult
+  }
+  if (typeof typeScriptVersionResult === "object") {
+    errors.push(...typeScriptVersionResult.errors)
+  }
+  else {
+    typeScriptVersion = typeScriptVersionResult
+  }
+  if ('errors' in projectsResult) {
+    errors.push(...projectsResult.errors)
+  }
+  else {
+    projects = projectsResult
+  }
+  if ('errors' in contributorsResult) {
+    errors.push(...contributorsResult.errors)
+  }
+  else {
+    contributors = contributorsResult
+  }
+  if (errors.length) {
+    return errors
+  }
+  else {
+    return {
+      libraryName,
+      libraryMajorVersion,
+      libraryMinorVersion,
+      nonNpm,
+      typeScriptVersion,
       projects,
       contributors,
-      typeScriptVersion,
-    })
-  );
-}
-
-interface Label {
-  readonly name: string;
-  readonly major: number;
-  readonly minor: number;
-}
-
-/*
-Allow any of the following:
-
-// Project: https://foo.com
-//          https://bar.com
-
-// Project: https://foo.com,
-//          https://bar.com
-
-// Project: https://foo.com, https://bar.com
-
-Use `\s\s+` to ensure at least 2 spaces, to  disambiguate from the next line being `// Definitions by:`.
-*/
-const separator: pm.Parser<string> = pm.regexp(/(, )|(,?\r?\n\/\/\s\s+)/);
-
-const projectParser: pm.Parser<readonly string[]> = pm.sepBy1(pm.regexp(/[^,\r\n]+/), separator);
-
-function contributorsParser(strict: boolean): pm.Parser<readonly Author[]> {
-  const contributor: pm.Parser<Author> = strict
-    ? pm.seqMap(
-        pm.regexp(/([^<]+) /, 1),
-        pm.regexp(/\<https\:\/\/github\.com\/([a-zA-Z\d\-]+)\/?\>/, 1),
-        (name, githubUsername) => ({ name, url: `https://github.com/${githubUsername}`, githubUsername })
-      )
-    : // In non-strict mode, allows arbitrary URL, and trailing whitespace.
-      pm.seqMap(pm.regexp(/([^<]+) /, 1), pm.regexp(/<([^>]+)> */, 1), (name, url) => {
-        const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)\/?$/;
-        const match = rgx.exec(url);
-        const githubUsername = match === null ? undefined : match[1];
-        // tslint:disable-next-line no-null-keyword
-        return { name, url: githubUsername ? `https://github.com/${githubUsername}` : url, githubUsername };
-      });
-  return pm.sepBy1(contributor, separator);
-}
-
-const definitionsParser = pm.regexp(/\r?\n\/\/ Definitions: [^\r\n]+/);
-
-function parseLabel(strict: boolean): pm.Parser<Label> {
-  return pm.Parser((input, index) => {
-    // Take all until the first newline.
-    const endIndex = regexpIndexOf(input, /\r|\n/, index);
-    if (endIndex === -1) {
-      return fail("EOF");
     }
-    // Index past the end of the newline.
-    const end = input[endIndex] === "\r" ? endIndex + 2 : endIndex + 1;
-    const tilNewline = input.slice(index, endIndex);
+  }
 
-    // Parse in reverse. Once we've stripped off the version, the rest is the libary name.
-    const reversed = reverse(tilNewline);
-
-    // Last digit is allowed to be "x", which acts like "0"
-    const rgx = /((\d+|x)\.(\d+)(\.\d+)?(v)? )?(.+)/;
-    const match = rgx.exec(reversed);
-    if (match === null) {
-      // tslint:disable-line no-null-keyword
-      return fail();
+  function validateName(): string | { errors: string[] } {
+    if (packageJson.name !== "@types/" + packageName) {
+      return { errors: [ `${packageJsonPath} should have \`"name": "@types/${packageName}"\``] };
     }
-    const [, version, a, b, c, v, nameReverse] = match;
-
-    let majorReverse: string;
-    let minorReverse: string;
-    if (version !== undefined) {
-      // tslint:disable-line strict-type-predicates
-      if (c !== undefined) {
-        // tslint:disable-line strict-type-predicates
-        // There is a patch version
-        majorReverse = c;
-        minorReverse = b;
-        if (strict) {
-          return fail("patch version not allowed");
+    else {
+      return packageName;
+    }
+  }
+  function validateVersion(): { major: number, minor: number } | {errors: string[]} {
+    const errors = []
+    if (!packageJson.version || typeof packageJson.version !== "string") {
+      errors.push(`${packageJsonPath} should have \`"version"\` matching the version of the implementation package.`);
+    }
+    else if (!/\d+\.\d+\.\d+/.exec(packageJson.version)) {
+      errors.push(`${packageJsonPath} has bad "version": should look like "NN.NN.0"`);
+    }
+    else if (!packageJson.version.endsWith(".0")) {
+      errors.push(`${packageJsonPath} has bad "version": must end with ".0"`);
+    }
+    else {
+      let version: "*" | { major: number, minor?: number } = "*"
+      try {
+        version = parsePackageSemver(packageJson.version)
+        if (version === "*") {
+          errors.push("Failed to parse version")
         }
-      } else {
-        majorReverse = b;
-        minorReverse = a;
+        else {
+          // TODO: parseSemverPackage will eventually return a real semver, which always has minor filled in
+          return { major: version.major, minor: version.minor ?? 0 }
+        }
+      } catch (e: any) {
+        errors.push(`'${packageJsonPath}' has bad "version": Semver parsing failed with '${e.message}'`);
       }
-      if (v !== undefined && strict) {
-        // tslint:disable-line strict-type-predicates
-        return fail("'v' not allowed");
+    }
+    return { errors }
+  }
+  function validateNonNpm(): boolean | {errors: string[] } {
+    const errors = []
+    if (packageJson.nonNpm != undefined) {
+      if (packageJson.nonNpm !== true) {
+        errors.push(`${packageJsonPath} has bad "nonNpm": must be true if present.`);
       }
+      else if (!packageJson.nonNpmDescription) {
+        errors.push(`${packageJsonPath} has missing "nonNpmDescription", which is required with "nonNpm": true.`);
+      }
+      else if (typeof packageJson.nonNpmDescription !== "string") {
+        errors.push(`${packageJsonPath} has bad "nonNpmDescription": must be a string if present.`);
+      }
+      else {
+        return true;
+      }
+      return { errors }
+    }
+    else if (packageJson.nonNpmDescription !== undefined) {
+      errors.push(`${packageJsonPath} has "nonNpmDescription" without "nonNpm": true.`);
+    }
+    if (errors.length) {
+      return { errors }
     } else {
-      if (strict) {
-        return fail("Needs MAJOR.MINOR");
-      }
-      majorReverse = "0";
-      minorReverse = "0";
+      return false
     }
-
-    const [name, major, minor] = [reverse(nameReverse), reverse(majorReverse), reverse(minorReverse)];
-    return pm.makeSuccess<Label>(end, {
-      name,
-      major: intOfString(major),
-      minor: minor === "x" ? 0 : intOfString(minor),
-    });
-
-    function fail(msg?: string): pm.Reply<Label> {
-      let expected = "foo MAJOR.MINOR";
-      if (msg !== undefined) {
-        expected += ` (${msg})`;
+  }
+  function validateTypeScriptVersion(): AllTypeScriptVersion | { errors: string[] } {
+    if (packageJson.typeScriptVersion) {
+      if ((typeof packageJson.typeScriptVersion !== "string" || !TypeScriptVersion.isTypeScriptVersion(packageJson.typeScriptVersion))) {
+        return { errors: [`${packageJsonPath} has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
+(Defaults to "${TypeScriptVersion.lowest}" if not provided.)`] };
       }
-      return pm.makeFailure(index, expected);
+      else {
+        return packageJson.typeScriptVersion
+      }
     }
-  });
-}
-
-const typeScriptVersionLineParser: pm.Parser<AllTypeScriptVersion> = pm
-  .regexp(/\/\/ (?:Minimum )?TypeScript Version: (\d.(\d))/, 1)
-  .chain<TypeScriptVersion>((v) =>
-    TypeScriptVersion.all.includes(v as TypeScriptVersion)
-      ? pm.succeed(v as TypeScriptVersion)
-      : pm.fail(`TypeScript ${v} is not yet supported.`)
-  );
-
-const typeScriptVersionParser: pm.Parser<AllTypeScriptVersion> = pm
-  .regexp(/\r?\n/)
-  .then(typeScriptVersionLineParser)
-  .fallback<TypeScriptVersion>(TypeScriptVersion.shipped[0]);
-
-export function parseTypeScriptVersionLine(line: string): AllTypeScriptVersion {
-  const result = typeScriptVersionLineParser.parse(line);
-  if (!result.status) {
-    throw new Error(`Could not parse version: line is '${line}'`);
+    return TypeScriptVersion.lowest
   }
-  return result.value;
-}
-
-function reverse(s: string): string {
-  let out = "";
-  for (let i = s.length - 1; i >= 0; i--) {
-    out += s[i];
+  function validateProjects(): string[] | { errors: string[] } {
+    const errors = []
+    if (!packageJson.projects || !Array.isArray(packageJson.projects) || !packageJson.projects.every(p => typeof p === "string")) {
+      errors.push(`${packageJsonPath} has bad "projects": must be an array of strings that point to the project web site(s).`);
+    }
+    else if (packageJson.projects.length === 0) {
+      errors.push(`${packageJsonPath} has bad "projects": must have at least one project URL.`);
+    }
+    else {
+      return packageJson.projects
+    }
+    return { errors }
   }
-  return out;
-}
-
-function regexpIndexOf(s: string, rgx: RegExp, start: number): number {
-  const index = s.slice(start).search(rgx);
-  return index === -1 ? index : index + start;
-}
-
-declare module "parsimmon" {
-  // tslint:disable-next-line no-unnecessary-qualifier
-  type Pr<T> = pm.Parser<T>; // https://github.com/Microsoft/TypeScript/issues/14121
-  export function seqMap<T, U, V, W, X, Y, Z, A, B, C>(
-    p1: Pr<T>,
-    p2: Pr<U>,
-    p3: Pr<V>,
-    p4: Pr<W>,
-    p5: Pr<X>,
-    p6: Pr<Y>,
-    p7: Pr<Z>,
-    p8: Pr<A>,
-    p9: Pr<B>,
-    cb: (a1: T, a2: U, a3: V, a4: W, a5: X, a6: Y, a7: Z, a8: A, a9: B) => C
-  ): Pr<C>;
-}
-
-function intOfString(str: string): number {
-  const n = Number.parseInt(str, 10);
-  if (Number.isNaN(n)) {
-    throw new Error(`Error in parseInt(${JSON.stringify(str)})`);
+  function validateContributors(): Author[] | { errors: string[] } {
+    const errors: string[] = []
+    if (!packageJson.contributors || !Array.isArray(packageJson.contributors)) {
+      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`);
+    }
+    else if (packageJson.contributors.length === 0) {
+      errors.push(`${packageJsonPath} has bad "contributors": must have at least one contributor.`);
+    }
+    else {
+      const es = checkPackageJsonContributors(packageJsonPath, packageJson.contributors);
+      if (es.length) {
+        errors.push(...es)
+      }
+      else {
+        return packageJson.contributors as Author[]
+      }
+    }
+    return { errors }
   }
-  return n;
+}
+
+function checkPackageJsonContributors(packageJsonPath: string, packageJsonContributors: readonly unknown[]) {
+  const errors: string[] = []
+  for (const c of packageJsonContributors) {
+    if (typeof c !== "object" || c === null) {
+      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`)
+      continue
+    }
+    if (!("name" in c) || typeof c.name !== "string") {
+      errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string, githubUsername: string }.`)
+    }
+    else if (c.name === "My Self") {
+      errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
+Author name should be your name, not the default.`)
+    }
+    if (!("githubUsername" in c) || typeof c.githubUsername !== "string") {
+      errors.push(`${packageJsonPath} has bad "githubUsername" in contributor ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string, githubUsername: string }.`)
+    }
+    else if (!("url" in c) || typeof c.url !== "string") {
+      errors.push(`${packageJsonPath} has bad "url" in contributor ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string, githubUsername: string }.`)
+    }
+    else if (c.url !== "https://github.com/" + c.githubUsername) {
+      errors.push(`${packageJsonPath} has bad "url" in contributor ${JSON.stringify(c)}
+Must be "https://github.com/${c.githubUsername}".`)
+    }
+    for (const key in c) {
+      switch (key) {
+        case "name":
+        case "url":
+        case "githubUsername":
+          break;
+        default:
+          errors.push(`${packageJsonPath} has bad contributor ${JSON.stringify(c)}: should not include property ${key}`);
+      }
+    }
+  }
+  return errors
 }
