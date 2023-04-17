@@ -46,7 +46,7 @@ export class DTMock {
       throw new Error(`Package ${packageName} does not have a package.json`);
     }
     const packageJson = JSON.parse(latestDir.get("package.json") as string);
-    const latestHeader = validatePackageJson(mangleScopedPackage(packageName), "package.json", packageJson, []);
+    const latestHeader = validatePackageJson(mangleScopedPackage(packageName), packageJson, []);
     if (Array.isArray(latestHeader)) {
       throw new Error(latestHeader.join("\n"));
     }

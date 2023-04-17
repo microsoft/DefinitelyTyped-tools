@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { validatePackageJson } from "@definitelytyped/header-parser";
+import { validatePackageJson, Header } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
 import {
   DependencyVersion,
@@ -29,6 +29,7 @@ import {
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { slicePrefixes } from "./utils";
 import path from "path";
+import assert from "assert";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -47,9 +48,10 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.libraryMajorVersion}.${typingsDataRaw.libraryMinorVersion}`;
 }
 
-export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw> {
+export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | string[]> {
+  const errors = []
   if (packageName !== packageName.toLowerCase()) {
-    throw new Error(`Package name \`${packageName}\` should be strictly lowercase`);
+    errors.push(`Package name \`${packageName}\` should be strictly lowercase`);
   }
   interface OlderVersionDir {
     readonly directoryName: string;
@@ -67,17 +69,17 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
 
   const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
-
-  const latestData: TypingsDataRaw = {
-    libraryVersionDirectoryName: undefined,
-    ...(await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost)),
-  };
+  const latestDataResult = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost)
+  if (Array.isArray(latestDataResult)) {
+    return [...errors, ...latestDataResult];
+  }
+  const latestData: TypingsDataRaw = {libraryVersionDirectoryName: undefined, ...latestDataResult,};
 
   const older = await Promise.all(
     olderVersionDirectories.map(async ({ directoryName, version: directoryVersion }) => {
       if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
         const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
-        throw new Error(
+        errors.push(
           `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
             (`v${latest}` === directoryName
               ? "."
@@ -87,35 +89,42 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
 
       // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
-      const data: TypingsDataRaw = {
-        libraryVersionDirectoryName: formatTypingVersion(directoryVersion),
-        ...(await combineDataForAllTypesVersions(
+      const result = await combineDataForAllTypesVersions(
           packageName,
           ls,
           fs.subDir(directoryName),
           moduleResolutionHost
-        )),
-      };
+        )
+      if (Array.isArray(result)) {
+        errors.push(...result)
+        return result
+      }
+      const data: TypingsDataRaw = {libraryVersionDirectoryName: formatTypingVersion(directoryVersion), ...result,};
 
       if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
         if (considerLibraryMinorVersion) {
-          throw new Error(
+          errors.push(
             `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor ?? "*"}, ` +
               `but package.json indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`);
+        } else {
+          errors.push(
+            `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
+              data.libraryMajorVersion.toString()
+          );
         }
-        throw new Error(
-          `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
-            data.libraryMajorVersion.toString()
-        );
       }
       return data;
     })
   );
+  if (errors.length) {
+    return errors
+  }
 
   const res: TypingsVersionsRaw = {};
   res[formattedLibraryVersion(latestData)] = latestData;
   for (const o of older) {
-    res[formattedLibraryVersion(o)] = o;
+    assert(!Array.isArray(o))
+    res[formattedLibraryVersion(o as TypingsDataRaw)] = o;
   }
   return res;
 }
@@ -127,7 +136,8 @@ interface LsMinusTypesVersionsAndPackageJson {
   readonly typesVersions: readonly TypeScriptVersion[];
   readonly hasPackageJson: boolean;
 }
-function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVersionsAndPackageJson {
+function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVersionsAndPackageJson | string[] {
+  const errors: string[] = [];
   const withoutPackageJson = ls.filter((name) => name !== packageJsonName);
   const [remainingLs, typesVersions] = split(withoutPackageJson, (fileOrDirectoryName) => {
     const match = /^ts(\d+\.\d+)$/.exec(fileOrDirectoryName);
@@ -137,12 +147,15 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
 
     const version = match[1];
     if (parseInt(version, 10) < 3) {
-      throw new Error(
+      errors.push(
         `Directory name starting with 'ts' should be a TypeScript version newer than 3.0. Got: ${version}`
       );
     }
     return version as TypeScriptVersion;
   });
+  if (errors.length) {
+    return errors
+  }
   return { remainingLs, typesVersions, hasPackageJson: withoutPackageJson.length !== ls.length };
 }
 
@@ -182,8 +195,13 @@ async function combineDataForAllTypesVersions(
   ls: readonly string[],
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost
-): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName">> {
-  const { remainingLs, typesVersions, hasPackageJson } = getTypesVersionsAndPackageJson(ls);
+): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
+  const errors = []
+  const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls)
+  if (Array.isArray(typesVersionAndPackageJson)) {
+    errors.push(...typesVersionAndPackageJson)
+  }
+  const { remainingLs, typesVersions, hasPackageJson } = Array.isArray(typesVersionAndPackageJson) ? { remainingLs: [], typesVersions: [], hasPackageJson: false} : typesVersionAndPackageJson;
   const packageJson = hasPackageJson
     ? (fs.readJson(packageJsonName) as {
         readonly license?: unknown;
@@ -194,21 +212,6 @@ async function combineDataForAllTypesVersions(
         readonly type?: unknown;
       })
     : {};
-  const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
-
-  const packageJsonResult = validatePackageJson(typingsPackageName, packageJsonName, packageJson, typesVersions);
-  if (Array.isArray(packageJsonResult)) {
-    throw Error(packageJsonResult.join("\n"));
-  }
-  const {
-    contributors,
-    libraryMajorVersion,
-    libraryMinorVersion,
-    typeScriptVersion: minTsVersion,
-    libraryName,
-    projects,
-  } = packageJsonResult
-
   const dataForRoot = getTypingDataForSingleTypesVersion(
     undefined,
     typingsPackageName,
@@ -216,22 +219,57 @@ async function combineDataForAllTypesVersions(
     fs,
     moduleResolutionHost
   );
+  if (Array.isArray(dataForRoot)) {
+    errors.push(...dataForRoot)
+  }
   const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
     const subFs = fs.subDir(`ts${tsVersion}`);
-    return getTypingDataForSingleTypesVersion(
+    const data = getTypingDataForSingleTypesVersion(
       tsVersion,
       typingsPackageName,
       subFs.readdir(),
       subFs,
       moduleResolutionHost
     );
+    if (Array.isArray(data)) {
+      errors.push(...data)
+    }
+    return data
   });
-  const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions];
-  const license = getLicenseFromPackageJson(packageJson.license);
-  const allowedDependencies = await getAllowedPackageJsonDependencies()
-  checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies);
-  checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies);
+  const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
+  if (Array.isArray(packageJsonType)) {
+    errors.push(...packageJsonType)
+  }
+  const packageJsonResult = validatePackageJson(typingsPackageName, packageJson, typesVersions);
+  if (Array.isArray(packageJsonResult)) {
+    errors.push(...packageJsonResult)
+  }
 
+  const {
+    contributors,
+    libraryMajorVersion,
+    libraryMinorVersion,
+    typeScriptVersion: minTsVersion,
+    libraryName,
+    projects,
+  } = Array.isArray(packageJsonResult) ? {} as Header : packageJsonResult
+  const allowedDependencies = await getAllowedPackageJsonDependencies()
+  errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies))
+  errors.push(...checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies))
+  const imports = checkPackageJsonImports(packageJson.imports, packageJsonName)
+  if (Array.isArray(imports)) {
+    errors.push(...imports)
+  }
+  const exports = checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName)
+  if (Array.isArray(exports)) {
+    errors.push(...exports)
+  }
+  const license = getLicenseFromPackageJson(packageJson.license);
+  if (errors.length) {
+    return errors
+  }
+
+  const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions] as TypingDataFromIndividualTypeScriptVersion[];
   const files = Array.from(
     flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
       declFiles.map((file) => (typescriptVersion === undefined ? file : `ts${typescriptVersion}/${file}`))
@@ -250,8 +288,8 @@ async function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    packageJsonDependencies: packageJson.dependencies,
-    packageJsonDevDependencies: packageJson.devDependencies,
+    packageJsonDependencies: packageJson.dependencies as Record<string,string>,
+    packageJsonDevDependencies: packageJson.devDependencies as Record<string, string>,
     // TODO: Add devDependencies here (aka testDependencies)
     contentHash: hash(
       hasPackageJson ? [...files, packageJsonName] : files,
@@ -259,9 +297,9 @@ async function combineDataForAllTypesVersions(
       fs
     ),
     globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
-    imports: checkPackageJsonImports(packageJson.imports, packageJsonName),
-    exports: checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName),
-    type: packageJsonType,
+    imports: imports as object | undefined,
+    exports: exports as string | object | undefined,
+    type: packageJsonType as "module" | undefined,
   };
 }
 
@@ -289,7 +327,8 @@ function getTypingDataForSingleTypesVersion(
   ls: readonly string[],
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost
-): TypingDataFromIndividualTypeScriptVersion {
+): TypingDataFromIndividualTypeScriptVersion | string[] {
+  const errors = []
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   const configHost: ts.ParseConfigHost = {
     ...moduleResolutionHost,
@@ -302,10 +341,10 @@ function getTypingDataForSingleTypesVersion(
     configHost,
     path.resolve("/", fs.debugPath())
   ).options;
-  checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath());
+  errors.push(...checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath()));
   // TODO: tests should be Set<string>, not Map<string, SourceFile>
   const { types, tests } = allReferencedFiles(
-    tsconfig.files!,
+    tsconfig.files ?? [],
     fs,
     packageName,
     moduleResolutionHost,
@@ -320,18 +359,17 @@ function getTypingDataForSingleTypesVersion(
         .filter(Boolean)
     : [];
   if (ls.includes(unusedFilesName) && !otherFiles.length) {
-    throw new Error(`In ${packageName}: OTHER_FILES.txt is empty.`);
+    errors.push(`In ${packageName}: OTHER_FILES.txt is empty.`);
   }
   for (const file of otherFiles) {
     if (!isRelativePath(file)) {
-      throw new Error(`In ${packageName}: A path segment is empty or all dots ${file}`);
+      errors.push(`In ${packageName}: A path segment is empty or all dots ${file}`);
     }
   }
-  // Note: findAllUnusedFiles also modifies usedFiles and otherFiles
-  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, packageName, fs);
-  // TODO: Don't throw here, but instead return a list of errors to be printed by ???
+  // Note: findAllUnusedFiles also modifies usedFiles and otherFiles and errors
+  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, errors, packageName, fs);
   if (unusedFiles.length) {
-    throw new Error('\n\t* ' + unusedFiles.map(unused => `Unused file ${unused}`).join("\n\t* ") + `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`)
+    errors.push('\n\t* ' + unusedFiles.map(unused => `Unused file ${unused}`).join("\n\t* ") + `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`)
   }
   for (const untestedTypeFile of filter(
     otherFiles,
@@ -345,6 +383,8 @@ function getTypingDataForSingleTypesVersion(
     );
   }
 
+  if (errors.length)
+    return errors
   return {
     typescriptVersion,
     globals: getDeclaredGlobals(types),
@@ -354,16 +394,17 @@ function getTypingDataForSingleTypesVersion(
 }
 
 // TODO: Expand these checks too, adding name and version just like dtslint
+// TODO: Maybe should be in header-parser now?
 function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
   if (exports === undefined) return exports;
   if (typeof exports === "string") {
     return exports;
   }
   if (typeof exports !== "object") {
-    throw new Error(`Package exports at path ${path} should be an object or string.`);
+    return [`Package exports at path ${path} should be an object or string.`];
   }
   if (exports === null) {
-    throw new Error(`Package exports at path ${path} should not be null.`);
+    return [`Package exports at path ${path} should not be null.`];
   }
   if (!(exports as Record<string, unknown>)["./package.json"]) {
     (exports as Record<string, unknown>)["./package.json"] = "./package.json";
@@ -371,13 +412,13 @@ function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string)
   return exports;
 }
 
-function checkPackageJsonImports(imports: unknown, path: string) {
+function checkPackageJsonImports(imports: unknown, path: string): object | string[] | undefined {
   if (imports === undefined) return imports;
   if (typeof imports !== "object") {
-    throw new Error(`Package imports at path ${path} should be an object or string.`);
+    return [`Package imports at path ${path} should be an object or string.`];
   }
-  if (imports === null) {
-    throw new Error(`Package imports at path ${path} should not be null.`);
+  else if (imports === null) {
+    return [`Package imports at path ${path} should not be null.`];
   }
   return imports;
 }
@@ -385,7 +426,7 @@ function checkPackageJsonImports(imports: unknown, path: string) {
 function checkPackageJsonType(type: unknown, path: string) {
   if (type === undefined) return type;
   if (type !== "module") {
-    throw new Error(`Package type at path ${path} can only be 'module'.`);
+    return [`Package type at path ${path} can only be 'module'.`];
   }
   return type;
 }
@@ -394,48 +435,51 @@ function checkPackageJsonDependencies(
   dependencies: unknown,
   path: string,
   allowedDependencies: ReadonlySet<string>
-): asserts dependencies is Record<string, string> {
+): string[] {
   if (dependencies === undefined) {
-    return;
+    return [];
   }
   if (dependencies === null || typeof dependencies !== "object") {
-    throw new Error(`${path} should contain "dependencies" or not exist.`);
+    return [`${path} should contain "dependencies" or not exist.`];
   }
 
+  const errors: string[] = [];
   for (const dependencyName of Object.keys(dependencies!)) {
     // `dependencies` cannot be null because of check above.
     if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
       const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
 Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
-      throw new Error(`In ${path}: ${msg}`);
+      errors.push(`In ${path}: ${msg}`);
     }
     const version = (dependencies as { [key: string]: unknown })[dependencyName];
     if (typeof version !== "string") {
-      // tslint:disable-line strict-type-predicates
-      throw new Error(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
+      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
     }
   }
+  return errors
 }
 
-function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): void {
+function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): string[] {
+  const errors = []
   const tsconfigPath = `${directoryPath}/tsconfig.json`;
   if (tsconfig.include) {
-    throw new Error(`In tsconfig, don't use "include", must use "files"`);
+    errors.push(`In tsconfig, don't use "include", must use "files"`);
   }
 
   const files = tsconfig.files;
   if (!files) {
-    throw new Error(`${tsconfigPath} needs to specify  "files"`);
+    errors.push(`${tsconfigPath} needs to specify  "files"`);
+    return errors
   }
   for (const file of files) {
     if (file.startsWith("./")) {
-      throw new Error(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
+      errors.push(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
     }
     if (!isRelativePath(file)) {
-      throw new Error(`In ${tsconfigPath}: A path segment is empty or all dots ${file}`);
+      errors.push(`In ${tsconfigPath}: A path segment is empty or all dots ${file}`);
     }
     if (file.endsWith(".d.ts") && file !== "index.d.ts") {
-      throw new Error(`${packageName}: Only index.d.ts may be listed explicitly in tsconfig's "files" entry.
+      errors.push(`${packageName}: Only index.d.ts may be listed explicitly in tsconfig's "files" entry.
 Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`);
     }
 
@@ -447,10 +491,11 @@ Other d.ts files must either be referenced through index.d.ts, tests, or added t
             ? `Expected file '${file}' to be named '${expectedName}' or to be inside a '${directoryPath}/test/' directory`
             : `Unexpected file extension for '${file}' -- expected '.ts' or '.tsx' (maybe this should not be in "files", but ` +
               "OTHER_FILES.txt)";
-        throw new Error(message);
+        errors.push(message);
       }
     }
   }
+  return errors;
 }
 
 function isRelativePath(path: string) {
@@ -484,24 +529,25 @@ export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
 
 const unusedFilesName = "OTHER_FILES.txt";
 
-/** Modifies usedFiles and otherFiles */
+/** Modifies usedFiles and otherFiles and errors */
 function findAllUnusedFiles(
   ls: readonly string[],
   usedFiles: Set<string>,
   otherFiles: string[],
+  errors: string[],
   packageName: string,
-  fs: FS
+  fs: FS,
 ): string[] {
   // Double-check that no windows "\\" broke in.
   for (const fileName of usedFiles) {
     if (hasWindowsSlashes(fileName)) {
-      throw new Error(`In ${packageName}: windows slash detected in ${fileName}`);
+      errors.push(`In ${packageName}: windows slash detected in ${fileName}`);
     }
   }
-  return findAllUnusedRecur(new Set(ls), usedFiles, new Set(otherFiles), fs);
+  return findAllUnusedRecur(new Set(ls), usedFiles, new Set(otherFiles), errors, fs);
 }
 
-function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherFiles: Set<string>, fs: FS): string[] {
+function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherFiles: Set<string>, errors: string[], fs: FS): string[] {
   const unused = []
   for (const lsEntry of ls) {
     if (usedFiles.has(lsEntry)) {
@@ -521,8 +567,7 @@ function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherF
 
       const lssubdir = subdir.readdir();
       if (lssubdir.length === 0) {
-        // tslint:disable-next-line strict-string-expressions
-        throw new Error(`Empty directory ${subdir.debugPath()} (${join(usedFiles)})`);
+        errors.push(`Empty directory ${subdir.debugPath()} (${join(usedFiles)})`);
       }
 
       function takeSubdirectoryOutOfSet(originalSet: Set<string>): Set<string> {
@@ -536,7 +581,7 @@ function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherF
         }
         return subdirSet;
       }
-      findAllUnusedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(otherFiles), subdir);
+      findAllUnusedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(otherFiles), errors, subdir);
     } else {
       if (
         lsEntry.toLowerCase() !== "readme.md" &&
@@ -551,11 +596,11 @@ function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherF
   }
   for (const otherFile of otherFiles) {
     if (usedFiles.has(otherFile)) {
-      throw new Error(
+      errors.push(
         `File ${fs.debugPath()}${otherFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`
       );
     }
-    throw new Error(`File ${fs.debugPath()}/${otherFile} listed in ${unusedFilesName} does not exist.`);
+    errors.push(`File ${fs.debugPath()}/${otherFile} listed in ${unusedFilesName} does not exist.`);
   }
   return unused
 }

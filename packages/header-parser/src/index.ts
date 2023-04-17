@@ -56,7 +56,7 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeS
   return out;
 }
 
-export function validatePackageJson(packageName: string, packageJsonPath: string, packageJson: Record<string, unknown>, typesVersions: readonly AllTypeScriptVersion[]): Header | string[] {
+export function validatePackageJson(packageName: string, packageJson: Record<string, unknown>, typesVersions: readonly AllTypeScriptVersion[]): Header | string[] {
   const errors = []
   const needsTypesVersions = typesVersions.length !== 0;
   // NOTE: I had to install eslint-plugin-import in DT because DT-tools hasn't shipped a new version
@@ -91,32 +91,32 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
       case "typesVersions":
       case "types":
         if (!needsTypesVersions) {
-          errors.push(`${packageJsonPath} doesn't need to set "${key}" when no 'ts4.x' directories exist.`);
+          errors.push(`${packageName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`);
         }
         break;
       default:
-        errors.push(`${packageJsonPath} should not include property ${key}`);
+        errors.push(`${packageName}'s package.json should not include property ${key}`);
     }
   }
   // private
   if (packageJson.private !== true) {
-    errors.push(`${packageJsonPath} has bad "private": must be \`"private": true\``)
+    errors.push(`${packageName}'s package.json has bad "private": must be \`"private": true\``)
   }
   // devDependencies
   if (typeof packageJson.devDependencies !== "object"
     || packageJson.devDependencies === null
     || (packageJson.devDependencies as any)["@types/" + packageName] !== "workspace:.") {
-    errors.push(`${packageJsonPath} has bad "devDependencies": must include \`"@types/${packageName}": "workspace:."\``);
+    errors.push(`${packageName}'s package.json has bad "devDependencies": must include \`"@types/${packageName}": "workspace:."\``);
   }
   // TODO: disallow devDeps from containing dependencies (although this is VERY linty)
   // TODO: Check that devDeps are NOT used in .d.ts files
 
   // typesVersions
   if (needsTypesVersions) {
-    assert.strictEqual(packageJson.types, "index", `"types" in '${packageJsonPath}' should be "index".`);
+    assert.strictEqual(packageJson.types, "index", `"types" in '${packageName}'s package.json' should be "index".`);
     const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
     if (!deepEquals(packageJson.typesVersions, expected)) {
-      errors.push(`'${packageJsonPath}' has bad "typesVersions". Should be: ${JSON.stringify(expected, undefined, 4)}`)
+      errors.push(`'${packageName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(expected, undefined, 4)}`)
     }
   }
 
@@ -189,7 +189,7 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
 
   function validateName(): string | { errors: string[] } {
     if (packageJson.name !== "@types/" + packageName) {
-      return { errors: [ `${packageJsonPath} should have \`"name": "@types/${packageName}"\``] };
+      return { errors: [ `${packageName}'s package.json should have \`"name": "@types/${packageName}"\``] };
     }
     else {
       return packageName;
@@ -198,13 +198,13 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
   function validateVersion(): { major: number, minor: number } | {errors: string[]} {
     const errors = []
     if (!packageJson.version || typeof packageJson.version !== "string") {
-      errors.push(`${packageJsonPath} should have \`"version"\` matching the version of the implementation package.`);
+      errors.push(`${packageName}'s package.json should have \`"version"\` matching the version of the implementation package.`);
     }
     else if (!/\d+\.\d+\.\d+/.exec(packageJson.version)) {
-      errors.push(`${packageJsonPath} has bad "version": should look like "NN.NN.0"`);
+      errors.push(`${packageName}'s package.json has bad "version": should look like "NN.NN.0"`);
     }
     else if (!packageJson.version.endsWith(".0")) {
-      errors.push(`${packageJsonPath} has bad "version": must end with ".0"`);
+      errors.push(`${packageName}'s package.json has bad "version": must end with ".0"`);
     }
     else {
       let version: "*" | { major: number, minor?: number } = "*"
@@ -218,7 +218,7 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
           return { major: version.major, minor: version.minor ?? 0 }
         }
       } catch (e: any) {
-        errors.push(`'${packageJsonPath}' has bad "version": Semver parsing failed with '${e.message}'`);
+        errors.push(`'${packageName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`);
       }
     }
     return { errors }
@@ -227,13 +227,13 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
     const errors = []
     if (packageJson.nonNpm != undefined) {
       if (packageJson.nonNpm !== true) {
-        errors.push(`${packageJsonPath} has bad "nonNpm": must be true if present.`);
+        errors.push(`${packageName}'s package.json has bad "nonNpm": must be true if present.`);
       }
       else if (!packageJson.nonNpmDescription) {
-        errors.push(`${packageJsonPath} has missing "nonNpmDescription", which is required with "nonNpm": true.`);
+        errors.push(`${packageName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`);
       }
       else if (typeof packageJson.nonNpmDescription !== "string") {
-        errors.push(`${packageJsonPath} has bad "nonNpmDescription": must be a string if present.`);
+        errors.push(`${packageName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
       }
       else {
         return true;
@@ -241,7 +241,7 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
       return { errors }
     }
     else if (packageJson.nonNpmDescription !== undefined) {
-      errors.push(`${packageJsonPath} has "nonNpmDescription" without "nonNpm": true.`);
+      errors.push(`${packageName}'s package.json has "nonNpmDescription" without "nonNpm": true.`);
     }
     if (errors.length) {
       return { errors }
@@ -252,7 +252,7 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
   function validateTypeScriptVersion(): AllTypeScriptVersion | { errors: string[] } {
     if (packageJson.typeScriptVersion) {
       if ((typeof packageJson.typeScriptVersion !== "string" || !TypeScriptVersion.isTypeScriptVersion(packageJson.typeScriptVersion))) {
-        return { errors: [`${packageJsonPath} has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
+        return { errors: [`${packageName}'s package.json has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
 (Defaults to "${TypeScriptVersion.lowest}" if not provided.)`] };
       }
       else {
@@ -264,10 +264,10 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
   function validateProjects(): string[] | { errors: string[] } {
     const errors = []
     if (!packageJson.projects || !Array.isArray(packageJson.projects) || !packageJson.projects.every(p => typeof p === "string")) {
-      errors.push(`${packageJsonPath} has bad "projects": must be an array of strings that point to the project web site(s).`);
+      errors.push(`${packageName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`);
     }
     else if (packageJson.projects.length === 0) {
-      errors.push(`${packageJsonPath} has bad "projects": must have at least one project URL.`);
+      errors.push(`${packageName}'s package.json has bad "projects": must have at least one project URL.`);
     }
     else {
       return packageJson.projects
@@ -277,13 +277,13 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
   function validateContributors(): Author[] | { errors: string[] } {
     const errors: string[] = []
     if (!packageJson.contributors || !Array.isArray(packageJson.contributors)) {
-      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`);
+      errors.push(`${packageName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`);
     }
     else if (packageJson.contributors.length === 0) {
-      errors.push(`${packageJsonPath} has bad "contributors": must have at least one contributor.`);
+      errors.push(`${packageName}'s package.json has bad "contributors": must have at least one contributor.`);
     }
     else {
-      const es = checkPackageJsonContributors(packageJsonPath, packageJson.contributors);
+      const es = checkPackageJsonContributors(packageName, packageJson.contributors);
       if (es.length) {
         errors.push(...es)
       }
@@ -295,32 +295,32 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
   }
 }
 
-function checkPackageJsonContributors(packageJsonPath: string, packageJsonContributors: readonly unknown[]) {
+function checkPackageJsonContributors(packageName: string, packageJsonContributors: readonly unknown[]) {
   const errors: string[] = []
   for (const c of packageJsonContributors) {
     if (typeof c !== "object" || c === null) {
-      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`)
+      errors.push(`${packageName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`)
       continue
     }
     if (!("name" in c) || typeof c.name !== "string") {
-      errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "name" in contributor ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
     }
     else if (c.name === "My Self") {
-      errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "name" in contributor ${JSON.stringify(c)}
 Author name should be your name, not the default.`)
     }
     if ("githubUsername" in c) {
       if (typeof c.githubUsername !== "string") {
-        errors.push(`${packageJsonPath} has bad "githubUsername" in contributor ${JSON.stringify(c)}
+        errors.push(`${packageName}'s package.json has bad "githubUsername" in contributor ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
       }
       else if ("url" in c) {
-        errors.push(`${packageJsonPath} has bad contributor: should not have both "githubUsername" and "url" properties in contributor ${JSON.stringify(c)}`)
+        errors.push(`${packageName}'s package.json has bad contributor: should not have both "githubUsername" and "url" properties in contributor ${JSON.stringify(c)}`)
       }
     }
     else if ("url" in c && typeof c.url !== "string") {
-      errors.push(`${packageJsonPath} has bad "url" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "url" in contributor ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
     }
     for (const key in c) {
@@ -330,7 +330,7 @@ Must be an object of type { name: string, url: string } | { name: string, github
         case "githubUsername":
           break;
         default:
-          errors.push(`${packageJsonPath} has bad contributor: should not include property ${key} in ${JSON.stringify(c)}`);
+          errors.push(`${packageName}'s package.json has bad contributor: should not include property ${key} in ${JSON.stringify(c)}`);
       }
     }
   }

@@ -45,58 +45,58 @@ describe("validatePackageJson", () => {
   it("requires private: true", () => {
     const pkg = { ...pkgJson };
     delete pkg.private;
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", pkg, [])).toEqual([
-      `cort-start/hapi/package.json has bad "private": must be \`"private": true\``
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json has bad "private": must be \`"private": true\``
     ]);
   });
   it("requires name", () => {
     const pkg = { ...pkgJson };
     delete pkg.name;
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", pkg, [])).toEqual([
-      "cort-start/hapi/package.json should have `\"name\": \"@types/hapi\"`"
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      "hapi's package.json should have `\"name\": \"@types/hapi\"`"
     ]);
   });
   it("requires name to match", () => {
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, name: "@types/sad" }, [])).toEqual([
-      "cort-start/hapi/package.json should have `\"name\": \"@types/hapi\"`"
+    expect(validatePackageJson("hapi", { ...pkgJson, name: "@types/sad" }, [])).toEqual([
+      "hapi's package.json should have `\"name\": \"@types/hapi\"`"
     ]);
   });
   it("requires devDependencies", () => {
     const pkg = { ...pkgJson };
     delete pkg.devDependencies;
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", pkg, [])).toEqual([
-      `cort-start/hapi/package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
     ]);
   });
   it("requires devDependencies to contain self-package", () => {
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, devDependencies: { } }, [])).toEqual([
-      `cort-start/hapi/package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
+    expect(validatePackageJson("hapi", { ...pkgJson, devDependencies: { } }, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
     ]);
   });
   it("requires devDependencies to contain self-package version 'workspace:.'", () => {
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, devDependencies: { "@types/hapi": "*" } }, [])).toEqual([
-      `cort-start/hapi/package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
+    expect(validatePackageJson("hapi", { ...pkgJson, devDependencies: { "@types/hapi": "*" } }, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``
     ]);
   });
   it("requires version", () => {
     const pkg = { ...pkgJson };
     delete pkg.version;
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", pkg, [])).toEqual([
-      `cort-start/hapi/package.json should have \`"version"\` matching the version of the implementation package.`
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json should have \`"version"\` matching the version of the implementation package.`
     ]);
   });
   it("requires version to be NN.NN.NN", () => {
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, version: "hi there" }, [])).toEqual([
-      `cort-start/hapi/package.json has bad "version": should look like "NN.NN.0"`
+    expect(validatePackageJson("hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
+      `hapi's package.json has bad "version": should look like "NN.NN.0"`
     ]);
   });
   it("requires version to end with .0", () => {
-    expect(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
-      `cort-start/hapi/package.json has bad "version": must end with ".0"`
+    expect(validatePackageJson("hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
+      `hapi's package.json has bad "version": must end with ".0"`
     ]);
   });
   it("works with old-version packages", () => {
-    expect(Array.isArray(validatePackageJson("hapi", "cort-start/hapi/package.json", { ...pkgJson, version: "16.6.0" }, []))).toBeFalsy();
+    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.0" }, []))).toBeFalsy();
   })
 })
 describe("makeTypesVersionsForPackageJson", () => {

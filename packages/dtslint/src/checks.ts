@@ -14,7 +14,7 @@ export function checkPackageJson(dirPath: string, typesVersions: readonly AllTyp
   if (!pathExistsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
-  return header.validatePackageJson(packageNameFromPath(dirPath), joinPaths(dirPath, "package.json"), readJson(pkgJsonPath), typesVersions);
+  return header.validatePackageJson(packageNameFromPath(dirPath), readJson(pkgJsonPath), typesVersions);
 }
 /**
  * numbers in `CompilerOptions` might be enum values mapped from strings

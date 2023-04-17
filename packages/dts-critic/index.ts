@@ -129,7 +129,7 @@ If you want to check the declaration against the JavaScript source code, you mus
 }
 
 function parseDtHeader(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
-  const result = headerParser.validatePackageJson(packageName, "package.json", packageJson, []);
+  const result = headerParser.validatePackageJson(packageName, packageJson, []);
   return Array.isArray(result) ? undefined : result;
 }
 
