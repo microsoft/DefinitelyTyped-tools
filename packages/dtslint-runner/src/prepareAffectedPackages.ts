@@ -19,16 +19,16 @@ export async function prepareAffectedPackages({
     parseInParallel: nProcesses > 1,
   };
   const dt = await getDefinitelyTyped(options, log);
-  await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
+  const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
   try {
-    await checkParseResults(/*includeNpmChecks*/ false, dt);
+    checkParseResults(allPackages);
   } catch (err) {
-    await getAffectedPackagesFromDiff(dt, definitelyTypedPath, "affected");
+    await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
     throw err;
   }
 
   const { changedPackages, dependentPackages } = await getAffectedPackagesFromDiff(
-    dt,
+    allPackages,
     definitelyTypedPath,
     "affected"
   );

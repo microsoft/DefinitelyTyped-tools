@@ -14,7 +14,6 @@ import {
   flatMapIterable,
   mapIterable,
   mapDefined,
-  FS,
   consoleLogger,
   assertDefined,
   cacheDir,
@@ -89,11 +88,10 @@ export function gitChanges(diffs: GitDiff[]): PackageId[] {
 }
 
 export async function getAffectedPackagesFromDiff(
-  dt: FS,
+  allPackages: AllPackages,
   definitelyTypedPath: string,
   selection: "all" | "affected" | RegExp
 ) {
-  const allPackages = await AllPackages.read(dt);
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {

@@ -60,8 +60,9 @@ export async function parseDefinitions(
     throw new Error(errors.join("\n"));
   }
   log.info("Parsing took " + (Date.now() - start) / 1000 + " s");
-  await writeDataFile(typesDataFilename, sorted(typings));
-  return AllPackages.from(typings, readNotNeededPackages(dt));
+  const sortedTypings = sorted(typings);
+  await writeDataFile(typesDataFilename, sortedTypings);
+  return AllPackages.from(sortedTypings, readNotNeededPackages(dt));
 }
 
 function sorted<T>(obj: { [name: string]: T }): { [name: string]: T } {

@@ -279,9 +279,6 @@ export function validatePackageJson(packageName: string, packageJson: Record<str
     if (!packageJson.contributors || !Array.isArray(packageJson.contributors)) {
       errors.push(`${packageName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`);
     }
-    else if (packageJson.contributors.length === 0) {
-      errors.push(`${packageName}'s package.json has bad "contributors": must have at least one contributor.`);
-    }
     else {
       const es = checkPackageJsonContributors(packageName, packageJson.contributors);
       if (es.length) {
