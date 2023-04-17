@@ -2,7 +2,7 @@
 import { join } from "path";
 import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 import { existsSync, readdirSync, statSync } from "fs";
-import { CompilerOptionsRaw, checkPackageJsonContents, checkTsconfig } from "../src/checks";
+import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 
 const testDir = __dirname;
@@ -66,23 +66,19 @@ describe("dtslint", () => {
     "contributors": [
       {
         "name": "Rafael Souza Fijalkowski",
-        "url": "https://github.com/rafaelsouzaf",
         "githubUsername": "rafaelsouzaf"
       },
       {
         "name": "Justin Simms",
-        "url": "https://github.com/jhsimms",
         "githubUsername": "jhsimms"
       },
       {
         "name": "Simon Schick",
-        "url": "https://github.com/SimonSchick",
         "githubUsername": "SimonSchick"
       },
       {
         "name": "Rodrigo Saboya",
-        "url": "https://github.com/saboya",
-        "githubUsername": "saboya"
+        "url": "https://example.com/saboya",
       }
     ]
   }
@@ -116,9 +112,6 @@ describe("dtslint", () => {
           'Unexpected compiler option paths'
         ]);
       });
-    });
-    describe("checkPackageJson", () => {
-      ;
     });
     describe("assertPackageIsNotDeprecated", () => {
       it("disallows packages that are in notNeededPackages.json", () => {

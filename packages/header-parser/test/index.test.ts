@@ -26,22 +26,18 @@ describe("validatePackageJson", () => {
     "contributors": [
       {
         "name": "Rafael Souza Fijalkowski",
-        "url": "https://github.com/rafaelsouzaf",
         "githubUsername": "rafaelsouzaf"
       },
       {
         "name": "Justin Simms",
-        "url": "https://github.com/jhsimms",
-        "githubUsername": "jhsimms"
+        "url": "https://example.com/jhsimms",
       },
       {
         "name": "Simon Schick",
-        "url": "https://github.com/SimonSchick",
         "githubUsername": "SimonSchick"
       },
       {
         "name": "Rodrigo Saboya",
-        "url": "https://github.com/saboya",
         "githubUsername": "saboya"
       }
     ]
@@ -153,9 +149,3 @@ describe("makeTypesVersionsForPackageJson", () => {
 }`);
   });
 });
-
-function dedent(strings: TemplateStringsArray): string {
-  expect(strings).toHaveLength(1);
-  const x = strings[0].trim();
-  return x.replace(/\n +/g, "\n");
-}

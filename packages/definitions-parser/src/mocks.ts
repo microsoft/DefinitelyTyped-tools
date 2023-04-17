@@ -307,7 +307,6 @@ function packageJson(packageName: string, version: string, dependencies: Record<
     "projects": ["https://project"],
     "contributors": [{
         "name": "The Dragon Quest Slime",
-        "url": "https://github.com/slime",
         "githubUsername": "slime"
     }],
     "dependencies": {

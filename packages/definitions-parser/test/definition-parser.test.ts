@@ -44,8 +44,7 @@ describe(getTypingInfo, () => {
         "contributors": [
           {
             "name": "Example",
-            "url": "https://github.com/example",
-            "githubUsername": "example"
+            "url": "https://example.com/example",
           }
         ],
         "devDependencies": {
@@ -84,8 +83,7 @@ describe(getTypingInfo, () => {
         "contributors": [
           {
             "name": "Example",
-            "url": "https://github.com/ñ",
-            "githubUsername": "ñ"
+            "url": "https://zombo.com/ñ",
           }
         ],
         "dependencies": {
@@ -123,7 +121,6 @@ export function myFunction(arg:string): string;
         "contributors": [
           {
             "name": "Example",
-            "url": "https://github.com/ñ",
             "githubUsername": "ñ"
           }
         ],
@@ -193,7 +190,6 @@ export * from 'buffer';
         "contributors": [
           {
             "name": "Noone",
-            "url": "https://github.com/noone",
             "githubUsername": "noone"
           }
         ],
@@ -278,7 +274,6 @@ const a = new webpack.AutomaticPrefetchPlugin();
         "contributors": [
           {
             "name": "Qubo",
-            "url": "https://github.com/tkqubo",
             "githubUsername": "tkqubo"
           }
         ],
@@ -360,7 +355,6 @@ import route = require('@ember/routing/route');
     "contributors": [
         {
             "name": "Chris Krycho",
-            "url": "https://github.com/chriskrycho",
             "githubUsername": "chriskrycho"
         }
     ]

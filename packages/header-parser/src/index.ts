@@ -85,6 +85,9 @@ export function validatePackageJson(packageName: string, packageJsonPath: string
         // "dependencies" / "license" checked by types-publisher,
         // TODO: asserts for other fields in types-publisher
         break;
+        // TODO: Only until Jake drops it
+      case "unmangledName":
+        break;
       case "typesVersions":
       case "types":
         if (!needsTypesVersions) {
@@ -296,28 +299,29 @@ function checkPackageJsonContributors(packageJsonPath: string, packageJsonContri
   const errors: string[] = []
   for (const c of packageJsonContributors) {
     if (typeof c !== "object" || c === null) {
-      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`)
+      errors.push(`${packageJsonPath} has bad "contributors": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`)
       continue
     }
     if (!("name" in c) || typeof c.name !== "string") {
       errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
-Must be an object of type { name: string, url: string, githubUsername: string }.`)
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
     }
     else if (c.name === "My Self") {
       errors.push(`${packageJsonPath} has bad "name" in contributor ${JSON.stringify(c)}
 Author name should be your name, not the default.`)
     }
-    if (!("githubUsername" in c) || typeof c.githubUsername !== "string") {
-      errors.push(`${packageJsonPath} has bad "githubUsername" in contributor ${JSON.stringify(c)}
-Must be an object of type { name: string, url: string, githubUsername: string }.`)
+    if ("githubUsername" in c) {
+      if (typeof c.githubUsername !== "string") {
+        errors.push(`${packageJsonPath} has bad "githubUsername" in contributor ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
+      }
+      else if ("url" in c) {
+        errors.push(`${packageJsonPath} has bad contributor: should not have both "githubUsername" and "url" properties in contributor ${JSON.stringify(c)}`)
+      }
     }
-    else if (!("url" in c) || typeof c.url !== "string") {
+    else if ("url" in c && typeof c.url !== "string") {
       errors.push(`${packageJsonPath} has bad "url" in contributor ${JSON.stringify(c)}
-Must be an object of type { name: string, url: string, githubUsername: string }.`)
-    }
-    else if (c.url !== "https://github.com/" + c.githubUsername) {
-      errors.push(`${packageJsonPath} has bad "url" in contributor ${JSON.stringify(c)}
-Must be "https://github.com/${c.githubUsername}".`)
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`)
     }
     for (const key in c) {
       switch (key) {
@@ -326,7 +330,7 @@ Must be "https://github.com/${c.githubUsername}".`)
         case "githubUsername":
           break;
         default:
-          errors.push(`${packageJsonPath} has bad contributor ${JSON.stringify(c)}: should not include property ${key}`);
+          errors.push(`${packageJsonPath} has bad contributor: should not include property ${key} in ${JSON.stringify(c)}`);
       }
     }
   }
