@@ -1,6 +1,6 @@
 import assert = require("assert");
 import { Author } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, assertDefined, unique, parsePackageSemver } from "@definitelytyped/utils";
+import { FS, mapValues, assertSorted, assertDefined, unique } from "@definitelytyped/utils";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as semver from "semver";
 import { readDataFile } from "./data-file";
@@ -75,7 +75,8 @@ export class AllPackages {
 
   tryResolve(dep: PackageId): PackageId {
     const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
-    return (versions && versions.tryGet(dep.version)?.id) || dep;
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${dep.version.major}${dep.version.minor ?? ""}`)
+    return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
   resolve(dep: PackageId): PackageIdWithDefiniteVersion {
@@ -83,7 +84,8 @@ export class AllPackages {
     if (!versions) {
       throw new Error(`No typings found with name '${dep.name}'.`);
     }
-    return versions.get(dep.version).id;
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${dep.version.major}${dep.version.minor ?? ""}`)
+    return versions.get(depVersion).id;
   }
 
   /** Gets the latest version of a package. E.g. getLatest(node v6) was node v10 (before node v11 came out). */
@@ -114,7 +116,7 @@ export class AllPackages {
 
   tryGetTypingsData({ name, version }: PackageId): TypingsData | undefined {
     const versions = this.data.get(getMangledNameForScopedPackage(name));
-    return versions && versions.tryGet(version);
+    return versions && versions.tryGet(new semver.Range(version === "*" ? "*" : `^${version.major}${version.minor ?? ""}`));
   }
 
   allPackages(): readonly AnyPackage[] {
@@ -148,7 +150,7 @@ export class AllPackages {
       if (pkg.name === dtName) continue
       const versions = this.data.get(dtName);
       if (versions) {
-        yield versions.get(parsePackageSemver(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
+        yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
       }
     }
   }
@@ -477,32 +479,28 @@ export class TypingsVersions {
   getAll(): Iterable<TypingsData> {
     return this.map.values();
   }
-  // TODO: Need to use Semver instead of DependencyVersion, and getLatestMatch should use Semver ranges
-  get(version: DependencyVersion, errorMessage?: string): TypingsData {
-    return version === "*" ? this.getLatest() : this.getLatestMatch(version, errorMessage);
+  get(version: semver.Range, errorMessage?: string): TypingsData {
+    const data = this.tryGet(version);
+    if (!data) {
+      // throw new Error(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
+      console.log(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
+      return this.getLatest()
+    }
+    return data;
   }
-
-  tryGet(version: DependencyVersion): TypingsData | undefined {
-    return version === "*" ? this.getLatest() : this.tryGetLatestMatch(version);
+  tryGet(version: semver.Range): TypingsData | undefined {
+    try {
+    const found = this.versions.find(v => version.test(v));
+    return found && this.map.get(found);
+    }
+    catch (e) {
+      console.log(version)
+      throw e;
+    }
   }
 
   getLatest(): TypingsData {
     return this.map.get(this.versions[0])!;
-  }
-
-  private getLatestMatch(version: DirectoryParsedTypingVersion, errorMessage?: string): TypingsData {
-    const data = this.tryGetLatestMatch(version);
-    if (!data) {
-      throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}. ${errorMessage || ""}`);
-    }
-    return data;
-  }
-
-  private tryGetLatestMatch(version: DirectoryParsedTypingVersion): TypingsData | undefined {
-    const found = this.versions.find(
-      (v) => v.major === version.major && (version.minor === undefined || v.minor === version.minor)
-    );
-    return found && this.map.get(found);
   }
 }
 

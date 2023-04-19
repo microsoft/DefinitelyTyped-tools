@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import * as semver from "semver";
 
+// TODO: This should likely go away, replaced by semver.parse+verify that patch is not specified
 export function parsePackageSemver(version: string): { major: number, minor?: number } | "*" {
   if (version === "workspace:.") {
     return "*"

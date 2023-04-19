@@ -201,10 +201,10 @@ export function validatePackageJson(packageName: string, packageJson: Record<str
       errors.push(`${packageName}'s package.json should have \`"version"\` matching the version of the implementation package.`);
     }
     else if (!/\d+\.\d+\.\d+/.exec(packageJson.version)) {
-      errors.push(`${packageName}'s package.json has bad "version": should look like "NN.NN.0"`);
+      errors.push(`${packageName}'s package.json has bad "version": should look like "NN.NN.99999"`);
     }
-    else if (!packageJson.version.endsWith(".0")) {
-      errors.push(`${packageName}'s package.json has bad "version": must end with ".0"`);
+    else if (!packageJson.version.endsWith(".99999")) {
+      errors.push(`${packageName}'s package.json has bad "version": must end with ".99999"`);
     }
     else {
       let version: "*" | { major: number, minor?: number } = "*"

@@ -15,7 +15,7 @@ export function checkParseResults(allPackages: AllPackages): void {
   for (const pkg of allPackages.allTypings()) {
     for (const dep of allPackages.allDependencyTypings(pkg)) {
       if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion) {
-        errors.push(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version.`);
+        errors.push(`${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version (${pkg.minTypeScriptVersion} < ${dep.minTypeScriptVersion}).`);
       }
     }
   }

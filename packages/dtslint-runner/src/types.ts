@@ -1,9 +1,3 @@
-export interface PreparePackagesOptions {
-  definitelyTypedPath: string;
-  nProcesses: number;
-  noInstall?: boolean;
-}
-
 export interface PreparePackagesResult {
   packageNames: readonly string[];
   dependents: readonly string[];

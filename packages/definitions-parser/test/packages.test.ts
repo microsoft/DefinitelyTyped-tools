@@ -10,6 +10,7 @@ import {
   getLicenseFromPackageJson,
   getDependencyFromFile,
 } from "../src/packages";
+import { Range } from 'semver';
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
@@ -78,27 +79,27 @@ describe(TypingsVersions, () => {
   });
 
   it("finds the latest version when any version is wanted", () => {
-    expect(versions.get("*").major).toEqual(3);
+    expect(versions.get(new Range("*")).major).toEqual(3);
   });
 
   it("finds the latest minor version for the given major version", () => {
-    expect(versions.get({ major: 2 }).major).toEqual(2);
-    expect(versions.get({ major: 2 }).minor).toEqual(5);
+    expect(versions.get(new Range("2")).major).toEqual(2);
+    expect(versions.get(new Range("2")).minor).toEqual(5);
   });
 
   it("finds a specific version", () => {
-    expect(versions.get({ major: 2, minor: 0 }).major).toEqual(2);
-    expect(versions.get({ major: 2, minor: 0 }).minor).toEqual(0);
+    expect(versions.get(new Range("2.0")).major).toEqual(2);
+    expect(versions.get(new Range("2.0")).minor).toEqual(0);
   });
 
   it("formats a version directory names", () => {
-    expect(versions.get({ major: 2, minor: 0 }).versionDirectoryName).toEqual("v2");
-    expect(versions.get({ major: 2, minor: 0 }).subDirectoryPath).toEqual("jquery/v2");
+    expect(versions.get(new Range("2.0")).versionDirectoryName).toEqual("v2");
+    expect(versions.get(new Range("2.0")).subDirectoryPath).toEqual("jquery/v2");
   });
 
   it("formats missing version error nicely", () => {
-    expect(() => versions.get({ major: 111, minor: 1001 })).toThrow("Could not find version 111.1001");
-    expect(() => versions.get({ major: 111 })).toThrow("Could not find version 111.*");
+    expect(() => versions.get(new Range("111.1001"))).toThrow("Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. ");
+    expect(() => versions.get(new Range("111"))).toThrow("Could not match version >=111.0.0 <112.0.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. ");
   });
 });
 
