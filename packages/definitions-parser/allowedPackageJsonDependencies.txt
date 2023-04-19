@@ -565,10 +565,10 @@
 @vue/reactivity
 @vue/test-utils
 @wordpress/api-fetch
+@wordpress/components
 @wordpress/core-data
 @wordpress/data
 @wordpress/element
-@wordpress/components
 abort-controller
 acorn
 actions-on-google
