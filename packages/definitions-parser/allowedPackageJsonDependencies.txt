@@ -565,6 +565,7 @@
 @vue/reactivity
 @vue/test-utils
 @wordpress/api-fetch
+@wordpress/components
 @wordpress/core-data
 @wordpress/data
 @wordpress/element
