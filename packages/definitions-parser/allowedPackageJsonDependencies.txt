@@ -474,6 +474,7 @@
 @popperjs/core
 @puppeteer/replay
 @rdfjs/types
+@react-native/virtualized-lists
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
