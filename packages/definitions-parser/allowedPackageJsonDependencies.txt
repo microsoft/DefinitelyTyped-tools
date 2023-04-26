@@ -667,6 +667,7 @@ gl-matrix
 glaze
 glob
 globby
+googleapis
 google-auth-library
 google-gax
 got
