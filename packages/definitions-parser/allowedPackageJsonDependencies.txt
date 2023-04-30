@@ -482,6 +482,7 @@
 @storybook/addons
 @storybook/csf
 @storybook/react
+@streamparser/json
 @testing-library/dom
 @tweenjs/tween.js
 @types/anymatch
