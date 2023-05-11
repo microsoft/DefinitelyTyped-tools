@@ -1,4 +1,3 @@
-import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
@@ -86,8 +85,6 @@ export default async function publishPackages(
         githubAccessToken,
         fetcher
       )) as { merged_at: string };
-      const latency = Date.now() - new Date(latest.merged_at).valueOf();
-      const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
 
@@ -105,23 +102,6 @@ export default async function publishPackages(
           fetcher
         );
         log("From github: " + JSON.stringify(commented).slice(0, 200));
-      }
-      if (dry) {
-        log("(dry) Not logging latency");
-      } else {
-        applicationinsights.defaultClient.trackEvent({
-          name: "publish package",
-          properties: {
-            name: cp.pkg.desc,
-            latency: latency.toString(),
-            commitLatency: commitlatency.toString(),
-            authorCommit: commits[0].sha,
-            pr: latestPr.toString(),
-          },
-        });
-        applicationinsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-        applicationinsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
-        log("Done logging latency");
       }
     }
   }
