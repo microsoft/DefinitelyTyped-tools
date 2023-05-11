@@ -1,3 +1,4 @@
+import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import calculateVersions from "./calculate-versions";
@@ -10,6 +11,10 @@ import { numberOfOsProcesses } from "./util/util";
 import { defaultLocalOptions } from "./lib/common";
 
 if (!module.parent) {
+  if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
+    applicationinsights.setup();
+    applicationinsights.start();
+  }
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
     full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0])

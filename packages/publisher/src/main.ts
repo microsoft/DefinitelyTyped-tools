@@ -1,3 +1,4 @@
+import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 import { pathExists, writeFile, remove } from "fs-extra";
 import { getSecret, Secret } from "./lib/secrets";
@@ -15,6 +16,10 @@ export default function main() {
       console.log("The environment variable GITHUB_ACCESS_TOKEN must be set.");
     } else {
       console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
+      if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
+        applicationinsights.setup().start();
+        console.log("Done initialising App Insights");
+      }
       const fetcher = new Fetcher();
       const log = loggerWithErrors()[0];
       log.info("");
@@ -56,6 +61,10 @@ export async function withFileLock(lockFilePath: string, cb: () => Promise<void>
     () => remove(lockFilePath),
     async (error) => {
       console.error(error?.stack || error?.message || error);
+      applicationinsights.defaultClient.trackException({
+        exception: error,
+      });
+
       await remove(lockFilePath);
       process.exit(1);
     }
