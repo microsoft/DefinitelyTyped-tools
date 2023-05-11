@@ -15,6 +15,7 @@
     "@definitelytyped/typescript-versions": "^0.0.159",
     "@definitelytyped/utils": "^0.0.159",
     "@octokit/rest": "^16.1.0",
+    "applicationinsights": "^2",
     "fs-extra": "^9.1.0",
     "fstream": "^1.0.12",
     "hh-mm-ss": "^1.2.0",
