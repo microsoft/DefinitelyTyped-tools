@@ -116,7 +116,7 @@ export class AllPackages {
 
   tryGetTypingsData({ name, version }: PackageId): TypingsData | undefined {
     const versions = this.data.get(getMangledNameForScopedPackage(name));
-    return versions && versions.tryGet(new semver.Range(version === "*" ? "*" : `^${version.major}${version.minor ?? ""}`));
+    return versions && versions.tryGet(new semver.Range(version === "*" ? "*" : `^${version.major}.${version.minor ?? ""}`));
   }
 
   allPackages(): readonly AnyPackage[] {

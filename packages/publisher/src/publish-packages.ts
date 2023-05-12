@@ -19,7 +19,11 @@ import { getSecret, Secret } from "./lib/secrets";
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-    const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
+      const options = { ...defaultLocalOptions, parseInParallel: true };
+      if (yargs.argv.path) {
+        options.definitelyTypedPath = yargs.argv.path as string;
+      }
+    const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
       await readChangedPackages(await AllPackages.read(dt)),
       dry,
@@ -72,6 +76,9 @@ export default async function publishPackages(
         fetcher
       )) as { items: { number: number }[] };
       let latestPr = 0;
+        if (!prs.items) {
+            console.log(prs)
+        }
       for (const pr of prs.items) {
         if (pr.number > latestPr) {
           latestPr = pr.number;
@@ -86,8 +93,6 @@ export default async function publishPackages(
         githubAccessToken,
         fetcher
       )) as { merged_at: string };
-      const latency = Date.now() - new Date(latest.merged_at).valueOf();
-      const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
 
@@ -105,23 +110,6 @@ export default async function publishPackages(
           fetcher
         );
         log("From github: " + JSON.stringify(commented).slice(0, 200));
-      }
-      if (dry) {
-        log("(dry) Not logging latency");
-      } else {
-        applicationinsights.defaultClient.trackEvent({
-          name: "publish package",
-          properties: {
-            name: cp.pkg.desc,
-            latency: latency.toString(),
-            commitLatency: commitlatency.toString(),
-            authorCommit: commits[0].sha,
-            pr: latestPr.toString(),
-          },
-        });
-        applicationinsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-        applicationinsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
-        log("Done logging latency");
       }
     }
   }

@@ -38,7 +38,11 @@ if (!module.parent) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
-    const dt = await getDefinitelyTyped(defaultLocalOptions, log);
+      const options = { ...defaultLocalOptions, definitelyTypedPath: outputDirPath, parseInParallel: true };
+      if (yargs.argv.path) {
+        options.definitelyTypedPath = yargs.argv.path as string;
+      }
+    const dt = await getDefinitelyTyped(options, log);
     const allPackages = await AllPackages.read(dt);
     await generatePackages(dt, await readChangedPackages(allPackages), tgz);
   });

@@ -37,7 +37,7 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
   const json = (await readDataFile("calculate-versions", versionsFilename)) as ChangedPackagesJson;
   return {
     changedTypings: json.changedTypings.map(
-      ({ id, version, latestVersion }): ChangedTyping => ({
+      ({ id, version, latestVersion }) => ({
         pkg: allPackages.getTypingsData(id),
         version,
         latestVersion,

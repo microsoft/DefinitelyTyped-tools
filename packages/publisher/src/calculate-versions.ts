@@ -12,12 +12,17 @@ import {
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
+import yargs = require("yargs");
 
 if (!module.parent) {
   const log = loggerWithErrors()[0];
+      const options = { ...defaultLocalOptions };
+      if (yargs.argv.path) {
+        options.definitelyTypedPath = yargs.argv.path as string;
+      }
   logUncaughtErrors(async () =>
     calculateVersions(
-      await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions, log),
+      await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log),
       log
     )
   );
@@ -51,7 +56,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
-      for (const [ name ] of Object.keys(pkg.packageJsonDependencies)) {
+      for (const name of Object.keys(pkg.packageJsonDependencies)) {
         // Assert that dependencies exist on npm.
         // Also checked when we install the dependencies, in dtslint-runner.
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
