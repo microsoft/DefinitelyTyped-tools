@@ -14,6 +14,7 @@ export async function installAllTypeScriptVersions() {
   for (const v of TypeScriptVersion.shipped) {
     await install(v);
   }
+  // `shipped + [rc, next] == supported` during the RC period. During that time, typescript@rc needs to be installed too.
   if (TypeScriptVersion.shipped.length + 2 === TypeScriptVersion.supported.length) {
     await install("rc");
   }
