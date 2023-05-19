@@ -14,6 +14,10 @@ export async function installAllTypeScriptVersions() {
   for (const v of TypeScriptVersion.shipped) {
     await install(v);
   }
+  // `shipped + [rc, next] == supported` during the RC period. During that time, typescript@rc needs to be installed too.
+  if (TypeScriptVersion.shipped.length + 2 === TypeScriptVersion.supported.length) {
+    await install("rc");
+  }
   await installTypeScriptNext();
 }
 
@@ -21,7 +25,7 @@ export async function installTypeScriptNext() {
   await install("next");
 }
 
-async function install(version: TsVersion | "next"): Promise<void> {
+async function install(version: TsVersion | "next" | "rc"): Promise<void> {
   if (version === "local") {
     return;
   }
@@ -29,7 +33,14 @@ async function install(version: TsVersion | "next"): Promise<void> {
   if (!(await fs.pathExists(dir))) {
     console.log(`Installing to ${dir}...`);
     await fs.mkdirp(dir);
-    await fs.writeJson(path.join(dir, "package.json"), packageJson(version));
+    await fs.writeJson(path.join(dir, "package.json"), {
+      description: `Installs typescript@${version}`,
+      repository: "N/A",
+      license: "MIT",
+      dependencies: {
+        typescript: version,
+      },
+    });
     await execAndThrowErrors("npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links", dir);
     console.log("Installed!");
     console.log("");
@@ -47,9 +58,10 @@ export function typeScriptPath(version: TsVersion, tsLocal: string | undefined):
   return path.join(installDir(version), "node_modules", "typescript");
 }
 
-function installDir(version: TsVersion | "next"): string {
+function installDir(version: TsVersion | "next" | "rc"): string {
   assert(version !== "local");
   if (version === "next") version = TypeScriptVersion.latest;
+  if (version === "rc") version = TypeScriptVersion.supported[TypeScriptVersion.supported.length - 2];
   return path.join(installsDir, version);
 }
 
@@ -73,15 +85,4 @@ async function execAndThrowErrors(cmd: string, cwd?: string): Promise<void> {
       }
     });
   });
-}
-
-function packageJson(version: TsVersion | "next"): {} {
-  return {
-    description: `Installs typescript@${version}`,
-    repository: "N/A",
-    license: "MIT",
-    dependencies: {
-      typescript: version,
-    },
-  };
 }
