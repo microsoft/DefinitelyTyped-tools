@@ -257,14 +257,14 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
   }
   assert(maxVersion !== "local");
 
-  const minIdx = TypeScriptVersion.shipped.indexOf(minVersion);
+  const minIdx = TypeScriptVersion.supported.indexOf(minVersion);
   assert(minIdx >= 0);
   if (maxVersion === TypeScriptVersion.latest) {
-    return [...TypeScriptVersion.shipped.slice(minIdx), TypeScriptVersion.latest];
+    return [...TypeScriptVersion.supported.slice(minIdx), TypeScriptVersion.latest];
   }
-  const maxIdx = TypeScriptVersion.shipped.indexOf(maxVersion as TypeScriptVersion);
+  const maxIdx = TypeScriptVersion.supported.indexOf(maxVersion as TypeScriptVersion);
   assert(maxIdx >= minIdx);
-  return TypeScriptVersion.shipped.slice(minIdx, maxIdx + 1);
+  return TypeScriptVersion.supported.slice(minIdx, maxIdx + 1);
 }
 
 export type TsVersion = TypeScriptVersion | "local";
