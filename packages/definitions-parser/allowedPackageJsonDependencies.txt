@@ -659,6 +659,7 @@ fflate
 final-form
 filestack-js
 firebase-admin
+flatbush
 flatpickr
 form-data
 fs-capacitor
