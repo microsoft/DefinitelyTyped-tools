@@ -10,7 +10,7 @@
     "@definitelytyped/header-parser": "^0.0.163",
     "command-exists": "^1.2.8",
     "rimraf": "^3.0.2",
-    "semver": "^6.2.0",
+    "semver": "^7.5.2",
     "tmp": "^0.2.1",
     "yargs": "^15.3.1"
   },
