@@ -778,6 +778,7 @@ quill-delta
 raven-js
 rc-tree
 rdf-js
+rdfxml-streaming-parser
 re-resizable
 react-autosize-textarea
 react-clock
