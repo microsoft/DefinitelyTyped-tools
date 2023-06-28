@@ -871,3 +871,4 @@ xpath
 yup
 zipkin
 zipkin-transport-http
+cmake-js
