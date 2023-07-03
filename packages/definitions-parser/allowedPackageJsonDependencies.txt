@@ -722,6 +722,7 @@ logrocket
 lottie-web
 magic-string
 mali
+meshoptimizer
 metascraper
 meteor-typings
 middy
