@@ -645,6 +645,7 @@ electron-store
 ember-cli-htmlbars
 ember-qunit
 ember-resolver
+ember-source
 eris
 ethers
 eventemitter2
