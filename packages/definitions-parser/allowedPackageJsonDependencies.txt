@@ -767,6 +767,7 @@ polished
 popper.js
 postcss
 preact
+prettier
 pretty-format
 probot
 prom-client
