@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/perf",
-  "version": "0.0.164-next.7",
+  "version": "0.0.164-next.8",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "directory": "packages/perf"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.164-next.7",
+    "@definitelytyped/definitions-parser": "^0.0.164-next.8",
     "@definitelytyped/header-parser": "^0.0.163",
     "@definitelytyped/typescript-versions": "^0.0.163",
     "@definitelytyped/utils": "^0.0.164-next.6",
