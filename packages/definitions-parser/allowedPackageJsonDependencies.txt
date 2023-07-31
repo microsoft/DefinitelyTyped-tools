@@ -577,6 +577,7 @@ acorn
 actions-on-google
 activex-helpers
 adal-node
+aggregate-error
 ajv
 algoliasearch
 algoliasearch-helper
