@@ -63,6 +63,7 @@
         "prefer-method-signature": false, // TODO?
 
         // Pretty sure we don't want these
+        "ban-ts-ignore": false, // Provided by ts-eslint
         "binary-expression-operand-order": false,
         "class-name": false,
         "completed-docs": false,
