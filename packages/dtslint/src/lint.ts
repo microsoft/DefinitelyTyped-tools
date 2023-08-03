@@ -48,7 +48,6 @@ export async function lint(
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
       const err =
-        testNoTsIgnore(text) ||
         testNoLintDisables("tslint:disable", text) ||
         testNoLintDisables("eslint-disable", text);
       if (err) {
@@ -158,11 +157,6 @@ function startsWithDirectory(filePath: string, dirPath: string): boolean {
 interface Err {
   pos: number;
   message: string;
-}
-function testNoTsIgnore(text: string): Err | undefined {
-  const tsIgnore = "ts-ignore";
-  const pos = text.indexOf(tsIgnore);
-  return pos === -1 ? undefined : { pos, message: "'ts-ignore' is forbidden." };
 }
 function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
   let lastIndex = 0;
