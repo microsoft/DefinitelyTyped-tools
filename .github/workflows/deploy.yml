@@ -26,7 +26,7 @@ jobs:
     - name: copy yarn.lock
       run: cp yarn.lock packages/publisher/
     - name: deploy publisher
-      uses: azure/functions-action@v1
+      uses: azure/functions-action@v1.4.8
       with:
         app-name: types-publisher
         slot-name: production
