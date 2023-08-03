@@ -47,9 +47,7 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err =
-        testNoLintDisables("tslint:disable", text) ||
-        testNoLintDisables("eslint-disable", text);
+      const err = testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text);
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
