@@ -25,18 +25,21 @@ jobs:
       run: yarn test
     - name: copy yarn.lock
       run: cp yarn.lock packages/publisher/
+    - name: prepare package outside monorepo
+      run: |
+        cp -r packages/publisher ${{ runner.temp }}/publisher
+        cd ${{ runner.temp }}/publisher
+        yarn install --frozen-lockfile
     - name: deploy publisher
       uses: azure/functions-action@v1
       with:
         app-name: types-publisher
         slot-name: production
         publish-profile: ${{ secrets.TYPESPUBLISHERFUNCTIONSPUBLISHPROFILE }}
-        package: packages/publisher
-        scm-do-build-during-deployment: true
-        enable-oryx-build: true
+        package: ${{ runner.temp }}/publisher
     - name: upload artifacts
       if: always()
       uses: actions/upload-artifact@v1
       with:
         name: temp
-        path: /home/runner/work/_temp
+        path: ${{ runner.temp }}

@@ -36,7 +36,6 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "oryx": "echo 'Skipping build, should already have built with tsc during CI, before deployment.'",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
     "clean": "node -r source-map-support/register dist/clean.js",
     "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
