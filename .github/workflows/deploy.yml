@@ -38,7 +38,7 @@ jobs:
         publish-profile: ${{ secrets.TYPESPUBLISHERFUNCTIONSPUBLISHPROFILE }}
         package: ${{ runner.temp }}/publisher
     - name: upload artifacts
-      if: always()
+      if: failure()
       uses: actions/upload-artifact@v1
       with:
         name: temp
