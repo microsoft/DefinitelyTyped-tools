@@ -40,6 +40,8 @@ jobs:
         app-name: types-publisher
         slot-name: production
         package: ${{ runner.temp }}/publisher
+        scm-do-build-during-deployment: false
+        enable-oryx-build: false
     - name: upload artifacts
       if: failure()
       uses: actions/upload-artifact@v1
