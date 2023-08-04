@@ -17,6 +17,10 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 14
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
     - name: install
       run: yarn install --frozen-lockfile
     - name: lint
@@ -35,7 +39,6 @@ jobs:
       with:
         app-name: types-publisher
         slot-name: production
-        publish-profile: ${{ secrets.TYPESPUBLISHERFUNCTIONSPUBLISHPROFILE }}
         package: ${{ runner.temp }}/publisher
     - name: upload artifacts
       if: failure()
