@@ -21,12 +21,12 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
-    # - name: install
-    #   run: yarn install --frozen-lockfile
-    # - name: lint
-    #   run: yarn lint
-    # - name: test
-    #   run: yarn test
+    - name: install
+      run: yarn install --frozen-lockfile
+    - name: lint
+      run: yarn lint
+    - name: test
+      run: yarn test
     - name: copy yarn.lock
       run: cp yarn.lock packages/publisher/
     - name: prepare package outside monorepo
