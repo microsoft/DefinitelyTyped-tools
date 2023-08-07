@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("prefer-declare-function", preferDeclareFunction, {
+ruleTester.run("@definitelytyped/prefer-declare-function", preferDeclareFunction, {
   invalid: [
     {
       filename: "index.d.ts",
