@@ -1,4 +1,4 @@
-import * as all from "./configs/all.js";
+import { all } from "./configs/all.js";
 export { rules } from "./rules/index.js";
 
 export const configs = {
