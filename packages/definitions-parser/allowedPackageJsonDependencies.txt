@@ -724,6 +724,7 @@ loglevel
 logrocket
 lottie-web
 magic-string
+markdownlint
 mali
 meshoptimizer
 metascraper
