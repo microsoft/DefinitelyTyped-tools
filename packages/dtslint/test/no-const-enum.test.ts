@@ -1,22 +1,22 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 
-import * as noAnyUnion from "../src/rules/no-any-union";
+import * as noConstEnum from "../src/rules/no-const-enum";
 
 const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-any-union", noAnyUnion, {
+ruleTester.run("no-const-enum", noConstEnum, {
   invalid: [
     {
-      code: `export const y: string | any;`,
+      code: ` const enum E { } `,
       errors: [
         {
           line: 1,
-          messageId: "anyUnion",
+          messageId: "constEnum",
         },
       ],
     },
   ],
-  valid: [`export const x: any;`],
+  valid: [` enum F {}`],
 });

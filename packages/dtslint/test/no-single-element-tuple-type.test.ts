@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-single-element-tuple-type", noDeclareCurrentPackage, {
+ruleTester.run("no-single-element-tuple-type", noDeclareCurrentPackage, {
   invalid: [
     {
       code: `type Test<T> = [T];`,

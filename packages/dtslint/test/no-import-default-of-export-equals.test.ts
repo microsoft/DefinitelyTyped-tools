@@ -11,7 +11,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   },
 });
 
-ruleTester.run("@definitelytyped/no-import-default-of-export-equals", noImportDefaultOfExportEquals, {
+ruleTester.run("no-import-default-of-export-equals", noImportDefaultOfExportEquals, {
   invalid: [
     {
       filename: "index.d.ts",
