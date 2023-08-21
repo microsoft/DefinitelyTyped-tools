@@ -11,7 +11,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("no-unnecessary-generics", rule, {
+ruleTester.run("@definitelytyped/no-unnecessary-generics", rule, {
   invalid: [
     {
       code: `
