@@ -5,7 +5,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-useless-files", noUselessFiles, {
+ruleTester.run("no-useless-files", noUselessFiles, {
   invalid: [
     {
       code: `// I am useless`,

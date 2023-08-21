@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-dead-reference", noDeadReference, {
+ruleTester.run("no-dead-reference", noDeadReference, {
   invalid: [
     {
       code: `

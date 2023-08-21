@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-bad-reference", noBadReference, {
+ruleTester.run("no-bad-reference", noBadReference, {
   invalid: [
     {
       code: `/// <reference path="../other" />`,

@@ -11,7 +11,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   },
 });
 
-ruleTester.run("@definitelytyped/no-declare-current-package", noDeclareCurrentPackage, {
+ruleTester.run("no-declare-current-package", noDeclareCurrentPackage, {
   invalid: [
     {
       filename: "index.d.ts",

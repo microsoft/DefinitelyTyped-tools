@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/redundant-undefined", redundantUndefined, {
+ruleTester.run("redundant-undefined", redundantUndefined, {
   invalid: [
     {
       code: `function f(s?: string | undefined): void {}`,

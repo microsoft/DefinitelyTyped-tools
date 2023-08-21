@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/export-just-namespace", exportJustNamespace, {
+ruleTester.run("export-just-namespace", exportJustNamespace, {
   invalid: [
     {
       code: `

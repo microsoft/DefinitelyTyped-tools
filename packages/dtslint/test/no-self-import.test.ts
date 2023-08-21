@@ -11,7 +11,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   },
 });
 
-ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
+ruleTester.run("no-self-import", dtHeader, {
   invalid: [
     {
       code: `import myself from "this-package";`,
