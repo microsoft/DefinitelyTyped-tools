@@ -2,6 +2,11 @@
     "extends": "tslint:all",
     "rulesDirectory": "./dist/rules",
     "rules": {
+        // Broken in Typescript 5.0 and above:
+        "unnecessary-bind": false,
+        "no-unnecessary-initializer": false,
+        "prefer-for-of": false,
+        "only-arrow-functions": false,
         // Custom rules
         "expect": true,
         "no-padding": true,
@@ -29,7 +34,6 @@
             "check-whitespace"
         ],
         "one-variable-per-declaration": [true, "ignore-for-loop"],
-        "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
         "prefer-template": [true, "allow-single-concat"],
         "whitespace": [
             true,
