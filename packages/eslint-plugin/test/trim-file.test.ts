@@ -5,7 +5,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("trim-file", trimFile, {
+ruleTester.run("@definitelytyped/trim-file", trimFile, {
   invalid: [
     {
       code: `\n `,

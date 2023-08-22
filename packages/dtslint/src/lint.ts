@@ -67,9 +67,7 @@ export async function lint(
   if (!expectOnly) {
     const cwd = process.cwd();
     process.chdir(dirPath);
-    const eslint = new ESLint({
-      rulePaths: [joinPaths(__dirname, "./rules/")],
-    });
+    const eslint = new ESLint();
     const formatter = await eslint.loadFormatter("stylish");
     const eresults = await eslint.lintFiles(esfiles);
     output += formatter.format(eresults);
