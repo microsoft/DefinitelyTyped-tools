@@ -873,6 +873,7 @@ web-tree-sitter
 winston
 winston-transport
 workbox-build
+xlsx
 xmlbuilder
 xpath
 yup
