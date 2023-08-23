@@ -533,20 +533,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@definitelytyped/header-parser@^0.0.166":
-  version "0.0.166"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.166.tgz#a8b88752c5536444fd65b8efa2fd52f2be185701"
-  integrity sha512-3Lfb6NEajcgNA7n04HxKmjas9msjysRhsEqQC0ZccqCuGorWkT/0yODlgCiuIxjdX6Z2dv+V5snQPIzPA+FXdA==
-  dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.166"
-    "@types/parsimmon" "^1.10.1"
-    parsimmon "^1.13.0"
-
-"@definitelytyped/typescript-versions@^0.0.166":
-  version "0.0.166"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.166.tgz#befde18fbb81fbb8542aad3cdbeac762fce4c63d"
-  integrity sha512-USWrVdA3G3jE9ynq/wtxd1aKmy35nFScA+Nz6IMsx/Mrez0fNxhfD8UYCd2sU+nJmoCv8XJbYWPrzIqEiuoXPA==
-
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.3.0.tgz#a556790523a351b4e47e9d385f47265eaaf9780a"
