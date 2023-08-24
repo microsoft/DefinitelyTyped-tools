@@ -16,6 +16,7 @@ import * as redundantUndefined from "./redundant-undefined";
 import * as trimFile from "./trim-file";
 
 export const rules = {
+  "@typescript-eslint/prefer-namespace-keyword": "error",
   "dt-header": dtHeader,
   "export-just-namespace": exportJustNamespace,
   "no-any-union": noAnyUnion,
