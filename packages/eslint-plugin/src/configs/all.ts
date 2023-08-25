@@ -145,6 +145,7 @@ export const all: Linter.BaseConfig = {
             "ts-check": false,
           },
         ],
+        "@typescript-eslint/prefer-namespace-keyword": "error",
       },
     },
   ],
