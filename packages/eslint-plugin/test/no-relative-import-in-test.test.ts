@@ -20,7 +20,7 @@ ruleTester.run("no-relative-import-in-test", rule, {
           messageId: "useGlobalImport",
         },
       ],
-      filename: "index.test.ts",
+      filename: "file.ts",
     },
   ],
   valid: [`import ts from "does-not-exist";`, `import ts from "typescript";`, `import other from "./does-not-exit";`],

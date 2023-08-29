@@ -34,12 +34,6 @@ const rule = createRule({
         }
 
         const moduleSymbol = checker.getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(source));
-        if (node.source.value.includes("abc.d.ts")) {
-          console.log("looking at the symbols", {
-            "from node": checker.getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(node)),
-            "from node.source": checker.getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(node.source)),
-          });
-        }
         if (!moduleSymbol?.declarations) {
           return;
         }
