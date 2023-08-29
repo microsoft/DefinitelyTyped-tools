@@ -93,7 +93,7 @@ export namespace TypeScriptVersion {
     "4.1",
     "4.2",
     "4.3",
-    "4.4",  
+    "4.4",
   ];
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
