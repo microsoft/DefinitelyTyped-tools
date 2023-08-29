@@ -9,7 +9,6 @@
         "only-arrow-functions": false,
         // Custom rules
         "expect": true,
-        "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
         "no-single-declare-module": true,
         "unified-signatures": true,

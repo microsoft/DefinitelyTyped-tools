@@ -25,7 +25,7 @@ const rule = createRule({
     schema: [],
     type: "problem",
   },
-  name: "no-relative-import-in-test",
+  name: "no-unnecessary-generics",
   create(context) {
     return {
       [[
