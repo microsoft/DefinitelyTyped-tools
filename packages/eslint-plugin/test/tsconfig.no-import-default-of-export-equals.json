@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext"
+  },
+    "files": [
+        "index.d.ts",
+        "file.ts"
+    ]
+}

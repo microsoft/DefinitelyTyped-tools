@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.3",
+      typeScriptVersion: "4.4",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.3",
+      typeScriptVersion: "4.4",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -147,11 +147,11 @@ describe("isSupported", () => {
   it("works", () => {
     expect(TypeScriptVersion.isSupported("4.5")).toBeTruthy();
   });
-  it("supports 4.3", () => {
-    expect(TypeScriptVersion.isSupported("4.3")).toBeTruthy();
+  it("supports 4.4", () => {
+    expect(TypeScriptVersion.isSupported("4.4")).toBeTruthy();
   });
-  it("does not support 4.2", () => {
-    expect(!TypeScriptVersion.isSupported("4.2")).toBeTruthy();
+  it("does not support 4.3", () => {
+    expect(!TypeScriptVersion.isSupported("4.3")).toBeTruthy();
   });
 });
 
@@ -169,7 +169,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.7")).toEqual(["4.7", "4.8", "4.9", "5.0", "5.1"]);
+    expect(TypeScriptVersion.range("4.7")).toEqual(["4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"]);
   });
   it("includes 4.3 onwards", () => {
     expect(TypeScriptVersion.range("4.3")).toEqual(TypeScriptVersion.supported);
@@ -178,10 +178,10 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.0")).toEqual(["ts5.0", "ts5.1", "latest"]);
+    expect(TypeScriptVersion.tagsToUpdate("5.0")).toEqual(["ts5.0", "ts5.1", "ts5.2", "ts5.3", "latest"]);
   });
-  it("allows 4.2 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.3")).toEqual(
+  it("allows 4.4 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("4.4")).toEqual(
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
     );
   });

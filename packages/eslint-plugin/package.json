@@ -1,51 +1,40 @@
 {
-  "name": "@definitelytyped/dtslint",
+  "name": "@definitelytyped/eslint-plugin",
   "version": "0.0.169",
-  "description": "Runs tests on TypeScript definition files",
+  "description": "ESLint rules for DefinitelyTyped",
   "main": "./dist/index.js",
-  "bin": "./dist/index.js",
   "publishConfig": {
     "access": "public"
   },
   "contributors": [
     "Nathan Shively-Sanders <nathansa@microsoft.com> (https://github.com/sandersn)",
     "Andy Hanson <andy-ms@microsoft.com> (https://github.com/andy-ms)",
-    "Dan Vanderkam <danvdk@gmail.com> (https://github.com/danvk)"
+    "Dan Vanderkam <danvdk@gmail.com> (https://github.com/danvk)",
+    "Remco Haszing <remcohaszing@gmail.com> (https://github.com/remcohaszing)"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
-    "directory": "packages/dtslint"
+    "directory": "packages/eslint-plugin"
   },
   "scripts": {
     "build": "tsc -b .",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/dts-critic": "^0.0.169",
     "@definitelytyped/header-parser": "^0.0.169",
-    "@definitelytyped/typescript-versions": "^0.0.169",
-    "@definitelytyped/utils": "^0.0.169",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
     "@typescript-eslint/types": "^5.56.0",
-    "@typescript-eslint/typescript-estree": "^5.55.0",
-    "@typescript-eslint/utils": "^5.55.0",
-    "eslint": "^8.17.0",
-    "fs-extra": "^6.0.1",
-    "json-stable-stringify": "^1.0.1",
-    "strip-json-comments": "^2.0.1",
-    "tslint": "5.14.0",
-    "yargs": "^15.1.0"
+    "@typescript-eslint/utils": "^5.55.0"
   },
   "peerDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-jsdoc": "^44.0.0",
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
     "@types/eslint": "^8.4.2",
-    "@types/fs-extra": "^5.0.2",
-    "@types/json-stable-stringify": "^1.0.32",
-    "@types/strip-json-comments": "^0.0.28",
     "typescript": "^5.0.2"
   },
   "engines": {

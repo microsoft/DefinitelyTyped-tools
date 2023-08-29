@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("dt-header", dtHeader, {
+ruleTester.run("@definitelytyped/dt-header", dtHeader, {
   invalid: [
     {
       code: ``,

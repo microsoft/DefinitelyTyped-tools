@@ -2,9 +2,13 @@
     "extends": "tslint:all",
     "rulesDirectory": "./dist/rules",
     "rules": {
+        // Broken in Typescript 5.0 and above:
+        "unnecessary-bind": false,
+        "no-unnecessary-initializer": false,
+        "prefer-for-of": false,
+        "only-arrow-functions": false,
         // Custom rules
         "expect": true,
-        "no-import-default-of-export-equals": true,
         "no-padding": true,
         "strict-export-declare-modifiers": true,
         "no-single-declare-module": true,
@@ -29,7 +33,6 @@
             "check-whitespace"
         ],
         "one-variable-per-declaration": [true, "ignore-for-loop"],
-        "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
         "prefer-template": [true, "allow-single-concat"],
         "whitespace": [
             true,
@@ -63,6 +66,7 @@
         "prefer-method-signature": false, // TODO?
 
         // Pretty sure we don't want these
+        "ban-ts-ignore": false, // Provided by ts-eslint
         "binary-expression-operand-order": false,
         "class-name": false,
         "completed-docs": false,
