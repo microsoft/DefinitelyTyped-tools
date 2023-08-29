@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint-runner",
-  "version": "0.0.170-next.0",
+  "version": "0.0.170-next.1",
   "description": "Run dtslint on DefinitelyTyped packages",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint-runner#readme",
   "license": "MIT",
@@ -23,9 +23,9 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.169",
-    "@definitelytyped/dtslint": "^0.0.170-next.0",
-    "@definitelytyped/utils": "^0.0.169",
+    "@definitelytyped/definitions-parser": "^0.0.170-next.1",
+    "@definitelytyped/dtslint": "^0.0.170-next.1",
+    "@definitelytyped/utils": "^0.0.170-next.1",
     "@octokit/rest": "^16.43.2",
     "fs-extra": "^9.0.0",
     "glob": "^7.2.3",
