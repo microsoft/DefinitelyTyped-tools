@@ -9,7 +9,6 @@
         "only-arrow-functions": false,
         // Custom rules
         "expect": true,
-        "no-padding": true,
         "no-relative-import-in-test": true,
         "strict-export-declare-modifiers": true,
         "no-single-declare-module": true,
@@ -19,32 +18,11 @@
 
         "comment-format": [true, "check-space"], // But not check-uppercase or check-lowercase
         "interface-name": [true, "never-prefix"],
-        "max-line-length": [true, 200],
         "member-access": [true, "no-public"],
-        "no-consecutive-blank-lines": true,
         "no-unnecessary-callback-wrapper": true,
         "no-namespace": [true, "allow-declarations"],
-        "object-literal-key-quotes": [true, "as-needed"],
-        "one-line": [
-            true,
-            "check-catch",
-            "check-finally",
-            "check-else",
-            "check-open-brace",
-            "check-whitespace"
-        ],
         "one-variable-per-declaration": [true, "ignore-for-loop"],
         "prefer-template": [true, "allow-single-concat"],
-        "whitespace": [
-            true,
-            "check-branch",
-            "check-decl",
-            "check-operator",
-            "check-module",
-            "check-separator",
-            "check-type",
-            "check-typecast"
-        ],
 
         // TODO?
         "align": false, // TODO
@@ -80,10 +58,12 @@
         "match-default-export-name": false,
         "max-classes-per-file": false,
         "max-file-line-count": false,
+        "max-line-length": false,
         "member-ordering": false,
         "newline-before-return": false,
         "newline-per-chained-call": false,
         "no-bitwise": false,
+        "no-consecutive-blank-lines": false,
         "no-console": false,
         "no-default-export": false,
         "no-empty": false,
@@ -103,7 +83,9 @@
         "no-unused-expression": false,
         "no-unused-variable": false,
         "no-use-before-declare": false,
+        "object-literal-key-quotes": false,
         "object-literal-sort-keys": false,
+        "one-line": false,
         "ordered-imports": false,
         "prefer-function-over-method": false,
         "quotemark": false,
@@ -115,6 +97,7 @@
         "typedef": false,
         "type-literal-delimiter": false,
         "variable-name": false,
+        "whitespace": false,
         "increment-decrement": false,
         "unnecessary-constructor": false,
         "unnecessary-else": false,
