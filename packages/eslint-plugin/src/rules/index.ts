@@ -7,6 +7,7 @@ import * as noDeadReference from "./no-dead-reference";
 import * as noDeclareCurrentPackage from "./no-declare-current-package";
 import * as noImportDefaultOfExportEquals from "./no-import-default-of-export-equals";
 import * as noOutsideDependencies from "./no-outside-dependencies";
+import * as noRelativeImportInTest from "./no-relative-import-in-test";
 import * as noSelfImport from "./no-self-import";
 import * as noSingleElementTupleType from "./no-single-element-tuple-type";
 import * as noUnnecessaryGenerics from "./no-unnecessary-generics";
@@ -25,6 +26,7 @@ export const rules = {
   "no-declare-current-package": noDeclareCurrentPackage,
   "no-import-default-of-export-equals": noImportDefaultOfExportEquals,
   "no-outside-dependencies": noOutsideDependencies,
+  "no-relative-import-in-test": noRelativeImportInTest,
   "no-self-import": noSelfImport,
   "no-single-element-tuple-type": noSingleElementTupleType,
   "no-unnecessary-generics": noUnnecessaryGenerics,
