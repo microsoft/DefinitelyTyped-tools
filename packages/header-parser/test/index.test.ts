@@ -40,7 +40,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.4",
+      typeScriptVersion: "4.5",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -65,7 +65,7 @@ describe("parse", () => {
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
-      typeScriptVersion: "4.4",
+      typeScriptVersion: "4.5",
       nonNpm: false,
       projects: ["https://github.com/foo/foo", "https://foo.com"],
       contributors: [
@@ -145,19 +145,19 @@ describe("all", () => {
 
 describe("isSupported", () => {
   it("works", () => {
+    expect(TypeScriptVersion.isSupported("5.0")).toBeTruthy();
+  });
+  it("supports oldest", () => {
     expect(TypeScriptVersion.isSupported("4.5")).toBeTruthy();
   });
-  it("supports 4.4", () => {
-    expect(TypeScriptVersion.isSupported("4.4")).toBeTruthy();
-  });
-  it("does not support 4.3", () => {
-    expect(!TypeScriptVersion.isSupported("4.3")).toBeTruthy();
+  it("does not support just before oldest", () => {
+    expect(!TypeScriptVersion.isSupported("4.4")).toBeTruthy();
   });
 });
 
 describe("isTypeScriptVersion", () => {
   it("accepts in-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("4.5")).toBeTruthy();
+    expect(TypeScriptVersion.isTypeScriptVersion("5.0")).toBeTruthy();
   });
   it("rejects out-of-range", () => {
     expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
@@ -169,10 +169,10 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.7")).toEqual(["4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"]);
+    expect(TypeScriptVersion.range("4.9")).toEqual(["4.9", "5.0", "5.1", "5.2", "5.3"]);
   });
-  it("includes 4.3 onwards", () => {
-    expect(TypeScriptVersion.range("4.3")).toEqual(TypeScriptVersion.supported);
+  it("includes oldest and above", () => {
+    expect(TypeScriptVersion.range("4.5")).toEqual(TypeScriptVersion.supported);
   });
 });
 
@@ -180,8 +180,8 @@ describe("tagsToUpdate", () => {
   it("works", () => {
     expect(TypeScriptVersion.tagsToUpdate("5.0")).toEqual(["ts5.0", "ts5.1", "ts5.2", "ts5.3", "latest"]);
   });
-  it("allows 4.4 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.4")).toEqual(
+  it("allows 4.5 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("4.5")).toEqual(
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
     );
   });
@@ -192,46 +192,46 @@ describe("makeTypesVersionsForPackageJson", () => {
     expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
   });
   it("works for one version", () => {
-    expect(makeTypesVersionsForPackageJson(["4.3"])).toEqual({
-      "<=4.3": {
-        "*": ["ts4.3/*"],
+    expect(makeTypesVersionsForPackageJson(["4.5"])).toEqual({
+      "<=4.5": {
+        "*": ["ts4.5/*"],
       },
     });
   });
   it("orders versions old to new  with old-to-new input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.4", "4.8", "5.0"]), undefined, 4)).toEqual(`{
-    "<=4.4": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.7", "5.0", "5.2"]), undefined, 4)).toEqual(`{
+    "<=4.7": {
         "*": [
-            "ts4.4/*"
-        ]
-    },
-    "<=4.8": {
-        "*": [
-            "ts4.8/*"
+            "ts4.7/*"
         ]
     },
     "<=5.0": {
         "*": [
             "ts5.0/*"
+        ]
+    },
+    "<=5.2": {
+        "*": [
+            "ts5.2/*"
         ]
     }
 }`);
   });
   it("orders versions old to new  with new-to-old input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["5.0", "4.8", "4.4"]), undefined, 4)).toEqual(`{
-    "<=4.4": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["5.2", "5.0", "4.7"]), undefined, 4)).toEqual(`{
+    "<=4.7": {
         "*": [
-            "ts4.4/*"
-        ]
-    },
-    "<=4.8": {
-        "*": [
-            "ts4.8/*"
+            "ts4.7/*"
         ]
     },
     "<=5.0": {
         "*": [
             "ts5.0/*"
+        ]
+    },
+    "<=5.2": {
+        "*": [
+            "ts5.2/*"
         ]
     }
 }`);
