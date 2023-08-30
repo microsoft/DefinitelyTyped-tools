@@ -156,7 +156,6 @@ interface Err {
 }
 function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
   let lastIndex = 0;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const pos = text.indexOf(disabler, lastIndex);
     if (pos === -1) {

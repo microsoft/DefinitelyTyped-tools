@@ -24,7 +24,6 @@ const rule = createRule({
       // Start search at the first statement. (`/// <reference>` before that is OK.)
       rgx.lastIndex = source.ast.body[0].range?.[0] ?? 0;
 
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const match = rgx.exec(source.text);
         if (match === null) {
