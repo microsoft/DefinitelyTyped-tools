@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/utils",
-  "version": "0.0.171",
+  "version": "0.0.172",
   "description": "Shared utilities for DefinitelyTyped tools",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/utils#readme",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-versions": "^0.0.171",
+    "@definitelytyped/typescript-versions": "^0.0.172",
     "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^14.14.35",
     "charm": "^1.0.2",
