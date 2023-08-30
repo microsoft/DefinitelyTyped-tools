@@ -42,7 +42,7 @@ export class DTMock {
   public addOldVersionOfPackage(packageName: string, olderVersion: `${number}`) {
     const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
-    const latestHeader = parseHeaderOrFail(index);
+    const latestHeader = parseHeaderOrFail(packageName, index);
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
     const olderVersionParsed = semver.coerce(olderVersion)!;
 

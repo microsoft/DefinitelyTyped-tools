@@ -78,7 +78,7 @@ export function dtsCritic(
   }
 
   const dts = fs.readFileSync(dtsPath, "utf-8");
-  const header = parseDtHeader(dts);
+  const header = parseDtHeader(dtsPath, dts);
 
   const name = findDtsName(dtsPath);
   const npmInfo = getNpmInfo(name);
@@ -128,9 +128,9 @@ If you want to check the declaration against the JavaScript source code, you mus
   }
 }
 
-function parseDtHeader(dts: string): headerParser.Header | undefined {
+function parseDtHeader(filePath: string, dts: string): headerParser.Header | undefined {
   try {
-    return headerParser.parseHeaderOrFail(dts);
+    return headerParser.parseHeaderOrFail(filePath, dts);
   } catch (e) {
     return undefined;
   }
