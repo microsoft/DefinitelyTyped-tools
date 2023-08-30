@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/eslint-plugin",
-  "version": "0.0.172",
+  "version": "0.0.173",
   "description": "ESLint rules for DefinitelyTyped",
   "main": "./dist/index.js",
   "publishConfig": {
@@ -22,7 +22,7 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.172",
+    "@definitelytyped/header-parser": "^0.0.173",
     "@typescript-eslint/types": "^5.56.0",
     "@typescript-eslint/utils": "^5.55.0"
   },
