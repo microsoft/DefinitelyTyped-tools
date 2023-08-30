@@ -15,7 +15,6 @@
         "void-return": true,
         "npm-naming": true,
 
-        "comment-format": [true, "check-space"], // But not check-uppercase or check-lowercase
         "interface-name": [true, "never-prefix"],
         "member-access": [true, "no-public"],
         "no-unnecessary-callback-wrapper": true,
