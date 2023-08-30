@@ -55,7 +55,7 @@ describe("parseHeaderOrFail", () => {
 
     expect(() => parseHeaderOrFail("types/fake/index.d.ts", src)).toThrowError(
       new Error("At 1:1 in types/fake/index.d.ts: Expected /\\/\\/ Type definitions for (non-npm package )?/")
-    )
+    );
   });
 
   it("works with slash end", () => {
