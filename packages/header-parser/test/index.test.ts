@@ -1,8 +1,8 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { parseHeaderOrFail, parseTypeScriptVersionLine, makeTypesVersionsForPackageJson } from "../src";
 
-describe("parse", () => {
-  it("works", () => {
+describe("parseHeaderOrFail", () => {
+  it("works without spacing", () => {
     const src = dedent`
             // Type definitions for foo 1.2
             // Project: https://github.com/foo/foo, https://foo.com
@@ -11,7 +11,7 @@ describe("parse", () => {
             // TypeScript Version: 2.2
 
             ...file content...`;
-    expect(parseHeaderOrFail(src)).toStrictEqual({
+    expect(parseHeaderOrFail("types/fake/index.d.ts", src)).toStrictEqual({
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
@@ -36,7 +36,7 @@ describe("parse", () => {
 
             ...file content...`;
 
-    expect(parseHeaderOrFail(src)).toStrictEqual({
+    expect(parseHeaderOrFail("types/fake/index.d.ts", src)).toStrictEqual({
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
@@ -50,6 +50,14 @@ describe("parse", () => {
     });
   });
 
+  it("throws an error when the header is a parse error", () => {
+    const src = ``;
+
+    expect(() => parseHeaderOrFail("types/fake/index.d.ts", src)).toThrowError(
+      new Error("At 1:1 in types/fake/index.d.ts: Expected /\\/\\/ Type definitions for (non-npm package )?/")
+    )
+  });
+
   it("works with slash end", () => {
     const src = dedent`
         // Type definitions for foo 1.2
@@ -61,7 +69,7 @@ describe("parse", () => {
 
         ...file content...`;
 
-    expect(parseHeaderOrFail(src)).toStrictEqual({
+    expect(parseHeaderOrFail("types/fake/index.d.ts", src)).toStrictEqual({
       libraryName: "foo",
       libraryMajorVersion: 1,
       libraryMinorVersion: 2,
@@ -81,7 +89,7 @@ describe("parse", () => {
             // Project: https://github.com/foo/foo
             // Definitions by: Bad Url <sptth://hubgit.moc/em>
             // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped`;
-    expect(parseHeaderOrFail(src).contributors).toStrictEqual([
+    expect(parseHeaderOrFail("types/fake/index.d.ts", src).contributors).toStrictEqual([
       { name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
     ]);
   });
@@ -95,7 +103,7 @@ describe("parse", () => {
             // TypeScript Version: 2.2
 
             ...file content...`;
-    expect(parseHeaderOrFail(src).nonNpm).toBe(true);
+    expect(parseHeaderOrFail("types/fake/index.d.ts", src).nonNpm).toBe(true);
   });
 });
 
