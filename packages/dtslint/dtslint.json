@@ -46,6 +46,7 @@
         "ban-ts-ignore": false, // Provided by ts-eslint
         "binary-expression-operand-order": false,
         "class-name": false,
+        "comment-format": false,
         "completed-docs": false,
         "curly": false,
         "cyclomatic-complexity": false,
