@@ -1,5 +1,6 @@
-import { getCommonDirectoryName, createRule } from "../util";
-import { ESLintUtils, AST_NODE_TYPES } from "@typescript-eslint/utils";
+import { createRule, getTypesPackageForDeclarationFile } from "../util";
+import { AST_NODE_TYPES } from "@typescript-eslint/utils";
+
 const rule = createRule({
   name: "no-declare-current-package",
   defaultOptions: [],
@@ -17,11 +18,8 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (!context.getFilename().endsWith(".d.ts")) {
-      return {};
-    }
-    const parserServices = ESLintUtils.getParserServices(context);
-    const packageName = getCommonDirectoryName(parserServices.program.getRootFileNames());
+    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
+
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       TSModuleDeclaration(node) {

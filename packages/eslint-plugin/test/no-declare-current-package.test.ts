@@ -6,16 +6,34 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2018,
-    tsconfigRootDir: __dirname,
-    project: "./tsconfig.no-declare-current-package.json",
   },
 });
 
 ruleTester.run("@definitelytyped/no-declare-current-package", noDeclareCurrentPackage, {
   invalid: [
     {
-      filename: "index.d.ts",
+      filename: "types/test/index.d.ts",
       code: `module "test" { }`,
+      errors: [
+        {
+          line: 1,
+          messageId: "noDeclareCurrentPackage",
+        },
+      ],
+    },
+    {
+      filename: "types/test/deep/import.d.ts",
+      code: `module "test/deep/import" { }`,
+      errors: [
+        {
+          line: 1,
+          messageId: "noDeclareCurrentPackage",
+        },
+      ],
+    },
+    {
+      filename: "types/scope__name/index.d.ts",
+      code: `module "@scope/name" { }`,
       errors: [
         {
           line: 1,
@@ -26,36 +44,16 @@ ruleTester.run("@definitelytyped/no-declare-current-package", noDeclareCurrentPa
   ],
   valid: [
     {
-      filename: "index.d.ts",
-      code: `module "foo" { }
-module "foo/bar/baz" { }
-`,
+      filename: "types/other/index.d.ts",
+      code: `module "foo" { }`,
     },
-  ],
-});
-// needed because you can only test one non-file.ts file per tsconfig
-// (and tsconfig is required for typed-based rules)
-const ruleTester2 = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 2018,
-    tsconfigRootDir: __dirname,
-    project: "./tsconfig.no-declare-current-package2.json",
-  },
-});
-
-ruleTester2.run("no-declare-current-package", noDeclareCurrentPackage, {
-  invalid: [
     {
-      filename: "deep/import.d.ts",
-      code: `module "test/deep/import" { }`,
-      errors: [
-        {
-          line: 1,
-          messageId: "noDeclareCurrentPackage",
-        },
-      ],
+      filename: "types/other/index.d.ts",
+      code: `module "foo/bar/baz" { }`,
+    },
+    {
+      filename: "types/deep/other/index.d.ts",
+      code: `module "other" { }`,
     },
   ],
-  valid: [],
 });
