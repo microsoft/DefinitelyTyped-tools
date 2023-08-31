@@ -1,5 +1,4 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-import { createRule, getCommonDirectoryName } from "../util";
+import { createRule, getTypesPackageForDeclarationFile } from "../util";
 
 const rule = createRule({
   name: "no-self-import",
@@ -16,12 +15,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (!context.getFilename().endsWith(".d.ts")) {
-      return {};
-    }
-
-    const services = ESLintUtils.getParserServices(context);
-    const packageName = getCommonDirectoryName(services.program.getRootFileNames());
+    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
 
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention

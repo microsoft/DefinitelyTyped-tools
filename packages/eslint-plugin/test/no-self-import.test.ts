@@ -1,14 +1,9 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
-import path from "path";
 
 import * as dtHeader from "../src/rules/no-self-import";
 
 const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: "./tsconfig.no-self-import.json",
-  },
 });
 
 ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
@@ -21,7 +16,7 @@ ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
           messageId: "useRelativeImport",
         },
       ],
-      filename: "this-package/index.d.ts",
+      filename: "types/this-package/index.d.ts",
     },
     {
       code: `import abc from "this-package/abc.d.ts";`,
@@ -31,17 +26,21 @@ ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
           messageId: "useRelativeImport",
         },
       ],
-      filename: "this-package/index.d.ts",
+      filename: "types/this-package/index.d.ts",
     },
   ],
   valid: [
     {
       code: `import other from "other-package";`,
-      filename: "this-package/index.d.ts",
+      filename: "types/this-package/index.d.ts",
     },
     {
       code: `import other from "other-package/this-package";`,
-      filename: "this-package/index.d.ts",
+      filename: "types/this-package/index.d.ts",
+    },
+    {
+      code: `import myself from "this-package";`,
+      filename: "types/grandparent/this-package/index.d.ts",
     },
   ],
 });

@@ -1,3 +1,4 @@
+import { unmangleScopedPackage } from "@definitelytyped/utils";
 import { ESLintUtils } from "@typescript-eslint/utils";
 import { basename, dirname } from "path";
 
@@ -6,17 +7,17 @@ export const createRule = ESLintUtils.RuleCreator(
     `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`
 );
 
-export function getCommonDirectoryName(files: readonly string[]): string {
-  let minLen = 999;
-  let minDir = "";
-  for (const file of files) {
-    const dir = dirname(file);
-    if (dir.length < minLen) {
-      minDir = dir;
-      minLen = dir.length;
-    }
+export function getTypesPackageForDeclarationFile(file: string) {
+  if (!file.endsWith(".d.ts")) {
+    return undefined;
   }
-  return basename(minDir);
+
+  const match = file.match(/types\/([^\/]+)\//)?.[1];
+  if (!match) {
+    return undefined;
+  }
+
+  return unmangleScopedPackage(match) ?? match;
 }
 
 export function isMainFile(fileName: string, allowNested: boolean) {

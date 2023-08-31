@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@definitelytyped/header-parser": "^0.0.175",
+    "@definitelytyped/utils": "^0.0.175",
     "@typescript-eslint/types": "^5.56.0",
     "@typescript-eslint/utils": "^5.55.0"
   },
