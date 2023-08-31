@@ -18,7 +18,11 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (context.getFilename().endsWith(".d.ts")) {
+    if (
+      context.getFilename().endsWith(".d.ts") ||
+      context.getFilename().endsWith(".d.mts") ||
+      context.getFilename().endsWith(".d.cts")
+    ) {
       return {};
     }
 
