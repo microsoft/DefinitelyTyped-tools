@@ -604,6 +604,7 @@ bl
 bookshelf
 boxen
 broadcast-channel
+broccoli-plugin
 bson
 buffer
 bull
