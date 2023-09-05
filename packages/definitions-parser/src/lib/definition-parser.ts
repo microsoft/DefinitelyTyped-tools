@@ -227,7 +227,7 @@ async function combineDataForAllTypesVersions(
     typeScriptVersion: minTsVersion,
     libraryName,
     projects,
-  } = parseHeaderOrFail("index.d.ts", readFileAndThrowOnBOM("index.d.ts", fs));
+  } = parseHeaderOrFail(`${typingsPackageName} > index.d.ts`, readFileAndThrowOnBOM("index.d.ts", fs));
 
   const dataForRoot = getTypingDataForSingleTypesVersion(
     undefined,
