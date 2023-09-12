@@ -7,8 +7,6 @@
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
     "@azure/functions": "^3.2.0",
-    "@azure/identity": "^1.5.2",
-    "@azure/keyvault-secrets": "^4.3.0",
     "@definitelytyped/definitions-parser": "^0.0.177",
     "@definitelytyped/header-parser": "^0.0.177",
     "@definitelytyped/retag": "^0.0.177",

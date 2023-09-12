@@ -1,7 +1,4 @@
-import { DefaultAzureCredential } from "@azure/identity";
-import { SecretClient } from "@azure/keyvault-secrets";
 import { assertDefined, mapDefined } from "@definitelytyped/utils";
-import { azureKeyvault } from "./settings";
 
 export enum Secret {
   /**
@@ -27,18 +24,5 @@ export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), (key) => {
 });
 
 export async function getSecret(secretId: Secret): Promise<string> {
-  const clientId = process.env.AZURE_CLIENT_ID;
-  const clientSecret = process.env.AZURE_CLIENT_SECRET;
-  const tenantId = process.env.AZURE_TENANT_ID;
-  if (!(clientId && clientSecret && tenantId)) {
-    throw new Error("Must set the AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, and AZURE_TENANT_ID environment variables.");
-  }
-
-  const credential = new DefaultAzureCredential();
-  const client = new SecretClient(azureKeyvault, credential);
-
-  // Convert `AZURE_STORAGE_ACCESS_KEY` to `azure-storage-access-key` -- for some reason, Azure wouldn't allow secret names with underscores.
-  const azureSecretName = Secret[secretId].toLowerCase().replace(/_/g, "-");
-  const secret = await client.getSecret(azureSecretName);
-  return assertDefined(secret.value);
+  return assertDefined(process.env[Secret[secretId]], `Missing secret ${Secret[secretId]}`);
 }
