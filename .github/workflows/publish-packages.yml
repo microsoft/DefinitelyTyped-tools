@@ -1,6 +1,7 @@
 name: Publish Packages
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '*/30 * * * *' # every 30 minutes
 
@@ -16,7 +17,11 @@ jobs:
       - uses: actions/setup-node@v2
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: node packages/publisher/dist/index.js
+      - uses: actions/cache@v3
+        with:
+          path: ./cache
+          key: always
+      - run: node packages/publisher/dist/run.js
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
