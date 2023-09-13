@@ -1,0 +1,27 @@
+name: Publish Packages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *' # every 30 minutes
+
+# publishing can take longer than 30 minutes but we never want to
+# run more than one publish job at a time
+concurrency: 1
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - uses: actions/cache@v3
+        with:
+          path: ./cache
+          key: always
+      - run: node packages/publisher/dist/run.js
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
