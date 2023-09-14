@@ -2,6 +2,11 @@ on:
   pull_request:
     branches:
     - master
+      
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
   build_and_test:
     name: build and test
@@ -11,6 +16,8 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 'lts/*'
+    - run: npm install -g pnpm
+    - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
     - name: install
       run: pnpm install
     - name: lint

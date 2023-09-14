@@ -19,14 +19,14 @@ These tools are not intended for public consumption, so we may break the API whe
 
 ## Development
 
-This is a monorepo managed with [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces) and [lerna](https://github.com/lerna/lerna). After cloning, run `yarn` to install dependencies for each package and link them to each other.
+This is a monorepo managed with [pnpm workspaces](https://https://pnpm.io/workspaces) and published with [changesets](https://github.com/changesets/changesets). After cloning, run `pnpm install` to install dependencies for each package and link them to each other.
 
 ### Testing
 
-All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `yarn test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
+All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `pnpm test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
 
 ```sh
-yarn test packages/utils
+pnpm test packages/utils
 ```
 
 ## Contributing
