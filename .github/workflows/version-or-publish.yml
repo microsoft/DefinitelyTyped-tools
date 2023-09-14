@@ -7,7 +7,7 @@ name: Format, Version or Publish Packages
 on:
   push:
     branches:
-      - main
+      - master
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
