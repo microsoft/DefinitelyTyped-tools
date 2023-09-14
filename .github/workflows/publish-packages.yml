@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v2
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - uses: actions/cache@v3
+      - uses: actions/cache/restore@v3
         with:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
