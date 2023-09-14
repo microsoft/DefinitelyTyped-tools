@@ -6,7 +6,9 @@ import { basename, dirname } from "path";
 
 // Possible TS bug can't figure out how to do declaration emit of created rules
 // without an explicit type annotation here due to pnpm symlink stuff
-export const createRule: <TOptions extends readonly unknown[], TMessageIds extends string>(opts: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, RuleListener>>) => RuleModule<TMessageIds, TOptions> = ESLintUtils.RuleCreator(
+export const createRule: <TOptions extends readonly unknown[], TMessageIds extends string>(
+  opts: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, RuleListener>>
+) => RuleModule<TMessageIds, TOptions> = ESLintUtils.RuleCreator(
   (name) =>
     `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`
 );
