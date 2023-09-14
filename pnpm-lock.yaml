@@ -62,13 +62,13 @@ importers:
   packages/definitions-parser:
     dependencies:
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@types/node':
         specifier: ^14.14.35
@@ -96,7 +96,7 @@ importers:
   packages/dts-critic:
     dependencies:
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       command-exists:
         specifier: ^1.2.8
@@ -139,16 +139,16 @@ importers:
   packages/dtslint:
     dependencies:
       '@definitelytyped/dts-critic':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../dts-critic
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.55.0
@@ -203,13 +203,13 @@ importers:
   packages/dtslint-runner:
     dependencies:
       '@definitelytyped/definitions-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../definitions-parser
       '@definitelytyped/dtslint':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../dtslint
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@octokit/rest':
         specifier: ^16.43.2
@@ -252,10 +252,10 @@ importers:
   packages/eslint-plugin:
     dependencies:
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.0.0
@@ -286,7 +286,7 @@ importers:
   packages/header-parser:
     dependencies:
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@types/parsimmon':
         specifier: ^1.10.1
@@ -298,16 +298,16 @@ importers:
   packages/perf:
     dependencies:
       '@definitelytyped/definitions-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../definitions-parser
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@octokit/rest':
         specifier: ^16.33.0
@@ -335,19 +335,19 @@ importers:
   packages/publisher:
     dependencies:
       '@definitelytyped/definitions-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../definitions-parser
       '@definitelytyped/header-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../header-parser
       '@definitelytyped/retag':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../retag
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       '@octokit/rest':
         specifier: ^16.1.0
@@ -396,13 +396,13 @@ importers:
   packages/retag:
     dependencies:
       '@definitelytyped/definitions-parser':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../definitions-parser
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@definitelytyped/utils':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../utils
       pacote:
         specifier: ^13.6.1
@@ -429,7 +429,7 @@ importers:
   packages/utils:
     dependencies:
       '@definitelytyped/typescript-versions':
-        specifier: ^0.0.178
+        specifier: workspace:*
         version: link:../typescript-versions
       '@qiwi/npm-registry-client':
         specifier: ^8.9.1
@@ -509,7 +509,7 @@ packages:
       debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.3
-      semver: 6.3.0
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -535,7 +535,7 @@ packages:
       '@babel/helper-validator-option': 7.21.0
       browserslist: 4.21.5
       lru-cache: 5.1.1
-      semver: 6.3.0
+      semver: 7.5.4
     dev: true
 
   /@babel/helper-environment-visitor@7.18.9:
@@ -2266,6 +2266,7 @@ packages:
 
   /aproba@1.2.0:
     resolution: {integrity: sha512-Y9J6ZjXtoYh8RnXVCMOU/ttDmk1aBjunq9vO0ta5x85WDQiQfUF9sIPBITdbiiIVcBo03Hi3jMxigBtsddlXRw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -2280,6 +2281,7 @@ packages:
 
   /are-we-there-yet@1.1.7:
     resolution: {integrity: sha512-nxwy40TuMiUGqMyRHgCSWZ9FM4VAoRP4xUYSTv5ImRog+h9yISPbVH7H8fASCIzYn9wlEv4zvFL7uKDMCFQm3g==}
+    requiresBuild: true
     dependencies:
       delegates: 1.0.0
       readable-stream: 2.3.8
@@ -2724,6 +2726,7 @@ packages:
   /code-point-at@1.1.0:
     resolution: {integrity: sha512-RpAVKQA5T63xEj6/giIbUEtZwJ4UFIc3ZtvEkiaUERylqe8xb5IvqcgOurZLahv93CLKfxcw5YI+DZcUBRyLXA==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -2807,6 +2810,7 @@ packages:
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -2824,7 +2828,7 @@ packages:
     dependencies:
       nice-try: 1.0.5
       path-key: 2.0.1
-      semver: 5.7.1
+      semver: 7.5.4
       shebang-command: 1.2.0
       which: 1.3.1
     dev: false
@@ -3187,7 +3191,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 6.3.0
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -3691,6 +3695,7 @@ packages:
 
   /gauge@2.7.4:
     resolution: {integrity: sha512-14x4kjc6lkD3ltw589k0NrPD6cCNTD6CWoVUNpB85+DrtONoZn+Rug6xZU5RvSC4+TZPxA5AnBibQYAvZn41Hg==}
+    requiresBuild: true
     dependencies:
       aproba: 1.2.0
       console-control-strings: 1.1.0
@@ -3992,6 +3997,7 @@ packages:
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       safer-buffer: 2.1.2
     dev: false
@@ -4124,6 +4130,7 @@ packages:
   /is-fullwidth-code-point@1.0.0:
     resolution: {integrity: sha512-1pqUqRjkhPJ9miNq9SwMfdvi6lBJcd6eFxvfaivQhaH3SgisfiuudvFntdKOmxuee/77l+FPjKrQjWvmPjWrRw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       number-is-nan: 1.0.1
     dev: false
@@ -4252,6 +4259,7 @@ packages:
 
   /isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -4279,7 +4287,7 @@ packages:
       '@babel/parser': 7.21.3
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
-      semver: 6.3.0
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5003,7 +5011,7 @@ packages:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
     dependencies:
-      semver: 6.3.0
+      semver: 7.5.4
     dev: true
 
   /make-error@1.3.6:
@@ -5288,7 +5296,7 @@ packages:
     dependencies:
       hosted-git-info: 2.8.9
       resolve: 1.22.1
-      semver: 5.7.1
+      semver: 7.5.4
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -5440,6 +5448,7 @@ packages:
   /number-is-nan@1.0.1:
     resolution: {integrity: sha512-4jbtZXNAsfZbAHiiqjLPBiCl16dES1zI4Hpzzxw61Tk+loF+sBDBKx1ICKKKwIqQ7M0mFn1TmkN7euSncWgHiQ==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5450,6 +5459,7 @@ packages:
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5717,6 +5727,7 @@ packages:
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -5843,6 +5854,7 @@ packages:
 
   /readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
+    requiresBuild: true
     dependencies:
       core-util-is: 1.0.3
       inherits: 2.0.4
@@ -5994,6 +6006,7 @@ packages:
 
   /safe-buffer@5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -6011,15 +6024,6 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  /semver@5.7.1:
-    resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
-    hasBin: true
-
-  /semver@6.3.0:
-    resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
-    hasBin: true
-    dev: true
 
   /semver@7.5.2:
     resolution: {integrity: sha512-SoftuTROv/cRjCze/scjGyiDtcUyxw1rgYQSZY7XTmtR5hX+dm76iDbTH8TkLPHCQmlbQVSSbNZCPM2hb0knnQ==}
@@ -6244,6 +6248,7 @@ packages:
   /string-width@1.0.2:
     resolution: {integrity: sha512-0XsVpQLnVCXHJfyEs8tC0zpTVIr5PKKsQtkT29IwupnPTjtPmQ3xT/4yCREF9hYkV/3M3kzcUTSAZT6a6h81tw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       code-point-at: 1.1.0
       is-fullwidth-code-point: 1.0.0
@@ -6277,6 +6282,7 @@ packages:
 
   /string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
+    requiresBuild: true
     dependencies:
       safe-buffer: 5.1.2
     dev: false
@@ -6538,7 +6544,7 @@ packages:
       minimatch: 3.1.2
       mkdirp: 0.5.6
       resolve: 1.22.1
-      semver: 5.7.1
+      semver: 7.5.4
       tslib: 1.14.1
       tsutils: 2.29.0(typescript@5.0.2)
       typescript: 5.0.2
@@ -6562,7 +6568,7 @@ packages:
       minimatch: 3.1.2
       mkdirp: 0.5.6
       resolve: 1.22.1
-      semver: 5.7.1
+      semver: 7.5.4
       tslib: 1.14.1
       tsutils: 2.29.0(typescript@5.0.2)
       typescript: 5.0.2

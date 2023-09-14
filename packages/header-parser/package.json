@@ -20,7 +20,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-versions": "^0.0.178",
+    "@definitelytyped/typescript-versions": "workspace:*",
     "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
   },

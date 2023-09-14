@@ -19,9 +19,9 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.178",
-    "@definitelytyped/typescript-versions": "^0.0.178",
-    "@definitelytyped/utils": "^0.0.178",
+    "@definitelytyped/header-parser": "workspace:*",
+    "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "@types/node": "^14.14.35",
     "fs-extra": "^9.1.0",
     "pacote": "^13.6.1",

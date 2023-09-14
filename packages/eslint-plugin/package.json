@@ -22,8 +22,8 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.178",
-    "@definitelytyped/utils": "^0.0.178",
+    "@definitelytyped/header-parser": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "@typescript-eslint/types": "^5.56.0",
     "@typescript-eslint/utils": "^5.55.0"
   },
