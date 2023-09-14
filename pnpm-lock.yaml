@@ -221,8 +221,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.0
       glob:
-        specifier: ^7.2.3
-        version: 7.2.3
+        specifier: ^8.1.0
+        version: 8.1.0
       pacote:
         specifier: ^13.6.1
         version: 13.6.2
@@ -265,10 +265,10 @@ importers:
         version: link:../utils
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.0.0
-        version: 5.55.0(@typescript-eslint/parser@5.55.0)(eslint@8.35.0)(typescript@5.0.2)
+        version: 5.55.0(@typescript-eslint/parser@5.55.0)(eslint@8.35.0)(typescript@5.2.2)
       '@typescript-eslint/parser':
         specifier: ^5.0.0
-        version: 5.55.0(eslint@8.35.0)(typescript@5.0.2)
+        version: 5.55.0(eslint@8.35.0)(typescript@5.2.2)
       '@typescript-eslint/types':
         specifier: ^5.56.0
         version: 5.56.0
@@ -1949,6 +1949,34 @@ packages:
       - supports-color
     dev: false
 
+  /@typescript-eslint/eslint-plugin@5.55.0(@typescript-eslint/parser@5.55.0)(eslint@8.35.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-IZGc50rtbjk+xp5YQoJvmMPmJEYoC53SiKPXyqWfv15XoD2Y5Kju6zN0DwlmaGJp1Iw33JsWJcQ7nw0lGCGjVg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      '@typescript-eslint/parser': ^5.0.0
+      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@eslint-community/regexpp': 4.4.0
+      '@typescript-eslint/parser': 5.55.0(eslint@8.35.0)(typescript@5.2.2)
+      '@typescript-eslint/scope-manager': 5.55.0
+      '@typescript-eslint/type-utils': 5.55.0(eslint@8.35.0)(typescript@5.2.2)
+      '@typescript-eslint/utils': 5.55.0(eslint@8.35.0)(typescript@5.2.2)
+      debug: 4.3.4
+      eslint: 8.35.0
+      grapheme-splitter: 1.0.4
+      ignore: 5.2.4
+      natural-compare-lite: 1.4.0
+      semver: 7.5.2
+      tsutils: 3.21.0(typescript@5.2.2)
+      typescript: 5.2.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@typescript-eslint/parser@5.55.0(eslint@7.32.0)(typescript@5.2.2):
     resolution: {integrity: sha512-ppvmeF7hvdhUUZWSd2EEWfzcFkjJzgNQzVST22nzg958CR+sphy8A6K7LXQZd6V75m1VKjp+J4g/PCEfSCmzhw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1985,6 +2013,26 @@ packages:
       debug: 4.3.4
       eslint: 8.35.0
       typescript: 5.0.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@typescript-eslint/parser@5.55.0(eslint@8.35.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-ppvmeF7hvdhUUZWSd2EEWfzcFkjJzgNQzVST22nzg958CR+sphy8A6K7LXQZd6V75m1VKjp+J4g/PCEfSCmzhw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 5.55.0
+      '@typescript-eslint/types': 5.55.0
+      '@typescript-eslint/typescript-estree': 5.55.0(typescript@5.2.2)
+      debug: 4.3.4
+      eslint: 8.35.0
+      typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2032,6 +2080,26 @@ packages:
       eslint: 8.35.0
       tsutils: 3.21.0(typescript@5.0.2)
       typescript: 5.0.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@typescript-eslint/type-utils@5.55.0(eslint@8.35.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-ObqxBgHIXj8rBNm0yh8oORFrICcJuZPZTqtAFh0oZQyr5DnAHZWfyw54RwpEEH+fD8suZaI0YxvWu5tYE/WswA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: '*'
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/typescript-estree': 5.55.0(typescript@5.2.2)
+      '@typescript-eslint/utils': 5.55.0(eslint@8.35.0)(typescript@5.2.2)
+      debug: 4.3.4
+      eslint: 8.35.0
+      tsutils: 3.21.0(typescript@5.2.2)
+      typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: false
