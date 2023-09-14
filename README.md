@@ -28,6 +28,12 @@ All packages use [jest](https://github.com/facebook/jest), with a single configu
 pnpm test packages/utils
 ```
 
+### Publishing/deploying
+
+[types-publisher](./packages/publisher) runs in [GitHub Actions](./.github/workflows/publish-packages.yml) using all monorepo packages built from source on `master`.
+
+The public packages are published to npm using [changesets](https://github.com/changesets/changesets). When making changes to any publishable package, run `pnpm changeset` (ideally as part of the related feature PR) to mark the changed packages for eventual version bumping and release. When that PR is merged, another PR will be automatically opened (or updated) updating package versions and CHANGELOGs. What _that_ PR is merged, a [workflow](./.github/workflows/version-or-publish.yml) will publish the changed packages to npm.
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
