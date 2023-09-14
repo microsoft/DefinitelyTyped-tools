@@ -478,6 +478,7 @@
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
+@serverless/typescript
 @sinonjs/fake-timers
 @storybook/addons
 @storybook/csf
