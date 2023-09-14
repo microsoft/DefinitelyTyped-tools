@@ -37,7 +37,7 @@ jobs:
         with:
           path: packages/definitions-parser/data/
       - uses: actions/cache/save@v3
-      if: always()
-      with:
-        path: ./cache
-        key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
+        if: always()
+        with:
+          path: ./cache
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
