@@ -15,7 +15,7 @@ export enum Secret {
    *
    * We only need one token in existence, so delete old tokens at: https://www.npmjs.com/settings/tokens
    */
-  NPM_TOKEN,
+  NPM_TYPES_TOKEN,
 }
 
 export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), (key) => {
