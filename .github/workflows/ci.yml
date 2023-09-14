@@ -69,7 +69,3 @@ jobs:
         fi
     - name: build
       run: yarn build
-    - name: publish alpha
-      run: yarn lerna publish prerelease -y --pre-dist-tag next --preid next
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
