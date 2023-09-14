@@ -22,6 +22,8 @@ jobs:
       run: pnpm install
     - name: lint
       run: pnpm lint
+    - name: build
+      run: pnpm build
     - name: test
       run: pnpm test
   check-parse-results:

@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "pretest": "pnpm run build",
     "lint": "eslint . --report-unused-disable-directives --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "test": "jest",
