@@ -20,7 +20,8 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ./cache
-          key: always
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
+          restore-keys: pacote-cache-
       - run: node packages/publisher/dist/run.js
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
