@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",
-    "@types/pacote": "^11.1.5"
+    "@types/pacote": "^11.1.5",
+    "@types/semver": "^7.5.2"
   },
   "peerDependencies": {
     "typescript": "*"

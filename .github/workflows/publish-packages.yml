@@ -11,7 +11,7 @@ concurrency: 1
 
 env:
   CI: true
-  PNPM_CACHE_FOLDER: .pnpm-stor
+  PNPM_CACHE_FOLDER: .pnpm-store
 
 jobs:
   publish:

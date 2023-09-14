@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
+    "@types/glob": "^8.1.0",
     "@types/pacote": "^11.1.5",
     "@types/semver": "^7.3.10",
     "@types/stats-lite": "^2.2.0",

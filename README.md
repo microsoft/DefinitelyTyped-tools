@@ -7,7 +7,6 @@ A monorepo for formerly disparate DefinitelyTyped-related tools:
 - [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner)
 - [dts-critic](packages/dts-critic): [DefinitelyTyped/dts-critic](https://github.com/DefinitelyTyped/dts-critic)
 - [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser)
-- [perf](packages/perf): [andrewbranch/definitely-not-slow](https://github.com/andrewbranch/definitely-not-slow)
 - [publisher](packages/publisher): the rest of [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
 - [retag](packages/retag): [DefinitelyTyped/dt-retag](https://github.com/DefinitelyTyped/dt-retag)
 - [typescript-versions](packages/typescript-versions): the part of [definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser) that tracked which TypeScript versions are published to npm and supported on DefinitelyTyped

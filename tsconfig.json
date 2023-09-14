@@ -8,7 +8,6 @@
     { "path": "packages/dtslint-runner" },
     { "path": "packages/eslint-plugin" },
     { "path": "packages/header-parser" },
-    { "path": "packages/perf" },
     { "path": "packages/publisher" },
     { "path": "packages/typescript-versions" },
     { "path": "packages/utils" },
