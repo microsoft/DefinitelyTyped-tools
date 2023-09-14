@@ -23,12 +23,12 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.178",
-    "@definitelytyped/dtslint": "^0.0.178",
-    "@definitelytyped/utils": "^0.0.178",
+    "@definitelytyped/definitions-parser": "workspace:*",
+    "@definitelytyped/dtslint": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "@octokit/rest": "^16.43.2",
     "fs-extra": "^9.0.0",
-    "glob": "^7.2.3",
+    "glob": "^8.1.0",
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
     "stats-lite": "^2.2.0",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
+    "@types/glob": "^8.1.0",
     "@types/pacote": "^11.1.5",
     "@types/semver": "^7.3.10",
     "@types/stats-lite": "^2.2.0",

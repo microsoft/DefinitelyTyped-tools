@@ -15,6 +15,10 @@ on:
     # https://crontab.guru/#5_8_*_*_1
     - cron: "5 8 * * 1"
 
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,12 +26,14 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: 'lts/*'
+    - run: npm install -g pnpm
+    - run: pnpm config set store-dir $PNPM_CACHE_FOLD
+    - run: pnpm install
+    - run: pnpm build
     - name: retag
       run: |
         git clone --depth 1 https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
-        yarn
-        yarn build
         node packages/retag/dist/index.js
       env:
         NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}

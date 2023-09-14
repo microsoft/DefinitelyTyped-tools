@@ -1,8 +1,12 @@
 import { unmangleScopedPackage } from "@definitelytyped/utils";
 import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleWithMetaAndName } from "@typescript-eslint/utils/dist/eslint-utils";
+import { RuleListener, RuleModule } from "@typescript-eslint/utils/dist/ts-eslint";
 import { basename, dirname } from "path";
 
-export const createRule = ESLintUtils.RuleCreator(
+// Possible TS bug can't figure out how to do declaration emit of created rules
+// without an explicit type annotation here due to pnpm symlink stuff
+export const createRule: <TOptions extends readonly unknown[], TMessageIds extends string>(opts: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, RuleListener>>) => RuleModule<TMessageIds, TOptions> = ESLintUtils.RuleCreator(
   (name) =>
     `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`
 );

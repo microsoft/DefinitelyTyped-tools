@@ -151,11 +151,11 @@ async function checkNpm(
     .join(", ");
   log("  To fix this:");
   log(`  git checkout -b not-needed-${name}`);
-  const yarnargs = [name, firstTypedVersion, projectName];
+  const pnpmArgs = [name, firstTypedVersion, projectName];
   if (libraryName !== name) {
-    yarnargs.push(JSON.stringify(libraryName));
+    pnpmArgs.push(JSON.stringify(libraryName));
   }
-  log("  yarn not-needed " + yarnargs.join(" "));
+  log("  pnpm not-needed " + pnpmArgs.join(" "));
   log(`  git add --all && git commit -m "${name}: Provides its own types" && git push -u origin not-needed-${name}`);
   log(`  And comment PR: This will deprecate \`@types/${name}\` in favor of just \`${name}\`. CC ${contributorUrls}`);
   if (semver.gt(`${major}.${minor}.0`, firstTypedVersion)) {

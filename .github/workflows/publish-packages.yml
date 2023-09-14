@@ -9,14 +9,22 @@ on:
 # run more than one publish job at a time
 concurrency: 1
 
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+        with:
+          node-version: 'lts/*'
+      - run: npm install -g pnpm
+      - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - uses: actions/cache/restore@v3
         with:
           path: ./cache

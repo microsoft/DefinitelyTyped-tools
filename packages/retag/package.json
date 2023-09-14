@@ -18,9 +18,9 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.178",
-    "@definitelytyped/typescript-versions": "^0.0.178",
-    "@definitelytyped/utils": "^0.0.178",
+    "@definitelytyped/definitions-parser": "workspace:*",
+    "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
     "yargs": "^15.3.1"
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/node": "^10.17.21",
     "@types/pacote": "^11.1.5",
+    "@types/semver": "^7.5.2",
     "@types/yargs": "^15.0.5"
   },
   "main": "dist/index.js",
