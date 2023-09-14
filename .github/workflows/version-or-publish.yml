@@ -40,7 +40,6 @@ jobs:
             git commit -am "Format"
             git push
           fi
-      - run: git status && git diff
       - uses: changesets/action@v1
         with:
           publish: pnpm ci:publish
