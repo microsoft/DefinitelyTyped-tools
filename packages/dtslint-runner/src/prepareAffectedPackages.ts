@@ -76,9 +76,9 @@ export async function installDependencies(packages: Iterable<TypingsData>, types
         lastError = undefined;
         break;
       } catch (e) {
-        console.error(`  from ${cwd} attempt ${i+1}: ${e}`);
+        console.error(`  from ${cwd} attempt ${i + 1}: ${e}`);
         lastError = e;
-        await sleep(5)
+        await sleep(5);
       }
     }
 
