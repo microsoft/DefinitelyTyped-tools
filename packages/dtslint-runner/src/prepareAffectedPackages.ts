@@ -6,7 +6,7 @@ import {
   allDependencies,
   TypingsData,
 } from "@definitelytyped/definitions-parser";
-import { execAndThrowErrors, joinPaths, loggerWithErrors, npmInstallFlags } from "@definitelytyped/utils";
+import { execAndThrowErrors, joinPaths, loggerWithErrors, npmInstallFlags, sleep } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
@@ -47,6 +47,8 @@ export async function prepareAffectedPackages({
   };
 }
 
+const npmRetryCount = 5;
+
 export async function installDependencies(packages: Iterable<TypingsData>, typesPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
   const start = Date.now();
@@ -62,10 +64,26 @@ export async function installDependencies(packages: Iterable<TypingsData>, types
     // This doesn't work reliably on travis, and we're just installing for the types, so ignore.
     const cmd = `npm install ${npmInstallFlags} --tag ts${pkg.minTypeScriptVersion}`;
     console.log(`  ${cwd}: ${cmd}`);
-    const stdout = await execAndThrowErrors(cmd, cwd);
-    if (stdout) {
-      // Must specify what this is for since these run in parallel.
-      console.log(` from ${cwd}: ${stdout}`);
+
+    let lastError;
+    for (let i = 0; i < npmRetryCount; i++) {
+      try {
+        const stdout = await execAndThrowErrors(cmd, cwd);
+        if (stdout) {
+          // Must specify what this is for since these run in parallel.
+          console.log(` from ${cwd}: ${stdout}`);
+        }
+        lastError = undefined;
+        break;
+      } catch (e) {
+        console.error(`  from ${cwd} attempt ${i+1}: ${e}`);
+        lastError = e;
+        await sleep(5)
+      }
+    }
+
+    if (lastError) {
+      throw lastError;
     }
   }
 
