@@ -727,6 +727,7 @@ logrocket
 lottie-web
 magic-string
 markdownlint
+marked
 mali
 meshoptimizer
 metascraper
