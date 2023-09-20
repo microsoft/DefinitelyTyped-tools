@@ -10,6 +10,9 @@ on:
     branches:
       - master
 
+permissions:
+  pull-requests: write
+
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
@@ -44,5 +47,5 @@ jobs:
         with:
           publish: pnpm ci:publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
