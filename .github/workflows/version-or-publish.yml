@@ -44,11 +44,9 @@ jobs:
             git commit -am "Format"
             git push
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
       - uses: changesets/action@v1
         with:
-          publish: pnpm ci:publish
+          publish: pnpm changeset tag && pnpm publish -r
         env:
           GITHUB_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
