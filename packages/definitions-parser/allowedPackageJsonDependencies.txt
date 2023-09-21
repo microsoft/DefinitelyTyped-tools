@@ -478,6 +478,7 @@
 @react-navigation/native
 @react-navigation/stack
 @sentry/browser
+@serverless/typescript
 @sinonjs/fake-timers
 @storybook/addons
 @storybook/csf
@@ -521,6 +522,7 @@
 @types/node
 @types/node-fetch
 @types/pino
+@types/prettier
 @types/puppeteer
 @types/puppeteer-core
 @types/react-leaflet
@@ -576,6 +578,7 @@ acorn
 actions-on-google
 activex-helpers
 adal-node
+aggregate-error
 ajv
 algoliasearch
 algoliasearch-helper
@@ -602,6 +605,7 @@ bl
 bookshelf
 boxen
 broadcast-channel
+broccoli-plugin
 bson
 buffer
 bull
@@ -645,6 +649,7 @@ electron-store
 ember-cli-htmlbars
 ember-qunit
 ember-resolver
+ember-source
 eris
 ethers
 eventemitter2
@@ -659,6 +664,7 @@ fflate
 final-form
 filestack-js
 firebase-admin
+flatbush
 flatpickr
 form-data
 fs-capacitor
@@ -720,7 +726,10 @@ loglevel
 logrocket
 lottie-web
 magic-string
+markdownlint
+marked
 mali
+meshoptimizer
 metascraper
 meteor-typings
 middy
@@ -764,6 +773,7 @@ polished
 popper.js
 postcss
 preact
+prettier
 pretty-format
 probot
 prom-client
@@ -775,8 +785,10 @@ puppeteer-core
 query-string
 quill-delta
 raven-js
+raw-body
 rc-tree
 rdf-js
+rdfxml-streaming-parser
 re-resizable
 react-autosize-textarea
 react-clock

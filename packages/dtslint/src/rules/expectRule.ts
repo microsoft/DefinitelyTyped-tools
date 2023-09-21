@@ -291,7 +291,6 @@ function parseAssertions(sourceFile: SourceFile): Assertions {
   const lineStarts = sourceFile.getLineStarts();
   let curLine = 0;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const commentMatch = commentRegexp.exec(text);
     if (commentMatch === null) {

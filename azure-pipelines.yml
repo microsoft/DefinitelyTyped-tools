@@ -22,7 +22,8 @@ steps:
   displayName: 'guardian export'
 
 - script: |
-    yarn install
+    npm i -g pnpm
+    pnpm install
     node node_modules/tslint/lib/tslintCli.js -c security/tslint.json 'packages/*/src/**/*.ts'
   displayName: 'tslint'
 

@@ -47,10 +47,7 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err =
-        testNoTsIgnore(text) ||
-        testNoLintDisables("tslint:disable", text) ||
-        testNoLintDisables("eslint-disable", text);
+      const err = testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text);
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
@@ -70,9 +67,7 @@ export async function lint(
   if (!expectOnly) {
     const cwd = process.cwd();
     process.chdir(dirPath);
-    const eslint = new ESLint({
-      rulePaths: [joinPaths(__dirname, "./rules/")],
-    });
+    const eslint = new ESLint();
     const formatter = await eslint.loadFormatter("stylish");
     const eresults = await eslint.lintFiles(esfiles);
     output += formatter.format(eresults);
@@ -159,14 +154,8 @@ interface Err {
   pos: number;
   message: string;
 }
-function testNoTsIgnore(text: string): Err | undefined {
-  const tsIgnore = "ts-ignore";
-  const pos = text.indexOf(tsIgnore);
-  return pos === -1 ? undefined : { pos, message: "'ts-ignore' is forbidden." };
-}
 function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
   let lastIndex = 0;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const pos = text.indexOf(disabler, lastIndex);
     if (pos === -1) {
@@ -257,14 +246,14 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
   }
   assert(maxVersion !== "local");
 
-  const minIdx = TypeScriptVersion.shipped.indexOf(minVersion);
+  const minIdx = TypeScriptVersion.supported.indexOf(minVersion);
   assert(minIdx >= 0);
   if (maxVersion === TypeScriptVersion.latest) {
-    return [...TypeScriptVersion.shipped.slice(minIdx), TypeScriptVersion.latest];
+    return [...TypeScriptVersion.supported.slice(minIdx), TypeScriptVersion.latest];
   }
-  const maxIdx = TypeScriptVersion.shipped.indexOf(maxVersion as TypeScriptVersion);
+  const maxIdx = TypeScriptVersion.supported.indexOf(maxVersion as TypeScriptVersion);
   assert(maxIdx >= minIdx);
-  return TypeScriptVersion.shipped.slice(minIdx, maxIdx + 1);
+  return TypeScriptVersion.supported.slice(minIdx, maxIdx + 1);
 }
 
 export type TsVersion = TypeScriptVersion | "local";
