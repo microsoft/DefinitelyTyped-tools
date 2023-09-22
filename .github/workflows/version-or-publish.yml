@@ -46,7 +46,7 @@ jobs:
           fi
       - uses: changesets/action@v1
         with:
-          publish: pnpm changeset tag && pnpm publish -r
+          publish: pnpm ci:publish
         env:
           GITHUB_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
