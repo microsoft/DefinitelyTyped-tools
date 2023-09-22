@@ -14,6 +14,7 @@ import * as noUnnecessaryGenerics from "./no-unnecessary-generics";
 import * as noUselessFiles from "./no-useless-files";
 import * as preferDeclareFunction from "./prefer-declare-function";
 import * as redundantUndefined from "./redundant-undefined";
+import * as strictExportDeclareModifiers from "./strict-export-declare-modifiers";
 
 export const rules = {
   "dt-header": dtHeader,
@@ -32,4 +33,5 @@ export const rules = {
   "no-useless-files": noUselessFiles,
   "prefer-declare-function": preferDeclareFunction,
   "redundant-undefined": redundantUndefined,
+  "strict-export-declare-modifiers": strictExportDeclareModifiers,
 };
