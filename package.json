@@ -8,7 +8,7 @@
     "test": "jest",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/retag.js",
-    "ci:publish": "pnpm publish -r"
+    "ci:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
