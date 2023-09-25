@@ -858,6 +858,7 @@ typeorm
 typescript
 typescript-tuple
 types-ramda
+undici-types
 unified
 url-pattern
 utility-types
