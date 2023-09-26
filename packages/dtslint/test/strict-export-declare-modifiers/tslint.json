@@ -1,6 +1,0 @@
-{
-  "rulesDirectory": ["../../dist/rules"],
-  "rules": {
-    "strict-export-declare-modifiers": true
-  }
-}

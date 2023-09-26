@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.158-next.3",
+  "version": "0.0.179",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -22,10 +22,10 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/dts-critic": "^0.0.157",
-    "@definitelytyped/header-parser": "^0.0.157",
-    "@definitelytyped/typescript-versions": "^0.0.157",
-    "@definitelytyped/utils": "^0.0.157",
+    "@definitelytyped/dts-critic": "workspace:*",
+    "@definitelytyped/header-parser": "workspace:*",
+    "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "@typescript-eslint/types": "^5.56.0",
@@ -39,14 +39,14 @@
     "yargs": "^15.1.0"
   },
   "peerDependencies": {
-    "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev"
+    "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
     "@types/eslint": "^8.4.2",
     "@types/fs-extra": "^5.0.2",
     "@types/json-stable-stringify": "^1.0.32",
     "@types/strip-json-comments": "^0.0.28",
-    "typescript": "4.7.4"
+    "typescript": "^5.0.2"
   },
   "engines": {
     "node": ">=10.0.0"
