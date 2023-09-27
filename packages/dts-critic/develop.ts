@@ -111,10 +111,11 @@ function getNonNpm(args: { dtPath: string }): void {
   const isNpmJson = getAllIsNpm(args.dtPath);
   for (const item of fs.readdirSync(dtTypesPath)) {
     const entry = path.join(dtTypesPath, item);
-    const dts = fs.readFileSync(entry + "/index.d.ts", "utf8");
+    const filePath = entry + "/index.d.ts";
+    const dts = fs.readFileSync(filePath, "utf8");
     let header;
     try {
-      header = headerParser.parseHeaderOrFail(dts);
+      header = headerParser.parseHeaderOrFail(filePath, dts);
     } catch (e) {
       header = undefined;
     }

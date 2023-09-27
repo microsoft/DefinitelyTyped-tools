@@ -14,6 +14,7 @@ import {
   loggerWithErrors,
   LoggerWithErrors,
   cacheDir,
+  nAtATime,
 } from "@definitelytyped/utils";
 import {
   AnyPackage,
@@ -64,16 +65,12 @@ async function tag(dry: boolean, nProcesses: number, name?: string) {
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
     await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
   } else {
-    await Promise.all(
-      (
-        await AllPackages.readLatestTypings()
-      ).map(async (pkg) => {
-        // Only update tags for the latest version of the package.
-        const version = await getLatestTypingVersion(pkg);
-        await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-        await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
-      })
-    );
+    await nAtATime(5, await AllPackages.readLatestTypings(), async (pkg) => {
+      // Only update tags for the latest version of the package.
+      const version = await getLatestTypingVersion(pkg);
+      await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+      await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+    });
   }
   // Don't tag notNeeded packages
 }

@@ -50,10 +50,10 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScri
   return out;
 }
 
-export function parseHeaderOrFail(mainFileContent: string): Header {
+export function parseHeaderOrFail(descriptor: string, mainFileContent: string): Header {
   const header = parseHeader(mainFileContent, /*strict*/ false);
   if (isParseError(header)) {
-    throw new Error(renderParseError(header));
+    throw new Error(renderParseError(descriptor, header));
   }
   return header;
 }
@@ -67,8 +67,8 @@ export function renderExpected(expected: readonly string[]): string {
   return expected.length === 1 ? expected[0] : `one of\n\t${expected.join("\n\t")}`;
 }
 
-function renderParseError({ line, column, expected }: ParseError): string {
-  return `At ${line}:${column} : Expected ${renderExpected(expected)}`;
+function renderParseError(descriptor: string, { line, column, expected }: ParseError): string {
+  return `At ${line}:${column} in ${descriptor}: Expected ${renderExpected(expected)}`;
 }
 
 function isParseError(x: {}): x is ParseError {

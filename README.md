@@ -7,7 +7,6 @@ A monorepo for formerly disparate DefinitelyTyped-related tools:
 - [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner)
 - [dts-critic](packages/dts-critic): [DefinitelyTyped/dts-critic](https://github.com/DefinitelyTyped/dts-critic)
 - [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser)
-- [perf](packages/perf): [andrewbranch/definitely-not-slow](https://github.com/andrewbranch/definitely-not-slow)
 - [publisher](packages/publisher): the rest of [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
 - [retag](packages/retag): [DefinitelyTyped/dt-retag](https://github.com/DefinitelyTyped/dt-retag)
 - [typescript-versions](packages/typescript-versions): the part of [definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser) that tracked which TypeScript versions are published to npm and supported on DefinitelyTyped
@@ -19,15 +18,21 @@ These tools are not intended for public consumption, so we may break the API whe
 
 ## Development
 
-This is a monorepo managed with [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces) and [lerna](https://github.com/lerna/lerna). After cloning, run `yarn` to install dependencies for each package and link them to each other.
+This is a monorepo managed with [pnpm workspaces](https://https://pnpm.io/workspaces) and published with [changesets](https://github.com/changesets/changesets). After cloning, run `pnpm install` to install dependencies for each package and link them to each other.
 
 ### Testing
 
-All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `yarn test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
+All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `pnpm test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
 
 ```sh
-yarn test packages/utils
+pnpm test packages/utils
 ```
+
+### Publishing/deploying
+
+[types-publisher](./packages/publisher) runs in [GitHub Actions](./.github/workflows/publish-packages.yml) using all monorepo packages built from source on `master`.
+
+The public packages are published to npm using [changesets](https://github.com/changesets/changesets). When making changes to any publishable package, run `pnpm changeset` (ideally as part of the related feature PR) to mark the changed packages for eventual version bumping and release. When that PR is merged, another PR will be automatically opened (or updated) updating package versions and CHANGELOGs. What _that_ PR is merged, a [workflow](./.github/workflows/version-or-publish.yml) will publish the changed packages to npm.
 
 ## Contributing
 

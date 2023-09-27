@@ -5,3 +5,4 @@ dist
 *.tsbuildinfo
 *.lerna_backup
 packages/utils/cache
+.pnpm-store

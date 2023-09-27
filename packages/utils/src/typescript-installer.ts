@@ -25,7 +25,7 @@ export async function installTypeScriptNext() {
   await install("next");
 }
 
-async function install(version: TsVersion | "next" | "rc"): Promise<void> {
+export async function install(version: TsVersion | "next" | "rc"): Promise<void> {
   if (version === "local") {
     return;
   }
