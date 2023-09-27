@@ -10,7 +10,7 @@ import { createTgz } from "./io";
 export const npmRegistryHostName = "registry.npmjs.org";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
 
-export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "..") : os.tmpdir(), "cache");
+export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
 type NeedToFixNpmRegistryClientTypings = any;
 

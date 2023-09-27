@@ -125,7 +125,7 @@ testo({
         "balzac": "~3"
     },
     "typesPublisherContentHash": "11",
-    "typeScriptVersion": "4.3"
+    "typeScriptVersion": "4.5"
 }`);
   },
   basicNotNeededPackageJson() {

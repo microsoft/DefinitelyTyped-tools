@@ -1,4 +1,3 @@
-import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
@@ -46,7 +45,7 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TOKEN), undefined);
+  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TYPES_TOKEN), undefined);
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);

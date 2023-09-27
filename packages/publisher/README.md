@@ -37,7 +37,6 @@ npm run parse
 npm run calculate-versions
 npm run generate
 npm run publish-packages
-npm run upload-blobs
 ```
 
 and optionally (in production, these run once a week):
@@ -324,40 +323,3 @@ npm run validate node express jquery
 will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
-
-### Republishing Packages to Github Mirror
-
-Rarely, the publisher can crash between publishing to npm and publishing to the github mirror.
-Because it uses npm as the source of truth, it will then fail to publish to github.
-In that case, you can republish a single package to github `@types` mirror by name.
-
-Usage:
-
-``` sh
-$ node dist/republish-single-github-mirror-package.js aframe
-```
-
-This will fail if the github version of the package is up-to-date, so you don't need to worry about publishing extra versions by mistake.
-You need to set the environment variable GH_API_TOKEN to a token with publish rights to the `@types` org on github.
-
-#### Why Isn't This Fixed
-
-The github mirror is not super valuable and it's only happened 3 times in the last year. It's only noticeable when updating ATA tags.
-
-## Debugging Azure
-
-While the server is running, you can view logs live:
-
-```sh
-npm install -g azure-cli
-azure config mode asm
-azure login
-azure site log tail types-publisher
-```
-
-If the server is working normally, you can view log files [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html).
-
-You can view the full server logs at [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
-For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
-You can also download a ZIP using the azure-cli command `azure site log download`.
-The most useful logs are in LogFiles/Application.

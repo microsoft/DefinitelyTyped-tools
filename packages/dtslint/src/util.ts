@@ -1,45 +1,24 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
 import assert = require("assert");
-import { pathExistsSync, readFileSync } from "fs-extra";
+import { pathExistsSync, readFile} from "fs-extra";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
 
-export const createRule = ESLintUtils.RuleCreator(
-  (name) => `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint/src/rules/${name}.ts`
-);
-
-export function packageNameFromPath(path: string): string {
-  const base = basename(path);
-  return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base
-}
-export function readJson(path: string): Record<string, unknown> {
-  return JSON.parse(stripJsonComments(readFileSync(path, "utf-8")));
+export async function readJson(path: string) {
+  const text = await readFile(path, "utf-8");
+  return JSON.parse(stripJsonComments(text));
 }
 
 export function failure(ruleName: string, s: string): string {
   return `${s} See: https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/docs/${ruleName}.md`;
 }
 
-export function getCommonDirectoryName(files: readonly string[]): string {
-  let minLen = 999;
-  let minDir = "";
-  for (const file of files) {
-    const dir = dirname(file);
-    if (dir.length < minLen) {
-      minDir = dir;
-      minLen = dir.length;
-    }
-  }
-  return basename(minDir);
-}
-
-export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
+export async function getCompilerOptions(dirPath: string): Promise<ts.CompilerOptions> {
   const tsconfigPath = join(dirPath, "tsconfig.json");
   if (!pathExistsSync(tsconfigPath)) {
     throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
   }
-  return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
+  return (await readJson(tsconfigPath)).compilerOptions as ts.CompilerOptions;
 }
 
 export function withoutPrefix(s: string, prefix: string): string | undefined {
@@ -49,13 +28,6 @@ export function withoutPrefix(s: string, prefix: string): string | undefined {
 export function last<T>(a: readonly T[]): T {
   assert(a.length !== 0);
   return a[a.length - 1];
-}
-
-export function assertDefined<T>(a: T | undefined): T {
-  if (a === undefined) {
-    throw new Error();
-  }
-  return a;
 }
 
 export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => Promise<U | undefined>): Promise<U[]> {
