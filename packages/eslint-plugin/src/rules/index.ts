@@ -15,6 +15,7 @@ import * as noUselessFiles from "./no-useless-files";
 import * as preferDeclareFunction from "./prefer-declare-function";
 import * as redundantUndefined from "./redundant-undefined";
 import * as strictExportDeclareModifiers from "./strict-export-declare-modifiers";
+import * as noSingleDeclareModule from './no-single-declare-module';
 
 export const rules = {
   "dt-header": dtHeader,
@@ -34,4 +35,5 @@ export const rules = {
   "prefer-declare-function": preferDeclareFunction,
   "redundant-undefined": redundantUndefined,
   "strict-export-declare-modifiers": strictExportDeclareModifiers,
+  "no-single-declare-module": noSingleDeclareModule,
 };
