@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.0.181
+
+### Patch Changes
+
+- 38396dff: Remove no-redundant-jsdoc2 rule
+
 ## 0.0.180
 
 ### Patch Changes
