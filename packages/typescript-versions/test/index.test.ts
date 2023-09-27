@@ -1,4 +1,4 @@
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { TypeScriptVersion } from "../src";
 
 describe("unsupported", () => {
   it("contains at least 2.9", () => {

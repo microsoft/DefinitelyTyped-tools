@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "@types/parsimmon": "^1.10.1",
     "parsimmon": "^1.13.0"
   },

@@ -7,7 +7,7 @@ interface ProgressOptions<T, U> {
   flavor(input: T, output: U): string | undefined;
 }
 
-async function nAtATime<T, U>(
+export async function nAtATime<T, U>(
   n: number,
   inputs: readonly T[],
   use: (t: T) => Awaitable<U>,
