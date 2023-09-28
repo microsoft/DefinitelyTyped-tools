@@ -33,7 +33,7 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "retag": "./dist/retag.js"
+    "retag": "./dist/index.js"
   },
   "publishConfig": {
     "access": "public"
