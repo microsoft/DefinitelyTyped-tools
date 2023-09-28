@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.0.182
+
+### Patch Changes
+
+- 7d60c4b6: Restore explicit disabling of no-redundant-jsdoc
+
 ## 0.0.181
 
 ### Patch Changes
