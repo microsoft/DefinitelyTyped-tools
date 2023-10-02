@@ -75,7 +75,7 @@ export class AllPackages {
 
   tryResolve(dep: PackageId): PackageId {
     const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
-    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${dep.version.major}${dep.version.minor ?? ""}`)
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`)
     return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
@@ -84,7 +84,7 @@ export class AllPackages {
     if (!versions) {
       throw new Error(`No typings found with name '${dep.name}'.`);
     }
-    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${dep.version.major}${dep.version.minor ?? ""}`)
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`)
     return versions.get(depVersion).id;
   }
 
@@ -116,7 +116,7 @@ export class AllPackages {
 
   tryGetTypingsData({ name, version }: PackageId): TypingsData | undefined {
     const versions = this.data.get(getMangledNameForScopedPackage(name));
-    return versions && versions.tryGet(new semver.Range(version === "*" ? "*" : `^${version.major}.${version.minor ?? ""}`));
+    return versions && versions.tryGet(new semver.Range(version === "*" ? "*" : `^${formatTypingVersion(version)}`));
   }
 
   allPackages(): readonly AnyPackage[] {

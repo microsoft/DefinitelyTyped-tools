@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@types/fail",
-    "version": "1.0.0",
+    "version": "1.0.99999",
     "projects": [
         "https://youtube.com/typeref-fails"
     ],

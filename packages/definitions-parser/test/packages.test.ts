@@ -21,7 +21,7 @@ describe(AllPackages, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1", "1.0.0");
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.99999");
     const [log] = quietLoggerWithErrors();
     allPackages = await parseDefinitions(dt.fs, undefined, log);
   });
@@ -64,10 +64,14 @@ describe(TypingsVersions, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1", "1.0.0");
-    dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
-    dt.addOldVersionOfPackage("jquery", "2.5", "2.5.0");
-    versions = new TypingsVersions(await getTypingInfo("jquery", dt.fs));
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.99999");
+    dt.addOldVersionOfPackage("jquery", "2", "2.0.99999");
+    dt.addOldVersionOfPackage("jquery", "2.5", "2.5.99999");
+    const typesorerr = await getTypingInfo("jquery", dt.fs);
+    if (Array.isArray(typesorerr)) {
+      throw new Error(typesorerr.join('\n'));
+    }
+    versions = new TypingsVersions(typesorerr);
   });
 
   it("sorts the data from latest to oldest version", () => {

@@ -5,7 +5,7 @@ describe("validatePackageJson", () => {
   const pkgJson: Record<string, unknown> = {
     "private": true,
     "name": "@types/hapi",
-    "version": "18.0.0",
+    "version": "18.0.99999",
     "projects": [
       "https://github.com/hapijs/hapi",
       "https://hapijs.com"
@@ -88,16 +88,16 @@ describe("validatePackageJson", () => {
   });
   it("requires version to be NN.NN.NN", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
-      `hapi's package.json has bad "version": should look like "NN.NN.0"`
+      `hapi's package.json has bad "version": should look like "NN.NN.99999"`
     ]);
   });
-  it("requires version to end with .0", () => {
+  it("requires version to end with .99999", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
-      `hapi's package.json has bad "version": must end with ".0"`
+      `hapi's package.json has bad "version": must end with ".99999"`
     ]);
   });
   it("works with old-version packages", () => {
-    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.0" }, []))).toBeFalsy();
+    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.99999" }, []))).toBeFalsy();
   })
 });
 

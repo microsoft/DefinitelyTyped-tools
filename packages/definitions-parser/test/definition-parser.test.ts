@@ -6,8 +6,8 @@ import { getTypingInfo } from "../src/lib/definition-parser";
 describe(getTypingInfo, () => {
   it("keys data by major.minor version", async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1.42", "1.42.0");
-    dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
+    dt.addOldVersionOfPackage("jquery", "1.42", "1.42.99999");
+    dt.addOldVersionOfPackage("jquery", "2", "2.0.99999");
     const info = await getTypingInfo("jquery", dt.fs);
 
     expect(Object.keys(info).sort()).toEqual(["1.42", "2.0", "3.3"]);
@@ -37,7 +37,7 @@ describe(getTypingInfo, () => {
     d.set("package.json", JSON.stringify({
         "private": true,
         "name": "@types/example",
-        "version": "25.0.0",
+        "version": "25.0.99999",
         "projects": [
           "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
         ],
@@ -76,7 +76,7 @@ describe(getTypingInfo, () => {
       JSON.stringify({
         "private": true,
         "name": "@types/ckeditor__ckeditor5-engine",
-        "version": "25.0.0",
+        "version": "25.0.99999",
         "projects": [
           "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
         ],
@@ -87,7 +87,7 @@ describe(getTypingInfo, () => {
           }
         ],
         "dependencies": {
-          "@types/ckeditor__ckeditor5-utils": "10.0.0",
+          "@types/ckeditor__ckeditor5-utils": "10.0.99999",
         },
         "devDependencies": {
           "@types/ckeditor__ckeditor5-engine": "workspace:."
@@ -114,7 +114,7 @@ export function myFunction(arg:string): string;
       JSON.stringify({
         "private": true,
         "name": "@types/ckeditor__ckeditor5-utils",
-        "version": "25.0.0",
+        "version": "25.0.99999",
         "projects": [
           "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils"
         ],
@@ -130,7 +130,7 @@ export function myFunction(arg:string): string;
           "@types/ckeditor__ckeditor5-utils": "workspace:."
         }
       }))
-    dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.0");
+    dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.99999");
 
     const info = await getTypingInfo("ckeditor__ckeditor5-engine", dt.fs);
     expect(info).toBeDefined();
@@ -183,7 +183,7 @@ export * from 'buffer';
       JSON.stringify({
         "private": true,
         "name": "@types/safer",
-        "version": "1.0.0",
+        "version": "1.0.99999",
         "projects": [
           "https://github.com/safer/safer"
         ],
@@ -202,6 +202,9 @@ export * from 'buffer';
       }))
 
     const info = await getTypingInfo("safer", dt.fs);
+    if (Array.isArray(info)) {
+      throw new Error(info.join("\n"));
+    }
     expect(info).toBeDefined();
     expect(info["1.0"].packageJsonDependencies).toEqual({ "@types/node": "*" });
   });
@@ -267,7 +270,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
     webpack.set("package.json",JSON.stringify({
         "private": true,
         "name": "@types/webpack",
-        "version": "5.2.0",
+        "version": "5.2.99999",
         "projects": [
           "https://github.com/webpack/webpack"
         ],
@@ -342,7 +345,7 @@ import route = require('@ember/routing/route');
       `{
     "private": true,
     "name": "@types/ember",
-    "version": "2.8.0",
+    "version": "2.8.99999",
     "dependencies": {
         "@types/ember__routing": "*"
     },
@@ -362,6 +365,9 @@ import route = require('@ember/routing/route');
     )
 
     const info = await getTypingInfo("ember", dt.fs);
+    if (Array.isArray(info)) {
+      throw new Error(info.join("\n"));
+    }
     expect(info["2.8"].packageJsonDevDependencies).toEqual({ "@types/ember": "workspace:." });
   });
 
@@ -370,6 +376,9 @@ import route = require('@ember/routing/route');
       "styled-components-react-native",
       new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"))
     );
+    if (Array.isArray(info)) {
+      throw new Error(info.join("\n"));
+    }
     expect(info["5.1"].packageJsonDependencies).toEqual({ "@types/styled-components": "*" });
   });
 
@@ -385,8 +394,8 @@ import route = require('@ember/routing/route');
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();
-      dt.addOldVersionOfPackage("jquery", "2", "2.0.0");
-      dt.addOldVersionOfPackage("jquery", "1.5", "1.5.0");
+      dt.addOldVersionOfPackage("jquery", "2", "2.0.99999");
+      dt.addOldVersionOfPackage("jquery", "1.5", "1.5.99999");
       const info = await getTypingInfo("jquery", dt.fs);
 
       expect(info).toEqual({
@@ -406,7 +415,7 @@ import route = require('@ember/routing/route');
     describe("validation thereof", () => {
       it("throws if a directory exists for the latest major version", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3", "3.0.0");
+        dt.addOldVersionOfPackage("jquery", "3", "3.0.99999");
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual([
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
@@ -416,7 +425,7 @@ import route = require('@ember/routing/route');
 
       it("throws if a directory exists for the latest minor version", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3.3", "3.3.0");
+        dt.addOldVersionOfPackage("jquery", "3.3", "3.3.99999");
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual([
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
@@ -425,7 +434,7 @@ import route = require('@ember/routing/route');
 
       it("does not throw when a minor version is older than the latest", () => {
         const dt = createMockDT();
-        dt.addOldVersionOfPackage("jquery", "3.0", "3.0.0");
+        dt.addOldVersionOfPackage("jquery", "3.0", "3.0.99999");
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toBeDefined();
       });

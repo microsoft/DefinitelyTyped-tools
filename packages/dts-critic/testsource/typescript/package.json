@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@types/typescript",
-    "version": "1200000.5.0",
+    "version": "1200000.5.99999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],

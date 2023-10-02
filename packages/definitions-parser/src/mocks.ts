@@ -303,7 +303,7 @@ function packageJson(packageName: string, version: string, dependencies: Record<
   return `{
     "private": true,
     "name": "@types/${packageName}",
-    "version": "${version}.0",
+    "version": "${version}.99999",
     "projects": ["https://project"],
     "contributors": [{
         "name": "The Dragon Quest Slime",
