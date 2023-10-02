@@ -1,12 +1,12 @@
 import assert = require("assert");
-import { pathExistsSync, readFileSync} from "fs-extra";
+import { pathExistsSync, readFileSync } from "fs-extra";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
 
 export function packageNameFromPath(path: string): string {
   const base = basename(path);
-  return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base
+  return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base;
 }
 export function readJson(path: string) {
   const text = readFileSync(path, "utf-8");

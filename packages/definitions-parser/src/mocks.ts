@@ -69,7 +69,7 @@ export class DTMock {
         },
       })
     );
-    oldDir.set("package.json", JSON.stringify({...packageJson, version: fullVersion }));
+    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion }));
 
     latestDir.forEach((content, entry) => {
       if (
@@ -163,8 +163,17 @@ untested.d.ts
 `
   );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
-  boring.set("package.json", packageJson("boring", "1.0",
-                                         {"@types/react": "*", "@types/react-default": "*", "@types/things": "*", "@types/vorticon": "*", "@types/manual": "*", "@types/super-big-fun-hus": "*"}));
+  boring.set(
+    "package.json",
+    packageJson("boring", "1.0", {
+      "@types/react": "*",
+      "@types/react-default": "*",
+      "@types/things": "*",
+      "@types/vorticon": "*",
+      "@types/manual": "*",
+      "@types/super-big-fun-hus": "*",
+    })
+  );
 
   const globby = dt.pkgDir("globby");
   globby.set(
@@ -195,22 +204,16 @@ var z = y;
 `
   );
   globby.set("tsconfig.json", tsconfig(["globby-tests.ts", "test/other-tests.ts"]));
-  globby.set("package.json", packageJson("globby", "1.0", { "@types/andere": "*" }))
+  globby.set("package.json", packageJson("globby", "1.0", { "@types/andere": "*" }));
 
   const hasDependency = dt.pkgDir("has-dependency");
-  hasDependency.set(
-    "index.d.ts",
-    `export * from "moment"`
-  );
+  hasDependency.set("index.d.ts", `export * from "moment"`);
   hasDependency.set("has-dependency-tests.ts", "");
   hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
-  hasDependency.set("package.json", packageJson("has-dependency", "1.0", { "moment": "*" }));
+  hasDependency.set("package.json", packageJson("has-dependency", "1.0", { moment: "*" }));
 
   const hasOlderTestDependency = dt.pkgDir("has-older-test-dependency");
-  hasOlderTestDependency.set(
-    "index.d.ts",
-    ``
-  );
+  hasOlderTestDependency.set("index.d.ts", ``);
   hasOlderTestDependency.set(
     "has-older-test-dependency-tests.ts",
     `import "jquery";
@@ -219,12 +222,14 @@ var z = y;
   hasOlderTestDependency.set(
     "tsconfig.json",
     JSON.stringify({
-      compilerOptions: {
-      },
+      compilerOptions: {},
       files: ["index.d.ts", "has-older-test-dependency-tests.ts"],
     })
   );
-  hasOlderTestDependency.set("package.json", packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" }));
+  hasOlderTestDependency.set(
+    "package.json",
+    packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" })
+  );
 
   const jquery = dt.pkgDir("jquery");
   jquery.set(
@@ -310,7 +315,9 @@ function packageJson(packageName: string, version: string, dependencies: Record<
         "githubUsername": "slime"
     }],
     "dependencies": {
-        ${Object.entries(dependencies).map(([name, version]) => `        "${name}": "${version}"`).join(",\n")}
+        ${Object.entries(dependencies)
+          .map(([name, version]) => `        "${name}": "${version}"`)
+          .join(",\n")}
     },
     "devDependencies": {
         "@types/${packageName}": "workspace:."

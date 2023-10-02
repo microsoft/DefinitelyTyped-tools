@@ -10,7 +10,7 @@ import {
   getLicenseFromPackageJson,
   getDependencyFromFile,
 } from "../src/packages";
-import { Range } from 'semver';
+import { Range } from "semver";
 import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
@@ -69,7 +69,7 @@ describe(TypingsVersions, () => {
     dt.addOldVersionOfPackage("jquery", "2.5", "2.5.99999");
     const typesorerr = await getTypingInfo("jquery", dt.fs);
     if (Array.isArray(typesorerr)) {
-      throw new Error(typesorerr.join('\n'));
+      throw new Error(typesorerr.join("\n"));
     }
     versions = new TypingsVersions(typesorerr);
   });
@@ -102,8 +102,12 @@ describe(TypingsVersions, () => {
   });
 
   it("formats missing version error nicely", () => {
-    expect(() => versions.get(new Range("111.1001"))).toThrow("Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. ");
-    expect(() => versions.get(new Range("111"))).toThrow("Could not match version >=111.0.0 <112.0.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. ");
+    expect(() => versions.get(new Range("111.1001"))).toThrow(
+      "Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. "
+    );
+    expect(() => versions.get(new Range("111"))).toThrow(
+      "Could not match version >=111.0.0 <112.0.0-0 in 3.3.0,2.5.0,2.0.0,1.0.0. "
+    );
   });
 });
 
@@ -117,7 +121,7 @@ describe(TypingsData, () => {
         "dependency-1": "*",
       },
       {
-        "@types/known": "workspace:."
+        "@types/known": "workspace:.",
       }
     );
     data = new TypingsData(versions["1.0"], true);
@@ -146,7 +150,7 @@ describe(TypingsData, () => {
     });
     expect(data.packageJsonDevDependencies).toEqual({
       "@types/known": "workspace:.",
-    })
+    });
     expect(data.id).toEqual({
       name: "known",
       version: {

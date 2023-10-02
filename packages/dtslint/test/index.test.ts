@@ -42,15 +42,12 @@ describe("dtslint", () => {
     forceConsistentCasingInFileNames: true,
   };
   const pkgJson: Record<string, unknown> = {
-    "private": true,
-    "name": "@types/hapi",
-    "version": "18.0.0",
-    "projects": [
-        "https://github.com/hapijs/hapi",
-        "https://hapijs.com"
-    ],
-    "typeScriptVersion": "4.2",
-    "dependencies": {
+    private: true,
+    name: "@types/hapi",
+    version: "18.0.0",
+    projects: ["https://github.com/hapijs/hapi", "https://hapijs.com"],
+    typeScriptVersion: "4.2",
+    dependencies: {
       "@types/boom": "*",
       "@types/catbox": "*",
       "@types/iron": "*",
@@ -58,35 +55,35 @@ describe("dtslint", () => {
       "@types/node": "*",
       "@types/podium": "*",
       "@types/shot": "*",
-      "joi": "^17.3.0"
+      joi: "^17.3.0",
     },
-    "devDependencies": {
-      "@types/hapi": "workspace:."
+    devDependencies: {
+      "@types/hapi": "workspace:.",
     },
-    "contributors": [
+    contributors: [
       {
-        "name": "Rafael Souza Fijalkowski",
-        "githubUsername": "rafaelsouzaf"
+        name: "Rafael Souza Fijalkowski",
+        githubUsername: "rafaelsouzaf",
       },
       {
-        "name": "Justin Simms",
-        "githubUsername": "jhsimms"
+        name: "Justin Simms",
+        githubUsername: "jhsimms",
       },
       {
-        "name": "Simon Schick",
-        "githubUsername": "SimonSchick"
+        name: "Simon Schick",
+        githubUsername: "SimonSchick",
       },
       {
-        "name": "Rodrigo Saboya",
-        "url": "https://example.com/saboya",
-      }
-    ]
-  }
+        name: "Rodrigo Saboya",
+        url: "https://example.com/saboya",
+      },
+    ],
+  };
   describe("checks", () => {
     describe("checkTsconfig", () => {
       it("disallows unknown compiler options", () => {
         expect(checkTsconfig({ ...base, completelyInvented: true })).toEqual([
-          "Unexpected compiler option completelyInvented"
+          "Unexpected compiler option completelyInvented",
         ]);
       });
       it("allows exactOptionalPropertyTypes: true", () => {
@@ -99,18 +96,16 @@ describe("dtslint", () => {
         const options = { ...base };
         delete options.module;
         expect(checkTsconfig(options)).toEqual([
-          'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.'
+          'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.',
         ]);
       });
       it("disallows exactOptionalPropertyTypes: false", () => {
         expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: false })).toEqual([
-          'When "exactOptionalPropertyTypes" is present, it must be set to `true`.'
+          'When "exactOptionalPropertyTypes" is present, it must be set to `true`.',
         ]);
       });
       it("disallows `paths`", () => {
-        expect(checkTsconfig({ ...base, paths: { "c": ['.'] } })).toEqual([
-          'Unexpected compiler option paths'
-        ]);
+        expect(checkTsconfig({ ...base, paths: { c: ["."] } })).toEqual(["Unexpected compiler option paths"]);
       });
     });
     describe("assertPackageIsNotDeprecated", () => {

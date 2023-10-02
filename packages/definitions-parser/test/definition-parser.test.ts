@@ -22,10 +22,7 @@ describe(getTypingInfo, () => {
   it("works for non-module files with empty statements", async () => {
     const dt = createMockDT();
     const d = dt.pkgDir("example");
-    d.set(
-      "index.d.ts",
-      `;;`
-    );
+    d.set("index.d.ts", `;;`);
 
     d.set(
       "tsconfig.json",
@@ -34,23 +31,24 @@ describe(getTypingInfo, () => {
         compilerOptions: {},
       })
     );
-    d.set("package.json", JSON.stringify({
-        "private": true,
-        "name": "@types/example",
-        "version": "25.0.99999",
-        "projects": [
-          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
-        ],
-        "contributors": [
+    d.set(
+      "package.json",
+      JSON.stringify({
+        private: true,
+        name: "@types/example",
+        version: "25.0.99999",
+        projects: ["https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"],
+        contributors: [
           {
-            "name": "Example",
-            "url": "https://example.com/example",
-          }
+            name: "Example",
+            url: "https://example.com/example",
+          },
         ],
-        "devDependencies": {
-          "@types/example": "workspace:."
-        }
-      }));
+        devDependencies: {
+          "@types/example": "workspace:.",
+        },
+      })
+    );
 
     const info = await getTypingInfo("example", dt.fs);
     expect(info).toBeDefined();
@@ -58,41 +56,36 @@ describe(getTypingInfo, () => {
   it("works for a scoped package with scoped older dependencies", async () => {
     const dt = createMockDT();
     const scopedWithOlderScopedDependency = dt.pkgDir("ckeditor__ckeditor5-engine");
-    scopedWithOlderScopedDependency.set(
-      "index.d.ts",
-      `import * as utils from '@ckeditor/ckeditor5-utils';`
-    );
+    scopedWithOlderScopedDependency.set("index.d.ts", `import * as utils from '@ckeditor/ckeditor5-utils';`);
 
     scopedWithOlderScopedDependency.set(
       "tsconfig.json",
       JSON.stringify({
         files: ["index.d.ts"],
-        compilerOptions: {
-        },
+        compilerOptions: {},
       })
     );
     scopedWithOlderScopedDependency.set(
       "package.json",
       JSON.stringify({
-        "private": true,
-        "name": "@types/ckeditor__ckeditor5-engine",
-        "version": "25.0.99999",
-        "projects": [
-          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"
-        ],
-        "contributors": [
+        private: true,
+        name: "@types/ckeditor__ckeditor5-engine",
+        version: "25.0.99999",
+        projects: ["https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-engine"],
+        contributors: [
           {
-            "name": "Example",
-            "url": "https://zombo.com/ñ",
-          }
+            name: "Example",
+            url: "https://zombo.com/ñ",
+          },
         ],
-        "dependencies": {
+        dependencies: {
           "@types/ckeditor__ckeditor5-utils": "10.0.99999",
         },
-        "devDependencies": {
-          "@types/ckeditor__ckeditor5-engine": "workspace:."
-        }
-      }))
+        devDependencies: {
+          "@types/ckeditor__ckeditor5-engine": "workspace:.",
+        },
+      })
+    );
 
     const olderScopedPackage = dt.pkgDir("ckeditor__ckeditor5-utils");
     olderScopedPackage.set(
@@ -105,31 +98,28 @@ export function myFunction(arg:string): string;
       "tsconfig.json",
       JSON.stringify({
         files: ["index.d.ts"],
-        compilerOptions: {
-        },
+        compilerOptions: {},
       })
     );
     olderScopedPackage.set(
       "package.json",
       JSON.stringify({
-        "private": true,
-        "name": "@types/ckeditor__ckeditor5-utils",
-        "version": "25.0.99999",
-        "projects": [
-          "https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils"
-        ],
-        "contributors": [
+        private: true,
+        name: "@types/ckeditor__ckeditor5-utils",
+        version: "25.0.99999",
+        projects: ["https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-utils"],
+        contributors: [
           {
-            "name": "Example",
-            "githubUsername": "ñ"
-          }
+            name: "Example",
+            githubUsername: "ñ",
+          },
         ],
-        "dependencies": {
+        dependencies: {},
+        devDependencies: {
+          "@types/ckeditor__ckeditor5-utils": "workspace:.",
         },
-        "devDependencies": {
-          "@types/ckeditor__ckeditor5-utils": "workspace:."
-        }
-      }))
+      })
+    );
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.99999");
 
     const info = await getTypingInfo("ckeditor__ckeditor5-engine", dt.fs);
@@ -179,27 +169,27 @@ export * from 'buffer';
     ]
 } `
     );
-    safer.set('package.json',
+    safer.set(
+      "package.json",
       JSON.stringify({
-        "private": true,
-        "name": "@types/safer",
-        "version": "1.0.99999",
-        "projects": [
-          "https://github.com/safer/safer"
-        ],
-        "contributors": [
+        private: true,
+        name: "@types/safer",
+        version: "1.0.99999",
+        projects: ["https://github.com/safer/safer"],
+        contributors: [
           {
-            "name": "Noone",
-            "githubUsername": "noone"
-          }
+            name: "Noone",
+            githubUsername: "noone",
+          },
         ],
-        "dependencies": {
-          "@types/node": "*"
+        dependencies: {
+          "@types/node": "*",
         },
-        "devDependencies": {
-          "@types/safer": "workspace:."
-        }
-      }))
+        devDependencies: {
+          "@types/safer": "workspace:.",
+        },
+      })
+    );
 
     const info = await getTypingInfo("safer", dt.fs);
     if (Array.isArray(info)) {
@@ -267,23 +257,24 @@ const a = new webpack.AutomaticPrefetchPlugin();
     ]
 }`
     );
-    webpack.set("package.json",JSON.stringify({
-        "private": true,
-        "name": "@types/webpack",
-        "version": "5.2.99999",
-        "projects": [
-          "https://github.com/webpack/webpack"
-        ],
-        "contributors": [
+    webpack.set(
+      "package.json",
+      JSON.stringify({
+        private: true,
+        name: "@types/webpack",
+        version: "5.2.99999",
+        projects: ["https://github.com/webpack/webpack"],
+        contributors: [
           {
-            "name": "Qubo",
-            "githubUsername": "tkqubo"
-          }
+            name: "Qubo",
+            githubUsername: "tkqubo",
+          },
         ],
-        "devDependencies": {
-          "@types/webpack": "workspace:."
-        }
-    }));
+        devDependencies: {
+          "@types/webpack": "workspace:.",
+        },
+      })
+    );
 
     const info = await getTypingInfo("webpack", dt.fs);
     expect(info).toBeDefined();
@@ -362,7 +353,7 @@ import route = require('@ember/routing/route');
         }
     ]
 }`
-    )
+    );
 
     const info = await getTypingInfo("ember", dt.fs);
     if (Array.isArray(info)) {
@@ -419,7 +410,7 @@ import route = require('@ember/routing/route');
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual([
           "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
-            "since it applies to any 3.* version, up to and including 3.3."
+            "since it applies to any 3.* version, up to and including 3.3.",
         ]);
       });
 
@@ -428,7 +419,7 @@ import route = require('@ember/routing/route');
         dt.addOldVersionOfPackage("jquery", "3.3", "3.3.99999");
 
         return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual([
-          "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."
+          "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed.",
         ]);
       });
 

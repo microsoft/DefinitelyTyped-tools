@@ -7,7 +7,10 @@ import { deepEquals } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
 // TODO: forbid triple-slash types references like "package/v1"
-export function checkPackageJson(dirPath: string, typesVersions: readonly AllTypeScriptVersion[]): header.Header | string[] {
+export function checkPackageJson(
+  dirPath: string,
+  typesVersions: readonly AllTypeScriptVersion[]
+): header.Header | string[] {
   // TODO: Don't allow package.json except in the root dir of a package and of /v* folders one below the root.
   // (this used to be in dt-header rule, but probably also elsewhere)
   const pkgJsonPath = joinPaths(dirPath, "package.json");
@@ -31,7 +34,7 @@ export interface DefinitelyTypedInfo {
 }
 // TODO: Maybe check ALL of tsconfig, not just compilerOptions
 export function checkTsconfig(options: CompilerOptionsRaw): string[] {
-  const errors = []
+  const errors = [];
   const mustHave = {
     noEmit: true,
     forceConsistentCasingInFileNames: true,
@@ -44,8 +47,8 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
     if (!deepEquals(expected, actual)) {
       errors.push(
         `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
-actual
-)}`
+          actual
+        )}`
       );
     }
   }
@@ -82,8 +85,7 @@ actual
 
   if (!("module" in options)) {
     errors.push('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
-  }
-  else if (
+  } else if (
     options.module?.toString().toLowerCase() !== "commonjs" &&
     options.module?.toString().toLowerCase() !== "node16"
   ) {

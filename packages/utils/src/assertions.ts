@@ -46,8 +46,8 @@ export function deepEquals(expected: unknown, actual: unknown): boolean {
         return false;
       }
     }
-    return true
-  }else {
+    return true;
+  } else {
     return expected === actual;
   }
 }

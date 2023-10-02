@@ -49,7 +49,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
 }
 
 export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | string[]> {
-  const errors = []
+  const errors = [];
   if (packageName !== packageName.toLowerCase()) {
     errors.push(`Package name \`${packageName}\` should be strictly lowercase`);
   }
@@ -69,11 +69,11 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
 
   const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
-  const latestDataResult = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost)
+  const latestDataResult = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost);
   if (Array.isArray(latestDataResult)) {
     return [...errors, ...latestDataResult];
   }
-  const latestData: TypingsDataRaw = {libraryVersionDirectoryName: undefined, ...latestDataResult,};
+  const latestData: TypingsDataRaw = { libraryVersionDirectoryName: undefined, ...latestDataResult };
 
   const older = await Promise.all(
     olderVersionDirectories.map(async ({ directoryName, version: directoryVersion }) => {
@@ -90,22 +90,25 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
       // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
       const result = await combineDataForAllTypesVersions(
-          packageName,
-          ls,
-          fs.subDir(directoryName),
-          moduleResolutionHost
-        )
+        packageName,
+        ls,
+        fs.subDir(directoryName),
+        moduleResolutionHost
+      );
       if (Array.isArray(result)) {
-        errors.push(...result)
-        return result
+        errors.push(...result);
+        return result;
       }
-      const data: TypingsDataRaw = {libraryVersionDirectoryName: formatTypingVersion(directoryVersion), ...result,};
+      const data: TypingsDataRaw = { libraryVersionDirectoryName: formatTypingVersion(directoryVersion), ...result };
 
       if (!matchesVersion(data, directoryVersion, considerLibraryMinorVersion)) {
         if (considerLibraryMinorVersion) {
           errors.push(
-            `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${directoryVersion.minor ?? "*"}, ` +
-              `but package.json indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`);
+            `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${
+              directoryVersion.minor ?? "*"
+            }, ` +
+              `but package.json indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`
+          );
         } else {
           errors.push(
             `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
@@ -117,13 +120,13 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
     })
   );
   if (errors.length) {
-    return errors
+    return errors;
   }
 
   const res: TypingsVersionsRaw = {};
   res[formattedLibraryVersion(latestData)] = latestData;
   for (const o of older) {
-    assert(!Array.isArray(o))
+    assert(!Array.isArray(o));
     res[formattedLibraryVersion(o as TypingsDataRaw)] = o;
   }
   return res;
@@ -147,14 +150,12 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
 
     const version = match[1];
     if (parseInt(version, 10) < 3) {
-      errors.push(
-        `Directory name starting with 'ts' should be a TypeScript version newer than 3.0. Got: ${version}`
-      );
+      errors.push(`Directory name starting with 'ts' should be a TypeScript version newer than 3.0. Got: ${version}`);
     }
     return version as TypeScriptVersion;
   });
   if (errors.length) {
-    return errors
+    return errors;
   }
   return { remainingLs, typesVersions, hasPackageJson: withoutPackageJson.length !== ls.length };
 }
@@ -196,12 +197,14 @@ async function combineDataForAllTypesVersions(
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
-  const errors = []
-  const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls)
+  const errors = [];
+  const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls);
   if (Array.isArray(typesVersionAndPackageJson)) {
-    errors.push(...typesVersionAndPackageJson)
+    errors.push(...typesVersionAndPackageJson);
   }
-  const { remainingLs, typesVersions, hasPackageJson } = Array.isArray(typesVersionAndPackageJson) ? { remainingLs: [], typesVersions: [], hasPackageJson: false} : typesVersionAndPackageJson;
+  const { remainingLs, typesVersions, hasPackageJson } = Array.isArray(typesVersionAndPackageJson)
+    ? { remainingLs: [], typesVersions: [], hasPackageJson: false }
+    : typesVersionAndPackageJson;
   const packageJson = hasPackageJson
     ? (fs.readJson(packageJsonName) as {
         readonly license?: unknown;
@@ -220,7 +223,7 @@ async function combineDataForAllTypesVersions(
     moduleResolutionHost
   );
   if (Array.isArray(dataForRoot)) {
-    errors.push(...dataForRoot)
+    errors.push(...dataForRoot);
   }
   const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
     const subFs = fs.subDir(`ts${tsVersion}`);
@@ -232,17 +235,17 @@ async function combineDataForAllTypesVersions(
       moduleResolutionHost
     );
     if (Array.isArray(data)) {
-      errors.push(...data)
+      errors.push(...data);
     }
-    return data
+    return data;
   });
   const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
   if (Array.isArray(packageJsonType)) {
-    errors.push(...packageJsonType)
+    errors.push(...packageJsonType);
   }
   const packageJsonResult = validatePackageJson(typingsPackageName, packageJson, typesVersions);
   if (Array.isArray(packageJsonResult)) {
-    errors.push(...packageJsonResult)
+    errors.push(...packageJsonResult);
   }
 
   const {
@@ -252,21 +255,21 @@ async function combineDataForAllTypesVersions(
     typeScriptVersion: minTsVersion,
     libraryName,
     projects,
-  } = Array.isArray(packageJsonResult) ? {} as Header : packageJsonResult
-  const allowedDependencies = await getAllowedPackageJsonDependencies()
-  errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies))
-  errors.push(...checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies))
-  const imports = checkPackageJsonImports(packageJson.imports, packageJsonName)
+  } = Array.isArray(packageJsonResult) ? ({} as Header) : packageJsonResult;
+  const allowedDependencies = await getAllowedPackageJsonDependencies();
+  errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies));
+  errors.push(...checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies));
+  const imports = checkPackageJsonImports(packageJson.imports, packageJsonName);
   if (Array.isArray(imports)) {
-    errors.push(...imports)
+    errors.push(...imports);
   }
-  const exports = checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName)
+  const exports = checkPackageJsonExportsAndAddPJsonEntry(packageJson.exports, packageJsonName);
   if (Array.isArray(exports)) {
-    errors.push(...exports)
+    errors.push(...exports);
   }
   const license = getLicenseFromPackageJson(packageJson.license);
   if (errors.length) {
-    return errors
+    return errors;
   }
 
   const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions] as TypingDataFromIndividualTypeScriptVersion[];
@@ -288,7 +291,7 @@ async function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    packageJsonDependencies: packageJson.dependencies as Record<string,string>,
+    packageJsonDependencies: packageJson.dependencies as Record<string, string>,
     packageJsonDevDependencies: packageJson.devDependencies as Record<string, string>,
     // TODO: Add devDependencies here (aka testDependencies)
     contentHash: hash(
@@ -328,7 +331,7 @@ function getTypingDataForSingleTypesVersion(
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost
 ): TypingDataFromIndividualTypeScriptVersion | string[] {
-  const errors = []
+  const errors = [];
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   const configHost: ts.ParseConfigHost = {
     ...moduleResolutionHost,
@@ -350,7 +353,11 @@ function getTypingDataForSingleTypesVersion(
     moduleResolutionHost,
     compilerOptions
   );
-  const usedFiles = new Set([...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map(f => slicePrefixes(f, "node_modules/@types/" + packageName + "/")));
+  const usedFiles = new Set(
+    [...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map((f) =>
+      slicePrefixes(f, "node_modules/@types/" + packageName + "/")
+    )
+  );
   const otherFiles = ls.includes(unusedFilesName)
     ? fs
         // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
@@ -369,7 +376,11 @@ function getTypingDataForSingleTypesVersion(
   // Note: findAllUnusedFiles also modifies usedFiles and otherFiles and errors
   const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, errors, packageName, fs);
   if (unusedFiles.length) {
-    errors.push('\n\t* ' + unusedFiles.map(unused => `Unused file ${unused}`).join("\n\t* ") + `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`)
+    errors.push(
+      "\n\t* " +
+        unusedFiles.map((unused) => `Unused file ${unused}`).join("\n\t* ") +
+        `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`
+    );
   }
   for (const untestedTypeFile of filter(
     otherFiles,
@@ -383,8 +394,7 @@ function getTypingDataForSingleTypesVersion(
     );
   }
 
-  if (errors.length)
-    return errors
+  if (errors.length) return errors;
   return {
     typescriptVersion,
     globals: getDeclaredGlobals(types),
@@ -416,8 +426,7 @@ function checkPackageJsonImports(imports: unknown, path: string): object | strin
   if (imports === undefined) return imports;
   if (typeof imports !== "object") {
     return [`Package imports at path ${path} should be an object or string.`];
-  }
-  else if (imports === null) {
+  } else if (imports === null) {
     return [`Package imports at path ${path} should not be null.`];
   }
   return imports;
@@ -456,11 +465,11 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
       errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
     }
   }
-  return errors
+  return errors;
 }
 
 function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): string[] {
-  const errors = []
+  const errors = [];
   const tsconfigPath = `${directoryPath}/tsconfig.json`;
   if (tsconfig.include) {
     errors.push(`In tsconfig, don't use "include", must use "files"`);
@@ -469,7 +478,7 @@ function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directo
   const files = tsconfig.files;
   if (!files) {
     errors.push(`${tsconfigPath} needs to specify  "files"`);
-    return errors
+    return errors;
   }
   for (const file of files) {
     if (file.startsWith("./")) {
@@ -536,7 +545,7 @@ function findAllUnusedFiles(
   otherFiles: string[],
   errors: string[],
   packageName: string,
-  fs: FS,
+  fs: FS
 ): string[] {
   // Double-check that no windows "\\" broke in.
   for (const fileName of usedFiles) {
@@ -547,8 +556,14 @@ function findAllUnusedFiles(
   return findAllUnusedRecur(new Set(ls), usedFiles, new Set(otherFiles), errors, fs);
 }
 
-function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherFiles: Set<string>, errors: string[], fs: FS): string[] {
-  const unused = []
+function findAllUnusedRecur(
+  ls: Iterable<string>,
+  usedFiles: Set<string>,
+  otherFiles: Set<string>,
+  errors: string[],
+  fs: FS
+): string[] {
+  const unused = [];
   for (const lsEntry of ls) {
     if (usedFiles.has(lsEntry)) {
       continue;
@@ -581,7 +596,13 @@ function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherF
         }
         return subdirSet;
       }
-      findAllUnusedRecur(lssubdir, takeSubdirectoryOutOfSet(usedFiles), takeSubdirectoryOutOfSet(otherFiles), errors, subdir);
+      findAllUnusedRecur(
+        lssubdir,
+        takeSubdirectoryOutOfSet(usedFiles),
+        takeSubdirectoryOutOfSet(otherFiles),
+        errors,
+        subdir
+      );
     } else {
       if (
         lsEntry.toLowerCase() !== "readme.md" &&
@@ -602,5 +623,5 @@ function findAllUnusedRecur(ls: Iterable<string>, usedFiles: Set<string>, otherF
     }
     errors.push(`File ${fs.debugPath()}/${otherFile} listed in ${unusedFilesName} does not exist.`);
   }
-  return unused
+  return unused;
 }

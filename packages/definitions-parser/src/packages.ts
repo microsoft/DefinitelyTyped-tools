@@ -75,7 +75,7 @@ export class AllPackages {
 
   tryResolve(dep: PackageId): PackageId {
     const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
-    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`)
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
     return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
@@ -84,7 +84,7 @@ export class AllPackages {
     if (!versions) {
       throw new Error(`No typings found with name '${dep.name}'.`);
     }
-    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`)
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
     return versions.get(depVersion).id;
   }
 
@@ -142,12 +142,12 @@ export class AllPackages {
   /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies.
    * I have NO idea why it's an iterator. Surely not for efficiency. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
-    for (const [ name, version ] of pkg.allPackageJsonDependencies()) {
+    for (const [name, version] of pkg.allPackageJsonDependencies()) {
       // TODO: chart.js@3 has types; @types/chart.js@2.9 is the last version on DT.
       // It shouldn't be an error to depend on chart.js@3 but it's currently ambiguous with @types/chart.js.
-      if (!name.startsWith(`@${scopeName}/`)) continue
-      const dtName = removeTypesScope(name)
-      if (pkg.name === dtName) continue
+      if (!name.startsWith(`@${scopeName}/`)) continue;
+      const dtName = removeTypesScope(name);
+      if (pkg.name === dtName) continue;
       const versions = this.data.get(dtName);
       if (versions) {
         yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
@@ -325,7 +325,7 @@ export function formatDependencyVersion(version: DependencyVersion) {
 }
 
 /** Maps name to version */
-export type PackageJsonDependencies = Record<string, string>
+export type PackageJsonDependencies = Record<string, string>;
 
 export interface TypingsDataRaw extends BaseRaw {
   /**
@@ -488,11 +488,10 @@ export class TypingsVersions {
   }
   tryGet(version: semver.Range): TypingsData | undefined {
     try {
-    const found = this.versions.find(v => version.test(v));
-    return found && this.map.get(found);
-    }
-    catch (e) {
-      console.log(version)
+      const found = this.versions.find((v) => version.test(v));
+      return found && this.map.get(found);
+    } catch (e) {
+      console.log(version);
       throw e;
     }
   }
@@ -546,10 +545,10 @@ export class TypingsData extends PackageBase {
   }
   *allPackageJsonDependencies(): Iterable<[string, string]> {
     for (const [name, version] of Object.entries(this.packageJsonDependencies)) {
-      yield [name, version]
+      yield [name, version];
     }
     for (const [name, version] of Object.entries(this.packageJsonDevDependencies)) {
-      yield [name, version]
+      yield [name, version];
     }
   }
   get contentHash(): string {

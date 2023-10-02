@@ -4,12 +4,7 @@ import {
   createReadme,
   getLicenseFileText,
 } from "../src/generate-packages";
-import {
-  License,
-  NotNeededPackage,
-  TypingsData,
-  TypingsDataRaw,
-} from "@definitelytyped/definitions-parser";
+import { License, NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
 import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
@@ -24,7 +19,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
-    packageJsonDependencies: { "@types/madeira": "^1", "balzac": "~3" },
+    packageJsonDependencies: { "@types/madeira": "^1", balzac: "~3" },
     packageJsonDevDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
     projectName: "jquery.org",

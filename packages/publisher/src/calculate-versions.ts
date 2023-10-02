@@ -16,15 +16,12 @@ import yargs = require("yargs");
 
 if (!module.parent) {
   const log = loggerWithErrors()[0];
-      const options = { ...defaultLocalOptions };
-      if (yargs.argv.path) {
-        options.definitelyTypedPath = yargs.argv.path as string;
-      }
+  const options = { ...defaultLocalOptions };
+  if (yargs.argv.path) {
+    options.definitelyTypedPath = yargs.argv.path as string;
+  }
   logUncaughtErrors(async () =>
-    calculateVersions(
-      await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log),
-      log
-    )
+    calculateVersions(await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log), log)
   );
 }
 
@@ -62,9 +59,9 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
           throw reason.code === "E404"
             ? new Error(
-              `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
-              { cause: reason }
-            )
+                `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
+                { cause: reason }
+              )
             : reason;
         });
       }

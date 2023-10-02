@@ -3,7 +3,10 @@ import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 import { PreparePackagesResult } from "./types";
 
-export async function prepareAllPackages(definitelyTypedPath: string, nProcesses: number): Promise<PreparePackagesResult> {
+export async function prepareAllPackages(
+  definitelyTypedPath: string,
+  nProcesses: number
+): Promise<PreparePackagesResult> {
   const [log] = loggerWithErrors();
   const options = {
     definitelyTypedPath,

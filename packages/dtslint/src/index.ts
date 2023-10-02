@@ -159,7 +159,7 @@ async function runTests(
 
   const packageJson = checkPackageJson(dirPath, typesVersions);
   if (Array.isArray(packageJson)) {
-    throw new Error("\n\t* " + packageJson.join("\n\t* "))
+    throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
 
   const minVersion = maxVersion(packageJson.typeScriptVersion, TypeScriptVersion.lowest);
@@ -215,7 +215,7 @@ async function testTypesVersion(
   checkTslintJson(dirPath);
   const tsconfigErrors = checkTsconfig(getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
-    throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "))
+    throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {

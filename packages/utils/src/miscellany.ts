@@ -2,17 +2,16 @@ import crypto from "crypto";
 import * as semver from "semver";
 
 // TODO: This should likely go away, replaced by semver.parse+verify that patch is not specified
-export function parsePackageSemver(version: string): { major: number, minor?: number } | "*" {
+export function parsePackageSemver(version: string): { major: number; minor?: number } | "*" {
   if (version === "workspace:.") {
-    return "*"
+    return "*";
   }
-  const start = new semver.Range(version).set[0][0].semver
+  const start = new semver.Range(version).set[0][0].semver;
   if (start === (semver.Comparator as any).ANY) {
-    return "*"
-  }
-  else {
+    return "*";
+  } else {
     // TODO: we should still use real semver but for now minor===0 => minor=undefined for compatibility
-    return { major: start.major, minor: start.minor === 0 ? undefined : start.minor }
+    return { major: start.major, minor: start.minor === 0 ? undefined : start.minor };
   }
 }
 

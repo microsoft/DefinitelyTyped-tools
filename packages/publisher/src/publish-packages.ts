@@ -18,10 +18,10 @@ import { getSecret, Secret } from "./lib/secrets";
 if (!module.parent) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-      const options = { ...defaultLocalOptions, parseInParallel: true };
-      if (yargs.argv.path) {
-        options.definitelyTypedPath = yargs.argv.path as string;
-      }
+    const options = { ...defaultLocalOptions, parseInParallel: true };
+    if (yargs.argv.path) {
+      options.definitelyTypedPath = yargs.argv.path as string;
+    }
     const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
       await readChangedPackages(await AllPackages.read(dt)),
@@ -75,9 +75,9 @@ export default async function publishPackages(
         fetcher
       )) as { items: { number: number }[] };
       let latestPr = 0;
-        if (!prs.items) {
-            console.log(prs)
-        }
+      if (!prs.items) {
+        console.log(prs);
+      }
       for (const pr of prs.items) {
         if (pr.number > latestPr) {
           latestPr = pr.number;

@@ -24,7 +24,7 @@ export async function parseDefinitions(
   log.info(`Found ${packageNames.length} packages.`);
 
   const typings: { [name: string]: TypingsVersionsRaw } = {};
-  const errors: string[] = []
+  const errors: string[] = [];
 
   const start = Date.now();
   if (parallel) {
@@ -36,22 +36,20 @@ export async function parseDefinitions(
       nProcesses: parallel.nProcesses,
       handleOutput({ data, packageName }: { data: TypingsVersionsRaw; packageName: string }) {
         if (Array.isArray(data)) {
-          errors.push(...data)
-        }
-        else {
+          errors.push(...data);
+        } else {
           typings[packageName] = data;
         }
       },
     });
   } else {
-    const errors = []
+    const errors = [];
     log.info("Parsing in main process...");
     for (const packageName of packageNames) {
-      const info = await getTypingInfo(packageName, dt)
+      const info = await getTypingInfo(packageName, dt);
       if (Array.isArray(info)) {
-        errors.push(...info)
-      }
-      else {
+        errors.push(...info);
+      } else {
         typings[packageName] = info;
       }
     }
