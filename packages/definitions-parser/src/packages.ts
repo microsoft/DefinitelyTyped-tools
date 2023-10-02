@@ -468,7 +468,7 @@ export class TypingsVersions {
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
-    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.0`));
+    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.99999`));
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
