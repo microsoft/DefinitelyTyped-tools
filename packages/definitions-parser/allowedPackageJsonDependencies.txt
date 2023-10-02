@@ -605,6 +605,7 @@ bl
 bookshelf
 boxen
 broadcast-channel
+broccoli-node-api
 broccoli-plugin
 bson
 buffer
@@ -724,6 +725,7 @@ log4js
 logform
 loglevel
 logrocket
+long
 lottie-web
 magic-string
 markdownlint

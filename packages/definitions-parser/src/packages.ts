@@ -482,9 +482,7 @@ export class TypingsVersions {
   get(version: semver.Range, errorMessage?: string): TypingsData {
     const data = this.tryGet(version);
     if (!data) {
-      // throw new Error(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
-      console.log(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
-      return this.getLatest()
+      throw new Error(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
     }
     return data;
   }

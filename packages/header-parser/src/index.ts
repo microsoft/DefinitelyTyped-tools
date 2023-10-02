@@ -85,8 +85,10 @@ export function validatePackageJson(packageName: string, packageJson: Record<str
         // "dependencies" / "license" checked by types-publisher,
         // TODO: asserts for other fields in types-publisher
         break;
-        // TODO: Only until Jake drops it
-      case "unmangledName":
+      case "paths":
+      case "pnpm":
+        // TODO: write validation rules for pnpm property (should just be overrides, and those should probably be restricted somehow)
+        // TODO: write validation rules for paths property (based on old version's checks?)
         break;
       case "typesVersions":
       case "types":
