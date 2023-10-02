@@ -152,7 +152,7 @@ async function runTests(
       throw new Error(`At ${dirPath}/${name}: TypeScript version directories only available starting with ts3.1.`);
     }
     if (!TypeScriptVersion.isSupported(version)) {
-      throw new Error("At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.");
+      throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
     }
     return version;
   });
@@ -191,10 +191,9 @@ async function runTests(
   }
 }
 
-function maxVersion(v1: TypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion;
-function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion;
-function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion) {
-  return parseFloat(v1) >= parseFloat(v2) ? v1 : v2;
+function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
+  // Note: For v1 to be later than v2, it must be a current Typescript version. So the type assertion is safe.
+  return parseFloat(v1) >= parseFloat(v2) ? (v1 as TypeScriptVersion) : v2;
 }
 
 function next(v: TypeScriptVersion): TypeScriptVersion {

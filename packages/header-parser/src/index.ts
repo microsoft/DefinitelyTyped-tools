@@ -227,7 +227,7 @@ export function validatePackageJson(
   }
   function validateNonNpm(): boolean | { errors: string[] } {
     const errors = [];
-    if (packageJson.nonNpm != undefined) {
+    if (packageJson.nonNpm !== undefined) {
       if (packageJson.nonNpm !== true) {
         errors.push(`${packageName}'s package.json has bad "nonNpm": must be true if present.`);
       } else if (!packageJson.nonNpmDescription) {

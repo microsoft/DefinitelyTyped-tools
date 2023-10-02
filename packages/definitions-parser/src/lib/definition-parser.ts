@@ -188,7 +188,7 @@ export function parseVersionFromDirectoryName(
  * falls back to '*' if the input format is not parseable.
  */
 export function tryParsePackageVersion(versionString: string | undefined): DependencyVersion {
-  return versionString != null ? parsePackageSemver(versionString) : "*";
+  return versionString !== undefined ? parsePackageSemver(versionString) : "*";
 }
 
 async function combineDataForAllTypesVersions(
