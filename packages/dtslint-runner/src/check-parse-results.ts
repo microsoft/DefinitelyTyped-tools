@@ -1,6 +1,6 @@
 import console from "console";
 import { AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
   getDefinitelyTyped(options, console).then((dt) => {
     AllPackages.read(dt).then(checkParseResults);

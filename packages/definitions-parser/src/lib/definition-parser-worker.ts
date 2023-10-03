@@ -8,7 +8,7 @@ import { dirname } from "path";
 // This file is "called" by runWithChildProcesses from parse-definition.ts
 export const definitionParserWorkerFilename = __filename;
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   process.on("message", (message) => {
     assert(process.argv.length === 3);
     const typesPath = process.argv[2];

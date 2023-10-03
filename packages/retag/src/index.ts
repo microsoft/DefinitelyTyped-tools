@@ -26,7 +26,7 @@ import {
 import * as pacote from "pacote";
 import * as semver from "semver";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   logUncaughtErrors(main);
 }
 

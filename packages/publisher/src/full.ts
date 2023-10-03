@@ -8,7 +8,7 @@ import { getDefinitelyTyped, ParseDefinitionsOptions } from "@definitelytyped/de
 import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
     full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0])
