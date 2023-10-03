@@ -3,7 +3,7 @@ import { cleanLogDirectory } from "@definitelytyped/utils";
 import { removeSync } from "fs-extra";
 import { outputDirPath, validateOutputPath } from "./lib/settings";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   clean();
 }
 

@@ -10,7 +10,7 @@ import { mapDefined, FS, logger, writeLog, Logger, ProgressBar, cacheDir, max, m
 import * as pacote from "pacote";
 import * as semver from "semver";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
   getDefinitelyTyped(options, console).then((dt) => {
     checkParseResults(/*includeNpmChecks*/ false, dt);

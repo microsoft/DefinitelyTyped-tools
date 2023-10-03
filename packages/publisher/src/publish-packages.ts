@@ -15,7 +15,7 @@ import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
     const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
