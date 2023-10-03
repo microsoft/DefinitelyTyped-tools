@@ -11,7 +11,7 @@ import {
   typesDataFilename,
 } from "@definitelytyped/definitions-parser";
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const { nProcesses, single: singleName } = yargs.options({
     single: { type: "string" },
     nProcesses: { type: "number" },

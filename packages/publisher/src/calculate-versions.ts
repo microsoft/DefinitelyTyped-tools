@@ -17,7 +17,7 @@ import yargs = require("yargs");
 
 const npmRegistryParallelism = 10;
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const log = loggerWithErrors()[0];
   const options = { ...defaultLocalOptions };
   if (yargs.argv.path) {

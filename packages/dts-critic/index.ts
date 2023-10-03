@@ -94,7 +94,7 @@ export function dtsCritic(
       if (options.mode === Mode.Code) {
         errors.push(...checkSource(name, dtsPath, sourcePath, options.errors, debug));
       }
-    } else if (module.filename === process.argv[1]) {
+    } else if (require.main === module) {
       console.log(`Warning: declaration provided is for a non-npm package.
 If you want to check the declaration against the JavaScript source code, you must provide a path to the source file.`);
     }
@@ -1032,6 +1032,6 @@ function mergeErrors(...results: (InferenceResult<unknown> | string)[]): Inferen
   return inferenceError(reasons.join(" "));
 }
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   main();
 }

@@ -4,7 +4,7 @@ import { logUncaughtErrors, loggerWithErrors } from "@definitelytyped/utils";
 import { getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const dry = !!yargs.argv.dry;
   console.log("gettingDefinitelyTyped: " + (dry ? "from github" : "locally"));
   logUncaughtErrors(async () => {

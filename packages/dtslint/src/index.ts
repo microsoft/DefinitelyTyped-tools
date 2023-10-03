@@ -274,7 +274,7 @@ If you want to re-add @types/${packageName}, please remove its entry from notNee
   }
 }
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   main().catch((err) => {
     console.error(err.stack);
     process.exit(1);
