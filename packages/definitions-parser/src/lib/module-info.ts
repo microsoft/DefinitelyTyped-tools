@@ -104,11 +104,11 @@ export function allReferencedFiles(
 
   function recur(containingFileName: string | undefined, ref: Reference): void {
     // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
-    const resolvedFileName = resolveReference(containingFileName, ref);
-
+    let resolvedFileName = resolveReference(containingFileName, ref);
     if (!resolvedFileName) {
       return;
     }
+    resolvedFileName = fs.realPath(resolvedFileName);
 
     if (seenReferences.has(resolvedFileName)) {
       return;
