@@ -130,7 +130,10 @@ If you want to check the declaration against the JavaScript source code, you mus
 
 function parseDtHeader(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
   const result = headerParser.validatePackageJson(packageName, packageJson, []);
-  return Array.isArray(result) ? undefined : result;
+  if (Array.isArray(result)) {
+    throw new Error(result.join("\n"));
+  }
+  return result;
 }
 
 function isNonNpm(header: headerParser.Header | undefined): boolean {

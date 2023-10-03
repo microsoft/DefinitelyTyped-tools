@@ -55,6 +55,8 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
 
   for (const key in options) {
     switch (key) {
+      case "paths":
+        // TODO: write validation rules for paths property (based on old version's checks?)
       case "lib":
       case "noImplicitAny":
       case "noImplicitThis":
