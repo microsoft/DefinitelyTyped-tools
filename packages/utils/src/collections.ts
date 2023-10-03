@@ -200,5 +200,5 @@ export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
 }
 
 export function compact<T>(array: readonly (T | undefined)[]): T[] {
-  return array.filter((x): x is T => !!x);
+  return array.filter((x): x is T => x !== undefined);
 }
