@@ -16,7 +16,7 @@ import * as pacote from "pacote";
 
 const npmRegistryParallelism = 10;
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const log = loggerWithErrors()[0];
   logUncaughtErrors(async () =>
     calculateVersions(

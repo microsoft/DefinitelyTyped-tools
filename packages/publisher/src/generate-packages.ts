@@ -38,7 +38,7 @@ import { skipBadPublishes } from "./lib/npm";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];

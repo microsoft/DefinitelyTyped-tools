@@ -245,6 +245,6 @@ function disableRules(allFailures: RuleFailure[]): Config.RawRulesConfig {
   return newRulesConfig;
 }
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   main();
 }

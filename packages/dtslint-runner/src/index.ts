@@ -8,7 +8,7 @@ import { assertDefined, logUncaughtErrors } from "@definitelytyped/utils";
 
 export { runDTSLint, RunDTSLintOptions };
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   const args = yargs
     .options({
       clone: {

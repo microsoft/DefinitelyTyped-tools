@@ -301,7 +301,7 @@ function getMinimumTypeScriptVersionFromComment(text: string): AllTypeScriptVers
   return parseTypeScriptVersionLine(line);
 }
 
-if (module.filename === process.argv[1]) {
+if (require.main === module) {
   main().catch((err) => {
     console.error(err.stack);
     process.exit(1);
