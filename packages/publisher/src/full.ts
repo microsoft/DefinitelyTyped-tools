@@ -9,7 +9,7 @@ import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors, assertD
 import { numberOfOsProcesses } from "./util/util";
 import { defaultLocalOptions } from "./lib/common";
 
-if (!module.parent) {
+if (module.filename === process.argv[1]) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
     full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0])

@@ -3,17 +3,20 @@ import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 import { ChangedPackages, ChangedPackagesJson, ChangedTypingJson, versionsFilename } from "./lib/versions";
 import { getDefinitelyTyped, AllPackages, NotNeededPackage, writeDataFile } from "@definitelytyped/definitions-parser";
 import {
-  mapDefinedAsync,
   logUncaughtErrors,
   loggerWithErrors,
   FS,
   LoggerWithErrors,
   cacheDir,
+  nAtATime,
+  compact,
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
 
-if (!module.parent) {
+const npmRegistryParallelism = 10;
+
+if (module.filename === process.argv[1]) {
   const log = loggerWithErrors()[0];
   logUncaughtErrors(async () =>
     calculateVersions(
@@ -47,7 +50,7 @@ async function computeAndSaveChangedPackages(
 
 async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors): Promise<ChangedPackages> {
   log.info("# Computing changed packages...");
-  const changedTypings = await mapDefinedAsync(allPackages.allTypings(), async (pkg) => {
+  const changedTypings = await nAtATime(npmRegistryParallelism, allPackages.allTypings(), async (pkg) => {
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
@@ -71,7 +74,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     return undefined;
   });
   log.info("# Computing deprecated packages...");
-  const changedNotNeededPackages = await mapDefinedAsync(allPackages.allNotNeeded(), async (pkg) => {
+  const changedNotNeededPackages = await nAtATime(npmRegistryParallelism, allPackages.allNotNeeded(), async (pkg) => {
     if (!(await isAlreadyDeprecated(pkg, log))) {
       // Assert that dependencies (i.e. the replacement package) exist on npm.
       // Also checked in checkNotNeededPackage().
@@ -85,7 +88,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     }
     return undefined;
   });
-  return { changedTypings, changedNotNeededPackages };
+  return { changedTypings: compact(changedTypings), changedNotNeededPackages: compact(changedNotNeededPackages) };
 }
 
 async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
