@@ -21,7 +21,7 @@ export async function publishTypingsPackage(
     // If this is an older version of the package, we still update tags for the *latest*.
     // NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
     // so we must undo that by re-tagging latest.
-    await updateLatestTag(pkg.fullNpmName, latestVersion, client, log, dry);
+    await updateLatestTag(pkg.name, latestVersion, client, log, dry);
   }
 }
 

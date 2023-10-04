@@ -1,35 +1,36 @@
-import * as ts from "typescript";
-import { validatePackageJson, Header } from "@definitelytyped/header-parser";
-import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
-import {
-  DependencyVersion,
-  formatTypingVersion,
-  getLicenseFromPackageJson,
-  TypingsDataRaw,
-  TypingsVersionsRaw,
-  DirectoryParsedTypingVersion,
-  getMangledNameForScopedPackage,
-} from "../packages";
-import { getAllowedPackageJsonDependencies } from "./settings";
+import { validatePackageJson } from "@definitelytyped/header-parser";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
   FS,
-  split,
-  hasWindowsSlashes,
-  mapDefined,
-  filter,
-  sort,
-  withoutStart,
+  assertDefined,
   computeHash,
-  join,
-  flatMap,
-  unique,
   createModuleResolutionHost,
+  filter,
+  flatMap,
+  hasWindowsSlashes,
+  join,
+  mapDefined,
   parsePackageSemver,
+  sort,
+  split,
+  unique,
+  withoutStart,
 } from "@definitelytyped/utils";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { slicePrefixes } from "./utils";
-import path from "path";
 import assert from "assert";
+import path from "path";
+import * as ts from "typescript";
+import {
+  DependencyVersion,
+  DirectoryParsedTypingVersion,
+  TypingsDataRaw,
+  TypingsVersionsRaw,
+  formatTypingVersion,
+  getLicenseFromPackageJson,
+  getMangledNameForScopedPackage,
+} from "../packages";
+import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
+import { getAllowedPackageJsonDependencies } from "./settings";
+import { slicePrefixes } from "./utils";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -37,15 +38,15 @@ function matchesVersion(
   considerLibraryMinorVersion: boolean
 ) {
   return (
-    typingsDataRaw.libraryMajorVersion === version.major &&
+    typingsDataRaw.header.libraryMajorVersion === version.major &&
     (considerLibraryMinorVersion
-      ? version.minor === undefined || typingsDataRaw.libraryMinorVersion === version.minor
+      ? version.minor === undefined || typingsDataRaw.header.libraryMinorVersion === version.minor
       : true)
   );
 }
 
 function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${number}` {
-  return `${typingsDataRaw.libraryMajorVersion}.${typingsDataRaw.libraryMinorVersion}`;
+  return `${typingsDataRaw.header.libraryMajorVersion}.${typingsDataRaw.header.libraryMinorVersion}`;
 }
 
 export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | string[]> {
@@ -78,12 +79,12 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
   const older = await Promise.all(
     olderVersionDirectories.map(async ({ directoryName, version: directoryVersion }) => {
       if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
-        const latest = `${latestData.libraryMajorVersion}.${latestData.libraryMinorVersion}`;
+        const latest = `${latestData.header.libraryMajorVersion}.${latestData.header.libraryMinorVersion}`;
         errors.push(
           `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
             (`v${latest}` === directoryName
               ? "."
-              : `; since it applies to any ${latestData.libraryMajorVersion}.* version, up to and including ${latest}.`)
+              : `; since it applies to any ${latestData.header.libraryMajorVersion}.* version, up to and including ${latest}.`)
         );
       }
 
@@ -107,12 +108,12 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
             `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${
               directoryVersion.minor ?? "*"
             }, ` +
-              `but package.json indicates major.minor version ${data.libraryMajorVersion}.${data.libraryMinorVersion}`
+              `but package.json indicates major.minor version ${data.header.libraryMajorVersion}.${data.header.libraryMinorVersion}`
           );
         } else {
           errors.push(
             `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
-              data.libraryMajorVersion.toString()
+              data.header.libraryMajorVersion.toString()
           );
         }
       }
@@ -248,14 +249,7 @@ async function combineDataForAllTypesVersions(
     errors.push(...packageJsonResult);
   }
 
-  const {
-    contributors,
-    libraryMajorVersion,
-    libraryMinorVersion,
-    typeScriptVersion: minTsVersion,
-    libraryName,
-    projects,
-  } = Array.isArray(packageJsonResult) ? ({} as Header) : packageJsonResult;
+  const header = Array.isArray(packageJsonResult) ? undefined : packageJsonResult;
   const allowedDependencies = await getAllowedPackageJsonDependencies();
   errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies));
   errors.push(...checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies));
@@ -281,13 +275,7 @@ async function combineDataForAllTypesVersions(
 
   // Note that only the first project is collected right now
   return {
-    libraryName,
-    typingsPackageName,
-    projectName: projects[0],
-    contributors,
-    libraryMajorVersion,
-    libraryMinorVersion,
-    minTsVersion,
+    header: assertDefined(header),
     typesVersions,
     files,
     license,

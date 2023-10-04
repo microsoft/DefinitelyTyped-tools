@@ -4,11 +4,11 @@ import {
   AllPackages,
   PackageId,
   PackageBase,
-  getMangledNameForScopedPackage,
   formatDependencyVersion,
   removeTypesScope,
 } from "./packages";
 import { tryParsePackageVersion } from "./lib/definition-parser";
+import { scopeName } from "./lib/settings";
 
 export interface Affected {
   readonly changedPackages: readonly TypingsData[];
@@ -87,7 +87,7 @@ function getReverseDependencies(
     for (const [name, version] of typing.allPackageJsonDependencies()) {
       const dependencies = map.get(
         packageIdToKey(
-          allPackages.tryResolve({ name: removeTypesScope(name), version: tryParsePackageVersion(version) })
+          allPackages.tryResolve({ typesDirectoryName: removeTypesScope(name), version: tryParsePackageVersion(version) })
         )
       );
       if (dependencies) {
@@ -99,5 +99,6 @@ function getReverseDependencies(
 }
 
 function packageIdToKey(pkg: PackageId): string {
-  return getMangledNameForScopedPackage(pkg.name) + "/v" + formatDependencyVersion(pkg.version);
+  const typesDirectoryName = pkg.typesDirectoryName ?? pkg.name.slice(scopeName.length + 2);
+  return typesDirectoryName + "/v" + formatDependencyVersion(pkg.version);
 }
