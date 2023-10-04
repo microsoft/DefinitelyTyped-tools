@@ -11,6 +11,11 @@
     { "path": "packages/publisher" },
     { "path": "packages/typescript-versions" },
     { "path": "packages/utils" },
-    { "path": "packages/retag" }
+    { "path": "packages/retag" },
+
+    { "path": "packages/definitions-parser/test" },
+    { "path": "packages/header-parser/test" },
+    { "path": "packages/publisher/test" },
+    { "path": "packages/utils/test" }
   ]
 }
