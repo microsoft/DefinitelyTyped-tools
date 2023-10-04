@@ -8,5 +8,6 @@
   "references": [
     { "path": ".." },
     { "path": "../../utils" }
-  ]
+  ],
+  "exclude": ["fixtures"]
 }

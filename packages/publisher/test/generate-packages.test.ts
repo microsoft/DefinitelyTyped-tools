@@ -10,19 +10,21 @@ import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
-    libraryName: "jquery",
-    typingsPackageName: "jquery",
-    contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
-    libraryMajorVersion: 1,
-    libraryMinorVersion: 0,
-    minTsVersion: "3.2",
+    header: {
+      name: "@types/jquery",
+      contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
+      libraryMajorVersion: 1,
+      libraryMinorVersion: 0,
+      typeScriptVersion: "3.2",
+      projects: ["jquery.org"],
+      nonNpm: false,
+    },
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
     packageJsonDependencies: { "@types/madeira": "^1", balzac: "~3" },
     packageJsonDevDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
-    projectName: "jquery.org",
     globals: [],
   };
 }

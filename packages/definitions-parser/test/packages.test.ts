@@ -174,16 +174,16 @@ describe(TypingsData, () => {
     });
   });
 
-  describe("fullNpmName", () => {
-    it("returns scoped name", () => {
-      expect(data.fullNpmName).toBe("@types/known");
+  describe("typesDirectoryName", () => {
+    it("returns unscoped name", () => {
+      expect(data.typesDirectoryName).toBe("known");
     });
 
     it("returns mangled name if scoped", () => {
       const versions = createTypingsVersionRaw("@foo/bar", {}, {});
       data = new TypingsData(versions["1.0"], false);
 
-      expect(data.fullNpmName).toBe("@types/foo__bar");
+      expect(data.typesDirectoryName).toBe("foo__bar");
     });
   });
 });
