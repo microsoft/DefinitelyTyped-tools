@@ -219,10 +219,6 @@ export abstract class PackageBase {
   }
 }
 
-export function getFullNpmName(packageName: string): string {
-  return `@${scopeName}/${getMangledNameForScopedPackage(packageName)}`;
-}
-
 interface NotNeededPackageRaw {
   /**
    * The npm name of the implementation library that the types package was for.
