@@ -12,7 +12,7 @@ function createRawPackage(license: License): TypingsDataRaw {
   return {
     header: {
       name: "@types/jquery",
-      contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
+      contributors: [{ name: "A", url: "b@c.d" }, { name: "E", githubUsername: "e" }],
       libraryMajorVersion: 1,
       libraryMinorVersion: 0,
       typeScriptVersion: "3.2",
@@ -60,6 +60,10 @@ testo({
       expect.stringContaining("This package contains type definitions for")
     );
   },
+  readmeContainsContributors() {
+    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"));
+  },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("jquery.org"));
@@ -105,7 +109,10 @@ testo({
     "contributors": [
         {
             "name": "A",
-            "url": "b@c.d",
+            "url": "b@c.d"
+        },
+        {
+            "name": "E",
             "githubUsername": "e"
         }
     ],

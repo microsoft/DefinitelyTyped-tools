@@ -30,11 +30,17 @@ export interface Header {
   readonly contributors: readonly Author[];
 }
 // used in definitions-parser
-export interface Author {
-  readonly name: string;
-  readonly url: string;
-  readonly githubUsername: string | undefined;
-}
+export type Author =
+  | {
+      readonly name: string;
+      readonly url: string;
+    }
+  | {
+      readonly name: string;
+      readonly githubUsername: string;
+      readonly url?: undefined;
+    };
+
 // used locally
 export interface ParseError {
   readonly index: number;
@@ -96,7 +102,9 @@ export function validatePackageJson(
       case "typesVersions":
       case "types":
         if (!needsTypesVersions) {
-          errors.push(`${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`);
+          errors.push(
+            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`
+          );
         }
         break;
       default:
@@ -122,11 +130,19 @@ export function validatePackageJson(
 
   // typesVersions
   if (needsTypesVersions) {
-    assert.strictEqual(packageJson.types, "index", `"types" in '${typesDirectoryName}'s package.json' should be "index".`);
+    assert.strictEqual(
+      packageJson.types,
+      "index",
+      `"types" in '${typesDirectoryName}'s package.json' should be "index".`
+    );
     const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
     if (!deepEquals(packageJson.typesVersions, expected)) {
       errors.push(
-        `'${typesDirectoryName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(expected, undefined, 4)}`
+        `'${typesDirectoryName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(
+          expected,
+          undefined,
+          4
+        )}`
       );
     }
   }
@@ -193,7 +209,9 @@ export function validatePackageJson(
 
   function validateName(): string | { errors: string[] } {
     if (packageJson.name !== "@types/" + typesDirectoryName) {
-      return { errors: [`${typesDirectoryName}'s package.json should have \`"name": "@types/${typesDirectoryName}"\``] };
+      return {
+        errors: [`${typesDirectoryName}'s package.json should have \`"name": "@types/${typesDirectoryName}"\``],
+      };
     } else {
       return typesDirectoryName;
     }
@@ -219,7 +237,9 @@ export function validatePackageJson(
           return { major: version.major, minor: version.minor ?? 0 };
         }
       } catch (e: any) {
-        errors.push(`'${typesDirectoryName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`);
+        errors.push(
+          `'${typesDirectoryName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`
+        );
       }
     }
     return { errors };
