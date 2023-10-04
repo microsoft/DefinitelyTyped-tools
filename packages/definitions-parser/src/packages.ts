@@ -198,7 +198,7 @@ export abstract class PackageBase {
 
   /**
    * The immediate subdirectory name in DefinitelyTyped/types/.
-   * Must be equal to the package.json "name" field withouth the "@types/" prefix.
+   * Must be equal to the package.json "name" field without the "@types/" prefix.
    * Does not include the version directory.
    */
   get typesDirectoryName(): string {
