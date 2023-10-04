@@ -1,4 +1,4 @@
-import { getAffectedPackages } from "../src/get-affected-packages";
+import { getAffectedPackagesWorker } from "../src/get-affected-packages";
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
@@ -18,34 +18,38 @@ const allPackages = AllPackages.from(typesData, notNeeded);
 
 testo({
   updatedPackage() {
-    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
-      { name: "jquery", version: { major: 2 } },
-    ]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 2, minor: 0 } }]);
-    expect((changedPackages[0] as any).data).toEqual(typesData.jquery["2.0"]);
-    expect(dependentPackages.map(({ id }) => id)).toEqual([
-      { name: "known-test", version: { major: 1, minor: 0 } },
-      { name: "most-recent", version: { major: 1, minor: 0 } },
-    ]);
+    const packageOutput = `/dt/types/jquery`
+    const dependentOutput = `/dt/types/jquery
+/dt/types/known-test
+/dt/types/most-recent`
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt');
+    expect(packageNames).toEqual(new Set(["jquery"]))
+    expect(dependents).toEqual([ "known-test", "most-recent", ]);
   },
   deletedPackage() {
-    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [{ name: "WAT", version: "*" }]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([]);
-    expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "unknown-test", version: { major: 1, minor: 0 } }]);
+    // TODO
+    const packageOutput = `/dt/types/WAT`
+    const dependentOutput = `/dt/types/WAT
+/dt/types/unknown-test`
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
+    expect(packageNames).toEqual(new Set([]));
+    expect(dependents).toEqual(["unknown-test"]);
   },
   deletedVersion() {
-    const { changedPackages } = getAffectedPackages(allPackages, [{ name: "jquery", version: { major: 0 } }]);
-    expect(changedPackages).toEqual([]);
+    // TODO
+    const packageOutput = ``
+    const dependentOutput = ``
+    const { packageNames } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
+    expect(packageNames).toEqual(new Set());
   },
   olderVersion() {
-    debugger;
-    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
-      { name: "jquery", version: { major: 1 } },
-    ]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
-    expect(dependentPackages.map(({ id }) => id)).toEqual([
-      { name: "has-older-test-dependency", version: { major: 1, minor: 0 } },
-      { name: "known", version: { major: 1, minor: 0 } },
-    ]);
+    // TODO
+    const packageOutput = `/dt/types/jquery`
+    const dependentOutput = `/dt/types/jquery
+/dt/types/has-older-test-dependency
+/dt/types/known`
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
+    expect(packageNames).toEqual(new Set(["jquery"]))
+    expect(dependents).toEqual([ "has-older-test-dependency", "known", ]);
   },
 });

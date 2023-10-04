@@ -1,8 +1,3 @@
-export interface PreparePackagesResult {
-  packageNames: readonly string[];
-  dependents: readonly string[];
-}
-
 export interface CloneDefinitelyTyped {
   kind: "clone";
   sha?: string;

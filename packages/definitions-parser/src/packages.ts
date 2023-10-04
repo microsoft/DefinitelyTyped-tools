@@ -317,13 +317,6 @@ export function formatTypingVersion(version: DirectoryParsedTypingVersion) {
   return `${version.major}${version.minor === undefined ? "" : `.${version.minor}`}`;
 }
 
-/** If no version is specified, uses "*". */
-export type DependencyVersion = DirectoryParsedTypingVersion | "*";
-
-export function formatDependencyVersion(version: DependencyVersion) {
-  return version === "*" ? "*" : formatTypingVersion(version);
-}
-
 /** Maps name to version */
 export type PackageJsonDependencies = Record<string, string>;
 
@@ -585,7 +578,7 @@ export class TypingsData extends PackageBase {
 /** Uniquely identifies a package. */
 export interface PackageId {
   readonly name: string;
-  readonly version: DependencyVersion;
+  readonly version: DirectoryParsedTypingVersion | "*";
 }
 
 export interface PackageIdWithDefiniteVersion {

@@ -1,7 +1,6 @@
-import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff } from "@definitelytyped/definitions-parser";
+import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff, PreparePackagesResult } from "@definitelytyped/definitions-parser";
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
-import { PreparePackagesResult } from "./types";
 
 export async function prepareAffectedPackages(
   definitelyTypedPath: string,
@@ -18,18 +17,10 @@ export async function prepareAffectedPackages(
   try {
     checkParseResults(allPackages);
   } catch (err) {
+    // TODO: ??? won't a failure in here squelch any errors from checkParseResults? Seems like a bad idea.
     await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
     throw err;
   }
 
-  const { changedPackages, dependentPackages } = await getAffectedPackagesFromDiff(
-    allPackages,
-    definitelyTypedPath,
-    "affected"
-  );
-
-  return {
-    packageNames: changedPackages.map((p) => p.subDirectoryPath),
-    dependents: dependentPackages.map((p) => p.subDirectoryPath),
-  };
+  return getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
 }

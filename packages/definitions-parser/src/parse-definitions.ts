@@ -4,8 +4,6 @@ import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
 import { AllPackages, readNotNeededPackages, typesDataFilename, TypingsVersionsRaw } from "./packages";
 
-export { tryParsePackageVersion } from "./lib/definition-parser";
-
 export interface ParallelOptions {
   readonly nProcesses: number;
   readonly definitelyTypedPath: string;

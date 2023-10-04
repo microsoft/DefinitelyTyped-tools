@@ -2,7 +2,6 @@ import * as ts from "typescript";
 import { validatePackageJson, Header } from "@definitelytyped/header-parser";
 import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
 import {
-  DependencyVersion,
   formatTypingVersion,
   getLicenseFromPackageJson,
   TypingsDataRaw,
@@ -24,7 +23,6 @@ import {
   flatMap,
   unique,
   createModuleResolutionHost,
-  parsePackageSemver,
 } from "@definitelytyped/utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { slicePrefixes } from "./utils";
@@ -181,14 +179,6 @@ export function parseVersionFromDirectoryName(
     major: Number(match[1]),
     minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
   };
-}
-
-/**
- * TODO: Uses of this should very likely be using semver. For now I'll parse with semver and convert to major & minor | *
- * falls back to '*' if the input format is not parseable.
- */
-export function tryParsePackageVersion(versionString: string | undefined): DependencyVersion {
-  return versionString !== undefined ? parsePackageSemver(versionString) : "*";
 }
 
 async function combineDataForAllTypesVersions(

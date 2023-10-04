@@ -74,8 +74,8 @@ export async function runDTSLint({
   await runWithListeningChildProcesses({
     inputs: testedPackages.map((path) => ({
       path,
-      onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
-      expectOnly: expectOnly || !packageNames.includes(path),
+      onlyTestTsNext: onlyTestTsNext || !packageNames.has(path),
+      expectOnly: expectOnly || !packageNames.has(path),
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),

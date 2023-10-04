@@ -2,9 +2,9 @@ import assert from "assert";
 import { sourceBranch } from "./lib/settings";
 import {
   PackageId,
-  DependencyVersion,
-  formatDependencyVersion,
+  DirectoryParsedTypingVersion,
   getDependencyFromFile,
+  formatTypingVersion,
   AllPackages,
   NotNeededPackage,
 } from "./packages";
@@ -20,7 +20,8 @@ import {
 } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
-import { getAffectedPackages } from "./get-affected-packages";
+import { inspect } from 'util'
+import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
   status: "A" | "D" | "M";
@@ -65,12 +66,11 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     return stdout;
   }
 }
-
 /** Returns all immediate subdirectories of the root directory that have changed. */
-export function gitChanges(diffs: GitDiff[]): PackageId[] {
-  const changedPackages = new Map<string, Map<string, DependencyVersion>>();
-
+function gitDeletions(diffs: GitDiff[]): PackageId[] {
+  const changedPackages = new Map<string, Map<string, DirectoryParsedTypingVersion | "*">>();
   for (const diff of diffs) {
+    if (diff.status !== "D") continue
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const versions = changedPackages.get(dep.name);
@@ -81,43 +81,40 @@ export function gitChanges(diffs: GitDiff[]): PackageId[] {
       }
     }
   }
-
+   
   return Array.from(
     flatMapIterable(changedPackages, ([name, versions]) => mapIterable(versions, ([_, version]) => ({ name, version })))
   );
+}
+ 
+function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
+  return version === "*" ? "*" : formatTypingVersion(version);
 }
 
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string,
   selection: "all" | "affected" | RegExp
-) {
+): Promise<PreparePackagesResult> {
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
       checkNotNeededPackage(deleted);
     }
   }
-
   const affected =
-    selection === "all"
-      ? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
-      : selection === "affected"
-      ? getAffectedPackages(allPackages, gitChanges(diffs))
+    selection === "all" ? { packageNames: new Set(allPackages.allTypings().map(t => t.subDirectoryPath)), dependents: [] }
+      : selection === "affected" ? await getAffectedPackages(allPackages, gitDeletions(diffs), definitelyTypedPath)
       : {
-          changedPackages: allPackages.allTypings().filter((t) => selection.test(t.name)),
-          dependentPackages: [],
+          packageNames: new Set(allPackages.allTypings().filter((t) => selection.test(t.name)).map(t => t.subDirectoryPath)),
+          dependents: [],
         };
 
   console.log(
-    `Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages
-      .map((t) => t.desc)
-      .toString()}`
+    `Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`
   );
   console.log(
-    `Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages
-      .map((t) => t.desc)
-      .toString()}`
+    `Testing ${affected.dependents.length} dependent packages: ${JSON.stringify(affected.dependents)}`
   );
   return affected;
 }
