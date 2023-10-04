@@ -111,7 +111,9 @@ export class AllPackages {
   tryGetTypingsData(pkg: PackageId): TypingsData | undefined {
     const typesDirectoryName = pkg.typesDirectoryName ?? pkg.name.slice(scopeName.length + 2);
     const versions = this.data.get(typesDirectoryName);
-    return versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`));
+    return (
+      versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))
+    );
   }
 
   allPackages(): readonly AnyPackage[] {
@@ -211,7 +213,7 @@ export abstract class PackageBase {
   get id(): PackageIdWithDefiniteVersion {
     return { typesDirectoryName: this.typesDirectoryName, version: { major: this.major, minor: this.minor } };
   }
-  
+
   isNotNeeded(): this is NotNeededPackage {
     return this instanceof NotNeededPackage;
   }
@@ -560,23 +562,18 @@ export type PackageId =
       readonly version: DependencyVersion;
     };
 
-export type PackageIdWithDefiniteVersion =
-  | {
-      readonly typesDirectoryName: string;
-      readonly version: HeaderParsedTypingVersion;
-    }
-  | {
-      readonly name: string;
-      readonly version: HeaderParsedTypingVersion;
-    };
+export interface PackageIdWithDefiniteVersion {
+  readonly typesDirectoryName: string;
+  readonly version: HeaderParsedTypingVersion;
+}
 
-    export interface TypesDataFile {
-      readonly [packageName: string]: TypingsVersionsRaw;
-    }
-    function readTypesDataFile(): Promise<TypesDataFile> {
-      return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
-    }
-    
+export interface TypesDataFile {
+  readonly [packageName: string]: TypingsVersionsRaw;
+}
+function readTypesDataFile(): Promise<TypesDataFile> {
+  return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
+}
+
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
   return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map((entry) =>
@@ -589,7 +586,9 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
  * For "types/a/v3/c", returns { name: "a", version: 3 }.
  * For "x", returns undefined.
  */
-export function getDependencyFromFile(file: string): { typesDirectoryName: string, version: DependencyVersion } | undefined {
+export function getDependencyFromFile(
+  file: string
+): { typesDirectoryName: string; version: DependencyVersion } | undefined {
   const parts = file.split("/");
   if (parts.length <= 2) {
     // It's not in a typings directory at all.

@@ -19,33 +19,33 @@ const allPackages = AllPackages.from(typesData, notNeeded);
 testo({
   updatedPackage() {
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
-      { name: "jquery", version: { major: 2 } },
+      { typesDirectoryName: "jquery", version: { major: 2 } },
     ]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 2, minor: 0 } }]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([{ typesDirectoryName: "jquery", version: { major: 2, minor: 0 } }]);
     expect((changedPackages[0] as any).data).toEqual(typesData.jquery["2.0"]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([
-      { name: "known-test", version: { major: 1, minor: 0 } },
-      { name: "most-recent", version: { major: 1, minor: 0 } },
+      { typesDirectoryName: "known-test", version: { major: 1, minor: 0 } },
+      { typesDirectoryName: "most-recent", version: { major: 1, minor: 0 } },
     ]);
   },
   deletedPackage() {
-    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [{ name: "WAT", version: "*" }]);
+    const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [{ typesDirectoryName: "WAT", version: "*" }]);
     expect(changedPackages.map(({ id }) => id)).toEqual([]);
-    expect(dependentPackages.map(({ id }) => id)).toEqual([{ name: "unknown-test", version: { major: 1, minor: 0 } }]);
+    expect(dependentPackages.map(({ id }) => id)).toEqual([{ typesDirectoryName: "unknown-test", version: { major: 1, minor: 0 } }]);
   },
   deletedVersion() {
-    const { changedPackages } = getAffectedPackages(allPackages, [{ name: "jquery", version: { major: 0 } }]);
+    const { changedPackages } = getAffectedPackages(allPackages, [{ typesDirectoryName: "jquery", version: { major: 0 } }]);
     expect(changedPackages).toEqual([]);
   },
   olderVersion() {
     debugger;
     const { changedPackages, dependentPackages } = getAffectedPackages(allPackages, [
-      { name: "jquery", version: { major: 1 } },
+      { typesDirectoryName: "jquery", version: { major: 1 } },
     ]);
-    expect(changedPackages.map(({ id }) => id)).toEqual([{ name: "jquery", version: { major: 1, minor: 0 } }]);
+    expect(changedPackages.map(({ id }) => id)).toEqual([{ typesDirectoryName: "jquery", version: { major: 1, minor: 0 } }]);
     expect(dependentPackages.map(({ id }) => id)).toEqual([
-      { name: "has-older-test-dependency", version: { major: 1, minor: 0 } },
-      { name: "known", version: { major: 1, minor: 0 } },
+      { typesDirectoryName: "has-older-test-dependency", version: { major: 1, minor: 0 } },
+      { typesDirectoryName: "known", version: { major: 1, minor: 0 } },
     ]);
   },
 });
