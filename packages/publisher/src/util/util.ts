@@ -7,5 +7,5 @@ export function currentTimeStamp(): string {
 }
 
 export function outputDirectory(pkg: AnyPackage) {
-  return joinPaths(outputDirPath, pkg.desc);
+  return joinPaths(outputDirPath, pkg.typesDirectoryName + pkg.isLatest ? "" : ` v${pkg.major}.${pkg.minor}`);
 }
