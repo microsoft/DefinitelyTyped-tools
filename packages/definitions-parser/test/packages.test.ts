@@ -29,7 +29,7 @@ describe(AllPackages, () => {
   it("applies path mappings to test dependencies", () => {
     const pkg = allPackages.tryGetLatestVersion("has-older-test-dependency")!;
     expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
-      { name: "jquery", version: { major: 1, minor: 0 } },
+      { typesDirectoryName: "jquery", version: { major: 1, minor: 0 } },
     ]);
   });
 
@@ -45,13 +45,19 @@ describe(AllPackages, () => {
     it("returns true if typings exist", () => {
       expect(
         allPackages.hasTypingFor({
-          name: "jquery",
+          name: "@types/jquery",
           version: "*",
         })
       ).toBe(true);
       expect(
         allPackages.hasTypingFor({
-          name: "nonExistent",
+          typesDirectoryName: "jquery",
+          version: "*",
+        })
+      ).toBe(true);
+      expect(
+        allPackages.hasTypingFor({
+          name: "@types/nonExistent",
           version: "*",
         })
       ).toBe(false);
@@ -128,7 +134,9 @@ describe(TypingsData, () => {
   });
 
   it("sets the correct properties", () => {
-    expect(data.name).toBe("known");
+    expect(data.name).toBe("@types/known");
+    expect(data.typesDirectoryName).toBe("known");
+    expect(data.libraryName).toBe("known");
     expect(data.contributors).toEqual([
       {
         name: "Bender",
@@ -152,7 +160,7 @@ describe(TypingsData, () => {
       "@types/known": "workspace:.",
     });
     expect(data.id).toEqual({
-      name: "known",
+      typesDirectoryName: "known",
       version: {
         major: 1,
         minor: 0,
@@ -163,27 +171,27 @@ describe(TypingsData, () => {
 
   describe("desc", () => {
     it("returns the name if latest version", () => {
-      expect(data.desc).toBe("known");
+      expect(data.desc).toBe("@types/known");
     });
 
     it("returns the verioned name if not latest", () => {
       const versions = createTypingsVersionRaw("known", {}, {});
       data = new TypingsData(versions["1.0"], false);
 
-      expect(data.desc).toBe("known v1.0");
+      expect(data.desc).toBe("@types/known v1.0");
     });
   });
 
-  describe("fullNpmName", () => {
-    it("returns scoped name", () => {
-      expect(data.fullNpmName).toBe("@types/known");
+  describe("typesDirectoryName", () => {
+    it("returns unscoped name", () => {
+      expect(data.typesDirectoryName).toBe("known");
     });
 
     it("returns mangled name if scoped", () => {
       const versions = createTypingsVersionRaw("@foo/bar", {}, {});
       data = new TypingsData(versions["1.0"], false);
 
-      expect(data.fullNpmName).toBe("@types/foo__bar");
+      expect(data.typesDirectoryName).toBe("foo__bar");
     });
   });
 });
@@ -207,7 +215,7 @@ describe(NotNeededPackage, () => {
 
   it("sets the correct properties", () => {
     expect(data.license).toBe(License.MIT);
-    expect(data.name).toBe("types-package");
+    expect(data.name).toBe("@types/types-package");
     expect(data.libraryName).toBe("real-package");
     expect(data.version).toMatchObject({
       major: 1,
@@ -268,14 +276,14 @@ describe(getDependencyFromFile, () => {
 
   it("returns parsed version for versioned paths", () => {
     expect(getDependencyFromFile("types/a/v3.5")).toEqual({
-      name: "a",
+      typesDirectoryName: "a",
       version: {
         major: 3,
         minor: 5,
       },
     });
     expect(getDependencyFromFile("types/a/v3")).toEqual({
-      name: "a",
+      typesDirectoryName: "a",
       version: {
         major: 3,
         minor: undefined,
@@ -285,7 +293,7 @@ describe(getDependencyFromFile, () => {
 
   it("returns undefined for unversioned subpaths", () => {
     expect(getDependencyFromFile("types/a/vnotaversion")).toEqual({
-      name: "a",
+      typesDirectoryName: "a",
       version: "*",
     });
   });

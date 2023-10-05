@@ -44,7 +44,7 @@ async function computeAndSaveChangedPackages(
     changedTypings: cp.changedTypings.map(
       ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })
     ),
-    changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.name),
+    changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.typesDirectoryName),
   };
   await writeDataFile(versionsFilename, json);
   return cp;
@@ -82,7 +82,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
       // Also checked in checkNotNeededPackage().
       await pacote.manifest(pkg.libraryName, { cache: cacheDir }).catch((reason) => {
         throw reason.code === "E404"
-          ? new Error(`To deprecate '@types/${pkg.name}', '${pkg.libraryName}' must exist on npm.`, { cause: reason })
+          ? new Error(`To deprecate '${pkg.name}', '${pkg.libraryName}' must exist on npm.`, { cause: reason })
           : reason;
       });
       log.info(`To be deprecated: ${pkg.name}`);
@@ -94,12 +94,12 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
 }
 
 async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
-  const offline = await pacote.manifest(pkg.fullNpmName, { cache: cacheDir, offline: true }).catch((reason) => {
+  const offline = await pacote.manifest(pkg.name, { cache: cacheDir, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED") throw reason;
     return undefined;
   });
   if (offline?.deprecated) return offline.deprecated;
   log.info(`Version info not cached for deprecated package ${pkg.desc}`);
-  const online = await pacote.manifest(pkg.fullNpmName, { cache: cacheDir, preferOnline: true });
+  const online = await pacote.manifest(pkg.name, { cache: cacheDir, preferOnline: true });
   return online.deprecated;
 }

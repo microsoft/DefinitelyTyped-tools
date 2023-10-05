@@ -51,7 +51,7 @@ export function cleanTypeScriptInstalls(): Promise<void> {
   return fs.remove(installsDir);
 }
 
-export function typeScriptPath(version: TsVersion, tsLocal: string | undefined): string {
+export function typeScriptPath(version: TsVersion | "next" | "rc", tsLocal: string | undefined): string {
   if (version === "local") {
     return tsLocal! + "/typescript.js";
   }

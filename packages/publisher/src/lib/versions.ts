@@ -19,6 +19,7 @@ export interface ChangedTyping {
 
 export interface ChangedPackagesJson {
   readonly changedTypings: readonly ChangedTypingJson[];
+  /** Values are `typesDirectoryName` strings (keys of notNeededPackages.json) */
   readonly changedNotNeededPackages: readonly string[];
 }
 
