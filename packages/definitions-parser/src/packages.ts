@@ -536,6 +536,10 @@ export class TypingsData extends PackageBase {
     return this.data.exports;
   }
 
+  get nonNpm() {
+    return this.data.header.nonNpm;
+  }
+
   get versionDirectoryName() {
     return this.data.libraryVersionDirectoryName && `v${this.data.libraryVersionDirectoryName}`;
   }

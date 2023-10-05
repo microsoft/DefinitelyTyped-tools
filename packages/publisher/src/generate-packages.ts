@@ -123,9 +123,12 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     // bugs,
     license: typing.license,
     contributors: typing.contributors,
+    type: typing.type,
     main: "",
     types: "index.d.ts",
     typesVersions: makeTypesVersionsForPackageJson(typing.typesVersions),
+    imports: typing.imports,
+    exports: typing.exports,
     repository: {
       type: "git",
       url: "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
@@ -135,19 +138,8 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     dependencies: typing.packageJsonDependencies,
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion,
+    nonNpm: typing.nonNpm ? typing.nonNpm : undefined,
   };
-  const exports = typing.exports;
-  if (exports) {
-    (out as any).exports = exports;
-  }
-  const imports = typing.imports;
-  if (imports) {
-    (out as any).imports = imports;
-  }
-  const type = typing.type;
-  if (type) {
-    (out as any).type = type;
-  }
 
   return JSON.stringify(out, undefined, 4);
 }
