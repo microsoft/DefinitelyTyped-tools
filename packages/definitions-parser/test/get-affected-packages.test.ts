@@ -11,7 +11,7 @@ const typesData: TypesDataFile = {
   unknown: createTypingsVersionRaw("unknown", { "@types/COMPLETELY-UNKNOWN": "1.0.0" }, {}),
   "unknown-test": createTypingsVersionRaw("unknown-test", {}, { "@types/WAT": "*" }),
 };
-typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], libraryMajorVersion: 2 };
+typesData.jquery["2.0"] = { ...typesData.jquery["1.0"], header: { ...typesData.jquery["1.0"].header, libraryMajorVersion: 2 } };
 
 const notNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
 const allPackages = AllPackages.from(typesData, notNeeded);

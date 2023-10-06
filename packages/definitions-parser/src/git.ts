@@ -72,7 +72,7 @@ function gitDeletions(diffs: GitDiff[]): PackageId[] {
     const dep = assertDefined(getDependencyFromFile(diff.file),
             `Unexpected file deleted: ${diff.file}
 When removing packages, you should only delete files that are a part of removed packages.`)
-    const key = `${dep.name}/v${formatDependencyVersion(dep.version)}`
+    const key = `${dep.typesDirectoryName}/v${formatDependencyVersion(dep.version)}`
     changedPackages.set(key, dep)
   }
   return Array.from(changedPackages.values())
@@ -120,7 +120,7 @@ export async function checkNotNeededPackage(unneeded: NotNeededPackage) {
   await pacote.manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: cacheDir }).catch((reason) => {
     throw reason.code === "E404"
       ? new Error(
-          `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
+          `The entry for ${unneeded.name} in notNeededPackages.json has
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
 Unneeded packages have to be replaced with a package on npm.`,
           { cause: reason }
@@ -131,15 +131,15 @@ Unneeded packages have to be replaced with a package on npm.`,
         })
       : reason;
   }); // eg @babel/parser
-  const typings = await pacote.manifest(unneeded.fullNpmName, { cache: cacheDir }).catch((reason) => {
+  const typings = await pacote.manifest(unneeded.name, { cache: cacheDir }).catch((reason) => {
     throw reason.code === "E404"
-      ? new Error(`Unexpected error: @types package not found for ${unneeded.fullNpmName}`, { cause: reason })
+      ? new Error(`Unexpected error: @types package not found for ${unneeded.name}`, { cause: reason })
       : reason;
   }); // eg @types/babel__parser
   assert(
     semver.gt(unneeded.version, typings.version),
     `The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
+it is supposed to replace, ${typings.version} of ${unneeded.name}.`
   );
 }
 
@@ -148,9 +148,9 @@ it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
  */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
-  const deletedPackages = new Set(gitDeletions(diffs).map(p => p.name));
+  const deletedPackages = new Set(gitDeletions(diffs).map(p => assertDefined(p.typesDirectoryName)));
   return mapDefined(deletedPackages, (p) => {
-    const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" });
+    const hasTyping = allPackages.hasTypingFor({ typesDirectoryName: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
     if (hasTyping && notNeeded) {
       throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);

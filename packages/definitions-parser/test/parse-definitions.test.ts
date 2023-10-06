@@ -23,8 +23,8 @@ testo({
     expect(defs.allTypings().length).toBe(6);
     const j = defs.tryGetLatestVersion("jquery");
     expect(j).toBeDefined();
-    expect(j!.fullNpmName).toContain("types");
-    expect(j!.fullNpmName).toContain("jquery");
+    expect(j!.name).toContain("types");
+    expect(j!.name).toContain("jquery");
     expect(defs.allPackages().length).toEqual(defs.allTypings().length + defs.allNotNeeded().length);
   },
 });

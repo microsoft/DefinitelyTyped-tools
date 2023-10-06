@@ -168,7 +168,7 @@ async function validateIsSubset(notNeeded: readonly NotNeededPackage[], log: Log
   const actual = (await readJson(joinPaths(validateTypesRegistryPath, indexJson))) as Registry;
   const expected = (await readJson(joinPaths(registryOutputPath, indexJson))) as Registry;
   for (const key of Object.keys(actual.entries)) {
-    if (!(key in expected.entries) && !notNeeded.some((p) => p.name === key)) {
+    if (!(key in expected.entries) && !notNeeded.some((p) => p.typesDirectoryName === key)) {
       throw new Error(`Actual types-registry has unexpected key ${key}`);
     }
   }
@@ -221,7 +221,7 @@ function generatePackageJson(name: string, version: string, typesPublisherConten
 
 interface Registry {
   readonly entries: {
-    readonly [packageName: string]: {
+    readonly [typesDirectoryName: string]: {
       readonly [distTags: string]: string;
     };
   };
@@ -231,8 +231,8 @@ async function generateRegistry(typings: readonly TypingsData[]): Promise<Regist
     entries: Object.fromEntries(
       await Promise.all(
         typings.map(async (typing) => [
-          typing.name,
-          filterTags((await pacote.packument(typing.fullNpmName, { cache: cacheDir }))["dist-tags"]),
+          typing.typesDirectoryName,
+          filterTags((await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"]),
         ])
       )
     ),

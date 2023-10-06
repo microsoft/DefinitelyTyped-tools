@@ -95,9 +95,9 @@ export default async function publishPackages(
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
 
-      const published = cp.pkg.fullNpmName + "@" + cp.version;
+      const published = cp.pkg.name + "@" + cp.version;
       const publishNotification =
-        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.fullNpmName + ").";
+        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.name + ").";
       log(publishNotification);
       if (dry) {
         log("(dry) Skip publishing notification to github.");

@@ -21,7 +21,8 @@ import { deepEquals, parsePackageSemver } from "@definitelytyped/utils";
 // used in dts-critic
 export interface Header {
   readonly nonNpm: boolean;
-  readonly libraryName: string;
+  readonly nonNpmDescription?: string;
+  readonly name: string;
   readonly libraryMajorVersion: number;
   readonly libraryMinorVersion: number;
   readonly typeScriptVersion: AllTypeScriptVersion;
@@ -29,11 +30,17 @@ export interface Header {
   readonly contributors: readonly Author[];
 }
 // used in definitions-parser
-export interface Author {
-  readonly name: string;
-  readonly url: string;
-  readonly githubUsername: string | undefined;
-}
+export type Author =
+  | {
+      readonly name: string;
+      readonly url: string;
+    }
+  | {
+      readonly name: string;
+      readonly githubUsername: string;
+      readonly url?: undefined;
+    };
+
 // used locally
 export interface ParseError {
   readonly index: number;
@@ -57,7 +64,7 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeS
 }
 
 export function validatePackageJson(
-  packageName: string,
+  typesDirectoryName: string,
   packageJson: Record<string, unknown>,
   typesVersions: readonly AllTypeScriptVersion[]
 ): Header | string[] {
@@ -96,25 +103,27 @@ export function validatePackageJson(
       case "typesVersions":
       case "types":
         if (!needsTypesVersions) {
-          errors.push(`${packageName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`);
+          errors.push(
+            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`
+          );
         }
         break;
       default:
-        errors.push(`${packageName}'s package.json should not include property ${key}`);
+        errors.push(`${typesDirectoryName}'s package.json should not include property ${key}`);
     }
   }
   // private
   if (packageJson.private !== true) {
-    errors.push(`${packageName}'s package.json has bad "private": must be \`"private": true\``);
+    errors.push(`${typesDirectoryName}'s package.json has bad "private": must be \`"private": true\``);
   }
   // devDependencies
   if (
     typeof packageJson.devDependencies !== "object" ||
     packageJson.devDependencies === null ||
-    (packageJson.devDependencies as any)["@types/" + packageName] !== "workspace:."
+    (packageJson.devDependencies as any)["@types/" + typesDirectoryName] !== "workspace:."
   ) {
     errors.push(
-      `${packageName}'s package.json has bad "devDependencies": must include \`"@types/${packageName}": "workspace:."\``
+      `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``
     );
   }
   // TODO: disallow devDeps from containing dependencies (although this is VERY linty)
@@ -122,18 +131,26 @@ export function validatePackageJson(
 
   // typesVersions
   if (needsTypesVersions) {
-    assert.strictEqual(packageJson.types, "index", `"types" in '${packageName}'s package.json' should be "index".`);
+    assert.strictEqual(
+      packageJson.types,
+      "index",
+      `"types" in '${typesDirectoryName}'s package.json' should be "index".`
+    );
     const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
     if (!deepEquals(packageJson.typesVersions, expected)) {
       errors.push(
-        `'${packageName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(expected, undefined, 4)}`
+        `'${typesDirectoryName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(
+          expected,
+          undefined,
+          4
+        )}`
       );
     }
   }
 
   // building the header object uses a monadic error pattern based on the one in the old header parser
   // It's verbose and repetitive, but I didn't feel like writing a monadic `seq` to be used in only one place.
-  let libraryName = "ERROR";
+  let name = "ERROR";
   let libraryMajorVersion = 0;
   let libraryMinorVersion = 0;
   let nonNpm = false;
@@ -149,7 +166,7 @@ export function validatePackageJson(
   if (typeof nameResult === "object") {
     errors.push(...nameResult.errors);
   } else {
-    libraryName = packageName;
+    name = packageJson.name as string;
   }
   if ("errors" in versionResult) {
     errors.push(...versionResult.errors);
@@ -181,7 +198,7 @@ export function validatePackageJson(
     return errors;
   } else {
     return {
-      libraryName,
+      name,
       libraryMajorVersion,
       libraryMinorVersion,
       nonNpm,
@@ -192,22 +209,24 @@ export function validatePackageJson(
   }
 
   function validateName(): string | { errors: string[] } {
-    if (packageJson.name !== "@types/" + packageName) {
-      return { errors: [`${packageName}'s package.json should have \`"name": "@types/${packageName}"\``] };
+    if (packageJson.name !== "@types/" + typesDirectoryName) {
+      return {
+        errors: [`${typesDirectoryName}'s package.json should have \`"name": "@types/${typesDirectoryName}"\``],
+      };
     } else {
-      return packageName;
+      return typesDirectoryName;
     }
   }
   function validateVersion(): { major: number; minor: number } | { errors: string[] } {
     const errors = [];
     if (!packageJson.version || typeof packageJson.version !== "string") {
       errors.push(
-        `${packageName}'s package.json should have \`"version"\` matching the version of the implementation package.`
+        `${typesDirectoryName}'s package.json should have \`"version"\` matching the version of the implementation package.`
       );
     } else if (!/\d+\.\d+\.\d+/.exec(packageJson.version)) {
-      errors.push(`${packageName}'s package.json has bad "version": should look like "NN.NN.99999"`);
+      errors.push(`${typesDirectoryName}'s package.json has bad "version": should look like "NN.NN.99999"`);
     } else if (!packageJson.version.endsWith(".99999")) {
-      errors.push(`${packageName}'s package.json has bad "version": must end with ".99999"`);
+      errors.push(`${typesDirectoryName}'s package.json has bad "version": must end with ".99999"`);
     } else {
       let version: "*" | { major: number; minor?: number } = "*";
       try {
@@ -219,7 +238,9 @@ export function validatePackageJson(
           return { major: version.major, minor: version.minor ?? 0 };
         }
       } catch (e: any) {
-        errors.push(`'${packageName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`);
+        errors.push(
+          `'${typesDirectoryName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`
+        );
       }
     }
     return { errors };
@@ -228,19 +249,19 @@ export function validatePackageJson(
     const errors = [];
     if (packageJson.nonNpm !== undefined) {
       if (packageJson.nonNpm !== true) {
-        errors.push(`${packageName}'s package.json has bad "nonNpm": must be true if present.`);
+        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpm": must be true if present.`);
       } else if (!packageJson.nonNpmDescription) {
         errors.push(
-          `${packageName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`
+          `${typesDirectoryName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`
         );
       } else if (typeof packageJson.nonNpmDescription !== "string") {
-        errors.push(`${packageName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
+        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
       } else {
         return true;
       }
       return { errors };
     } else if (packageJson.nonNpmDescription !== undefined) {
-      errors.push(`${packageName}'s package.json has "nonNpmDescription" without "nonNpm": true.`);
+      errors.push(`${typesDirectoryName}'s package.json has "nonNpmDescription" without "nonNpm": true.`);
     }
     if (errors.length) {
       return { errors };
@@ -256,7 +277,7 @@ export function validatePackageJson(
       ) {
         return {
           errors: [
-            `${packageName}'s package.json has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
+            `${typesDirectoryName}'s package.json has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
 (Defaults to "${TypeScriptVersion.lowest}" if not provided.)`,
           ],
         };
@@ -274,10 +295,10 @@ export function validatePackageJson(
       !packageJson.projects.every((p) => typeof p === "string")
     ) {
       errors.push(
-        `${packageName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`
+        `${typesDirectoryName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`
       );
     } else if (packageJson.projects.length === 0) {
-      errors.push(`${packageName}'s package.json has bad "projects": must have at least one project URL.`);
+      errors.push(`${typesDirectoryName}'s package.json has bad "projects": must have at least one project URL.`);
     } else {
       return packageJson.projects;
     }
@@ -287,10 +308,10 @@ export function validatePackageJson(
     const errors: string[] = [];
     if (!packageJson.contributors || !Array.isArray(packageJson.contributors)) {
       errors.push(
-        `${packageName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
+        `${typesDirectoryName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
       );
     } else {
-      const es = checkPackageJsonContributors(packageName, packageJson.contributors);
+      const es = checkPackageJsonContributors(typesDirectoryName, packageJson.contributors);
       if (es.length) {
         errors.push(...es);
       } else {

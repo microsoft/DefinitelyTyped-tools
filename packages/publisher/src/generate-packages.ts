@@ -3,34 +3,33 @@ import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import path = require("path");
 import yargs = require("yargs");
 
-import { defaultLocalOptions } from "./lib/common";
-import { outputDirPath, sourceBranch } from "./lib/settings";
 import {
+  AllPackages,
+  AnyPackage,
+  License,
+  NotNeededPackage,
+  TypingsData,
+  getDefinitelyTyped
+} from "@definitelytyped/definitions-parser";
+import {
+  FS,
+  Logger,
   assertNever,
+  cacheDir,
   joinPaths,
   logUncaughtErrors,
-  loggerWithErrors,
-  FS,
   logger,
-  writeLog,
+  loggerWithErrors,
   writeFile,
-  Logger,
-  cacheDir,
+  writeLog,
   writeTgz,
 } from "@definitelytyped/utils";
-import {
-  getDefinitelyTyped,
-  AllPackages,
-  TypingsData,
-  NotNeededPackage,
-  AnyPackage,
-  getFullNpmName,
-  License,
-} from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
-import { readChangedPackages, ChangedPackages } from "./lib/versions";
-import { outputDirectory } from "./util/util";
+import { defaultLocalOptions } from "./lib/common";
 import { skipBadPublishes } from "./lib/npm";
+import { outputDirPath, sourceBranch } from "./lib/settings";
+import { ChangedPackages, readChangedPackages } from "./lib/versions";
+import { outputDirectory } from "./util/util";
 
 const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
@@ -70,7 +69,7 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   await writeLog("package-generator.md", logResult());
 }
 async function generateTypingPackage(typing: TypingsData, version: string, dt: FS): Promise<void> {
-  const typesDirectory = dt.subDir("types").subDir(typing.name);
+  const typesDirectory = dt.subDir("types").subDir(typing.typesDirectoryName);
   const packageFS =
     typing.isLatest || !typing.versionDirectoryName
       ? typesDirectory
@@ -85,8 +84,8 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
 async function generateNotNeededPackage(pkg: NotNeededPackage, log: Logger): Promise<void> {
   pkg = await skipBadPublishes(pkg, log);
   const info = await pacote.manifest(pkg.libraryName, { cache: cacheDir, fullMetadata: true });
-  const readme = `This is a stub types definition for ${getFullNpmName(pkg.name)} (${info.homepage}).\n
-${pkg.libraryName} provides its own type definitions, so you don't need ${getFullNpmName(pkg.name)} installed!`;
+  const readme = `This is a stub types definition for ${pkg.name} (${info.homepage}).\n
+${pkg.libraryName} provides its own type definitions, so you don't need ${pkg.name} installed!`;
   await writeCommonOutputs(pkg, createNotNeededPackageJSON(pkg), readme);
 }
 
@@ -116,39 +115,31 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
 export function createPackageJSON(typing: TypingsData, version: string): string {
   // Use the ordering of fields from https://docs.npmjs.com/files/package.json
   const out: {} = {
-    name: typing.fullNpmName,
+    name: typing.name,
     version,
     description: `TypeScript definitions for ${typing.libraryName}`,
     // keywords,
-    homepage: `https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/${typing.name}`,
+    homepage: `https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/${typing.typesDirectoryName}`,
     // bugs,
     license: typing.license,
     contributors: typing.contributors,
+    type: typing.type,
     main: "",
     types: "index.d.ts",
     typesVersions: makeTypesVersionsForPackageJson(typing.typesVersions),
+    imports: typing.imports,
+    exports: typing.exports,
     repository: {
       type: "git",
       url: "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-      directory: `types/${typing.name}`,
+      directory: `types/${typing.typesDirectoryName}`,
     },
     scripts: {},
     dependencies: typing.packageJsonDependencies,
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion,
+    nonNpm: typing.nonNpm ? typing.nonNpm : undefined,
   };
-  const exports = typing.exports;
-  if (exports) {
-    (out as any).exports = exports;
-  }
-  const imports = typing.imports;
-  if (imports) {
-    (out as any).imports = imports;
-  }
-  const type = typing.type;
-  if (type) {
-    (out as any).type = type;
-  }
 
   return JSON.stringify(out, undefined, 4);
 }
@@ -157,7 +148,7 @@ const definitelyTypedURL = "https://github.com/DefinitelyTyped/DefinitelyTyped";
 
 export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
   const out = {
-    name: pkg.fullNpmName,
+    name: pkg.name,
     version: String(pkg.version),
     description: `Stub TypeScript definitions entry for ${pkg.libraryName}, which provides its own types definitions`,
     main: "",
@@ -175,7 +166,7 @@ export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
 export function createReadme(typing: TypingsData, packageFS: FS): string {
   const lines: string[] = [];
   lines.push("# Installation");
-  lines.push(`> \`npm install --save ${typing.fullNpmName}\``);
+  lines.push(`> \`npm install --save ${typing.name}\``);
   lines.push("");
 
   lines.push("# Summary");
@@ -212,7 +203,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
 
   lines.push("# Credits");
   const contributors = typing.contributors
-    .map(({ name, url }) => `[${name}](${url})`)
+    .map((c) => `[${c.name}](${c.url ?? `https://github.com/${c.githubUsername}`})`)
     .join(", ")
     .replace(/, ([^,]+)$/, ", and $1");
   lines.push(`These definitions were written by ${contributors}.`);

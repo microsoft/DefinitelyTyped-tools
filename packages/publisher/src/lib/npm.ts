@@ -10,7 +10,7 @@ import * as semver from "semver";
  */
 export async function skipBadPublishes(pkg: NotNeededPackage, log: Logger) {
   // because this is called right after isAlreadyDeprecated, we can rely on the cache being up-to-date
-  const info = await pacote.packument(pkg.fullNpmName, { cache: cacheDir });
+  const info = await pacote.packument(pkg.name, { cache: cacheDir });
   const maxVersion = semver.maxSatisfying(Object.keys(info.versions), "*")!;
   if (semver.lte(pkg.version, maxVersion)) {
     const plusOne = semver.inc(maxVersion, "patch")!;

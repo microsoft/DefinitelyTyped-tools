@@ -10,19 +10,21 @@ import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
-    libraryName: "jquery",
-    typingsPackageName: "jquery",
-    contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
-    libraryMajorVersion: 1,
-    libraryMinorVersion: 0,
-    minTsVersion: "3.2",
+    header: {
+      name: "@types/jquery",
+      contributors: [{ name: "A", url: "b@c.d" }, { name: "E", githubUsername: "e" }],
+      libraryMajorVersion: 1,
+      libraryMinorVersion: 0,
+      typeScriptVersion: "3.2",
+      projects: ["jquery.org"],
+      nonNpm: false,
+    },
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
     packageJsonDependencies: { "@types/madeira": "^1", balzac: "~3" },
     packageJsonDevDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
-    projectName: "jquery.org",
     globals: [],
   };
 }
@@ -57,6 +59,10 @@ testo({
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining("This package contains type definitions for")
     );
+  },
+  readmeContainsContributors() {
+    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"));
   },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
@@ -103,7 +109,10 @@ testo({
     "contributors": [
         {
             "name": "A",
-            "url": "b@c.d",
+            "url": "b@c.d"
+        },
+        {
+            "name": "E",
             "githubUsername": "e"
         }
     ],

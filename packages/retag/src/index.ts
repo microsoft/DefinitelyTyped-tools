@@ -63,13 +63,13 @@ async function tag(dry: boolean, nProcesses: number, name?: string) {
     const pkg = await AllPackages.readSingle(name);
     const version = await getLatestTypingVersion(pkg);
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-    await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+    await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
   } else {
     await nAtATime(5, await AllPackages.readLatestTypings(), async (pkg) => {
       // Only update tags for the latest version of the package.
       const version = await getLatestTypingVersion(pkg);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-      await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
+      await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
     });
   }
   // Don't tag notNeeded packages
@@ -83,7 +83,7 @@ export async function updateTypeScriptVersionTags(
   dry: boolean
 ): Promise<void> {
   const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
-  const name = pkg.fullNpmName;
+  const name = pkg.name;
   log(`Tag ${name}@${version} as ${JSON.stringify(tags)}`);
   if (dry) {
     log("(dry) Skip tag");
@@ -118,7 +118,7 @@ export async function fetchTypesPackageVersionInfo(
   canPublish: boolean,
   log?: LoggerWithErrors
 ): Promise<{ version: string; needsPublish: boolean }> {
-  const spec = `${pkg.fullNpmName}@~${pkg.major}.${pkg.minor}`;
+  const spec = `${pkg.name}@~${pkg.major}.${pkg.minor}`;
   let info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED" && reason.code !== "ETARGET") throw reason;
     return undefined;
@@ -139,8 +139,8 @@ export async function fetchTypesPackageVersionInfo(
   if (info.deprecated) {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
     assert(
-      pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
-      `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
+      pkg.typesDirectoryName === "angular-ui-router" || pkg.typesDirectoryName === "ui-router-extras",
+      `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
     );
   }
   const needsPublish = canPublish && pkg.contentHash !== info.typesPublisherContentHash;

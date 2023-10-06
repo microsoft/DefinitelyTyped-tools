@@ -13,14 +13,13 @@ describe("io", () => {
         throw err;
       })
         .pipe(fs.createWriteStream(archivePath))
-        .on("finish", () => {
+        .on("finish", async () => {
           expect(fs.existsSync(archivePath)).toBe(true);
           const entries: string[] = [];
-          list({ file: archivePath, onentry: (e) => entries.push(e.path) }, null, () => {
-            expect(entries[0]).toBe("pack/");
-            expect(entries[1]).toBe("pack/test.txt");
-            done();
-          });
+          await list({ file: archivePath, onentry: (e) => entries.push(e.path) });
+          expect(entries[0]).toBe("pack/");
+          expect(entries[1]).toBe("pack/test.txt");
+          done();
         });
     });
   });

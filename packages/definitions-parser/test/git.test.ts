@@ -5,12 +5,12 @@ import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 
 const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", {}, [], {}),
-  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, [], {}),
-  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], {}),
-  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], {}),
-  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], {}),
-  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {}),
+  jquery: createTypingsVersionRaw("jquery", {}, {}),
+  known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
+  "known-test": createTypingsVersionRaw("known-test", {}, { "@types/jquery": "*" }),
+  "most-recent": createTypingsVersionRaw("most-recent", { "@types/jquery": "*" }, {}),
+  unknown: createTypingsVersionRaw("unknown", { "@types/COMPLETELY-UNKNOWN": "1.0.0" }, {}),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, { "@types/WAT": "*" }),
 };
 
 const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
@@ -29,7 +29,7 @@ testo({
   forgotToDeleteFiles() {
     expect(() =>
       getNotNeededPackages(
-        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, [], {}) }, jestNotNeeded),
+        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         deleteJestDiffs
       )
     ).toThrow("Please delete all files in jest");
