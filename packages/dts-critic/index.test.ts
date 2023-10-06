@@ -252,7 +252,7 @@ suite("dtsCritic", {
     expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
   },
   noMatchingNpmPackage() {
-    expect(dtsCritic(testsource("wenceslas.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("no-matching-package/wenceslas.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmPackage,
         message: `Declaration file must have a matching npm package.

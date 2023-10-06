@@ -174,12 +174,12 @@ export async function runDTSLint({
   return allFailures.length;
 }
 
-function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: readonly string[]) {
+function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<string>) {
   return new Set(
     (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .map((s) => s.trim())
-      .filter(onlyRunAffectedPackages ? (line) => line && dependents.includes(line) : Boolean)
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean)
   );
 }
 

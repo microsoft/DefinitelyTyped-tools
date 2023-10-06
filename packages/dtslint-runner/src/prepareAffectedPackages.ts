@@ -14,13 +14,11 @@ export async function prepareAffectedPackages(
   };
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  try {
-    checkParseResults(allPackages);
-  } catch (err) {
-    // TODO: ??? won't a failure in here squelch any errors from checkParseResults? Seems like a bad idea.
-    await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
-    throw err;
+  const errors = checkParseResults(allPackages);
+  // TODO: getAffectedPackagesFromDiff also should not throw, but return an array of errors
+  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
+  if (errors.length) {
+    throw new Error(errors.join('\n'));
   }
-
-  return getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
+  return result
 }

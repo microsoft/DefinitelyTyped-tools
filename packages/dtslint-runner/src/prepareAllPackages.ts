@@ -14,6 +14,9 @@ export async function prepareAllPackages(
   };
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  checkParseResults(allPackages);
-  return { packageNames: new Set(allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath)), dependents: [] };
+  const errors = checkParseResults(allPackages);
+  if (errors.length) {
+    throw new Error(errors.join('\n'))
+  }
+  return { packageNames: new Set(allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath)), dependents: new Set() };
 }

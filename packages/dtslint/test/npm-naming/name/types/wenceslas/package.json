@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@types/wenceslas",
-    "version": "1.0.0",
+    "version": "0.0.99999",
     "projects": [
         "https://github.com/bobby-headers/dt-header"
     ],

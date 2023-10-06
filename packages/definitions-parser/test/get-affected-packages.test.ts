@@ -22,34 +22,33 @@ testo({
     const dependentOutput = `/dt/types/jquery
 /dt/types/known-test
 /dt/types/most-recent`
-    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt');
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, [dependentOutput], '/dt');
     expect(packageNames).toEqual(new Set(["jquery"]))
-    expect(dependents).toEqual([ "known-test", "most-recent", ]);
+    expect(dependents).toEqual(new Set([ "known-test", "most-recent", ]));
   },
   deletedPackage() {
-    // TODO
-    const packageOutput = `/dt/types/WAT`
-    const dependentOutput = `/dt/types/WAT
-/dt/types/unknown-test`
-    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
+    const packageOutput = ``
+    const dependentOutput = `/dt/types/unknown-test`
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, [dependentOutput], '/dt')
     expect(packageNames).toEqual(new Set([]));
-    expect(dependents).toEqual(["unknown-test"]);
+    expect(dependents).toEqual(new Set(["unknown-test"]))
   },
   deletedVersion() {
-    // TODO
-    const packageOutput = ``
-    const dependentOutput = ``
+    const packageOutput = `/dt/types/jquery`
+    const dependentOutput = [`/dt/types/jquery
+/dt/types/known-test
+/dt/types/most-recent`, `/dt/types/has-older-test-dependency
+/dt/types/known`]
     const { packageNames } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
-    expect(packageNames).toEqual(new Set());
+    expect(packageNames).toEqual(new Set(['jquery']));
   },
   olderVersion() {
-    // TODO
     const packageOutput = `/dt/types/jquery`
     const dependentOutput = `/dt/types/jquery
 /dt/types/has-older-test-dependency
 /dt/types/known`
-    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, '/dt')
+    const { packageNames, dependents } = getAffectedPackagesWorker(allPackages, packageOutput, [dependentOutput], '/dt')
     expect(packageNames).toEqual(new Set(["jquery"]))
-    expect(dependents).toEqual([ "has-older-test-dependency", "known", ]);
+    expect(dependents).toEqual(new Set([ "has-older-test-dependency", "known", ]))
   },
 });

@@ -1,12 +1,12 @@
 {
     "private": true,
-    "name": "@types/dts-critic",
+    "name": "@types/wenceslas",
     "version": "0.0.99999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
     "devDependencies": {
-        "@types/dts-critic": "workspace:."
+        "@types/wenceslas": "workspace:."
     },
     "contributors": [
         {

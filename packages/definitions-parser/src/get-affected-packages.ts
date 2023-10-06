@@ -1,9 +1,9 @@
 import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
-import { AllPackages, PackageId, getDependencyFromFile } from "./packages";
+import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
-  readonly dependents: readonly string[];
+  readonly dependents: Set<string>;
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
@@ -12,29 +12,14 @@ export async function getAffectedPackages(
   deletions: PackageId[],
   definitelyTypedPath: string
 ): Promise<PreparePackagesResult> {
-  // const resolved = changedPackageIds.map((id) => allPackages.tryResolve(id));
-  // // If a package doesn't exist, that's because it was deleted.
-  // const changed = mapDefined(resolved, (id) => allPackages.tryGetTypingsData(id));
-  // const dependent = mapIterable(collectDependers(resolved, await getReverseDependencies(allPackages, resolved, definitelyTypedPath)), (p) =>
-  //   allPackages.getTypingsData(p)
-  // );
-  // [x] Test changes of non-types-packages
-  // [ ] Test deletion (you don't test deleted packages)
-  // [ ] Test deletion+notNeeded
-  // [ ] Test deletion of old vXX packages
-  // [ ] Test new packages
   const allDependents = [];
-  console.log(deletions.map((d) => d.name));
-  for (const d of deletions.map((d) => "@types/" + d.name)) {
-    for (const x of allPackages.allTypings()) {
-      for (const [name] of x.allPackageJsonDependencies()) {
-        if (d === name) {
-          allDependents.push(
-            await execAndThrowErrors(
-              `pnpm ls -r --depth -1 --parseable --filter '...{./types/${x.name}}'`,
-              definitelyTypedPath
-            )
-          );
+  console.log(deletions.map((d) => d.name + "@" + (d.version === "*" ? "*" : formatTypingVersion(d.version))));
+  const filters = [`--filter '...[jakebailey/pnpm-workspaces-working]'`];
+  for (const d of deletions) {
+    for (const dep of allPackages.allTypings()) {
+      for (const [name, version] of dep.allPackageJsonDependencies()) {
+        if ("@types/" + d.name === name && (d.version === "*" || formatTypingVersion(d.version) === version)) {
+          filters.push(`--filter '...{./types/${dep.name}}'`);
           break;
         }
       }
@@ -44,14 +29,16 @@ export async function getAffectedPackages(
     `pnpm ls -r --depth -1 --parseable --filter '[jakebailey/pnpm-workspaces-working]'`,
     definitelyTypedPath
   );
-  allDependents.push(
-    await execAndThrowErrors(
-      `pnpm ls -r --depth -1 --parseable --filter '...[jakebailey/pnpm-workspaces-working]'`,
-      definitelyTypedPath
-    )
-  );
+  // Chunk into 100-package chunks because of CMD.COM's command-line length limit
+  for (let i = 0; i < filters.length; i += 100) {
+    allDependents.push(
+      await execAndThrowErrors(
+        `pnpm ls -r --depth -1 --parseable ${filters.slice(i, i + 100).join(" ")}`,
+        definitelyTypedPath
+      )
+    );
+  }
   return getAffectedPackagesWorker(allPackages, changedPackageNames, allDependents, definitelyTypedPath);
-  // return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
 }
 
 export function getAffectedPackagesWorker(
@@ -66,19 +53,26 @@ export function getAffectedPackagesWorker(
   console.log(cLines);
   const packageNames = new Set(
     cLines.map(
-      (c) => assertDefined(allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c)))).subDirectoryPath
+      (c) =>
+        assertDefined(
+          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c))
+        ).subDirectoryPath
     )
   );
   // TODO: Check for duplicates in dependentOutputs (PROBABLY by converting to a set, it's really a set anyways)
   const dLines = mapDefined(dependentOutputs.join("\n").split("\n"), (line) => filterPackages(line, dt));
   console.log(dLines);
-  const dependents = dLines
-    .map(
-      (d) =>
-        assertDefined(allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(d))), d + " package not found")
-          .subDirectoryPath
-    )
-    .filter((d) => !packageNames.has(d));
+  const dependents = new Set(
+    dLines
+      .map(
+        (d) =>
+          assertDefined(
+            allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(d + "/index.d.ts"), "bad path " + d)),
+            d + " package not found"
+          ).subDirectoryPath
+      )
+      .filter((d) => !packageNames.has(d))
+  );
   return { packageNames, dependents };
 }
 

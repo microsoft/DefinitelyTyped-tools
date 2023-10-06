@@ -11,8 +11,6 @@ import {
 import {
   Logger,
   execAndThrowErrors,
-  flatMapIterable,
-  mapIterable,
   mapDefined,
   consoleLogger,
   assertDefined,
@@ -66,55 +64,49 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     return stdout;
   }
 }
-/** Returns all immediate subdirectories of the root directory that have changed. */
+/** Returns all immediate subdirectories of the root directory that have been deleted. */
 function gitDeletions(diffs: GitDiff[]): PackageId[] {
-  const changedPackages = new Map<string, Map<string, DirectoryParsedTypingVersion | "*">>();
+  const changedPackages = new Map<string, PackageId>;
   for (const diff of diffs) {
     if (diff.status !== "D") continue
-    const dep = getDependencyFromFile(diff.file);
-    if (dep) {
-      const versions = changedPackages.get(dep.name);
-      if (!versions) {
-        changedPackages.set(dep.name, new Map([[formatDependencyVersion(dep.version), dep.version]]));
-      } else {
-        versions.set(formatDependencyVersion(dep.version), dep.version);
-      }
-    }
+    const dep = assertDefined(getDependencyFromFile(diff.file),
+            `Unexpected file deleted: ${diff.file}
+When removing packages, you should only delete files that are a part of removed packages.`)
+    const key = `${dep.name}/v${formatDependencyVersion(dep.version)}`
+    changedPackages.set(key, dep)
   }
-   
-  return Array.from(
-    flatMapIterable(changedPackages, ([name, versions]) => mapIterable(versions, ([_, version]) => ({ name, version })))
-  );
+  return Array.from(changedPackages.values())
 }
  
 function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
   return version === "*" ? "*" : formatTypingVersion(version);
 }
-
+// TODO: Don't throw; instead, return an array of errors
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string,
   selection: "all" | "affected" | RegExp
 ): Promise<PreparePackagesResult> {
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+  console.log(diffs)
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
       checkNotNeededPackage(deleted);
     }
   }
-  const affected =
-    selection === "all" ? { packageNames: new Set(allPackages.allTypings().map(t => t.subDirectoryPath)), dependents: [] }
+  const affected: PreparePackagesResult =
+    selection === "all" ? { packageNames: new Set(allPackages.allTypings().map(t => t.subDirectoryPath)), dependents: new Set() }
       : selection === "affected" ? await getAffectedPackages(allPackages, gitDeletions(diffs), definitelyTypedPath)
       : {
           packageNames: new Set(allPackages.allTypings().filter((t) => selection.test(t.name)).map(t => t.subDirectoryPath)),
-          dependents: [],
+          dependents: new Set(),
         };
 
   console.log(
     `Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`
   );
   console.log(
-    `Testing ${affected.dependents.length} dependent packages: ${JSON.stringify(affected.dependents)}`
+    `Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`
   );
   return affected;
 }
@@ -156,26 +148,12 @@ it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
  */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
-  const deletedPackages = new Set(
-    diffs
-      .filter((d) => d.status === "D")
-      .map(
-        (d) =>
-          assertDefined(
-            getDependencyFromFile(d.file),
-            `Unexpected file deleted: ${d.file}
-When removing packages, you should only delete files that are a part of removed packages.`
-          ).name
-      )
-  );
+  const deletedPackages = new Set(gitDeletions(diffs).map(p => p.name));
   return mapDefined(deletedPackages, (p) => {
     const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
-    if (hasTyping) {
-      if (notNeeded) {
-        throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
-      }
-      return undefined;
+    if (hasTyping && notNeeded) {
+      throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
     } else {
       return notNeeded;
     }
