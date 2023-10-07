@@ -232,7 +232,13 @@ async function generateRegistry(typings: readonly TypingsData[]): Promise<Regist
       await Promise.all(
         typings.map(async (typing) => [
           typing.name,
-          filterTags((await pacote.packument(typing.fullNpmName, { cache: cacheDir }))["dist-tags"]),
+          await pacote
+            .packument(typing.fullNpmName, { cache: cacheDir })
+            .then((packument) => filterTags(packument["dist-tags"]))
+            .catch((reason) => {
+              if (reason.code !== "E404") throw reason;
+              return undefined;
+            }),
         ])
       )
     ),
