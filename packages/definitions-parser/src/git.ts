@@ -1,5 +1,5 @@
 import assert from "assert";
-import { sourceBranch } from "./lib/settings";
+import { sourceBranch, sourceRemote } from "./lib/settings";
 import {
   PackageId,
   DirectoryParsedTypingVersion,
@@ -43,7 +43,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     // If this succeeds, we got the full clone.
   } catch (_) {
     // This is a shallow clone.
-    await run(`git fetch origin ${sourceBranch}`);
+    await run(`git fetch ${sourceRemote} ${sourceBranch}`);
     await run(`git branch ${sourceBranch} FETCH_HEAD`);
   }
 

@@ -1,6 +1,8 @@
 import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
+import { sourceBranch, sourceRemote } from "./lib/settings";
 import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
+import { satisfies } from "semver";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
@@ -14,11 +16,11 @@ export async function getAffectedPackages(
 ): Promise<PreparePackagesResult> {
   const allDependents = [];
   console.log(deletions.map((d) => d.typesDirectoryName + "@" + (d.version === "*" ? "*" : formatTypingVersion(d.version))));
-  const filters = [`--filter '...[jakebailey/pnpm-workspaces-working]'`];
+  const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
   for (const d of deletions) {
     for (const dep of allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
-        if ("@types/" + d.typesDirectoryName === name && (d.version === "*" || formatTypingVersion(d.version) === version)) {
+        if ("@types/" + d.typesDirectoryName === name && (d.version === "*" || satisfies(formatTypingVersion(d.version), version))) {
           filters.push(`--filter '...{./types/${dep.name}}'`);
           break;
         }
@@ -26,7 +28,7 @@ export async function getAffectedPackages(
     }
   }
   const changedPackageNames = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '[jakebailey/pnpm-workspaces-working]'`,
+    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
     definitelyTypedPath
   );
   // Chunk into 100-package chunks because of CMD.COM's command-line length limit
