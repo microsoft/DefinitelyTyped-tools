@@ -15,10 +15,12 @@ export async function prepareAffectedPackages(
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
   const errors = checkParseResults(allPackages);
-  // TODO: getAffectedPackagesFromDiff also should not throw, but return an array of errors
   const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
   if (errors.length) {
     throw new Error(errors.join('\n'));
+  }
+  if (Array.isArray(result)) {
+    throw new Error([...errors, ...result].join('\n'))
   }
   return result
 }

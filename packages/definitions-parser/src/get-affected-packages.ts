@@ -15,7 +15,6 @@ export async function getAffectedPackages(
   definitelyTypedPath: string
 ): Promise<PreparePackagesResult> {
   const allDependents = [];
-  console.log(deletions.map((d) => d.typesDirectoryName + "@" + (d.version === "*" ? "*" : formatTypingVersion(d.version))));
   const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
   for (const d of deletions) {
     for (const dep of allPackages.allTypings()) {
@@ -50,22 +49,18 @@ export function getAffectedPackagesWorker(
   definitelyTypedPath: string
 ): PreparePackagesResult {
   const dt = resolve(definitelyTypedPath);
-  console.log(dependentOutputs);
-  const cLines = mapDefined(changedOutput.split("\n"), (line) => filterPackages(line, dt));
-  console.log(cLines);
+  const changedDirs = mapDefined(changedOutput.split("\n"), (line) => getDirectoryName(line, dt));
+  const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), (line) => getDirectoryName(line, dt));
   const packageNames = new Set(
-    cLines.map(
+    changedDirs.map(
       (c) =>
         assertDefined(
           allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c))
         ).subDirectoryPath
     )
   );
-  // TODO: Check for duplicates in dependentOutputs (PROBABLY by converting to a set, it's really a set anyways)
-  const dLines = mapDefined(dependentOutputs.join("\n").split("\n"), (line) => filterPackages(line, dt));
-  console.log(dLines);
   const dependents = new Set(
-    dLines
+    dependentDirs
       .map(
         (d) =>
           assertDefined(
@@ -78,11 +73,8 @@ export function getAffectedPackagesWorker(
   return { packageNames, dependents };
 }
 
-function filterPackages(line: string, dt: string): string | undefined {
+function getDirectoryName(line: string, dt: string): string | undefined {
   return line && line !== dt
     ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt)
     : undefined;
 }
-
-// TODO: Error message from expect rule needs to mention typeScriptVersion not a comment in the header
-// TODO: not-needed script can't delete pnp directories
