@@ -58,6 +58,7 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
       case "paths":
         // TODO: write validation rules for paths property (based on old version's checks?)
         // - all the remaps we have now look like `"jquery/*": ["../jquery/index.d.ts"]`, where jquery is in package.json's deps
+        break;
       case "lib":
       case "noImplicitAny":
       case "noImplicitThis":
