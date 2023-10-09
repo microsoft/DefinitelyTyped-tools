@@ -92,6 +92,9 @@ describe("dtslint", () => {
       it("allows module: node16", () => {
         expect(checkTsconfig({ ...base, module: "node16" })).toEqual([]);
       });
+      it("allows `paths`", () => {
+        expect(checkTsconfig({ ...base, paths: { boom: ["../boom/index.d.ts"] } })).toEqual([]);
+      });
       it("disallows missing `module`", () => {
         const options = { ...base };
         delete options.module;
@@ -103,9 +106,6 @@ describe("dtslint", () => {
         expect(checkTsconfig({ ...base, exactOptionalPropertyTypes: false })).toEqual([
           'When "exactOptionalPropertyTypes" is present, it must be set to `true`.',
         ]);
-      });
-      it("disallows `paths`", () => {
-        expect(checkTsconfig({ ...base, paths: { c: ["."] } })).toEqual(["Unexpected compiler option paths"]);
       });
     });
     describe("assertPackageIsNotDeprecated", () => {

@@ -1,18 +1,16 @@
 import assert from "assert";
-import { sourceBranch } from "./lib/settings";
+import { sourceBranch, sourceRemote } from "./lib/settings";
 import {
   PackageId,
-  DependencyVersion,
-  formatDependencyVersion,
+  DirectoryParsedTypingVersion,
   getDependencyFromFile,
+  formatTypingVersion,
   AllPackages,
   NotNeededPackage,
 } from "./packages";
 import {
   Logger,
   execAndThrowErrors,
-  flatMapIterable,
-  mapIterable,
   mapDefined,
   consoleLogger,
   assertDefined,
@@ -20,7 +18,8 @@ import {
 } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
-import { getAffectedPackages } from "./get-affected-packages";
+import { inspect } from 'util'
+import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
   status: "A" | "D" | "M";
@@ -44,7 +43,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     // If this succeeds, we got the full clone.
   } catch (_) {
     // This is a shallow clone.
-    await run(`git fetch origin ${sourceBranch}`);
+    await run(`git fetch ${sourceRemote} ${sourceBranch}`);
     await run(`git branch ${sourceBranch} FETCH_HEAD`);
   }
 
@@ -65,59 +64,49 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     return stdout;
   }
 }
-
-/** Returns all immediate subdirectories of the root directory that have changed. */
-export function gitChanges(diffs: GitDiff[]): PackageId[] {
-  const changedPackages = new Map<string, Map<string, DependencyVersion>>();
-
+/** Returns all immediate subdirectories of the root directory that have been deleted. */
+function gitDeletions(diffs: GitDiff[]): PackageId[] {
+  const changedPackages = new Map<string, PackageId>;
   for (const diff of diffs) {
-    const dep = getDependencyFromFile(diff.file);
-    if (dep) {
-      const versions = changedPackages.get(dep.typesDirectoryName);
-      if (!versions) {
-        changedPackages.set(dep.typesDirectoryName, new Map([[formatDependencyVersion(dep.version), dep.version]]));
-      } else {
-        versions.set(formatDependencyVersion(dep.version), dep.version);
-      }
-    }
+    if (diff.status !== "D") continue
+    const dep = assertDefined(getDependencyFromFile(diff.file),
+            `Unexpected file deleted: ${diff.file}
+When removing packages, you should only delete files that are a part of removed packages.`)
+    const key = `${dep.typesDirectoryName}/v${formatDependencyVersion(dep.version)}`
+    changedPackages.set(key, dep)
   }
-
-  return Array.from(
-    flatMapIterable(changedPackages, ([name, versions]) => mapIterable(versions, ([_, version]) => ({ name, version })))
-  );
+  return Array.from(changedPackages.values())
 }
-
+ 
+function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
+  return version === "*" ? "*" : formatTypingVersion(version);
+}
+// TODO: Don't throw; instead, return an array of errors
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string,
   selection: "all" | "affected" | RegExp
-) {
+): Promise<PreparePackagesResult> {
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+  console.log(diffs)
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
     for (const deleted of getNotNeededPackages(allPackages, diffs)) {
       checkNotNeededPackage(deleted);
     }
   }
-
-  const affected =
-    selection === "all"
-      ? { changedPackages: allPackages.allTypings(), dependentPackages: [] }
-      : selection === "affected"
-      ? getAffectedPackages(allPackages, gitChanges(diffs))
+  const affected: PreparePackagesResult =
+    selection === "all" ? { packageNames: new Set(allPackages.allTypings().map(t => t.subDirectoryPath)), dependents: new Set() }
+      : selection === "affected" ? await getAffectedPackages(allPackages, gitDeletions(diffs), definitelyTypedPath)
       : {
-          changedPackages: allPackages.allTypings().filter((t) => selection.test(t.name)),
-          dependentPackages: [],
+          packageNames: new Set(allPackages.allTypings().filter((t) => selection.test(t.name)).map(t => t.subDirectoryPath)),
+          dependents: new Set(),
         };
 
   console.log(
-    `Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages
-      .map((t) => t.desc)
-      .toString()}`
+    `Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`
   );
   console.log(
-    `Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages
-      .map((t) => t.desc)
-      .toString()}`
+    `Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`
   );
   return affected;
 }
@@ -159,26 +148,12 @@ it is supposed to replace, ${typings.version} of ${unneeded.name}.`
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
  */
 export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
-  const deletedPackages = new Set(
-    diffs
-      .filter((d) => d.status === "D")
-      .map(
-        (d) =>
-          assertDefined(
-            getDependencyFromFile(d.file),
-            `Unexpected file deleted: ${d.file}
-When removing packages, you should only delete files that are a part of removed packages.`
-          ).typesDirectoryName
-      )
-  );
+  const deletedPackages = new Set(gitDeletions(diffs).map(p => assertDefined(p.typesDirectoryName)));
   return mapDefined(deletedPackages, (p) => {
     const hasTyping = allPackages.hasTypingFor({ typesDirectoryName: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
-    if (hasTyping) {
-      if (notNeeded) {
-        throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
-      }
-      return undefined;
+    if (hasTyping && notNeeded) {
+      throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
     } else {
       return notNeeded;
     }

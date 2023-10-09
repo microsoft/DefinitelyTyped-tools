@@ -18,7 +18,7 @@ export function createTypingsVersionRaw(
         name: `@${scopeName}/${getMangledNameForScopedPackage(libraryName)}`,
         libraryMajorVersion: 1,
         libraryMinorVersion: 0,
-        contributors: [{ name: "Bender", url: "futurama.com", githubUsername: "bender" }],
+        contributors: [{ name: "Bender", url: "futurama.com" }],
         typeScriptVersion: "2.3",
         nonNpm: false,
         projects: ["zombo.com"],

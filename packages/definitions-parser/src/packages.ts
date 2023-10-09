@@ -308,13 +308,6 @@ export function formatTypingVersion(version: DirectoryParsedTypingVersion) {
   return `${version.major}${version.minor === undefined ? "" : `.${version.minor}`}`;
 }
 
-/** If no version is specified, uses "*". */
-export type DependencyVersion = DirectoryParsedTypingVersion | "*";
-
-export function formatDependencyVersion(version: DependencyVersion) {
-  return version === "*" ? "*" : formatTypingVersion(version);
-}
-
 /** Maps name to version */
 export type PackageJsonDependencies = Record<string, string>;
 
@@ -554,12 +547,12 @@ export class TypingsData extends PackageBase {
 export type PackageId =
   | {
       readonly typesDirectoryName: string;
-      readonly version: DependencyVersion;
+      readonly version: DirectoryParsedTypingVersion | "*";
     }
   | {
       readonly name: string;
       readonly typesDirectoryName?: undefined;
-      readonly version: DependencyVersion;
+      readonly version: DirectoryParsedTypingVersion | "*";
     };
 
 export interface PackageIdWithDefiniteVersion {
@@ -588,7 +581,7 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
  */
 export function getDependencyFromFile(
   file: string
-): { typesDirectoryName: string; version: DependencyVersion } | undefined {
+): { typesDirectoryName: string; version: DirectoryParsedTypingVersion | "*" } | undefined {
   const parts = file.split("/");
   if (parts.length <= 2) {
     // It's not in a typings directory at all.

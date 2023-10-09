@@ -1,7 +1,6 @@
-import { getDefinitelyTyped, parseDefinitions } from "@definitelytyped/definitions-parser";
+import { getDefinitelyTyped, parseDefinitions, PreparePackagesResult  } from "@definitelytyped/definitions-parser";
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
-import { PreparePackagesResult } from "./types";
 
 export async function prepareAllPackages(
   definitelyTypedPath: string,
@@ -15,6 +14,9 @@ export async function prepareAllPackages(
   };
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  checkParseResults(allPackages);
-  return { packageNames: allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath), dependents: [] };
+  const errors = checkParseResults(allPackages);
+  if (errors.length) {
+    throw new Error(errors.join('\n'))
+  }
+  return { packageNames: new Set(allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath)), dependents: new Set() };
 }

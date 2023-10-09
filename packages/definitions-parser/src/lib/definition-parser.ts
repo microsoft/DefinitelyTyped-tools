@@ -10,7 +10,6 @@ import {
   hasWindowsSlashes,
   join,
   mapDefined,
-  parsePackageSemver,
   sort,
   split,
   unique,
@@ -20,7 +19,6 @@ import assert from "assert";
 import path from "path";
 import * as ts from "typescript";
 import {
-  DependencyVersion,
   DirectoryParsedTypingVersion,
   TypingsDataRaw,
   TypingsVersionsRaw,
@@ -182,14 +180,6 @@ export function parseVersionFromDirectoryName(
     major: Number(match[1]),
     minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
   };
-}
-
-/**
- * TODO: Uses of this should very likely be using semver. For now I'll parse with semver and convert to major & minor | *
- * falls back to '*' if the input format is not parseable.
- */
-export function tryParsePackageVersion(versionString: string | undefined): DependencyVersion {
-  return versionString !== undefined ? parsePackageSemver(versionString) : "*";
 }
 
 async function combineDataForAllTypesVersions(

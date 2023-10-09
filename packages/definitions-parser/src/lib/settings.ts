@@ -4,8 +4,8 @@ import { getUrlContentsAsString, withCache } from "./utils";
 const root = joinPaths(__dirname, "..", "..");
 export const storageDirPath = process.env.STORAGE_DIR || root;
 export const dataDirPath = joinPaths(storageDirPath, "data");
-
 export const sourceBranch = "master";
+export const sourceRemote = "origin";
 export const typesDirectoryName = "types";
 
 /** URL to download the repository from. */

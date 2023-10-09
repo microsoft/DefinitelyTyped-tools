@@ -77,6 +77,7 @@ export function validatePackageJson(
   // DONE: old-TS-version package: har-format
   // DONE: react
   // DONE: node
+  // TODO: Some spelling correction would be nice here, especially for typeScriptVersion's case.
   for (const key in packageJson) {
     switch (key) {
       case "private":

@@ -1,7 +1,6 @@
-import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff } from "@definitelytyped/definitions-parser";
+import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff, PreparePackagesResult } from "@definitelytyped/definitions-parser";
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
-import { PreparePackagesResult } from "./types";
 
 export async function prepareAffectedPackages(
   definitelyTypedPath: string,
@@ -15,21 +14,11 @@ export async function prepareAffectedPackages(
   };
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  try {
-    checkParseResults(allPackages);
-  } catch (err) {
-    await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
-    throw err;
+  const errors = checkParseResults(allPackages);
+  // TODO: getAffectedPackagesFromDiff also should not throw, but return an array of errors
+  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
+  if (errors.length) {
+    throw new Error(errors.join('\n'));
   }
-
-  const { changedPackages, dependentPackages } = await getAffectedPackagesFromDiff(
-    allPackages,
-    definitelyTypedPath,
-    "affected"
-  );
-
-  return {
-    packageNames: changedPackages.map((p) => p.subDirectoryPath),
-    dependents: dependentPackages.map((p) => p.subDirectoryPath),
-  };
+  return result
 }

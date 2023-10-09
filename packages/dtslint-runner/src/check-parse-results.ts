@@ -7,7 +7,7 @@ if (require.main === module) {
   });
 }
 
-export function checkParseResults(allPackages: AllPackages): void {
+export function checkParseResults(allPackages: AllPackages): string[] {
   const errors = [];
   for (const pkg of allPackages.allTypings()) {
     for (const dep of allPackages.allDependencyTypings(pkg)) {
@@ -18,7 +18,5 @@ export function checkParseResults(allPackages: AllPackages): void {
       }
     }
   }
-  if (errors.length) {
-    throw new Error(errors.join("\n"));
-  }
+  return errors;
 }

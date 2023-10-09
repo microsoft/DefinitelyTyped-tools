@@ -141,7 +141,6 @@ describe(TypingsData, () => {
       {
         name: "Bender",
         url: "futurama.com",
-        githubUsername: "bender",
       },
     ]);
     expect(data.major).toBe(1);
