@@ -5,11 +5,6 @@ import { FS, assertDefined, sort } from "@definitelytyped/utils";
 import { readFileAndThrowOnBOM } from "./definition-parser";
 import { getMangledNameForScopedPackage } from "../packages";
 
-const extensions: Map<string, string> = new Map();
-extensions.set(".d.ts", ""); // TODO: Inaccurate?
-extensions.set(".d.mts", ".mjs");
-extensions.set(".d.cts", ".cjs");
-
 export function getDeclaredGlobals(all: Map<string, ts.SourceFile>): string[] {
   const globals = new Set<string>();
   for (const sourceFile of all.values()) {
@@ -87,10 +82,10 @@ export function allReferencedFiles(
   packageName: string,
   moduleResolutionHost: ts.ModuleResolutionHost,
   compilerOptions: ts.CompilerOptions
-): { types: Map<string, ts.SourceFile>; tests: Map<string, ts.SourceFile> } {
+): { types: Map<string, ts.SourceFile>; tests: Set<string> } {
   const seenReferences = new Set<string>();
   const types = new Map<string, ts.SourceFile>();
-  const tests = new Map<string, ts.SourceFile>();
+  const tests = new Set<string>();
   // The directory where the tsconfig/index.d.ts is - i.e., may be a version within the package
   const baseDirectory = path.resolve("/", fs.debugPath());
   // The root of the package and all versions, i.e., the direct subdirectory of types/
@@ -143,7 +138,7 @@ export function allReferencedFiles(
       ) {
         types.set(relativeFileName, src);
       } else {
-        tests.set(relativeFileName, src);
+        tests.add(relativeFileName);
       }
 
       const refs = findReferencedFiles(src, packageName);

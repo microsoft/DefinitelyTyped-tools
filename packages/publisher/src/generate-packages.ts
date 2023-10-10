@@ -135,7 +135,7 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
       directory: `types/${typing.typesDirectoryName}`,
     },
     scripts: {},
-    dependencies: typing.packageJsonDependencies,
+    dependencies: typing.dependencies,
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion,
     nonNpm: typing.nonNpm ? typing.nonNpm : undefined,
@@ -192,7 +192,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("");
   lines.push("### Additional Details");
   lines.push(` * Last updated: ${new Date().toUTCString()}`);
-  const dependencies = Object.keys(typing.packageJsonDependencies).sort();
+  const dependencies = Object.keys(typing.dependencies).sort();
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"

@@ -196,7 +196,7 @@ export * from 'buffer';
       throw new Error(info.join("\n"));
     }
     expect(info).toBeDefined();
-    expect(info["1.0"].packageJsonDependencies).toEqual({ "@types/node": "*" });
+    expect(info["1.0"].dependencies).toEqual({ "@types/node": "*" });
   });
   it("errors on arbitrary path mapping", () => {});
   it("supports node_modules passthrough path mapping", async () => {
@@ -359,7 +359,7 @@ import route = require('@ember/routing/route');
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
     }
-    expect(info["2.8"].packageJsonDevDependencies).toEqual({ "@types/ember": "workspace:." });
+    expect(info["2.8"].devDependencies).toEqual({ "@types/ember": "workspace:." });
   });
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
@@ -370,7 +370,7 @@ import route = require('@ember/routing/route');
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
     }
-    expect(info["5.1"].packageJsonDependencies).toEqual({ "@types/styled-components": "*" });
+    expect(info["5.1"].dependencies).toEqual({ "@types/styled-components": "*" });
   });
 
   it("rejects relative references to other packages", async () => {

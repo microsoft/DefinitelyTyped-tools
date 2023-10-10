@@ -1,6 +1,7 @@
 # DefinitelyTyped Header Parser
 
-This library parses headers of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) types.
+This library parses package.jsons of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) types.
+Its name is left over from when package information was stored in textual headers.
 
 # Contributing
 

@@ -152,10 +152,10 @@ describe(TypingsData, () => {
     expect(data.contentHash).toBe("11111111111111");
     expect(data.projectName).toBe("zombo.com");
     expect(data.globals).toEqual([]);
-    expect(data.packageJsonDependencies).toEqual({
+    expect(data.dependencies).toEqual({
       "dependency-1": "*",
     });
-    expect(data.packageJsonDevDependencies).toEqual({
+    expect(data.devDependencies).toEqual({
       "@types/known": "workspace:.",
     });
     expect(data.id).toEqual({

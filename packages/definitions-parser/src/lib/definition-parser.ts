@@ -269,9 +269,8 @@ async function combineDataForAllTypesVersions(
     typesVersions,
     files,
     license,
-    packageJsonDependencies: packageJson.dependencies as Record<string, string>,
-    packageJsonDevDependencies: packageJson.devDependencies as Record<string, string>,
-    // TODO: Add devDependencies here (aka testDependencies)
+    dependencies: packageJson.dependencies as Record<string, string>,
+    devDependencies: packageJson.devDependencies as Record<string, string>,
     contentHash: hash(
       hasPackageJson ? [...files, packageJsonName] : files,
       mapDefined(allTypesVersions, (a) => a.tsconfigPathsForHash),
@@ -289,7 +288,7 @@ function getAllUniqueValues<K extends string, T>(records: readonly Record<K, rea
 }
 
 interface TypingDataFromIndividualTypeScriptVersion {
-  /** Undefined for root (which uses `// TypeScript Version: ` comment instead) */
+  /** Undefined for root (which uses typeScriptVersion in package.json instead) */
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly declFiles: readonly string[]; // TODO: Used to map file.d.ts to ts4.1/file.d.ts -- not sure why this is needed
   readonly tsconfigPathsForHash: string | undefined;
@@ -323,7 +322,6 @@ function getTypingDataForSingleTypesVersion(
     path.resolve("/", fs.debugPath())
   ).options;
   errors.push(...checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath()));
-  // TODO: tests should be Set<string>, not Map<string, SourceFile>
   const { types, tests } = allReferencedFiles(
     tsconfig.files ?? [],
     fs,
@@ -332,7 +330,7 @@ function getTypingDataForSingleTypesVersion(
     compilerOptions
   );
   const usedFiles = new Set(
-    [...types.keys(), ...tests.keys(), "tsconfig.json", "tslint.json"].map((f) =>
+    [...types.keys(), ...tests, "tsconfig.json", "tslint.json"].map((f) =>
       slicePrefixes(f, "node_modules/@types/" + packageName + "/")
     )
   );

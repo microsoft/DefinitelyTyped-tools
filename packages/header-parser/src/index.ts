@@ -2,22 +2,6 @@ import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typesc
 import assert = require("assert");
 import { deepEquals, parsePackageSemver } from "@definitelytyped/utils";
 
-// TODO:
-// 1. Convert this package into a packageJson checker
-// 2. Move checks from dt-header into dtslint/checks.ts and remove the rule.
-// 4. Add test for header in dtslint that forbids it.
-// 5. Update dts-gen and DT README and ??? -- rest of ecosystem.
-/*
-
-  # Example header format #
-
-  // Type definitions for foo 1.2
-  // Project: https://github.com/foo/foo, https://foo.com
-  // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
-  // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-  // TypeScript Version: 2.1
-
-*/
 // used in dts-critic
 export interface Header {
   readonly nonNpm: boolean;
@@ -70,14 +54,6 @@ export function validatePackageJson(
 ): Header | string[] {
   const errors = [];
   const needsTypesVersions = typesVersions.length !== 0;
-  // NOTE: I had to install eslint-plugin-import in DT because DT-tools hasn't shipped a new version
-  // DONE: normal package: 3box
-  // DONE: scoped package: adeira__js
-  // DONE: old-version package: gulp/v3
-  // DONE: old-TS-version package: har-format
-  // DONE: react
-  // DONE: node
-  // TODO: Some spelling correction would be nice here, especially for typeScriptVersion's case.
   for (const key in packageJson) {
     switch (key) {
       case "private":
@@ -94,11 +70,9 @@ export function validatePackageJson(
       case "contributors":
       case "nonNpm":
       case "nonNpmDescription":
+      case "pnpm":
         // "dependencies" / "license" checked by types-publisher,
         // TODO: asserts for other fields in types-publisher
-        break;
-      case "pnpm":
-        // TODO: write validation rules for pnpm property (should just be overrides, and those should probably be restricted somehow)
         break;
       case "typesVersions":
       case "types":
@@ -163,6 +137,7 @@ export function validatePackageJson(
   const typeScriptVersionResult = validateTypeScriptVersion();
   const projectsResult = validateProjects();
   const contributorsResult = validateContributors();
+  const pnpmResult = validatePnpm();
   if (typeof nameResult === "object") {
     errors.push(...nameResult.errors);
   } else {
@@ -193,6 +168,9 @@ export function validatePackageJson(
     errors.push(...contributorsResult.errors);
   } else {
     contributors = contributorsResult;
+  }
+  if (typeof pnpmResult === "object") {
+    errors.push(...pnpmResult.errors);
   }
   if (errors.length) {
     return errors;
@@ -319,6 +297,38 @@ export function validatePackageJson(
       }
     }
     return { errors };
+  }
+  function validatePnpm(): undefined | { errors: string[] } {
+    const errors = [];
+    if (packageJson.pnpm) {
+      if (typeof packageJson.pnpm !== "object" || packageJson.pnpm === null) {
+        errors.push(
+          `${typesDirectoryName}'s package.json has bad "pnpm": must be an object like { "overrides": { "@types/react": "^16" } }`
+        );
+      } else {
+        for (const key in packageJson.pnpm) {
+          if (key !== "overrides") {
+            errors.push(
+              `${typesDirectoryName}'s package.json has bad "pnpm": it should not include property "${key}", only "overrides".`
+            );
+          }
+        }
+        const overrides = (packageJson.pnpm as Record<string, unknown>).overrides;
+        if (overrides && typeof overrides === "object" && overrides !== null) {
+          for (const key in overrides) {
+            if (!key.startsWith("@types/")) {
+              errors.push(`${typesDirectoryName}'s package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`);
+            }
+          }
+        } else {
+          errors.push(`${typesDirectoryName}'s package.json has bad "pnpm": it must contain an "overrides" object.`);
+        }
+      }
+    }
+    if (errors.length) {
+      return { errors };
+    }
+    return undefined;
   }
 }
 

@@ -22,8 +22,8 @@ function createRawPackage(license: License): TypingsDataRaw {
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
-    packageJsonDependencies: { "@types/madeira": "^1", balzac: "~3" },
-    packageJsonDevDependencies: { "@types/jquery": "workspace:." },
+    dependencies: { "@types/madeira": "^1", balzac: "~3" },
+    devDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
     globals: [],
   };
@@ -76,7 +76,7 @@ testo({
   },
   readmeMultipleDependencies() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    typing.packageJsonDependencies["@types/example"] = "*";
+    typing.dependencies["@types/example"] = "*";
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining(
         "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"

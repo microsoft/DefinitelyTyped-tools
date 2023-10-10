@@ -136,12 +136,9 @@ export class AllPackages {
     return this.notNeeded;
   }
 
-  /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies.
-   * I have NO idea why it's an iterator. Surely not for efficiency. */
+  /** Returns all of the dependencies *that are typed on DT*, ignoring others, and including test dependencies. */
   *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
     for (const [name, version] of pkg.allPackageJsonDependencies()) {
-      // TODO: chart.js@3 has types; @types/chart.js@2.9 is the last version on DT.
-      // It shouldn't be an error to depend on chart.js@3 but it's currently ambiguous with @types/chart.js.
       if (!name.startsWith(`@${scopeName}/`)) continue;
       if (pkg.name === name) continue;
       const typesDirectoryName = removeTypesScope(name);
@@ -336,12 +333,12 @@ export interface TypingsDataRaw {
    * Packages that provide definitions that this package depends on.
    * NOTE: Includes `@types/` packages.
    */
-  readonly packageJsonDependencies: PackageJsonDependencies;
+  readonly dependencies: PackageJsonDependencies;
 
   /**
    * Packages that this package's tests or other development depends on.
    */
-  readonly packageJsonDevDependencies: PackageJsonDependencies;
+  readonly devDependencies: PackageJsonDependencies;
 
   /**
    * The [older] version of the library that this definition package refers to, as represented *on-disk*.
@@ -493,18 +490,17 @@ export class TypingsData extends PackageBase {
   get license(): License {
     return this.data.license;
   }
-  // TODO: Rename this back to dependencies/devDependencies
-  get packageJsonDependencies(): PackageJsonDependencies {
-    return this.data.packageJsonDependencies ?? {};
+  get dependencies(): PackageJsonDependencies {
+    return this.data.dependencies ?? {};
   }
-  get packageJsonDevDependencies(): PackageJsonDependencies {
-    return this.data.packageJsonDevDependencies ?? {};
+  get devDependencies(): PackageJsonDependencies {
+    return this.data.devDependencies ?? {};
   }
   *allPackageJsonDependencies(): Iterable<[string, string]> {
-    for (const [name, version] of Object.entries(this.packageJsonDependencies)) {
+    for (const [name, version] of Object.entries(this.dependencies)) {
       yield [name, version];
     }
-    for (const [name, version] of Object.entries(this.packageJsonDevDependencies)) {
+    for (const [name, version] of Object.entries(this.devDependencies)) {
       yield [name, version];
     }
   }

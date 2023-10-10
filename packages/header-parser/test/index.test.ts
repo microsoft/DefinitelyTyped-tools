@@ -1,4 +1,3 @@
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { validatePackageJson, makeTypesVersionsForPackageJson } from "../src";
 
 describe("validatePackageJson", () => {
@@ -40,6 +39,11 @@ describe("validatePackageJson", () => {
       },
     ],
   };
+  const header = { ...pkgJson, nonNpm: false, libraryMajorVersion: 18, libraryMinorVersion: 0 };
+  delete (header as any).dependencies;
+  delete (header as any).devDependencies;
+  delete (header as any).private;
+  delete (header as any).version;
   it("requires private: true", () => {
     const pkg = { ...pkgJson };
     delete pkg.private;
@@ -94,48 +98,25 @@ describe("validatePackageJson", () => {
   it("works with old-version packages", () => {
     expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.99999" }, []))).toBeFalsy();
   });
-});
-
-describe("isSupported", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.isSupported("5.0")).toBeTruthy();
+  it("requires pnpm to be an object", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: "not an object" }, [])).toEqual([
+      `hapi's package.json has bad "pnpm": must be an object like { "overrides": { "@types/react": "^16" } }`,
+    ]);
   });
-  it("supports oldest", () => {
-    expect(TypeScriptVersion.isSupported("4.5")).toBeTruthy();
+  it("requires pnpm to contain exactly overrides", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { unexpected: true } }, [])).toEqual([
+      `hapi's package.json has bad "pnpm": it should not include property "unexpected", only "overrides".`,
+      `hapi's package.json has bad "pnpm": it must contain an "overrides" object.`,
+    ]);
   });
-  it("does not support just before oldest", () => {
-    expect(!TypeScriptVersion.isSupported("4.4")).toBeTruthy();
+  it("pnpm may only override types packages", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { overrides: { vinland: "^1" } } }, [])).toEqual([
+      `hapi's package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`,
+    ]);
   });
-});
-
-describe("isTypeScriptVersion", () => {
-  it("accepts in-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("5.0")).toBeTruthy();
-  });
-  it("rejects out-of-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
-  });
-  it("rejects garbage", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi")).toBeFalsy();
-  });
-});
-
-describe("range", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.range("4.9")).toEqual(["4.9", "5.0", "5.1", "5.2", "5.3"]);
-  });
-  it("includes oldest and above", () => {
-    expect(TypeScriptVersion.range("4.5")).toEqual(TypeScriptVersion.supported);
-  });
-});
-
-describe("tagsToUpdate", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.0")).toEqual(["ts5.0", "ts5.1", "ts5.2", "ts5.3", "latest"]);
-  });
-  it("allows 4.5 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.5")).toEqual(
-      TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
+  it("pnpm overrides work", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { overrides: { "@types/react": "^16" } } }, [])).toEqual(
+      header
     );
   });
 });
