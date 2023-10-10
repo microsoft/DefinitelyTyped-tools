@@ -440,20 +440,24 @@ export function checkPackageJsonType(type: unknown, path: string) {
   return type;
 }
 
+/**
+ * @param devDependencySelfName - pass the package name only for devDependencies
+ */
 export function checkPackageJsonDependencies(
   dependencies: unknown,
   path: string,
-  allowedDependencies: ReadonlySet<string>
+  allowedDependencies: ReadonlySet<string>,
+  devDependencySelfName?: string
 ): string[] {
   if (dependencies === undefined) {
     return [];
   }
   if (dependencies === null || typeof dependencies !== "object") {
-    return [`${path} should contain "dependencies" or not exist.`];
+    return [`${path} should contain ${devDependencySelfName ? "devDependencies" : "dependencies"} or not exist.`];
   }
 
   const errors: string[] = [];
-  for (const dependencyName of Object.keys(dependencies!)) {
+  for (const dependencyName of Object.keys(dependencies)) {
     // `dependencies` cannot be null because of check above.
     if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
       const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
@@ -463,6 +467,14 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
     const version = (dependencies as { [key: string]: unknown })[dependencyName];
     if (typeof version !== "string") {
       errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
+    }
+  }
+  if (devDependencySelfName) {
+    const selfDependency = (dependencies as { [key: string]: string | undefined })[devDependencySelfName];
+    if (selfDependency === undefined || selfDependency !== "workspace:.") {
+      errors.push(
+        `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(devDependencySelfName)}: "workspace:."`
+      );
     }
   }
   return errors;

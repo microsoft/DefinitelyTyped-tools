@@ -137,7 +137,7 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     dependencies: typing.dependencies,
     typesPublisherContentHash: typing.contentHash,
     typeScriptVersion: typing.minTypeScriptVersion,
-    nonNpm: typing.nonNpm ? typing.nonNpm : undefined,
+    nonNpm: typing.nonNpm === true ? typing.nonNpm : undefined,
   };
 
   return JSON.stringify(out, undefined, 4);

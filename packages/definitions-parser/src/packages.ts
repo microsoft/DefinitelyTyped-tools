@@ -356,8 +356,7 @@ export interface TypingsDataRaw {
   /**
    * Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
    *
-   * Does *not* include a partial `package.json` because that will not be copied directly.
-   * TODO: THis might change!
+   * Does *not* include `package.json` because that is not copied directly, but generated from TypingsData.
    */
   readonly files: readonly string[];
 
