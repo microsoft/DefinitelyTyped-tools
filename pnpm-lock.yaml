@@ -229,9 +229,6 @@ importers:
       pacote:
         specifier: ^13.6.1
         version: 13.6.2
-      semver:
-        specifier: ^7.3.7
-        version: 7.5.2
       stats-lite:
         specifier: ^2.2.0
         version: 2.2.0
@@ -248,9 +245,6 @@ importers:
       '@types/pacote':
         specifier: ^11.1.5
         version: 11.1.5
-      '@types/semver':
-        specifier: ^7.3.10
-        version: 7.3.13
       '@types/stats-lite':
         specifier: ^2.2.0
         version: 2.2.0
@@ -306,6 +300,13 @@ importers:
       parsimmon:
         specifier: ^1.13.0
         version: 1.18.1
+      semver:
+        specifier: ^7.3.7
+        version: 7.5.4
+    devDependencies:
+      '@types/semver':
+        specifier: ^7.5.2
+        version: 7.5.2
 
   packages/publisher:
     dependencies:
@@ -427,9 +428,6 @@ importers:
       fstream:
         specifier: ^1.0.12
         version: 1.0.12
-      semver:
-        specifier: ^7.5.4
-        version: 7.5.4
       tar:
         specifier: ^6.1.11
         version: 6.1.13
@@ -443,9 +441,6 @@ importers:
       '@types/fs-extra':
         specifier: ^8.1.0
         version: 8.1.2
-      '@types/semver':
-        specifier: ^7.5.3
-        version: 7.5.3
       '@types/tar':
         specifier: ^6.1
         version: 6.1.6
@@ -1846,16 +1841,8 @@ packages:
     resolution: {integrity: sha512-KQf+QAMWKMrtBMsB8/24w53tEsxllMj6TuA80TT/5igJalLI/zm0L3oXRbIAl4Ohfc85gyHX/jhMwsVkmhLU4A==}
     dev: true
 
-  /@types/semver@7.3.13:
-    resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
-    dev: true
-
   /@types/semver@7.5.2:
     resolution: {integrity: sha512-7aqorHYgdNO4DM36stTiGO3DvKoex9TQRwsJU6vMaFGyqpBA1MNZkz+PG3gaNUPpTAOYhT1WR7M1JyA3fbS9Cw==}
-
-  /@types/semver@7.5.3:
-    resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
-    dev: true
 
   /@types/source-map-support@0.4.2:
     resolution: {integrity: sha512-GbGWx39O8NdUHSChdrU0XeigBAgu1Teg3llwE0slSVcH2qISaQT70ftAiH+h4HIt3VIObFU34PSpXIKJuXCybQ==}

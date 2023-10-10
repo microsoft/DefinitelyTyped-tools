@@ -23,7 +23,11 @@
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "@types/parsimmon": "^1.10.1",
-    "parsimmon": "^1.13.0"
+    "parsimmon": "^1.13.0",
+    "semver": "^7.3.7"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.5.2"
   },
   "publishConfig": {
     "access": "public"
