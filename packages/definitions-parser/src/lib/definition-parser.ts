@@ -1,4 +1,12 @@
-import { validatePackageJson } from "@definitelytyped/header-parser";
+import {
+  validatePackageJson,
+  License,
+  getLicenseFromPackageJson,
+  checkPackageJsonType,
+  checkPackageJsonDependencies,
+  checkPackageJsonImports,
+  checkPackageJsonExportsAndAddPJsonEntry,
+} from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
   FS,
@@ -23,7 +31,6 @@ import {
   TypingsDataRaw,
   TypingsVersionsRaw,
   formatTypingVersion,
-  getLicenseFromPackageJson,
   getMangledNameForScopedPackage,
 } from "../packages";
 import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
@@ -252,6 +259,9 @@ async function combineDataForAllTypesVersions(
     errors.push(...exports);
   }
   const license = getLicenseFromPackageJson(packageJson.license);
+  if (Array.isArray(license)) {
+    errors.push(...license);
+  }
   if (errors.length) {
     return errors;
   }
@@ -268,7 +278,7 @@ async function combineDataForAllTypesVersions(
     header: assertDefined(header),
     typesVersions,
     files,
-    license,
+    license: license as License,
     dependencies: packageJson.dependencies as Record<string, string>,
     devDependencies: packageJson.devDependencies as Record<string, string>,
     contentHash: hash(
@@ -377,71 +387,6 @@ function getTypingDataForSingleTypesVersion(
     declFiles: sort(types.keys()),
     tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
   };
-}
-
-// TODO: Expand these checks too, adding name and version just like dtslint
-// TODO: Maybe should be in header-parser now?
-function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
-  if (exports === undefined) return exports;
-  if (typeof exports === "string") {
-    return exports;
-  }
-  if (typeof exports !== "object") {
-    return [`Package exports at path ${path} should be an object or string.`];
-  }
-  if (exports === null) {
-    return [`Package exports at path ${path} should not be null.`];
-  }
-  if (!(exports as Record<string, unknown>)["./package.json"]) {
-    (exports as Record<string, unknown>)["./package.json"] = "./package.json";
-  }
-  return exports;
-}
-
-function checkPackageJsonImports(imports: unknown, path: string): object | string[] | undefined {
-  if (imports === undefined) return imports;
-  if (typeof imports !== "object") {
-    return [`Package imports at path ${path} should be an object or string.`];
-  } else if (imports === null) {
-    return [`Package imports at path ${path} should not be null.`];
-  }
-  return imports;
-}
-
-function checkPackageJsonType(type: unknown, path: string) {
-  if (type === undefined) return type;
-  if (type !== "module") {
-    return [`Package type at path ${path} can only be 'module'.`];
-  }
-  return type;
-}
-
-function checkPackageJsonDependencies(
-  dependencies: unknown,
-  path: string,
-  allowedDependencies: ReadonlySet<string>
-): string[] {
-  if (dependencies === undefined) {
-    return [];
-  }
-  if (dependencies === null || typeof dependencies !== "object") {
-    return [`${path} should contain "dependencies" or not exist.`];
-  }
-
-  const errors: string[] = [];
-  for (const dependencyName of Object.keys(dependencies!)) {
-    // `dependencies` cannot be null because of check above.
-    if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
-      const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
-Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
-      errors.push(`In ${path}: ${msg}`);
-    }
-    const version = (dependencies as { [key: string]: unknown })[dependencyName];
-    if (typeof version !== "string") {
-      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
-    }
-  }
-  return errors;
 }
 
 function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): string[] {

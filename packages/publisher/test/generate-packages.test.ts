@@ -4,7 +4,8 @@ import {
   createReadme,
   getLicenseFileText,
 } from "../src/generate-packages";
-import { License, NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
+import { License } from "@definitelytyped/header-parser";
+import { NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
 import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 

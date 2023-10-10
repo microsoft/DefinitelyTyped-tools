@@ -1,4 +1,4 @@
-import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
+import { makeTypesVersionsForPackageJson, License } from "@definitelytyped/header-parser";
 import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
 import path = require("path");
 import yargs = require("yargs");
@@ -6,7 +6,6 @@ import yargs = require("yargs");
 import {
   AllPackages,
   AnyPackage,
-  License,
   NotNeededPackage,
   TypingsData,
   getDefinitelyTyped

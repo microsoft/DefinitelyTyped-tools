@@ -71,8 +71,6 @@ export function validatePackageJson(
       case "nonNpm":
       case "nonNpmDescription":
       case "pnpm":
-        // "dependencies" / "license" checked by types-publisher,
-        // TODO: asserts for other fields in types-publisher
         break;
       case "typesVersions":
       case "types":
@@ -138,6 +136,7 @@ export function validatePackageJson(
   const projectsResult = validateProjects();
   const contributorsResult = validateContributors();
   const pnpmResult = validatePnpm();
+  const licenseResult = getLicenseFromPackageJson(packageJson.license);
   if (typeof nameResult === "object") {
     errors.push(...nameResult.errors);
   } else {
@@ -171,6 +170,9 @@ export function validatePackageJson(
   }
   if (typeof pnpmResult === "object") {
     errors.push(...pnpmResult.errors);
+  }
+  if (Array.isArray(licenseResult)) {
+    errors.push(...licenseResult);
   }
   if (errors.length) {
     return errors;
@@ -317,7 +319,9 @@ export function validatePackageJson(
         if (overrides && typeof overrides === "object" && overrides !== null) {
           for (const key in overrides) {
             if (!key.startsWith("@types/")) {
-              errors.push(`${typesDirectoryName}'s package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`);
+              errors.push(
+                `${typesDirectoryName}'s package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`
+              );
             }
           }
         } else {
@@ -376,6 +380,94 @@ Must be an object of type { name: string, url: string } | { name: string, github
             )}`
           );
       }
+    }
+  }
+  return errors;
+}
+
+// Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
+export const enum License {
+  MIT = "MIT",
+  Apache20 = "Apache-2.0",
+}
+const allLicenses = [License.MIT, License.Apache20];
+export function getLicenseFromPackageJson(packageJsonLicense: unknown): License | string[] {
+  if (packageJsonLicense === undefined) {
+    // tslint:disable-line strict-type-predicates (false positive)
+    return License.MIT;
+  }
+  if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
+    return [`Specifying '"license": "MIT"' is redundant, this is the default.`];
+  }
+  if (allLicenses.includes(packageJsonLicense as License)) {
+    return packageJsonLicense as License;
+  }
+  return [
+    `'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(
+      allLicenses
+    )}}`,
+  ];
+}
+// TODO: Move these checks into validatePackageJson and make it return an entire package.json type, not just Header
+// TODO: Expand these checks too, adding name and version just like dtslint
+export function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
+  if (exports === undefined) return exports;
+  if (typeof exports === "string") {
+    return exports;
+  }
+  if (typeof exports !== "object") {
+    return [`Package exports at path ${path} should be an object or string.`];
+  }
+  if (exports === null) {
+    return [`Package exports at path ${path} should not be null.`];
+  }
+  if (!(exports as Record<string, unknown>)["./package.json"]) {
+    (exports as Record<string, unknown>)["./package.json"] = "./package.json";
+  }
+  return exports;
+}
+
+export function checkPackageJsonImports(imports: unknown, path: string): object | string[] | undefined {
+  if (imports === undefined) return imports;
+  if (typeof imports !== "object") {
+    return [`Package imports at path ${path} should be an object or string.`];
+  } else if (imports === null) {
+    return [`Package imports at path ${path} should not be null.`];
+  }
+  return imports;
+}
+
+export function checkPackageJsonType(type: unknown, path: string) {
+  if (type === undefined) return type;
+  if (type !== "module") {
+    return [`Package type at path ${path} can only be 'module'.`];
+  }
+  return type;
+}
+
+export function checkPackageJsonDependencies(
+  dependencies: unknown,
+  path: string,
+  allowedDependencies: ReadonlySet<string>
+): string[] {
+  if (dependencies === undefined) {
+    return [];
+  }
+  if (dependencies === null || typeof dependencies !== "object") {
+    return [`${path} should contain "dependencies" or not exist.`];
+  }
+
+  const errors: string[] = [];
+  for (const dependencyName of Object.keys(dependencies!)) {
+    // `dependencies` cannot be null because of check above.
+    if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
+      const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
+Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
+      errors.push(`In ${path}: ${msg}`);
+    }
+    const version = (dependencies as { [key: string]: unknown })[dependencyName];
+    if (typeof version !== "string") {
+      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
     }
   }
   return errors;

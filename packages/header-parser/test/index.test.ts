@@ -1,4 +1,4 @@
-import { validatePackageJson, makeTypesVersionsForPackageJson } from "../src";
+import { validatePackageJson, makeTypesVersionsForPackageJson, License, getLicenseFromPackageJson } from "../src";
 
 describe("validatePackageJson", () => {
   const pkgJson: Record<string, unknown> = {
@@ -171,3 +171,27 @@ describe("makeTypesVersionsForPackageJson", () => {
 }`);
   });
 });
+
+describe(getLicenseFromPackageJson, () => {
+  it("returns MIT by default", () => {
+    expect(getLicenseFromPackageJson(undefined)).toBe(License.MIT);
+  });
+
+  it("throws if license is MIT", () => {
+    expect(getLicenseFromPackageJson("MIT")).toEqual([
+      "Specifying '\"license\": \"MIT\"' is redundant, this is the default."
+    ]);
+  });
+
+  it("returns known licenses", () => {
+    expect(getLicenseFromPackageJson(License.Apache20)).toBe(License.Apache20);
+  });
+
+  it("throws if unknown license", () => {
+    expect(getLicenseFromPackageJson("nonsense")).toEqual([
+      `'package.json' license is "nonsense".
+Expected one of: ["MIT","Apache-2.0"]}`
+    ]);
+  });
+});
+

@@ -4,10 +4,8 @@ import {
   AllPackages,
   TypingsVersions,
   TypingsData,
-  License,
   getMangledNameForScopedPackage,
   NotNeededPackage,
-  getLicenseFromPackageJson,
   getDependencyFromFile,
 } from "../src/packages";
 import { Range } from "semver";
@@ -15,6 +13,7 @@ import { parseDefinitions } from "../src/parse-definitions";
 import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { License } from "@definitelytyped/header-parser";
 
 describe(AllPackages, () => {
   let allPackages: AllPackages;
@@ -243,24 +242,6 @@ describe(NotNeededPackage, () => {
         NotNeededPackage.fromRaw("nouislider", { libraryName: "noUISlider", asOfVersion: "16.0.0" })
       ).toThrow("not-needed package 'nouislider' must use a libraryName that is all lower-case letters.");
     });
-  });
-});
-
-describe(getLicenseFromPackageJson, () => {
-  it("returns MIT by default", () => {
-    expect(getLicenseFromPackageJson(undefined)).toBe(License.MIT);
-  });
-
-  it("throws if license is MIT", () => {
-    expect(() => getLicenseFromPackageJson("MIT")).toThrow();
-  });
-
-  it("returns known licenses", () => {
-    expect(getLicenseFromPackageJson(License.Apache20)).toBe(License.Apache20);
-  });
-
-  it("throws if unknown license", () => {
-    expect(() => getLicenseFromPackageJson("nonsense")).toThrow();
   });
 });
 

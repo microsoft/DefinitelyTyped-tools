@@ -1,5 +1,6 @@
+import { License } from "@definitelytyped/header-parser"
 import { scopeName } from "../src/lib/settings";
-import { TypingsVersionsRaw, License, getMangledNameForScopedPackage } from "../src/packages";
+import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../src/packages";
 
 export function testo(o: { [s: string]: () => void }) {
   for (const k of Object.keys(o)) {

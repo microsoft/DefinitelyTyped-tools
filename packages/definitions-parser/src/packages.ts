@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Author, Header } from "@definitelytyped/header-parser";
+import { Author, Header, License } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { FS, assertDefined, assertSorted, mapValues, unique, unmangleScopedPackage } from "@definitelytyped/utils";
 import * as semver from "semver";
@@ -381,27 +381,6 @@ export interface TypingsDataRaw {
   readonly globals: readonly string[];
 }
 
-// Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
-export const enum License {
-  MIT = "MIT",
-  Apache20 = "Apache-2.0",
-}
-const allLicenses = [License.MIT, License.Apache20];
-export function getLicenseFromPackageJson(packageJsonLicense: unknown): License {
-  if (packageJsonLicense === undefined) {
-    // tslint:disable-line strict-type-predicates (false positive)
-    return License.MIT;
-  }
-  if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
-    throw new Error(`Specifying '"license": "MIT"' is redundant, this is the default.`);
-  }
-  if (allLicenses.includes(packageJsonLicense as License)) {
-    return packageJsonLicense as License;
-  }
-  throw new Error(
-    `'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(allLicenses)}}`
-  );
-}
 
 export class TypingsVersions {
   private readonly map: ReadonlyMap<semver.SemVer, TypingsData>;
