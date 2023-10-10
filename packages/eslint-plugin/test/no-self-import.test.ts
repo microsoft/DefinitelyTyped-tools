@@ -28,6 +28,66 @@ ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
       ],
       filename: "types/this-package/index.d.ts",
     },
+    {
+      code: `import old from "./v11"`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 24,
+          line: 1,
+          messageId: "useOnlyCurrentVersion",
+        },
+      ],
+      filename: "types.d.ts",
+    },
+    {
+      code: `import old from "./v11/index"`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 30,
+          line: 1,
+          messageId: "useOnlyCurrentVersion",
+        },
+      ],
+      filename: "types.d.ts",
+    },
+    {
+      code: `import old from "./v11/subdir/file"`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 36,
+          line: 1,
+          messageId: "useOnlyCurrentVersion",
+        },
+      ],
+      filename: "types.d.ts",
+    },
+    {
+      code: `import old from "./v0.1"`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 25,
+          line: 1,
+          messageId: "useOnlyCurrentVersion",
+        },
+      ],
+      filename: "types.d.ts",
+    },
+    {
+      code: `import old from "./v0.1/index"`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 31,
+          line: 1,
+          messageId: "useOnlyCurrentVersion",
+        },
+      ],
+      filename: "types.d.ts",
+    },
   ],
   valid: [
     {
@@ -41,6 +101,14 @@ ruleTester.run("@definitelytyped/no-self-import", dtHeader, {
     {
       code: `import myself from "this-package";`,
       filename: "types/grandparent/this-package/index.d.ts",
+    },
+    {
+      code: `import old from "./v1gardenpath"`,
+      filename: "types.d.ts",
+    },
+    {
+      code: `import old from "./v1verb/other"`,
+      filename: "types.d.ts",
     },
   ],
 });
