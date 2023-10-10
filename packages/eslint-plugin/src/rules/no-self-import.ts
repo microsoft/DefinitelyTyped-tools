@@ -5,7 +5,8 @@ const rule = createRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Forbids declaration files to import the current package using a global import or old versions with a relative import.",
+      description:
+        "Forbids declaration files to import the current package using a global import or old versions with a relative import.",
       recommended: "error",
     },
     messages: {

@@ -1,4 +1,9 @@
-import { getDefinitelyTyped, parseDefinitions, getAffectedPackagesFromDiff, PreparePackagesResult } from "@definitelytyped/definitions-parser";
+import {
+  getDefinitelyTyped,
+  parseDefinitions,
+  getAffectedPackagesFromDiff,
+  PreparePackagesResult,
+} from "@definitelytyped/definitions-parser";
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
@@ -17,10 +22,10 @@ export async function prepareAffectedPackages(
   const errors = checkParseResults(allPackages);
   const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
   if (errors.length) {
-    throw new Error(errors.join('\n'));
+    throw new Error(errors.join("\n"));
   }
   if (Array.isArray(result)) {
-    throw new Error([...errors, ...result].join('\n'))
+    throw new Error([...errors, ...result].join("\n"));
   }
-  return result
+  return result;
 }

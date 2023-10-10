@@ -34,7 +34,7 @@ import {
   getMangledNameForScopedPackage,
 } from "../packages";
 import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
-import { getAllowedPackageJsonDependencies, scopeName  } from "./settings";
+import { getAllowedPackageJsonDependencies, scopeName } from "./settings";
 import { slicePrefixes } from "./utils";
 
 function matchesVersion(
@@ -249,7 +249,14 @@ async function combineDataForAllTypesVersions(
   const header = Array.isArray(packageJsonResult) ? undefined : packageJsonResult;
   const allowedDependencies = await getAllowedPackageJsonDependencies();
   errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies));
-  errors.push(...checkPackageJsonDependencies(packageJson.devDependencies, packageJsonName, allowedDependencies, `@${scopeName}/${typingsPackageName}`));
+  errors.push(
+    ...checkPackageJsonDependencies(
+      packageJson.devDependencies,
+      packageJsonName,
+      allowedDependencies,
+      `@${scopeName}/${typingsPackageName}`
+    )
+  );
   const imports = checkPackageJsonImports(packageJson.imports, packageJsonName);
   if (Array.isArray(imports)) {
     errors.push(...imports);

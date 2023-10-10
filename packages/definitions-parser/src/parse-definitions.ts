@@ -33,7 +33,7 @@ export async function parseDefinitions(
       workerFile: definitionParserWorkerFilename,
       nProcesses: parallel.nProcesses,
       handleOutput({ data, packageName }: { data: TypingsVersionsRaw | { errors: string[] }; packageName: string }) {
-        if ('errors' in data) {
+        if ("errors" in data) {
           errors.push(...data.errors);
         } else {
           typings[packageName] = data;
@@ -45,7 +45,7 @@ export async function parseDefinitions(
     log.info("Parsing in main process...");
     for (const packageName of packageNames) {
       const info = await getTypingInfo(packageName, dt);
-      if ('errors' in info) {
+      if ("errors" in info) {
         errors.push(...info.errors);
       } else {
         typings[packageName] = info;

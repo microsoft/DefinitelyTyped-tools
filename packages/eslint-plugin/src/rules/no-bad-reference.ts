@@ -31,7 +31,7 @@ const rule = createRule({
       }
 
       if (referenceMatch.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
-        report(comment, "referencePathOldVersion")
+        report(comment, "referencePathOldVersion");
       }
       if (isDeclarationFile) {
         if (referenceMatch.startsWith("..")) {

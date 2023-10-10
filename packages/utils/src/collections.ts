@@ -35,7 +35,7 @@ export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => 
   }
   return out;
 }
- 
+
 export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
   return Array.from(values).sort(comparer);
 }

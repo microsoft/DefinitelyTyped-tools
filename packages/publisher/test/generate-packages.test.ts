@@ -13,7 +13,10 @@ function createRawPackage(license: License): TypingsDataRaw {
   return {
     header: {
       name: "@types/jquery",
-      contributors: [{ name: "A", url: "b@c.d" }, { name: "E", githubUsername: "e" }],
+      contributors: [
+        { name: "A", url: "b@c.d" },
+        { name: "E", githubUsername: "e" },
+      ],
       libraryMajorVersion: 1,
       libraryMinorVersion: 0,
       typeScriptVersion: "3.2",
@@ -63,7 +66,9 @@ testo({
   },
   readmeContainsContributors() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"));
+    expect(createReadme(typing, defaultFS())).toEqual(
+      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)")
+    );
   },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);

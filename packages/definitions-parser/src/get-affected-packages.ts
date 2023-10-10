@@ -19,7 +19,10 @@ export async function getAffectedPackages(
   for (const d of deletions) {
     for (const dep of allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
-        if ("@types/" + d.typesDirectoryName === name && (d.version === "*" || satisfies(formatTypingVersion(d.version), version))) {
+        if (
+          "@types/" + d.typesDirectoryName === name &&
+          (d.version === "*" || satisfies(formatTypingVersion(d.version), version))
+        ) {
           filters.push(`--filter '...{./types/${dep.name}}'`);
           break;
         }

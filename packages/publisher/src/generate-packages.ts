@@ -8,7 +8,7 @@ import {
   AnyPackage,
   NotNeededPackage,
   TypingsData,
-  getDefinitelyTyped
+  getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
 import {
   FS,

@@ -473,7 +473,9 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
     const selfDependency = (dependencies as { [key: string]: string | undefined })[devDependencySelfName];
     if (selfDependency === undefined || selfDependency !== "workspace:.") {
       errors.push(
-        `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(devDependencySelfName)}: "workspace:."`
+        `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(
+          devDependencySelfName
+        )}: "workspace:."`
       );
     }
   }

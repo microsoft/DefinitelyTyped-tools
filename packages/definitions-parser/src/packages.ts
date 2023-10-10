@@ -380,7 +380,6 @@ export interface TypingsDataRaw {
   readonly globals: readonly string[];
 }
 
-
 export class TypingsVersions {
   private readonly map: ReadonlyMap<semver.SemVer, TypingsData>;
 

@@ -1,4 +1,4 @@
-import { License } from "@definitelytyped/header-parser"
+import { License } from "@definitelytyped/header-parser";
 import { scopeName } from "../src/lib/settings";
 import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../src/packages";
 

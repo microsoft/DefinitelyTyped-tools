@@ -18,5 +18,5 @@ export function checkParseResults(allPackages: AllPackages): string[] {
       }
     }
   }
-  return errors
+  return errors;
 }

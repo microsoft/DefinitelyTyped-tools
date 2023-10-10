@@ -179,7 +179,7 @@ describe(getLicenseFromPackageJson, () => {
 
   it("throws if license is MIT", () => {
     expect(getLicenseFromPackageJson("MIT")).toEqual([
-      "Specifying '\"license\": \"MIT\"' is redundant, this is the default."
+      'Specifying \'"license": "MIT"\' is redundant, this is the default.',
     ]);
   });
 
@@ -190,8 +190,7 @@ describe(getLicenseFromPackageJson, () => {
   it("throws if unknown license", () => {
     expect(getLicenseFromPackageJson("nonsense")).toEqual([
       `'package.json' license is "nonsense".
-Expected one of: ["MIT","Apache-2.0"]}`
+Expected one of: ["MIT","Apache-2.0"]}`,
     ]);
   });
 });
-
