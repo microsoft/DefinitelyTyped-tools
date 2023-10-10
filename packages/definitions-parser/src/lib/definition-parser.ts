@@ -54,7 +54,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.header.libraryMajorVersion}.${typingsDataRaw.header.libraryMinorVersion}`;
 }
 
-export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | string[]> {
+export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | { errors: string[] }> {
   const errors = [];
   if (packageName !== packageName.toLowerCase()) {
     errors.push(`Package name \`${packageName}\` should be strictly lowercase`);
@@ -77,7 +77,7 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
   const latestDataResult = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost);
   if (Array.isArray(latestDataResult)) {
-    return [...errors, ...latestDataResult];
+    return { errors: [...errors, ...latestDataResult] };
   }
   const latestData: TypingsDataRaw = { libraryVersionDirectoryName: undefined, ...latestDataResult };
 
@@ -126,7 +126,7 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
     })
   );
   if (errors.length) {
-    return errors;
+    return { errors };
   }
 
   const res: TypingsVersionsRaw = {};

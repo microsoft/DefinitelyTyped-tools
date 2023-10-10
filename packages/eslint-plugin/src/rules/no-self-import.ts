@@ -1,5 +1,4 @@
 import { createRule, getTypesPackageForDeclarationFile } from "../util";
-// TODO: Also forbid importing an old version of the current package (or maybe in a new rule, ugh)
 const rule = createRule({
   name: "no-self-import",
   defaultOptions: [],
