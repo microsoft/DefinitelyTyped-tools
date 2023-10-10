@@ -87,12 +87,12 @@ describe("validatePackageJson", () => {
   });
   it("requires version to be NN.NN.NN", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
-      `hapi's package.json has bad "version": should look like "NN.NN.99999"`,
+      `hapi's package.json has bad "version": "hi there" should look like "NN.NN.99999"`,
     ]);
   });
   it("requires version to end with .99999", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
-      `hapi's package.json has bad "version": must end with ".99999"`,
+      `hapi's package.json has bad "version": 1.2.3 must end with ".99999"`,
     ]);
   });
   it("works with old-version packages", () => {

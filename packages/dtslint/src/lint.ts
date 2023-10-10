@@ -112,11 +112,11 @@ function testDependencies(
     const typesFolder = dirname(path);
 
     return `
-A module look-up failed, this often occurs when you need to run \`npm install\` on a dependent module before you can lint.
+A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
 
 Before you debug, first try running:
 
-   npm install --prefix ${typesFolder}
+   pnpm install --filter '...{./types/${typesFolder}}...'
 
 Then re-run. Full error logs are below.
 

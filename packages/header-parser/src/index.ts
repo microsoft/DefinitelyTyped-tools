@@ -1,6 +1,7 @@
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { deepEquals, parsePackageSemver } from "@definitelytyped/utils";
+import * as semver from "semver";
+import { deepEquals } from "@definitelytyped/utils";
 
 // used in dts-critic
 export interface Header {
@@ -203,24 +204,18 @@ export function validatePackageJson(
       errors.push(
         `${typesDirectoryName}'s package.json should have \`"version"\` matching the version of the implementation package.`
       );
-    } else if (!/\d+\.\d+\.\d+/.exec(packageJson.version)) {
-      errors.push(`${typesDirectoryName}'s package.json has bad "version": should look like "NN.NN.99999"`);
-    } else if (!packageJson.version.endsWith(".99999")) {
-      errors.push(`${typesDirectoryName}'s package.json has bad "version": must end with ".99999"`);
     } else {
-      let version: "*" | { major: number; minor?: number } = "*";
-      try {
-        version = parsePackageSemver(packageJson.version);
-        if (version === "*") {
-          errors.push("Failed to parse version");
-        } else {
-          // TODO: parseSemverPackage will eventually return a real semver, which always has minor filled in
-          return { major: version.major, minor: version.minor ?? 0 };
-        }
-      } catch (e: any) {
+      const version = semver.parse(packageJson.version);
+      if (version === null) {
         errors.push(
-          `'${typesDirectoryName}'s package.json' has bad "version": Semver parsing failed with '${e.message}'`
+          `${typesDirectoryName}'s package.json has bad "version": ${JSON.stringify(
+            packageJson.version
+          )} should look like "NN.NN.99999"`
         );
+      } else if (version.patch !== 99999) {
+        errors.push(`${typesDirectoryName}'s package.json has bad "version": ${version} must end with ".99999"`);
+      } else {
+        return { major: version.major, minor: version.minor };
       }
     }
     return { errors };
