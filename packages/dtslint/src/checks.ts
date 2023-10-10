@@ -33,7 +33,7 @@ export interface DefinitelyTypedInfo {
   readonly relativeBaseUrl: string;
 }
 // TODO: Maybe check ALL of tsconfig, not just compilerOptions
-export function checkTsconfig(options: CompilerOptionsRaw): string[] {
+export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): string[] {
   const errors = [];
   const mustHave = {
     noEmit: true,
@@ -55,10 +55,6 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
 
   for (const key in options) {
     switch (key) {
-      case "paths":
-        // TODO: write validation rules for paths property (based on old version's checks?)
-        // - all the remaps we have now look like `"jquery/*": ["../jquery/index.d.ts"]`, where jquery is in package.json's deps
-        break;
       case "lib":
       case "noImplicitAny":
       case "noImplicitThis":
@@ -76,6 +72,7 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
       case "noUnusedParameters":
       case "exactOptionalPropertyTypes":
       case "module":
+      case "paths":
         break;
       default:
         if (!(key in mustHave)) {
@@ -124,6 +121,20 @@ export function checkTsconfig(options: CompilerOptionsRaw): string[] {
       'Use `/// <reference types="..." />` directives in source files and ensure ' +
         'that the "types" field in your tsconfig is an empty array.'
     );
+  }
+  if (options.paths) {
+    for (const key in options.paths) {
+      if (options.paths[key].length !== 1) {
+        errors.push(`${dirPath}/tsconfig.json: "paths" must map each module specifier to only one file.`);
+      }
+      const [target] = options.paths[key];
+      if (target !== "./index.d.ts") {
+        const m = target.match(/^..\/([^\/]+)\/(?:v\d+\.?\d*\/)?index.d.ts$/);
+        if (!m || m[1] !== key) {
+          errors.push(`${dirPath}/tsconfig.json: "paths" must map '${key}' to ${key}'s index.d.ts.`);
+        }
+      }
+    }
   }
   return errors;
 }

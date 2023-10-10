@@ -212,7 +212,7 @@ async function testTypesVersion(
   isLatest: boolean
 ): Promise<void> {
   checkTslintJson(dirPath);
-  const tsconfigErrors = checkTsconfig(getCompilerOptions(dirPath));
+  const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
