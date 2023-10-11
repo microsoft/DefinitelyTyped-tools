@@ -6,13 +6,10 @@ import { CompilerOptions } from "typescript";
 import { deepEquals } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
-// TODO: forbid triple-slash types references like "package/v1"
 export function checkPackageJson(
   dirPath: string,
   typesVersions: readonly AllTypeScriptVersion[]
 ): header.Header | string[] {
-  // TODO: Don't allow package.json except in the root dir of a package and of /v* folders one below the root.
-  // (this used to be in dt-header rule, but probably also elsewhere)
   const pkgJsonPath = joinPaths(dirPath, "package.json");
   if (!pathExistsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
@@ -32,7 +29,6 @@ export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-// TODO: Maybe check ALL of tsconfig, not just compilerOptions
 export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): string[] {
   const errors = [];
   const mustHave = {
