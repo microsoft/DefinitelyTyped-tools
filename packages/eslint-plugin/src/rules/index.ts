@@ -14,6 +14,7 @@ import * as preferDeclareFunction from "./prefer-declare-function";
 import * as redundantUndefined from "./redundant-undefined";
 import * as strictExportDeclareModifiers from "./strict-export-declare-modifiers";
 import * as noSingleDeclareModule from "./no-single-declare-module";
+import * as noOldDTHeader from "./no-old-dt-header";
 
 export const rules = {
   "export-just-namespace": exportJustNamespace,
@@ -32,4 +33,5 @@ export const rules = {
   "redundant-undefined": redundantUndefined,
   "strict-export-declare-modifiers": strictExportDeclareModifiers,
   "no-single-declare-module": noSingleDeclareModule,
+  "no-old-dt-header": noOldDTHeader,
 };
