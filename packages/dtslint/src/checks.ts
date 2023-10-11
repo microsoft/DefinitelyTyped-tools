@@ -125,7 +125,7 @@ export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): str
       }
       const [target] = options.paths[key];
       if (target !== "./index.d.ts") {
-        const m = target.match(/^..\/([^\/]+)\/(?:v\d+\.?\d*\/)?index.d.ts$/);
+        const m = target.match(/^(?:..\/)+([^\/]+)\/(?:v\d+\.?\d*\/)?index.d.ts$/);
         if (!m || m[1] !== key) {
           errors.push(`${dirPath}/tsconfig.json: "paths" must map '${key}' to ${key}'s index.d.ts.`);
         }

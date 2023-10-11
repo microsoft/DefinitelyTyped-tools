@@ -6,7 +6,7 @@ const ruleTester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
 });
 
-ruleTester.run("@definitelytyped/no-bad-reference", noOldDtHeader, {
+ruleTester.run("@definitelytyped/no-old-dt-header", noOldDtHeader, {
   invalid: [
     {
       code: `// Type definitions for AFRAME 1.2

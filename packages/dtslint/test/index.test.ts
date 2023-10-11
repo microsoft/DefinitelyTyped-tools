@@ -96,6 +96,12 @@ describe("dtslint", () => {
         expect(
           checkTsconfig("reactive-dep", { ...base, paths: { "react-native": ["../react-native/v0.69/index.d.ts"] } })
         ).toEqual([]);
+        expect(
+          checkTsconfig("reactive-dep/v1", {
+            ...base,
+            paths: { "react-native": ["../../react-native/v0.69/index.d.ts"] },
+          })
+        ).toEqual([]);
       });
       it("forbids paths: mapping to self-contained file", () => {
         expect(checkTsconfig("rrrr", { ...base, paths: { "react-native": ["./other.d.ts"] } })).toEqual([

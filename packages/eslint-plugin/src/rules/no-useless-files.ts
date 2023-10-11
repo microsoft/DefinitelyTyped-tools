@@ -1,4 +1,4 @@
-import { createRule } from "../util";
+import { commentsMatching, createRule } from "../util";
 
 const rule = createRule({
   name: "no-useless-files",
@@ -25,15 +25,9 @@ const rule = createRule({
       } else {
         const referenceRegExp = /^\/\s*<reference\s*(types|path)\s*=\s*["|'](.*)["|']/;
         let noReferenceFound = true;
-
-        for (const comment of comments) {
-          const referenceMatch = comment.value.match(referenceRegExp)?.[1];
-          if (!referenceMatch) {
-            continue;
-          }
+        commentsMatching(context.getSourceCode(), referenceRegExp, () => {
           noReferenceFound = false;
-          break;
-        }
+        });
 
         if (noReferenceFound) {
           reportNoContent();
