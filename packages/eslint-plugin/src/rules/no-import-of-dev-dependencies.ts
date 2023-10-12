@@ -1,5 +1,5 @@
 import { TSESTree } from "@typescript-eslint/utils";
-import { createRule, commentsMatching } from "../util";
+import { createRule, commentsMatching, getTypesPackageForDeclarationFile } from "../util";
 import fs from "fs";
 import path from "path";
 
@@ -20,13 +20,14 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
+    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
     if (context.getFilename().endsWith(".d.ts")) {
       const packageJson = getPackageJson(context.getPhysicalFilename?.() ?? context.getFilename());
       const devdeps = packageJson
         ? Object.keys(packageJson.devDependencies).map((dep) => dep.replace(/@types\//, ""))
         : [];
       commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
-        if (devdeps.includes(ref)) {
+        if (devdeps.includes(ref) && ref !== packageName) {
           report(comment, "noReferenceOfDevDependencies");
         }
       });
@@ -34,7 +35,7 @@ const rule = createRule({
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {
-          if (devdeps.includes(node.source.value)) {
+          if (devdeps.includes(node.source.value) && node.source.value !== packageName) {
             context.report({
               messageId: "noImportOfDevDependencies",
               node,

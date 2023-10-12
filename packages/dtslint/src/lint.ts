@@ -116,7 +116,7 @@ A module look-up failed, this often occurs when you need to run \`pnpm install\`
 
 Before you debug, first try running:
 
-   pnpm install --filter '...{./types/${typesFolder}}...'
+   pnpm install --filter '{./types/${typesFolder}}...'
 
 Then re-run. Full error logs are below.
 

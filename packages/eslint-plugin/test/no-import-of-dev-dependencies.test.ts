@@ -49,6 +49,10 @@ ruleTester.run("@definitelytyped/no-import-of-dev-dependencies", noImportDefault
       code: `import other from 'other'`,
     },
     {
+      filename: "types/yargs/index.d.ts",
+      code: `import self from "yargs"`,
+    },
+    {
       filename: "index.d.ts",
       code: `/// <reference types="other"/>`,
     },
