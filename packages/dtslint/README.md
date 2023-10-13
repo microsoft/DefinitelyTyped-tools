@@ -52,8 +52,7 @@ Refer to the [handbook](http://www.typescriptlang.org/docs/handbook/declaration-
     },
     "files": [
         "index.d.ts",
-        "test/aframe-tests.ts",
-        "test/aframe-io-tests.ts"
+        "PACKAGE-NAME-tests.ts",
     ]
 }
 ```
@@ -69,19 +68,19 @@ You may also have to add `"target": "es6"` if using certain language features.
     "name": "@types/PACKAGE-NAME",
     "version": "1.2.99999",
     "projects": [
-        "https://aframe.io/"
+        "https://example.com/"
     ],
     "dependencies": {
-        "@types/animejs": "*",
-        "@types/three": "*"
+        "@types/DEPENDENCY-1": "*",
+        "@types/DEPENDENCY-2": "*"
     },
     "devDependencies": {
-        "@types/aframe": "workspace:."
+        "@types/PACKAGE-NAME": "workspace:."
     },
     "contributors": [
         {
-            "name": "Paul Shannon",
-            "githubUsername": "devpaul"
+            "name": "My Self",
+            "githubUsername": "ghost"
         }
     ]
 }
