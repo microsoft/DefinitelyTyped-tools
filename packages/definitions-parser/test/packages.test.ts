@@ -20,7 +20,7 @@ describe(AllPackages, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1", "1.0.99999");
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.9999");
     const [log] = quietLoggerWithErrors();
     allPackages = await parseDefinitions(dt.fs, undefined, log);
   });
@@ -69,9 +69,9 @@ describe(TypingsVersions, () => {
 
   beforeAll(async () => {
     const dt = createMockDT();
-    dt.addOldVersionOfPackage("jquery", "1", "1.0.99999");
-    dt.addOldVersionOfPackage("jquery", "2", "2.0.99999");
-    dt.addOldVersionOfPackage("jquery", "2.5", "2.5.99999");
+    dt.addOldVersionOfPackage("jquery", "1", "1.0.9999");
+    dt.addOldVersionOfPackage("jquery", "2", "2.0.9999");
+    dt.addOldVersionOfPackage("jquery", "2.5", "2.5.9999");
     const info = await getTypingInfo("jquery", dt.fs);
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
@@ -108,10 +108,10 @@ describe(TypingsVersions, () => {
 
   it("formats missing version error nicely", () => {
     expect(() => versions.get(new Range("111.1001"))).toThrow(
-      "Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.99999,2.5.99999,2.0.99999,1.0.99999. "
+      "Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. "
     );
     expect(() => versions.get(new Range("111"))).toThrow(
-      "Could not match version >=111.0.0 <112.0.0-0 in 3.3.99999,2.5.99999,2.0.99999,1.0.99999. "
+      "Could not match version >=111.0.0 <112.0.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. "
     );
   });
 });

@@ -3,14 +3,14 @@
     "name": "@types/tslib",
     "nonNpm": true,
     "nonNpmDescription": "tslib",
-    "version": "1.0.99999",
+    "version": "1.0.9999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
     "devDependencies": {
         "@types/tslib": "workspace:."
     },
-    "contributors": [
+    "owners": [
         {
             "name": "Typescript Bot",
             "githubUsername": "typescript-bot"

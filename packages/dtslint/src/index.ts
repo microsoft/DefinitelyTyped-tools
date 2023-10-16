@@ -159,7 +159,7 @@ async function runTests(
     throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
 
-  const minVersion = maxVersion(packageJson.typeScriptVersion, TypeScriptVersion.lowest);
+  const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
     await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);

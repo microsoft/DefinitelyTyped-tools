@@ -28,21 +28,18 @@ export async function prepareAllPackages(
   };
 }
 const npmRetryCount = 5;
-export async function installAllDependencies(typesPath: string): Promise<void> {
+export async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
   const cmd = `pnpm install ${pnpmInstallFlags}`;
-  console.log(`  ${typesPath}: ${cmd}`);
+  console.log(`  ${definitelyTypedPath}: ${cmd}`);
   let lastError;
   for (let i = 0; i < npmRetryCount; i++) {
     try {
-      const stdout = await execAndThrowErrors(cmd, typesPath);
-      if (stdout) {
-        console.log(stdout);
-      }
+      await execAndThrowErrors(cmd, definitelyTypedPath);
       lastError = undefined;
       break;
     } catch (e) {
-      console.error(`  from ${typesPath} attempt ${i + 1}: ${e}`);
+      console.error(`  from ${definitelyTypedPath} attempt ${i + 1}: ${e}`);
       lastError = e;
       await sleep(5);
     }

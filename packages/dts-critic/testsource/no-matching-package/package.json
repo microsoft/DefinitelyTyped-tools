@@ -1,14 +1,14 @@
 {
     "private": true,
     "name": "@types/wenceslas",
-    "version": "0.0.99999",
+    "version": "0.0.9999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
     "devDependencies": {
         "@types/wenceslas": "workspace:."
     },
-    "contributors": [
+    "owners": [
         {
             "name": "Typescript Bot",
             "githubUsername": "typescript-bot"

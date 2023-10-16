@@ -4,9 +4,9 @@ describe("validatePackageJson", () => {
   const pkgJson: Record<string, unknown> = {
     private: true,
     name: "@types/hapi",
-    version: "18.0.99999",
+    version: "18.0.9999",
     projects: ["https://github.com/hapijs/hapi", "https://hapijs.com"],
-    typeScriptVersion: "4.2",
+    minimumTypeScriptVersion: "4.2",
     dependencies: {
       "@types/boom": "*",
       "@types/catbox": "*",
@@ -20,7 +20,7 @@ describe("validatePackageJson", () => {
     devDependencies: {
       "@types/hapi": "workspace:.",
     },
-    contributors: [
+    owners: [
       {
         name: "Rafael Souza Fijalkowski",
         githubUsername: "rafaelsouzaf",
@@ -87,16 +87,16 @@ describe("validatePackageJson", () => {
   });
   it("requires version to be NN.NN.NN", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
-      `hapi's package.json has bad "version": "hi there" should look like "NN.NN.99999"`,
+      `hapi's package.json has bad "version": "hi there" should look like "NN.NN.9999"`,
     ]);
   });
-  it("requires version to end with .99999", () => {
+  it("requires version to end with .9999", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
-      `hapi's package.json has bad "version": 1.2.3 must end with ".99999"`,
+      `hapi's package.json has bad "version": 1.2.3 must end with ".9999"`,
     ]);
   });
   it("works with old-version packages", () => {
-    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.99999" }, []))).toBeFalsy();
+    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.9999" }, []))).toBeFalsy();
   });
   it("requires pnpm to be an object", () => {
     expect(validatePackageJson("hapi", { ...pkgJson, pnpm: "not an object" }, [])).toEqual([

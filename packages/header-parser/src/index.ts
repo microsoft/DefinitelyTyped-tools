@@ -10,12 +10,12 @@ export interface Header {
   readonly name: string;
   readonly libraryMajorVersion: number;
   readonly libraryMinorVersion: number;
-  readonly typeScriptVersion: AllTypeScriptVersion;
+  readonly minimumTypeScriptVersion: AllTypeScriptVersion;
   readonly projects: readonly string[];
-  readonly contributors: readonly Author[];
+  readonly owners: readonly Owner[];
 }
 // used in definitions-parser
-export type Author =
+export type Owner =
   | {
       readonly name: string;
       readonly url: string;
@@ -59,8 +59,8 @@ export function validatePackageJson(
       case "version":
       case "devDependencies":
       case "projects":
-      case "typeScriptVersion":
-      case "contributors":
+      case "minimumTypeScriptVersion":
+      case "owners":
       case "nonNpm":
       case "nonNpmDescription":
       case "pnpm":
@@ -116,15 +116,15 @@ export function validatePackageJson(
   let libraryMajorVersion = 0;
   let libraryMinorVersion = 0;
   let nonNpm = false;
-  let typeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
+  let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
-  let contributors: Author[] = [];
+  let owners: Owner[] = [];
   const nameResult = validateName();
   const versionResult = validateVersion();
   const nonNpmResult = validateNonNpm();
   const typeScriptVersionResult = validateTypeScriptVersion();
   const projectsResult = validateProjects();
-  const contributorsResult = validateContributors();
+  const ownersResult = validateOwners();
   const pnpmResult = validatePnpm();
   const licenseResult = getLicenseFromPackageJson(packageJson.license);
   if (typeof nameResult === "object") {
@@ -146,17 +146,17 @@ export function validatePackageJson(
   if (typeof typeScriptVersionResult === "object") {
     errors.push(...typeScriptVersionResult.errors);
   } else {
-    typeScriptVersion = typeScriptVersionResult;
+    minimumTypeScriptVersion = typeScriptVersionResult;
   }
   if ("errors" in projectsResult) {
     errors.push(...projectsResult.errors);
   } else {
     projects = projectsResult;
   }
-  if ("errors" in contributorsResult) {
-    errors.push(...contributorsResult.errors);
+  if ("errors" in ownersResult) {
+    errors.push(...ownersResult.errors);
   } else {
-    contributors = contributorsResult;
+    owners = ownersResult;
   }
   if (typeof pnpmResult === "object") {
     errors.push(...pnpmResult.errors);
@@ -172,9 +172,9 @@ export function validatePackageJson(
       libraryMajorVersion,
       libraryMinorVersion,
       nonNpm,
-      typeScriptVersion,
+      minimumTypeScriptVersion,
       projects,
-      contributors,
+      owners,
     };
   }
 
@@ -199,10 +199,10 @@ export function validatePackageJson(
         errors.push(
           `${typesDirectoryName}'s package.json has bad "version": ${JSON.stringify(
             packageJson.version
-          )} should look like "NN.NN.99999"`
+          )} should look like "NN.NN.9999"`
         );
-      } else if (version.patch !== 99999) {
-        errors.push(`${typesDirectoryName}'s package.json has bad "version": ${version} must end with ".99999"`);
+      } else if (version.patch !== 9999) {
+        errors.push(`${typesDirectoryName}'s package.json has bad "version": ${version} must end with ".9999"`);
       } else {
         return { major: version.major, minor: version.minor };
       }
@@ -234,19 +234,19 @@ export function validatePackageJson(
     }
   }
   function validateTypeScriptVersion(): AllTypeScriptVersion | { errors: string[] } {
-    if (packageJson.typeScriptVersion) {
+    if (packageJson.minimumTypeScriptVersion) {
       if (
-        typeof packageJson.typeScriptVersion !== "string" ||
-        !TypeScriptVersion.isTypeScriptVersion(packageJson.typeScriptVersion)
+        typeof packageJson.minimumTypeScriptVersion !== "string" ||
+        !TypeScriptVersion.isTypeScriptVersion(packageJson.minimumTypeScriptVersion)
       ) {
         return {
           errors: [
-            `${typesDirectoryName}'s package.json has bad "typeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
+            `${typesDirectoryName}'s package.json has bad "minimumTypeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
 (Defaults to "${TypeScriptVersion.lowest}" if not provided.)`,
           ],
         };
       } else {
-        return packageJson.typeScriptVersion;
+        return packageJson.minimumTypeScriptVersion;
       }
     }
     return TypeScriptVersion.lowest;
@@ -268,18 +268,18 @@ export function validatePackageJson(
     }
     return { errors };
   }
-  function validateContributors(): Author[] | { errors: string[] } {
+  function validateOwners(): Owner[] | { errors: string[] } {
     const errors: string[] = [];
-    if (!packageJson.contributors || !Array.isArray(packageJson.contributors)) {
+    if (!packageJson.owners || !Array.isArray(packageJson.owners)) {
       errors.push(
-        `${typesDirectoryName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
+        `${typesDirectoryName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
       );
     } else {
-      const es = checkPackageJsonContributors(typesDirectoryName, packageJson.contributors);
+      const es = checkPackageJsonContributors(typesDirectoryName, packageJson.owners);
       if (es.length) {
         errors.push(...es);
       } else {
-        return packageJson.contributors as Author[];
+        return packageJson.owners as Owner[];
       }
     }
     return { errors };

@@ -13,13 +13,13 @@ function createRawPackage(license: License): TypingsDataRaw {
   return {
     header: {
       name: "@types/jquery",
-      contributors: [
+      owners: [
         { name: "A", url: "b@c.d" },
         { name: "E", githubUsername: "e" },
       ],
       libraryMajorVersion: 1,
       libraryMinorVersion: 0,
-      typeScriptVersion: "3.2",
+      minimumTypeScriptVersion: "3.2",
       projects: ["jquery.org"],
       nonNpm: false,
     },

@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Author, Header, License } from "@definitelytyped/header-parser";
+import { Owner, Header, License } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { FS, assertDefined, assertSorted, mapValues, unique, unmangleScopedPackage } from "@definitelytyped/utils";
 import * as semver from "semver";
@@ -380,7 +380,7 @@ export class TypingsVersions {
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
-    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.99999`));
+    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.9999`));
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
@@ -426,8 +426,8 @@ export class TypingsData extends PackageBase {
       this.data.header.nonNpmDescription ?? unmangleScopedPackage(this.typesDirectoryName) ?? this.typesDirectoryName
     );
   }
-  get contributors(): readonly Author[] {
-    return this.data.header.contributors;
+  get contributors(): readonly Owner[] {
+    return this.data.header.owners;
   }
   get major(): number {
     return this.data.header.libraryMajorVersion;
@@ -437,8 +437,8 @@ export class TypingsData extends PackageBase {
   }
 
   get minTypeScriptVersion(): TypeScriptVersion {
-    return TypeScriptVersion.isSupported(this.data.header.typeScriptVersion)
-      ? this.data.header.typeScriptVersion
+    return TypeScriptVersion.isSupported(this.data.header.minimumTypeScriptVersion)
+      ? this.data.header.minimumTypeScriptVersion
       : TypeScriptVersion.lowest;
   }
   get typesVersions(): readonly TypeScriptVersion[] {
