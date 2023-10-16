@@ -1,79 +1,9 @@
 import * as path from "path";
 import * as ts from "typescript";
-import { FS, assertDefined, sort } from "@definitelytyped/utils";
+import { FS, assertDefined } from "@definitelytyped/utils";
 
 import { readFileAndThrowOnBOM } from "./definition-parser";
 import { getMangledNameForScopedPackage } from "../packages";
-
-export function getDeclaredGlobals(all: Map<string, ts.SourceFile>): string[] {
-  const globals = new Set<string>();
-  for (const sourceFile of all.values()) {
-    if (ts.isExternalModule(sourceFile)) {
-      if (sourceFileExportsSomething(sourceFile)) {
-        const namespaceExport = sourceFile.statements.find(ts.isNamespaceExportDeclaration);
-        if (namespaceExport) {
-          globals.add(namespaceExport.name.text);
-        }
-      }
-    } else {
-      for (const node of sourceFile.statements) {
-        switch (node.kind) {
-          case ts.SyntaxKind.ModuleDeclaration: {
-            const decl = node as ts.ModuleDeclaration;
-            const name = decl.name.text;
-            if (decl.name.kind !== ts.SyntaxKind.StringLiteral && isValueNamespace(decl)) {
-              globals.add(name);
-            }
-            break;
-          }
-          case ts.SyntaxKind.VariableStatement:
-            for (const decl of (node as ts.VariableStatement).declarationList.declarations) {
-              if (decl.name.kind === ts.SyntaxKind.Identifier) {
-                globals.add(decl.name.text);
-              }
-            }
-            break;
-          case ts.SyntaxKind.EnumDeclaration:
-          case ts.SyntaxKind.ClassDeclaration:
-          case ts.SyntaxKind.FunctionDeclaration: {
-            // Deliberately not doing this for types, because those won't show up in JS code and can't be used for ATA
-            const nameNode = (node as ts.EnumDeclaration | ts.ClassDeclaration | ts.FunctionDeclaration).name;
-            if (nameNode) {
-              globals.add(nameNode.text);
-            }
-            break;
-          }
-          case ts.SyntaxKind.ImportEqualsDeclaration:
-          case ts.SyntaxKind.InterfaceDeclaration:
-          case ts.SyntaxKind.TypeAliasDeclaration:
-          case ts.SyntaxKind.EmptyStatement:
-            break;
-          default:
-            throw new Error(`Unexpected node kind ${ts.SyntaxKind[node.kind]}`);
-        }
-      }
-    }
-  }
-  return sort(globals);
-}
-
-/**
- * A file is a proper module if it is an external module *and* it has at least one export.
- * A module with only imports is not a proper module; it likely just augments some other module.
- */
-function sourceFileExportsSomething({ statements }: ts.SourceFile): boolean {
-  return statements.some((statement) => {
-    switch (statement.kind) {
-      case ts.SyntaxKind.ImportEqualsDeclaration:
-      case ts.SyntaxKind.ImportDeclaration:
-        return false;
-      case ts.SyntaxKind.ModuleDeclaration:
-        return (statement as ts.ModuleDeclaration).name.kind === ts.SyntaxKind.Identifier;
-      default:
-        return true;
-    }
-  });
-}
 
 /** Returns a map from filename (path relative to `directory`) to the SourceFile we parsed for it. */
 export function allReferencedFiles(

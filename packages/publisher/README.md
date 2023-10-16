@@ -118,16 +118,7 @@ This file is a key/value mapping used by other steps in the process.
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],
-            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
-            "globals": [
-                "$",
-                "Symbol",
-                "jQuery"
-            ],
-            "declaredModules": [
-                "jquery",
-                "jquery/dist/jquery.slim"
-            ]
+            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b"
 		}
 	}
 }

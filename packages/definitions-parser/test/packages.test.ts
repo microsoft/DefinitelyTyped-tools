@@ -223,7 +223,6 @@ describe(NotNeededPackage, () => {
     expect(data.minor).toBe(0);
     expect(data.isLatest).toBe(true);
     expect(data.isNotNeeded()).toBe(true);
-    expect(data.declaredModules).toEqual([]);
     expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
     expect(data.deprecatedMessage()).toBe(
       "This is a stub types definition. real-package provides its own type definitions, so you do not need this installed."

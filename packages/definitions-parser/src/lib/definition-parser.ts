@@ -32,7 +32,7 @@ import {
   formatTypingVersion,
   getMangledNameForScopedPackage,
 } from "../packages";
-import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "./module-info";
+import { allReferencedFiles, createSourceFile } from "./module-info";
 import { getAllowedPackageJsonDependencies, scopeName } from "./settings";
 import { slicePrefixes } from "./utils";
 
@@ -300,7 +300,6 @@ interface TypingDataFromIndividualTypeScriptVersion {
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly declFiles: readonly string[]; // TODO: Used to map file.d.ts to ts4.1/file.d.ts -- not sure why this is needed
   readonly tsconfigPathsForHash: string | undefined;
-  readonly globals: readonly string[];
 }
 
 /**
@@ -381,7 +380,6 @@ function getTypingDataForSingleTypesVersion(
   if (errors.length) return errors;
   return {
     typescriptVersion,
-    globals: getDeclaredGlobals(types),
     declFiles: sort(types.keys()),
     tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
   };

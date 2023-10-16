@@ -270,9 +270,6 @@ export class NotNeededPackage extends PackageBase {
   get isLatest(): boolean {
     return true;
   }
-  get declaredModules(): readonly string[] {
-    return [];
-  }
   get minTypeScriptVersion(): TypeScriptVersion {
     return TypeScriptVersion.lowest;
   }

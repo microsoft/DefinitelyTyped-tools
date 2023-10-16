@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import { createModuleResolutionHost } from "@definitelytyped/utils";
 import { DTMock, createMockDT } from "../src/mocks";
 import { testo } from "./utils";
-import { allReferencedFiles, createSourceFile, getDeclaredGlobals } from "../src/lib/module-info";
+import { allReferencedFiles } from "../src/lib/module-info";
 
 const fs = createMockDT().fs;
 const moduleResolutionHost = createModuleResolutionHost(fs);
@@ -137,51 +137,5 @@ testo({
     );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
-  },
-});
-testo({
-  getDeclaredGlobalsFindsExportAsNamespace() {
-    expect(
-      getDeclaredGlobals(
-        new Map([
-          [
-            "index.d.ts",
-            createSourceFile(
-              "index.d.ts",
-              "export type T = 1; export as namespace jQuery",
-              moduleResolutionHost,
-              compilerOptions
-            ),
-          ],
-        ])
-      )
-    ).toEqual(["jQuery"]);
-  },
-  getDeclaredGlobalsFindsGlobalDeclarations() {
-    // non-modules: namespaces, vars, enum, class, function
-    // NOT for interface, type alias, import=
-    expect(
-      getDeclaredGlobals(
-        new Map([
-          [
-            "index.d.ts",
-            createSourceFile(
-              "index.d.ts",
-              `
-        type T = 1;
-        interface I { i }
-        var i, j: I
-        enum E { e }
-        class C {}
-        function f() {}
-        namespace n { export type T = 1; export var value: "make sure n is a value namespace" }
-        `,
-              moduleResolutionHost,
-              compilerOptions
-            ),
-          ],
-        ])
-      )
-    ).toEqual(["C", "E", "f", "i", "j", "n"]);
   },
 });
