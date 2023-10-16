@@ -66,7 +66,7 @@ You may also have to add `"target": "es6"` if using certain language features.
 {
     "private": true,
     "name": "@types/PACKAGE-NAME",
-    "version": "1.2.99999",
+    "version": "1.2.9999",
     "projects": [
         "https://example.com/"
     ],
@@ -77,7 +77,7 @@ You may also have to add `"target": "es6"` if using certain language features.
     "devDependencies": {
         "@types/PACKAGE-NAME": "workspace:."
     },
-    "contributors": [
+    "owners": [
         {
             "name": "My Self",
             "githubUsername": "ghost"
@@ -87,7 +87,7 @@ You may also have to add `"target": "es6"` if using certain language features.
 ```
 
 1. If the types are for a scoped package, you must name-mangle `@scope/package` to `@types/scope__package`.
-2. The major and minor versions should match some published version of the npm package. The patch version must be 99999; Definitely Typed will increment published patch versions starting at 0, and the patch version of the types will not match the patch version of the npm package.
+2. The major and minor versions should match some published version of the npm package. The patch version must be 9999; Definitely Typed will increment published patch versions starting at 0, and the patch version of the types will not match the patch version of the npm package.
 3. `"projects"` is a link to the source project.
 4. There might not be any dependencies if the *types* don't rely on anything but standard types.
 5. `"devDependencies"` must include a self-reference like `"@types/PACKAGE-NAME": "workspace:.`. Plus any dependencies used only by tests.
@@ -158,7 +158,7 @@ Normally packages will be tested according to [DefinitelyType's support window](
 To restrict testing to new versions only, specify it in package.json:
 
 ```ts
-"typeScriptVersion: 5.0"
+"minimumTypeScriptVersion: 5.0"
 ```
 
 This tests only 5.0 and above, although people can still depend on the package with lower versions of Typescript if they want.

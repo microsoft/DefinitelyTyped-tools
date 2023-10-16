@@ -2,7 +2,7 @@ import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath } from "@definitelytyped/utils";
 import assert = require("assert");
 import { pathExistsSync } from "fs-extra";
-import { dirname, join as joinPaths, normalize } from "path";
+import { join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
@@ -108,15 +108,12 @@ function testDependencies(
     (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module")
   );
   if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
-    const path = cannotFindDepsDiags.file.fileName;
-    const typesFolder = dirname(path);
-
     return `
 A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
 
 Before you debug, first try running:
 
-   pnpm install --filter '{./types/${typesFolder}}...'
+   pnpm install -w --filter '...{./types/${dirPath}}...'
 
 Then re-run. Full error logs are below.
 

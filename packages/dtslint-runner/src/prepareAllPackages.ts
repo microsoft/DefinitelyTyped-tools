@@ -1,5 +1,5 @@
 import { getDefinitelyTyped, parseDefinitions, PreparePackagesResult } from "@definitelytyped/definitions-parser";
-import { execAndThrowErrors, loggerWithErrors, pnpmInstallFlags, sleep } from "@definitelytyped/utils";
+import { execAndThrowErrors, loggerWithErrors, sleep } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
 export async function prepareAllPackages(
@@ -30,7 +30,7 @@ export async function prepareAllPackages(
 const npmRetryCount = 5;
 export async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
-  const cmd = `pnpm install ${pnpmInstallFlags}`;
+  const cmd = `pnpm install --no-save`;
   console.log(`  ${definitelyTypedPath}: ${cmd}`);
   let lastError;
   for (let i = 0; i < npmRetryCount; i++) {

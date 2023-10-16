@@ -177,7 +177,6 @@ export async function isDirectory(path: string): Promise<boolean> {
   return (await stat(path)).isDirectory();
 }
 
-export const pnpmInstallFlags = "--ignore-scripts --no-save";
 const downloadTimeout = 1_000_000; // ms
 const connectionTimeout = 800_000; // ms
 
