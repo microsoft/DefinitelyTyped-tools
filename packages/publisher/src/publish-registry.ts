@@ -25,7 +25,7 @@ import {
   writeFile,
   Logger,
   sleep,
-  npmInstallFlags,
+  pnpmInstallFlags,
   readJson,
   NpmPublishClient,
   cacheDir,
@@ -144,7 +144,7 @@ async function installForValidate(log: Logger): Promise<void> {
     repository: {},
   });
 
-  const cmd = `npm install types-registry@next ${npmInstallFlags}`;
+  const cmd = `npm install types-registry@next ${pnpmInstallFlags}`;
   log(cmd);
   const err = (await execAndThrowErrors(cmd, validateOutputPath)).trim();
   if (err) {
