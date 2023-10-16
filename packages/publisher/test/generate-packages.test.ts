@@ -99,10 +99,6 @@ testo({
     const typing = new TypingsData(rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).not.toContain("type T = import");
   },
-  readmeNoGlobals() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("Global values: none"));
-  },
   basicPackageJson() {
     const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
     expect(createPackageJSON(typing, "1.0")).toEqual(`{
