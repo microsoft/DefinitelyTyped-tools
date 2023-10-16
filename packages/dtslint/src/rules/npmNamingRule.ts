@@ -172,13 +172,6 @@ function toCriticOptions(options: ConfigOptions): Options {
 
 function walk(ctx: Lint.WalkContext<CriticOptions>): void {
   const { sourceFile } = ctx;
-  const { text } = sourceFile;
-  const lookFor = (search: string, explanation: string) => {
-    const idx = text.indexOf(search);
-    if (idx !== -1) {
-      ctx.addFailureAt(idx, search.length, failure(Rule.metadata.ruleName, explanation));
-    }
-  };
   if (isMainFile(sourceFile.fileName, /*allowNested*/ false)) {
     try {
       const optionsWithSuggestions = toOptionsWithSuggestions(ctx.options);
@@ -189,8 +182,6 @@ function walk(ctx: Lint.WalkContext<CriticOptions>): void {
           case ErrorKind.NoMatchingNpmPackage:
           case ErrorKind.NoMatchingNpmVersion:
           case ErrorKind.NonNpmHasMatchingPackage:
-            lookFor("// Type definitions for", errorMessage(error, ctx.options));
-            break;
           case ErrorKind.DtsPropertyNotInJs:
           case ErrorKind.DtsSignatureNotInJs:
           case ErrorKind.JsPropertyNotInDts:
