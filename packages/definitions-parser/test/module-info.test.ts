@@ -12,7 +12,6 @@ const compilerOptions = {
   typeRoots: ["/DefinitelyTyped/types"],
 };
 
-// TODO:  test getModuleInfo -> getGlobalsFromModule -- just the globals
 function getBoringReferences() {
   return allReferencedFiles(
     ["index.d.ts", "boring-tests.ts"],

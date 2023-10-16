@@ -172,7 +172,7 @@ describe(TypingsData, () => {
       expect(data.desc).toBe("@types/known");
     });
 
-    it("returns the verioned name if not latest", () => {
+    it("returns the versioned name if not latest", () => {
       const versions = createTypingsVersionRaw("known", {}, {});
       data = new TypingsData(versions["1.0"], false);
 

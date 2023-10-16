@@ -19,9 +19,9 @@ export interface GitDiff {
 }
 
 /*
-We have to be careful about how we get the diff because travis uses a shallow clone.
+We have to be careful about how we get the diff because Actions uses a shallow clone.
 
-Travis runs:
+Actions runs:
     git clone --depth=50 https://github.com/DefinitelyTyped/DefinitelyTyped.git DefinitelyTyped
     cd DefinitelyTyped
     git fetch origin +refs/pull/123/merge

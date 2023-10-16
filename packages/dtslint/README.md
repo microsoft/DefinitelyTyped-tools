@@ -91,7 +91,8 @@ You may also have to add `"target": "es6"` if using certain language features.
 3. `"projects"` is a link to the source project.
 4. There might not be any dependencies if the *types* don't rely on anything but standard types.
 5. `"devDependencies"` must include a self-reference like `"@types/PACKAGE-NAME": "workspace:.`. Plus any dependencies used only by tests.
-6. If you do not have a github user name, you can provide a `"url"` of your own instead.
+6. Non-`@types` dependencies must be added to `allowedPackageJsonDependencies.txt` in the definitions-parser package. The PR must be approved by a Typescript team member.
+7. If you do not have a github user name, you can provide a `"url"` of your own instead.
 
 Also:
 

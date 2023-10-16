@@ -1,7 +1,7 @@
 import console from "console";
 import { AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import { assertDefined } from "@definitelytyped/utils";
-import * as semver from "semver"
+import * as semver from "semver";
 if (require.main === module) {
   const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
   getDefinitelyTyped(options, console).then((dt) => {

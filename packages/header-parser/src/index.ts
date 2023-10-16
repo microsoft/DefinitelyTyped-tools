@@ -26,14 +26,6 @@ export type Author =
       readonly url?: undefined;
     };
 
-// used locally
-export interface ParseError {
-  readonly index: number;
-  readonly line: number;
-  readonly column: number;
-  readonly expected: readonly string[];
-}
-
 export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeScriptVersion[]): unknown {
   if (typesVersions.length === 0) {
     return undefined;
@@ -99,9 +91,6 @@ export function validatePackageJson(
       `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``
     );
   }
-  // TODO: disallow devDeps from containing dependencies (although this is VERY linty)
-  // TODO: Check that devDeps are NOT used in .d.ts files
-
   // typesVersions
   if (needsTypesVersions) {
     assert.strictEqual(
@@ -458,7 +447,6 @@ export function checkPackageJsonDependencies(
 
   const errors: string[] = [];
   for (const dependencyName of Object.keys(dependencies)) {
-    // `dependencies` cannot be null because of check above.
     if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
       const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
 Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;

@@ -300,12 +300,6 @@ importers:
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
-      '@types/parsimmon':
-        specifier: ^1.10.1
-        version: 1.10.6
-      parsimmon:
-        specifier: ^1.13.0
-        version: 1.18.1
       semver:
         specifier: ^7.3.7
         version: 7.5.4
@@ -1827,10 +1821,6 @@ packages:
       '@types/npmlog': 4.1.4
       '@types/ssri': 7.1.1
     dev: true
-
-  /@types/parsimmon@1.10.6:
-    resolution: {integrity: sha512-FwAQwMRbkhx0J6YELkwIpciVzCcgEqXEbIrIn3a2P5d3kGEHQ3wVhlN3YdVepYP+bZzCYO6OjmD4o9TGOZ40rA==}
-    dev: false
 
   /@types/prettier@2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
@@ -5710,10 +5700,6 @@ packages:
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
     dev: true
-
-  /parsimmon@1.18.1:
-    resolution: {integrity: sha512-u7p959wLfGAhJpSDJVYXoyMCXWYwHia78HhRBWqk7AIbxdmlrfdp5wX0l3xv/iTSH5HvhN9K7o26hwwpgS5Nmw==}
-    dev: false
 
   /path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}

@@ -148,9 +148,6 @@ async function runTests(
     if (!TypeScriptVersion.isTypeScriptVersion(version)) {
       throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
     }
-    if (!TypeScriptVersion.isRedirectable(version)) {
-      throw new Error(`At ${dirPath}/${name}: TypeScript version directories only available starting with ts3.1.`);
-    }
     if (!TypeScriptVersion.isSupported(version)) {
       throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
     }

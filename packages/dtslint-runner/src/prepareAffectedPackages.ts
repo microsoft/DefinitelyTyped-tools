@@ -25,6 +25,8 @@ export async function prepareAffectedPackages(
     throw new Error(errors.join("\n"));
   }
   if (Array.isArray(result)) {
+    // TODO: This error handling doesn't make sense but matches the old way. Try removing the previous if statement
+    // and changing this one to if (errors.length || Array.isArray(result)) { ... }
     throw new Error([...errors, ...result].join("\n"));
   }
   return result;

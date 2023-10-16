@@ -44,7 +44,7 @@ export async function getAffectedPackages(
   }
   return getAffectedPackagesWorker(allPackages, changedPackageNames, allDependents, definitelyTypedPath);
 }
-
+/** This function is exported for testing, since it's determined entirely by its inputs. */
 export function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
@@ -52,8 +52,8 @@ export function getAffectedPackagesWorker(
   definitelyTypedPath: string
 ): PreparePackagesResult {
   const dt = resolve(definitelyTypedPath);
-  const changedDirs = mapDefined(changedOutput.split("\n"), (line) => getDirectoryName(line, dt));
-  const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), (line) => getDirectoryName(line, dt));
+  const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
+  const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set(
     changedDirs.map(
       (c) =>
@@ -76,8 +76,7 @@ export function getAffectedPackagesWorker(
   return { packageNames, dependents };
 }
 
-function getDirectoryName(line: string, dt: string): string | undefined {
-  return line && line !== dt
-    ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt)
-    : undefined;
+function getDirectoryName(dt: string): (line: string) => string | undefined {
+  return (line) =>
+    line && line !== dt ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt) : undefined;
 }

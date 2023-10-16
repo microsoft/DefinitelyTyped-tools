@@ -79,7 +79,7 @@ export function dtsCritic(
 
   const name = findDtsName(dtsPath);
   const packageJsonPath = path.join(path.dirname(path.resolve(dtsPath)), "package.json");
-  const header = parseDtHeader(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")));
+  const header = parsePackageJson(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")));
 
   const npmInfo = getNpmInfo(name);
 
@@ -128,12 +128,9 @@ If you want to check the declaration against the JavaScript source code, you mus
   }
 }
 
-function parseDtHeader(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
+function parsePackageJson(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
   const result = headerParser.validatePackageJson(packageName, packageJson, []);
-  if (Array.isArray(result)) {
-    throw new Error(result.join("\n"));
-  }
-  return result;
+  return Array.isArray(result) ? undefined : result;
 }
 
 function isNonNpm(header: headerParser.Header | undefined): boolean {
