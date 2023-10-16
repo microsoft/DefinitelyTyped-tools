@@ -1,4 +1,4 @@
-import { FS, LoggerWithErrors, filterNAtATimeOrdered, runWithChildProcesses } from "@definitelytyped/utils";
+import { FS, LoggerWithErrors, filterNAtATimeOrdered, joinPaths, runWithChildProcesses } from "@definitelytyped/utils";
 import { writeDataFile } from "./data-file";
 import { getTypingInfo } from "./lib/definition-parser";
 import { definitionParserWorkerFilename } from "./lib/definition-parser-worker";
@@ -17,7 +17,7 @@ export async function parseDefinitions(
   log.info("Parsing definitions...");
   const typesFS = dt.subDir("types");
   const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, typesFS.readdir(), (name) =>
-    typesFS.isDirectory(name)
+    typesFS.isDirectory(name) && typesFS.exists(joinPaths(name, "package.json"))
   );
   log.info(`Found ${packageNames.length} packages.`);
 

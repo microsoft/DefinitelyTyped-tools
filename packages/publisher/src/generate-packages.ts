@@ -197,7 +197,6 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
     }`
   );
-  lines.push(` * Global values: ${typing.globals.length ? typing.globals.map((g) => `\`${g}\``).join(", ") : "none"}`);
   lines.push("");
 
   lines.push("# Credits");

@@ -150,7 +150,6 @@ describe(TypingsData, () => {
     expect(data.license).toBe(License.MIT);
     expect(data.contentHash).toBe("11111111111111");
     expect(data.projectName).toBe("zombo.com");
-    expect(data.globals).toEqual([]);
     expect(data.dependencies).toEqual({
       "dependency-1": "*",
     });

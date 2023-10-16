@@ -30,7 +30,6 @@ export function createTypingsVersionRaw(
       dependencies,
       devDependencies,
       contentHash: "11111111111111",
-      globals: [],
     },
   };
 }

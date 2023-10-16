@@ -20,7 +20,6 @@ import {
   mapDefined,
   sort,
   split,
-  unique,
   withoutStart,
 } from "@definitelytyped/utils";
 import assert from "assert";
@@ -143,7 +142,6 @@ const packageJsonName = "package.json";
 interface LsMinusTypesVersionsAndPackageJson {
   readonly remainingLs: readonly string[];
   readonly typesVersions: readonly TypeScriptVersion[];
-  readonly hasPackageJson: boolean;
 }
 function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVersionsAndPackageJson | string[] {
   const errors: string[] = [];
@@ -163,7 +161,7 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
   if (errors.length) {
     return errors;
   }
-  return { remainingLs, typesVersions, hasPackageJson: withoutPackageJson.length !== ls.length };
+  return { remainingLs, typesVersions };
 }
 
 /**
@@ -200,19 +198,17 @@ async function combineDataForAllTypesVersions(
   if (Array.isArray(typesVersionAndPackageJson)) {
     errors.push(...typesVersionAndPackageJson);
   }
-  const { remainingLs, typesVersions, hasPackageJson } = Array.isArray(typesVersionAndPackageJson)
-    ? { remainingLs: [], typesVersions: [], hasPackageJson: false }
+  const { remainingLs, typesVersions } = Array.isArray(typesVersionAndPackageJson)
+    ? { remainingLs: [], typesVersions: [] }
     : typesVersionAndPackageJson;
-  const packageJson = hasPackageJson
-    ? (fs.readJson(packageJsonName) as {
-        readonly license?: unknown;
-        readonly dependencies?: unknown;
-        readonly devDependencies?: unknown;
-        readonly imports?: unknown;
-        readonly exports?: unknown;
-        readonly type?: unknown;
-      })
-    : {};
+  const packageJson = fs.readJson(packageJsonName) as {
+    readonly license?: unknown;
+    readonly dependencies?: unknown;
+    readonly devDependencies?: unknown;
+    readonly imports?: unknown;
+    readonly exports?: unknown;
+    readonly type?: unknown;
+  };
   const dataForRoot = getTypingDataForSingleTypesVersion(
     undefined,
     typingsPackageName,
@@ -289,19 +285,14 @@ async function combineDataForAllTypesVersions(
     dependencies: packageJson.dependencies as Record<string, string>,
     devDependencies: packageJson.devDependencies as Record<string, string>,
     contentHash: hash(
-      hasPackageJson ? [...files, packageJsonName] : files,
+      [...files, packageJsonName],
       mapDefined(allTypesVersions, (a) => a.tsconfigPathsForHash),
       fs
     ),
-    globals: getAllUniqueValues<"globals", string>(allTypesVersions, "globals"),
     imports: imports as object | undefined,
     exports: exports as string | object | undefined,
     type: packageJsonType as "module" | undefined,
   };
-}
-
-function getAllUniqueValues<K extends string, T>(records: readonly Record<K, readonly T[]>[], key: K): readonly T[] {
-  return unique(flatMap(records, (x) => x[key]));
 }
 
 interface TypingDataFromIndividualTypeScriptVersion {

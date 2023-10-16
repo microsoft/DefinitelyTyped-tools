@@ -29,7 +29,6 @@ function createRawPackage(license: License): TypingsDataRaw {
     dependencies: { "@types/madeira": "^1", balzac: "~3" },
     devDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
-    globals: [],
   };
 }
 

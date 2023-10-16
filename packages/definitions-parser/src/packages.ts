@@ -273,9 +273,6 @@ export class NotNeededPackage extends PackageBase {
   get declaredModules(): readonly string[] {
     return [];
   }
-  get globals(): readonly string[] {
-    return this.globals;
-  }
   get minTypeScriptVersion(): TypeScriptVersion {
     return TypeScriptVersion.lowest;
   }
@@ -371,13 +368,6 @@ export interface TypingsDataRaw {
    * A hash of the names and contents of the `files` list, used for versioning.
    */
   readonly contentHash: string;
-
-  /**
-   * A list of *values* declared in the global namespace.
-   *
-   * @note This does not include *types* declared in the global namespace.
-   */
-  readonly globals: readonly string[];
 }
 
 export class TypingsVersions {
@@ -486,9 +476,6 @@ export class TypingsData extends PackageBase {
   }
   get projectName(): string | undefined {
     return this.data.header.projects[0];
-  }
-  get globals(): readonly string[] {
-    return this.data.globals;
   }
   get type() {
     return this.data.type;
