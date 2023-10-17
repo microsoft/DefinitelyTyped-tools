@@ -23,7 +23,7 @@ export async function getAffectedPackages(
           "@types/" + d.typesDirectoryName === name &&
           (d.version === "*" || satisfies(formatTypingVersion(d.version), version))
         ) {
-          filters.push(`--filter '...{./types/${dep.name}}'`);
+          filters.push(`--filter '...${dep.name}'`);
           break;
         }
       }
