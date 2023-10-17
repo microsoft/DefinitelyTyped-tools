@@ -427,9 +427,10 @@ export class TypingsData extends PackageBase {
     );
   }
   get contributors(): readonly Contributor[] {
-    return this.data.header.owners.map((o) =>
-      "githubUsername" in o ? { name: o.name, url: `https://github.com/${o.githubUsername}` } : o
-    );
+    return this.data.header.owners.map((o) => ({
+      ...o,
+      url: "githubUsername" in o ? `https://github.com/${o.githubUsername}` : o.url,
+    }));
   }
   get major(): number {
     return this.data.header.libraryMajorVersion;
