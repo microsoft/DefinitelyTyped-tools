@@ -258,12 +258,8 @@ suite("dtsCritic", {
         message: `Declaration file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-// Type definitions for non-npm package wenceslas-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
+   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
       },
     ]);
   },

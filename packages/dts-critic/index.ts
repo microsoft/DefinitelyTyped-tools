@@ -237,12 +237,8 @@ function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header | 
       message: `Declaration file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-// Type definitions for non-npm package ${name}-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
+   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
     };
   }
   const target = getHeaderVersion(header);
@@ -257,7 +253,7 @@ Add -browser to the end of your name to make sure it doesn't conflict with exist
       message: `The types for '${name}' must match a version that exists on npm.
 You should copy the major and minor version from the package on npm.
 
-To resolve this error, change the version in the header, ${headerstring},
+To resolve this error, change the version in the package.json, ${headerstring},
 to match one on npm: ${verstring}.
 
 For example, if you're trying to match the latest version, use ${lateststring}.`,
