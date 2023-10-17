@@ -1,109 +1,82 @@
-import { mapDefined, mapIterable, sort } from "@definitelytyped/utils";
-import {
-  TypingsData,
-  AllPackages,
-  PackageId,
-  PackageBase,
-  getMangledNameForScopedPackage,
-  formatDependencyVersion,
-} from "./packages";
-
-export interface Affected {
-  readonly changedPackages: readonly TypingsData[];
-  readonly dependentPackages: readonly TypingsData[];
-  allPackages: AllPackages;
+import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
+import { sourceBranch, sourceRemote } from "./lib/settings";
+import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
+import { resolve } from "path";
+import { satisfies } from "semver";
+export interface PreparePackagesResult {
+  readonly packageNames: Set<string>;
+  readonly dependents: Set<string>;
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
-export function getAffectedPackages(allPackages: AllPackages, changedPackageIds: PackageId[]): Affected {
-  const resolved = changedPackageIds.map((id) => allPackages.tryResolve(id));
-  // If a package doesn't exist, that's because it was deleted.
-  const changed = mapDefined(resolved, (id) => allPackages.tryGetTypingsData(id));
-  const dependent = mapIterable(collectDependers(resolved, getReverseDependencies(allPackages, resolved)), (p) =>
-    allPackages.getTypingsData(p)
-  );
-  return { changedPackages: changed, dependentPackages: sortPackages(dependent), allPackages };
-}
-
-/** Every package name in the original list, plus their dependencies (incl. dependencies' dependencies). */
-export function allDependencies(allPackages: AllPackages, packages: Iterable<TypingsData>): TypingsData[] {
-  return sortPackages(transitiveClosure(packages, (pkg) => allPackages.allDependencyTypings(pkg)));
-}
-
-/** Collect all packages that depend on changed packages, and all that depend on those, etc. */
-function collectDependers(
-  changedPackages: PackageId[],
-  reverseDependencies: Map<PackageId, Set<PackageId>>
-): Set<PackageId> {
-  const dependers = transitiveClosure(changedPackages, (pkg) => reverseDependencies.get(pkg) || []);
-  // Don't include the original changed packages, just their dependers
-  for (const original of changedPackages) {
-    dependers.delete(original);
-  }
-  return dependers;
-}
-
-function sortPackages(packages: Iterable<TypingsData>): TypingsData[] {
-  return sort<TypingsData>(packages, PackageBase.compare); // tslint:disable-line no-unbound-method
-}
-
-function transitiveClosure<T>(initialItems: Iterable<T>, getRelatedItems: (item: T) => Iterable<T>): Set<T> {
-  const all = new Set<T>();
-  const workList: T[] = [];
-
-  function add(item: T): void {
-    if (!all.has(item)) {
-      all.add(item);
-      workList.push(item);
-    }
-  }
-
-  for (const item of initialItems) {
-    add(item);
-  }
-
-  while (workList.length) {
-    const item = workList.pop()!;
-    for (const newItem of getRelatedItems(item)) {
-      add(newItem);
-    }
-  }
-
-  return all;
-}
-
-/** Generate a map from a package to packages that depend on it. */
-function getReverseDependencies(
+export async function getAffectedPackages(
   allPackages: AllPackages,
-  changedPackages: PackageId[]
-): Map<PackageId, Set<PackageId>> {
-  const map = new Map<string, [PackageId, Set<PackageId>]>();
-  for (const changed of changedPackages) {
-    map.set(packageIdToKey(changed), [changed, new Set()]);
-  }
-  for (const typing of allPackages.allTypings()) {
-    if (!map.has(packageIdToKey(typing.id))) {
-      map.set(packageIdToKey(typing.id), [typing.id, new Set()]);
-    }
-  }
-  for (const typing of allPackages.allTypings()) {
-    for (const [name, version] of Object.entries(typing.dependencies)) {
-      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name, version })));
-      if (dependencies) {
-        dependencies[1].add(typing.id);
-      }
-    }
-    for (const dependencyName of typing.testDependencies) {
-      const version = typing.pathMappings[dependencyName] || "*";
-      const dependencies = map.get(packageIdToKey(allPackages.tryResolve({ name: dependencyName, version })));
-      if (dependencies) {
-        dependencies[1].add(typing.id);
+  deletions: PackageId[],
+  definitelyTypedPath: string
+): Promise<PreparePackagesResult> {
+  const allDependents = [];
+  const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
+  for (const d of deletions) {
+    for (const dep of allPackages.allTypings()) {
+      for (const [name, version] of dep.allPackageJsonDependencies()) {
+        if (
+          "@types/" + d.typesDirectoryName === name &&
+          (d.version === "*" || satisfies(formatTypingVersion(d.version), version))
+        ) {
+          filters.push(`--filter '...${dep.name}'`);
+          break;
+        }
       }
     }
   }
-  return new Map(map.values());
+  const changedPackageNames = await execAndThrowErrors(
+    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
+    definitelyTypedPath
+  );
+  // Chunk into 100-package chunks because of CMD.COM's command-line length limit
+  for (let i = 0; i < filters.length; i += 100) {
+    allDependents.push(
+      await execAndThrowErrors(
+        `pnpm ls -r --depth -1 --parseable ${filters.slice(i, i + 100).join(" ")}`,
+        definitelyTypedPath
+      )
+    );
+  }
+  return getAffectedPackagesWorker(allPackages, changedPackageNames, allDependents, definitelyTypedPath);
+}
+/** This function is exported for testing, since it's determined entirely by its inputs. */
+export function getAffectedPackagesWorker(
+  allPackages: AllPackages,
+  changedOutput: string,
+  dependentOutputs: string[],
+  definitelyTypedPath: string
+): PreparePackagesResult {
+  const dt = resolve(definitelyTypedPath);
+  const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
+  const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
+  const packageNames = new Set(
+    changedDirs.map(
+      (c) =>
+        assertDefined(
+          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c))
+        ).subDirectoryPath
+    )
+  );
+  const dependents = new Set(
+    dependentDirs
+      .map(
+        (d) =>
+          assertDefined(
+            allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(d + "/index.d.ts"), "bad path " + d)),
+            d + " package not found"
+          ).subDirectoryPath
+      )
+      .filter((d) => !packageNames.has(d))
+  );
+  return { packageNames, dependents };
 }
 
-function packageIdToKey(pkg: PackageId): string {
-  return getMangledNameForScopedPackage(pkg.name) + "/v" + formatDependencyVersion(pkg.version);
+function getDirectoryName(dt: string): (line: string) => string | undefined {
+  return (line) =>
+    line && line !== dt ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt) : undefined;
 }

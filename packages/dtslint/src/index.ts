@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-import { parseTypeScriptVersionLine } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { readdir, readFile, stat, existsSync } from "fs-extra";
+import { readFile, existsSync } from "fs-extra";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
 import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
-import { getCompilerOptions, mapDefinedAsync, withoutPrefix } from "./util";
+import { getCompilerOptions, packageNameFromPath } from "./util";
+import { getTypesVersions } from "@definitelytyped/header-parser";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -130,50 +130,23 @@ async function runTests(
   expectOnly: boolean,
   tsLocal: string | undefined
 ): Promise<void> {
-  const isOlderVersion = /^v(0\.)?\d+$/.test(basename(dirPath));
+  // Assert that we're really on DefinitelyTyped.
+  const dtRoot = findDTRoot(dirPath);
+  const packageName = packageNameFromPath(dirPath);
+  assertPathIsInDefinitelyTyped(dirPath, dtRoot);
+  assertPathIsNotBanned(packageName);
+  assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
 
-  const indexText = await readFile(joinPaths(dirPath, "index.d.ts"), "utf-8");
-  // If this *is* on DefinitelyTyped, types-publisher will fail if it can't parse the header.
-  const dt = indexText.includes("// Type definitions for");
-  if (dt) {
-    // Someone may have copied text from DefinitelyTyped to their type definition and included a header,
-    // so assert that we're really on DefinitelyTyped.
-    const dtRoot = findDTRoot(dirPath);
-    const packageName = basename(dirPath);
-    assertPathIsInDefinitelyTyped(dirPath, dtRoot);
-    assertPathIsNotBanned(packageName);
-    assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
+  const typesVersions = getTypesVersions(dirPath);
+  const packageJson = checkPackageJson(dirPath, typesVersions);
+  if (Array.isArray(packageJson)) {
+    throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
 
-  const typesVersions = await mapDefinedAsync(await readdir(dirPath), async (name) => {
-    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
-      return undefined;
-    }
-    const version = withoutPrefix(name, "ts");
-    if (version === undefined || !(await stat(joinPaths(dirPath, name))).isDirectory()) {
-      return undefined;
-    }
-
-    if (!TypeScriptVersion.isTypeScriptVersion(version)) {
-      throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
-    }
-    if (!TypeScriptVersion.isRedirectable(version)) {
-      throw new Error(`At ${dirPath}/${name}: TypeScript version directories only available starting with ts3.1.`);
-    }
-    return version;
-  });
-
-  if (dt) {
-    await checkPackageJson(dirPath, typesVersions);
-  }
-
-  const minVersion = maxVersion(
-    getMinimumTypeScriptVersionFromComment(indexText),
-    TypeScriptVersion.lowest
-  ) as TypeScriptVersion;
+  const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(dirPath, tsVersion, tsVersion, isOlderVersion, dt, expectOnly, tsLocal, /*isLatest*/ true);
+    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
   } else {
     // For example, typesVersions of [3.2, 3.5, 3.6] will have
     // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -194,18 +167,14 @@ async function runTests(
       if (lows.length > 1) {
         console.log("testing from", low, "to", hi, "in", versionPath);
       }
-      await testTypesVersion(versionPath, low, hi, isOlderVersion, dt, expectOnly, undefined, isLatest);
+      await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
     }
   }
 }
 
-function maxVersion(v1: TypeScriptVersion | undefined, v2: TypeScriptVersion): TypeScriptVersion;
-function maxVersion(v1: AllTypeScriptVersion | undefined, v2: AllTypeScriptVersion): AllTypeScriptVersion;
-function maxVersion(v1: AllTypeScriptVersion | undefined, v2: AllTypeScriptVersion) {
-  if (!v1) return v2;
-  if (!v2) return v1;
-  if (parseFloat(v1) >= parseFloat(v2)) return v1;
-  return v2;
+function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
+  // Note: For v1 to be later than v2, it must be a current Typescript version. So the type assertion is safe.
+  return parseFloat(v1) >= parseFloat(v2) ? (v1 as TypeScriptVersion) : v2;
 }
 
 function next(v: TypeScriptVersion): TypeScriptVersion {
@@ -219,17 +188,15 @@ async function testTypesVersion(
   dirPath: string,
   lowVersion: TsVersion,
   hiVersion: TsVersion,
-  isOlderVersion: boolean,
-  dt: boolean,
   expectOnly: boolean,
   tsLocal: string | undefined,
   isLatest: boolean
 ): Promise<void> {
-  await checkTslintJson(dirPath, dt);
-  checkTsconfig(
-    await getCompilerOptions(dirPath),
-    dt ? { relativeBaseUrl: ".." + (isOlderVersion ? "/.." : "") + (isLatest ? "" : "/..") + "/" } : undefined
-  );
+  checkTslintJson(dirPath);
+  const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
+  if (tsconfigErrors.length > 0) {
+    throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
+  }
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     throw new Error(err);
@@ -286,19 +253,6 @@ export function assertPackageIsNotDeprecated(packageName: string, notNeededPacka
 That means ${packageName} ships its own types, and @types/${packageName} was deprecated and removed from Definitely Typed.
 If you want to re-add @types/${packageName}, please remove its entry from notNeededPackages.json.`);
   }
-}
-
-function getMinimumTypeScriptVersionFromComment(text: string): AllTypeScriptVersion | undefined {
-  const match = text.match(/\/\/ (?:Minimum )?TypeScript Version: /);
-  if (!match) {
-    return undefined;
-  }
-
-  let line = text.slice(match.index, text.indexOf("\n", match.index));
-  if (line.endsWith("\r")) {
-    line = line.slice(0, line.length - 1);
-  }
-  return parseTypeScriptVersionLine(line);
 }
 
 if (require.main === module) {

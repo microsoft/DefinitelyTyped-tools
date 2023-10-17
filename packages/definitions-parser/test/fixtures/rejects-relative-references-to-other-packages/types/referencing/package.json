@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "name": "@types/referencing",
+    "version": "1.0.9999",
+    "projects": [
+        "https://youtube.com/s-fails"
+    ],
+    "devDependencies": {
+        "@types/referencing": "workspace:."
+    },
+    "owners": [
+        {
+            "name": "Typescript Bot",
+            "githubUsername": "typescript-bot"
+        }
+    ]
+}

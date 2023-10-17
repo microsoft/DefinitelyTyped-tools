@@ -18,7 +18,11 @@ import { getSecret, Secret } from "./lib/secrets";
 if (require.main === module) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-    const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
+    const options = { ...defaultLocalOptions, parseInParallel: true };
+    if (yargs.argv.path) {
+      options.definitelyTypedPath = yargs.argv.path as string;
+    }
+    const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
       await readChangedPackages(await AllPackages.read(dt)),
       dry,
@@ -71,6 +75,9 @@ export default async function publishPackages(
         fetcher
       )) as { items: { number: number }[] };
       let latestPr = 0;
+      if (!prs.items) {
+        console.log(prs);
+      }
       for (const pr of prs.items) {
         if (pr.number > latestPr) {
           latestPr = pr.number;
@@ -88,9 +95,9 @@ export default async function publishPackages(
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
 
-      const published = cp.pkg.fullNpmName + "@" + cp.version;
+      const published = cp.pkg.name + "@" + cp.version;
       const publishNotification =
-        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.fullNpmName + ").";
+        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.name + ").";
       log(publishNotification);
       if (dry) {
         log("(dry) Skip publishing notification to github.");

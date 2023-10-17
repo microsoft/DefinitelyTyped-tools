@@ -1,15 +1,12 @@
-import { AllPackages, getDefinitelyTyped, parseDefinitions } from "@definitelytyped/definitions-parser";
-import { joinPaths, loggerWithErrors } from "@definitelytyped/utils";
+import { getDefinitelyTyped, parseDefinitions, PreparePackagesResult } from "@definitelytyped/definitions-parser";
+import { execAndThrowErrors, loggerWithErrors, sleep } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
-import { installDependencies } from "./prepareAffectedPackages";
-import { PreparePackagesOptions, PreparePackagesResult } from "./types";
 
-export async function prepareAllPackages({
-  definitelyTypedPath,
-  noInstall,
-  nProcesses,
-}: PreparePackagesOptions): Promise<PreparePackagesResult> {
-  const typesPath = joinPaths(definitelyTypedPath, "types");
+export async function prepareAllPackages(
+  definitelyTypedPath: string,
+  clone: boolean,
+  nProcesses: number
+): Promise<PreparePackagesResult> {
   const [log] = loggerWithErrors();
   const options = {
     definitelyTypedPath,
@@ -17,11 +14,38 @@ export async function prepareAllPackages({
     parseInParallel: nProcesses > 1,
   };
   const dt = await getDefinitelyTyped(options, log);
-  await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
-  await checkParseResults(/*includeNpmChecks*/ false, dt);
-  const allPackages = await AllPackages.read(dt);
-  if (!noInstall) {
-    await installDependencies(allPackages.allTypings(), typesPath);
+  const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
+  if (clone) {
+    await installAllDependencies(definitelyTypedPath);
   }
-  return { packageNames: allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath), dependents: [] };
+  const errors = checkParseResults(allPackages);
+  if (errors.length) {
+    throw new Error(errors.join("\n"));
+  }
+  return {
+    packageNames: new Set(allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath)),
+    dependents: new Set(),
+  };
+}
+const npmRetryCount = 5;
+export async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
+  console.log("Installing NPM dependencies...");
+  const cmd = `pnpm install --no-save`;
+  console.log(`  ${definitelyTypedPath}: ${cmd}`);
+  let lastError;
+  for (let i = 0; i < npmRetryCount; i++) {
+    try {
+      await execAndThrowErrors(cmd, definitelyTypedPath);
+      lastError = undefined;
+      break;
+    } catch (e) {
+      console.error(`  from ${definitelyTypedPath} attempt ${i + 1}: ${e}`);
+      lastError = e;
+      await sleep(5);
+    }
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
 }

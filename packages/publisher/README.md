@@ -1,9 +1,7 @@
 
-[![Build Status](https://travis-ci.org/microsoft/types-publisher.svg?branch=master)](https://travis-ci.org/microsoft/types-publisher)
-
 # About
 
-This is the source code for the types-publisher service, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
+This is the source code for the Definitely Typed publisher action, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
 
 # Disclaimer
 
@@ -16,7 +14,7 @@ If you don't like the contents of a given definition, file an issue (or pull req
 
 # Manually running
 
-Normally, types-publisher is run on a loop every 2,000 seconds (33 minutes), but to test it out you can do it yourself.
+Normally, the publisher is run every 30 minutes following a cron schedule in .github/workflows/publish-packages.yml, but to test it out you can do it yourself.
 You will need to see the [Environment variables](#environment-variables) section first.
 
 ```
@@ -25,31 +23,31 @@ cat settings.json
 Make sure your settings are correct.
 
 ```
-npm run build
-npm run full
+pnpm run build
+pnpm run full
 ```
 
 *or*
 ```
-npm run build
-npm run clean
-npm run parse
-npm run calculate-versions
-npm run generate
-npm run publish-packages
+pnpm run build
+pnpm run clean
+pnpm run parse
+pnpm run calculate-versions
+pnpm run generate
+pnpm run publish-packages
 ```
 
 and optionally (in production, these run once a week):
 
 ```
-npm run publish-registry
-npm run validate
+pnpm run publish-registry
+pnpm run validate
 ```
 
 You can run tests with
 
 ```
-npm run test
+pnpm run test
 ```
 
 # Overview
@@ -120,16 +118,7 @@ This file is a key/value mapping used by other steps in the process.
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],
-            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
-            "globals": [
-                "$",
-                "Symbol",
-                "jQuery"
-            ],
-            "declaredModules": [
-                "jquery",
-                "jquery/dist/jquery.slim"
-            ]
+            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b"
 		}
 	}
 }

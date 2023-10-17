@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "name": "@types/wenceslas",
+    "version": "0.0.9999",
+    "projects": [
+        "https://github.com/bobby-headers/dt-header"
+    ],
+    "devDependencies": {
+        "@types/wenceslas": "workspace:."
+    },
+    "owners": [
+        {
+            "name": "Jane Doe",
+            "githubUsername": "janedoe"
+        }
+    ]
+}

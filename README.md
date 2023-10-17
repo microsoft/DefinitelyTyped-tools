@@ -3,12 +3,13 @@
 A monorepo for formerly disparate DefinitelyTyped-related tools:
 
 - [definitions-parser](packages/definitions-parser): the part of [microsoft/types-publisher](https://github.com/microsoft/types-publisher) that reads DefinitelyTyped repository data
-- [dtslint](packages/dtslint): [microsoft/dtslint](https://github.com/microsoft/dtslint)
-- [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner)
-- [dts-critic](packages/dts-critic): [DefinitelyTyped/dts-critic](https://github.com/DefinitelyTyped/dts-critic)
-- [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser)
+- [dtslint](packages/dtslint): [microsoft/dtslint](https://github.com/microsoft/dtslint), make sure a package is correct for DT
+- [dtslint-runner](packages/dtslint-runner): [DefinitelyTyped/dtslint-runner](https://github.com/DefinitelyTyped/dtslint-runner), test all packages, or all changed packages, on DT with dtslint
+- [eslint-plugin](packages/eslint-plugin): provides DT-specific lint rules (except for the few remaining tslint rules, still in dtslint)
+- [dts-critic](packages/dts-critic): [DefinitelyTyped/dts-critic](https://github.com/DefinitelyTyped/dts-critic), issue errors when a types packages mismatches its original Javascript package.
+- [header-parser](packages/header-parser): [microsoft/definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser), check and extract DT-related info from package.json
 - [publisher](packages/publisher): the rest of [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
-- [retag](packages/retag): [DefinitelyTyped/dt-retag](https://github.com/DefinitelyTyped/dt-retag)
+- [retag](packages/retag): [DefinitelyTyped/dt-retag](https://github.com/DefinitelyTyped/dt-retag), script to add ATA tags to `@types` packages. Run weekly.
 - [typescript-versions](packages/typescript-versions): the part of [definitelytyped-header-parser](https://github.com/microsoft/definitelytyped-header-parser) that tracked which TypeScript versions are published to npm and supported on DefinitelyTyped
 - [utils](packages/utils): shared utilities, mostly extracted from [microsoft/types-publisher](https://github.com/microsoft/types-publisher)
 

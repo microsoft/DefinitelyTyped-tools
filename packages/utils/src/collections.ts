@@ -36,18 +36,6 @@ export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => 
   return out;
 }
 
-export function* mapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
-  for (const input of inputs) {
-    yield mapper(input);
-  }
-}
-
-export function* flatMapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U>): Iterable<U> {
-  for (const input of inputs) {
-    yield* mapper(input);
-  }
-}
-
 export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
   return Array.from(values).sort(comparer);
 }
@@ -165,14 +153,6 @@ export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: 
 
 export function unique<T>(arr: Iterable<T>): T[] {
   return [...new Set(arr)];
-}
-
-export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
-  const out = {} as T;
-  for (const key of Object.keys(data).sort()) {
-    out[key as keyof T] = data[key as keyof T];
-  }
-  return out;
 }
 
 export function min<T>(array: readonly [T, ...(T | undefined)[]]): T;

@@ -19,6 +19,7 @@ export interface ChangedTyping {
 
 export interface ChangedPackagesJson {
   readonly changedTypings: readonly ChangedTypingJson[];
+  /** Values are `typesDirectoryName` strings (keys of notNeededPackages.json) */
   readonly changedNotNeededPackages: readonly string[];
 }
 
@@ -36,13 +37,11 @@ export interface ChangedPackages {
 export async function readChangedPackages(allPackages: AllPackages): Promise<ChangedPackages> {
   const json = (await readDataFile("calculate-versions", versionsFilename)) as ChangedPackagesJson;
   return {
-    changedTypings: json.changedTypings.map(
-      ({ id, version, latestVersion }): ChangedTyping => ({
-        pkg: allPackages.getTypingsData(id),
-        version,
-        latestVersion,
-      })
-    ),
+    changedTypings: json.changedTypings.map(({ id, version, latestVersion }) => ({
+      pkg: allPackages.getTypingsData(id),
+      version,
+      latestVersion,
+    })),
     changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>
       assertDefined(allPackages.getNotNeededPackage(id))
     ),

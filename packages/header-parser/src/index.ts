@@ -1,42 +1,33 @@
-import pm = require("parsimmon");
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import assert = require("assert");
+import fs = require("fs");
+import * as semver from "semver";
+import { withoutStart, mapDefined, deepEquals, joinPaths } from "@definitelytyped/utils";
 
-/*
-
-  # Example header format #
-
-  // Type definitions for foo 1.2
-  // Project: https://github.com/foo/foo, https://foo.com
-  // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
-  // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-  // TypeScript Version: 2.1
-
-*/
-
+// used in dts-critic
 export interface Header {
   readonly nonNpm: boolean;
-  readonly libraryName: string;
+  readonly nonNpmDescription?: string;
+  readonly name: string;
   readonly libraryMajorVersion: number;
   readonly libraryMinorVersion: number;
-  readonly typeScriptVersion: AllTypeScriptVersion;
+  readonly minimumTypeScriptVersion: AllTypeScriptVersion;
   readonly projects: readonly string[];
-  readonly contributors: readonly Author[];
+  readonly owners: readonly Owner[];
 }
+// used in definitions-parser
+export type Owner =
+  | {
+      readonly name: string;
+      readonly url: string;
+    }
+  | {
+      readonly name: string;
+      readonly githubUsername: string;
+      readonly url?: undefined;
+    };
 
-export interface Author {
-  readonly name: string;
-  readonly url: string;
-  readonly githubUsername: string | undefined;
-}
-
-export interface ParseError {
-  readonly index: number;
-  readonly line: number;
-  readonly column: number;
-  readonly expected: readonly string[];
-}
-
-export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScriptVersion[]): unknown {
+export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeScriptVersion[]): unknown {
   if (typesVersions.length === 0) {
     return undefined;
   }
@@ -50,230 +41,449 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly TypeScri
   return out;
 }
 
-export function parseHeaderOrFail(descriptor: string, mainFileContent: string): Header {
-  const header = parseHeader(mainFileContent, /*strict*/ false);
-  if (isParseError(header)) {
-    throw new Error(renderParseError(descriptor, header));
-  }
-  return header;
-}
-
-export function validate(mainFileContent: string): ParseError | undefined {
-  const h = parseHeader(mainFileContent, /*strict*/ true);
-  return isParseError(h) ? h : undefined;
-}
-
-export function renderExpected(expected: readonly string[]): string {
-  return expected.length === 1 ? expected[0] : `one of\n\t${expected.join("\n\t")}`;
-}
-
-function renderParseError(descriptor: string, { line, column, expected }: ParseError): string {
-  return `At ${line}:${column} in ${descriptor}: Expected ${renderExpected(expected)}`;
-}
-
-function isParseError(x: {}): x is ParseError {
-  // tslint:disable-next-line strict-type-predicates
-  return (x as ParseError).expected !== undefined;
-}
-
-/** @param strict If true, we allow fewer things to be parsed. Turned on by linting. */
-function parseHeader(text: string, strict: boolean): Header | ParseError {
-  const res = headerParser(strict).parse(text);
-  return res.status
-    ? res.value
-    : { index: res.index.offset, line: res.index.line, column: res.index.column, expected: res.expected };
-}
-
-function headerParser(strict: boolean): pm.Parser<Header> {
-  return pm.seqMap(
-    pm.regex(/\/\/ Type definitions for (non-npm package )?/),
-    parseLabel(strict),
-    pm.string("// Project: "),
-    projectParser,
-    pm.regexp(/\r?\n\/\/ Definitions by: /),
-    contributorsParser(strict),
-    definitionsParser,
-    typeScriptVersionParser,
-    pm.all, // Don't care about the rest of the file
-    // tslint:disable-next-line:variable-name
-    (str, label, _project, projects, _defsBy, contributors, _definitions, typeScriptVersion) => ({
-      libraryName: label.name,
-      libraryMajorVersion: label.major,
-      libraryMinorVersion: label.minor,
-      nonNpm: str.endsWith("non-npm package "),
-      projects,
-      contributors,
-      typeScriptVersion,
-    })
-  );
-}
-
-interface Label {
-  readonly name: string;
-  readonly major: number;
-  readonly minor: number;
-}
-
-/*
-Allow any of the following:
-
-// Project: https://foo.com
-//          https://bar.com
-
-// Project: https://foo.com,
-//          https://bar.com
-
-// Project: https://foo.com, https://bar.com
-
-Use `\s\s+` to ensure at least 2 spaces, to  disambiguate from the next line being `// Definitions by:`.
-*/
-const separator: pm.Parser<string> = pm.regexp(/(, )|(,?\r?\n\/\/\s\s+)/);
-
-const projectParser: pm.Parser<readonly string[]> = pm.sepBy1(pm.regexp(/[^,\r\n]+/), separator);
-
-function contributorsParser(strict: boolean): pm.Parser<readonly Author[]> {
-  const contributor: pm.Parser<Author> = strict
-    ? pm.seqMap(
-        pm.regexp(/([^<]+) /, 1),
-        pm.regexp(/\<https\:\/\/github\.com\/([a-zA-Z\d\-]+)\/?\>/, 1),
-        (name, githubUsername) => ({ name, url: `https://github.com/${githubUsername}`, githubUsername })
-      )
-    : // In non-strict mode, allows arbitrary URL, and trailing whitespace.
-      pm.seqMap(pm.regexp(/([^<]+) /, 1), pm.regexp(/<([^>]+)> */, 1), (name, url) => {
-        const rgx = /^https\:\/\/github.com\/([a-zA-Z\d\-]+)\/?$/;
-        const match = rgx.exec(url);
-        const githubUsername = match === null ? undefined : match[1];
-        // tslint:disable-next-line no-null-keyword
-        return { name, url: githubUsername ? `https://github.com/${githubUsername}` : url, githubUsername };
-      });
-  return pm.sepBy1(contributor, separator);
-}
-
-const definitionsParser = pm.regexp(/\r?\n\/\/ Definitions: [^\r\n]+/);
-
-function parseLabel(strict: boolean): pm.Parser<Label> {
-  return pm.Parser((input, index) => {
-    // Take all until the first newline.
-    const endIndex = regexpIndexOf(input, /\r|\n/, index);
-    if (endIndex === -1) {
-      return fail("EOF");
-    }
-    // Index past the end of the newline.
-    const end = input[endIndex] === "\r" ? endIndex + 2 : endIndex + 1;
-    const tilNewline = input.slice(index, endIndex);
-
-    // Parse in reverse. Once we've stripped off the version, the rest is the libary name.
-    const reversed = reverse(tilNewline);
-
-    // Last digit is allowed to be "x", which acts like "0"
-    const rgx = /((\d+|x)\.(\d+)(\.\d+)?(v)? )?(.+)/;
-    const match = rgx.exec(reversed);
-    if (match === null) {
-      // tslint:disable-line no-null-keyword
-      return fail();
-    }
-    const [, version, a, b, c, v, nameReverse] = match;
-
-    let majorReverse: string;
-    let minorReverse: string;
-    if (version !== undefined) {
-      // tslint:disable-line strict-type-predicates
-      if (c !== undefined) {
-        // tslint:disable-line strict-type-predicates
-        // There is a patch version
-        majorReverse = c;
-        minorReverse = b;
-        if (strict) {
-          return fail("patch version not allowed");
+export function validatePackageJson(
+  typesDirectoryName: string,
+  packageJson: Record<string, unknown>,
+  typesVersions: readonly AllTypeScriptVersion[]
+): Header | string[] {
+  const errors = [];
+  const needsTypesVersions = typesVersions.length !== 0;
+  for (const key in packageJson) {
+    switch (key) {
+      case "private":
+      case "dependencies":
+      case "license":
+      case "imports":
+      case "exports":
+      case "type":
+      case "name":
+      case "version":
+      case "devDependencies":
+      case "projects":
+      case "minimumTypeScriptVersion":
+      case "owners":
+      case "nonNpm":
+      case "nonNpmDescription":
+      case "pnpm":
+        break;
+      case "typesVersions":
+      case "types":
+        if (!needsTypesVersions) {
+          errors.push(
+            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'tsX.X' directories exist.`
+          );
         }
-      } else {
-        majorReverse = b;
-        minorReverse = a;
-      }
-      if (v !== undefined && strict) {
-        // tslint:disable-line strict-type-predicates
-        return fail("'v' not allowed");
-      }
-    } else {
-      if (strict) {
-        return fail("Needs MAJOR.MINOR");
-      }
-      majorReverse = "0";
-      minorReverse = "0";
+        break;
+      default:
+        errors.push(`${typesDirectoryName}'s package.json should not include property ${key}`);
     }
+  }
+  // private
+  if (packageJson.private !== true) {
+    errors.push(`${typesDirectoryName}'s package.json has bad "private": must be \`"private": true\``);
+  }
+  // devDependencies
+  if (
+    typeof packageJson.devDependencies !== "object" ||
+    packageJson.devDependencies === null ||
+    (packageJson.devDependencies as any)["@types/" + typesDirectoryName] !== "workspace:."
+  ) {
+    errors.push(
+      `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``
+    );
+  }
+  // typesVersions
+  if (needsTypesVersions) {
+    assert.strictEqual(
+      packageJson.types,
+      "index",
+      `"types" in '${typesDirectoryName}'s package.json' should be "index".`
+    );
+    const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
+    if (!deepEquals(packageJson.typesVersions, expected)) {
+      errors.push(
+        `'${typesDirectoryName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(
+          expected,
+          undefined,
+          4
+        )}`
+      );
+    }
+  }
 
-    const [name, major, minor] = [reverse(nameReverse), reverse(majorReverse), reverse(minorReverse)];
-    return pm.makeSuccess<Label>(end, {
+  // building the header object uses a monadic error pattern based on the one in the old header parser
+  // It's verbose and repetitive, but I didn't feel like writing a monadic `seq` to be used in only one place.
+  let name = "ERROR";
+  let libraryMajorVersion = 0;
+  let libraryMinorVersion = 0;
+  let nonNpm = false;
+  let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
+  let projects: string[] = [];
+  let owners: Owner[] = [];
+  const nameResult = validateName();
+  const versionResult = validateVersion();
+  const nonNpmResult = validateNonNpm();
+  const typeScriptVersionResult = validateTypeScriptVersion();
+  const projectsResult = validateProjects();
+  const ownersResult = validateOwners();
+  const pnpmResult = validatePnpm();
+  const licenseResult = getLicenseFromPackageJson(packageJson.license);
+  if (typeof nameResult === "object") {
+    errors.push(...nameResult.errors);
+  } else {
+    name = packageJson.name as string;
+  }
+  if ("errors" in versionResult) {
+    errors.push(...versionResult.errors);
+  } else {
+    libraryMajorVersion = versionResult.major;
+    libraryMinorVersion = versionResult.minor;
+  }
+  if (typeof nonNpmResult === "object") {
+    errors.push(...nonNpmResult.errors);
+  } else {
+    nonNpm = nonNpmResult;
+  }
+  if (typeof typeScriptVersionResult === "object") {
+    errors.push(...typeScriptVersionResult.errors);
+  } else {
+    minimumTypeScriptVersion = typeScriptVersionResult;
+  }
+  if ("errors" in projectsResult) {
+    errors.push(...projectsResult.errors);
+  } else {
+    projects = projectsResult;
+  }
+  if ("errors" in ownersResult) {
+    errors.push(...ownersResult.errors);
+  } else {
+    owners = ownersResult;
+  }
+  if (typeof pnpmResult === "object") {
+    errors.push(...pnpmResult.errors);
+  }
+  if (Array.isArray(licenseResult)) {
+    errors.push(...licenseResult);
+  }
+  if (errors.length) {
+    return errors;
+  } else {
+    return {
       name,
-      major: intOfString(major),
-      minor: minor === "x" ? 0 : intOfString(minor),
-    });
+      libraryMajorVersion,
+      libraryMinorVersion,
+      nonNpm,
+      minimumTypeScriptVersion,
+      projects,
+      owners,
+    };
+  }
 
-    function fail(msg?: string): pm.Reply<Label> {
-      let expected = "foo MAJOR.MINOR";
-      if (msg !== undefined) {
-        expected += ` (${msg})`;
-      }
-      return pm.makeFailure(index, expected);
+  function validateName(): string | { errors: string[] } {
+    if (packageJson.name !== "@types/" + typesDirectoryName) {
+      return {
+        errors: [`${typesDirectoryName}'s package.json should have \`"name": "@types/${typesDirectoryName}"\``],
+      };
+    } else {
+      return typesDirectoryName;
     }
+  }
+  function validateVersion(): { major: number; minor: number } | { errors: string[] } {
+    const errors = [];
+    if (!packageJson.version || typeof packageJson.version !== "string") {
+      errors.push(
+        `${typesDirectoryName}'s package.json should have \`"version"\` matching the version of the implementation package.`
+      );
+    } else {
+      const version = semver.parse(packageJson.version);
+      if (version === null) {
+        errors.push(
+          `${typesDirectoryName}'s package.json has bad "version": ${JSON.stringify(
+            packageJson.version
+          )} should look like "NN.NN.9999"`
+        );
+      } else if (version.patch !== 9999) {
+        errors.push(`${typesDirectoryName}'s package.json has bad "version": ${version} must end with ".9999"`);
+      } else {
+        return { major: version.major, minor: version.minor };
+      }
+    }
+    return { errors };
+  }
+  function validateNonNpm(): boolean | { errors: string[] } {
+    const errors = [];
+    if (packageJson.nonNpm !== undefined) {
+      if (packageJson.nonNpm !== true) {
+        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpm": must be true if present.`);
+      } else if (!packageJson.nonNpmDescription) {
+        errors.push(
+          `${typesDirectoryName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`
+        );
+      } else if (typeof packageJson.nonNpmDescription !== "string") {
+        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
+      } else {
+        return true;
+      }
+      return { errors };
+    } else if (packageJson.nonNpmDescription !== undefined) {
+      errors.push(`${typesDirectoryName}'s package.json has "nonNpmDescription" without "nonNpm": true.`);
+    }
+    if (errors.length) {
+      return { errors };
+    } else {
+      return false;
+    }
+  }
+  function validateTypeScriptVersion(): AllTypeScriptVersion | { errors: string[] } {
+    if (packageJson.minimumTypeScriptVersion) {
+      if (
+        typeof packageJson.minimumTypeScriptVersion !== "string" ||
+        !TypeScriptVersion.isTypeScriptVersion(packageJson.minimumTypeScriptVersion)
+      ) {
+        return {
+          errors: [
+            `${typesDirectoryName}'s package.json has bad "minimumTypeScriptVersion": if present, must be a MAJOR.MINOR semver string up to "${TypeScriptVersion.latest}".
+(Defaults to "${TypeScriptVersion.lowest}" if not provided.)`,
+          ],
+        };
+      } else {
+        return packageJson.minimumTypeScriptVersion;
+      }
+    }
+    return TypeScriptVersion.lowest;
+  }
+  function validateProjects(): string[] | { errors: string[] } {
+    const errors = [];
+    if (
+      !packageJson.projects ||
+      !Array.isArray(packageJson.projects) ||
+      !packageJson.projects.every((p) => typeof p === "string")
+    ) {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`
+      );
+    } else if (packageJson.projects.length === 0) {
+      errors.push(`${typesDirectoryName}'s package.json has bad "projects": must have at least one project URL.`);
+    } else {
+      return packageJson.projects;
+    }
+    return { errors };
+  }
+  function validateOwners(): Owner[] | { errors: string[] } {
+    const errors: string[] = [];
+    if (!packageJson.owners || !Array.isArray(packageJson.owners)) {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
+      );
+    } else {
+      const es = checkPackageJsonOwners(typesDirectoryName, packageJson.owners);
+      if (es.length) {
+        errors.push(...es);
+      } else {
+        return packageJson.owners as Owner[];
+      }
+    }
+    return { errors };
+  }
+  function validatePnpm(): undefined | { errors: string[] } {
+    const errors = [];
+    if (packageJson.pnpm) {
+      if (typeof packageJson.pnpm !== "object" || packageJson.pnpm === null) {
+        errors.push(
+          `${typesDirectoryName}'s package.json has bad "pnpm": must be an object like { "overrides": { "@types/react": "^16" } }`
+        );
+      } else {
+        for (const key in packageJson.pnpm) {
+          if (key !== "overrides") {
+            errors.push(
+              `${typesDirectoryName}'s package.json has bad "pnpm": it should not include property "${key}", only "overrides".`
+            );
+          }
+        }
+        const overrides = (packageJson.pnpm as Record<string, unknown>).overrides;
+        if (overrides && typeof overrides === "object" && overrides !== null) {
+          for (const key in overrides) {
+            if (!key.startsWith("@types/")) {
+              errors.push(
+                `${typesDirectoryName}'s package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`
+              );
+            }
+          }
+        } else {
+          errors.push(`${typesDirectoryName}'s package.json has bad "pnpm": it must contain an "overrides" object.`);
+        }
+      }
+    }
+    if (errors.length) {
+      return { errors };
+    }
+    return undefined;
+  }
+}
+
+export function getTypesVersions(dirPath: string): readonly TypeScriptVersion[] {
+  return mapDefined(fs.readdirSync(dirPath), (name) => {
+    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
+      return undefined;
+    }
+    const version = withoutStart(name, "ts");
+    if (version === undefined || !fs.statSync(joinPaths(dirPath, name)).isDirectory()) {
+      return undefined;
+    }
+
+    if (!TypeScriptVersion.isTypeScriptVersion(version)) {
+      throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
+    }
+    if (!TypeScriptVersion.isSupported(version)) {
+      throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
+    }
+    return version;
   });
 }
-
-const typeScriptVersionLineParser: pm.Parser<AllTypeScriptVersion> = pm
-  .regexp(/\/\/ (?:Minimum )?TypeScript Version: (\d.(\d))/, 1)
-  .chain<TypeScriptVersion>((v) =>
-    TypeScriptVersion.all.includes(v as TypeScriptVersion)
-      ? pm.succeed(v as TypeScriptVersion)
-      : pm.fail(`TypeScript ${v} is not yet supported.`)
-  );
-
-const typeScriptVersionParser: pm.Parser<AllTypeScriptVersion> = pm
-  .regexp(/\r?\n/)
-  .then(typeScriptVersionLineParser)
-  .fallback<TypeScriptVersion>(TypeScriptVersion.shipped[0]);
-
-export function parseTypeScriptVersionLine(line: string): AllTypeScriptVersion {
-  const result = typeScriptVersionLineParser.parse(line);
-  if (!result.status) {
-    throw new Error(`Could not parse version: line is '${line}'`);
+function checkPackageJsonOwners(packageName: string, packageJsonOwners: readonly unknown[]) {
+  const errors: string[] = [];
+  for (const c of packageJsonOwners) {
+    if (typeof c !== "object" || c === null) {
+      errors.push(
+        `${packageName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`
+      );
+      continue;
+    }
+    if (!("name" in c) || typeof c.name !== "string") {
+      errors.push(`${packageName}'s package.json has bad "name" in owner ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
+    } else if (c.name === "My Self") {
+      errors.push(`${packageName}'s package.json has bad "name" in owner ${JSON.stringify(c)}
+Author name should be your name, not the default.`);
+    }
+    if ("githubUsername" in c) {
+      if (typeof c.githubUsername !== "string") {
+        errors.push(`${packageName}'s package.json has bad "githubUsername" in owner ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
+      } else if ("url" in c) {
+        errors.push(
+          `${packageName}'s package.json has bad owner: should not have both "githubUsername" and "url" properties in owner ${JSON.stringify(
+            c
+          )}`
+        );
+      }
+    } else if ("url" in c && typeof c.url !== "string") {
+      errors.push(`${packageName}'s package.json has bad "url" in owner ${JSON.stringify(c)}
+Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
+    }
+    for (const key in c) {
+      switch (key) {
+        case "name":
+        case "url":
+        case "githubUsername":
+          break;
+        default:
+          errors.push(
+            `${packageName}'s package.json has bad owner: should not include property ${key} in ${JSON.stringify(c)}`
+          );
+      }
+    }
   }
-  return result.value;
+  return errors;
 }
 
-function reverse(s: string): string {
-  let out = "";
-  for (let i = s.length - 1; i >= 0; i--) {
-    out += s[i];
+// Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
+export const enum License {
+  MIT = "MIT",
+  Apache20 = "Apache-2.0",
+}
+const allLicenses = [License.MIT, License.Apache20];
+export function getLicenseFromPackageJson(packageJsonLicense: unknown): License | string[] {
+  if (packageJsonLicense === undefined) {
+    // tslint:disable-line strict-type-predicates (false positive)
+    return License.MIT;
   }
-  return out;
-}
-
-function regexpIndexOf(s: string, rgx: RegExp, start: number): number {
-  const index = s.slice(start).search(rgx);
-  return index === -1 ? index : index + start;
-}
-
-declare module "parsimmon" {
-  // tslint:disable-next-line no-unnecessary-qualifier
-  type Pr<T> = pm.Parser<T>; // https://github.com/Microsoft/TypeScript/issues/14121
-  export function seqMap<T, U, V, W, X, Y, Z, A, B, C>(
-    p1: Pr<T>,
-    p2: Pr<U>,
-    p3: Pr<V>,
-    p4: Pr<W>,
-    p5: Pr<X>,
-    p6: Pr<Y>,
-    p7: Pr<Z>,
-    p8: Pr<A>,
-    p9: Pr<B>,
-    cb: (a1: T, a2: U, a3: V, a4: W, a5: X, a6: Y, a7: Z, a8: A, a9: B) => C
-  ): Pr<C>;
-}
-
-function intOfString(str: string): number {
-  const n = Number.parseInt(str, 10);
-  if (Number.isNaN(n)) {
-    throw new Error(`Error in parseInt(${JSON.stringify(str)})`);
+  if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
+    return [`Specifying '"license": "MIT"' is redundant, this is the default.`];
   }
-  return n;
+  if (allLicenses.includes(packageJsonLicense as License)) {
+    return packageJsonLicense as License;
+  }
+  return [
+    `'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(
+      allLicenses
+    )}}`,
+  ];
+}
+// TODO: Move these checks into validatePackageJson and make it return an entire package.json type, not just Header
+// TODO: Expand these checks too, adding name and version just like dtslint
+export function checkPackageJsonExportsAndAddPJsonEntry(exports: unknown, path: string) {
+  if (exports === undefined) return exports;
+  if (typeof exports === "string") {
+    return exports;
+  }
+  if (typeof exports !== "object") {
+    return [`Package exports at path ${path} should be an object or string.`];
+  }
+  if (exports === null) {
+    return [`Package exports at path ${path} should not be null.`];
+  }
+  if (!(exports as Record<string, unknown>)["./package.json"]) {
+    (exports as Record<string, unknown>)["./package.json"] = "./package.json";
+  }
+  return exports;
+}
+
+export function checkPackageJsonImports(imports: unknown, path: string): object | string[] | undefined {
+  if (imports === undefined) return imports;
+  if (typeof imports !== "object") {
+    return [`Package imports at path ${path} should be an object or string.`];
+  } else if (imports === null) {
+    return [`Package imports at path ${path} should not be null.`];
+  }
+  return imports;
+}
+
+export function checkPackageJsonType(type: unknown, path: string) {
+  if (type === undefined) return type;
+  if (type !== "module") {
+    return [`Package type at path ${path} can only be 'module'.`];
+  }
+  return type;
+}
+
+/**
+ * @param devDependencySelfName - pass the package name only for devDependencies
+ */
+export function checkPackageJsonDependencies(
+  dependencies: unknown,
+  path: string,
+  allowedDependencies: ReadonlySet<string>,
+  devDependencySelfName?: string
+): string[] {
+  if (dependencies === undefined) {
+    return [];
+  }
+  if (dependencies === null || typeof dependencies !== "object") {
+    return [`${path} should contain ${devDependencySelfName ? "devDependencies" : "dependencies"} or not exist.`];
+  }
+
+  const errors: string[] = [];
+  for (const dependencyName of Object.keys(dependencies)) {
+    if (!dependencyName.startsWith("@types/") && !allowedDependencies.has(dependencyName)) {
+      const msg = `Dependency ${dependencyName} not in the allowed dependencies list.
+Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
+      errors.push(`In ${path}: ${msg}`);
+    }
+    const version = (dependencies as { [key: string]: unknown })[dependencyName];
+    if (typeof version !== "string") {
+      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
+    }
+  }
+  if (devDependencySelfName) {
+    const selfDependency = (dependencies as { [key: string]: string | undefined })[devDependencySelfName];
+    if (selfDependency === undefined || selfDependency !== "workspace:.") {
+      errors.push(
+        `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(
+          devDependencySelfName
+        )}: "workspace:."`
+      );
+    }
+  }
+  return errors;
 }

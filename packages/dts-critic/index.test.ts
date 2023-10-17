@@ -252,23 +252,19 @@ suite("dtsCritic", {
     expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
   },
   noMatchingNpmPackage() {
-    expect(dtsCritic(testsource("wenceslas.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("no-matching-package/wenceslas.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmPackage,
         message: `Declaration file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-// Type definitions for non-npm package wenceslas-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
+   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
       },
     ]);
   },
   noMatchingNpmVersion() {
-    expect(dtsCritic(testsource("typescript.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("typescript/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmVersion,
         message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
@@ -277,13 +273,13 @@ You should copy the major and minor version from the package on npm.`),
     ]);
   },
   nonNpmHasMatchingPackage() {
-    expect(dtsCritic(testsource("tslib.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("example/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NonNpmHasMatchingPackage,
-        message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
+        message: `The non-npm package 'example' conflicts with the existing npm package 'example'.
 Try adding -browser to the end of the name to get
 
-    tslib-browser
+    example-browser
 `,
       },
     ]);

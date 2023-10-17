@@ -1,7 +1,7 @@
 import assert from "assert";
 import { relative, resolve } from "path";
 import { assertDefined } from "./assertions";
-import { pathExistsSync, readdirSync, statSync } from "fs-extra";
+import { pathExistsSync, readdirSync, realpathSync, statSync } from "fs-extra";
 import { readFileSync, readJsonSync } from "./io";
 
 /** Convert a path to use "/" instead of "\\" for consistency. (This affects content hash.) */
@@ -36,6 +36,7 @@ export interface FS {
   subDir(path: string): FS;
   /** Representation of current location, for debugging. */
   debugPath(): string;
+  realPath(path: string): string;
 }
 
 export function createModuleResolutionHost(
@@ -181,6 +182,13 @@ export class InMemoryFS implements FS {
   debugPath(): string {
     return this.rootPrefix;
   }
+
+  realPath(path: string): string {
+    if (this.exists(path)) {
+      return path;
+    }
+    throw new Error(`No file system entry at ${this.rootPrefix}/${path}`);
+  }
 }
 
 export class DiskFS implements FS {
@@ -221,5 +229,9 @@ export class DiskFS implements FS {
 
   debugPath(): string {
     return this.rootPrefix.slice(0, this.rootPrefix.length - 1); // remove trailing '/'
+  }
+
+  realPath(path: string): string {
+    return realpathSync(this.getPath(path));
   }
 }

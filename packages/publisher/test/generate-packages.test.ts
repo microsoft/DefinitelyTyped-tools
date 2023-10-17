@@ -4,50 +4,34 @@ import {
   createReadme,
   getLicenseFileText,
 } from "../src/generate-packages";
-import {
-  AllPackages,
-  License,
-  NotNeededPackage,
-  readNotNeededPackages,
-  TypesDataFile,
-  TypingsData,
-  TypingsDataRaw,
-  createMockDT,
-} from "@definitelytyped/definitions-parser";
+import { License } from "@definitelytyped/header-parser";
+import { NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
-import { Registry, InMemoryFS, Dir, FS } from "@definitelytyped/utils";
+import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
-    libraryName: "jquery",
-    typingsPackageName: "jquery",
-    dependencies: { madeira: { major: 1 } },
-    testDependencies: [],
-    pathMappings: {},
-    contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
-    libraryMajorVersion: 1,
-    libraryMinorVersion: 0,
-    minTsVersion: "3.2",
+    header: {
+      name: "@types/jquery",
+      owners: [
+        { name: "A", url: "b@c.d" },
+        { name: "E", githubUsername: "e" },
+      ],
+      libraryMajorVersion: 1,
+      libraryMinorVersion: 0,
+      minimumTypeScriptVersion: "3.2",
+      projects: ["jquery.org"],
+      nonNpm: false,
+    },
     typesVersions: [],
     files: ["index.d.ts", "jquery.test.ts"],
     license,
-    packageJsonDependencies: [{ name: "balzac", version: "~3" }],
+    dependencies: { "@types/madeira": "^1", balzac: "~3" },
+    devDependencies: { "@types/jquery": "workspace:." },
     contentHash: "11",
-    projectName: "jquery.org",
-    globals: [],
-    declaredModules: ["jquery"],
   };
 }
-function createTypesData(): TypesDataFile {
-  return {
-    jquery: {
-      "1.0": createRawPackage(License.MIT),
-    },
-    madeira: {
-      "1.0": createRawPackage(License.Apache20),
-    },
-  };
-}
+
 function createUnneededPackage() {
   return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
@@ -79,6 +63,12 @@ testo({
       expect.stringContaining("This package contains type definitions for")
     );
   },
+  readmeContainsContributors() {
+    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, defaultFS())).toEqual(
+      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)")
+    );
+  },
   readmeContainsProjectName() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("jquery.org"));
@@ -91,8 +81,7 @@ testo({
   },
   readmeMultipleDependencies() {
     const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    // @ts-expect-error - dependencies is readonly
-    typing.dependencies.example = { major: 2 };
+    typing.dependencies["@types/example"] = "*";
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining(
         "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"
@@ -110,14 +99,9 @@ testo({
     const typing = new TypingsData(rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).not.toContain("type T = import");
   },
-  readmeNoGlobals() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("Global values: none"));
-  },
   basicPackageJson() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
     const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages)).toEqual(`{
+    expect(createPackageJSON(typing, "1.0")).toEqual(`{
     "name": "@types/jquery",
     "version": "1.0",
     "description": "TypeScript definitions for jquery",
@@ -126,7 +110,10 @@ testo({
     "contributors": [
         {
             "name": "A",
-            "url": "b@c.d",
+            "url": "b@c.d"
+        },
+        {
+            "name": "E",
             "githubUsername": "e"
         }
     ],

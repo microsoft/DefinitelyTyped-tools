@@ -1,27 +1,17 @@
-import assert from "assert";
-import { sourceBranch } from "./lib/settings";
+import { sourceBranch, sourceRemote } from "./lib/settings";
 import {
   PackageId,
-  DependencyVersion,
-  formatDependencyVersion,
+  DirectoryParsedTypingVersion,
   getDependencyFromFile,
+  formatTypingVersion,
   AllPackages,
   NotNeededPackage,
 } from "./packages";
-import {
-  Logger,
-  execAndThrowErrors,
-  flatMapIterable,
-  mapIterable,
-  mapDefined,
-  FS,
-  consoleLogger,
-  assertDefined,
-  cacheDir,
-} from "@definitelytyped/utils";
+import { Logger, execAndThrowErrors, consoleLogger, assertDefined, cacheDir } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
-import { getAffectedPackages } from "./get-affected-packages";
+import { inspect } from "util";
+import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
   status: "A" | "D" | "M";
@@ -29,9 +19,9 @@ export interface GitDiff {
 }
 
 /*
-We have to be careful about how we get the diff because travis uses a shallow clone.
+We have to be careful about how we get the diff because Actions uses a shallow clone.
 
-Travis runs:
+Actions runs:
     git clone --depth=50 https://github.com/DefinitelyTyped/DefinitelyTyped.git DefinitelyTyped
     cd DefinitelyTyped
     git fetch origin +refs/pull/123/merge
@@ -45,7 +35,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     // If this succeeds, we got the full clone.
   } catch (_) {
     // This is a shallow clone.
-    await run(`git fetch origin ${sourceBranch}`);
+    await run(`git fetch ${sourceRemote} ${sourceBranch}`);
     await run(`git branch ${sourceBranch} FETCH_HEAD`);
   }
 
@@ -66,62 +56,54 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     return stdout;
   }
 }
-
-/** Returns all immediate subdirectories of the root directory that have changed. */
-export function gitChanges(diffs: GitDiff[]): PackageId[] {
-  const changedPackages = new Map<string, Map<string, DependencyVersion>>();
-
+/** Returns all immediate subdirectories of the root directory that have been deleted. */
+function gitDeletions(diffs: GitDiff[]): { errors: string[] } | { ok: PackageId[] } {
+  const changedPackages = new Map<string, PackageId>();
+  const errors = [];
   for (const diff of diffs) {
+    if (diff.status !== "D") continue;
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
-      const versions = changedPackages.get(dep.name);
-      if (!versions) {
-        changedPackages.set(dep.name, new Map([[formatDependencyVersion(dep.version), dep.version]]));
-      } else {
-        versions.set(formatDependencyVersion(dep.version), dep.version);
-      }
+      const key = `${dep.typesDirectoryName}/v${formatDependencyVersion(dep.version)}`;
+      changedPackages.set(key, dep);
+    } else {
+      errors.push(
+        `Unexpected file deleted: ${diff.file}
+When removing packages, you should only delete files that are a part of removed packages.`
+      );
     }
   }
-
-  return Array.from(
-    flatMapIterable(changedPackages, ([name, versions]) => mapIterable(versions, ([_, version]) => ({ name, version })))
-  );
+  return errors.length ? { errors } : { ok: Array.from(changedPackages.values()) };
 }
 
+function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
+  return version === "*" ? "*" : formatTypingVersion(version);
+}
 export async function getAffectedPackagesFromDiff(
-  dt: FS,
-  definitelyTypedPath: string,
-  selection: "all" | "affected" | RegExp
-) {
-  const allPackages = await AllPackages.read(dt);
+  allPackages: AllPackages,
+  definitelyTypedPath: string
+): Promise<string[] | PreparePackagesResult> {
+  const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
-    for (const deleted of getNotNeededPackages(allPackages, diffs)) {
-      checkNotNeededPackage(deleted);
-    }
+    const deleteds = getNotNeededPackages(allPackages, diffs);
+    if ("errors" in deleteds) errors.push(...deleteds.errors);
+    else
+      for (const deleted of deleteds.ok) {
+        errors.push(...(await checkNotNeededPackage(deleted)));
+      }
   }
-
-  const affected =
-    selection === "all"
-      ? { changedPackages: allPackages.allTypings(), dependentPackages: [], allPackages }
-      : selection === "affected"
-      ? getAffectedPackages(allPackages, gitChanges(diffs))
-      : {
-          changedPackages: allPackages.allTypings().filter((t) => selection.test(t.name)),
-          dependentPackages: [],
-          allPackages,
-        };
-
-  console.log(
-    `Testing ${affected.changedPackages.length} changed packages: ${affected.changedPackages
-      .map((t) => t.desc)
-      .toString()}`
-  );
-  console.log(
-    `Testing ${affected.dependentPackages.length} dependent packages: ${affected.dependentPackages
-      .map((t) => t.desc)
-      .toString()}`
-  );
+  const deletions = gitDeletions(diffs);
+  if ("errors" in deletions) {
+    errors.push(...deletions.errors);
+    return errors;
+  }
+  if (errors.length) {
+    return errors;
+  }
+  const affected = await getAffectedPackages(allPackages, deletions.ok, definitelyTypedPath);
+  console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
+  console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
   return affected;
 }
 
@@ -130,60 +112,55 @@ export async function getAffectedPackagesFromDiff(
  * 2. asOfVersion must be newer than `@types/name@latest` on npm
  * 3. `name@asOfVersion` must exist on npm
  */
-export async function checkNotNeededPackage(unneeded: NotNeededPackage) {
-  await pacote.manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: cacheDir }).catch((reason) => {
-    throw reason.code === "E404"
-      ? new Error(
-          `The entry for ${unneeded.fullNpmName} in notNeededPackages.json has
+export async function checkNotNeededPackage(unneeded: NotNeededPackage): Promise<string[]> {
+  const errors = [];
+  const replacementPackage = await pacote
+    .manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: cacheDir })
+    .catch((reason) => {
+      if (reason.code === "E404")
+        return `The entry for ${unneeded.name} in notNeededPackages.json has
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
-Unneeded packages have to be replaced with a package on npm.`,
-          { cause: reason }
-        )
-      : reason.code === "ETARGET"
-      ? new Error(`The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`, {
-          cause: reason,
-        })
-      : reason;
-  }); // eg @babel/parser
-  const typings = await pacote.manifest(unneeded.fullNpmName, { cache: cacheDir }).catch((reason) => {
-    throw reason.code === "E404"
-      ? new Error(`Unexpected error: @types package not found for ${unneeded.fullNpmName}`, { cause: reason })
-      : reason;
+Unneeded packages have to be replaced with a package on npm.`;
+      else if (reason.code === "ETARGET")
+        return `The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`;
+      else throw reason;
+    }); // eg @babel/parser
+  if (typeof replacementPackage === "string") errors.push(replacementPackage);
+  const typings = await pacote.manifest(unneeded.name, { cache: cacheDir }).catch((reason) => {
+    if (reason.code === "E404") return `Unexpected error: @types package not found for ${unneeded.name}`;
+    else throw reason;
   }); // eg @types/babel__parser
-  assert(
-    semver.gt(unneeded.version, typings.version),
-    `The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
-it is supposed to replace, ${typings.version} of ${unneeded.fullNpmName}.`
-  );
+  if (typeof typings === "string") {
+    errors.push(typings);
+    return errors;
+  }
+  if (!semver.gt(unneeded.version, typings.version))
+    errors.push(`The specified version ${unneeded.version} of ${unneeded.libraryName} must be newer than the version
+it is supposed to replace, ${typings.version} of ${unneeded.name}.`);
+  return errors;
 }
 
 /**
  * 1. Find all the deleted files and group by package (error on deleted files outside a package).
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
  */
-export function getNotNeededPackages(allPackages: AllPackages, diffs: GitDiff[]) {
-  const deletedPackages = new Set(
-    diffs
-      .filter((d) => d.status === "D")
-      .map(
-        (d) =>
-          assertDefined(
-            getDependencyFromFile(d.file),
-            `Unexpected file deleted: ${d.file}
-When removing packages, you should only delete files that are a part of removed packages.`
-          ).name
-      )
-  );
-  return mapDefined(deletedPackages, (p) => {
-    const hasTyping = allPackages.hasTypingFor({ name: p, version: "*" });
+export function getNotNeededPackages(
+  allPackages: AllPackages,
+  diffs: GitDiff[]
+): { errors: string[] } | { ok: NotNeededPackage[] } {
+  const deletions = gitDeletions(diffs);
+  if ("errors" in deletions) return deletions;
+  const deletedPackages = new Set(deletions.ok.map((p) => assertDefined(p.typesDirectoryName)));
+  const notNeededs = [];
+  const errors = [];
+  for (const p of deletedPackages) {
+    const hasTyping = allPackages.hasTypingFor({ typesDirectoryName: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
-    if (hasTyping) {
-      if (notNeeded) {
-        throw new Error(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
-      }
-      return undefined;
-    } else {
-      return notNeeded;
+    if (hasTyping && notNeeded) {
+      errors.push(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);
+    } else if (notNeeded) {
+      notNeededs.push(notNeeded);
     }
-  });
+  }
+  return errors.length ? { errors } : { ok: notNeededs };
 }

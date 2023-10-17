@@ -34,3 +34,20 @@ export function assertSorted<T>(
   }
   return a;
 }
+
+export function deepEquals(expected: unknown, actual: unknown): boolean {
+  if (Array.isArray(expected)) {
+    return (
+      Array.isArray(actual) && actual.length === expected.length && expected.every((e, i) => deepEquals(e, actual[i]))
+    );
+  } else if (typeof expected === "object" && typeof actual === "object" && actual !== null) {
+    for (const k in expected) {
+      if (!deepEquals((expected as any)[k], (actual as any)[k])) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    return expected === actual;
+  }
+}

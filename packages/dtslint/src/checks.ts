@@ -1,61 +1,21 @@
-import { makeTypesVersionsForPackageJson } from "@definitelytyped/header-parser";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import assert = require("assert");
-import { pathExists } from "fs-extra";
+import * as header from "@definitelytyped/header-parser";
+import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { pathExistsSync } from "fs-extra";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
+import { deepEquals } from "@definitelytyped/utils";
 
-import { readJson } from "./util";
-
-export async function checkPackageJson(dirPath: string, typesVersions: readonly TypeScriptVersion[]): Promise<void> {
+import { readJson, packageNameFromPath } from "./util";
+export function checkPackageJson(
+  dirPath: string,
+  typesVersions: readonly AllTypeScriptVersion[]
+): header.Header | string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
-  const needsTypesVersions = typesVersions.length !== 0;
-  if (!(await pathExists(pkgJsonPath))) {
-    if (needsTypesVersions) {
-      throw new Error(`${dirPath}: Must have 'package.json' for "typesVersions"`);
-    }
-    return;
+  if (!pathExistsSync(pkgJsonPath)) {
+    throw new Error(`${dirPath}: Missing 'package.json'`);
   }
-
-  const pkgJson = (await readJson(pkgJsonPath)) as Record<string, unknown>;
-
-  if ((pkgJson as any).private !== true) {
-    throw new Error(`${pkgJsonPath} should set \`"private": true\``);
-  }
-
-  if (needsTypesVersions) {
-    assert.strictEqual((pkgJson as any).types, "index", `"types" in '${pkgJsonPath}' should be "index".`);
-    const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
-    assert.deepEqual(
-      (pkgJson as any).typesVersions,
-      expected,
-      `"typesVersions" in '${pkgJsonPath}' is not set right. Should be: ${JSON.stringify(expected, undefined, 4)}`
-    );
-  }
-
-  for (const key in pkgJson) {
-    // tslint:disable-line forin
-    switch (key) {
-      case "private":
-      case "dependencies":
-      case "license":
-      case "imports":
-      case "exports":
-      case "type":
-        // "private"/"typesVersions"/"types" checked above, "dependencies" / "license" checked by types-publisher,
-        break;
-      case "typesVersions":
-      case "types":
-        if (!needsTypesVersions) {
-          throw new Error(`${pkgJsonPath} doesn't need to set "${key}" when no 'ts3.x' directories exist.`);
-        }
-        break;
-      default:
-        throw new Error(`${pkgJsonPath} should not include field ${key}`);
-    }
-  }
+  return header.validatePackageJson(packageNameFromPath(dirPath), readJson(pkgJsonPath), typesVersions);
 }
-
 /**
  * numbers in `CompilerOptions` might be enum values mapped from strings
  */
@@ -69,76 +29,69 @@ export interface DefinitelyTypedInfo {
   /** "../" or "../../" or "../../../". This should use '/' even on windows. */
   readonly relativeBaseUrl: string;
 }
-export function checkTsconfig(options: CompilerOptionsRaw, dt: DefinitelyTypedInfo | undefined): void {
-  if (dt) {
-    const { relativeBaseUrl } = dt;
+export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): string[] {
+  const errors = [];
+  const mustHave = {
+    noEmit: true,
+    forceConsistentCasingInFileNames: true,
+    types: [],
+  };
 
-    const mustHave = {
-      noEmit: true,
-      forceConsistentCasingInFileNames: true,
-      baseUrl: relativeBaseUrl,
-      typeRoots: [relativeBaseUrl],
-      types: [],
-    };
-
-    for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
-      const expected = mustHave[key];
-      const actual = options[key];
-      if (!deepEquals(expected, actual)) {
-        throw new Error(
-          `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
-            actual
-          )}`
-        );
-      }
-    }
-
-    for (const key in options) {
-      switch (key) {
-        case "lib":
-        case "noImplicitAny":
-        case "noImplicitThis":
-        case "strict":
-        case "strictNullChecks":
-        case "noUncheckedIndexedAccess":
-        case "strictFunctionTypes":
-        case "esModuleInterop":
-        case "allowSyntheticDefaultImports":
-        case "paths":
-        case "target":
-        case "jsx":
-        case "jsxFactory":
-        case "experimentalDecorators":
-        case "noUnusedLocals":
-        case "noUnusedParameters":
-        case "exactOptionalPropertyTypes":
-        case "module":
-          break;
-        default:
-          if (!(key in mustHave)) {
-            throw new Error(`Unexpected compiler option ${key}`);
-          }
-      }
+  for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
+    const expected = mustHave[key];
+    const actual = options[key];
+    if (!deepEquals(expected, actual)) {
+      errors.push(
+        `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
+          actual
+        )}`
+      );
     }
   }
 
+  for (const key in options) {
+    switch (key) {
+      case "lib":
+      case "noImplicitAny":
+      case "noImplicitThis":
+      case "strict":
+      case "strictNullChecks":
+      case "noUncheckedIndexedAccess":
+      case "strictFunctionTypes":
+      case "esModuleInterop":
+      case "allowSyntheticDefaultImports":
+      case "target":
+      case "jsx":
+      case "jsxFactory":
+      case "experimentalDecorators":
+      case "noUnusedLocals":
+      case "noUnusedParameters":
+      case "exactOptionalPropertyTypes":
+      case "module":
+      case "paths":
+        break;
+      default:
+        if (!(key in mustHave)) {
+          errors.push(`Unexpected compiler option ${key}`);
+        }
+    }
+  }
   if (!("lib" in options)) {
-    throw new Error('Must specify "lib", usually to `"lib": ["es6"]` or `"lib": ["es6", "dom"]`.');
+    errors.push('Must specify "lib", usually to `"lib": ["es6"]` or `"lib": ["es6", "dom"]`.');
   }
 
   if (!("module" in options)) {
-    throw new Error('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
-  }
-  if (
+    errors.push('Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.');
+  } else if (
     options.module?.toString().toLowerCase() !== "commonjs" &&
     options.module?.toString().toLowerCase() !== "node16"
   ) {
-    throw new Error(`When "module" is present, it must be set to "commonjs" or "node16".`);
+    errors.push(`When "module" is present, it must be set to "commonjs" or "node16".`);
   }
 
   if ("strict" in options) {
     if (options.strict !== true) {
-      throw new Error('When "strict" is present, it must be set to `true`.');
+      errors.push('When "strict" is present, it must be set to `true`.');
     }
 
     for (const key of ["noImplicitAny", "noImplicitThis", "strictNullChecks", "strictFunctionTypes"]) {
@@ -149,30 +102,35 @@ export function checkTsconfig(options: CompilerOptionsRaw, dt: DefinitelyTypedIn
   } else {
     for (const key of ["noImplicitAny", "noImplicitThis", "strictNullChecks", "strictFunctionTypes"]) {
       if (!(key in options)) {
-        throw new Error(`Expected \`"${key}": true\` or \`"${key}": false\`.`);
+        errors.push(`Expected \`"${key}": true\` or \`"${key}": false\`.`);
       }
     }
   }
   if ("exactOptionalPropertyTypes" in options) {
     if (options.exactOptionalPropertyTypes !== true) {
-      throw new Error('When "exactOptionalPropertyTypes" is present, it must be set to `true`.');
+      errors.push('When "exactOptionalPropertyTypes" is present, it must be set to `true`.');
     }
   }
 
   if (options.types && options.types.length) {
-    throw new Error(
+    errors.push(
       'Use `/// <reference types="..." />` directives in source files and ensure ' +
         'that the "types" field in your tsconfig is an empty array.'
     );
   }
-}
-
-function deepEquals(expected: unknown, actual: unknown): boolean {
-  if (expected instanceof Array) {
-    return (
-      actual instanceof Array && actual.length === expected.length && expected.every((e, i) => deepEquals(e, actual[i]))
-    );
-  } else {
-    return expected === actual;
+  if (options.paths) {
+    for (const key in options.paths) {
+      if (options.paths[key].length !== 1) {
+        errors.push(`${dirPath}/tsconfig.json: "paths" must map each module specifier to only one file.`);
+      }
+      const [target] = options.paths[key];
+      if (target !== "./index.d.ts") {
+        const m = target.match(/^(?:..\/)+([^\/]+)\/(?:v\d+\.?\d*\/)?index.d.ts$/);
+        if (!m || m[1] !== key) {
+          errors.push(`${dirPath}/tsconfig.json: "paths" must map '${key}' to ${key}'s index.d.ts.`);
+        }
+      }
+    }
   }
+  return errors;
 }

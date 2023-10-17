@@ -5,12 +5,12 @@ import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git
 import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
 
 const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", {}, [], {}),
-  known: createTypingsVersionRaw("known", { jquery: { major: 1 } }, [], {}),
-  "known-test": createTypingsVersionRaw("known-test", {}, ["jquery"], {}),
-  "most-recent": createTypingsVersionRaw("most-recent", { jquery: "*" }, [], {}),
-  unknown: createTypingsVersionRaw("unknown", { "COMPLETELY-UNKNOWN": { major: 1 } }, [], {}),
-  "unknown-test": createTypingsVersionRaw("unknown-test", {}, ["WAT"], {}),
+  jquery: createTypingsVersionRaw("jquery", {}, {}),
+  known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
+  "known-test": createTypingsVersionRaw("known-test", {}, { "@types/jquery": "*" }),
+  "most-recent": createTypingsVersionRaw("most-recent", { "@types/jquery": "*" }, {}),
+  unknown: createTypingsVersionRaw("unknown", { "@types/COMPLETELY-UNKNOWN": "1.0.0" }, {}),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, { "@types/WAT": "*" }),
 };
 
 const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
@@ -24,25 +24,28 @@ const deleteJestDiffs: GitDiff[] = [
 
 testo({
   ok() {
-    expect(getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
+    expect(getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual({ ok: jestNotNeeded });
   },
   forgotToDeleteFiles() {
-    expect(() =>
+    expect(
       getNotNeededPackages(
-        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, [], {}) }, jestNotNeeded),
+        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         deleteJestDiffs
       )
-    ).toThrow("Please delete all files in jest");
+    ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
   tooManyDeletes() {
-    expect(() => getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toThrow(
-      "Unexpected file deleted: oops.txt"
-    );
+    expect(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
+      errors: [
+        `Unexpected file deleted: oops.txt
+When removing packages, you should only delete files that are a part of removed packages.`,
+      ],
+    });
   },
   deleteInOtherPackage() {
     expect(
       getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
-    ).toEqual(jestNotNeeded);
+    ).toEqual({ ok: jestNotNeeded });
   },
   extraneousFile() {
     expect(
@@ -52,7 +55,7 @@ testo({
         { status: "D", file: "types/jest/index.d.ts" },
         { status: "D", file: "types/jest/jest-tests.d.ts" },
       ])
-    ).toEqual(jestNotNeeded);
+    ).toEqual({ ok: jestNotNeeded });
   },
   scoped() {
     expect(
@@ -60,7 +63,7 @@ testo({
         AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
-    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
+    ).toEqual({ ok: [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")] });
   },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
@@ -96,30 +99,34 @@ const nonexistentReplacementPackage = new NotNeededPackage("jest", "nonexistent"
 const nonexistentTypesPackage = new NotNeededPackage("nonexistent", "jest", "100.0.0");
 
 testo({
-  missingSource() {
-    return expect(checkNotNeededPackage(nonexistentReplacementPackage)).rejects.toThrow(
-      "The entry for @types/jest in notNeededPackages.json"
-    );
+  async missingSource() {
+    return expect(await checkNotNeededPackage(nonexistentReplacementPackage)).toEqual([
+      `The entry for @types/jest in notNeededPackages.json has
+"libraryName": "nonexistent", but there is no npm package with this name.
+Unneeded packages have to be replaced with a package on npm.`,
+    ]);
   },
-  missingTypings() {
-    return expect(checkNotNeededPackage(nonexistentTypesPackage)).rejects.toThrow(
-      "@types package not found for @types/nonexistent"
-    );
+  async missingTypings() {
+    return expect(await checkNotNeededPackage(nonexistentTypesPackage)).toEqual([
+      "Unexpected error: @types package not found for @types/nonexistent",
+    ]);
   },
-  deprecatedSameVersion() {
-    return expect(checkNotNeededPackage(sameVersion)).rejects
-      .toThrow(`The specified version 50.0.0 of jest must be newer than the version
-it is supposed to replace, 50.0.0 of @types/jest.`);
+  async deprecatedSameVersion() {
+    return expect(await checkNotNeededPackage(sameVersion)).toEqual([
+      `The specified version 50.0.0 of jest must be newer than the version
+it is supposed to replace, 50.0.0 of @types/jest.`,
+    ]);
   },
-  deprecatedOlderVersion() {
-    return expect(checkNotNeededPackage(olderReplacement)).rejects
-      .toThrow(`The specified version 4.0.0 of jest must be newer than the version
-it is supposed to replace, 50.0.0 of @types/jest.`);
+  async deprecatedOlderVersion() {
+    return expect(await checkNotNeededPackage(olderReplacement)).toEqual([
+      `The specified version 4.0.0 of jest must be newer than the version
+it is supposed to replace, 50.0.0 of @types/jest.`,
+    ]);
   },
-  missingNpmVersion() {
-    return expect(checkNotNeededPackage(nonexistentReplacementVersion)).rejects.toThrow(
-      "The specified version 999.0.0 of jest is not on npm."
-    );
+  async missingNpmVersion() {
+    return expect(await checkNotNeededPackage(nonexistentReplacementVersion)).toEqual([
+      "The specified version 999.0.0 of jest is not on npm.",
+    ]);
   },
   ok() {
     return checkNotNeededPackage(newerReplacement);

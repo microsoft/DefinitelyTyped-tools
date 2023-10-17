@@ -1,4 +1,4 @@
-import { parseHeaderOrFail } from "@definitelytyped/header-parser";
+import { validatePackageJson } from "@definitelytyped/header-parser";
 import { Dir, FS, InMemoryFS, mangleScopedPackage } from "@definitelytyped/utils";
 import * as semver from "semver";
 
@@ -39,10 +39,17 @@ export class DTMock {
    * @param packageName The package of which an old version is to be added.
    * @param olderVersion The older version that's to be added.
    */
-  public addOldVersionOfPackage(packageName: string, olderVersion: `${number}`) {
+  public addOldVersionOfPackage(packageName: string, olderVersion: `${number}`, fullVersion: string) {
     const latestDir = this.pkgDir(mangleScopedPackage(packageName));
     const index = latestDir.get("index.d.ts") as string;
-    const latestHeader = parseHeaderOrFail(packageName, index);
+    if (latestDir.get("package.json") === undefined) {
+      throw new Error(`Package ${packageName} does not have a package.json`);
+    }
+    const packageJson = JSON.parse(latestDir.get("package.json") as string);
+    const latestHeader = validatePackageJson(mangleScopedPackage(packageName), packageJson, []);
+    if (Array.isArray(latestHeader)) {
+      throw new Error(latestHeader.join("\n"));
+    }
     const latestVersion = `${latestHeader.libraryMajorVersion}.${latestHeader.libraryMinorVersion}`;
     const olderVersionParsed = semver.coerce(olderVersion)!;
 
@@ -62,12 +69,14 @@ export class DTMock {
         },
       })
     );
+    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion }));
 
     latestDir.forEach((content, entry) => {
       if (
         content !== oldDir &&
         entry !== "index.d.ts" &&
         entry !== "tsconfig.json" &&
+        entry !== "package.json" &&
         !(content instanceof Dir && /^v\d+(\.\d+)?$/.test(entry))
       ) {
         oldDir.set(entry, content);
@@ -84,11 +93,7 @@ export function createMockDT() {
   const boring = dt.pkgDir("boring");
   boring.set(
     "index.d.ts",
-    `// Type definitions for boring 1.0
-// Project: https://boring.com
-// Definitions by: Some Guy From Space <https://github.com/goodspaceguy420>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
+    `
 import * as React from 'react';
 export const drills: number;
 `
@@ -158,16 +163,22 @@ untested.d.ts
 `
   );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
+  boring.set(
+    "package.json",
+    packageJson("boring", "1.0", {
+      "@types/react": "*",
+      "@types/react-default": "*",
+      "@types/things": "*",
+      "@types/vorticon": "*",
+      "@types/manual": "*",
+      "@types/super-big-fun-hus": "*",
+    })
+  );
 
   const globby = dt.pkgDir("globby");
   globby.set(
     "index.d.ts",
-    `// Type definitions for globby 0.2
-// Project: https://globby-gloopy.com
-// Definitions by: The Dragon Quest Slime <https://github.com/gloopyslime>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-/// <reference path="./sneaky.d.ts" />
+    `/// <reference path="./sneaky.d.ts" />
 /// <reference types="andere/snee" />
 declare var x: number
 `
@@ -193,31 +204,16 @@ var z = y;
 `
   );
   globby.set("tsconfig.json", tsconfig(["globby-tests.ts", "test/other-tests.ts"]));
+  globby.set("package.json", packageJson("globby", "1.0", { "@types/andere": "*" }));
 
   const hasDependency = dt.pkgDir("has-dependency");
-  hasDependency.set(
-    "index.d.ts",
-    `// Type definitions for has-dependency 3.3
-// Project: https://www.microsoft.com
-// Definitions by: Andrew Branch <https://github.com/andrewbranch>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 3.1
-    
-export * from "moment"`
-  );
+  hasDependency.set("index.d.ts", `export * from "moment"`);
   hasDependency.set("has-dependency-tests.ts", "");
   hasDependency.set("tsconfig.json", tsconfig(["has-dependency-tests.ts"]));
-  hasDependency.set("package.json", `{ "private": true, "dependencies": { "moment": "*" } }`);
+  hasDependency.set("package.json", packageJson("has-dependency", "1.0", { moment: "*" }));
 
   const hasOlderTestDependency = dt.pkgDir("has-older-test-dependency");
-  hasOlderTestDependency.set(
-    "index.d.ts",
-    `// Type definitions for has-older-test-dependency
-// Project: https://github.com/baz/foo
-// Definitions by: My Self <https://github.com/me>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-`
-  );
+  hasOlderTestDependency.set("index.d.ts", ``);
   hasOlderTestDependency.set(
     "has-older-test-dependency-tests.ts",
     `import "jquery";
@@ -226,13 +222,13 @@ export * from "moment"`
   hasOlderTestDependency.set(
     "tsconfig.json",
     JSON.stringify({
-      compilerOptions: {
-        paths: {
-          jquery: ["jquery/v1"],
-        },
-      },
+      compilerOptions: {},
       files: ["index.d.ts", "has-older-test-dependency-tests.ts"],
     })
+  );
+  hasOlderTestDependency.set(
+    "package.json",
+    packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" })
   );
 
   const jquery = dt.pkgDir("jquery");
@@ -244,13 +240,7 @@ declare var jQuery: 1;
   );
   jquery.set(
     "index.d.ts",
-    `// Type definitions for jquery 3.3
-// Project: https://jquery.com
-// Definitions by: Leonard Thieu <https://github.com/leonard-thieu>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.3
-
-/// <reference path="JQuery.d.ts" />
+    `/// <reference path="JQuery.d.ts" />
 
 export = jQuery;
 `
@@ -262,16 +252,15 @@ console.log(jQuery);
 `
   );
   jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
+  jquery.set("package.json", packageJson("jquery", "3.3", {}));
 
   const scoped = dt.pkgDir("wordpress__plugins");
   scoped.set(
     "index.d.ts",
-    `// Type definitions for @wordpress/plguins
-// Project: https://github.com/WordPress/gutenberg/tree/master/packages/plugins/README.md
-// Definitions by: Derek Sifford <https://github.com/dsifford>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+    `
 `
   );
+  scoped.set("package.json", packageJson("wordpress__plugins", "1.0", {}));
   scoped.set(
     "tsconfig.json",
     JSON.stringify({
@@ -312,5 +301,26 @@ function tsconfig(testNames: string[]) {
         "index.d.ts",
 ${testNames.map((s) => "        " + JSON.stringify(s)).join(",\n")}
     ]
+}`;
+}
+
+function packageJson(packageName: string, version: string, dependencies: Record<string, string>) {
+  return `{
+    "private": true,
+    "name": "@types/${packageName}",
+    "version": "${version}.9999",
+    "projects": ["https://project"],
+    "owners": [{
+        "name": "The Dragon Quest Slime",
+        "githubUsername": "slime"
+    }],
+    "dependencies": {
+        ${Object.entries(dependencies)
+          .map(([name, version]) => `        "${name}": "${version}"`)
+          .join(",\n")}
+    },
+    "devDependencies": {
+        "@types/${packageName}": "workspace:."
+    }
 }`;
 }

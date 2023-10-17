@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import { createModuleResolutionHost } from "@definitelytyped/utils";
 import { DTMock, createMockDT } from "../src/mocks";
 import { testo } from "./utils";
-import { allReferencedFiles, getModuleInfo, getTestDependencies } from "../src/lib/module-info";
+import { allReferencedFiles } from "../src/lib/module-info";
 
 const fs = createMockDT().fs;
 const moduleResolutionHost = createModuleResolutionHost(fs);
@@ -92,35 +92,6 @@ testo({
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "types.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
   },
-  getModuleInfoWorksWithOtherFiles() {
-    const { types } = getBoringReferences();
-    // written as if it were from OTHER_FILES.txt
-    types.set(
-      "untested.d.ts",
-      ts.createSourceFile(
-        "untested.d.ts",
-        fs.subDir("types").subDir("boring").readFile("untested.d.ts"),
-        ts.ScriptTarget.Latest,
-        false
-      )
-    );
-    const i = getModuleInfo("boring", types);
-    expect(i.dependencies).toEqual(
-      new Set(["boring/quaternary", "boring/tertiary", "manual", "react", "react-default", "things", "vorticon"])
-    );
-  },
-  getModuleInfoForNestedTypeReferences() {
-    const { types } = allReferencedFiles(
-      ["index.d.ts", "globby-tests.ts", "test/other-tests.ts"],
-      fs.subDir("types").subDir("globby"),
-      "globby",
-      moduleResolutionHost,
-      compilerOptions
-    );
-    expect(Array.from(types.keys())).toEqual(["index.d.ts", "sneaky.d.ts"]);
-    const i = getModuleInfo("globby", types);
-    expect(i.dependencies).toEqual(new Set(["andere/snee"]));
-  },
   selfInScopedPackage() {
     const dtMock = new DTMock();
     const scoped = dtMock.pkgDir("rdfjs__to-ntriples");
@@ -166,18 +137,5 @@ testo({
     );
     expect(Array.from(types.keys())).toEqual(["index.d.ts", "../ts1.0/index.d.ts", "component.d.ts"]);
     expect(Array.from(tests.keys())).toEqual([]);
-  },
-  getTestDependenciesWorks() {
-    const { types, tests } = getBoringReferences();
-    const i = getModuleInfo("boring", types);
-    const d = getTestDependencies(
-      "boring",
-      tests.keys(),
-      i.dependencies,
-      fs.subDir("types").subDir("boring"),
-      moduleResolutionHost,
-      compilerOptions
-    );
-    expect(d).toEqual(new Set(["boring", "boring/commonjs", "boring/secondary", "boring/v1", "super-big-fun-hus"]));
   },
 });

@@ -48,8 +48,8 @@ export async function runDTSLint({
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
   const { packageNames, dependents } = onlyRunAffectedPackages
-    ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
-    : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
+    ? await prepareAffectedPackages(definitelyTypedPath, nProcesses)
+    : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone", nProcesses);
 
   if (!noInstall && !localTypeScriptPath) {
     if (onlyTestTsNext) {
@@ -74,8 +74,8 @@ export async function runDTSLint({
   await runWithListeningChildProcesses({
     inputs: testedPackages.map((path) => ({
       path,
-      onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
-      expectOnly: expectOnly || !packageNames.includes(path),
+      onlyTestTsNext: onlyTestTsNext || !packageNames.has(path),
+      expectOnly: expectOnly || !packageNames.has(path),
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),
@@ -174,12 +174,12 @@ export async function runDTSLint({
   return allFailures.length;
 }
 
-function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: readonly string[]) {
+function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<string>) {
   return new Set(
     (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .map((s) => s.trim())
-      .filter(onlyRunAffectedPackages ? (line) => line && dependents.includes(line) : Boolean)
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean)
   );
 }
 

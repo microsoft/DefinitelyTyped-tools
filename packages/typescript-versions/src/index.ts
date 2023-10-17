@@ -130,11 +130,11 @@ export namespace TypeScriptVersion {
     return index === supported.length - 1 ? undefined : supported[index + 1];
   }
 
-  export function isRedirectable(v: TypeScriptVersion): boolean {
+  export function isRedirectable(v: AllTypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
 
-  export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+  export function isTypeScriptVersion(str: string): str is AllTypeScriptVersion {
     return all.includes(str as TypeScriptVersion);
   }
 }

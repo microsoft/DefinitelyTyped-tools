@@ -1,8 +1,8 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { typeScriptPath } from "@definitelytyped/utils";
+import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExists } from "fs-extra";
-import { dirname, join as joinPaths, normalize } from "path";
+import { pathExistsSync } from "fs-extra";
+import { join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
@@ -10,7 +10,7 @@ type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
 
 import { getProgram, Options as ExpectOptions } from "./rules/expectRule";
-import { readJson, withoutPrefix } from "./util";
+import { readJson } from "./util";
 
 export async function lint(
   dirPath: string,
@@ -37,7 +37,7 @@ export async function lint(
   const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const config = await getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
+  const config = getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
   const esfiles = [];
 
   for (const file of lintProgram.getSourceFiles()) {
@@ -108,15 +108,12 @@ function testDependencies(
     (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module")
   );
   if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
-    const path = cannotFindDepsDiags.file.fileName;
-    const typesFolder = dirname(path);
-
     return `
-A module look-up failed, this often occurs when you need to run \`npm install\` on a dependent module before you can lint.
+A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
 
 Before you debug, first try running:
 
-   npm install --prefix ${typesFolder}
+   pnpm install -w --filter '...{./types/${dirPath}}...'
 
 Then re-run. Full error logs are below.
 
@@ -140,7 +137,7 @@ function normalizePath(file: string) {
 function isTypesVersionPath(fileName: string, dirPath: string) {
   const normalFileName = normalizePath(fileName);
   const normalDirPath = normalizePath(dirPath);
-  const subdirPath = withoutPrefix(normalFileName, normalDirPath);
+  const subdirPath = withoutStart(normalFileName, normalDirPath);
   return subdirPath && /^\/ts\d+\.\d/.test(subdirPath);
 }
 
@@ -179,25 +176,14 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
   }
 }
 
-export async function checkTslintJson(dirPath: string, dt: boolean): Promise<void> {
+export function checkTslintJson(dirPath: string): void {
   const configPath = getConfigPath(dirPath);
-  const shouldExtend = `@definitelytyped/dtslint/${dt ? "dt" : "dtslint"}.json`;
-  const validateExtends = (extend: string | string[]) =>
-    extend === shouldExtend || (!dt && Array.isArray(extend) && extend.some((val) => val === shouldExtend));
-
-  if (!(await pathExists(configPath))) {
-    if (dt) {
-      throw new Error(
-        `On DefinitelyTyped, must include \`tslint.json\` containing \`{ "extends": "${shouldExtend}" }\`.\n` +
-          "This was inferred as a DefinitelyTyped package because it contains a `// Type definitions for` header."
-      );
-    }
-    return;
+  const shouldExtend = "@definitelytyped/dtslint/dt.json";
+  if (!pathExistsSync(configPath)) {
+    throw new Error(`Missing \`tslint.json\` that contains \`{ "extends": "${shouldExtend}" }\`.`);
   }
-
-  const tslintJson = await readJson(configPath);
-  if (!validateExtends(tslintJson.extends)) {
-    throw new Error(`If 'tslint.json' is present, it should extend "${shouldExtend}"`);
+  if (readJson(configPath).extends !== shouldExtend) {
+    throw new Error(`'tslint.json' must extend "${shouldExtend}"`);
   }
 }
 
@@ -205,14 +191,14 @@ function getConfigPath(dirPath: string): string {
   return joinPaths(dirPath, "tslint.json");
 }
 
-async function getLintConfig(
+function getLintConfig(
   expectedConfigPath: string,
   tsconfigPath: string,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined
-): Promise<IConfigurationFile> {
-  const configExists = await pathExists(expectedConfigPath);
+): IConfigurationFile {
+  const configExists = pathExistsSync(expectedConfigPath);
   const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
   // Second param to `findConfiguration` doesn't matter, since config path is provided.
   const config = Configuration.findConfiguration(configPath, "").results;

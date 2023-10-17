@@ -13,16 +13,18 @@ import {
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
+import yargs = require("yargs");
 
 const npmRegistryParallelism = 10;
 
 if (require.main === module) {
   const log = loggerWithErrors()[0];
+  const options = { ...defaultLocalOptions };
+  if (yargs.argv.path) {
+    options.definitelyTypedPath = yargs.argv.path as string;
+  }
   logUncaughtErrors(async () =>
-    calculateVersions(
-      await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions, log),
-      log
-    )
+    calculateVersions(await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log), log)
   );
 }
 
@@ -42,7 +44,7 @@ async function computeAndSaveChangedPackages(
     changedTypings: cp.changedTypings.map(
       ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })
     ),
-    changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.name),
+    changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.typesDirectoryName),
   };
   await writeDataFile(versionsFilename, json);
   return cp;
@@ -54,7 +56,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
-      for (const { name } of pkg.packageJsonDependencies) {
+      for (const name of Object.keys(pkg.dependencies)) {
         // Assert that dependencies exist on npm.
         // Also checked when we install the dependencies, in dtslint-runner.
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
@@ -80,7 +82,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
       // Also checked in checkNotNeededPackage().
       await pacote.manifest(pkg.libraryName, { cache: cacheDir }).catch((reason) => {
         throw reason.code === "E404"
-          ? new Error(`To deprecate '@types/${pkg.name}', '${pkg.libraryName}' must exist on npm.`, { cause: reason })
+          ? new Error(`To deprecate '${pkg.name}', '${pkg.libraryName}' must exist on npm.`, { cause: reason })
           : reason;
       });
       log.info(`To be deprecated: ${pkg.name}`);
@@ -92,12 +94,12 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
 }
 
 async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
-  const offline = await pacote.manifest(pkg.fullNpmName, { cache: cacheDir, offline: true }).catch((reason) => {
+  const offline = await pacote.manifest(pkg.name, { cache: cacheDir, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED") throw reason;
     return undefined;
   });
   if (offline?.deprecated) return offline.deprecated;
   log.info(`Version info not cached for deprecated package ${pkg.desc}`);
-  const online = await pacote.manifest(pkg.fullNpmName, { cache: cacheDir, preferOnline: true });
+  const online = await pacote.manifest(pkg.name, { cache: cacheDir, preferOnline: true });
   return online.deprecated;
 }

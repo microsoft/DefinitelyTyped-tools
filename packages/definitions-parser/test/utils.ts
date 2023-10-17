@@ -1,4 +1,6 @@
-import { TypingsVersionsRaw, License, DependencyVersion, DirectoryParsedTypingVersion } from "../src/packages";
+import { License } from "@definitelytyped/header-parser";
+import { scopeName } from "../src/lib/settings";
+import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../src/packages";
 
 export function testo(o: { [s: string]: () => void }) {
   for (const k of Object.keys(o)) {
@@ -7,30 +9,27 @@ export function testo(o: { [s: string]: () => void }) {
 }
 
 export function createTypingsVersionRaw(
-  name: string,
-  dependencies: { readonly [name: string]: DependencyVersion },
-  testDependencies: string[],
-  pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion }
+  libraryName: string,
+  dependencies: { readonly [name: string]: string },
+  devDependencies: { readonly [name: string]: string }
 ): TypingsVersionsRaw {
   return {
     "1.0": {
-      libraryName: name,
-      typingsPackageName: name,
-      dependencies,
-      testDependencies,
+      header: {
+        name: `@${scopeName}/${getMangledNameForScopedPackage(libraryName)}`,
+        libraryMajorVersion: 1,
+        libraryMinorVersion: 0,
+        owners: [{ name: "Bender", url: "futurama.com" }],
+        minimumTypeScriptVersion: "2.3",
+        nonNpm: false,
+        projects: ["zombo.com"],
+      },
       files: ["index.d.ts"],
-      libraryMajorVersion: 1,
-      libraryMinorVersion: 0,
-      pathMappings,
-      contributors: [{ name: "Bender", url: "futurama.com", githubUsername: "bender" }],
-      minTsVersion: "2.3",
       typesVersions: [],
       license: License.MIT,
-      packageJsonDependencies: [],
+      dependencies,
+      devDependencies,
       contentHash: "11111111111111",
-      projectName: "zombo.com",
-      globals: [],
-      declaredModules: [],
     },
   };
 }

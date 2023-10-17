@@ -32,6 +32,7 @@
     "@typescript-eslint/typescript-estree": "^5.55.0",
     "@typescript-eslint/utils": "^5.55.0",
     "eslint": "^8.17.0",
+    "eslint-plugin-import": "^2.27.5",
     "fs-extra": "^6.0.1",
     "json-stable-stringify": "^1.0.1",
     "strip-json-comments": "^2.0.1",
@@ -46,7 +47,7 @@
     "@types/fs-extra": "^5.0.2",
     "@types/json-stable-stringify": "^1.0.32",
     "@types/strip-json-comments": "^0.0.28",
-    "typescript": "^5.0.2"
+    "typescript": "next"
   },
   "engines": {
     "node": ">=10.0.0"

@@ -1,15 +1,14 @@
 import { TSESTree } from "@typescript-eslint/utils";
-import { createRule } from "../util";
+import { commentsMatching, createRule } from "../util";
 
-type MessageId = "referencePathPackage" | "referencePathTest";
-
+type MessageId = "referencePathPackage" | "referencePathTest" | "referencePathOldVersion";
 const rule = createRule({
   name: "no-bad-reference",
   defaultOptions: [],
   meta: {
     type: "problem",
     docs: {
-      description: `Forbids <reference path="../etc"/> in any file, and forbid <reference path> in test files.`,
+      description: `Forbids <reference path="./vNN"/> in all files, <reference path="../etc"/> in declaration files, and all <reference path> in test files.`,
       recommended: "error",
     },
     messages: {
@@ -17,27 +16,24 @@ const rule = createRule({
         "Don't use <reference path> to reference another package. Use an import or <reference types> instead.",
       referencePathTest:
         "Don't use <reference path> in test files. Use <reference types> or include the file in 'tsconfig.json'.",
+      referencePathOldVersion: "Don't use <reference path> to reference an old version of the current package.",
     },
     schema: [],
   },
   create(context) {
-    const { comments } = context.getSourceCode().ast;
     const isDeclarationFile = context.getFilename().endsWith(".d.ts");
-
-    for (const comment of comments) {
-      const referenceMatch = comment.value.match(/<reference\s+path\s*=\s*"(.+)"\s*\/>/)?.[1];
-      if (!referenceMatch) {
-        continue;
+    commentsMatching(context.getSourceCode(), /<reference\s+path\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
+      if (ref.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
+        report(comment, "referencePathOldVersion");
       }
-
       if (isDeclarationFile) {
-        if (referenceMatch.startsWith("..")) {
+        if (ref.startsWith("..")) {
           report(comment, "referencePathPackage");
         }
       } else {
         report(comment, "referencePathTest");
       }
-    }
+    });
 
     return {};
 

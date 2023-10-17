@@ -1,16 +1,17 @@
 import { createRule, getTypesPackageForDeclarationFile } from "../util";
-
 const rule = createRule({
   name: "no-self-import",
   defaultOptions: [],
   meta: {
     type: "problem",
     docs: {
-      description: "Forbids declaration files to import the current package using a global import.",
+      description:
+        "Forbids declaration files to import the current package using a global import or old versions with a relative import.",
       recommended: "error",
     },
     messages: {
       useRelativeImport: "Declaration file should not use a global import of itself. Use a relative import.",
+      useOnlyCurrentVersion: "Don't import an old version of the current package.",
     },
     schema: [],
   },
@@ -23,6 +24,11 @@ const rule = createRule({
         if (node.source.value === packageName || node.source.value.startsWith(packageName + "/")) {
           context.report({
             messageId: "useRelativeImport",
+            node,
+          });
+        } else if (node.source.value.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
+          context.report({
+            messageId: "useOnlyCurrentVersion",
             node,
           });
         }
