@@ -4,7 +4,9 @@ import calculateVersions from "./calculate-versions";
 import { clean } from "./clean";
 import generatePackages from "./generate-packages";
 import publishPackages from "./publish-packages";
-import { getDefinitelyTyped, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
+import { assertDefined } from "@definitelytyped/utils";
+import { numberOfOsProcesses } from "./util/util";
+import { getDefinitelyTyped, parseDefinitions, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
 import { Fetcher, logUncaughtErrors, loggerWithErrors, LoggerWithErrors } from "@definitelytyped/utils";
 import { defaultLocalOptions } from "./lib/common";
 
@@ -24,7 +26,13 @@ export default async function full(
 ): Promise<void> {
   clean();
   const dt = await getDefinitelyTyped(options, log);
-  const changedPackages = await calculateVersions(dt, log);
+  await parseDefinitions(
+    dt,
+    options.parseInParallel
+      ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
+      : undefined,
+    log
+  );  const changedPackages = await calculateVersions(dt, log);
   await generatePackages(dt, changedPackages);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
 }
