@@ -16,8 +16,10 @@ export async function parseDefinitions(
 ): Promise<AllPackages> {
   log.info("Parsing definitions...");
   const typesFS = dt.subDir("types");
-  const packageNames = await filterNAtATimeOrdered(parallel ? parallel.nProcesses : 1, typesFS.readdir(), (name) =>
-    typesFS.isDirectory(name) && typesFS.exists(joinPaths(name, "package.json"))
+  const packageNames = await filterNAtATimeOrdered(
+    parallel ? parallel.nProcesses : 1,
+    typesFS.readdir(),
+    (name) => typesFS.isDirectory(name) && typesFS.exists(joinPaths(name, "package.json"))
   );
   log.info(`Found ${packageNames.length} packages.`);
 

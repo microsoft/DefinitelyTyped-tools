@@ -25,24 +25,9 @@ export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
   return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
 }
 
-export function withoutPrefix(s: string, prefix: string): string | undefined {
-  return s.startsWith(prefix) ? s.slice(prefix.length) : undefined;
-}
-
 export function last<T>(a: readonly T[]): T {
   assert(a.length !== 0);
   return a[a.length - 1];
-}
-
-export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => Promise<U | undefined>): Promise<U[]> {
-  const out = [];
-  for (const a of arr) {
-    const res = await mapper(a);
-    if (res !== undefined) {
-      out.push(res);
-    }
-  }
-  return out;
 }
 
 export function isMainFile(fileName: string, allowNested: boolean) {

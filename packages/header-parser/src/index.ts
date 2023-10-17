@@ -1,7 +1,8 @@
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
+import fs = require("fs");
 import * as semver from "semver";
-import { deepEquals } from "@definitelytyped/utils";
+import { withoutStart, mapDefined, deepEquals, joinPaths } from "@definitelytyped/utils";
 
 // used in dts-critic
 export interface Header {
@@ -69,7 +70,7 @@ export function validatePackageJson(
       case "types":
         if (!needsTypesVersions) {
           errors.push(
-            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'ts4.x' directories exist.`
+            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'tsX.X' directories exist.`
           );
         }
         break;
@@ -275,7 +276,7 @@ export function validatePackageJson(
         `${typesDirectoryName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
       );
     } else {
-      const es = checkPackageJsonContributors(typesDirectoryName, packageJson.owners);
+      const es = checkPackageJsonOwners(typesDirectoryName, packageJson.owners);
       if (es.length) {
         errors.push(...es);
       } else {
@@ -320,35 +321,54 @@ export function validatePackageJson(
   }
 }
 
-function checkPackageJsonContributors(packageName: string, packageJsonContributors: readonly unknown[]) {
+export function getTypesVersions(dirPath: string): readonly TypeScriptVersion[] {
+  return mapDefined(fs.readdirSync(dirPath), (name) => {
+    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
+      return undefined;
+    }
+    const version = withoutStart(name, "ts");
+    if (version === undefined || !fs.statSync(joinPaths(dirPath, name)).isDirectory()) {
+      return undefined;
+    }
+
+    if (!TypeScriptVersion.isTypeScriptVersion(version)) {
+      throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
+    }
+    if (!TypeScriptVersion.isSupported(version)) {
+      throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
+    }
+    return version;
+  });
+}
+function checkPackageJsonOwners(packageName: string, packageJsonOwners: readonly unknown[]) {
   const errors: string[] = [];
-  for (const c of packageJsonContributors) {
+  for (const c of packageJsonOwners) {
     if (typeof c !== "object" || c === null) {
       errors.push(
-        `${packageName}'s package.json has bad "contributors": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`
+        `${packageName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`
       );
       continue;
     }
     if (!("name" in c) || typeof c.name !== "string") {
-      errors.push(`${packageName}'s package.json has bad "name" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "name" in owner ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
     } else if (c.name === "My Self") {
-      errors.push(`${packageName}'s package.json has bad "name" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "name" in owner ${JSON.stringify(c)}
 Author name should be your name, not the default.`);
     }
     if ("githubUsername" in c) {
       if (typeof c.githubUsername !== "string") {
-        errors.push(`${packageName}'s package.json has bad "githubUsername" in contributor ${JSON.stringify(c)}
+        errors.push(`${packageName}'s package.json has bad "githubUsername" in owner ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
       } else if ("url" in c) {
         errors.push(
-          `${packageName}'s package.json has bad contributor: should not have both "githubUsername" and "url" properties in contributor ${JSON.stringify(
+          `${packageName}'s package.json has bad owner: should not have both "githubUsername" and "url" properties in owner ${JSON.stringify(
             c
           )}`
         );
       }
     } else if ("url" in c && typeof c.url !== "string") {
-      errors.push(`${packageName}'s package.json has bad "url" in contributor ${JSON.stringify(c)}
+      errors.push(`${packageName}'s package.json has bad "url" in owner ${JSON.stringify(c)}
 Must be an object of type { name: string, url: string } | { name: string, githubUsername: string}.`);
     }
     for (const key in c) {
@@ -359,9 +379,7 @@ Must be an object of type { name: string, url: string } | { name: string, github
           break;
         default:
           errors.push(
-            `${packageName}'s package.json has bad contributor: should not include property ${key} in ${JSON.stringify(
-              c
-            )}`
+            `${packageName}'s package.json has bad owner: should not include property ${key} in ${JSON.stringify(c)}`
           );
       }
     }

@@ -1,14 +1,14 @@
 {
     "private": true,
     "name": "@types/dts-critic",
-    "version": "0.0.99999",
+    "version": "1.0.9999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
     "devDependencies": {
         "@types/dts-critic": "workspace:."
     },
-    "contributors": [
+    "owners": [
         {
             "name": "Typescript Bot",
             "githubUsername": "typescript-bot"

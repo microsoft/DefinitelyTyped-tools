@@ -1,5 +1,5 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { typeScriptPath } from "@definitelytyped/utils";
+import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
 import { pathExistsSync } from "fs-extra";
 import { join as joinPaths, normalize } from "path";
@@ -10,7 +10,7 @@ type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
 
 import { getProgram, Options as ExpectOptions } from "./rules/expectRule";
-import { readJson, withoutPrefix } from "./util";
+import { readJson } from "./util";
 
 export async function lint(
   dirPath: string,
@@ -137,7 +137,7 @@ function normalizePath(file: string) {
 function isTypesVersionPath(fileName: string, dirPath: string) {
   const normalFileName = normalizePath(fileName);
   const normalDirPath = normalizePath(dirPath);
-  const subdirPath = withoutPrefix(normalFileName, normalDirPath);
+  const subdirPath = withoutStart(normalFileName, normalDirPath);
   return subdirPath && /^\/ts\d+\.\d/.test(subdirPath);
 }
 

@@ -2,13 +2,14 @@
 
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { readdir, readFile, stat, existsSync } from "fs-extra";
+import { readFile, existsSync } from "fs-extra";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
 import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
-import { getCompilerOptions, mapDefinedAsync, packageNameFromPath, withoutPrefix } from "./util";
+import { getCompilerOptions, packageNameFromPath } from "./util";
+import { getTypesVersions } from "@definitelytyped/header-parser";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -136,24 +137,7 @@ async function runTests(
   assertPathIsNotBanned(packageName);
   assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
 
-  const typesVersions = await mapDefinedAsync(await readdir(dirPath), async (name) => {
-    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
-      return undefined;
-    }
-    const version = withoutPrefix(name, "ts");
-    if (version === undefined || !(await stat(joinPaths(dirPath, name))).isDirectory()) {
-      return undefined;
-    }
-
-    if (!TypeScriptVersion.isTypeScriptVersion(version)) {
-      throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
-    }
-    if (!TypeScriptVersion.isSupported(version)) {
-      throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
-    }
-    return version;
-  });
-
+  const typesVersions = getTypesVersions(dirPath);
   const packageJson = checkPackageJson(dirPath, typesVersions);
   if (Array.isArray(packageJson)) {
     throw new Error("\n\t* " + packageJson.join("\n\t* "));

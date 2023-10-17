@@ -79,11 +79,11 @@ export function dtsCritic(
 
   const name = findDtsName(dtsPath);
   const packageJsonPath = path.join(path.dirname(path.resolve(dtsPath)), "package.json");
-  const header = parsePackageJson(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")));
-
   const npmInfo = getNpmInfo(name);
-
-  if (isNonNpm(header)) {
+  const header = parsePackageJson(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")), path.dirname(dtsPath));
+  if (header === undefined) {
+    return [];
+  } else if (header.nonNpm) {
     const errors: CriticError[] = [];
     const nonNpmError = checkNonNpm(name, npmInfo);
     if (nonNpmError) {
@@ -128,13 +128,14 @@ If you want to check the declaration against the JavaScript source code, you mus
   }
 }
 
-function parsePackageJson(packageName: string, packageJson: Record<string, unknown>): headerParser.Header | undefined {
-  const result = headerParser.validatePackageJson(packageName, packageJson, []);
+function parsePackageJson(
+  packageName: string,
+  packageJson: Record<string, unknown>,
+  dirPath: string
+): headerParser.Header | undefined {
+  const result = headerParser.validatePackageJson(packageName, packageJson, headerParser.getTypesVersions(dirPath));
+  if (Array.isArray(result)) console.log(result.join("\n"));
   return Array.isArray(result) ? undefined : result;
-}
-
-function isNonNpm(header: headerParser.Header | undefined): boolean {
-  return !!header && header.nonNpm;
 }
 
 export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport];
@@ -230,7 +231,7 @@ Try adding -browser to the end of the name to get
  * Checks DefinitelyTyped npm package.
  * If all checks are successful, returns the npm version that matches the header.
  */
-function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header | undefined): NpmError | string {
+function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header): NpmError | string {
   if (!npmInfo.isNpm) {
     return {
       kind: ErrorKind.NoMatchingNpmPackage,
@@ -241,35 +242,24 @@ To resolve this error, either:
    Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
     };
   }
-  const target = getHeaderVersion(header);
+  const target = `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
   const npmVersion = getMatchingVersion(target, npmInfo);
   if (!npmVersion) {
     const versions = npmInfo.versions;
     const verstring = versions.join(", ");
     const lateststring = versions[versions.length - 1];
-    const headerstring = target || "NO HEADER VERSION FOUND";
     return {
       kind: ErrorKind.NoMatchingNpmVersion,
       message: `The types for '${name}' must match a version that exists on npm.
 You should copy the major and minor version from the package on npm.
 
-To resolve this error, change the version in the package.json, ${headerstring},
+To resolve this error, change the version in the package.json, ${target},
 to match one on npm: ${verstring}.
 
 For example, if you're trying to match the latest version, use ${lateststring}.`,
     };
   }
   return npmVersion;
-}
-
-function getHeaderVersion(header: headerParser.Header | undefined): string | undefined {
-  if (!header) {
-    return undefined;
-  }
-  if (header.libraryMajorVersion === 0 && header.libraryMinorVersion === 0) {
-    return undefined;
-  }
-  return `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
 }
 
 /**

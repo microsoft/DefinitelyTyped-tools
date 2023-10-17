@@ -273,13 +273,13 @@ You should copy the major and minor version from the package on npm.`),
     ]);
   },
   nonNpmHasMatchingPackage() {
-    expect(dtsCritic(testsource("tslib/index.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("example/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NonNpmHasMatchingPackage,
-        message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
+        message: `The non-npm package 'example' conflicts with the existing npm package 'example'.
 Try adding -browser to the end of the name to get
 
-    tslib-browser
+    example-browser
 `,
       },
     ]);

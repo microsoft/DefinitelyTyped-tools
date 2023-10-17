@@ -1,14 +1,14 @@
 {
     "private": true,
-    "name": "@types/tslib",
+    "name": "@types/example",
     "nonNpm": true,
-    "nonNpmDescription": "tslib",
+    "nonNpmDescription": "example",
     "version": "1.0.9999",
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
     "devDependencies": {
-        "@types/tslib": "workspace:."
+        "@types/example": "workspace:."
     },
     "owners": [
         {
