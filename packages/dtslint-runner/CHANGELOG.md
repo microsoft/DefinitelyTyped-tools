@@ -1,5 +1,18 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.184
+
+### Patch Changes
+
+- 024c3e73: Update @definitelytyped for Definitely Typed's monorepo upgrade
+- 9fffa8ff: Fix entrypoint scripts to ensure they don’t run when being imported by an ES module
+- Updated dependencies [024c3e73]
+- Updated dependencies [9fffa8ff]
+- Updated dependencies [9fffa8ff]
+  - @definitelytyped/definitions-parser@0.0.179
+  - @definitelytyped/dtslint@0.0.183
+  - @definitelytyped/utils@0.0.179
+
 ## 0.0.183
 
 ### Patch Changes
