@@ -201,7 +201,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
 
   lines.push("# Credits");
   const contributors = typing.contributors
-    .map((c) => `[${c.name}](${c.url ?? `https://github.com/${c.githubUsername}`})`)
+    .map((c) => `[${c.name}](${c.url})`)
     .join(", ")
     .replace(/, ([^,]+)$/, ", and $1");
   lines.push(`These definitions were written by ${contributors}.`);

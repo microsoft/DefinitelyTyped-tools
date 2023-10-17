@@ -16,11 +16,14 @@ export interface Header {
   readonly owners: readonly Owner[];
 }
 // used in definitions-parser
+/** Standard package.json `contributor` */
+export interface Contributor {
+  readonly name: string;
+  readonly url: string;
+}
+/** Additional github-specific form supported on DT. */
 export type Owner =
-  | {
-      readonly name: string;
-      readonly url: string;
-    }
+  | Contributor
   | {
       readonly name: string;
       readonly githubUsername: string;

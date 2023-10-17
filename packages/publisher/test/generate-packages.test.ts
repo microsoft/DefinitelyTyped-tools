@@ -114,7 +114,7 @@ testo({
         },
         {
             "name": "E",
-            "githubUsername": "e"
+            "url": "https://github.com/e"
         }
     ],
     "main": "",
