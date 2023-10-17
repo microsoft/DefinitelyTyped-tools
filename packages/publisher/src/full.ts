@@ -32,7 +32,8 @@ export default async function full(
       ? { nProcesses: numberOfOsProcesses, definitelyTypedPath: assertDefined(options.definitelyTypedPath) }
       : undefined,
     log
-  );  const changedPackages = await calculateVersions(dt, log);
+  );
+  const changedPackages = await calculateVersions(dt, log);
   await generatePackages(dt, changedPackages);
   await publishPackages(changedPackages, dry, githubAccessToken, fetcher);
 }
