@@ -242,7 +242,10 @@ To resolve this error, either:
    Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
     };
   }
-  const target = `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
+  const target =
+    header.libraryMajorVersion === 0 && header.libraryMinorVersion === 0
+      ? undefined
+      : `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
   const npmVersion = getMatchingVersion(target, npmInfo);
   if (!npmVersion) {
     const versions = npmInfo.versions;
