@@ -81,8 +81,7 @@ function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
 }
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
-  definitelyTypedPath: string,
-  selection: "all" | "affected" | RegExp
+  definitelyTypedPath: string
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
@@ -90,38 +89,19 @@ export async function getAffectedPackagesFromDiff(
     const deleteds = getNotNeededPackages(allPackages, diffs);
     if ("errors" in deleteds) errors.push(...deleteds.errors);
     else
-      for (const deleted of deleteds.ok as NotNeededPackage[]) {
+      for (const deleted of deleteds.ok) {
         errors.push(...(await checkNotNeededPackage(deleted)));
       }
   }
-  let affected: PreparePackagesResult;
-  if (selection === "all")
-    affected = {
-      packageNames: new Set(allPackages.allTypings().map((t) => t.subDirectoryPath)),
-      dependents: new Set(),
-    };
-  else if (selection === "affected") {
-    const deletions = gitDeletions(diffs);
-    if ("errors" in deletions) {
-      errors.push(...deletions.errors);
-      affected = { packageNames: new Set(), dependents: new Set() };
-    } else {
-      affected = await getAffectedPackages(allPackages, deletions.ok, definitelyTypedPath);
-    }
-  } else {
-    affected = {
-      packageNames: new Set(
-        allPackages
-          .allTypings()
-          .filter((t) => selection.test(t.name))
-          .map((t) => t.subDirectoryPath)
-      ),
-      dependents: new Set(),
-    };
+  const deletions = gitDeletions(diffs);
+  if ("errors" in deletions) {
+    errors.push(...deletions.errors);
+    return errors;
   }
   if (errors.length) {
     return errors;
   }
+  const affected = await getAffectedPackages(allPackages, deletions.ok, definitelyTypedPath);
   console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
   console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
   return affected;

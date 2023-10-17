@@ -20,7 +20,7 @@ export async function prepareAffectedPackages(
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
   const errors = checkParseResults(allPackages);
-  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, "affected");
+  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath);
   if (errors.length) {
     throw new Error(errors.join("\n"));
   }
