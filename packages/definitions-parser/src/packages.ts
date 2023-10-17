@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { Owner, Header, License } from "@definitelytyped/header-parser";
+import { Contributor, Header, License } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { FS, assertDefined, assertSorted, mapValues, unique, unmangleScopedPackage } from "@definitelytyped/utils";
 import * as semver from "semver";
@@ -426,8 +426,11 @@ export class TypingsData extends PackageBase {
       this.data.header.nonNpmDescription ?? unmangleScopedPackage(this.typesDirectoryName) ?? this.typesDirectoryName
     );
   }
-  get contributors(): readonly Owner[] {
-    return this.data.header.owners;
+  get contributors(): readonly Contributor[] {
+    return this.data.header.owners.map((o) => ({
+      ...o,
+      url: "githubUsername" in o ? `https://github.com/${o.githubUsername}` : o.url,
+    }));
   }
   get major(): number {
     return this.data.header.libraryMajorVersion;
