@@ -64,7 +64,7 @@ testo({
     const packageOutput = ``;
     const dependentOutput = ``;
     const { packageNames, dependents } = getAffectedPackagesWorker(
-      AllPackages.from({ ...typesData, mistake: createTypingsVersionRaw("mistake", {}, {}) }, notNeeded),
+      allPackages,
       packageOutput,
       ["mistake"],
       [dependentOutput],
