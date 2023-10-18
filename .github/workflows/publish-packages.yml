@@ -11,7 +11,6 @@ concurrency: 1
 
 env:
   CI: true
-  PNPM_CACHE_FOLDER: .pnpm-store
 
 jobs:
   publish:
@@ -21,11 +20,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
+
       - run: npm install -g pnpm
-      - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - name: Get pnpm cache info
+        id: pnpm-cache
+        shell: bash
+        run: echo "store=$(pnpm store path)" >> $GITHUB_OUTPUT
       - uses: actions/cache/restore@v3
         with:
-          path: ${{ env.PNPM_CACHE_FOLDER }}
+          path: ${{ steps.pnpm-cache.outputs.store }}
           key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-cache-
@@ -58,5 +61,5 @@ jobs:
       - run: pnpm store prune
       - uses: actions/cache/save@v3
         with:
-          path: ${{ env.PNPM_CACHE_FOLDER }}
+          path: ${{ steps.pnpm-cache.outputs.store }}
           key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
