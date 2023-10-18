@@ -1,5 +1,14 @@
 # @definitelytyped/publisher
 
+## 0.0.180
+
+### Patch Changes
+
+- ddbece90: Restore parseDefinitions in publisher/full.ts
+- Updated dependencies [3c8512ad]
+  - @definitelytyped/definitions-parser@0.0.180
+  - @definitelytyped/retag@0.0.180
+
 ## 0.0.179
 
 ### Patch Changes
