@@ -50,7 +50,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.header.libraryMajorVersion}.${typingsDataRaw.header.libraryMinorVersion}`;
 }
 
-export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt: FS): Promise<TypingsVersionsRaw | { errors: string[] }> {
+export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt: FS): Promise<TypingsVersionsRaw | undefined | { errors: string[] }> {
   const errors = [];
   if (packageNameOrTypesDirectoryName !== packageNameOrTypesDirectoryName.toLowerCase()) {
     errors.push(`Package name \`${packageNameOrTypesDirectoryName}\` should be strictly lowercase`);
@@ -60,7 +60,12 @@ export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt:
     readonly version: DirectoryParsedTypingVersion;
   }
 
-  const fs = dt.subDir("types").subDir(getMangledNameForScopedPackage(packageNameOrTypesDirectoryName));
+  const typesDirectoryName = getMangledNameForScopedPackage(packageNameOrTypesDirectoryName);
+  if (!dt.subDir("types").exists(typesDirectoryName) || !dt.subDir("types").isDirectory(typesDirectoryName)) {
+    return undefined;
+  }
+
+  const fs = dt.subDir("types").subDir(typesDirectoryName);
   const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(
     fs.readdir(),
     (fileOrDirectoryName) => {
@@ -338,13 +343,21 @@ function getFilesForSingleTypeScriptVersion(
     path.resolve("/", fs.debugPath())
   ).options;
   errors.push(...checkFilesFromTsConfig(typesDirectoryName, tsconfig, fs.debugPath()));
-  const { types, tests } = allReferencedFiles(
-    tsconfig.files ?? [],
-    fs,
-    typesDirectoryName,
-    moduleResolutionHost,
-    compilerOptions
-  );
+  let types, tests;
+  try {
+    ({ types, tests } = allReferencedFiles(
+      tsconfig.files ?? [],
+      fs,
+      typesDirectoryName,
+      moduleResolutionHost,
+      compilerOptions
+    ));
+  } catch (err) {
+    if (err instanceof Error) {
+      errors.push(err.message);
+    }
+    return errors;
+  }
   const usedFiles = new Set(
     [...types.keys(), ...tests, "tsconfig.json", "tslint.json"].map((f) =>
       slicePrefixes(f, "node_modules/@types/" + typesDirectoryName + "/")

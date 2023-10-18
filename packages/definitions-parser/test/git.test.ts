@@ -23,33 +23,33 @@ const deleteJestDiffs: GitDiff[] = [
 ];
 
 testo({
-  ok() {
-    expect(getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual({ ok: jestNotNeeded });
+  async ok() {
+    expect(await getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual({ ok: jestNotNeeded });
   },
-  forgotToDeleteFiles() {
+  async forgotToDeleteFiles() {
     expect(
-      getNotNeededPackages(
+      await getNotNeededPackages(
         AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         deleteJestDiffs
       )
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
-  tooManyDeletes() {
-    expect(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
+  async tooManyDeletes() {
+    expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
       errors: [
         `Unexpected file deleted: oops.txt
 When removing packages, you should only delete files that are a part of removed packages.`,
       ],
     });
   },
-  deleteInOtherPackage() {
+  async deleteInOtherPackage() {
     expect(
-      getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
+      await getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
     ).toEqual({ ok: jestNotNeeded });
   },
-  extraneousFile() {
+  async extraneousFile() {
     expect(
-      getNotNeededPackages(allPackages, [
+      await getNotNeededPackages(allPackages, [
         { status: "A", file: "oooooooooooops.txt" },
         { status: "M", file: "notNeededPackages.json" },
         { status: "D", file: "types/jest/index.d.ts" },
@@ -57,9 +57,9 @@ When removing packages, you should only delete files that are a part of removed 
       ])
     ).toEqual({ ok: jestNotNeeded });
   },
-  scoped() {
+  async scoped() {
     expect(
-      getNotNeededPackages(
+      await getNotNeededPackages(
         AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )

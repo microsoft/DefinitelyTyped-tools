@@ -86,7 +86,7 @@ export async function getAffectedPackagesFromDiff(
   const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
-    const deleteds = getNotNeededPackages(allPackages, diffs);
+    const deleteds = await getNotNeededPackages(allPackages, diffs);
     if ("errors" in deleteds) errors.push(...deleteds.errors);
     else
       for (const deleted of deleteds.ok) {
@@ -144,17 +144,17 @@ it is supposed to replace, ${typings.version} of ${unneeded.name}.`);
  * 1. Find all the deleted files and group by package (error on deleted files outside a package).
  * 2. Make sure that all deleted packages in notNeededPackages have no files left.
  */
-export function getNotNeededPackages(
+export async function getNotNeededPackages(
   allPackages: AllPackages,
   diffs: GitDiff[]
-): { errors: string[] } | { ok: NotNeededPackage[] } {
+): Promise<{ errors: string[] } | { ok: NotNeededPackage[] }> {
   const deletions = gitDeletions(diffs);
   if ("errors" in deletions) return deletions;
   const deletedPackages = new Set(deletions.ok.map((p) => assertDefined(p.typesDirectoryName)));
   const notNeededs = [];
   const errors = [];
   for (const p of deletedPackages) {
-    const hasTyping = allPackages.hasTypingFor({ typesDirectoryName: p, version: "*" });
+    const hasTyping = await allPackages.hasTypingFor({ typesDirectoryName: p, version: "*" });
     const notNeeded = allPackages.getNotNeededPackage(p);
     if (hasTyping && notNeeded) {
       errors.push(`Please delete all files in ${p} when adding it to notNeededPackages.json.`);

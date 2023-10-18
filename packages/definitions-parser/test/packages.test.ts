@@ -40,21 +40,21 @@ describe(AllPackages, () => {
   });
 
   describe("hasTypingFor", () => {
-    it("returns true if typings exist", () => {
+    it("returns true if typings exist", async () => {
       expect(
-        allPackages.hasTypingFor({
+        await allPackages.hasTypingFor({
           name: "@types/jquery",
           version: "*",
         })
       ).toBe(true);
       expect(
-        allPackages.hasTypingFor({
+        await allPackages.hasTypingFor({
           typesDirectoryName: "jquery",
           version: "*",
         })
       ).toBe(true);
       expect(
-        allPackages.hasTypingFor({
+        await allPackages.hasTypingFor({
           name: "@types/nonExistent",
           version: "*",
         })
@@ -75,7 +75,7 @@ describe(TypingsVersions, () => {
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
     }
-    versions = new TypingsVersions(dt.fs, info);
+    versions = new TypingsVersions(dt.fs, info!);
   });
 
   it("sorts the data from latest to oldest version", () => {
@@ -125,7 +125,7 @@ describe(TypingsData, () => {
         name: "@types/known"
       }))
       .set("index.d.ts", "declare const x: number;")
-      .set("tsconfig.json", "{}");
+      .set("tsconfig.json", `{ "files": ["index.d.ts"] }`);
 
     const versions = createTypingsVersionRaw(
       "known",
@@ -155,7 +155,7 @@ describe(TypingsData, () => {
     expect(data.typesVersions).toEqual([]);
     expect(data.files).toEqual(["index.d.ts"]);
     expect(data.license).toBe(License.MIT);
-    expect(data.contentHash).toBe("11111111111111");
+    expect(data.contentHash).toBe("f647d34b5793cea752bc5b892d2099c92f1ced5f13b8a4ec3e4826d9f9cd0163");
     expect(data.projectName).toBe("zombo.com");
     expect(data.dependencies).toEqual({
       "dependency-1": "*",

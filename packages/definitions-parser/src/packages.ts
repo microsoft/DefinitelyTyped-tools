@@ -13,7 +13,9 @@ export class AllPackages {
   }
 
   static fromTestData(typingsVersionsRaw: Record<string, TypingsVersionsRaw>, notNeeded: readonly NotNeededPackage[]) {
-    const fs = new InMemoryFS(new Dir(/*parent*/ undefined), "");
+    const rootDir = new Dir(/*parent*/ undefined);
+    rootDir.set("types", new Dir(/*parent*/ rootDir));
+    const fs = new InMemoryFS(rootDir, "/");
     return new AllPackages(
       fs,
       new Map(Object.entries(typingsVersionsRaw).map(([name, raw]) => [name, new TypingsVersions(fs, raw)])),
@@ -24,8 +26,11 @@ export class AllPackages {
   /** Use for `--single` tasks only. Do *not* call this in a loop! */
   static async readSingle(dt: FS, name: string): Promise<TypingsData> {
     const data = await getTypingInfo(name, dt);
-    if ("errors" in data) {
+    if (!data) {
       throw new Error(`Can't find package ${name}`);
+    }
+    if ("errors" in data) {
+      throw new Error(`Errors while reading package ${name}: ${data.errors.join("\n")}`);
     }
     const versions = Object.values(data);
     if (versions.length > 1) {
@@ -49,8 +54,8 @@ export class AllPackages {
     return this.notNeeded.find((p) => p.typesDirectoryName === typesDirectoryName);
   }
 
-  hasTypingFor(dep: PackageId): boolean {
-    return this.tryGetTypingsData(dep) !== undefined;
+  async hasTypingFor(dep: PackageId): Promise<boolean> {
+    return await this.tryGetTypingsData(dep) !== undefined;
   }
   
   getErrors() {
@@ -127,6 +132,9 @@ export class AllPackages {
       return undefined;
     }
     const raw = await getTypingInfo(typesDirectoryName, this.dt);
+    if (!raw) {
+      return undefined;
+    }
     if ("errors" in raw) {
       this.errors.set(typesDirectoryName, raw.errors);
       return undefined;
@@ -465,6 +473,11 @@ export class TypingsData extends PackageBase {
   }
   get typesVersions(): readonly TypeScriptVersion[] {
     return this.data.typesVersions;
+  }
+  
+  getErrors() {
+    void this.files;
+    return this.errors;
   }
 
   private typesVersionsFiles: readonly FilesForSingleTypeScriptVersion[] | undefined;
