@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.180
+
+### Patch Changes
+
+- 3c8512ad: dtslint-runner checks new packages, even malformed ones.
+
 ## 0.0.179
 
 ### Patch Changes
