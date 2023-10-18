@@ -1,43 +1,12 @@
 import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
 import { sourceBranch, sourceRemote } from "./lib/settings";
-import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
+import { AllPackages, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 import { satisfies } from "semver";
-import { GitDiff } from "./git";
+import { GitDiff, gitChanges } from "./git";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
-}
-
-/** Returns all immediate subdirectories of the root directory that have been deleted or added. */
-export function gitChanges(
-  diffs: GitDiff[]
-): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
-  const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
-  const errors = [];
-  for (const diff of diffs) {
-    if (diff.status === "M") continue;
-    const dep = getDependencyFromFile(diff.file);
-    if (dep) {
-      const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
-      addedPackages.set(key, [dep, diff.status]);
-    } else {
-      errors.push(
-        `Unexpected file ${diff.status === "A" ? "added" : "deleted"}: ${diff.file}
-You should ` +
-          (diff.status === "A"
-            ? `only add files that are part of packages.`
-            : "only delete files that are a part of removed packages.")
-      );
-    }
-  }
-  if (errors.length) return { errors };
-  const deletions: PackageId[] = [];
-  const additions: PackageId[] = [];
-  for (const [dep, status] of Array.from(addedPackages.values())) {
-    (status === "D" ? deletions : additions).push(dep);
-  }
-  return { deletions, additions };
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */

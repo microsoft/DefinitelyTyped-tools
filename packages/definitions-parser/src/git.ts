@@ -1,10 +1,10 @@
 import { sourceBranch, sourceRemote } from "./lib/settings";
-import { AllPackages, NotNeededPackage } from "./packages";
+import { PackageId, AllPackages, NotNeededPackage, getDependencyFromFile, formatTypingVersion } from "./packages";
 import { Logger, execAndThrowErrors, consoleLogger, assertDefined, cacheDir } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
 import { inspect } from "util";
-import { gitChanges, PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
+import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
 
 export interface GitDiff {
   status: "A" | "D" | "M";
@@ -50,6 +50,35 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
   }
 }
 
+export function gitChanges(
+  diffs: GitDiff[]
+): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
+  const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
+  const errors = [];
+  for (const diff of diffs) {
+    if (diff.status === "M") continue;
+    const dep = getDependencyFromFile(diff.file);
+    if (dep) {
+      const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
+      addedPackages.set(key, [dep, diff.status]);
+    } else {
+      errors.push(
+        `Unexpected file ${diff.status === "A" ? "added" : "deleted"}: ${diff.file}
+You should ` +
+          (diff.status === "A"
+            ? `only add files that are part of packages.`
+            : "only delete files that are a part of removed packages.")
+      );
+    }
+  }
+  if (errors.length) return { errors };
+  const deletions: PackageId[] = [];
+  const additions: PackageId[] = [];
+  for (const [dep, status] of Array.from(addedPackages.values())) {
+    (status === "D" ? deletions : additions).push(dep);
+  }
+  return { deletions, additions };
+}
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string
