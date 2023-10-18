@@ -7,6 +7,8 @@ import { currentTimeStamp } from "./util/util";
 export default async function main() {
   const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
   const dry = !!(yargs.argv.dry || process.env.WEBHOOK_FORCE_DRY);
+  const definitelyTypedPath = yargs.argv.path || undefined;
+  if (definitelyTypedPath !== undefined && typeof definitelyTypedPath !== "string") throw new Error("path must be a string");
 
   console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
   const fetcher = new Fetcher();
@@ -21,7 +23,7 @@ export default async function main() {
     githubAccessToken,
     fetcher,
     {
-      definitelyTypedPath: undefined,
+      definitelyTypedPath,
       parseInParallel: false,
       progress: false,
     },
