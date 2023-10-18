@@ -23,12 +23,19 @@ jobs:
           node-version: 'lts/*'
       - run: npm install -g pnpm
       - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.PNPM_CACHE_FOLDER }}
+          key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-cache-
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - uses: actions/cache/restore@v3
         with:
           path: ./cache
-          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: pacote-cache-
 
       - uses: actions/checkout@v4
@@ -46,4 +53,10 @@ jobs:
         if: always()
         with:
           path: ./cache
-          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - run: pnpm store prune
+      - uses: actions/cache/save@v3
+        with:
+          path: ${{ env.PNPM_CACHE_FOLDER }}
+          key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
