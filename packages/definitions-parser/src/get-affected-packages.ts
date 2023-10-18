@@ -3,18 +3,63 @@ import { sourceBranch, sourceRemote } from "./lib/settings";
 import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 import { satisfies } from "semver";
+import { GitDiff } from "./git";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
 }
 
+/** Returns all immediate subdirectories of the root directory that have been deleted or added. */
+export function gitChanges(
+  diffs: GitDiff[]
+): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
+  const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
+  const errors = [];
+  for (const diff of diffs) {
+    if (diff.status === "M") continue;
+    const dep = getDependencyFromFile(diff.file);
+    if (dep) {
+      const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
+      addedPackages.set(key, [dep, diff.status]);
+    } else {
+      errors.push(
+        `Unexpected file ${diff.status === "A" ? "added" : "deleted"}: ${diff.file}
+You should ` +
+          (diff.status === "A"
+            ? `only add files that are part of packages.`
+            : "only delete files that are a part of removed packages.")
+      );
+    }
+  }
+  if (errors.length) return { errors };
+  const deletions: PackageId[] = [];
+  const additions: PackageId[] = [];
+  for (const [dep, status] of Array.from(addedPackages.values())) {
+    (status === "D" ? deletions : additions).push(dep);
+  }
+  return { deletions, additions };
+}
+
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export async function getAffectedPackages(
   allPackages: AllPackages,
-  deletions: PackageId[],
+  diffs: GitDiff[],
   definitelyTypedPath: string
-): Promise<PreparePackagesResult> {
-  const allDependents = [];
+): Promise<{ errors: string[] } | PreparePackagesResult> {
+  const errors = [];
+  const changedPackageDirectories = await execAndThrowErrors(
+    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
+    definitelyTypedPath
+  );
+
+  const git = gitChanges(diffs);
+  if ("errors" in git) {
+    errors.push(...git.errors);
+    return { errors };
+  }
+  const { additions, deletions } = git;
+  const addedPackageDirectories = mapDefined(additions, (id) => id.typesDirectoryName);
+  const allDependentDirectories = [];
   const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
   for (const d of deletions) {
     for (const dep of allPackages.allTypings()) {
@@ -29,39 +74,44 @@ export async function getAffectedPackages(
       }
     }
   }
-  const changedPackageNames = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
-    definitelyTypedPath
-  );
   // Chunk into 100-package chunks because of CMD.COM's command-line length limit
   for (let i = 0; i < filters.length; i += 100) {
-    allDependents.push(
+    allDependentDirectories.push(
       await execAndThrowErrors(
         `pnpm ls -r --depth -1 --parseable ${filters.slice(i, i + 100).join(" ")}`,
         definitelyTypedPath
       )
     );
   }
-  return getAffectedPackagesWorker(allPackages, changedPackageNames, allDependents, definitelyTypedPath);
+  return getAffectedPackagesWorker(
+    allPackages,
+    changedPackageDirectories,
+    addedPackageDirectories,
+    allDependentDirectories,
+    definitelyTypedPath
+  );
 }
 /** This function is exported for testing, since it's determined entirely by its inputs. */
 export function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
+  additions: string[],
   dependentOutputs: string[],
   definitelyTypedPath: string
 ): PreparePackagesResult {
   const dt = resolve(definitelyTypedPath);
   const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
-  const packageNames = new Set(
-    changedDirs.map(
+  const packageNames = new Set([
+    ...additions,
+    ...changedDirs.map(
       (c) =>
         assertDefined(
-          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c))
+          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)),
+          "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
         ).subDirectoryPath
-    )
-  );
+    ),
+  ]);
   const dependents = new Set(
     dependentDirs
       .map(
