@@ -8,7 +8,8 @@ export default async function main() {
   const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
   const dry = !!(yargs.argv.dry || process.env.WEBHOOK_FORCE_DRY);
   const definitelyTypedPath = yargs.argv.path || undefined;
-  if (definitelyTypedPath !== undefined && typeof definitelyTypedPath !== "string") throw new Error("path must be a string");
+  if (definitelyTypedPath !== undefined && typeof definitelyTypedPath !== "string")
+    throw new Error("path must be a string");
 
   console.log(`=== ${dry ? "DRY" : "PRODUCTION"} RUN ===`);
   const fetcher = new Fetcher();
