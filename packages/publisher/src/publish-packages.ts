@@ -24,7 +24,7 @@ if (require.main === module) {
     }
     const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
-      await readChangedPackages(await AllPackages.read(dt)),
+      await readChangedPackages(AllPackages.fromFS(dt)),
       dry,
       process.env.GH_API_TOKEN || "",
       new Fetcher()

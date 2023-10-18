@@ -5,7 +5,7 @@ import {
   getLicenseFileText,
 } from "../src/generate-packages";
 import { License } from "@definitelytyped/header-parser";
-import { NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
+import { NotNeededPackage, TypingsData, TypingsDataRaw, createMockDT } from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
 import { InMemoryFS, Dir, FS } from "@definitelytyped/utils";
 
@@ -24,11 +24,9 @@ function createRawPackage(license: License): TypingsDataRaw {
       nonNpm: false,
     },
     typesVersions: [],
-    files: ["index.d.ts", "jquery.test.ts"],
     license,
     dependencies: { "@types/madeira": "^1", balzac: "~3" },
     devDependencies: { "@types/jquery": "workspace:." },
-    contentHash: "11",
   };
 }
 
@@ -50,37 +48,37 @@ function defaultFS(): FS {
 
 testo({
   mitLicenseText() {
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.MIT), /*isLatest*/ true);
     expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("MIT License"));
   },
   apacheLicenseText() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("Apache License, Version 2.0"));
   },
   basicReadme() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining("This package contains type definitions for")
     );
   },
   readmeContainsContributors() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)")
     );
   },
   readmeContainsProjectName() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(expect.stringContaining("jquery.org"));
   },
   readmeOneDependency() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
     );
   },
   readmeMultipleDependencies() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     typing.dependencies["@types/example"] = "*";
     expect(createReadme(typing, defaultFS())).toEqual(
       expect.stringContaining(
@@ -89,18 +87,20 @@ testo({
     );
   },
   readmeContainsSingleFileDTS() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, defaultFS())).toContain("type T = import");
   },
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
-    // @ts-expect-error - files is readonly
-    rawPkg.files = ["index.d.ts", "other.d.ts"];
-    const typing = new TypingsData(rawPkg, /*isLatest*/ true);
-    expect(createReadme(typing, defaultFS())).not.toContain("type T = import");
+    const dt = createMockDT();
+    dt.pkgDir("jquery")
+      .set("index.d.ts", `type T = import("./types");`)
+      .set("other.d.ts", "");
+    const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
+    expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
   },
   basicPackageJson() {
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS(), createRawPackage(License.MIT), /*isLatest*/ true);
     expect(createPackageJSON(typing, "1.0")).toEqual(`{
     "name": "@types/jquery",
     "version": "1.0",

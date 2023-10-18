@@ -1,4 +1,4 @@
-import { getDefinitelyTyped, parseDefinitions, PreparePackagesResult } from "@definitelytyped/definitions-parser";
+import { AllPackages, getDefinitelyTyped, PreparePackagesResult } from "@definitelytyped/definitions-parser";
 import { execAndThrowErrors, loggerWithErrors, sleep } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
@@ -14,16 +14,16 @@ export async function prepareAllPackages(
     parseInParallel: nProcesses > 1,
   };
   const dt = await getDefinitelyTyped(options, log);
-  const allPackages = await parseDefinitions(dt, nProcesses ? { definitelyTypedPath, nProcesses } : undefined, log);
+  const allPackages = AllPackages.fromFS(dt);
   if (clone) {
     await installAllDependencies(definitelyTypedPath);
   }
-  const errors = checkParseResults(allPackages);
+  const errors = await checkParseResults(allPackages);
   if (errors.length) {
     throw new Error(errors.join("\n"));
   }
   return {
-    packageNames: new Set(allPackages.allTypings().map(({ subDirectoryPath }) => subDirectoryPath)),
+    packageNames: new Set((await allPackages.allTypings()).map(({ subDirectoryPath }) => subDirectoryPath)),
     dependents: new Set(),
   };
 }

@@ -1,32 +1,29 @@
 import {
-  validatePackageJson,
   License,
-  getLicenseFromPackageJson,
-  checkPackageJsonType,
   checkPackageJsonDependencies,
-  checkPackageJsonImports,
   checkPackageJsonExportsAndAddPJsonEntry,
+  checkPackageJsonImports,
+  checkPackageJsonType,
+  getLicenseFromPackageJson,
+  validatePackageJson,
 } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
   FS,
   assertDefined,
-  computeHash,
-  createModuleResolutionHost,
   filter,
-  flatMap,
   hasWindowsSlashes,
   join,
-  mapDefined,
   sort,
   split,
-  withoutStart,
+  withoutStart
 } from "@definitelytyped/utils";
 import assert from "assert";
 import path from "path";
 import * as ts from "typescript";
 import {
   DirectoryParsedTypingVersion,
+  TypingsData,
   TypingsDataRaw,
   TypingsVersionsRaw,
   formatTypingVersion,
@@ -53,17 +50,17 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.header.libraryMajorVersion}.${typingsDataRaw.header.libraryMinorVersion}`;
 }
 
-export async function getTypingInfo(packageName: string, dt: FS): Promise<TypingsVersionsRaw | { errors: string[] }> {
+export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt: FS): Promise<TypingsVersionsRaw | { errors: string[] }> {
   const errors = [];
-  if (packageName !== packageName.toLowerCase()) {
-    errors.push(`Package name \`${packageName}\` should be strictly lowercase`);
+  if (packageNameOrTypesDirectoryName !== packageNameOrTypesDirectoryName.toLowerCase()) {
+    errors.push(`Package name \`${packageNameOrTypesDirectoryName}\` should be strictly lowercase`);
   }
   interface OlderVersionDir {
     readonly directoryName: string;
     readonly version: DirectoryParsedTypingVersion;
   }
 
-  const fs = dt.subDir("types").subDir(getMangledNameForScopedPackage(packageName));
+  const fs = dt.subDir("types").subDir(getMangledNameForScopedPackage(packageNameOrTypesDirectoryName));
   const [rootDirectoryLs, olderVersionDirectories] = split<string, OlderVersionDir>(
     fs.readdir(),
     (fileOrDirectoryName) => {
@@ -72,9 +69,8 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
     }
   );
 
-  const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
-  const latestDataResult = await combineDataForAllTypesVersions(packageName, rootDirectoryLs, fs, moduleResolutionHost);
+  const latestDataResult = await getPackageJsonInfoForPackage(packageNameOrTypesDirectoryName, rootDirectoryLs, fs);
   if (Array.isArray(latestDataResult)) {
     return { errors: [...errors, ...latestDataResult] };
   }
@@ -85,7 +81,7 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
       if (matchesVersion(latestData, directoryVersion, considerLibraryMinorVersion)) {
         const latest = `${latestData.header.libraryMajorVersion}.${latestData.header.libraryMinorVersion}`;
         errors.push(
-          `The latest version of the '${packageName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
+          `The latest version of the '${packageNameOrTypesDirectoryName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
             (`v${latest}` === directoryName
               ? "."
               : `; since it applies to any ${latestData.header.libraryMajorVersion}.* version, up to and including ${latest}.`)
@@ -94,11 +90,10 @@ export async function getTypingInfo(packageName: string, dt: FS): Promise<Typing
 
       // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
-      const result = await combineDataForAllTypesVersions(
-        packageName,
+      const result = await getPackageJsonInfoForPackage(
+        packageNameOrTypesDirectoryName,
         ls,
         fs.subDir(directoryName),
-        moduleResolutionHost
       );
       if (Array.isArray(result)) {
         errors.push(...result);
@@ -187,19 +182,18 @@ export function parseVersionFromDirectoryName(
   };
 }
 
-async function combineDataForAllTypesVersions(
+async function getPackageJsonInfoForPackage(
   typingsPackageName: string,
   ls: readonly string[],
   fs: FS,
-  moduleResolutionHost: ts.ModuleResolutionHost
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
   const errors = [];
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls);
   if (Array.isArray(typesVersionAndPackageJson)) {
     errors.push(...typesVersionAndPackageJson);
   }
-  const { remainingLs, typesVersions } = Array.isArray(typesVersionAndPackageJson)
-    ? { remainingLs: [], typesVersions: [] }
+  const { typesVersions } = Array.isArray(typesVersionAndPackageJson)
+    ? { typesVersions: [] }
     : typesVersionAndPackageJson;
   const packageJson = fs.readJson(packageJsonName) as {
     readonly license?: unknown;
@@ -209,30 +203,7 @@ async function combineDataForAllTypesVersions(
     readonly exports?: unknown;
     readonly type?: unknown;
   };
-  const dataForRoot = getTypingDataForSingleTypesVersion(
-    undefined,
-    typingsPackageName,
-    remainingLs,
-    fs,
-    moduleResolutionHost
-  );
-  if (Array.isArray(dataForRoot)) {
-    errors.push(...dataForRoot);
-  }
-  const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
-    const subFs = fs.subDir(`ts${tsVersion}`);
-    const data = getTypingDataForSingleTypesVersion(
-      tsVersion,
-      typingsPackageName,
-      subFs.readdir(),
-      subFs,
-      moduleResolutionHost
-    );
-    if (Array.isArray(data)) {
-      errors.push(...data);
-    }
-    return data;
-  });
+  
   const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
   if (Array.isArray(packageJsonType)) {
     errors.push(...packageJsonType);
@@ -269,33 +240,71 @@ async function combineDataForAllTypesVersions(
     return errors;
   }
 
-  const allTypesVersions = [dataForRoot, ...dataForOtherTypesVersions] as TypingDataFromIndividualTypeScriptVersion[];
-  const files = Array.from(
-    flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
-      declFiles.map((file) => (typescriptVersion === undefined ? file : `ts${typescriptVersion}/${file}`))
-    )
-  );
-
   // Note that only the first project is collected right now
   return {
     header: assertDefined(header),
     typesVersions,
-    files,
     license: license as License,
     dependencies: packageJson.dependencies as Record<string, string>,
     devDependencies: packageJson.devDependencies as Record<string, string>,
-    contentHash: hash(
-      [...files, packageJsonName],
-      mapDefined(allTypesVersions, (a) => a.tsconfigPathsForHash),
-      fs
-    ),
     imports: imports as object | undefined,
     exports: exports as string | object | undefined,
     type: packageJsonType as "module" | undefined,
   };
 }
 
-interface TypingDataFromIndividualTypeScriptVersion {
+export function getFiles(
+  dt: FS,
+  typingsData: TypingsData,
+  moduleResolutionHost: ts.ModuleResolutionHost
+): readonly FilesForSingleTypeScriptVersion[] | { errors: string[] } {
+  const errors = [];
+  const rootDir = dt.subDir("types").subDir(typingsData.typesDirectoryName);
+  const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(rootDir.readdir());
+  if (Array.isArray(typesVersionAndPackageJson)) {
+    errors.push(...typesVersionAndPackageJson);
+  }
+  const { remainingLs, typesVersions } = Array.isArray(typesVersionAndPackageJson)
+    ? { remainingLs: [], typesVersions: [] }
+    : typesVersionAndPackageJson;
+  const dataForRoot = getFilesForSingleTypeScriptVersion(
+    undefined,
+    typingsData.typesDirectoryName,
+    remainingLs,
+    rootDir,
+    moduleResolutionHost
+  );
+  if (Array.isArray(dataForRoot)) {
+    errors.push(...dataForRoot);
+  }
+  const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
+    const subFs = rootDir.subDir(`ts${tsVersion}`);
+    const data = getFilesForSingleTypeScriptVersion(
+      tsVersion,
+      typingsData.typesDirectoryName,
+      subFs.readdir(),
+      subFs,
+      moduleResolutionHost
+    );
+    if (Array.isArray(data)) {
+      errors.push(...data);
+    }
+    return data;
+  });
+
+  if (errors.length) {
+    return { errors };
+  }
+
+  return [dataForRoot, ...dataForOtherTypesVersions] as FilesForSingleTypeScriptVersion[];
+  // return Array.from(
+  //   flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
+  //     declFiles.map((file) => (typescriptVersion === undefined ? file : `ts${typescriptVersion}/${file}`))
+  //   )
+  // );
+}
+
+export interface FilesForSingleTypeScriptVersion {
   /** Undefined for root (which uses typeScriptVersion in package.json instead) */
   readonly typescriptVersion: TypeScriptVersion | undefined;
   readonly declFiles: readonly string[]; // TODO: Used to map file.d.ts to ts4.1/file.d.ts -- not sure why this is needed
@@ -304,17 +313,17 @@ interface TypingDataFromIndividualTypeScriptVersion {
 
 /**
  * @param typescriptVersion Set if this is in e.g. a `ts3.1` directory.
- * @param packageName Name of the outermost directory; e.g. for "node/v4" this is just "node".
+ * @param typesDirectoryName Name of the outermost directory; e.g. for "node/v4" this is just "node".
  * @param ls All file/directory names in `directory`.
  * @param fs FS rooted at the directory for this particular TS version, e.g. `types/abs/ts3.1` or `types/abs` when typescriptVersion is undefined.
  */
-function getTypingDataForSingleTypesVersion(
+function getFilesForSingleTypeScriptVersion(
   typescriptVersion: TypeScriptVersion | undefined,
-  packageName: string,
+  typesDirectoryName: string,
   ls: readonly string[],
   fs: FS,
   moduleResolutionHost: ts.ModuleResolutionHost
-): TypingDataFromIndividualTypeScriptVersion | string[] {
+): FilesForSingleTypeScriptVersion | string[] {
   const errors = [];
   const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
   const configHost: ts.ParseConfigHost = {
@@ -328,17 +337,17 @@ function getTypingDataForSingleTypesVersion(
     configHost,
     path.resolve("/", fs.debugPath())
   ).options;
-  errors.push(...checkFilesFromTsConfig(packageName, tsconfig, fs.debugPath()));
+  errors.push(...checkFilesFromTsConfig(typesDirectoryName, tsconfig, fs.debugPath()));
   const { types, tests } = allReferencedFiles(
     tsconfig.files ?? [],
     fs,
-    packageName,
+    typesDirectoryName,
     moduleResolutionHost,
     compilerOptions
   );
   const usedFiles = new Set(
     [...types.keys(), ...tests, "tsconfig.json", "tslint.json"].map((f) =>
-      slicePrefixes(f, "node_modules/@types/" + packageName + "/")
+      slicePrefixes(f, "node_modules/@types/" + typesDirectoryName + "/")
     )
   );
   const otherFiles = ls.includes(unusedFilesName)
@@ -349,15 +358,15 @@ function getTypingDataForSingleTypesVersion(
         .filter(Boolean)
     : [];
   if (ls.includes(unusedFilesName) && !otherFiles.length) {
-    errors.push(`In ${packageName}: OTHER_FILES.txt is empty.`);
+    errors.push(`In ${typesDirectoryName}: OTHER_FILES.txt is empty.`);
   }
   for (const file of otherFiles) {
     if (!isRelativePath(file)) {
-      errors.push(`In ${packageName}: A path segment is empty or all dots ${file}`);
+      errors.push(`In ${typesDirectoryName}: A path segment is empty or all dots ${file}`);
     }
   }
   // Note: findAllUnusedFiles also modifies usedFiles and otherFiles and errors
-  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, errors, packageName, fs);
+  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, errors, typesDirectoryName, fs);
   if (unusedFiles.length) {
     errors.push(
       "\n\t* " +
@@ -378,9 +387,10 @@ function getTypingDataForSingleTypesVersion(
   }
 
   if (errors.length) return errors;
+  const declFiles = sort(types.keys());
   return {
     typescriptVersion,
-    declFiles: sort(types.keys()),
+    declFiles: typescriptVersion === undefined ? declFiles : declFiles.map(f => `ts${typescriptVersion}/${f}`),
     tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
   };
 }
@@ -432,15 +442,6 @@ interface TsConfig {
   include?: readonly string[];
   files?: readonly string[];
   compilerOptions: ts.CompilerOptions;
-}
-
-function hash(files: readonly string[], tsconfigPathsForHash: readonly string[], fs: FS): string {
-  const fileContents = files.map((f) => `${f}**${readFileAndThrowOnBOM(f, fs)}`);
-  let allContent = fileContents.join("||");
-  for (const path of tsconfigPathsForHash) {
-    allContent += path;
-  }
-  return computeHash(allContent);
 }
 
 export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {

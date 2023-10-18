@@ -1,19 +1,17 @@
-import { createMockDT } from "../src/mocks";
+import { License } from "@definitelytyped/header-parser";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { Range } from "semver";
 import { getTypingInfo } from "../src/lib/definition-parser";
+import { createMockDT } from "../src/mocks";
 import {
   AllPackages,
-  TypingsVersions,
-  TypingsData,
-  getMangledNameForScopedPackage,
   NotNeededPackage,
+  TypingsData,
+  TypingsVersions,
   getDependencyFromFile,
+  getMangledNameForScopedPackage,
 } from "../src/packages";
-import { Range } from "semver";
-import { parseDefinitions } from "../src/parse-definitions";
-import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { License } from "@definitelytyped/header-parser";
 
 describe(AllPackages, () => {
   let allPackages: AllPackages;
@@ -21,15 +19,16 @@ describe(AllPackages, () => {
   beforeAll(async () => {
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1", "1.0.9999");
-    const [log] = quietLoggerWithErrors();
-    allPackages = await parseDefinitions(dt.fs, undefined, log);
+    allPackages = AllPackages.fromFS(dt.fs);
   });
 
-  it("applies path mappings to test dependencies", () => {
-    const pkg = allPackages.tryGetLatestVersion("has-older-test-dependency")!;
-    expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
-      { typesDirectoryName: "jquery", version: { major: 1, minor: 0 } },
-    ]);
+  it("applies path mappings to test dependencies", async () => {
+    const pkg = await allPackages.tryGetLatestVersion("has-older-test-dependency");
+    for await (const { id } of allPackages.allDependencyTypings(pkg!)) {
+      expect(id).toEqual(
+        { typesDirectoryName: "jquery", version: { major: 1, minor: 0 } },
+      );
+    }
   });
 
   describe("getNotNeededPackage", () => {
@@ -76,7 +75,7 @@ describe(TypingsVersions, () => {
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
     }
-    versions = new TypingsVersions(info);
+    versions = new TypingsVersions(dt.fs, info);
   });
 
   it("sorts the data from latest to oldest version", () => {
@@ -120,6 +119,14 @@ describe(TypingsData, () => {
   let data: TypingsData;
 
   beforeEach(() => {
+    const dt = createMockDT();
+    dt.pkgDir("known")
+      .set("package.json", JSON.stringify({
+        name: "@types/known"
+      }))
+      .set("index.d.ts", "declare const x: number;")
+      .set("tsconfig.json", "{}");
+
     const versions = createTypingsVersionRaw(
       "known",
       {
@@ -129,7 +136,7 @@ describe(TypingsData, () => {
         "@types/known": "workspace:.",
       }
     );
-    data = new TypingsData(versions["1.0"], true);
+    data = new TypingsData(dt.fs, versions["1.0"], true);
   });
 
   it("sets the correct properties", () => {
@@ -173,7 +180,7 @@ describe(TypingsData, () => {
 
     it("returns the versioned name if not latest", () => {
       const versions = createTypingsVersionRaw("known", {}, {});
-      data = new TypingsData(versions["1.0"], false);
+      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
 
       expect(data.desc).toBe("@types/known v1.0");
     });
@@ -186,7 +193,7 @@ describe(TypingsData, () => {
 
     it("returns mangled name if scoped", () => {
       const versions = createTypingsVersionRaw("@foo/bar", {}, {});
-      data = new TypingsData(versions["1.0"], false);
+      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
 
       expect(data.typesDirectoryName).toBe("foo__bar");
     });

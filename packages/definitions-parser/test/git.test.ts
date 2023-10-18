@@ -2,9 +2,9 @@ import * as util from "util";
 import * as pacote from "pacote";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
-import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
+import { NotNeededPackage, AllPackages } from "../src/packages";
 
-const typesData: TypesDataFile = {
+const typesData = {
   jquery: createTypingsVersionRaw("jquery", {}, {}),
   known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
   "known-test": createTypingsVersionRaw("known-test", {}, { "@types/jquery": "*" }),
@@ -14,7 +14,7 @@ const typesData: TypesDataFile = {
 };
 
 const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
-const allPackages = AllPackages.from(typesData, jestNotNeeded);
+const allPackages = AllPackages.fromTestData(typesData, jestNotNeeded);
 
 const deleteJestDiffs: GitDiff[] = [
   { status: "M", file: "notNeededPackages.json" },
@@ -29,7 +29,7 @@ testo({
   forgotToDeleteFiles() {
     expect(
       getNotNeededPackages(
-        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
+        AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         deleteJestDiffs
       )
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
@@ -60,7 +60,7 @@ When removing packages, you should only delete files that are a part of removed 
   scoped() {
     expect(
       getNotNeededPackages(
-        AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
+        AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     ).toEqual({ ok: [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")] });

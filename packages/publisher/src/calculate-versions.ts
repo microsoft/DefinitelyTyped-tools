@@ -31,7 +31,7 @@ if (require.main === module) {
 export default async function calculateVersions(dt: FS, log: LoggerWithErrors): Promise<ChangedPackages> {
   log.info("=== Calculating versions ===");
   log.info("* Reading packages...");
-  const packages = await AllPackages.read(dt);
+  const packages = AllPackages.fromFS(dt);
   return computeAndSaveChangedPackages(packages, log);
 }
 
@@ -52,7 +52,7 @@ async function computeAndSaveChangedPackages(
 
 async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithErrors): Promise<ChangedPackages> {
   log.info("# Computing changed packages...");
-  const changedTypings = await nAtATime(npmRegistryParallelism, allPackages.allTypings(), async (pkg) => {
+  const changedTypings = await nAtATime(npmRegistryParallelism, await allPackages.allTypings(), async (pkg) => {
     const { version, needsPublish } = await fetchTypesPackageVersionInfo(pkg, /*publish*/ true, log);
     if (needsPublish) {
       log.info(`Need to publish: ${pkg.desc}@${version}`);
@@ -70,7 +70,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
       }
       const latestVersion = pkg.isLatest
         ? undefined
-        : (await fetchTypesPackageVersionInfo(allPackages.getLatest(pkg), /*publish*/ true)).version;
+        : (await fetchTypesPackageVersionInfo(await allPackages.getLatest(pkg), /*publish*/ true)).version;
       return { pkg, version, latestVersion };
     }
     return undefined;

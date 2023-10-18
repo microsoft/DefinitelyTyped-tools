@@ -41,7 +41,7 @@ if (require.main === module) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, log);
-    const allPackages = await AllPackages.read(dt);
+    const allPackages = AllPackages.fromFS(dt);
     await generatePackages(dt, await readChangedPackages(allPackages), tgz);
   });
 }
