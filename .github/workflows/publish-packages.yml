@@ -17,8 +17,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - run: npm install -g pnpm
@@ -30,7 +30,15 @@ jobs:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
           restore-keys: pacote-cache-
-      - run: node packages/publisher/dist/run.js
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DefinitelyTyped/DefinitelyTyped'
+          path: 'DefinitelyTyped'
+      - run: pnpm install
+        working-directory: DefinitelyTyped
+
+      - run: node packages/publisher/dist/run.js --path DefinitelyTyped
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TYPES_TOKEN: ${{ secrets.NPM_TYPES_TOKEN }}
