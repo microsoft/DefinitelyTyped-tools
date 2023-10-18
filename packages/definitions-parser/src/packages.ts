@@ -442,8 +442,6 @@ export class TypingsVersions {
 }
 
 export class TypingsData extends PackageBase {
-  public errors: readonly string[] | undefined;
-
   constructor(private dt: FS, private readonly data: TypingsDataRaw, readonly isLatest: boolean, private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())) {
     super();
   }
@@ -474,28 +472,31 @@ export class TypingsData extends PackageBase {
   get typesVersions(): readonly TypeScriptVersion[] {
     return this.data.typesVersions;
   }
-  
-  getErrors() {
-    void this.files;
-    return this.errors;
-  }
 
   private typesVersionsFiles: readonly FilesForSingleTypeScriptVersion[] | undefined;
-  get files(): readonly string[] {
+  tryGetFiles(): readonly string[] | { errors: string[] } {
     if (!this.typesVersionsFiles) {
       const files = getFiles(this.dt, this, this.moduleResolutionHost);
       if ("errors" in files) {
-        this.errors = files.errors;
-        this.typesVersionsFiles = [];
-      } else {
-        this.typesVersionsFiles = files;
+        return files;
       }
+      this.typesVersionsFiles = files;
     }
     return this.typesVersionsFiles.flatMap((v) => v.declFiles);
   }
-  get dtsFiles(): readonly string[] {
-    return this.files.filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+
+  getFiles(): readonly string[] {
+    const files = this.tryGetFiles();
+    if ("errors" in files) {
+      throw new Error(`Errors while reading package ${this.name}: ${files.errors.join("\n")}`);
+    }
+    return files;
   }
+
+  getDtsFiles(): readonly string[] {
+    return this.getFiles().filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+  }
+
   get license(): License {
     return this.data.license;
   }
@@ -517,7 +518,7 @@ export class TypingsData extends PackageBase {
   private _contentHash: string | undefined;
   get contentHash(): string {
     return this._contentHash ??= hash(
-      [...this.files, "package.json"],
+      [...this.getFiles(), "package.json"],
       mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
       this.dt.subDir("types").subDir(this.typesDirectoryName)
     );

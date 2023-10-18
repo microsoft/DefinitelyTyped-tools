@@ -153,7 +153,7 @@ describe(TypingsData, () => {
     expect(data.minor).toBe(0);
     expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
     expect(data.typesVersions).toEqual([]);
-    expect(data.files).toEqual(["index.d.ts"]);
+    expect(data.getFiles()).toEqual(["index.d.ts"]);
     expect(data.license).toBe(License.MIT);
     expect(data.contentHash).toBe("f647d34b5793cea752bc5b892d2099c92f1ced5f13b8a4ec3e4826d9f9cd0163");
     expect(data.projectName).toBe("zombo.com");

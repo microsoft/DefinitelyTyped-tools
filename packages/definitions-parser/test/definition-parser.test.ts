@@ -381,9 +381,12 @@ import route = require('@ember/routing/route');
       throw new Error(raw.errors.join("\n"));
     }
     const typingData = new TypingsVersions(dt, raw).getLatest();
-    const errors = typingData.getErrors();
-    expect(errors).toHaveLength(1);
-    expect(errors![0]).toMatch("Definitions must use global references to other packages");
+    const files = typingData.tryGetFiles();
+    if (!("errors" in files)) {
+      throw new Error("Expected errors");
+    }
+    expect(files.errors).toHaveLength(1);
+    expect(files.errors[0]).toMatch("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {
