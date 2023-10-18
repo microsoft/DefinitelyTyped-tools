@@ -391,7 +391,7 @@ function getFilesForSingleTypeScriptVersion(
   return {
     typescriptVersion,
     declFiles: typescriptVersion === undefined ? declFiles : declFiles.map(f => `ts${typescriptVersion}/${f}`),
-    tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions.paths),
+    tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions?.paths),
   };
 }
 
