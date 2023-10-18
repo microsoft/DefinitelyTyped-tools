@@ -28,6 +28,7 @@ testo({
     const { packageNames, dependents } = getAffectedPackagesWorker(
       allPackages,
       packageOutput,
+      [],
       [dependentOutput],
       "/dt"
     );
@@ -40,6 +41,7 @@ testo({
     const { packageNames, dependents } = getAffectedPackagesWorker(
       allPackages,
       packageOutput,
+      [],
       [dependentOutput],
       "/dt"
     );
@@ -55,8 +57,21 @@ testo({
       `/dt/types/has-older-test-dependency
 /dt/types/known`,
     ];
-    const { packageNames } = getAffectedPackagesWorker(allPackages, packageOutput, dependentOutput, "/dt");
+    const { packageNames } = getAffectedPackagesWorker(allPackages, packageOutput, [], dependentOutput, "/dt");
     expect(packageNames).toEqual(new Set(["jquery"]));
+  },
+  newPackage() {
+    const packageOutput = ``;
+    const dependentOutput = ``;
+    const { packageNames, dependents } = getAffectedPackagesWorker(
+      allPackages,
+      packageOutput,
+      ["mistake"],
+      [dependentOutput],
+      "/dt"
+    );
+    expect(packageNames).toEqual(new Set(["mistake"]));
+    expect(dependents).toEqual(new Set([]));
   },
   olderVersion() {
     const packageOutput = `/dt/types/jquery`;
@@ -66,6 +81,7 @@ testo({
     const { packageNames, dependents } = getAffectedPackagesWorker(
       allPackages,
       packageOutput,
+      [],
       [dependentOutput],
       "/dt"
     );

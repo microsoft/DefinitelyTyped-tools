@@ -1,8 +1,9 @@
 import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
 import { sourceBranch, sourceRemote } from "./lib/settings";
-import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
+import { AllPackages, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 import { satisfies } from "semver";
+import { GitDiff, gitChanges } from "./git";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
@@ -11,10 +12,23 @@ export interface PreparePackagesResult {
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export async function getAffectedPackages(
   allPackages: AllPackages,
-  deletions: PackageId[],
+  diffs: GitDiff[],
   definitelyTypedPath: string
-): Promise<PreparePackagesResult> {
-  const allDependents = [];
+): Promise<{ errors: string[] } | PreparePackagesResult> {
+  const errors = [];
+  const changedPackageDirectories = await execAndThrowErrors(
+    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
+    definitelyTypedPath
+  );
+
+  const git = gitChanges(diffs);
+  if ("errors" in git) {
+    errors.push(...git.errors);
+    return { errors };
+  }
+  const { additions, deletions } = git;
+  const addedPackageDirectories = mapDefined(additions, (id) => id.typesDirectoryName);
+  const allDependentDirectories = [];
   const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
   for (const d of deletions) {
     for (const dep of allPackages.allTypings()) {
@@ -29,39 +43,44 @@ export async function getAffectedPackages(
       }
     }
   }
-  const changedPackageNames = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
-    definitelyTypedPath
-  );
   // Chunk into 100-package chunks because of CMD.COM's command-line length limit
   for (let i = 0; i < filters.length; i += 100) {
-    allDependents.push(
+    allDependentDirectories.push(
       await execAndThrowErrors(
         `pnpm ls -r --depth -1 --parseable ${filters.slice(i, i + 100).join(" ")}`,
         definitelyTypedPath
       )
     );
   }
-  return getAffectedPackagesWorker(allPackages, changedPackageNames, allDependents, definitelyTypedPath);
+  return getAffectedPackagesWorker(
+    allPackages,
+    changedPackageDirectories,
+    addedPackageDirectories,
+    allDependentDirectories,
+    definitelyTypedPath
+  );
 }
 /** This function is exported for testing, since it's determined entirely by its inputs. */
 export function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
+  additions: string[],
   dependentOutputs: string[],
   definitelyTypedPath: string
 ): PreparePackagesResult {
   const dt = resolve(definitelyTypedPath);
   const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
-  const packageNames = new Set(
-    changedDirs.map(
+  const packageNames = new Set([
+    ...additions,
+    ...changedDirs.map(
       (c) =>
         assertDefined(
-          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c))
+          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)),
+          "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
         ).subDirectoryPath
-    )
-  );
+    ),
+  ]);
   const dependents = new Set(
     dependentDirs
       .map(

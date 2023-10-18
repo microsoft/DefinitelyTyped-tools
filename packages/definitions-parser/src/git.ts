@@ -1,12 +1,5 @@
 import { sourceBranch, sourceRemote } from "./lib/settings";
-import {
-  PackageId,
-  DirectoryParsedTypingVersion,
-  getDependencyFromFile,
-  formatTypingVersion,
-  AllPackages,
-  NotNeededPackage,
-} from "./packages";
+import { PackageId, AllPackages, NotNeededPackage, getDependencyFromFile, formatTypingVersion } from "./packages";
 import { Logger, execAndThrowErrors, consoleLogger, assertDefined, cacheDir } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
@@ -56,28 +49,35 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     return stdout;
   }
 }
-/** Returns all immediate subdirectories of the root directory that have been deleted. */
-function gitDeletions(diffs: GitDiff[]): { errors: string[] } | { ok: PackageId[] } {
-  const changedPackages = new Map<string, PackageId>();
+
+export function gitChanges(
+  diffs: GitDiff[]
+): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
+  const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
   const errors = [];
   for (const diff of diffs) {
-    if (diff.status !== "D") continue;
+    if (diff.status === "M") continue;
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
-      const key = `${dep.typesDirectoryName}/v${formatDependencyVersion(dep.version)}`;
-      changedPackages.set(key, dep);
+      const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
+      addedPackages.set(key, [dep, diff.status]);
     } else {
       errors.push(
-        `Unexpected file deleted: ${diff.file}
-When removing packages, you should only delete files that are a part of removed packages.`
+        `Unexpected file ${diff.status === "A" ? "added" : "deleted"}: ${diff.file}
+You should ` +
+          (diff.status === "A"
+            ? `only add files that are part of packages.`
+            : "only delete files that are a part of removed packages.")
       );
     }
   }
-  return errors.length ? { errors } : { ok: Array.from(changedPackages.values()) };
-}
-
-function formatDependencyVersion(version: DirectoryParsedTypingVersion | "*") {
-  return version === "*" ? "*" : formatTypingVersion(version);
+  if (errors.length) return { errors };
+  const deletions: PackageId[] = [];
+  const additions: PackageId[] = [];
+  for (const [dep, status] of Array.from(addedPackages.values())) {
+    (status === "D" ? deletions : additions).push(dep);
+  }
+  return { deletions, additions };
 }
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
@@ -89,19 +89,14 @@ export async function getAffectedPackagesFromDiff(
     const deleteds = getNotNeededPackages(allPackages, diffs);
     if ("errors" in deleteds) errors.push(...deleteds.errors);
     else
-      for (const deleted of deleteds.ok) {
+      for (const deleted of deleteds) {
         errors.push(...(await checkNotNeededPackage(deleted)));
       }
   }
-  const deletions = gitDeletions(diffs);
-  if ("errors" in deletions) {
-    errors.push(...deletions.errors);
+  const affected = await getAffectedPackages(allPackages, diffs, definitelyTypedPath);
+  if ("errors" in affected) {
     return errors;
   }
-  if (errors.length) {
-    return errors;
-  }
-  const affected = await getAffectedPackages(allPackages, deletions.ok, definitelyTypedPath);
   console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
   console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
   return affected;
@@ -147,10 +142,11 @@ it is supposed to replace, ${typings.version} of ${unneeded.name}.`);
 export function getNotNeededPackages(
   allPackages: AllPackages,
   diffs: GitDiff[]
-): { errors: string[] } | { ok: NotNeededPackage[] } {
-  const deletions = gitDeletions(diffs);
-  if ("errors" in deletions) return deletions;
-  const deletedPackages = new Set(deletions.ok.map((p) => assertDefined(p.typesDirectoryName)));
+): { errors: string[] } | NotNeededPackage[] {
+  const changes = gitChanges(diffs);
+  if ("errors" in changes) return changes;
+  const { deletions } = changes;
+  const deletedPackages = new Set(deletions.map((p) => assertDefined(p.typesDirectoryName)));
   const notNeededs = [];
   const errors = [];
   for (const p of deletedPackages) {
@@ -162,5 +158,5 @@ export function getNotNeededPackages(
       notNeededs.push(notNeeded);
     }
   }
-  return errors.length ? { errors } : { ok: notNeededs };
+  return errors.length ? { errors } : notNeededs;
 }
