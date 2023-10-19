@@ -7,9 +7,7 @@ import {
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
-export async function prepareAffectedPackages(
-  definitelyTypedPath: string,
-): Promise<PreparePackagesResult> {
+export async function prepareAffectedPackages(definitelyTypedPath: string): Promise<PreparePackagesResult> {
   const log = loggerWithErrors()[0];
   const options = {
     definitelyTypedPath,

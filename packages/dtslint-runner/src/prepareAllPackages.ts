@@ -2,10 +2,7 @@ import { AllPackages, getDefinitelyTyped, PreparePackagesResult } from "@definit
 import { execAndThrowErrors, loggerWithErrors, sleep } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
-export async function prepareAllPackages(
-  definitelyTypedPath: string,
-  clone: boolean,
-): Promise<PreparePackagesResult> {
+export async function prepareAllPackages(definitelyTypedPath: string, clone: boolean): Promise<PreparePackagesResult> {
   const [log] = loggerWithErrors();
   const options = {
     definitelyTypedPath,

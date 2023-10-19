@@ -73,12 +73,16 @@ export async function getAffectedPackagesWorker(
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set([
     ...additions,
-    ...await Promise.all(changedDirs.map(
-      async (c) =>
-        assertDefined(
-          await allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)),
-          "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
-        ).subDirectoryPath
+    ...(await Promise.all(
+      changedDirs.map(
+        async (c) =>
+          assertDefined(
+            await allPackages.tryGetTypingsData(
+              assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)
+            ),
+            "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
+          ).subDirectoryPath
+      )
     )),
   ]);
   const dependents = new Set(
