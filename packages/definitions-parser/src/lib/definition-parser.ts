@@ -292,11 +292,6 @@ export function getFiles(
   }
 
   return [dataForRoot, ...dataForOtherTypesVersions] as FilesForSingleTypeScriptVersion[];
-  // return Array.from(
-  //   flatMap(allTypesVersions, ({ typescriptVersion, declFiles }) =>
-  //     declFiles.map((file) => (typescriptVersion === undefined ? file : `ts${typescriptVersion}/${file}`))
-  //   )
-  // );
 }
 
 export interface FilesForSingleTypeScriptVersion {
@@ -345,6 +340,8 @@ function getFilesForSingleTypeScriptVersion(
   } catch (err) {
     if (err instanceof Error) {
       errors.push(err.message);
+    } else {
+      throw err;
     }
     return errors;
   }

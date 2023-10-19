@@ -3,7 +3,6 @@
 import assert = require("assert");
 import yargs from "yargs";
 import process = require("process");
-import os = require("os");
 
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
@@ -25,12 +24,11 @@ if (require.main === module) {
 }
 
 async function main() {
-  const { dry, nProcesses, name } = yargs.options({
+  const { dry, name } = yargs.options({
     dry: { type: "boolean", default: false },
-    nProcesses: { type: "number", default: os.cpus().length },
     name: { type: "string" },
   }).argv;
-  await tag(dry, nProcesses, name);
+  await tag(dry, name);
 }
 
 /**
@@ -41,7 +39,7 @@ async function main() {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tag(dry: boolean, _nProcesses: number, name?: string) {
+async function tag(dry: boolean, name?: string) {
   const log = loggerWithErrors()[0];
   const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true };
   const dt = await getDefinitelyTyped(options, log);
