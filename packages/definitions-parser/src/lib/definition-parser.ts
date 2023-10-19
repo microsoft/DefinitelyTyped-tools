@@ -8,16 +8,7 @@ import {
   validatePackageJson,
 } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import {
-  FS,
-  assertDefined,
-  filter,
-  hasWindowsSlashes,
-  join,
-  sort,
-  split,
-  withoutStart
-} from "@definitelytyped/utils";
+import { FS, assertDefined, filter, hasWindowsSlashes, join, sort, split, withoutStart } from "@definitelytyped/utils";
 import assert from "assert";
 import path from "path";
 import * as ts from "typescript";
@@ -50,7 +41,10 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
   return `${typingsDataRaw.header.libraryMajorVersion}.${typingsDataRaw.header.libraryMinorVersion}`;
 }
 
-export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt: FS): Promise<TypingsVersionsRaw | undefined | { errors: string[] }> {
+export async function getTypingInfo(
+  packageNameOrTypesDirectoryName: string,
+  dt: FS
+): Promise<TypingsVersionsRaw | undefined | { errors: string[] }> {
   const errors = [];
   if (packageNameOrTypesDirectoryName !== packageNameOrTypesDirectoryName.toLowerCase()) {
     errors.push(`Package name \`${packageNameOrTypesDirectoryName}\` should be strictly lowercase`);
@@ -95,11 +89,7 @@ export async function getTypingInfo(packageNameOrTypesDirectoryName: string, dt:
 
       // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
-      const result = await getPackageJsonInfoForPackage(
-        packageNameOrTypesDirectoryName,
-        ls,
-        fs.subDir(directoryName),
-      );
+      const result = await getPackageJsonInfoForPackage(packageNameOrTypesDirectoryName, ls, fs.subDir(directoryName));
       if (Array.isArray(result)) {
         errors.push(...result);
         return result;
@@ -190,7 +180,7 @@ export function parseVersionFromDirectoryName(
 async function getPackageJsonInfoForPackage(
   typingsPackageName: string,
   ls: readonly string[],
-  fs: FS,
+  fs: FS
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
   const errors = [];
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls);
@@ -208,7 +198,7 @@ async function getPackageJsonInfoForPackage(
     readonly exports?: unknown;
     readonly type?: unknown;
   };
-  
+
   const packageJsonType = checkPackageJsonType(packageJson.type, packageJsonName);
   if (Array.isArray(packageJsonType)) {
     errors.push(...packageJsonType);
@@ -403,7 +393,7 @@ function getFilesForSingleTypeScriptVersion(
   const declFiles = sort(types.keys());
   return {
     typescriptVersion,
-    declFiles: typescriptVersion === undefined ? declFiles : declFiles.map(f => `ts${typescriptVersion}/${f}`),
+    declFiles: typescriptVersion === undefined ? declFiles : declFiles.map((f) => `ts${typescriptVersion}/${f}`),
     tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions?.paths),
   };
 }

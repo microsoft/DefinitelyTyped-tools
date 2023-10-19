@@ -44,7 +44,10 @@ When removing packages, you should only delete files that are a part of removed 
   },
   async deleteInOtherPackage() {
     expect(
-      await getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
+      await getNotNeededPackages(allPackages, [
+        ...deleteJestDiffs,
+        { status: "D", file: "types/most-recent/extra-tests.ts" },
+      ])
     ).toEqual({ ok: jestNotNeeded });
   },
   async extraneousFile() {

@@ -16,12 +16,7 @@ import {
   cacheDir,
   nAtATime,
 } from "@definitelytyped/utils";
-import {
-  AnyPackage,
-  TypingsData,
-  AllPackages,
-  getDefinitelyTyped,
-} from "@definitelytyped/definitions-parser";
+import { AnyPackage, TypingsData, AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
 import * as semver from "semver";
 
@@ -54,7 +49,7 @@ async function tag(dry: boolean, _nProcesses: number, name?: string) {
 
   const publishClient = await NpmPublishClient.create(token, {});
   if (name) {
-    const pkg = await AllPackages.readSingle(dt,name);
+    const pkg = await AllPackages.readSingle(dt, name);
     const version = await getLatestTypingVersion(pkg);
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
     await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);

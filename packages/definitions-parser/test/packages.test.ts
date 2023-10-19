@@ -25,9 +25,7 @@ describe(AllPackages, () => {
   it("applies path mappings to test dependencies", async () => {
     const pkg = await allPackages.tryGetLatestVersion("has-older-test-dependency");
     for await (const { id } of allPackages.allDependencyTypings(pkg!)) {
-      expect(id).toEqual(
-        { typesDirectoryName: "jquery", version: { major: 1, minor: 0 } },
-      );
+      expect(id).toEqual({ typesDirectoryName: "jquery", version: { major: 1, minor: 0 } });
     }
   });
 
@@ -121,9 +119,12 @@ describe(TypingsData, () => {
   beforeEach(() => {
     const dt = createMockDT();
     dt.pkgDir("known")
-      .set("package.json", JSON.stringify({
-        name: "@types/known"
-      }))
+      .set(
+        "package.json",
+        JSON.stringify({
+          name: "@types/known",
+        })
+      )
       .set("index.d.ts", "declare const x: number;")
       .set("tsconfig.json", `{ "files": ["index.d.ts"] }`);
 

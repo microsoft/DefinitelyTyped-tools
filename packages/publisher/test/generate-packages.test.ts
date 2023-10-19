@@ -38,7 +38,7 @@ function defaultFS() {
   dt.pkgDir("jquery")
     .set("package.json", JSON.stringify({ name: "@types/jquery" }))
     .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
-    .set("index.d.ts",`type T = import("./types");\n`)
+    .set("index.d.ts", `type T = import("./types");\n`)
     .set("jquery-tests.ts", "// tests");
   return dt;
 }
@@ -96,9 +96,7 @@ testo({
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
-    dt.pkgDir("jquery")
-      .set("other.d.ts", "")
-      .set("OTHER_FILES.txt", "other.d.ts");
+    dt.pkgDir("jquery").set("other.d.ts", "").set("OTHER_FILES.txt", "other.d.ts");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
   },

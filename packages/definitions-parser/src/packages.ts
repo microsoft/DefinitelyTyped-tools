@@ -1,9 +1,25 @@
 import assert = require("assert");
 import { Header, License, Owner } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { Dir, FS, InMemoryFS, assertDefined, computeHash, createModuleResolutionHost, mapDefined, unique, unmangleScopedPackage } from "@definitelytyped/utils";
+import {
+  Dir,
+  FS,
+  InMemoryFS,
+  assertDefined,
+  computeHash,
+  createModuleResolutionHost,
+  mapDefined,
+  unique,
+  unmangleScopedPackage,
+} from "@definitelytyped/utils";
 import * as semver from "semver";
-import { FilesForSingleTypeScriptVersion, getFiles, getTypingInfo, parseVersionFromDirectoryName, readFileAndThrowOnBOM } from "./lib/definition-parser";
+import {
+  FilesForSingleTypeScriptVersion,
+  getFiles,
+  getTypingInfo,
+  parseVersionFromDirectoryName,
+  readFileAndThrowOnBOM,
+} from "./lib/definition-parser";
 import { scopeName, typesDirectoryName } from "./lib/settings";
 import { slicePrefixes } from "./lib/utils";
 
@@ -19,8 +35,8 @@ export class AllPackages {
     return new AllPackages(
       fs,
       new Map(Object.entries(typingsVersionsRaw).map(([name, raw]) => [name, new TypingsVersions(fs, raw)])),
-      notNeeded,
-    )
+      notNeeded
+    );
   }
 
   /** Use for `--single` tasks only. Do *not* call this in a loop! */
@@ -42,13 +58,13 @@ export class AllPackages {
   /** Keys are `typesDirectoryName` strings */
   readonly errors: Map<string, string[]> = new Map();
   private isComplete = false;
-  private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath())
+  private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath());
 
   private constructor(
     private dt: FS,
     /** Keys are `typesDirectoryName` strings */
     private readonly types: Map<string, TypingsVersions>,
-    private readonly notNeeded: readonly NotNeededPackage[],
+    private readonly notNeeded: readonly NotNeededPackage[]
   ) {}
 
   getNotNeededPackage(typesDirectoryName: string): NotNeededPackage | undefined {
@@ -56,9 +72,9 @@ export class AllPackages {
   }
 
   async hasTypingFor(dep: PackageId): Promise<boolean> {
-    return await this.tryGetTypingsData(dep) !== undefined;
+    return (await this.tryGetTypingsData(dep)) !== undefined;
   }
-  
+
   getErrorsAsArray() {
     return Array.from(this.errors.entries()).map(([name, errors]) => `${name}: ${errors.join("\n")}`);
   }
@@ -123,7 +139,7 @@ export class AllPackages {
       versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))
     );
   }
-  
+
   async tryGetTypingsVersions(typesDirectoryName: string): Promise<TypingsVersions | undefined> {
     let versions = this.types.get(typesDirectoryName);
     if (versions) {
@@ -145,9 +161,8 @@ export class AllPackages {
     return versions;
   }
 
-
   async allPackages(): Promise<readonly AnyPackage[]> {
-    return [...await this.allTypings(), ...this.allNotNeeded()];
+    return [...(await this.allTypings()), ...this.allNotNeeded()];
   }
 
   /** Note: this includes older version directories (`foo/v0`) */
@@ -177,18 +192,20 @@ export class AllPackages {
       }
     }
   }
-  
+
   private async readAllTypings() {
     if (this.isComplete) {
       return;
     }
     const types = this.dt.subDir("types");
-    await Promise.all(types.readdir().map(async (typesDirectoryName) => {
-      if (!types.isDirectory(typesDirectoryName) || !types.subDir(typesDirectoryName).exists("package.json")) {
-        return;
-      }
-      await this.tryGetTypingsVersions(typesDirectoryName);
-    }));
+    await Promise.all(
+      types.readdir().map(async (typesDirectoryName) => {
+        if (!types.isDirectory(typesDirectoryName) || !types.subDir(typesDirectoryName).exists("package.json")) {
+          return;
+        }
+        await this.tryGetTypingsVersions(typesDirectoryName);
+      })
+    );
     this.isComplete = true;
   }
 }
@@ -404,7 +421,11 @@ export class TypingsVersions {
    */
   private readonly versions: semver.SemVer[];
 
-  constructor(dt: FS, data: TypingsVersionsRaw, private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())) {
+  constructor(
+    dt: FS,
+    data: TypingsVersionsRaw,
+    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
+  ) {
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
@@ -413,7 +434,10 @@ export class TypingsVersions {
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
-      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i, this.moduleResolutionHost)])
+      this.versions.map((version, i) => [
+        version,
+        new TypingsData(dt, data[`${version.major}.${version.minor}`], !i, this.moduleResolutionHost),
+      ])
     );
   }
 
@@ -443,7 +467,12 @@ export class TypingsVersions {
 }
 
 export class TypingsData extends PackageBase {
-  constructor(private dt: FS, private readonly data: TypingsDataRaw, readonly isLatest: boolean, private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())) {
+  constructor(
+    private dt: FS,
+    private readonly data: TypingsDataRaw,
+    readonly isLatest: boolean,
+    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
+  ) {
     super();
   }
 
@@ -518,11 +547,11 @@ export class TypingsData extends PackageBase {
 
   private _contentHash: string | undefined;
   get contentHash(): string {
-    return this._contentHash ??= hash(
+    return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
       mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
       this.dt.subDir("types").subDir(this.typesDirectoryName)
-    );
+    ));
   }
   get projectName(): string | undefined {
     return this.data.header.projects[0];
