@@ -23,14 +23,14 @@
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "@types/node": "^14.14.35",
+    "@types/semver": "^7.5.2",
     "fs-extra": "^9.1.0",
     "pacote": "^13.6.1",
     "semver": "^7.3.7"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",
-    "@types/pacote": "^11.1.5",
-    "@types/semver": "^7.5.2"
+    "@types/pacote": "^11.1.5"
   },
   "peerDependencies": {
     "typescript": "*"
