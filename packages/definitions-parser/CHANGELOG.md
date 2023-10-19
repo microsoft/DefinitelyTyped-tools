@@ -1,5 +1,14 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.181
+
+### Patch Changes
+
+- 8cae0671: Add semver types to dependencies in definitions-parser
+- 22ffaadf: Always convert contributor githubUsername to url (missing changeset)
+- Updated dependencies [22ffaadf]
+  - @definitelytyped/header-parser@0.0.180
+
 ## 0.0.180
 
 ### Patch Changes
