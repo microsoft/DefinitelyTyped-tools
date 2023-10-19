@@ -90,9 +90,10 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
     }
     return undefined;
   });
-  if (allPackages.errors.size) {
+  const errors = allPackages.getErrorsAsArray();
+  if (errors.length) {
     throw new Error(
-      `Cannot determine if packages with errors need to be published:\n\n${allPackages.getErrorsAsArray().join("\n")}`
+      `Cannot determine if packages with errors need to be published:\n\n${errors.join("\n")}`
     );
   }
   return { changedTypings: compact(changedTypings), changedNotNeededPackages: compact(changedNotNeededPackages) };

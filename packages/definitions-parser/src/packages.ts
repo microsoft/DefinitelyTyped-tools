@@ -56,7 +56,7 @@ export class AllPackages {
   }
 
   /** Keys are `typesDirectoryName` strings */
-  readonly errors: Map<string, string[]> = new Map();
+  private readonly errors: Map<string, string[]> = new Map();
   private isComplete = false;
   private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath());
 
@@ -140,7 +140,7 @@ export class AllPackages {
     );
   }
 
-  async tryGetTypingsVersions(typesDirectoryName: string): Promise<TypingsVersions | undefined> {
+  private async tryGetTypingsVersions(typesDirectoryName: string): Promise<TypingsVersions | undefined> {
     let versions = this.types.get(typesDirectoryName);
     if (versions) {
       return versions;
