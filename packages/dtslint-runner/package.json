@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "check-parse-results": "node --require source-map-support/register dist/check-parse-results.js",
+    "check-parse-results": "node --enable-source-maps dist/check-parse-results.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
@@ -39,7 +39,6 @@
     "@types/glob": "^8.1.0",
     "@types/pacote": "^11.1.5",
     "@types/semver": "^7.5.2",
-    "@types/stats-lite": "^2.2.0",
-    "source-map-support": "^0.5.21"
+    "@types/stats-lite": "^2.2.0"
   }
 }
