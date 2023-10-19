@@ -24,7 +24,7 @@ const deleteJestDiffs: GitDiff[] = [
 
 testo({
   async ok() {
-    expect(await getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual({ ok: jestNotNeeded });
+    expect(await getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
   },
   async forgotToDeleteFiles() {
     expect(
@@ -38,17 +38,14 @@ testo({
     expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
       errors: [
         `Unexpected file deleted: oops.txt
-When removing packages, you should only delete files that are a part of removed packages.`,
+You should only delete files that are a part of removed packages.`,
       ],
     });
   },
   async deleteInOtherPackage() {
     expect(
-      await getNotNeededPackages(allPackages, [
-        ...deleteJestDiffs,
-        { status: "D", file: "types/most-recent/extra-tests.ts" },
-      ])
-    ).toEqual({ ok: jestNotNeeded });
+      await getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
+    ).toEqual(jestNotNeeded);
   },
   async extraneousFile() {
     expect(
@@ -58,7 +55,12 @@ When removing packages, you should only delete files that are a part of removed 
         { status: "D", file: "types/jest/index.d.ts" },
         { status: "D", file: "types/jest/jest-tests.d.ts" },
       ])
-    ).toEqual({ ok: jestNotNeeded });
+    ).toEqual({
+      errors: [
+        `Unexpected file added: oooooooooooops.txt
+You should only add files that are part of packages.`,
+      ],
+    });
   },
   async scoped() {
     expect(
@@ -66,7 +68,7 @@ When removing packages, you should only delete files that are a part of removed 
         AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
-    ).toEqual({ ok: [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")] });
+    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
   },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
