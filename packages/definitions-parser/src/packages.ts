@@ -509,23 +509,12 @@ export class TypingsData extends PackageBase {
   }
 
   private typesVersionsFiles: readonly FilesForSingleTypeScriptVersion[] | undefined;
-  tryGetFiles(): readonly string[] | { errors: string[] } {
+  getFiles(): readonly string[] {
     if (!this.typesVersionsFiles) {
       const files = getFiles(this.dt, this, this.moduleResolutionHost);
-      if ("errors" in files) {
-        return files;
-      }
       this.typesVersionsFiles = files;
     }
     return this.typesVersionsFiles.flatMap((v) => v.declFiles);
-  }
-
-  getFiles(): readonly string[] {
-    const files = this.tryGetFiles();
-    if ("errors" in files) {
-      throw new Error(`Errors while reading package ${this.name}: ${files.errors.join("\n")}`);
-    }
-    return files;
   }
 
   getDtsFiles(): readonly string[] {

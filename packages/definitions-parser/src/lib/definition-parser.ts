@@ -252,7 +252,7 @@ export function getFiles(
   dt: FS,
   typingsData: TypingsData,
   moduleResolutionHost: ts.ModuleResolutionHost
-): readonly FilesForSingleTypeScriptVersion[] | { errors: string[] } {
+): readonly FilesForSingleTypeScriptVersion[] {
   const errors = [];
   const rootDir = dt.subDir("types").subDir(typingsData.typesDirectoryName);
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(rootDir.readdir());
@@ -288,7 +288,7 @@ export function getFiles(
   });
 
   if (errors.length) {
-    return { errors };
+    throw new Error(`Errors encountered resolving files for ${typingsData.name}:\n${errors.join("\n")}`);
   }
 
   return [dataForRoot, ...dataForOtherTypesVersions] as FilesForSingleTypeScriptVersion[];
