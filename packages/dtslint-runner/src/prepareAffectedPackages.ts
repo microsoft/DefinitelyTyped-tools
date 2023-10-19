@@ -9,13 +9,11 @@ import { checkParseResults } from "./check-parse-results";
 
 export async function prepareAffectedPackages(
   definitelyTypedPath: string,
-  nProcesses: number
 ): Promise<PreparePackagesResult> {
   const log = loggerWithErrors()[0];
   const options = {
     definitelyTypedPath,
     progress: false,
-    parseInParallel: nProcesses > 1,
   };
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = AllPackages.fromFS(dt);

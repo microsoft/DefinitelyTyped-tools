@@ -7,7 +7,6 @@ testo({
     const dt = await getDefinitelyTyped(
       {
         definitelyTypedPath: undefined,
-        parseInParallel: false,
         progress: false,
       },
       quietLoggerWithErrors()[0]

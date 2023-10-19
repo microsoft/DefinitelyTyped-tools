@@ -18,7 +18,7 @@ import { getSecret, Secret } from "./lib/secrets";
 if (require.main === module) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-    const options = { ...defaultLocalOptions, parseInParallel: true };
+    const options = { ...defaultLocalOptions };
     if (yargs.argv.path) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }

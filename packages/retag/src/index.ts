@@ -43,7 +43,7 @@ async function main() {
  */
 async function tag(dry: boolean, _nProcesses: number, name?: string) {
   const log = loggerWithErrors()[0];
-  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
+  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true };
   const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 

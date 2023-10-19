@@ -73,7 +73,7 @@ testo({
     expect(packageNames).toEqual(new Set(["mistake"]));
     expect(dependents).toEqual(new Set([]));
   },
-  olderVersion() {
+  async olderVersion() {
     const packageOutput = `/dt/types/jquery`;
     const dependentOutput = `/dt/types/jquery
 /dt/types/has-older-test-dependency

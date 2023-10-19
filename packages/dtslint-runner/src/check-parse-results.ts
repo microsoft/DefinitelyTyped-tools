@@ -3,7 +3,7 @@ import { AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-pa
 import { assertDefined } from "@definitelytyped/utils";
 import * as semver from "semver";
 if (require.main === module) {
-  const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
+  const options = { definitelyTypedPath: undefined, progress: false };
   getDefinitelyTyped(options, console).then((dt) => {
     return checkParseResults(AllPackages.fromFS(dt));
   });
