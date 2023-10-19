@@ -31,7 +31,7 @@ export async function getAffectedPackages(
   const allDependentDirectories = [];
   const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
   for (const d of deletions) {
-    for (const dep of allPackages.allTypings()) {
+    for (const dep of await allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
         if (
           "@types/" + d.typesDirectoryName === name &&
@@ -61,36 +61,40 @@ export async function getAffectedPackages(
   );
 }
 /** This function is exported for testing, since it's determined entirely by its inputs. */
-export function getAffectedPackagesWorker(
+export async function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
   additions: string[],
   dependentOutputs: string[],
   definitelyTypedPath: string
-): PreparePackagesResult {
+): Promise<PreparePackagesResult> {
   const dt = resolve(definitelyTypedPath);
   const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set([
     ...additions,
-    ...changedDirs.map(
-      (c) =>
+    ...await Promise.all(changedDirs.map(
+      async (c) =>
         assertDefined(
-          allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)),
+          await allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)),
           "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
         ).subDirectoryPath
-    ),
+    )),
   ]);
   const dependents = new Set(
-    dependentDirs
-      .map(
-        (d) =>
-          assertDefined(
-            allPackages.tryGetTypingsData(assertDefined(getDependencyFromFile(d + "/index.d.ts"), "bad path " + d)),
-            d + " package not found"
-          ).subDirectoryPath
+    (
+      await Promise.all(
+        dependentDirs.map(
+          async (d) =>
+            assertDefined(
+              await allPackages.tryGetTypingsData(
+                assertDefined(getDependencyFromFile(d + "/index.d.ts"), "bad path " + d)
+              ),
+              d + " package not found"
+            ).subDirectoryPath
+        )
       )
-      .filter((d) => !packageNames.has(d))
+    ).filter((d) => !packageNames.has(d))
   );
   return { packageNames, dependents };
 }

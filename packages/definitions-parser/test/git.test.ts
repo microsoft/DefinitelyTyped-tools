@@ -2,9 +2,9 @@ import * as util from "util";
 import * as pacote from "pacote";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
-import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
+import { NotNeededPackage, AllPackages } from "../src/packages";
 
-const typesData: TypesDataFile = {
+const typesData = {
   jquery: createTypingsVersionRaw("jquery", {}, {}),
   known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
   "known-test": createTypingsVersionRaw("known-test", {}, { "@types/jquery": "*" }),
@@ -14,7 +14,7 @@ const typesData: TypesDataFile = {
 };
 
 const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
-const allPackages = AllPackages.from(typesData, jestNotNeeded);
+const allPackages = AllPackages.fromTestData(typesData, jestNotNeeded);
 
 const deleteJestDiffs: GitDiff[] = [
   { status: "M", file: "notNeededPackages.json" },
@@ -23,33 +23,33 @@ const deleteJestDiffs: GitDiff[] = [
 ];
 
 testo({
-  ok() {
-    expect(getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
+  async ok() {
+    expect(await getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
   },
-  forgotToDeleteFiles() {
+  async forgotToDeleteFiles() {
     expect(
-      getNotNeededPackages(
-        AllPackages.from({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
+      await getNotNeededPackages(
+        AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         deleteJestDiffs
       )
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
-  tooManyDeletes() {
-    expect(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
+  async tooManyDeletes() {
+    expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
       errors: [
         `Unexpected file deleted: oops.txt
 You should only delete files that are a part of removed packages.`,
       ],
     });
   },
-  deleteInOtherPackage() {
+  async deleteInOtherPackage() {
     expect(
-      getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
+      await getNotNeededPackages(allPackages, [...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }])
     ).toEqual(jestNotNeeded);
   },
-  extraneousFile() {
+  async extraneousFile() {
     expect(
-      getNotNeededPackages(allPackages, [
+      await getNotNeededPackages(allPackages, [
         { status: "A", file: "oooooooooooops.txt" },
         { status: "M", file: "notNeededPackages.json" },
         { status: "D", file: "types/jest/index.d.ts" },
@@ -62,10 +62,10 @@ You should only add files that are part of packages.`,
       ],
     });
   },
-  scoped() {
+  async scoped() {
     expect(
-      getNotNeededPackages(
-        AllPackages.from(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
+      await getNotNeededPackages(
+        AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         [{ status: "D", file: "types/ember__object/index.d.ts" }]
       )
     ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
