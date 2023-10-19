@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.0.180
+
+### Patch Changes
+
+- 22ffaadf: Always convert contributor githubUsername to url (missing changeset)
+
 ## 0.0.179
 
 ### Patch Changes

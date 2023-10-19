@@ -1,5 +1,16 @@
 # @definitelytyped/publisher
 
+## 0.0.181
+
+### Patch Changes
+
+- 22ffaadf: Always convert contributor githubUsername to url (missing changeset)
+- Updated dependencies [8cae0671]
+- Updated dependencies [22ffaadf]
+  - @definitelytyped/definitions-parser@0.0.181
+  - @definitelytyped/header-parser@0.0.180
+  - @definitelytyped/retag@0.0.181
+
 ## 0.0.180
 
 ### Patch Changes

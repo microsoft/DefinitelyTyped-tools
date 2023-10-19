@@ -1,5 +1,12 @@
 # @definitelytyped/dts-critic
 
+## 0.0.180
+
+### Patch Changes
+
+- Updated dependencies [22ffaadf]
+  - @definitelytyped/header-parser@0.0.180
+
 ## 0.0.179
 
 ### Patch Changes
