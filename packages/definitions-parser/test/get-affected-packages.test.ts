@@ -1,8 +1,8 @@
 import { getAffectedPackagesWorker } from "../src/get-affected-packages";
-import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
+import { NotNeededPackage, AllPackages } from "../src/packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
-const typesData: TypesDataFile = {
+const typesData = {
   "has-older-test-dependency": createTypingsVersionRaw("has-older-test-dependency", {}, { "@types/jquery": "1.0.0" }),
   jquery: createTypingsVersionRaw("jquery", {}, {}),
   known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
@@ -17,15 +17,15 @@ typesData.jquery["2.0"] = {
 };
 
 const notNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
-const allPackages = AllPackages.from(typesData, notNeeded);
+const allPackages = AllPackages.fromTestData(typesData, notNeeded);
 
 testo({
-  updatedPackage() {
+  async updatedPackage() {
     const packageOutput = `/dt/types/jquery`;
     const dependentOutput = `/dt/types/jquery
 /dt/types/known-test
 /dt/types/most-recent`;
-    const { packageNames, dependents } = getAffectedPackagesWorker(
+    const { packageNames, dependents } = await getAffectedPackagesWorker(
       allPackages,
       packageOutput,
       [],
@@ -35,10 +35,10 @@ testo({
     expect(packageNames).toEqual(new Set(["jquery"]));
     expect(dependents).toEqual(new Set(["known-test", "most-recent"]));
   },
-  deletedPackage() {
+  async deletedPackage() {
     const packageOutput = ``;
     const dependentOutput = `/dt/types/unknown-test`;
-    const { packageNames, dependents } = getAffectedPackagesWorker(
+    const { packageNames, dependents } = await getAffectedPackagesWorker(
       allPackages,
       packageOutput,
       [],
@@ -48,7 +48,7 @@ testo({
     expect(packageNames).toEqual(new Set([]));
     expect(dependents).toEqual(new Set(["unknown-test"]));
   },
-  deletedVersion() {
+  async deletedVersion() {
     const packageOutput = `/dt/types/jquery`;
     const dependentOutput = [
       `/dt/types/jquery
@@ -57,13 +57,13 @@ testo({
       `/dt/types/has-older-test-dependency
 /dt/types/known`,
     ];
-    const { packageNames } = getAffectedPackagesWorker(allPackages, packageOutput, [], dependentOutput, "/dt");
+    const { packageNames } = await getAffectedPackagesWorker(allPackages, packageOutput, [], dependentOutput, "/dt");
     expect(packageNames).toEqual(new Set(["jquery"]));
   },
-  newPackage() {
+  async newPackage() {
     const packageOutput = ``;
     const dependentOutput = ``;
-    const { packageNames, dependents } = getAffectedPackagesWorker(
+    const { packageNames, dependents } = await getAffectedPackagesWorker(
       allPackages,
       packageOutput,
       ["mistake"],
@@ -73,12 +73,12 @@ testo({
     expect(packageNames).toEqual(new Set(["mistake"]));
     expect(dependents).toEqual(new Set([]));
   },
-  olderVersion() {
+  async olderVersion() {
     const packageOutput = `/dt/types/jquery`;
     const dependentOutput = `/dt/types/jquery
 /dt/types/has-older-test-dependency
 /dt/types/known`;
-    const { packageNames, dependents } = getAffectedPackagesWorker(
+    const { packageNames, dependents } = await getAffectedPackagesWorker(
       allPackages,
       packageOutput,
       [],

@@ -3,7 +3,6 @@
 import assert = require("assert");
 import yargs from "yargs";
 import process = require("process");
-import os = require("os");
 
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
@@ -16,13 +15,7 @@ import {
   cacheDir,
   nAtATime,
 } from "@definitelytyped/utils";
-import {
-  AnyPackage,
-  TypingsData,
-  AllPackages,
-  parseDefinitions,
-  getDefinitelyTyped,
-} from "@definitelytyped/definitions-parser";
+import { AnyPackage, TypingsData, AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
 import * as semver from "semver";
 
@@ -31,12 +24,11 @@ if (require.main === module) {
 }
 
 async function main() {
-  const { dry, nProcesses, name } = yargs.options({
+  const { dry, name } = yargs.options({
     dry: { type: "boolean", default: false },
-    nProcesses: { type: "number", default: os.cpus().length },
     name: { type: "string" },
   }).argv;
-  await tag(dry, nProcesses, name);
+  await tag(dry, name);
 }
 
 /**
@@ -47,25 +39,21 @@ async function main() {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tag(dry: boolean, nProcesses: number, name?: string) {
+async function tag(dry: boolean, name?: string) {
   const log = loggerWithErrors()[0];
-  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
-  await parseDefinitions(
-    await getDefinitelyTyped(options, log),
-    { nProcesses: nProcesses || os.cpus().length, definitelyTypedPath: "../DefinitelyTyped" },
-    log
-  );
-
+  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true };
+  const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 
   const publishClient = await NpmPublishClient.create(token, {});
   if (name) {
-    const pkg = await AllPackages.readSingle(name);
+    const pkg = await AllPackages.readSingle(dt, name);
     const version = await getLatestTypingVersion(pkg);
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
     await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
   } else {
-    await nAtATime(5, await AllPackages.readLatestTypings(), async (pkg) => {
+    const allPackages = AllPackages.fromFS(dt);
+    await nAtATime(5, await allPackages.allLatestTypings(), async (pkg) => {
       // Only update tags for the latest version of the package.
       const version = await getLatestTypingVersion(pkg);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);

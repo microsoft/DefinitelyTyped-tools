@@ -15,8 +15,6 @@ export interface ParseDefinitionsOptions {
   readonly definitelyTypedPath: string | undefined;
   /** Whether to show progress bars. Good when running locally, bad when running in CI. */
   readonly progress: boolean;
-  /** Disabled in CI since it has problems logging errors from other processes. */
-  readonly parseInParallel: boolean;
 }
 
 export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: LoggerWithErrors): Promise<FS> {
