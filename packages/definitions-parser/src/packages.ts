@@ -39,7 +39,8 @@ export class AllPackages {
     return new TypingsData(dt, versions[0], /*isLatest*/ true);
   }
 
-  private readonly errors: Map<string, string[]> = new Map();
+  /** Keys are `typesDirectoryName` strings */
+  readonly errors: Map<string, string[]> = new Map();
   private isComplete = false;
   private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath())
 
@@ -58,7 +59,7 @@ export class AllPackages {
     return await this.tryGetTypingsData(dep) !== undefined;
   }
   
-  getErrors() {
+  getErrorsAsArray() {
     return Array.from(this.errors.entries()).map(([name, errors]) => `${name}: ${errors.join("\n")}`);
   }
 
@@ -182,12 +183,12 @@ export class AllPackages {
       return;
     }
     const types = this.dt.subDir("types");
-    for (const typesDirectoryName of types.readdir()) {
+    await Promise.all(types.readdir().map(async (typesDirectoryName) => {
       if (!types.isDirectory(typesDirectoryName) || !types.subDir(typesDirectoryName).exists("package.json")) {
-        continue;
+        return;
       }
-      this.tryGetTypingsVersions(typesDirectoryName);
-    }
+      await this.tryGetTypingsVersions(typesDirectoryName);
+    }));
     this.isComplete = true;
   }
 }

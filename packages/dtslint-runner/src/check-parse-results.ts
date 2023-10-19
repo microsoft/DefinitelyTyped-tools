@@ -27,5 +27,5 @@ export async function checkParseResults(allPackages: AllPackages): Promise<strin
       }
     }
   }
-  return [...allPackages.getErrors(), ...errors];
+  return [...allPackages.getErrorsAsArray(), ...errors];
 }
