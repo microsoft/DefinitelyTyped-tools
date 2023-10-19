@@ -17,7 +17,6 @@
     "longjohn": "^0.2.11",
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
-    "source-map-support": "^0.4.0",
     "typescript": "next",
     "yargs": "15.3.1"
   },
@@ -26,23 +25,22 @@
     "@types/mz": "^0.0.31",
     "@types/pacote": "^11.1.5",
     "@types/semver": "^7.5.2",
-    "@types/source-map-support": "^0.4.0",
     "@types/yargs": "^15.0.4"
   },
   "scripts": {
     "build": "tsc -b",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
-    "clean": "node -r source-map-support/register dist/clean.js",
-    "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
-    "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
-    "generate": "node -r source-map-support/register dist/generate-packages.js",
-    "validate": "node -r source-map-support/register dist/validate.js",
-    "publish-packages": "node -r source-map-support/register dist/publish-packages.js",
-    "publish-packages-dry": "node -r source-map-support/register dist/publish-packages.js --dry",
-    "publish-registry": "node -r source-map-support/register dist/publish-registry.js",
-    "full": "node -r source-map-support/register dist/full.js",
-    "full-dry": "node -r source-map-support/register dist/full.js --dry",
-    "test-tsNext": "node -r source-map-support/register dist/tester/test.js --all --tsNext"
+    "clean": "node --enable-source-maps dist/clean.js",
+    "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
+    "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
+    "generate": "node --enable-source-maps dist/generate-packages.js",
+    "validate": "node --enable-source-maps dist/validate.js",
+    "publish-packages": "node --enable-source-maps dist/publish-packages.js",
+    "publish-packages-dry": "node --enable-source-maps dist/publish-packages.js --dry",
+    "publish-registry": "node --enable-source-maps dist/publish-registry.js",
+    "full": "node --enable-source-maps dist/full.js",
+    "full-dry": "node --enable-source-maps dist/full.js --dry",
+    "test-tsNext": "node --enable-source-maps dist/tester/test.js --all --tsNext"
   },
   "repository": {
     "type": "git",
