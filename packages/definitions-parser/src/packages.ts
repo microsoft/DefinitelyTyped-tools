@@ -20,7 +20,7 @@ import {
   parseVersionFromDirectoryName,
   readFileAndThrowOnBOM,
 } from "./lib/definition-parser";
-import { scopeName, typesDirectoryName } from "./lib/settings";
+import { getAllowedPackageJsonDependencies, scopeName, typesDirectoryName } from "./lib/settings";
 import { slicePrefixes } from "./lib/utils";
 
 export class AllPackages {
@@ -197,6 +197,8 @@ export class AllPackages {
     if (this.isComplete) {
       return;
     }
+    // populate cache so every directory doesn't try to request this from GH
+    await getAllowedPackageJsonDependencies();
     const types = this.dt.subDir("types");
     await Promise.all(
       types.readdir().map(async (typesDirectoryName) => {
