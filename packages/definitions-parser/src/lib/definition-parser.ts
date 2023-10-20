@@ -254,7 +254,7 @@ export function getFiles(
   moduleResolutionHost: ts.ModuleResolutionHost
 ): readonly FilesForSingleTypeScriptVersion[] {
   const errors = [];
-  const rootDir = dt.subDir("types").subDir(typingsData.typesDirectoryName);
+  const rootDir = dt.subDir("types").subDir(typingsData.subDirectoryPath);
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(rootDir.readdir());
   if (Array.isArray(typesVersionAndPackageJson)) {
     errors.push(...typesVersionAndPackageJson);

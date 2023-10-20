@@ -1,4 +1,5 @@
 import { ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
+import path from "path";
 
 if (process.env.LONGJOHN) {
   console.log("=== USING LONGJOHN ===");
@@ -12,7 +13,7 @@ export interface TesterOptions extends ParseDefinitionsOptions {
 }
 
 export const defaultLocalOptions: TesterOptions = {
-  definitelyTypedPath: "../../../DefinitelyTyped",
+  definitelyTypedPath: path.resolve(__dirname, "../../../../../DefinitelyTyped"),
   progress: true,
 };
 

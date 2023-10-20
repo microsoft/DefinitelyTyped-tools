@@ -36,7 +36,7 @@ if (require.main === module) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
-    const options = { ...defaultLocalOptions, definitelyTypedPath: outputDirPath };
+    const options = { ...defaultLocalOptions };
     if (yargs.argv.path) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }

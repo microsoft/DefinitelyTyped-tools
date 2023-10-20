@@ -1,4 +1,4 @@
-import { DTMock, NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
+import { AllPackages, DTMock, NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
 import { License } from "@definitelytyped/header-parser";
 import {
   createNotNeededPackageJSON,
@@ -24,7 +24,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     },
     typesVersions: [],
     license,
-    dependencies: { "@types/madeira": "^1", balzac: "~3" },
+    dependencies: { "@types/madeira": "^1" },
     devDependencies: { "@types/jquery": "workspace:." },
   };
 }
@@ -36,7 +36,18 @@ function createUnneededPackage() {
 function defaultFS() {
   const dt = new DTMock();
   dt.pkgDir("jquery")
-    .set("package.json", JSON.stringify({ name: "@types/jquery" }))
+    .set("package.json", JSON.stringify({
+      private: true,
+      name: "@types/jquery",
+      version: "1.0.9999",
+      projects: ["jquery.org"],
+      owners: [
+        { name: "A", url: "b@c.d" },
+        { name: "E", githubUsername: "e" },
+      ],
+      dependencies: { "@types/madeira": "^1" },
+      devDependencies: { "@types/jquery": "workspace:." },
+    }, undefined, 4))
     .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
     .set("index.d.ts", `type T = import("./types");\n`)
     .set("jquery-tests.ts", "// tests");
@@ -135,10 +146,9 @@ testo({
     },
     "scripts": {},
     "dependencies": {
-        "@types/madeira": "^1",
-        "balzac": "~3"
+        "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "9d3169349ad27006640a88a02cfb8269edfb00b3bcf73acc7cd133d019c6e154",
+    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
     "typeScriptVersion": "4.5"
 }`);
   },
@@ -173,4 +183,14 @@ testo({
     "deprecated": "This is a stub types definition. @google-cloud/chubdub provides its own type definitions, so you do not need this installed."
 }`);
   },
+  async versionedPackage() {
+    const dt = defaultFS();
+    dt.addOldVersionOfPackage("jquery", "0", "0.0.9999");
+    dt.pkgDir("jquery").subdir("v0")
+      .set("index.d.ts", "import {} from './only-in-v0';")
+      .set("only-in-v0.d.ts", "export const x: number;");
+    const allPackages = AllPackages.fromFS(dt.fs);
+    const typing = await allPackages.getTypingsData({ name: "@types/jquery", version: { major: 0 } })!;
+    expect(typing.getFiles()).toContain("only-in-v0.d.ts");
+  }
 });
