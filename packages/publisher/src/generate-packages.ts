@@ -8,6 +8,7 @@ import {
   AnyPackage,
   NotNeededPackage,
   TypingsData,
+  getAllowedPackageJsonDependencies,
   getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
 import {
@@ -19,6 +20,7 @@ import {
   logUncaughtErrors,
   logger,
   loggerWithErrors,
+  nAtATime,
   writeFile,
   writeLog,
   writeTgz,
@@ -53,13 +55,17 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   await mkdirp(outputDirPath);
   await emptyDir(outputDirPath);
 
-  for (const { pkg, version } of changedPackages.changedTypings) {
+  // warm the cache so we don't request this from GH concurrently
+  await getAllowedPackageJsonDependencies();
+
+  await nAtATime(10, changedPackages.changedTypings, async ({ pkg, version }) => {
     await generateTypingPackage(pkg, version, dt);
     if (tgz) {
       await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
     log(` * ${pkg.desc}`);
-  }
+  });
+
   log("## Generating deprecated packages");
   for (const pkg of changedPackages.changedNotNeededPackages) {
     log(` * ${pkg.libraryName}`);

@@ -544,7 +544,7 @@ export class TypingsData extends PackageBase {
     return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
       mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
-      this.dt.subDir("types").subDir(this.typesDirectoryName)
+      this.dt.subDir("types").subDir(this.subDirectoryPath)
     ));
   }
   get projectName(): string | undefined {
