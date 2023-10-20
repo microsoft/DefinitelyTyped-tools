@@ -141,7 +141,7 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     },
     scripts: {},
     dependencies: typing.dependencies,
-    typesPublisherContentHash: typing.contentHash,
+    typesPublisherContentHash: typing.getContentHash(),
     typeScriptVersion: typing.minTypeScriptVersion,
     nonNpm: typing.nonNpm === true ? typing.nonNpm : undefined,
   };

@@ -192,6 +192,6 @@ testo({
     const allPackages = AllPackages.fromFS(dt.fs);
     const typing = await allPackages.getTypingsData({ name: "@types/jquery", version: { major: 0 } })!;
     expect(typing.getFiles()).toContain("only-in-v0.d.ts");
-    expect(typing.contentHash).toBeTruthy(); // used to crash
+    expect(typing.getContentHash()).toBeTruthy(); // used to crash
   }
 });

@@ -111,7 +111,7 @@ export async function fetchTypesPackageVersionInfo(
     if (reason.code !== "ENOTCACHED" && reason.code !== "ETARGET") throw reason;
     return undefined;
   });
-  if (!info || info.typesPublisherContentHash !== pkg.contentHash) {
+  if (!info || info.typesPublisherContentHash !== pkg.getContentHash()) {
     if (log) {
       log.info(`Version info not cached for ${pkg.desc}@${info ? info.version : "(no latest version)"}`);
     }
@@ -131,6 +131,6 @@ export async function fetchTypesPackageVersionInfo(
       `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
     );
   }
-  const needsPublish = canPublish && pkg.contentHash !== info.typesPublisherContentHash;
+  const needsPublish = canPublish && pkg.getContentHash() !== info.typesPublisherContentHash;
   return { version: needsPublish ? semver.inc(info.version, "patch")! : info.version, needsPublish };
 }

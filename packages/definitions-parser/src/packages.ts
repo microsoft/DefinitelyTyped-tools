@@ -540,7 +540,7 @@ export class TypingsData extends PackageBase {
   }
 
   private _contentHash: string | undefined;
-  get contentHash(): string {
+  getContentHash(): string {
     return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
       mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
