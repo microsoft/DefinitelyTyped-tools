@@ -36,12 +36,12 @@ if (require.main === module) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
-    const options = { ...defaultLocalOptions, definitelyTypedPath: outputDirPath, parseInParallel: true };
+    const options = { ...defaultLocalOptions, definitelyTypedPath: outputDirPath };
     if (yargs.argv.path) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, log);
-    const allPackages = await AllPackages.read(dt);
+    const allPackages = AllPackages.fromFS(dt);
     await generatePackages(dt, await readChangedPackages(allPackages), tgz);
   });
 }
@@ -76,7 +76,7 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
 
   await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
   await Promise.all(
-    typing.files.map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
+    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
   );
 }
 
@@ -179,10 +179,11 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("# Details");
   lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}.`);
 
-  if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
-    const dts = typing.dtsFiles[0];
+  const dtsFiles = typing.getDtsFiles();
+  if (dtsFiles.length === 1 && packageFS.readFile(dtsFiles[0]).length < 2500) {
+    const dts = dtsFiles[0];
     const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`;
-    lines.push(`## [${typing.dtsFiles[0]}](${url})`);
+    lines.push(`## [${dtsFiles[0]}](${url})`);
     lines.push("````ts");
     lines.push(packageFS.readFile(dts));
     lines.push("````");

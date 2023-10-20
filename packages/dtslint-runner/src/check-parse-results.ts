@@ -3,16 +3,16 @@ import { AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-pa
 import { assertDefined } from "@definitelytyped/utils";
 import * as semver from "semver";
 if (require.main === module) {
-  const options = { definitelyTypedPath: undefined, progress: false, parseInParallel: false };
+  const options = { definitelyTypedPath: undefined, progress: false };
   getDefinitelyTyped(options, console).then((dt) => {
-    AllPackages.read(dt).then(checkParseResults);
+    return checkParseResults(AllPackages.fromFS(dt));
   });
 }
 
-export function checkParseResults(allPackages: AllPackages): string[] {
+export async function checkParseResults(allPackages: AllPackages): Promise<string[]> {
   const errors = [];
-  for (const pkg of allPackages.allTypings()) {
-    for (const dep of allPackages.allDependencyTypings(pkg)) {
+  for (const pkg of await allPackages.allTypings()) {
+    for await (const dep of allPackages.allDependencyTypings(pkg)) {
       // check raw version because parsed version doesn't currently retain range information
       const version = assertDefined(new Map(pkg.allPackageJsonDependencies()).get(dep.name));
       if (semver.parse(version)) {
@@ -27,5 +27,5 @@ export function checkParseResults(allPackages: AllPackages): string[] {
       }
     }
   }
-  return errors;
+  return [...allPackages.getErrorsAsArray(), ...errors];
 }

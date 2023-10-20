@@ -32,7 +32,6 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
     "clean": "node --enable-source-maps dist/clean.js",
     "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
-    "parse": "node --enable-source-maps dist/parse-definitions.js",
     "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
     "generate": "node --enable-source-maps dist/generate-packages.js",
     "validate": "node --enable-source-maps dist/validate.js",
