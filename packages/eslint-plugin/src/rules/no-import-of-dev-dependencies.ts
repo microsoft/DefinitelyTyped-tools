@@ -26,8 +26,11 @@ const rule = createRule({
       const devdeps = packageJson
         ? Object.keys(packageJson.devDependencies).map((dep) => dep.replace(/@types\//, ""))
         : [];
+      const deps = packageJson
+        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => dep.replace(/@types\//, ""))
+        : [];
       commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
-        if (devdeps.includes(ref) && ref !== packageName) {
+        if (devdeps.includes(ref) && ref !== packageName && !deps.includes(ref)) {
           report(comment, "noReferenceOfDevDependencies");
         }
       });
@@ -35,7 +38,7 @@ const rule = createRule({
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {
-          if (devdeps.includes(node.source.value) && node.source.value !== packageName) {
+          if (devdeps.includes(node.source.value) && node.source.value !== packageName && !deps.includes(node.source.value)) {
             context.report({
               messageId: "noImportOfDevDependencies",
               node,
@@ -63,7 +66,7 @@ const rule = createRule({
     }
   },
 });
-function getPackageJson(sourceFile: string): { devDependencies: Record<string, string> } | undefined {
+function getPackageJson(sourceFile: string): { dependencies?: Record<string, string>, devDependencies: Record<string, string> } | undefined {
   let dir = path.dirname(sourceFile);
   let text: string | undefined;
   while (dir !== "/") {
