@@ -25,6 +25,7 @@ export default async function main() {
     fetcher,
     {
       definitelyTypedPath,
+      parseInParallel: false,
       progress: false,
     },
     log

@@ -24,10 +24,12 @@ export function createTypingsVersionRaw(
         nonNpm: false,
         projects: ["zombo.com"],
       },
+      files: ["index.d.ts"],
       typesVersions: [],
       license: License.MIT,
       dependencies,
       devDependencies,
+      contentHash: "11111111111111",
     },
   };
 }

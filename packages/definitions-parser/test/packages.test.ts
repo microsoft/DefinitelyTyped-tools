@@ -1,17 +1,19 @@
-import { License } from "@definitelytyped/header-parser";
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { Range } from "semver";
-import { getTypingInfo } from "../src/lib/definition-parser";
 import { createMockDT } from "../src/mocks";
+import { getTypingInfo } from "../src/lib/definition-parser";
 import {
   AllPackages,
-  NotNeededPackage,
-  TypingsData,
   TypingsVersions,
-  getDependencyFromFile,
+  TypingsData,
   getMangledNameForScopedPackage,
+  NotNeededPackage,
+  getDependencyFromFile,
 } from "../src/packages";
+import { Range } from "semver";
+import { parseDefinitions } from "../src/parse-definitions";
+import { quietLoggerWithErrors } from "@definitelytyped/utils";
 import { createTypingsVersionRaw } from "./utils";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { License } from "@definitelytyped/header-parser";
 
 describe(AllPackages, () => {
   let allPackages: AllPackages;
@@ -19,14 +21,15 @@ describe(AllPackages, () => {
   beforeAll(async () => {
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1", "1.0.9999");
-    allPackages = AllPackages.fromFS(dt.fs);
+    const [log] = quietLoggerWithErrors();
+    allPackages = await parseDefinitions(dt.fs, undefined, log);
   });
 
-  it("applies path mappings to test dependencies", async () => {
-    const pkg = await allPackages.tryGetLatestVersion("has-older-test-dependency");
-    for await (const { id } of allPackages.allDependencyTypings(pkg!)) {
-      expect(id).toEqual({ typesDirectoryName: "jquery", version: { major: 1, minor: 0 } });
-    }
+  it("applies path mappings to test dependencies", () => {
+    const pkg = allPackages.tryGetLatestVersion("has-older-test-dependency")!;
+    expect(Array.from(allPackages.allDependencyTypings(pkg), ({ id }) => id)).toEqual([
+      { typesDirectoryName: "jquery", version: { major: 1, minor: 0 } },
+    ]);
   });
 
   describe("getNotNeededPackage", () => {
@@ -38,21 +41,21 @@ describe(AllPackages, () => {
   });
 
   describe("hasTypingFor", () => {
-    it("returns true if typings exist", async () => {
+    it("returns true if typings exist", () => {
       expect(
-        await allPackages.hasTypingFor({
+        allPackages.hasTypingFor({
           name: "@types/jquery",
           version: "*",
         })
       ).toBe(true);
       expect(
-        await allPackages.hasTypingFor({
+        allPackages.hasTypingFor({
           typesDirectoryName: "jquery",
           version: "*",
         })
       ).toBe(true);
       expect(
-        await allPackages.hasTypingFor({
+        allPackages.hasTypingFor({
           name: "@types/nonExistent",
           version: "*",
         })
@@ -73,7 +76,7 @@ describe(TypingsVersions, () => {
     if (Array.isArray(info)) {
       throw new Error(info.join("\n"));
     }
-    versions = new TypingsVersions(dt.fs, info!);
+    versions = new TypingsVersions(info);
   });
 
   it("sorts the data from latest to oldest version", () => {
@@ -117,17 +120,6 @@ describe(TypingsData, () => {
   let data: TypingsData;
 
   beforeEach(() => {
-    const dt = createMockDT();
-    dt.pkgDir("known")
-      .set(
-        "package.json",
-        JSON.stringify({
-          name: "@types/known",
-        })
-      )
-      .set("index.d.ts", "declare const x: number;")
-      .set("tsconfig.json", `{ "files": ["index.d.ts"] }`);
-
     const versions = createTypingsVersionRaw(
       "known",
       {
@@ -137,7 +129,7 @@ describe(TypingsData, () => {
         "@types/known": "workspace:.",
       }
     );
-    data = new TypingsData(dt.fs, versions["1.0"], true);
+    data = new TypingsData(versions["1.0"], true);
   });
 
   it("sets the correct properties", () => {
@@ -154,9 +146,9 @@ describe(TypingsData, () => {
     expect(data.minor).toBe(0);
     expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
     expect(data.typesVersions).toEqual([]);
-    expect(data.getFiles()).toEqual(["index.d.ts"]);
+    expect(data.files).toEqual(["index.d.ts"]);
     expect(data.license).toBe(License.MIT);
-    expect(data.contentHash).toBe("f647d34b5793cea752bc5b892d2099c92f1ced5f13b8a4ec3e4826d9f9cd0163");
+    expect(data.contentHash).toBe("11111111111111");
     expect(data.projectName).toBe("zombo.com");
     expect(data.dependencies).toEqual({
       "dependency-1": "*",
@@ -181,7 +173,7 @@ describe(TypingsData, () => {
 
     it("returns the versioned name if not latest", () => {
       const versions = createTypingsVersionRaw("known", {}, {});
-      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
+      data = new TypingsData(versions["1.0"], false);
 
       expect(data.desc).toBe("@types/known v1.0");
     });
@@ -194,7 +186,7 @@ describe(TypingsData, () => {
 
     it("returns mangled name if scoped", () => {
       const versions = createTypingsVersionRaw("@foo/bar", {}, {});
-      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
+      data = new TypingsData(versions["1.0"], false);
 
       expect(data.typesDirectoryName).toBe("foo__bar");
     });

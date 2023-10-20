@@ -48,8 +48,8 @@ export async function runDTSLint({
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
   const { packageNames, dependents } = onlyRunAffectedPackages
-    ? await prepareAffectedPackages(definitelyTypedPath)
-    : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
+    ? await prepareAffectedPackages(definitelyTypedPath, nProcesses)
+    : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone", nProcesses);
 
   if (!noInstall && !localTypeScriptPath) {
     if (onlyTestTsNext) {
