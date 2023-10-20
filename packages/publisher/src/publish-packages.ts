@@ -18,13 +18,13 @@ import { getSecret, Secret } from "./lib/secrets";
 if (require.main === module) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(async () => {
-    const options = { ...defaultLocalOptions };
+    const options = { ...defaultLocalOptions, parseInParallel: true };
     if (yargs.argv.path) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
-      await readChangedPackages(AllPackages.fromFS(dt)),
+      await readChangedPackages(await AllPackages.read(dt)),
       dry,
       process.env.GH_API_TOKEN || "",
       new Fetcher()

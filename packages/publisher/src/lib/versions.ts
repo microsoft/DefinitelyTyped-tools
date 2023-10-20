@@ -37,13 +37,11 @@ export interface ChangedPackages {
 export async function readChangedPackages(allPackages: AllPackages): Promise<ChangedPackages> {
   const json = (await readDataFile("calculate-versions", versionsFilename)) as ChangedPackagesJson;
   return {
-    changedTypings: await Promise.all(
-      json.changedTypings.map(async ({ id, version, latestVersion }) => ({
-        pkg: await allPackages.getTypingsData(id),
-        version,
-        latestVersion,
-      }))
-    ),
+    changedTypings: json.changedTypings.map(({ id, version, latestVersion }) => ({
+      pkg: allPackages.getTypingsData(id),
+      version,
+      latestVersion,
+    })),
     changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>
       assertDefined(allPackages.getNotNeededPackage(id))
     ),

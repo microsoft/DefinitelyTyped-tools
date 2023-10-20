@@ -47,7 +47,7 @@ if (require.main === module) {
       process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions,
       loggerWithErrors()[0]
     );
-    await publishRegistry(dt, AllPackages.fromFS(dt), dry);
+    await publishRegistry(dt, await AllPackages.read(dt), dry);
   });
 }
 
@@ -59,7 +59,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
   assert(semver.satisfies(latestVersion, "~0.1"));
 
   // Don't include not-needed packages in the registry.
-  const registryJsonData = await generateRegistry(await allPackages.allLatestTypings());
+  const registryJsonData = await generateRegistry(allPackages.allLatestTypings());
   const registry = JSON.stringify(registryJsonData);
   const newContentHash = computeHash(registry);
   const newVersion = semver.inc(latestVersion, "patch")!;
