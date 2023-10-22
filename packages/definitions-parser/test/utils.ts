@@ -23,11 +23,13 @@ export function createTypingsVersionRaw(
         minimumTypeScriptVersion: "2.3",
         nonNpm: false,
         projects: ["zombo.com"],
+        files: ["**/*.d.{ts,cts,mts,*.ts}"],
       },
       typesVersions: [],
       license: License.MIT,
       dependencies,
       devDependencies,
+      olderVersionDirectories: [],
     },
   };
 }

@@ -5,6 +5,7 @@
     "projects": [
         "https://github.com/styled-components/styled-components"
     ],
+    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "dependencies": {
         "@types/styled-components": "*"
     },

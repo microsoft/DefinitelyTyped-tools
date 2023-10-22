@@ -7,19 +7,12 @@ import {
   InMemoryFS,
   assertDefined,
   computeHash,
-  createModuleResolutionHost,
-  mapDefined,
+  readFileAndThrowOnBOM,
   unique,
   unmangleScopedPackage,
 } from "@definitelytyped/utils";
 import * as semver from "semver";
-import {
-  FilesForSingleTypeScriptVersion,
-  getFiles,
-  getTypingInfo,
-  parseVersionFromDirectoryName,
-  readFileAndThrowOnBOM,
-} from "./lib/definition-parser";
+import { getFiles, getTypingInfo, parseVersionFromDirectoryName } from "./lib/definition-parser";
 import { getAllowedPackageJsonDependencies, scopeName, typesDirectoryName } from "./lib/settings";
 import { slicePrefixes } from "./lib/utils";
 
@@ -58,7 +51,6 @@ export class AllPackages {
   /** Keys are `typesDirectoryName` strings */
   private readonly errors: Map<string, string[]> = new Map();
   private isComplete = false;
-  private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath());
 
   private constructor(
     private dt: FS,
@@ -156,7 +148,7 @@ export class AllPackages {
       this.errors.set(typesDirectoryName, raw.errors);
       return undefined;
     }
-    versions = new TypingsVersions(this.dt, raw, this.moduleResolutionHost);
+    versions = new TypingsVersions(this.dt, raw);
     this.types.set(typesDirectoryName, versions);
     return versions;
   }
@@ -413,6 +405,8 @@ export interface TypingsDataRaw {
    * Can be either MIT or Apache v2, defaults to MIT when not explicitly defined in this package’s "package.json".
    */
   readonly license: License;
+
+  readonly olderVersionDirectories: readonly string[]; // TODO(jakebailey): document
 }
 
 export class TypingsVersions {
@@ -423,11 +417,7 @@ export class TypingsVersions {
    */
   private readonly versions: semver.SemVer[];
 
-  constructor(
-    dt: FS,
-    data: TypingsVersionsRaw,
-    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
-  ) {
+  constructor(dt: FS, data: TypingsVersionsRaw) {
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
@@ -436,10 +426,7 @@ export class TypingsVersions {
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
-      this.versions.map((version, i) => [
-        version,
-        new TypingsData(dt, data[`${version.major}.${version.minor}`], !i, this.moduleResolutionHost),
-      ])
+      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i)])
     );
   }
 
@@ -469,12 +456,7 @@ export class TypingsVersions {
 }
 
 export class TypingsData extends PackageBase {
-  constructor(
-    private dt: FS,
-    private readonly data: TypingsDataRaw,
-    readonly isLatest: boolean,
-    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
-  ) {
+  constructor(private dt: FS, private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
     super();
   }
 
@@ -508,13 +490,13 @@ export class TypingsData extends PackageBase {
     return this.data.typesVersions;
   }
 
-  private typesVersionsFiles: readonly FilesForSingleTypeScriptVersion[] | undefined;
+  private _files: readonly string[] | undefined;
   getFiles(): readonly string[] {
-    if (!this.typesVersionsFiles) {
-      const files = getFiles(this.dt, this, this.moduleResolutionHost);
-      this.typesVersionsFiles = files;
+    if (!this._files) {
+      const files = getFiles(this.dt, this, this.data.olderVersionDirectories);
+      this._files = files;
     }
-    return this.typesVersionsFiles.flatMap((v) => v.declFiles);
+    return this._files;
   }
 
   getDtsFiles(): readonly string[] {
@@ -543,7 +525,6 @@ export class TypingsData extends PackageBase {
   getContentHash(): string {
     return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
-      mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
       this.dt.subDir("types").subDir(this.subDirectoryPath)
     ));
   }
@@ -630,11 +611,8 @@ export function getDependencyFromFile(
   return { typesDirectoryName: name, version: "*" };
 }
 
-function hash(files: readonly string[], tsconfigPathsForHash: readonly string[], fs: FS): string {
+function hash(files: readonly string[], fs: FS): string {
   const fileContents = files.map((f) => `${f}**${readFileAndThrowOnBOM(f, fs)}`);
-  let allContent = fileContents.join("||");
-  for (const path of tsconfigPathsForHash) {
-    allContent += path;
-  }
+  const allContent = fileContents.join("||");
   return computeHash(allContent);
 }

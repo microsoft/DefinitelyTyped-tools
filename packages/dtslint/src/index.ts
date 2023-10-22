@@ -2,7 +2,7 @@
 
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { readFile, existsSync } from "fs-extra";
+import { readFile, existsSync, readdirSync } from "fs-extra";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
 import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
@@ -137,8 +137,17 @@ async function runTests(
   assertPathIsNotBanned(packageName);
   assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
 
+  const olderVersionDirectories: string[] = [];
+  if (dirname(dirPath) === "types") {
+    for (const subdir of readdirSync(dirPath, { withFileTypes: true })) {
+      if (subdir.isDirectory() && /^v(\d+)(\.(\d+))?$/.test(subdir.name)) {
+        olderVersionDirectories.push(subdir.name);
+      }
+    }
+  }
+
   const typesVersions = getTypesVersions(dirPath);
-  const packageJson = checkPackageJson(dirPath, typesVersions);
+  const packageJson = checkPackageJson(dirPath, typesVersions, olderVersionDirectories);
   if (Array.isArray(packageJson)) {
     throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }

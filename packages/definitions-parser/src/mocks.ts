@@ -58,7 +58,7 @@ export class DTMock {
 
     oldDir.set("index.d.ts", index.replace(latestVersion, `${olderVersionParsed.major}.${olderVersionParsed.minor}`));
     oldDir.set("tsconfig.json", JSON.stringify(tsconfig, undefined, 4));
-    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion }));
+    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion, files: ["**/*.d.{ts,cts,mts,*.ts}"] }));
 
     latestDir.forEach((content, entry) => {
       if (
@@ -143,12 +143,6 @@ import { drills } from "boring";
 import { hovercars } from "boring/secondary";
 import australia = require('boring/commonjs');
 import { inane } from "boring/v1";
-`
-  );
-  boring.set(
-    "OTHER_FILES.txt",
-    `
-untested.d.ts
 `
   );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
@@ -303,6 +297,7 @@ function packageJson(packageName: string, version: string, dependencies: Record<
         "name": "The Dragon Quest Slime",
         "githubUsername": "slime"
     }],
+    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "dependencies": {
         ${Object.entries(dependencies)
           .map(([name, version]) => `        "${name}": "${version}"`)

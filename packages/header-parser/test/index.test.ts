@@ -7,6 +7,7 @@ describe("validatePackageJson", () => {
     version: "18.0.9999",
     projects: ["https://github.com/hapijs/hapi", "https://hapijs.com"],
     minimumTypeScriptVersion: "4.2",
+    files: ["**/*.d.{ts,cts,mts,*.ts}"],
     dependencies: {
       "@types/boom": "*",
       "@types/catbox": "*",

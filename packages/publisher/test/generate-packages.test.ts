@@ -27,11 +27,13 @@ function createRawPackage(license: License): TypingsDataRaw {
       minimumTypeScriptVersion: "3.2",
       projects: ["jquery.org"],
       nonNpm: false,
+      files: ["**/*.d.{ts,cts,mts,*.ts}"],
     },
     typesVersions: [],
     license,
     dependencies: { "@types/madeira": "^1" },
     devDependencies: { "@types/jquery": "workspace:." },
+    olderVersionDirectories: [],
   };
 }
 
@@ -54,6 +56,7 @@ function defaultFS() {
             { name: "A", url: "b@c.d" },
             { name: "E", githubUsername: "e" },
           ],
+          files: ["**/*.d.{ts,cts,mts,*.ts}"],
           dependencies: { "@types/madeira": "^1" },
           devDependencies: { "@types/jquery": "workspace:." },
         },
@@ -120,16 +123,9 @@ testo({
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
-    dt.pkgDir("jquery").set("other.d.ts", "").set("OTHER_FILES.txt", "other.d.ts");
+    dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
-  },
-  generatingPackageJsonFailsWhenFilesHaveErrors() {
-    const rawPkg = createRawPackage(License.Apache20);
-    const dt = defaultFS();
-    dt.pkgDir("jquery").set("unused.d.ts", "");
-    const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(() => createPackageJSON(typing, "1.0")).toThrowError("Unused file");
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
@@ -161,7 +157,7 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
+    "typesPublisherContentHash": "6bf92b10706574677a8e15d838df0e26969a7578094064d3b9820c6a1265cd05",
     "typeScriptVersion": "4.5"
 }`);
   },

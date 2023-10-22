@@ -5,6 +5,7 @@
     "projects": [
         "https://github.com/microsoft/TypeScript"
     ],
+    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "devDependencies": {
         "@types/dts-critic": "workspace:."
     },

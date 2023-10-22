@@ -5,6 +5,7 @@
     "projects": [
         "https://youtube.com/typeref-fails"
     ],
+    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "devDependencies": {
         "@types/fail": "workspace:."
     },

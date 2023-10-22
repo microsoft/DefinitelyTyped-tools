@@ -235,3 +235,13 @@ export class DiskFS implements FS {
     return realpathSync(this.getPath(path));
   }
 }
+
+export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
+  // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
+  const text = fs.readFile(fileName);
+  if (text.charCodeAt(0) === 0xfeff) {
+    const commands = ["npm install -g strip-bom-cli", `strip-bom ${fileName} > fix`, `mv fix ${fileName}`];
+    throw new Error(`File '${fileName}' has a BOM. Try using:\n${commands.join("\n")}`);
+  }
+  return text;
+}
