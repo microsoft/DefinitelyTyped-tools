@@ -59,6 +59,16 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
       for (const name of Object.keys(pkg.dependencies)) {
         // Assert that dependencies exist on npm.
         // Also checked when we install the dependencies, in dtslint-runner.
+
+        // If we're publishing interdependent types packages, this will fail as
+        // we haven't published them yet. Skip for any packages which are
+        // definitely within the repo.
+        // TODO: This could verify the version range is correct, but just checks for existence for now.
+        // TODO: This startsWith/slice could be a helper.
+        if (name.startsWith("@types/") && allPackages.tryGetLatestVersion(name.slice("@types/".length))) {
+          continue;
+        }
+
         await pacote.manifest(name, { cache: cacheDir }).catch((reason) => {
           throw reason.code === "E404"
             ? new Error(
