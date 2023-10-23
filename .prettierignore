@@ -1,3 +1,10 @@
 node_modules
 dist
 packages/publisher/output
+
+packages/dts-critic/testsource
+
+*.json
+*.yml
+*.yaml
+*.md
