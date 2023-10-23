@@ -22,7 +22,7 @@
     "eslint-plugin-jsdoc": "^30.7.8",
     "jest": "^29.5.0",
     "prettier": "^2.6.2",
-    "ts-jest": "^29.0.5",
+    "ts-jest": "^29.1.1",
     "tslint": "^6.1.2",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^5.2.2"
