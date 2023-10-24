@@ -187,7 +187,6 @@ function main() {
 
 const npmNotFound = "E404";
 
-// TODO(jakebailey): replace with pacote
 export function getNpmInfo(name: string): NpmInfo {
   const npmName = dtToNpmName(name);
   const infoResult = cp.spawnSync("npm", ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
