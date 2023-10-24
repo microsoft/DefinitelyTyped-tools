@@ -8,7 +8,7 @@ import {
   validatePackageJson,
 } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { FS, assertDefined, split } from "@definitelytyped/utils";
+import { FS, assertDefined, isDeclarationPath, split } from "@definitelytyped/utils";
 import assert from "assert";
 import {
   DirectoryParsedTypingVersion,
@@ -19,7 +19,6 @@ import {
   getMangledNameForScopedPackage,
 } from "../packages";
 import { getAllowedPackageJsonDependencies, scopeName } from "./settings";
-import { Minimatch } from "minimatch";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -257,14 +256,6 @@ async function getPackageJsonInfoForPackage(
   };
 }
 
-// Use the glob, so that we match the files array behavior, rather than attempting to
-// do it via string manipulation.
-// TODO(jakebailey): pull out to a common helper and use everywhere?
-const declarationMatcher = new Minimatch("**/*.d.{ts,cts,mts,*.ts}", { optimizationLevel: 2 });
-function isDeclaration(path: string): boolean {
-  return declarationMatcher.match(path);
-}
-
 export function getFiles(
   dt: FS,
   typingsData: TypingsData,
@@ -274,7 +265,7 @@ export function getFiles(
 
   const files: string[] = [];
   function addFileIfDeclaration(path: string): void {
-    if (isDeclaration(path)) {
+    if (isDeclarationPath(path)) {
       files.push(path);
     }
   }

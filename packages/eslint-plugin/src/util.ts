@@ -1,7 +1,9 @@
-import { unmangleScopedPackage } from "@definitelytyped/utils";
+import { isDeclarationPath, typesPackageNameToRealName } from "@definitelytyped/utils";
 import { TSESTree, ESLintUtils } from "@typescript-eslint/utils";
 import { RuleWithMetaAndName } from "@typescript-eslint/utils/dist/eslint-utils";
 import { RuleListener, RuleModule, SourceCode } from "@typescript-eslint/utils/dist/ts-eslint";
+import path from "path";
+import fs from "fs";
 
 // Possible TS bug can't figure out how to do declaration emit of created rules
 // without an explicit type annotation here due to pnpm symlink stuff
@@ -13,17 +15,11 @@ export const createRule: <TOptions extends readonly unknown[], TMessageIds exten
 );
 
 export function getTypesPackageForDeclarationFile(file: string) {
-  if (!file.endsWith(".d.ts")) {
-    // TODO(jakebailey): cts, mts *.d.*.ts
+  if (!isDeclarationPath(file)) {
     return undefined;
   }
-
-  const match = file.match(/types\/([^\/]+)\//)?.[1];
-  if (!match) {
-    return undefined;
-  }
-
-  return unmangleScopedPackage(match) ?? match;
+  const info = findTypesPackage(file);
+  return info?.realName;
 }
 
 export function commentsMatching(
@@ -35,4 +31,50 @@ export function commentsMatching(
     const m = comment.value.match(regex);
     if (m) f(m[1], comment);
   }
+}
+
+export function findTypesPackage(file: string) {
+  file = path.resolve(file);
+  let dir = path.dirname(file);
+  const root = path.parse(dir).root;
+
+  for (; dir !== root; dir = path.dirname(dir)) {
+    try {
+      const packageJsonContents = fs.readFileSync(path.join(dir, "package.json"), "utf8");
+      const packageJson = JSON.parse(packageJsonContents) as {
+        name?: string;
+        version?: string;
+        owners?: string[];
+        devDependencies?: Record<string, string | undefined>;
+      };
+      // TODO(jakebailey): helper?
+      if (packageJson.name?.startsWith("@types/") && packageJson.version && packageJson.owners) {
+        return {
+          dir,
+          packageJson,
+          realName: typesPackageNameToRealName(packageJson.name),
+        };
+      }
+    } catch {
+      // continue
+    }
+  }
+
+  // TODO(jakebailey): this should just return undefined, but we need to figure out a way to test a real DT layout
+  throw new Error(`No types package found for ${file}`);
+
+  // return undefined;
+}
+
+export function findDtRoot(typesPackageDir: string) {
+  let dir = typesPackageDir;
+  const root = path.parse(dir).root;
+
+  for (; dir !== root; dir = path.dirname(dir)) {
+    if (path.basename(dir) === "types") {
+      return path.dirname(dir);
+    }
+  }
+
+  return undefined;
 }

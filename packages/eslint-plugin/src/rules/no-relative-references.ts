@@ -1,8 +1,8 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
-import { createRule, getTypesPackageForDeclarationFile } from "../util";
+import { createRule, findDtRoot, findTypesPackage } from "../util";
 import * as ts from "typescript";
 import path from "path";
-import { assertDefined } from "@definitelytyped/utils";
+import { DiskFS, assertDefined, createModuleResolutionHost } from "@definitelytyped/utils";
 
 // TODO(jakebailey): is this redundant with no-bad-reference?
 const rule = createRule({
@@ -15,29 +15,83 @@ const rule = createRule({
       recommended: "error",
     },
     messages: {
-      oops: '\'Definitions must use global references to other packages, not parent ("../xxx") references.',
+      oops: 'Definitions must use global references to other packages, not parent ("../xxx") references.',
     },
     schema: [],
   },
   create(context) {
-    const currentPackageName = getTypesPackageForDeclarationFile(context.getFilename());
-    if (!currentPackageName) {
+    const containingFileName = context.getFilename();
+    const typesPackage = findTypesPackage(containingFileName);
+    if (!typesPackage) {
       return {};
     }
+
+    const { realName: currentPackageName, dir: baseDirectory } = typesPackage;
+
+    const dtRootPath = findDtRoot(baseDirectory);
+    if (!dtRootPath) {
+      return {};
+    }
+
+    const dt = new DiskFS(dtRootPath);
+    const fs = new DiskFS(baseDirectory);
+
+    const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
+
+    const tsconfig = fs.readJson("tsconfig.json");
+    const configHost: ts.ParseConfigHost = {
+      ...moduleResolutionHost,
+      readDirectory: (dir) => fs.readdir(dir),
+      useCaseSensitiveFileNames: true,
+    };
+
+    const compilerOptions = ts.parseJsonConfigFileContent(
+      tsconfig,
+      configHost,
+      path.resolve("/", fs.debugPath())
+    ).options;
 
     const ast = context.getSourceCode().ast;
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 
-    const refs = findReferencedFiles(sourceFile, "foo");
-    resolveReference({}, {} as any, "", "", refs[0]); // TODO(jakebailey): set this up
+    const seenReferences = new Set<string>();
+    const refs = findReferencedFiles(sourceFile, currentPackageName);
+    for (const ref of refs) {
+      // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
+      let resolvedFileName = resolveReference(
+        compilerOptions,
+        moduleResolutionHost,
+        baseDirectory,
+        containingFileName,
+        ref
+      );
+      if (!resolvedFileName) {
+        continue;
+      }
+      resolvedFileName = fs.realPath(resolvedFileName);
 
-    // if (isJustNamespace(ast.body, exportEqualsNode.expression.name)) {
-    //   context.report({
-    //     messageId: "oops",
-    //     node: exportEqualsNode,
-    //   });
-    // }
+      if (seenReferences.has(resolvedFileName)) {
+        continue;
+      }
+      seenReferences.add(resolvedFileName);
+
+      if (path.relative(baseDirectory, resolvedFileName).startsWith("..")) {
+        context.report({
+          messageId: "oops",
+          loc: {
+            start: {
+              line: ref.range.pos, // lol this is wrong
+              column: ref.range.pos,
+            },
+            end: {
+              line: ref.range.end,
+              column: ref.range.end,
+            },
+          },
+        });
+      }
+    }
 
     return {};
   },
@@ -47,6 +101,7 @@ interface Reference {
   kind: "path" | "import" | "types";
   text: string;
   resolutionMode?: ts.ModuleKind.ESNext | ts.ModuleKind.CommonJS;
+  range: ts.TextRange;
 }
 
 function resolveReference(
@@ -93,19 +148,20 @@ function findReferencedFiles(src: ts.SourceFile, packageName: string) {
       text: ref.fileName,
       kind: "path",
       resolutionMode: ref.resolutionMode,
+      range: ref,
     });
   }
   for (const ref of src.typeReferenceDirectives) {
     // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
     if (ref.fileName.startsWith("../" + packageName + "/") || ref.fileName.startsWith(packageName + "/")) {
-      refs.push({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode });
+      refs.push({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode, range: ref });
     }
   }
 
   for (const ref of imports(src)) {
     const resolutionMode = ts.getModeForUsageLocation(src, ref);
     if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
-      refs.push({ kind: "import", text: ref.text, resolutionMode });
+      refs.push({ kind: "import", text: ref.text, resolutionMode, range: ref });
     }
   }
   return refs;

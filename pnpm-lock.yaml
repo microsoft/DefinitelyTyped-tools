@@ -79,9 +79,6 @@ importers:
       fs-extra:
         specifier: ^9.1.0
         version: 9.1.0
-      minimatch:
-        specifier: ^9.0.3
-        version: 9.0.3
       pacote:
         specifier: ^13.6.1
         version: 13.6.2
@@ -422,6 +419,9 @@ importers:
       fstream:
         specifier: ^1.0.12
         version: 1.0.12
+      minimatch:
+        specifier: ^9.0.3
+        version: 9.0.3
       tar:
         specifier: ^6.1.11
         version: 6.1.13

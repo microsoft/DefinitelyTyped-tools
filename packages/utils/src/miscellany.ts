@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { Minimatch } from "minimatch";
 
 export function tryParseJson<T>(text: string): unknown;
 export function tryParseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T): T | undefined;
@@ -60,6 +61,25 @@ export function mangleScopedPackage(packageName: string): string {
   return isScopedPackage(packageName) ? packageName.replace(/\//, "__").replace("@", "") : packageName;
 }
 
+const atTypesPrefix = "@types/";
+
+export function isTypesPackageName(packageName: string): boolean {
+  return packageName.startsWith(atTypesPrefix);
+}
+
+export function typesPackageNameToRealName(typesPackageName: string) {
+  if (!isTypesPackageName(typesPackageName)) {
+    throw new Error(`Not a types package name: ${typesPackageName}`);
+  }
+  const name = typesPackageName.slice(atTypesPrefix.length);
+  return unmangleScopedPackage(name) ?? name;
+}
+
 export async function sleep(seconds: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, seconds * 1000));
+}
+
+const declarationMatcher = new Minimatch("**/*.d.{ts,cts,mts,*.ts}", { optimizationLevel: 2 });
+export function isDeclarationPath(path: string): boolean {
+  return declarationMatcher.match(path);
 }
