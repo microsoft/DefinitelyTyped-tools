@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.182
+
+### Patch Changes
+
+- 13922c30: Ignore non-types packages when checking for changed packages
+
 ## 0.0.181
 
 ### Patch Changes
