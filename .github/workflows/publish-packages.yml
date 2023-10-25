@@ -40,15 +40,11 @@ jobs:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: pacote-cache-
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'DefinitelyTyped/DefinitelyTyped'
-          path: 'DefinitelyTyped'
+      - run: git clone --depth 1 https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
       - run: pnpm install
-        working-directory: DefinitelyTyped
+        working-directory: ../DefinitelyTyped
 
-      - run: node packages/publisher/dist/run.js --path DefinitelyTyped
+      - run: node packages/publisher/dist/run.js --path ../DefinitelyTyped
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TYPES_TOKEN: ${{ secrets.NPM_TYPES_TOKEN }}
