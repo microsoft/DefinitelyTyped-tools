@@ -20,8 +20,6 @@ jobs:
       - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - run: pnpm install
       - run: pnpm build
-      - name: Parse declarations
-        run: pnpm run --filter @definitelytyped/publisher parse
       - name: Check parse results
         run: pnpm run --filter @definitelytyped/dtslint-runner check-parse-results
       - if: always()
