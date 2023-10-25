@@ -24,11 +24,12 @@ if (require.main === module) {
 }
 
 async function main() {
-  const { dry, name } = yargs.options({
+  const { dry, path, name } = yargs.options({
     dry: { type: "boolean", default: false },
+    path: { type: "string", default: "../DefinitelyTyped" },
     name: { type: "string" },
   }).argv;
-  await tag(dry, name);
+  await tag(dry, path, name);
 }
 
 /**
@@ -39,9 +40,9 @@ async function main() {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tag(dry: boolean, name?: string) {
+async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
   const log = loggerWithErrors()[0];
-  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true };
+  const options = { definitelyTypedPath, progress: true };
   const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 

@@ -868,6 +868,7 @@ vega-typings
 vfile-message
 victory
 vite
+vscode-languageserver-types
 vue
 vue-router
 vuex

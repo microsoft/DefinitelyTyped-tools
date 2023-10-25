@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.0.181
+
+### Patch Changes
+
+- a5011acf: Disable corepack when we run npm
+
 ## 0.0.180
 
 ### Patch Changes

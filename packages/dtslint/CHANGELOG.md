@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.0.185
+
+### Patch Changes
+
+- Updated dependencies [a5011acf]
+  - @definitelytyped/dts-critic@0.0.181
+
 ## 0.0.184
 
 ### Patch Changes

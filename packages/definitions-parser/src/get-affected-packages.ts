@@ -17,7 +17,7 @@ export async function getAffectedPackages(
 ): Promise<{ errors: string[] } | PreparePackagesResult> {
   const errors = [];
   const changedPackageDirectories = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '[${sourceRemote}/${sourceBranch}]'`,
+    `pnpm ls -r --depth -1 --parseable --filter '...@types/**[${sourceRemote}/${sourceBranch}]'`,
     definitelyTypedPath
   );
 
