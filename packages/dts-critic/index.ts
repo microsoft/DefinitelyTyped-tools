@@ -299,7 +299,11 @@ export function findDtsName(dtsPath: string) {
 function downloadNpmPackage(name: string, version: string, outDir: string): string {
   const npmName = dtToNpmName(name);
   const fullName = `${npmName}@${version}`;
-  const cpOpts = { encoding: "utf8", maxBuffer: 100 * 1024 * 1024, env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } } as const;
+  const cpOpts = {
+    encoding: "utf8",
+    maxBuffer: 100 * 1024 * 1024,
+    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
+  } as const;
   const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
   // https://github.com/npm/cli/issues/3405
   const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
