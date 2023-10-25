@@ -34,9 +34,9 @@ jobs:
     - name: retag
       run: |
         git clone --depth 1 https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
-      - run: pnpm install
-        working-directory: ../DefinitelyTyped
-      - run: node packages/retag/dist/index.js
+    - run: pnpm install
+      working-directory: ../DefinitelyTyped
+    - run: node packages/retag/dist/index.js
       env:
         NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
         GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
