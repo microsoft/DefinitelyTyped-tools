@@ -6,21 +6,21 @@ const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
-export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
+export function exec(cmd: string, cwd?: string, env?: NodeJS.ProcessEnv): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
     const maxBuffer = 1024 * 1024 * 1; // Max = 1 MiB, default is 200 KiB
 
-    node_exec(cmd, { encoding: "utf8", cwd, maxBuffer }, (error, stdout, stderr) => {
+    node_exec(cmd, { encoding: "utf8", cwd, maxBuffer, env }, (error, stdout, stderr) => {
       resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
     });
   });
 }
 
 /** Run a command and return the stdout, or if there was an error, throw. */
-export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<string> {
-  const { error, stdout, stderr } = await exec(cmd, cwd);
+export async function execAndThrowErrors(cmd: string, cwd?: string, env?: NodeJS.ProcessEnv): Promise<string> {
+  const { error, stdout, stderr } = await exec(cmd, cwd, env);
   if (error) {
     throw new Error(`${error.stack}\n${stderr}`);
   }
