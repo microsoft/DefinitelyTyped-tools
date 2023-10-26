@@ -14,7 +14,7 @@ export interface Header {
   readonly minimumTypeScriptVersion: AllTypeScriptVersion;
   readonly projects: readonly string[];
   readonly owners: readonly Owner[];
-  readonly files: readonly string[];
+  // readonly files: readonly string[];
 }
 // used in definitions-parser
 /** Standard package.json `contributor` */
@@ -125,7 +125,7 @@ export function validatePackageJson(
   let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
   let owners: Owner[] = [];
-  let files: string[] = [];
+  // let files: string[] = [];
   const nameResult = validateName();
   const versionResult = validateVersion();
   const nonNpmResult = validateNonNpm();
@@ -171,17 +171,17 @@ export function validatePackageJson(
   if (Array.isArray(licenseResult)) {
     errors.push(...licenseResult);
   }
-  if (Array.isArray(packageJson.files)) {
-    for (const file of packageJson.files) {
-      if (typeof file !== "string") {
-        errors.push(`files in ${typesDirectoryName}'s package.json should be an array of strings`);
-        break;
-      }
-    }
-    files = packageJson.files;
-  } else {
-    errors.push(`files in ${typesDirectoryName}'s package.json should be an array of strings`);
-  }
+  // if (Array.isArray(packageJson.files)) {
+  //   for (const file of packageJson.files) {
+  //     if (typeof file !== "string") {
+  //       errors.push(`files in ${typesDirectoryName}'s package.json should be an array of strings`);
+  //       break;
+  //     }
+  //   }
+  //   files = packageJson.files;
+  // } else {
+  //   errors.push(`files in ${typesDirectoryName}'s package.json should be an array of strings`);
+  // }
   if (errors.length) {
     return errors;
   } else {
@@ -193,7 +193,7 @@ export function validatePackageJson(
       minimumTypeScriptVersion,
       projects,
       owners,
-      files,
+      // files,
     };
   }
 
