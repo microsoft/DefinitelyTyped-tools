@@ -16,8 +16,9 @@ export async function getAffectedPackages(
   definitelyTypedPath: string
 ): Promise<{ errors: string[] } | PreparePackagesResult> {
   const errors = [];
+  // No ... prefix; we only want packages that were actually edited.
   const changedPackageDirectories = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '...@types/**[${sourceRemote}/${sourceBranch}]'`,
+    `pnpm ls -r --depth -1 --parseable --filter '@types/**[${sourceRemote}/${sourceBranch}]'`,
     definitelyTypedPath
   );
 
@@ -29,7 +30,10 @@ export async function getAffectedPackages(
   const { additions, deletions } = git;
   const addedPackageDirectories = mapDefined(additions, (id) => id.typesDirectoryName);
   const allDependentDirectories = [];
-  const filters = [`--filter '...[${sourceRemote}/${sourceBranch}]'`];
+  // Start the filter off with all packages that were touched along with those that depend on them.
+  const filters = [`--filter '...@types/**[${sourceRemote}/${sourceBranch}]'`];
+  // For packages that have been deleted, they won't appear in the graph anymore; look for packages
+  // that still depend on the package (but via npm) and manually add them.
   for (const d of deletions) {
     for (const dep of await allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
