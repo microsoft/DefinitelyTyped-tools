@@ -2,6 +2,7 @@ import { TSESLint, ESLintUtils } from "@typescript-eslint/utils";
 import path from "path";
 import fs from "fs";
 
+// TODO(jakebailey): require line numbers
 type ValidTestCase<TOptions extends Readonly<unknown[]>> = Omit<
   TSESLint.ValidTestCase<TOptions>,
   "code" | "filename"
