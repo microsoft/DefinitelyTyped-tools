@@ -1,5 +1,16 @@
 # @definitelytyped/publisher
 
+## 0.0.183
+
+### Patch Changes
+
+- d01cacd5: Make AllPackages lazy and asynchronous
+- Updated dependencies [d01cacd5]
+  - @definitelytyped/definitions-parser@0.0.183
+  - @definitelytyped/retag@0.0.183
+  - @definitelytyped/utils@0.0.180
+  - @definitelytyped/header-parser@0.0.181
+
 ## 0.0.182
 
 ### Patch Changes

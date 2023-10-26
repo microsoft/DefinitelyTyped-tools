@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.183
+
+### Patch Changes
+
+- Updated dependencies [d01cacd5]
+  - @definitelytyped/utils@0.0.180
+  - @definitelytyped/header-parser@0.0.181
+
 ## 0.0.182
 
 ### Patch Changes
