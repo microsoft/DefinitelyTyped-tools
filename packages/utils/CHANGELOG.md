@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.0.180
+
+### Patch Changes
+
+- d01cacd5: Make AllPackages lazy and asynchronous
+
 ## 0.0.179
 
 ### Patch Changes
