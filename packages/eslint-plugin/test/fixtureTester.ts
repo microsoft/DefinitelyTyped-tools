@@ -2,6 +2,12 @@ import { TSESLint, ESLintUtils } from "@typescript-eslint/utils";
 import path from "path";
 import fs from "fs";
 
+export const fixtureRoot = path.join(__dirname, "fixtures");
+
+export function getFixturePath(filename: string): string {
+  return path.join(fixtureRoot, filename);
+}
+
 // TODO(jakebailey): require line numbers
 type ValidTestCase<TOptions extends Readonly<unknown[]>> = Omit<
   TSESLint.ValidTestCase<TOptions>,
@@ -33,7 +39,7 @@ function convertTestCase<
   TOptions extends Readonly<unknown[]>,
   T extends ValidTestCase<TOptions> | InvalidTestCase<TMessageIds, TOptions>
 >(test: T): TSESLint.ValidTestCase<TOptions> | TSESLint.InvalidTestCase<TMessageIds, TOptions> {
-  const fixture = path.join(__dirname, "fixtures", test.filename);
+  const fixture = getFixturePath(test.filename);
   const code = fs.readFileSync(fixture, "utf8");
   return {
     name: test.filename,
