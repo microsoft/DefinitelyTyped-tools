@@ -8,6 +8,7 @@ import {
   AnyPackage,
   NotNeededPackage,
   TypingsData,
+  getAllowedPackageJsonDependencies,
   getDefinitelyTyped,
 } from "@definitelytyped/definitions-parser";
 import {
@@ -19,6 +20,7 @@ import {
   logUncaughtErrors,
   logger,
   loggerWithErrors,
+  nAtATime,
   writeFile,
   writeLog,
   writeTgz,
@@ -36,12 +38,12 @@ if (require.main === module) {
   const tgz = !!yargs.argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
-    const options = { ...defaultLocalOptions, definitelyTypedPath: outputDirPath, parseInParallel: true };
+    const options = { ...defaultLocalOptions };
     if (yargs.argv.path) {
       options.definitelyTypedPath = yargs.argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, log);
-    const allPackages = await AllPackages.read(dt);
+    const allPackages = AllPackages.fromFS(dt);
     await generatePackages(dt, await readChangedPackages(allPackages), tgz);
   });
 }
@@ -53,13 +55,17 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   await mkdirp(outputDirPath);
   await emptyDir(outputDirPath);
 
-  for (const { pkg, version } of changedPackages.changedTypings) {
+  // warm the cache so we don't request this from GH concurrently
+  await getAllowedPackageJsonDependencies();
+
+  await nAtATime(10, changedPackages.changedTypings, async ({ pkg, version }) => {
     await generateTypingPackage(pkg, version, dt);
     if (tgz) {
       await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
     log(` * ${pkg.desc}`);
-  }
+  });
+
   log("## Generating deprecated packages");
   for (const pkg of changedPackages.changedNotNeededPackages) {
     log(` * ${pkg.libraryName}`);
@@ -76,7 +82,7 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
 
   await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
   await Promise.all(
-    typing.files.map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
+    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
   );
 }
 
@@ -135,7 +141,7 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     },
     scripts: {},
     dependencies: typing.dependencies,
-    typesPublisherContentHash: typing.contentHash,
+    typesPublisherContentHash: typing.getContentHash(),
     typeScriptVersion: typing.minTypeScriptVersion,
     nonNpm: typing.nonNpm === true ? typing.nonNpm : undefined,
   };
@@ -179,10 +185,11 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("# Details");
   lines.push(`Files were exported from ${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}.`);
 
-  if (typing.dtsFiles.length === 1 && packageFS.readFile(typing.dtsFiles[0]).length < 2500) {
-    const dts = typing.dtsFiles[0];
+  const dtsFiles = typing.getDtsFiles();
+  if (dtsFiles.length === 1 && packageFS.readFile(dtsFiles[0]).length < 2500) {
+    const dts = dtsFiles[0];
     const url = `${definitelyTypedURL}/tree/${sourceBranch}/types/${typing.subDirectoryPath}/${dts}`;
-    lines.push(`## [${typing.dtsFiles[0]}](${url})`);
+    lines.push(`## [${dtsFiles[0]}](${url})`);
     lines.push("````ts");
     lines.push(packageFS.readFile(dts));
     lines.push("````");

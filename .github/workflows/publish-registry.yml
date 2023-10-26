@@ -21,8 +21,6 @@ jobs:
       - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: Parse declarations
-        run: pnpm run --filter @definitelytyped/publisher parse
       - uses: actions/cache/restore@v3
         with:
           path: ./cache

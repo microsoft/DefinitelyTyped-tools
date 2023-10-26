@@ -1,4 +1,5 @@
 import { ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
+import path from "path";
 
 if (process.env.LONGJOHN) {
   console.log("=== USING LONGJOHN ===");
@@ -12,13 +13,11 @@ export interface TesterOptions extends ParseDefinitionsOptions {
 }
 
 export const defaultLocalOptions: TesterOptions = {
-  definitelyTypedPath: "../../../DefinitelyTyped",
+  definitelyTypedPath: path.resolve(__dirname, "../../../../../DefinitelyTyped"),
   progress: true,
-  parseInParallel: !process.env.VSCODE_INSPECTOR_OPTIONS,
 };
 
 export const defaultRemoteOptions: ParseDefinitionsOptions = {
   definitelyTypedPath: undefined,
   progress: false,
-  parseInParallel: false,
 };

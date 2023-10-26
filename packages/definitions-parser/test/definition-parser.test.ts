@@ -1,7 +1,8 @@
-import path from "path";
 import { DiskFS } from "@definitelytyped/utils";
-import { createMockDT } from "../src/mocks";
+import path from "path";
 import { getTypingInfo } from "../src/lib/definition-parser";
+import { createMockDT } from "../src/mocks";
+import { TypingsVersions } from "../src/packages";
 
 describe(getTypingInfo, () => {
   it("keys data by major.minor version", async () => {
@@ -10,13 +11,13 @@ describe(getTypingInfo, () => {
     dt.addOldVersionOfPackage("jquery", "2", "2.0.9999");
     const info = await getTypingInfo("jquery", dt.fs);
 
-    expect(Object.keys(info).sort()).toEqual(["1.42", "2.0", "3.3"]);
+    expect(Object.keys(info!).sort()).toEqual(["1.42", "2.0", "3.3"]);
   });
 
   it("works for a package with dependencies", async () => {
     const dt = createMockDT();
     const info = await getTypingInfo("has-dependency", dt.fs);
-    expect("errors" in info).toBeFalsy();
+    expect("errors" in info!).toBeFalsy();
   });
 
   it("works for non-module files with empty statements", async () => {
@@ -51,7 +52,7 @@ describe(getTypingInfo, () => {
     );
 
     const info = await getTypingInfo("example", dt.fs);
-    expect("errors" in info).toBeFalsy();
+    expect("errors" in info!).toBeFalsy();
   });
   it("works for a scoped package with scoped older dependencies", async () => {
     const dt = createMockDT();
@@ -123,7 +124,7 @@ export function myFunction(arg:string): string;
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.9999");
 
     const info = await getTypingInfo("ckeditor__ckeditor5-engine", dt.fs);
-    expect("errors" in info).toBeFalsy();
+    expect("errors" in info!).toBeFalsy();
   });
 
   it("allows path mapping to node/buffer", async () => {
@@ -192,11 +193,11 @@ export * from 'buffer';
     );
 
     const info = await getTypingInfo("safer", dt.fs);
-    if ("errors" in info) {
+    if ("errors" in info!) {
       throw new Error(info.errors.join("\n"));
     }
-    expect(info["1.0"]).toBeDefined();
-    expect(info["1.0"].dependencies).toEqual({ "@types/node": "*" });
+    expect(info!["1.0"]).toBeDefined();
+    expect(info!["1.0"].dependencies).toEqual({ "@types/node": "*" });
   });
   it("errors on arbitrary path mapping", () => {});
   it("supports node_modules passthrough path mapping", async () => {
@@ -277,7 +278,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
     );
 
     const info = await getTypingInfo("webpack", dt.fs);
-    expect("errors" in info).toBeFalsy();
+    expect("errors" in info!).toBeFalsy();
   });
 
   it("allows references to old versions of self", async () => {
@@ -285,7 +286,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
       "fail",
       new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/"))
     );
-    expect("errors" in info).toBeFalsy();
+    expect("errors" in info!).toBeFalsy();
   });
 
   it("omits test dependencies on modules declared in index.d.ts", async () => {
@@ -355,7 +356,7 @@ import route = require('@ember/routing/route');
 }`
     );
 
-    const info = await getTypingInfo("ember", dt.fs);
+    const info = (await getTypingInfo("ember", dt.fs))!;
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));
     }
@@ -363,10 +364,10 @@ import route = require('@ember/routing/route');
   });
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
-    const info = await getTypingInfo(
+    const info = (await getTypingInfo(
       "styled-components-react-native",
       new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"))
-    );
+    ))!;
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));
     }
@@ -374,12 +375,13 @@ import route = require('@ember/routing/route');
   });
 
   it("rejects relative references to other packages", async () => {
-    expect(() =>
-      getTypingInfo(
-        "referencing",
-        new DiskFS(path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/"))
-      )
-    ).rejects.toThrow("Definitions must use global references to other packages");
+    const dt = new DiskFS(path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/"));
+    const raw = (await getTypingInfo("referencing", dt))!;
+    if ("errors" in raw) {
+      throw new Error(raw.errors.join("\n"));
+    }
+    const typingData = new TypingsVersions(dt, raw).getLatest();
+    expect(() => typingData.getFiles()).toThrow("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {
