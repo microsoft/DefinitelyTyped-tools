@@ -36,6 +36,7 @@ function convertTestCase<
   const fixture = path.join(__dirname, "fixtures", test.filename);
   const code = fs.readFileSync(fixture, "utf8");
   return {
+    name: test.filename,
     ...test,
     code,
     filename: fixture,
