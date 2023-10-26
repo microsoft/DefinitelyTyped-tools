@@ -16,7 +16,10 @@ const rule = createRule({
       recommended: "error",
     },
     messages: {
-      oops: 'Definitions must use global references to other packages, not parent ("../xxx") references.',
+      relativeImport:
+        'The relative import "{{text}}" resolves outside of the package; use a bare import to reference other packages.',
+      relativeReference:
+        'The relative reference "{{text}}" resolves outside of the package; use a global reference to reference other packages.',
     },
     schema: [],
   },
@@ -78,7 +81,7 @@ const rule = createRule({
         const end = sourceFile.getLineAndCharacterOfPosition(ref.range.end);
 
         context.report({
-          messageId: "oops",
+          messageId: ref.kind === "import" ? "relativeImport" : "relativeReference",
           loc: {
             start: {
               line: pos.line + 1,
@@ -89,6 +92,7 @@ const rule = createRule({
               column: end.character + 1,
             },
           },
+          data: { text: ref.text },
         });
       }
     }
