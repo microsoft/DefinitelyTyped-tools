@@ -77,6 +77,8 @@ const rule = createRule({
       seenReferences.add(resolvedFileName);
 
       if (path.relative(baseDirectory, resolvedFileName).startsWith("..")) {
+        // TODO(jakebailey): why bother doing this when we could just check the import path itself?
+        // Relative imports can't be remapped, so we could just count ".." to see if it leaves the package.
         context.report({
           messageId: "oops",
           loc: {
