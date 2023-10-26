@@ -27,7 +27,7 @@ function createRawPackage(license: License): TypingsDataRaw {
       minimumTypeScriptVersion: "3.2",
       projects: ["jquery.org"],
       nonNpm: false,
-      files: ["**/*.d.{ts,cts,mts,*.ts}"],
+      // files: ["**/*.d.{ts,cts,mts,*.ts}"],
     },
     typesVersions: [],
     license,
