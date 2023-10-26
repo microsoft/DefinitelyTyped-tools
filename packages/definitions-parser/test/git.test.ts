@@ -35,12 +35,7 @@ testo({
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
   async tooManyDeletes() {
-    expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }])).toEqual({
-      errors: [
-        `Unexpected file deleted: oops.txt
-You should only delete files that are a part of removed packages.`,
-      ],
-    });
+    expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "types/oops/oops.txt" }])).toEqual([]);
   },
   async deleteInOtherPackage() {
     expect(
@@ -53,17 +48,10 @@ You should only delete files that are a part of removed packages.`,
   async extraneousFile() {
     expect(
       await getNotNeededPackages(allPackages, [
-        { status: "A", file: "oooooooooooops.txt" },
-        { status: "M", file: "notNeededPackages.json" },
-        { status: "D", file: "types/jest/index.d.ts" },
-        { status: "D", file: "types/jest/jest-tests.d.ts" },
+        ...deleteJestDiffs,
+        { status: "A", file: "types/oops/oooooooooooops.txt" },
       ])
-    ).toEqual({
-      errors: [
-        `Unexpected file added: oooooooooooops.txt
-You should only add files that are part of packages.`,
-      ],
-    });
+    ).toEqual(jestNotNeeded);
   },
   async scoped() {
     expect(

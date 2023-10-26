@@ -21,5 +21,8 @@ export async function prepareAffectedPackages(definitelyTypedPath: string): Prom
   if (errors.length) {
     throw new Error(errors.join("\n"));
   }
-  return result as PreparePackagesResult;
+  if (Array.isArray(result)) {
+    throw new Error(`result should not have been array: ${typeof result}`);
+  }
+  return result;
 }

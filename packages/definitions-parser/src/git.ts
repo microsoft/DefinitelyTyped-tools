@@ -56,6 +56,7 @@ export function gitChanges(
   const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
   const errors = [];
   for (const diff of diffs) {
+    if (!/types[\\/]/.test(diff.file)) continue;
     if (diff.status === "M") continue;
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
@@ -95,7 +96,13 @@ export async function getAffectedPackagesFromDiff(
   }
   const affected = await getAffectedPackages(allPackages, diffs, definitelyTypedPath);
   if ("errors" in affected) {
+    errors.push(...affected.errors);
+  }
+  if (errors.length) {
     return errors;
+  }
+  if ("errors" in affected) {
+    throw new Error("unexpected error array");
   }
   console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
   console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
