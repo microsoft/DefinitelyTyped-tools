@@ -21,10 +21,6 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (1 === 1) {
-      return {};
-    }
-
     const isDeclarationFile = context.getFilename().endsWith(".d.ts");
     commentsMatching(context.getSourceCode(), /<reference\s+path\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
       if (ref.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {

@@ -1,0 +1,14 @@
+{
+    "name": "@types/no-import-of-dev-dependencies",
+    "version": "2.0.9999",
+    "owners": [],
+    "dependencies": {
+        "@types/foo": "*",
+        "other": "*"
+    },
+    "devDependencies": {
+        "@types/devdep": "*",
+        "@types/no-import-of-dev-dependencies": "workspace:.",
+        "otherdevdep": "*"
+    }
+}
