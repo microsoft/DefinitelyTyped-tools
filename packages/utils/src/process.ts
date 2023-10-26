@@ -6,7 +6,11 @@ const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
-export function exec(cmd: string, cwd?: string, env?: NodeJS.ProcessEnv): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
+export function exec(
+  cmd: string,
+  cwd?: string,
+  env?: NodeJS.ProcessEnv
+): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
