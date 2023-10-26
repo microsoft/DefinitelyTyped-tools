@@ -1,7 +1,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  modulePathIgnorePatterns: ["packages\\/publisher\\/output"],
+  modulePathIgnorePatterns: ["packages\\/publisher\\/output", "testsource", "fixtures"],
   testMatch: ["<rootDir>/packages/*/test/**/*.test.ts", "<rootDir>/packages/dts-critic/index.test.ts"],
   transform: {
     "^.+\\.tsx?$": [
