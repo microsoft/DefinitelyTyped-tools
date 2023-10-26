@@ -5,6 +5,7 @@ import path from "path";
 import { DiskFS, assertDefined, createModuleResolutionHost } from "@definitelytyped/utils";
 
 // TODO(jakebailey): is this redundant with no-bad-reference?
+// Yes, it is, but this one handles imports. Need to dedupe.
 const rule = createRule({
   name: "no-relative-references",
   defaultOptions: [],
@@ -55,7 +56,6 @@ const rule = createRule({
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 
-    const seenReferences = new Set<string>();
     const refs = findReferencedFiles(sourceFile, currentPackageName);
     for (const ref of refs) {
       // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
@@ -70,11 +70,6 @@ const rule = createRule({
         continue;
       }
       resolvedFileName = fs.realPath(resolvedFileName);
-
-      if (seenReferences.has(resolvedFileName)) {
-        continue;
-      }
-      seenReferences.add(resolvedFileName);
 
       if (path.relative(baseDirectory, resolvedFileName).startsWith("..")) {
         // TODO(jakebailey): why bother doing this when we could just check the import path itself?
