@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.0.181
+
+### Patch Changes
+
+- 97f68d6e: Fix one more missing corepack issue, env in exec util
+
 ## 0.0.180
 
 ### Patch Changes

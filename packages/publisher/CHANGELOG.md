@@ -1,5 +1,17 @@
 # @definitelytyped/publisher
 
+## 0.0.184
+
+### Patch Changes
+
+- 97f68d6e: Fix one more missing corepack issue, env in exec util
+- Updated dependencies [c8d8b1f8]
+- Updated dependencies [97f68d6e]
+  - @definitelytyped/definitions-parser@0.0.184
+  - @definitelytyped/utils@0.0.181
+  - @definitelytyped/retag@0.0.184
+  - @definitelytyped/header-parser@0.0.182
+
 ## 0.0.183
 
 ### Patch Changes
