@@ -56,7 +56,6 @@ export async function getAffectedPackages(
       )
     );
   }
-
   return getAffectedPackagesWorker(
     allPackages,
     changedPackageDirectories,
