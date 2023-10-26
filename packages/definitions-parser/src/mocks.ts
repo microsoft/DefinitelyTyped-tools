@@ -57,10 +57,7 @@ export class DTMock {
     const tsconfig = JSON.parse(latestDir.get("tsconfig.json") as string);
 
     oldDir.set("index.d.ts", index.replace(latestVersion, `${olderVersionParsed.major}.${olderVersionParsed.minor}`));
-    oldDir.set(
-      "tsconfig.json",
-      JSON.stringify(tsconfig, undefined, 4)
-    );
+    oldDir.set("tsconfig.json", JSON.stringify(tsconfig, undefined, 4));
     oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion }));
 
     latestDir.forEach((content, entry) => {

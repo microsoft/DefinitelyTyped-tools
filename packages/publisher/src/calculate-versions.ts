@@ -65,7 +65,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
         // definitely within the repo.
         // TODO: This could verify the version range is correct, but just checks for existence for now.
         // TODO: This startsWith/slice could be a helper.
-        if (name.startsWith("@types/") && await allPackages.tryGetLatestVersion(name.slice("@types/".length))) {
+        if (name.startsWith("@types/") && (await allPackages.tryGetLatestVersion(name.slice("@types/".length)))) {
           continue;
         }
 

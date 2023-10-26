@@ -1,4 +1,10 @@
-import { AllPackages, DTMock, NotNeededPackage, TypingsData, TypingsDataRaw } from "@definitelytyped/definitions-parser";
+import {
+  AllPackages,
+  DTMock,
+  NotNeededPackage,
+  TypingsData,
+  TypingsDataRaw,
+} from "@definitelytyped/definitions-parser";
 import { License } from "@definitelytyped/header-parser";
 import {
   createNotNeededPackageJSON,
@@ -36,18 +42,25 @@ function createUnneededPackage() {
 function defaultFS() {
   const dt = new DTMock();
   dt.pkgDir("jquery")
-    .set("package.json", JSON.stringify({
-      private: true,
-      name: "@types/jquery",
-      version: "1.0.9999",
-      projects: ["jquery.org"],
-      owners: [
-        { name: "A", url: "b@c.d" },
-        { name: "E", githubUsername: "e" },
-      ],
-      dependencies: { "@types/madeira": "^1" },
-      devDependencies: { "@types/jquery": "workspace:." },
-    }, undefined, 4))
+    .set(
+      "package.json",
+      JSON.stringify(
+        {
+          private: true,
+          name: "@types/jquery",
+          version: "1.0.9999",
+          projects: ["jquery.org"],
+          owners: [
+            { name: "A", url: "b@c.d" },
+            { name: "E", githubUsername: "e" },
+          ],
+          dependencies: { "@types/madeira": "^1" },
+          devDependencies: { "@types/jquery": "workspace:." },
+        },
+        undefined,
+        4
+      )
+    )
     .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
     .set("index.d.ts", `type T = import("./types");\n`)
     .set("jquery-tests.ts", "// tests");
@@ -186,12 +199,13 @@ testo({
   async versionedPackage() {
     const dt = defaultFS();
     dt.addOldVersionOfPackage("jquery", "0", "0.0.9999");
-    dt.pkgDir("jquery").subdir("v0")
+    dt.pkgDir("jquery")
+      .subdir("v0")
       .set("index.d.ts", "import {} from './only-in-v0';")
       .set("only-in-v0.d.ts", "export const x: number;");
     const allPackages = AllPackages.fromFS(dt.fs);
     const typing = await allPackages.getTypingsData({ name: "@types/jquery", version: { major: 0 } })!;
     expect(typing.getFiles()).toContain("only-in-v0.d.ts");
     expect(typing.getContentHash()).toBeTruthy(); // used to crash
-  }
+  },
 });
