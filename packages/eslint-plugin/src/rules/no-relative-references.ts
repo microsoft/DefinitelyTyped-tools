@@ -86,12 +86,12 @@ const rule = createRule({
           messageId: "oops",
           loc: {
             start: {
-              line: pos.line,
-              column: pos.character,
+              line: pos.line + 1,
+              column: pos.character + 1,
             },
             end: {
-              line: end.line,
-              column: end.character,
+              line: end.line + 1,
+              column: end.character + 1,
             },
           },
         });
