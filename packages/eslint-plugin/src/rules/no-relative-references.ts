@@ -79,16 +79,19 @@ const rule = createRule({
       if (path.relative(baseDirectory, resolvedFileName).startsWith("..")) {
         // TODO(jakebailey): why bother doing this when we could just check the import path itself?
         // Relative imports can't be remapped, so we could just count ".." to see if it leaves the package.
+        const pos = sourceFile.getLineAndCharacterOfPosition(ref.range.pos);
+        const end = sourceFile.getLineAndCharacterOfPosition(ref.range.end);
+
         context.report({
           messageId: "oops",
           loc: {
             start: {
-              line: ref.range.pos, // lol this is wrong
-              column: ref.range.pos,
+              line: pos.line,
+              column: pos.character,
             },
             end: {
-              line: ref.range.end,
-              column: ref.range.end,
+              line: end.line,
+              column: end.character,
             },
           },
         });
