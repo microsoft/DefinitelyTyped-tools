@@ -1,5 +1,14 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.184
+
+### Patch Changes
+
+- c8d8b1f8: Fix dependent packages showing up as changed in getAffectedPackages
+- Updated dependencies [97f68d6e]
+  - @definitelytyped/utils@0.0.181
+  - @definitelytyped/header-parser@0.0.182
+
 ## 0.0.183
 
 ### Patch Changes
