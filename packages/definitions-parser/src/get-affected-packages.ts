@@ -57,10 +57,6 @@ export async function getAffectedPackages(
     );
   }
 
-  console.log("changedPackageDirectories", changedPackageDirectories);
-  console.log("addedPackageDirectories", addedPackageDirectories);
-  console.log("allDependentDirectories", allDependentDirectories);
-
   return getAffectedPackagesWorker(
     allPackages,
     changedPackageDirectories,
