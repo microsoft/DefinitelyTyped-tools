@@ -6,6 +6,7 @@ import { DiskFS, assertDefined, createModuleResolutionHost } from "@definitelyty
 
 // TODO(jakebailey): is this redundant with no-bad-reference?
 // Yes, it is, but this one handles imports. Need to dedupe.
+// TODO(jakebailey): don't do resolution, check the paths only as relative leaving the package is the problem.
 const rule = createRule({
   name: "no-relative-references",
   defaultOptions: [],
