@@ -7,6 +7,7 @@ import {
   InMemoryFS,
   assertDefined,
   computeHash,
+  isDeclarationPath,
   readFileAndThrowOnBOM,
   unique,
   unmangleScopedPackage,
@@ -503,7 +504,7 @@ export class TypingsData extends PackageBase {
   }
 
   getDtsFiles(): readonly string[] {
-    return this.getFiles().filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+    return this.getFiles().filter(isDeclarationPath);
   }
 
   get license(): License {

@@ -1,3 +1,4 @@
+import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule } from "../util";
 
 const rule = createRule({
@@ -18,7 +19,7 @@ const rule = createRule({
   create(context) {
     const text = context.getSourceCode().text;
     if (
-      context.getFilename().endsWith(".d.ts") &&
+      isDeclarationPath(context.getFilename()) &&
       text.indexOf("// Type definitions for ") === 0 &&
       text.indexOf("// Definitions by: ") > 0
     ) {

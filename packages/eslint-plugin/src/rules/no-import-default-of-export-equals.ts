@@ -1,3 +1,4 @@
+import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
 import * as ts from "typescript";
@@ -19,7 +20,7 @@ const rule = createRule({
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context);
     const checker = parserServices.program.getTypeChecker();
-    if (context.getFilename().endsWith(".d.ts")) {
+    if (isDeclarationPath(context.getFilename())) {
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {

@@ -1,5 +1,6 @@
 import { TSESTree } from "@typescript-eslint/utils";
 import { commentsMatching, createRule } from "../util";
+import { isDeclarationPath } from "@definitelytyped/utils";
 
 type MessageId = "referencePathPackage" | "referencePathTest" | "referencePathOldVersion";
 const rule = createRule({
@@ -21,7 +22,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const isDeclarationFile = context.getFilename().endsWith(".d.ts");
+    const isDeclarationFile = isDeclarationPath(context.getFilename());
     commentsMatching(context.getSourceCode(), /<reference\s+path\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
       if (ref.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
         report(comment, "referencePathOldVersion");
