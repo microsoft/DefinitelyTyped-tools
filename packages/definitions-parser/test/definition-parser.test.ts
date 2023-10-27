@@ -374,16 +374,6 @@ import route = require('@ember/routing/route');
     expect(info["5.1"].dependencies).toEqual({ "@types/styled-components": "*" });
   });
 
-  it.skip("rejects relative references to other packages", async () => {
-    const dt = new DiskFS(path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/"));
-    const raw = (await getTypingInfo("referencing", dt))!;
-    if ("errors" in raw) {
-      throw new Error(raw.errors.join("\n"));
-    }
-    const typingData = new TypingsVersions(dt, raw).getLatest();
-    expect(() => typingData.getFiles()).toThrow("Definitions must use global references to other packages"); // TODO(jakebailey): move test elsewhere
-  });
-
   describe("concerning multiple versions", () => {
     it("records what the version directory looks like on disk", async () => {
       const dt = createMockDT();
