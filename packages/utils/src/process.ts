@@ -28,7 +28,7 @@ export async function execAndThrowErrors(cmd: string, cwd?: string, env?: NodeJS
   if (error) {
     throw new Error(`${error.stack}\n${stderr}`);
   }
-  return stdout + stderr;
+  return stdout;
 }
 
 export const enum CrashRecoveryState {
