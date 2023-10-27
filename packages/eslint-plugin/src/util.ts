@@ -56,40 +56,50 @@ function isTypesPackage(packageJson: Partial<PackageJSON>): boolean {
   );
 }
 
-export function findTypesPackage(file: string): TypesPackageInfo | undefined {
-  file = path.resolve(file);
-  const root = path.parse(file).root;
+function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined): T | undefined {
+  p = path.resolve(p);
+  const root = path.parse(p).root;
 
-  for (let dir = path.dirname(file); dir !== root; dir = path.dirname(dir)) {
-    const packageJsonPath = path.join(dir, "package.json");
+  while (true) {
+    const v = fn(p);
+    if (v !== undefined) {
+      return v;
+    }
+    if (p === root) {
+      break;
+    }
+    p = path.dirname(p);
+  }
+
+  return undefined;
+}
+
+export function findTypesPackage(file: string): TypesPackageInfo | undefined {
+  return findUp(file, (p) => {
+    const packageJsonPath = path.join(p, "package.json");
     if (!fs.existsSync(packageJsonPath)) {
-      continue;
+      return undefined;
     }
 
     const packageJsonContents = fs.readFileSync(packageJsonPath, "utf8");
     const packageJson = JSON.parse(packageJsonContents);
     if (isTypesPackage(packageJson)) {
       return {
-        dir,
+        dir: p,
         packageJson,
         realName: typesPackageNameToRealName(packageJson.name),
       };
     }
-  }
 
-  return undefined;
+    return undefined;
+  });
 }
 
 export function findDtRoot(typesPackageDir: string) {
-  // TODO(jakebailey): check package.json name instead? pnpm-workspace.yaml?
-  let dir = typesPackageDir;
-  const root = path.parse(dir).root;
-
-  for (; dir !== root; dir = path.dirname(dir)) {
-    if (path.basename(dir) === "types") {
-      return path.dirname(dir);
+  return findUp(typesPackageDir, (p) => {
+    if (fs.existsSync(path.join(p, "notNeededPackages.json"))) {
+      return p;
     }
-  }
-
-  return undefined;
+    return undefined;
+  });
 }

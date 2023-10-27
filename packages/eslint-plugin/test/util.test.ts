@@ -44,7 +44,7 @@ describe("findDtRoot", () => {
     ["types/scoped__foo/scoped__foo-tests.ts", fixtureRoot],
     ["types/scoped__foo/v1/index.d.ts", fixtureRoot],
     ["types/scoped__foo/v1/scoped__foo-tests.ts", fixtureRoot],
-    ["bad.d.ts", undefined],
+    ["bad.d.ts", fixtureRoot],
   ])("%s becomes %s", (input, expected) => {
     expect(findDtRoot(getFixturePath(input))).toEqual(expected);
   });
