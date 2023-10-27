@@ -19,6 +19,9 @@ const rule = createRule({
   },
   create(context) {
     const packageName = getTypesPackageForDeclarationFile(context.getFilename());
+    if (!packageName) {
+      return {};
+    }
 
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention

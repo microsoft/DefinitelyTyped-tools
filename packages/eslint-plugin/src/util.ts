@@ -60,10 +60,7 @@ export function findTypesPackage(file: string) {
     }
   }
 
-  // TODO(jakebailey): this should just return undefined, but we need to figure out a way to test a real DT layout
-  throw new Error(`No types package found for ${file}`);
-
-  // return undefined;
+  return undefined;
 }
 
 export function findDtRoot(typesPackageDir: string) {
