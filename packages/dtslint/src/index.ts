@@ -149,6 +149,7 @@ async function runTests(
   }
 
   await assertNpmIgnoreExpected(dirPath);
+  assertNoOtherFiles(dirPath);
 
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
@@ -292,5 +293,13 @@ async function assertNpmIgnoreExpected(dirPath: string) {
 
   if (!deepEquals(actual, expected)) {
     throw new Error(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedString}`);
+  }
+}
+
+function assertNoOtherFiles(dirPath: string) {
+  if (existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
+    throw new Error(
+      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`
+    );
   }
 }
