@@ -5,7 +5,6 @@
     "projects": [
         "https://youtube.com/s-fails"
     ],
-    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "devDependencies": {
         "@types/referencing": "workspace:."
     },

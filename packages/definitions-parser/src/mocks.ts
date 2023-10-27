@@ -58,7 +58,7 @@ export class DTMock {
 
     oldDir.set("index.d.ts", index.replace(latestVersion, `${olderVersionParsed.major}.${olderVersionParsed.minor}`));
     oldDir.set("tsconfig.json", JSON.stringify(tsconfig, undefined, 4));
-    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion, files: ["**/*.d.{ts,cts,mts,*.ts}"] }));
+    oldDir.set("package.json", JSON.stringify({ ...packageJson, version: fullVersion }));
 
     latestDir.forEach((content, entry) => {
       if (
@@ -297,7 +297,6 @@ function packageJson(packageName: string, version: string, dependencies: Record<
         "name": "The Dragon Quest Slime",
         "githubUsername": "slime"
     }],
-    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "dependencies": {
         ${Object.entries(dependencies)
           .map(([name, version]) => `        "${name}": "${version}"`)

@@ -27,7 +27,6 @@ function createRawPackage(license: License): TypingsDataRaw {
       minimumTypeScriptVersion: "3.2",
       projects: ["jquery.org"],
       nonNpm: false,
-      // files: ["**/*.d.{ts,cts,mts,*.ts}"],
     },
     typesVersions: [],
     license,
@@ -56,7 +55,6 @@ function defaultFS() {
             { name: "A", url: "b@c.d" },
             { name: "E", githubUsername: "e" },
           ],
-          files: ["**/*.d.{ts,cts,mts,*.ts}"],
           dependencies: { "@types/madeira": "^1" },
           devDependencies: { "@types/jquery": "workspace:." },
         },
@@ -157,7 +155,7 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "6bf92b10706574677a8e15d838df0e26969a7578094064d3b9820c6a1265cd05",
+    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
     "typeScriptVersion": "4.5"
 }`);
   },

@@ -45,7 +45,6 @@ describe(getTypingInfo, () => {
             url: "https://example.com/example",
           },
         ],
-        files: ["**/*.d.{ts,cts,mts,*.ts}"],
         devDependencies: {
           "@types/example": "workspace:.",
         },
@@ -80,7 +79,6 @@ describe(getTypingInfo, () => {
             url: "https://zombo.com/ñ",
           },
         ],
-        files: ["**/*.d.{ts,cts,mts,*.ts}"], // TODO(jakebailey): check
         dependencies: {
           "@types/ckeditor__ckeditor5-utils": "10.0.9999",
         },
@@ -117,7 +115,6 @@ export function myFunction(arg:string): string;
             githubUsername: "ñ",
           },
         ],
-        files: ["**/*.d.{ts,cts,mts,*.ts}", "!v10/**"], // TODO(jakebailey): test separately
         dependencies: {},
         devDependencies: {
           "@types/ckeditor__ckeditor5-utils": "workspace:.",
@@ -186,7 +183,6 @@ export * from 'buffer';
             githubUsername: "noone",
           },
         ],
-        files: ["**/*.d.{ts,cts,mts,*.ts}"],
         dependencies: {
           "@types/node": "*",
         },
@@ -269,7 +265,6 @@ const a = new webpack.AutomaticPrefetchPlugin();
         name: "@types/webpack",
         version: "5.2.9999",
         projects: ["https://github.com/webpack/webpack"],
-        files: ["**/*.d.{ts,cts,mts,*.ts}"],
         owners: [
           {
             name: "Qubo",
@@ -343,7 +338,6 @@ import route = require('@ember/routing/route');
     "private": true,
     "name": "@types/ember",
     "version": "2.8.9999",
-    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "dependencies": {
         "@types/ember__routing": "*"
     },

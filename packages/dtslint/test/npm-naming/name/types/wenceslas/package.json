@@ -5,7 +5,6 @@
     "projects": [
         "https://github.com/bobby-headers/dt-header"
     ],
-    "files": ["**/*.d.{ts,cts,mts,*.ts}"],
     "devDependencies": {
         "@types/wenceslas": "workspace:."
     },

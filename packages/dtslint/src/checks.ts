@@ -9,35 +9,13 @@ import { readJson, packageNameFromPath } from "./util";
 export function checkPackageJson(
   dirPath: string,
   typesVersions: readonly AllTypeScriptVersion[],
-  _olderVersionDirectories: readonly string[]
 ): header.Header | string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
   if (!pathExistsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
   const typesDirectoryName = packageNameFromPath(dirPath);
-  const v = header.validatePackageJson(typesDirectoryName, readJson(pkgJsonPath), typesVersions);
-  if (Array.isArray(v)) {
-    return v;
-  }
-
-  // const errors: string[] = [];
-
-  // const expected = ["**/*.d.{ts,cts,mts,*.ts}"];
-  // for (const older of olderVersionDirectories) {
-  //   expected.push(`!${older}/**`);
-  // }
-
-  // if (!deepEquals(v.files, expected)) {
-  //   errors.push(
-  //     `${typesDirectoryName}'s package.json has bad "files": Should be ${JSON.stringify(expected, undefined, 4)}`
-  //   );
-  // }
-
-  // if (errors.length) {
-  //   return errors;
-  // }
-  return v;
+  return header.validatePackageJson(typesDirectoryName, readJson(pkgJsonPath), typesVersions);
 }
 /**
  * numbers in `CompilerOptions` might be enum values mapped from strings
