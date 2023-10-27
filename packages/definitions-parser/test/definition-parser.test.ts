@@ -2,7 +2,6 @@ import { DiskFS } from "@definitelytyped/utils";
 import path from "path";
 import { getTypingInfo } from "../src/lib/definition-parser";
 import { createMockDT } from "../src/mocks";
-import { TypingsVersions } from "../src/packages";
 
 describe(getTypingInfo, () => {
   it("keys data by major.minor version", async () => {
