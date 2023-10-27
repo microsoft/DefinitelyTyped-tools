@@ -1,4 +1,6 @@
 *.d.ts
-dist/**
+**/dist/**
 node_modules
 packages/publisher/output
+**/testsource/**
+**/fixtures/**
