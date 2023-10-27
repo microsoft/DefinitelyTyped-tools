@@ -406,7 +406,10 @@ export interface TypingsDataRaw {
    */
   readonly license: License;
 
-  readonly olderVersionDirectories: readonly string[]; // TODO(jakebailey): document
+  /**
+   * Which subdirectories of this package are older versions, e.g. `v1`, `v0.1`, `v15`.
+   */
+  readonly olderVersionDirectories: readonly string[];
 }
 
 export class TypingsVersions {
