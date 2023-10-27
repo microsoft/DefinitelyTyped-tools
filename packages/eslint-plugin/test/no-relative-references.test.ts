@@ -12,7 +12,11 @@ runTestsWithFixtures("@definitelytyped/no-relative-references", noRelativeRefere
       filename: "types/no-relative-references/index.d.ts",
       errors: [
         { messageId: "relativeReference", data: { text: "../foo/index.d.ts" } },
+        { messageId: "relativeReference", data: { text: "./v1/index.d.ts" } },
+        { messageId: "relativeReference", data: { text: "../foo/v1/index.d.ts" } },
         { messageId: "relativeImport", data: { text: "../foo" } },
+        { messageId: "relativeImport", data: { text: "./v1" } },
+        { messageId: "relativeImport", data: { text: "../foo/v1" } },
       ],
     },
     {

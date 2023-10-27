@@ -1,8 +1,7 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-import { createRule, findDtRoot, findTypesPackage } from "../util";
+import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
+import { createRule, findTypesPackage } from "../util";
 import * as ts from "typescript";
 import path from "path";
-import { DiskFS, assertDefined, createModuleResolutionHost } from "@definitelytyped/utils";
 
 // TODO(jakebailey): is this redundant with no-bad-reference?
 // Yes, it is, but this one handles imports. Need to dedupe.
@@ -31,145 +30,73 @@ const rule = createRule({
       return {};
     }
 
-    const { realName: currentPackageName, dir: baseDirectory } = typesPackage;
-
-    const dtRootPath = findDtRoot(baseDirectory);
-    if (!dtRootPath) {
-      return {};
+    const realNamePlusSlash = typesPackage.realName + "/";
+    function isRelativeOrSelf(name: string) {
+      return name.startsWith(".") || name.startsWith(realNamePlusSlash);
     }
-
-    const dt = new DiskFS(dtRootPath);
-    const fs = new DiskFS(baseDirectory);
-
-    const moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath());
-
-    const tsconfig = fs.readJson("tsconfig.json");
-    const configHost: ts.ParseConfigHost = {
-      ...moduleResolutionHost,
-      readDirectory: (dir) => fs.readdir(dir),
-      useCaseSensitiveFileNames: true,
-    };
-
-    const compilerOptions = ts.parseJsonConfigFileContent(
-      tsconfig,
-      configHost,
-      path.resolve("/", fs.debugPath())
-    ).options;
 
     const ast = context.getSourceCode().ast;
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 
-    const refs = findReferencedFiles(sourceFile, currentPackageName);
+    const refs: Reference[] = [];
+    for (const ref of sourceFile.referencedFiles) {
+      refs.push({ kind: "path", text: ref.fileName, range: ref });
+    }
+    for (const ref of sourceFile.typeReferenceDirectives) {
+      if (isRelativeOrSelf(ref.fileName)) {
+        refs.push({ kind: "types", text: ref.fileName, range: ref });
+      }
+    }
+    for (const ref of imports(sourceFile)) {
+      if (isRelativeOrSelf(ref.text)) {
+        refs.push({ kind: "import", text: ref.text, range: ref });
+      }
+    }
+
     for (const ref of refs) {
-      // An absolute file name for use with TS resolution, e.g. '/DefinitelyTyped/types/foo/index.d.ts'
-      let resolvedFileName = resolveReference(
-        compilerOptions,
-        moduleResolutionHost,
-        baseDirectory,
-        containingFileName,
-        ref
-      );
-      if (!resolvedFileName) {
+      const p = ref.text.startsWith(realNamePlusSlash)
+        ? path.posix.join(typesPackage.dir, ref.text.slice(realNamePlusSlash.length))
+        : ref.text;
+
+      // TODO(jakebailey): Rather than using path.resolve, manually walk each
+      // part seeing if any of them escape the package, which would let us
+      // catch places where people relatively move out of the package and back
+      // in again.
+      //
+      // As a perf trick, we can use path.resolve if the path doesn't contain
+      // ".."; then we know that it could only ever go into a child package.
+      const resolved = path.resolve(path.dirname(containingFileName), p);
+      const otherPackage = findTypesPackage(resolved);
+
+      if (otherPackage && otherPackage.dir === typesPackage.dir) {
         continue;
       }
-      resolvedFileName = fs.realPath(resolvedFileName);
 
-      if (path.relative(baseDirectory, resolvedFileName).startsWith("..")) {
-        // TODO(jakebailey): why bother doing this when we could just check the import path itself?
-        // Relative imports can't be remapped, so we could just count ".." to see if it leaves the package.
-        const pos = sourceFile.getLineAndCharacterOfPosition(ref.range.pos);
-        const end = sourceFile.getLineAndCharacterOfPosition(ref.range.end);
-
-        context.report({
-          messageId: ref.kind === "import" ? "relativeImport" : "relativeReference",
-          loc: {
-            start: {
-              line: pos.line + 1,
-              column: pos.character + 1,
-            },
-            end: {
-              line: end.line + 1,
-              column: end.character + 1,
-            },
-          },
-          data: { text: ref.text },
-        });
-      }
+      context.report({
+        messageId: ref.kind === "import" ? "relativeImport" : "relativeReference",
+        loc: tsRangeToESLintLocation(ref.range, sourceFile),
+        data: { text: ref.text },
+      });
     }
 
     return {};
   },
 });
 
+function tsRangeToESLintLocation(range: ts.TextRange, sourceFile: ts.SourceFile): TSESTree.SourceLocation {
+  const pos = sourceFile.getLineAndCharacterOfPosition(range.pos);
+  const end = sourceFile.getLineAndCharacterOfPosition(range.end);
+  return {
+    start: { line: pos.line + 1, column: pos.character + 1 },
+    end: { line: end.line + 1, column: end.character + 1 },
+  };
+}
+
 interface Reference {
   kind: "path" | "import" | "types";
   text: string;
-  resolutionMode?: ts.ModuleKind.ESNext | ts.ModuleKind.CommonJS;
   range: ts.TextRange;
-}
-
-function resolveReference(
-  compilerOptions: ts.CompilerOptions,
-  moduleResolutionHost: ts.ModuleResolutionHost,
-  baseDirectory: string,
-  containingFileName: string | undefined,
-  { kind, text, resolutionMode }: Reference
-): string | undefined {
-  switch (kind) {
-    case "path":
-      if (containingFileName) {
-        return ts.resolveTripleslashReference(text, containingFileName);
-      } else {
-        return path.resolve(baseDirectory, text);
-      }
-    case "types":
-      return ts.resolveTypeReferenceDirective(
-        text,
-        assertDefined(containingFileName, "Must have a containing file to resolve a type reference directive"),
-        compilerOptions,
-        moduleResolutionHost,
-        /*redirectedReference*/ undefined,
-        /*cache*/ undefined,
-        resolutionMode
-      ).resolvedTypeReferenceDirective?.resolvedFileName;
-    case "import":
-      return ts.resolveModuleName(
-        text,
-        assertDefined(containingFileName, "Must have an containing file to resolve an import"),
-        compilerOptions,
-        moduleResolutionHost,
-        /*cache*/ undefined,
-        /*redirectedReference*/ undefined,
-        resolutionMode
-      ).resolvedModule?.resolvedFileName;
-  }
-}
-
-function findReferencedFiles(src: ts.SourceFile, packageName: string) {
-  const refs: Reference[] = [];
-  for (const ref of src.referencedFiles) {
-    refs.push({
-      text: ref.fileName,
-      kind: "path",
-      resolutionMode: ref.resolutionMode,
-      range: ref,
-    });
-  }
-  for (const ref of src.typeReferenceDirectives) {
-    // only <reference types="../packagename/x" /> references are local (or "packagename/x", though in 3.7 that doesn't work in DT).
-    if (ref.fileName.startsWith("../" + packageName + "/") || ref.fileName.startsWith(packageName + "/")) {
-      refs.push({ kind: "types", text: ref.fileName, resolutionMode: ref.resolutionMode, range: ref });
-    }
-  }
-
-  for (const ref of imports(src)) {
-    const resolutionMode = ts.getModeForUsageLocation(src, ref);
-    if (ref.text.startsWith(".") || getMangledNameForScopedPackage(ref.text).startsWith(packageName + "/")) {
-      refs.push({ kind: "import", text: ref.text, resolutionMode, range: ref });
-    }
-  }
-  return refs;
 }
 
 /**
@@ -222,18 +149,6 @@ function parseRequire(reference: ts.ExternalModuleReference): ts.StringLiteralLi
     throw new Error(`Bad 'import =' reference: ${reference.getText()}`);
   }
   return expression;
-}
-
-// Same as the function in moduleNameResolver.ts in typescript
-// TODO(jakebailey): this is a copy and paste from the definition parser
-function getMangledNameForScopedPackage(packageName: string): string {
-  if (packageName.startsWith("@")) {
-    const replaceSlash = packageName.replace("/", "__");
-    if (replaceSlash !== packageName) {
-      return replaceSlash.slice(1); // Take off the "@"
-    }
-  }
-  return packageName;
 }
 
 export = rule;

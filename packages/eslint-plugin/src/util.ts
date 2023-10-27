@@ -33,10 +33,32 @@ export function commentsMatching(
   }
 }
 
+function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined): T | undefined {
+  p = path.resolve(p);
+  const root = path.parse(p).root;
+
+  while (true) {
+    const v = fn(p);
+    if (v !== undefined) {
+      return v;
+    }
+    if (p === root) {
+      break;
+    }
+    p = path.dirname(p);
+  }
+
+  return undefined;
+}
+
 export interface TypesPackageInfo {
   dir: string;
+  /** package.json with name="@types/foo__bar-baz" */
   packageJson: PackageJSON;
+  /** real package name being typed, like "@foo/bar-baz" */
   realName: string;
+  /** directory path relative to "types", like "foo__bar-baz" or "foo__bar-baz/v2" */
+  // subDirectoryPath: string;
 }
 
 export interface PackageJSON {
@@ -56,24 +78,6 @@ function isTypesPackage(packageJson: Partial<PackageJSON>): boolean {
   );
 }
 
-function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined): T | undefined {
-  p = path.resolve(p);
-  const root = path.parse(p).root;
-
-  while (true) {
-    const v = fn(p);
-    if (v !== undefined) {
-      return v;
-    }
-    if (p === root) {
-      break;
-    }
-    p = path.dirname(p);
-  }
-
-  return undefined;
-}
-
 export function findTypesPackage(file: string): TypesPackageInfo | undefined {
   return findUp(file, (p) => {
     const packageJsonPath = path.join(p, "package.json");
@@ -83,18 +87,18 @@ export function findTypesPackage(file: string): TypesPackageInfo | undefined {
 
     const packageJsonContents = fs.readFileSync(packageJsonPath, "utf8");
     const packageJson = JSON.parse(packageJsonContents);
-    if (isTypesPackage(packageJson)) {
-      return {
-        dir: p,
-        packageJson,
-        realName: typesPackageNameToRealName(packageJson.name),
-      };
+    if (!isTypesPackage(packageJson)) {
+      return undefined;
     }
-
-    return undefined;
+    return {
+      dir: p,
+      packageJson,
+      realName: typesPackageNameToRealName(packageJson.name),
+    };
   });
 }
 
+// TODO(jakebailey): delete
 export function findDtRoot(typesPackageDir: string) {
   return findUp(typesPackageDir, (p) => {
     if (fs.existsSync(path.join(p, "notNeededPackages.json"))) {
