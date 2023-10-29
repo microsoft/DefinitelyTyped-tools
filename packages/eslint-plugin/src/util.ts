@@ -2,7 +2,6 @@ import { unmangleScopedPackage } from "@definitelytyped/utils";
 import { TSESTree, ESLintUtils } from "@typescript-eslint/utils";
 import { RuleWithMetaAndName } from "@typescript-eslint/utils/dist/eslint-utils";
 import { RuleListener, RuleModule, SourceCode } from "@typescript-eslint/utils/dist/ts-eslint";
-import { basename, dirname } from "path";
 
 // Possible TS bug can't figure out how to do declaration emit of created rules
 // without an explicit type annotation here due to pnpm symlink stuff
@@ -24,27 +23,6 @@ export function getTypesPackageForDeclarationFile(file: string) {
   }
 
   return unmangleScopedPackage(match) ?? match;
-}
-
-export function isMainFile(fileName: string, allowNested: boolean) {
-  // Linter may be run with cwd of the package. We want `index.d.ts` but not `submodule/index.d.ts` to match.
-  if (fileName === "index.d.ts") {
-    return true;
-  }
-
-  if (basename(fileName) !== "index.d.ts") {
-    return false;
-  }
-
-  let parent = dirname(fileName);
-  // May be a directory for an older version, e.g. `v0`.
-  // Note a types redirect `foo/ts3.1` should not have its own header.
-  if (allowNested && /^v(0\.)?\d+$/.test(basename(parent))) {
-    parent = dirname(parent);
-  }
-
-  // Allow "types/foo/index.d.ts", not "types/foo/utils/index.d.ts"
-  return basename(dirname(parent)) === "types";
 }
 
 export function commentsMatching(
