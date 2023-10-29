@@ -1,21 +1,21 @@
-import * as exportJustNamespace from "./export-just-namespace";
-import * as noAnyUnion from "./no-any-union";
-import * as noBadReference from "./no-bad-reference";
-import * as noConstEnum from "./no-const-enum";
-import * as noDeadReference from "./no-dead-reference";
-import * as noDeclareCurrentPackage from "./no-declare-current-package";
-import * as noImportDefaultOfExportEquals from "./no-import-default-of-export-equals";
-import * as noRelativeImportInTest from "./no-relative-import-in-test";
-import * as noSelfImport from "./no-self-import";
-import * as noSingleElementTupleType from "./no-single-element-tuple-type";
-import * as noUnnecessaryGenerics from "./no-unnecessary-generics";
-import * as noUselessFiles from "./no-useless-files";
-import * as preferDeclareFunction from "./prefer-declare-function";
-import * as redundantUndefined from "./redundant-undefined";
-import * as strictExportDeclareModifiers from "./strict-export-declare-modifiers";
-import * as noSingleDeclareModule from "./no-single-declare-module";
-import * as noOldDTHeader from "./no-old-dt-header";
-import * as noImportOfDevDependencies from "./no-import-of-dev-dependencies";
+import exportJustNamespace = require("./export-just-namespace");
+import noAnyUnion = require("./no-any-union");
+import noBadReference = require("./no-bad-reference");
+import noConstEnum = require("./no-const-enum");
+import noDeadReference = require("./no-dead-reference");
+import noDeclareCurrentPackage = require("./no-declare-current-package");
+import noImportDefaultOfExportEquals = require("./no-import-default-of-export-equals");
+import noRelativeImportInTest = require("./no-relative-import-in-test");
+import noSelfImport = require("./no-self-import");
+import noSingleElementTupleType = require("./no-single-element-tuple-type");
+import noUnnecessaryGenerics = require("./no-unnecessary-generics");
+import noUselessFiles = require("./no-useless-files");
+import preferDeclareFunction = require("./prefer-declare-function");
+import redundantUndefined = require("./redundant-undefined");
+import strictExportDeclareModifiers = require("./strict-export-declare-modifiers");
+import noSingleDeclareModule = require("./no-single-declare-module");
+import noOldDTHeader = require("./no-old-dt-header");
+import noImportOfDevDependencies = require("./no-import-of-dev-dependencies");
 
 export const rules = {
   "export-just-namespace": exportJustNamespace,
