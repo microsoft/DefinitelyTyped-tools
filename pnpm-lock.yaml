@@ -229,9 +229,6 @@ importers:
       glob:
         specifier: ^8.1.0
         version: 8.1.0
-      pacote:
-        specifier: ^13.6.1
-        version: 13.6.2
       semver:
         specifier: ^7.3.7
         version: 7.5.4
@@ -248,9 +245,6 @@ importers:
       '@types/glob':
         specifier: ^8.1.0
         version: 8.1.0
-      '@types/pacote':
-        specifier: ^11.1.5
-        version: 11.1.5
       '@types/semver':
         specifier: ^7.5.2
         version: 7.5.2
@@ -260,9 +254,6 @@ importers:
 
   packages/eslint-plugin:
     dependencies:
-      '@definitelytyped/header-parser':
-        specifier: workspace:*
-        version: link:../header-parser
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
@@ -319,21 +310,12 @@ importers:
       '@definitelytyped/retag':
         specifier: workspace:*
         version: link:../retag
-      '@definitelytyped/typescript-versions':
-        specifier: workspace:*
-        version: link:../typescript-versions
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
-      '@octokit/rest':
-        specifier: ^16.1.0
-        version: 16.43.2(@octokit/core@3.6.0)
       fs-extra:
         specifier: ^9.1.0
         version: 9.1.0
-      fstream:
-        specifier: ^1.0.12
-        version: 1.0.12
       longjohn:
         specifier: ^0.2.11
         version: 0.2.12
@@ -353,9 +335,6 @@ importers:
       '@types/fs-extra':
         specifier: ^9.0.8
         version: 9.0.13
-      '@types/mz':
-        specifier: ^0.0.31
-        version: 0.0.31
       '@types/pacote':
         specifier: ^11.1.5
         version: 11.1.5
@@ -419,9 +398,6 @@ importers:
       fs-extra:
         specifier: ^8.1.0
         version: 8.1.0
-      fstream:
-        specifier: ^1.0.12
-        version: 1.0.12
       tar:
         specifier: ^6.1.11
         version: 6.1.13
@@ -1948,12 +1924,6 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/mz@0.0.31:
-    resolution: {integrity: sha512-Vbn32vE6cpW/X77pylhSCRAa33zbWs7EgOwZAMC7h6sbuSlvGPFZyg+8lb3hx1DUvKDoQEH1PXx/ORk+nF1e1Q==}
-    dependencies:
-      '@types/node': 18.14.2
-    dev: true
-
   /@types/node-fetch@2.6.2:
     resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
     dependencies:
@@ -3028,6 +2998,7 @@ packages:
   /clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+    requiresBuild: true
     dev: true
 
   /co@4.6.0:
@@ -3254,6 +3225,7 @@ packages:
 
   /defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
+    requiresBuild: true
     dependencies:
       clone: 1.0.4
     dev: true
@@ -4125,16 +4097,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /fstream@1.0.12:
-    resolution: {integrity: sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg==}
-    engines: {node: '>=0.6'}
-    dependencies:
-      graceful-fs: 4.2.11
-      inherits: 2.0.4
-      mkdirp: 0.5.6
-      rimraf: 2.7.1
-    dev: false
 
   /function-bind@1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
@@ -6635,13 +6597,6 @@ packages:
   /reverse-arguments@1.0.0:
     resolution: {integrity: sha512-/x8uIPdTafBqakK0TmPNJzgkLP+3H+yxpUJhCQHsLBg1rYEVNR2D8BRYNWQhVBjyOd7oo1dZRVzIkwMY2oqfYQ==}
     dev: true
-
-  /rimraf@2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
-    hasBin: true
-    dependencies:
-      glob: 7.2.3
-    dev: false
 
   /rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
