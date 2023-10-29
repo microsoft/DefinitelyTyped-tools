@@ -25,10 +25,6 @@ export type CompilerOptionsRaw = {
     : CompilerOptions[K];
 };
 
-export interface DefinitelyTypedInfo {
-  /** "../" or "../../" or "../../../". This should use '/' even on windows. */
-  readonly relativeBaseUrl: string;
-}
 export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): string[] {
   const errors = [];
   const mustHave = {

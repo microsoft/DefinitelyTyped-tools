@@ -5,7 +5,7 @@ import { WalkContext } from "tslint";
 
 const suggestionsDir = path.join(os.homedir(), ".dts", "suggestions");
 
-export interface Suggestion {
+interface Suggestion {
   fileName: string;
   ruleName: string;
   message: string;

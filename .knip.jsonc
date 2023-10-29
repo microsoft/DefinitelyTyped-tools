@@ -81,5 +81,6 @@
     }
   },
   "ignore": ["**/fixtures", "**/testsource", "**/dtslint/test/*/**", "**/*.d.ts"],
+  "ignoreExportsUsedInFile": true,
   "jest": true
 }
