@@ -73,7 +73,10 @@
       "project": "**/*.ts"
     },
     "packages/utils": {
-      "entry": "src/index.ts",
+      "entry": [
+        "src/index.ts",
+        "src/types/*.ts"
+      ],
       "project": "**/*.ts"
     }
   },
