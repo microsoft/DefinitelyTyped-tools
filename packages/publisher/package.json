@@ -9,11 +9,8 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
-    "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@octokit/rest": "^16.1.0",
     "fs-extra": "^9.1.0",
-    "fstream": "^1.0.12",
     "longjohn": "^0.2.11",
     "pacote": "^13.6.1",
     "semver": "^7.3.7",
@@ -22,7 +19,6 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",
-    "@types/mz": "^0.0.31",
     "@types/pacote": "^11.1.5",
     "@types/semver": "^7.5.2",
     "@types/yargs": "^15.0.4"

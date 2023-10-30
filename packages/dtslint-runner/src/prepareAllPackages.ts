@@ -23,7 +23,7 @@ export async function prepareAllPackages(definitelyTypedPath: string, clone: boo
   };
 }
 const npmRetryCount = 5;
-export async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
+async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
   const cmd = `pnpm install --no-save`;
   console.log(`  ${definitelyTypedPath}: ${cmd}`);
