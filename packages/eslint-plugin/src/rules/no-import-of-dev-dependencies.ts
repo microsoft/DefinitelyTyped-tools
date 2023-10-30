@@ -40,7 +40,7 @@ const rule = createRule({
         }
         return dep;
       })
-      .filter((dep) => dep !== info.realName);
+      .filter((dep) => dep !== info.realName && packageJson.dependencies?.[dep] === undefined); // TODO(jakebailey): add test for this case from https://github.com/microsoft/DefinitelyTyped-tools/pull/773
 
     commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
       if (devDeps.includes(ref)) {

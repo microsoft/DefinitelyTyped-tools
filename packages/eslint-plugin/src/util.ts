@@ -65,6 +65,7 @@ export interface PackageJSON {
   name: string;
   version: string;
   owners: string[];
+  dependencies?: Record<string, string | undefined>;
   devDependencies?: Record<string, string | undefined>;
 }
 
