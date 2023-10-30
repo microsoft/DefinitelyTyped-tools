@@ -1,6 +1,24 @@
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
+
+/*
+BAD - what we have now
+    <TElement extends HTMLElement = HTMLElement>(
+      html: JQuery.htmlString,
+      ownerDocument_attributes?: Document | JQuery.PlainObject,
+      // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
+    ): JQuery<TElement>;
+
+GOOD - what we want to have
+    // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
+    <TElement extends HTMLElement = HTMLElement>(
+      html: JQuery.htmlString,
+      ownerDocument_attributes?: Document | JQuery.PlainObject,
+    ): JQuery<TElement>; 
+*/
+
+
 import { createRule } from "../util";
 
 type ESTreeFunctionLikeWithTypeParameters = TSESTree.FunctionLike & {
@@ -54,7 +72,7 @@ const rule = createRule({
               context.report({
                 data: { name },
                 messageId: "sole",
-                node: parserServices.tsNodeToESTreeNodeMap.get(res.soleUse),
+                node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
               });
               break;
             case "never":
