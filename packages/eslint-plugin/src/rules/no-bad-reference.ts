@@ -15,9 +15,9 @@ const rule = createRule({
       recommended: "error",
     },
     messages: {
-      relativeImport:
+      importOutside:
         'The import "{{text}}" resolves outside of the package. Use a bare import to reference other packages.',
-      relativeReference:
+      referenceOutside:
         'The reference "{{text}}" resolves outside of the package. Use a global reference to reference other packages.',
       testReference:
         'The path reference "{{text}}" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.',
@@ -83,7 +83,7 @@ const rule = createRule({
       }
 
       context.report({
-        messageId: ref.kind === "import" ? "relativeImport" : "relativeReference",
+        messageId: ref.kind === "import" ? "importOutside" : "referenceOutside",
         loc: tsRangeToESLintLocation(ref.range, sourceFile),
         data: { text: ref.text },
       });
