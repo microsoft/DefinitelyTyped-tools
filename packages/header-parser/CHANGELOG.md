@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.0.184
+
+### Patch Changes
+
+- f9e73605: Remove validation of `"pnpm"` field
+
 ## 0.0.183
 
 ### Patch Changes

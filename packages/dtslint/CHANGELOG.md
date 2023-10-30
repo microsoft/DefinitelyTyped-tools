@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.0.189
+
+### Patch Changes
+
+- Updated dependencies [f9e73605]
+  - @definitelytyped/header-parser@0.0.184
+  - @definitelytyped/dts-critic@0.0.185
+
 ## 0.0.188
 
 ### Patch Changes

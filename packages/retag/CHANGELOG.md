@@ -1,5 +1,11 @@
 # @definitelytyped/retag
 
+## 0.0.186
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.186
+
 ## 0.0.185
 
 ### Patch Changes
