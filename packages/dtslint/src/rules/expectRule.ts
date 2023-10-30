@@ -194,7 +194,7 @@ function createProgram(configFile: string, ts: typeof TsType): Program {
   const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, resolvePath(projectDirectory), {
     noEmit: true,
   });
-  
+
   if (config.compilerOptions?.module === "node16" && parsed.options.module === undefined) {
     // TypeScript version is too old to handle the "node16" module option,
     // but we can run tests falling back to commonjs/node.
