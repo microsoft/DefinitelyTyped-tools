@@ -17,8 +17,10 @@ const rule = createRule({
     messages: {
       importOutside:
         'The import "{{text}}" resolves outside of the package. Use a bare import to reference other packages.',
+      importLeaves: 'The import "{{text}}" resolves to the current package, but uses relative paths.',
       referenceOutside:
         'The reference "{{text}}" resolves outside of the package. Use a global reference to reference other packages.',
+      referenceLeaves: 'The reference "{{text}}" resolves to the current package, but uses relative paths.',
       testReference:
         'The path reference "{{text}}" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.',
     },
@@ -30,6 +32,8 @@ const rule = createRule({
     if (!typesPackage) {
       return {};
     }
+
+    const containingDirectory = path.dirname(containingFileName);
 
     const realNamePlusSlash = typesPackage.realName + "/";
     function isRelativeOrSelf(name: string) {
@@ -65,20 +69,46 @@ const rule = createRule({
 
     for (const ref of refs) {
       const p = ref.text.startsWith(realNamePlusSlash)
-        ? path.posix.join(typesPackage.dir, ref.text.slice(realNamePlusSlash.length))
+        ? path.posix.join(
+            path.posix.relative(containingDirectory, typesPackage.dir),
+            ref.text.slice(realNamePlusSlash.length)
+          )
         : ref.text;
 
-      // TODO(jakebailey): Rather than using path.resolve, manually walk each
-      // part seeing if any of them escape the package, which would let us
-      // catch places where people relatively move out of the package and back
-      // in again.
-      //
-      // As a perf trick, we can use path.resolve if the path doesn't contain
-      // ".."; then we know that it could only ever go into a child package.
-      const resolved = path.resolve(path.dirname(containingFileName), p);
+      const resolved = path.resolve(containingDirectory, p);
       const otherPackage = findTypesPackage(resolved);
 
       if (otherPackage && otherPackage.dir === typesPackage.dir) {
+        // Perf trick; if a path doesn't have ".." anywhere, then it can't have resolved
+        // up and out of a package dir so we can skip this work.
+        if (p.includes("..")) {
+          // If we resolved to something in the correct package, we still could have
+          // gotten here by leaving the package (up into a parent, or down into a versioned dir).
+          // Manually walk the path to see if that happened.
+          const parts = p.split("/"); // TODO(jakebailey): ban backslashes
+          let cwd = containingDirectory;
+          for (const part of parts) {
+            if (part === "" || part === ".") {
+              continue;
+            }
+            if (part === "..") {
+              cwd = path.posix.dirname(cwd);
+            } else {
+              cwd = path.posix.join(cwd, part);
+            }
+            const otherPackage = findTypesPackage(cwd);
+            if (otherPackage && otherPackage.dir === typesPackage.dir) {
+              continue;
+            }
+
+            context.report({
+              messageId: ref.kind === "import" ? "importLeaves" : "referenceLeaves",
+              loc: tsRangeToESLintLocation(ref.range, sourceFile),
+              data: { text: ref.text },
+            });
+          }
+        }
+
         continue;
       }
 
