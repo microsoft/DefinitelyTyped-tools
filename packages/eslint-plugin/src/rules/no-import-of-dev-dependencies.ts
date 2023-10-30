@@ -25,10 +25,16 @@ const rule = createRule({
     if (context.getFilename().endsWith(".d.ts")) {
       const packageJson = getPackageJson(context.getPhysicalFilename?.() ?? context.getFilename());
       const devdeps = packageJson
-        ? Object.keys(packageJson.devDependencies).map((dep) => unmangleScopedPackage(dep.replace(/^@types\//, "")))
+        ? Object.keys(packageJson.devDependencies).map((dep) => {
+            const withoutTypes = dep.replace(/^@types\//, "");
+            return unmangleScopedPackage(withoutTypes) || withoutTypes;
+          })
         : [];
       const deps = packageJson
-        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => unmangleScopedPackage(dep.replace(/^@types\//, "")))
+        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => {
+            const withoutTypes = dep.replace(/^@types\//, "");
+            return unmangleScopedPackage(withoutTypes) || withoutTypes;
+          })
         : [];
       commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
         if (devdeps.includes(ref) && ref !== packageName && !deps.includes(ref)) {
@@ -39,7 +45,11 @@ const rule = createRule({
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {
-          if (devdeps.includes(node.source.value) && node.source.value !== packageName && !deps.includes(node.source.value)) {
+          if (
+            devdeps.includes(node.source.value) &&
+            node.source.value !== packageName &&
+            !deps.includes(node.source.value)
+          ) {
             context.report({
               messageId: "noImportOfDevDependencies",
               node,
@@ -67,7 +77,9 @@ const rule = createRule({
     }
   },
 });
-function getPackageJson(sourceFile: string): { dependencies?: Record<string, string>, devDependencies: Record<string, string> } | undefined {
+function getPackageJson(
+  sourceFile: string
+): { dependencies?: Record<string, string>; devDependencies: Record<string, string> } | undefined {
   let dir = path.dirname(sourceFile);
   let text: string | undefined;
   while (dir !== "/") {
