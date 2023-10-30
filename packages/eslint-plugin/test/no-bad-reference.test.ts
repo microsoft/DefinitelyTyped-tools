@@ -1,134 +1,57 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-
 import * as noBadReference from "../src/rules/no-bad-reference";
+import { runTestsWithFixtures } from "./fixtureTester";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
-
-ruleTester.run("@definitelytyped/no-bad-reference", noBadReference, {
-  invalid: [
+runTestsWithFixtures("@definitelytyped/no-bad-reference", noBadReference, {
+  valid: [
     {
-      code: `/// <reference path="../other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 28,
-          line: 1,
-          messageId: "referencePathTest",
-        },
-      ],
-      filename: "types.ts",
-    },
-    {
-      code: `/// <reference path="other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 25,
-          line: 1,
-          messageId: "referencePathTest",
-        },
-      ],
-      filename: "types.ts",
-    },
-    {
-      code: `/// <reference path="../other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 28,
-          line: 1,
-          messageId: "referencePathPackage",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 25,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11/index" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 31,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11/subdir/file" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 37,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v0.1" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 26,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v0.1/index" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 32,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
+      filename: "types/foo/index.d.ts",
     },
   ],
-  valid: [
-    ``,
-    `// unrelated comment`,
-    `/// similar (reference path) comment`,
+  invalid: [
     {
-      code: `/// <reference path="other" />`,
-      filename: "types.d.ts",
+      filename: "types/no-bad-reference/index.d.ts",
+      errors: [
+        {
+          messageId: "referencePathPackage",
+          line: 1,
+          column: 20,
+          endColumn: 28,
+        },
+        {
+          messageId: "referencePathOldVersion",
+          line: 2,
+          column: 20,
+          endColumn: 25,
+        },
+        {
+          messageId: "referencePathOldVersion",
+          line: 3,
+          column: 20,
+          endColumn: 31,
+        },
+        {
+          messageId: "referencePathOldVersion",
+          line: 4,
+          column: 20,
+          endColumn: 37,
+        },
+        {
+          messageId: "referencePathOldVersion",
+          line: 5,
+          column: 20,
+          endColumn: 26,
+        },
+        {
+          messageId: "referencePathOldVersion",
+          line: 6,
+          column: 20,
+          endColumn: 32,
+        },
+      ],
     },
     {
-      code: `/// <reference path="./other" />`,
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v1gardenpath" />`,
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v1verb/other" />`,
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="other" />
-/// <reference path="other2" />`,
-      filename: "types.d.ts",
+      filename: "types/no-bad-reference/no-bad-reference-tests.ts",
+      errors: [{ messageId: "referencePathTest" }, { messageId: "referencePathTest" }],
     },
   ],
 });

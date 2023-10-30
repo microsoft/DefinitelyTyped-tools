@@ -16,9 +16,9 @@ const rule = createRule({
     },
     messages: {
       relativeImport:
-        'The relative import "{{text}}" resolves outside of the package; use a bare import to reference other packages.',
+        'The import "{{text}}" resolves outside of the package; use a bare import to reference other packages.',
       relativeReference:
-        'The relative reference "{{text}}" resolves outside of the package; use a global reference to reference other packages.',
+        'The reference "{{text}}" resolves outside of the package; use a global reference to reference other packages.',
     },
     schema: [],
   },
