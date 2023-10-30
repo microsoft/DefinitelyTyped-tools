@@ -2,6 +2,7 @@ import { TSESTree } from "@typescript-eslint/utils";
 import { createRule, commentsMatching, getTypesPackageForDeclarationFile } from "../util";
 import fs from "fs";
 import path from "path";
+import { unmangleScopedPackage } from "@definitelytyped/utils";
 
 type MessageId = "noImportOfDevDependencies" | "noReferenceOfDevDependencies";
 const rule = createRule({
@@ -24,10 +25,10 @@ const rule = createRule({
     if (context.getFilename().endsWith(".d.ts")) {
       const packageJson = getPackageJson(context.getPhysicalFilename?.() ?? context.getFilename());
       const devdeps = packageJson
-        ? Object.keys(packageJson.devDependencies).map((dep) => dep.replace(/@types\//, ""))
+        ? Object.keys(packageJson.devDependencies).map((dep) => unmangleScopedPackage(dep.replace(/^@types\//, "")))
         : [];
       const deps = packageJson
-        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => dep.replace(/@types\//, ""))
+        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => unmangleScopedPackage(dep.replace(/^@types\//, "")))
         : [];
       commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
         if (devdeps.includes(ref) && ref !== packageName && !deps.includes(ref)) {
