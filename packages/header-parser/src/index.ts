@@ -129,7 +129,6 @@ export function validatePackageJson(
   const typeScriptVersionResult = validateTypeScriptVersion();
   const projectsResult = validateProjects();
   const ownersResult = validateOwners();
-  const pnpmResult = validatePnpm();
   const licenseResult = getLicenseFromPackageJson(packageJson.license);
   if (typeof nameResult === "object") {
     errors.push(...nameResult.errors);
@@ -161,9 +160,6 @@ export function validatePackageJson(
     errors.push(...ownersResult.errors);
   } else {
     owners = ownersResult;
-  }
-  if (typeof pnpmResult === "object") {
-    errors.push(...pnpmResult.errors);
   }
   if (Array.isArray(licenseResult)) {
     errors.push(...licenseResult);
@@ -287,40 +283,6 @@ export function validatePackageJson(
       }
     }
     return { errors };
-  }
-  function validatePnpm(): undefined | { errors: string[] } {
-    const errors = [];
-    if (packageJson.pnpm) {
-      if (typeof packageJson.pnpm !== "object" || packageJson.pnpm === null) {
-        errors.push(
-          `${typesDirectoryName}'s package.json has bad "pnpm": must be an object like { "overrides": { "@types/react": "^16" } }`
-        );
-      } else {
-        for (const key in packageJson.pnpm) {
-          if (key !== "overrides") {
-            errors.push(
-              `${typesDirectoryName}'s package.json has bad "pnpm": it should not include property "${key}", only "overrides".`
-            );
-          }
-        }
-        const overrides = (packageJson.pnpm as Record<string, unknown>).overrides;
-        if (overrides && typeof overrides === "object" && overrides !== null) {
-          for (const key in overrides) {
-            if (!key.startsWith("@types/")) {
-              errors.push(
-                `${typesDirectoryName}'s package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`
-              );
-            }
-          }
-        } else {
-          errors.push(`${typesDirectoryName}'s package.json has bad "pnpm": it must contain an "overrides" object.`);
-        }
-      }
-    }
-    if (errors.length) {
-      return { errors };
-    }
-    return undefined;
   }
 }
 

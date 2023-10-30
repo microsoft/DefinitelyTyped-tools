@@ -98,27 +98,6 @@ describe("validatePackageJson", () => {
   it("works with old-version packages", () => {
     expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.9999" }, []))).toBeFalsy();
   });
-  it("requires pnpm to be an object", () => {
-    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: "not an object" }, [])).toEqual([
-      `hapi's package.json has bad "pnpm": must be an object like { "overrides": { "@types/react": "^16" } }`,
-    ]);
-  });
-  it("requires pnpm to contain exactly overrides", () => {
-    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { unexpected: true } }, [])).toEqual([
-      `hapi's package.json has bad "pnpm": it should not include property "unexpected", only "overrides".`,
-      `hapi's package.json has bad "pnpm": it must contain an "overrides" object.`,
-    ]);
-  });
-  it("pnpm may only override types packages", () => {
-    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { overrides: { vinland: "^1" } } }, [])).toEqual([
-      `hapi's package.json has bad "pnpm": pnpm overrides may only override @types/ packages.`,
-    ]);
-  });
-  it("pnpm overrides work", () => {
-    expect(validatePackageJson("hapi", { ...pkgJson, pnpm: { overrides: { "@types/react": "^16" } } }, [])).toEqual(
-      header
-    );
-  });
 });
 
 describe("makeTypesVersionsForPackageJson", () => {
