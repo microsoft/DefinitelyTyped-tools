@@ -97,13 +97,3 @@ export function findTypesPackage(file: string): TypesPackageInfo | undefined {
     };
   });
 }
-
-// TODO(jakebailey): delete
-export function findDtRoot(typesPackageDir: string) {
-  return findUp(typesPackageDir, (p) => {
-    if (fs.existsSync(path.join(p, "notNeededPackages.json"))) {
-      return p;
-    }
-    return undefined;
-  });
-}
