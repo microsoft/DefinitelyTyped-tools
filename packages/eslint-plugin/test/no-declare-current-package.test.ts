@@ -13,27 +13,19 @@ runTestsWithFixtures("@definitelytyped/no-declare-current-package", noDeclareCur
   invalid: [
     {
       filename: "types/no-declare-current-package/index.d.ts",
-      errors: [
-        { messageId: "noDeclareCurrentPackage" },
-      ],
+      errors: [{ messageId: "noDeclareCurrentPackage" }],
     },
     {
       filename: "types/no-declare-current-package/test/deep/import.d.ts",
-      errors: [
-        { messageId: "noDeclareCurrentPackage" },
-      ],
+      errors: [{ messageId: "noDeclareCurrentPackage" }],
     },
     {
       filename: "types/scoped__no-declare-current-package/index.d.ts",
-      errors: [
-        { messageId: "noDeclareCurrentPackage" },
-      ],
+      errors: [{ messageId: "noDeclareCurrentPackage" }],
     },
     {
       filename: "types/scoped__no-declare-current-package/test/deep/import.d.ts",
-      errors: [
-        { messageId: "noDeclareCurrentPackage" },
-      ],
+      errors: [{ messageId: "noDeclareCurrentPackage" }],
     },
   ],
 });

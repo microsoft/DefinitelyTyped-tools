@@ -8,7 +8,7 @@ import { deepEquals } from "@definitelytyped/utils";
 import { readJson, packageNameFromPath } from "./util";
 export function checkPackageJson(
   dirPath: string,
-  typesVersions: readonly AllTypeScriptVersion[],
+  typesVersions: readonly AllTypeScriptVersion[]
 ): header.Header | string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
   if (!pathExistsSync(pkgJsonPath)) {
