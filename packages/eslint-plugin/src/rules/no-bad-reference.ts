@@ -23,6 +23,7 @@ const rule = createRule({
       referenceLeaves: 'The reference "{{text}}" resolves to the current package, but uses relative paths.',
       testReference:
         'The path reference "{{text}}" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.',
+      backslashes: "Use forward slashes in paths.",
     },
     schema: [],
   },
@@ -68,6 +69,13 @@ const rule = createRule({
     }
 
     for (const ref of refs) {
+      if (ref.text.includes("\\")) {
+        context.report({
+          messageId: "backslashes",
+          loc: tsRangeToESLintLocation(ref.range, sourceFile),
+        });
+      }
+
       const p = ref.text.startsWith(realNamePlusSlash)
         ? path.posix.join(
             path.posix.relative(containingDirectory, typesPackage.dir),
@@ -85,7 +93,7 @@ const rule = createRule({
           // If we resolved to something in the correct package, we still could have
           // gotten here by leaving the package (up into a parent, or down into a versioned dir).
           // Manually walk the path to see if that happened.
-          const parts = p.split("/"); // TODO(jakebailey): ban backslashes
+          const parts = p.split("/");
           let cwd = containingDirectory;
           for (const part of parts) {
             if (part === "" || part === ".") {

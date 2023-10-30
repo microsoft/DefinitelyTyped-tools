@@ -10,6 +10,7 @@
 /// <reference path="./v1verb/other" />
 /// <reference path="other" />
 /// <reference path="other2" />
+/// <reference path="..\index.d.ts" />
 
 // unrelated comment
 /// similar (reference path) comment

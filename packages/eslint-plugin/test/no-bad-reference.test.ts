@@ -113,6 +113,7 @@ runTestsWithFixtures("@definitelytyped/no-bad-reference", rule, {
         { messageId: "referenceOutside", data: { text: "./v11/subdir/file" } },
         { messageId: "referenceOutside", data: { text: "./v0.1" } },
         { messageId: "referenceOutside", data: { text: "./v0.1/index" } },
+        { messageId: "backslashes", line: 13 },
       ],
     },
     {
