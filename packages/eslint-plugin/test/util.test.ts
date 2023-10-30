@@ -1,5 +1,5 @@
-import { findDtRoot, findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
-import { fixtureRoot, getFixturePath } from "./fixtureTester";
+import { findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
+import { getFixturePath } from "./fixtureTester";
 
 describe("getTypesPackageForDeclarationFile", () => {
   test.each([
@@ -31,21 +31,5 @@ describe("findTypesPackage realName", () => {
   ])("%s becomes %s", (input, expected) => {
     const realName = findTypesPackage(getFixturePath(input))?.realName;
     expect(realName).toEqual(expected);
-  });
-});
-
-describe("findDtRoot", () => {
-  test.each([
-    ["types/foo/index.d.ts", fixtureRoot],
-    ["types/foo/foo-tests.ts", fixtureRoot],
-    ["types/foo/v1/index.d.ts", fixtureRoot],
-    ["types/foo/v1/foo-tests.ts", fixtureRoot],
-    ["types/scoped__foo/index.d.ts", fixtureRoot],
-    ["types/scoped__foo/scoped__foo-tests.ts", fixtureRoot],
-    ["types/scoped__foo/v1/index.d.ts", fixtureRoot],
-    ["types/scoped__foo/v1/scoped__foo-tests.ts", fixtureRoot],
-    ["bad.d.ts", fixtureRoot],
-  ])("%s becomes %s", (input, expected) => {
-    expect(findDtRoot(getFixturePath(input))).toEqual(expected);
   });
 });
