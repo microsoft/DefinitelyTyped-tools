@@ -1,4 +1,4 @@
-import { assertDefined, mapDefined } from "@definitelytyped/utils";
+import { assertDefined } from "@definitelytyped/utils";
 
 export enum Secret {
   /**
@@ -17,11 +17,6 @@ export enum Secret {
    */
   NPM_TYPES_TOKEN,
 }
-
-export const allSecrets: Secret[] = mapDefined(Object.keys(Secret), (key) => {
-  const value = (Secret as unknown as { [key: string]: unknown })[key];
-  return typeof value === "number" ? value : undefined; // tslint:disable-line strict-type-predicates (tslint bug)
-});
 
 export async function getSecret(secretId: Secret): Promise<string> {
   return assertDefined(process.env[Secret[secretId]], `Missing secret ${Secret[secretId]}`);
