@@ -6,3 +6,10 @@ dist
 *.lerna_backup
 packages/utils/cache
 .pnpm-store
+
+
+**/.vscode/*
+!**/.vscode/tasks.json
+!**/.vscode/settings.template.json
+!**/.vscode/launch.json
+!**/.vscode/extensions.json
