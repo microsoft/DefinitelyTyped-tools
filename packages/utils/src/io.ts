@@ -1,4 +1,3 @@
-import "./types/fstream";
 import {
   readFile as readFileWithEncoding,
   readFileSync as readFileWithEncodingSync,

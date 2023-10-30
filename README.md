@@ -19,7 +19,7 @@ These tools are not intended for public consumption, so we may break the API whe
 
 ## Development
 
-This is a monorepo managed with [pnpm workspaces](https://https://pnpm.io/workspaces) and published with [changesets](https://github.com/changesets/changesets). After cloning, run `pnpm install` to install dependencies for each package and link them to each other.
+This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces) and published with [changesets](https://github.com/changesets/changesets). After cloning, run `pnpm install` to install dependencies for each package and link them to each other.
 
 ### Testing
 
