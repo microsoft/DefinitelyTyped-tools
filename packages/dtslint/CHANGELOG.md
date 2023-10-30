@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.0.188
+
+### Patch Changes
+
+- 1efaeab5: Fall back from `--module node16` when testing TS versions that don’t support it
+- 95f31676: Mention package.json field, not header, when referring to minimumTypeScriptVersion
+- Updated dependencies [2b3138a0]
+  - @definitelytyped/utils@0.0.182
+  - @definitelytyped/header-parser@0.0.183
+  - @definitelytyped/dts-critic@0.0.184
+
 ## 0.0.187
 
 ### Patch Changes

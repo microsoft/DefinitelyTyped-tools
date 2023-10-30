@@ -1,5 +1,19 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.190
+
+### Patch Changes
+
+- 2b3138a0: Throw parse errors early now that more stuff is lazy
+- c0b13e4b: Allow PRs to delete files
+- Updated dependencies [2b3138a0]
+- Updated dependencies [c0b13e4b]
+- Updated dependencies [1efaeab5]
+- Updated dependencies [95f31676]
+  - @definitelytyped/utils@0.0.182
+  - @definitelytyped/definitions-parser@0.0.185
+  - @definitelytyped/dtslint@0.0.188
+
 ## 0.0.189
 
 ### Patch Changes
