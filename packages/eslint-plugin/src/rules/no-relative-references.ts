@@ -2,6 +2,7 @@ import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import { createRule, findTypesPackage } from "../util";
 import * as ts from "typescript";
 import path from "path";
+import { isDeclarationPath } from "@definitelytyped/utils";
 
 // TODO(jakebailey): is this redundant with no-bad-reference?
 // Yes, it is, but this one handles imports. Need to dedupe.
@@ -19,6 +20,8 @@ const rule = createRule({
         'The import "{{text}}" resolves outside of the package; use a bare import to reference other packages.',
       relativeReference:
         'The reference "{{text}}" resolves outside of the package; use a global reference to reference other packages.',
+      testReference:
+        'The path reference "{{text}}" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.',
     },
     schema: [],
   },
@@ -40,7 +43,15 @@ const rule = createRule({
 
     const refs: Reference[] = [];
     for (const ref of sourceFile.referencedFiles) {
-      refs.push({ kind: "path", text: ref.fileName, range: ref });
+      if (isDeclarationPath(containingFileName)) {
+        refs.push({ kind: "path", text: ref.fileName, range: ref });
+      } else {
+        context.report({
+          messageId: "testReference",
+          loc: tsRangeToESLintLocation(ref, sourceFile),
+          data: { text: ref.fileName },
+        });
+      }
     }
     for (const ref of sourceFile.typeReferenceDirectives) {
       if (isRelativeOrSelf(ref.fileName)) {

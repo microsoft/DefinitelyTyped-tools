@@ -96,5 +96,23 @@ runTestsWithFixtures("@definitelytyped/no-relative-references", noRelativeRefere
         { messageId: "relativeImport", data: { text: "../../../foo/v1" } },
       ],
     },
+    {
+      filename: "types/no-bad-reference/index.d.ts",
+      errors: [
+        { messageId: "relativeReference", data: { text: "../other" } },
+        { messageId: "relativeReference", data: { text: "./v11" } },
+        { messageId: "relativeReference", data: { text: "./v11/index" } },
+        { messageId: "relativeReference", data: { text: "./v11/subdir/file" } },
+        { messageId: "relativeReference", data: { text: "./v0.1" } },
+        { messageId: "relativeReference", data: { text: "./v0.1/index" } },
+      ],
+    },
+    {
+      filename: "types/no-bad-reference/no-bad-reference-tests.ts",
+      errors: [
+        { messageId: "testReference", data: { text: "../other" } },
+        { messageId: "testReference", data: { text: "other" } },
+      ],
+    },
   ],
 });
