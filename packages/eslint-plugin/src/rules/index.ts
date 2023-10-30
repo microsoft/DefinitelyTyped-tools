@@ -16,7 +16,6 @@ import * as strictExportDeclareModifiers from "./strict-export-declare-modifiers
 import * as noSingleDeclareModule from "./no-single-declare-module";
 import * as noOldDTHeader from "./no-old-dt-header";
 import * as noImportOfDevDependencies from "./no-import-of-dev-dependencies";
-import * as noRelativeReferences from "./no-relative-references";
 
 export const rules = {
   "export-just-namespace": exportJustNamespace,
@@ -37,5 +36,4 @@ export const rules = {
   "no-single-declare-module": noSingleDeclareModule,
   "no-old-dt-header": noOldDTHeader,
   "no-import-of-dev-dependencies": noImportOfDevDependencies,
-  "no-relative-references": noRelativeReferences,
 };
