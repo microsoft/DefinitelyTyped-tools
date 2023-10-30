@@ -160,7 +160,7 @@ async function runTests(
       const hi = his[i];
       assert(
         parseFloat(hi) >= parseFloat(low),
-        `'// Minimum TypeScript Version: ${minVersion}' in header skips ts${hi} folder.`
+        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`
       );
       const isLatest = hi === TypeScriptVersion.latest;
       const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
