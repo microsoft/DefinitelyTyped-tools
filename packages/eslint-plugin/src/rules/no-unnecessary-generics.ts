@@ -49,29 +49,23 @@ const rule = createRule({
         for (const typeParameter of tsNode.typeParameters) {
           const name = typeParameter.name.text;
           const res = getSoleUse(tsNode, assertDefined(checker.getSymbolAtLocation(typeParameter.name)), checker);
-          switch (res.type) {
-            case "sole":
-              context.report({
-                data: { name },
-                messageId: "sole",
-                node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
-              });
-              break;
-            case "never":
-              context.report({
-                data: { name },
-                messageId: "never",
-                node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
-              });
-              break;
+          
+          if (res.type === "ok") {
+            continue;
           }
+
+          context.report({
+            data: { name },
+            messageId: res.type,
+            node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
+          });
         }
       },
     };
   },
 });
 
-type Result = { type: "ok" | "never" } | { type: "sole"; soleUse: ts.Identifier };
+interface Result { type: "ok" | "never" | "sole"; }
 function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol, checker: ts.TypeChecker): Result {
   const exit = {};
   let soleUse: ts.Identifier | undefined;
@@ -99,7 +93,7 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
     throw err;
   }
 
-  return soleUse ? { type: "sole", soleUse } : { type: "never" };
+  return soleUse ? { type: "sole" } : { type: "never" };
 
   function recur(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
