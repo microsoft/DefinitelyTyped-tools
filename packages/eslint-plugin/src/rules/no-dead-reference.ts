@@ -15,7 +15,6 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    // TODO(jakebailey): we can just grab the TS AST directly and read the references props, no regex.
     const source = context.getSourceCode();
     if (source.ast.body.length) {
       // 'm' flag makes it multiline, so `^` matches the beginning of any line.

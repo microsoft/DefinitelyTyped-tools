@@ -8,7 +8,6 @@ export function getFixturePath(filename: string): string {
   return path.join(fixtureRoot, filename);
 }
 
-// TODO(jakebailey): require line numbers
 type ValidTestCase<TOptions extends Readonly<unknown[]>> = Omit<
   TSESLint.ValidTestCase<TOptions>,
   "code" | "filename"
