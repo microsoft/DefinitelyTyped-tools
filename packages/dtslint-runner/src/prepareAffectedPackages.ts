@@ -16,13 +16,12 @@ export async function prepareAffectedPackages(definitelyTypedPath: string): Prom
   const dt = await getDefinitelyTyped(options, log);
   const allPackages = AllPackages.fromFS(dt);
   const checkErrors = await checkParseResults(allPackages);
-  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath);
-  const errors = [...checkErrors, ...(Array.isArray(result) ? result : [])];
-  if (errors.length) {
-    throw new Error(errors.join("\n"));
+  if (checkErrors.length) {
+    throw new Error(checkErrors.join("\n"));
   }
+  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath);
   if (Array.isArray(result)) {
-    throw new Error(`result should not have been array: ${typeof result}`);
+    throw new Error(result.join("\n"));
   }
   return result;
 }
