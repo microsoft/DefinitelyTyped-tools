@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.0.182
+
+### Patch Changes
+
+- 2b3138a0: Throw parse errors early now that more stuff is lazy
+
 ## 0.0.181
 
 ### Patch Changes
