@@ -260,7 +260,7 @@ function walk(
       const explain =
         nextHigherVersion === "next"
           ? "TypeScript@next features not yet supported."
-          : `Fix by adding '"minimumTypeScriptVersion": ""${nextHigherVersion}""' to package.json.`;
+          : `Fix by adding '"minimumTypeScriptVersion": "${nextHigherVersion}"' to package.json.`;
       return msg + explain;
     }
   }
