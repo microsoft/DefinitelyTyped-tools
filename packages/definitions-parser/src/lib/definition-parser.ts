@@ -8,7 +8,7 @@ import {
   validatePackageJson,
 } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { FS, assertDefined, isDeclarationPath, split } from "@definitelytyped/utils";
+import { FS, assertDefined, atTypesSlash, isDeclarationPath, split } from "@definitelytyped/utils";
 import assert from "assert";
 import {
   DirectoryParsedTypingVersion,
@@ -18,7 +18,7 @@ import {
   formatTypingVersion,
   getMangledNameForScopedPackage,
 } from "../packages";
-import { getAllowedPackageJsonDependencies, scopeName } from "./settings";
+import { getAllowedPackageJsonDependencies } from "./settings";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -223,7 +223,7 @@ async function getPackageJsonInfoForPackage(
       packageJson.devDependencies,
       packageJsonName,
       allowedDependencies,
-      `@${scopeName}/${typingsPackageName}`
+      `${atTypesSlash}${typingsPackageName}`
     )
   );
   const imports = checkPackageJsonImports(packageJson.imports, packageJsonName);

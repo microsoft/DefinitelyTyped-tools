@@ -61,17 +61,32 @@ export function mangleScopedPackage(packageName: string): string {
   return isScopedPackage(packageName) ? packageName.replace(/\//, "__").replace("@", "") : packageName;
 }
 
-const atTypesPrefix = "@types/";
+export const atTypesSlash = "@types/";
 
 export function isTypesPackageName(packageName: string): boolean {
-  return packageName.startsWith(atTypesPrefix);
+  return packageName.startsWith(atTypesSlash);
+}
+
+function trimAtTypesPrefix(packageName: string): string {
+  return packageName.slice(atTypesSlash.length);
+}
+
+export function tryTrimAtTypesPrefix(packageName: string): string {
+  if (isTypesPackageName(packageName)) {
+    return trimAtTypesPrefix(packageName);
+  }
+  return packageName;
+}
+
+export function mustTrimAtTypesPrefix(packageName: string): string {
+  if (!isTypesPackageName(packageName)) {
+    throw new Error(`Not a types package name: ${packageName}`);
+  }
+  return trimAtTypesPrefix(packageName);
 }
 
 export function typesPackageNameToRealName(typesPackageName: string) {
-  if (!isTypesPackageName(typesPackageName)) {
-    throw new Error(`Not a types package name: ${typesPackageName}`);
-  }
-  const name = typesPackageName.slice(atTypesPrefix.length);
+  const name = mustTrimAtTypesPrefix(typesPackageName);
   return unmangleScopedPackage(name) ?? name;
 }
 

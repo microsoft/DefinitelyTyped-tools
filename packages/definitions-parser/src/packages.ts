@@ -6,16 +6,19 @@ import {
   FS,
   InMemoryFS,
   assertDefined,
+  atTypesSlash,
   computeHash,
   isDeclarationPath,
+  isTypesPackageName,
+  mustTrimAtTypesPrefix,
   readFileAndThrowOnBOM,
+  tryTrimAtTypesPrefix,
   unique,
   unmangleScopedPackage,
 } from "@definitelytyped/utils";
 import * as semver from "semver";
 import { getFiles, getTypingInfo, parseVersionFromDirectoryName } from "./lib/definition-parser";
-import { getAllowedPackageJsonDependencies, scopeName, typesDirectoryName } from "./lib/settings";
-import { slicePrefixes } from "./lib/utils";
+import { getAllowedPackageJsonDependencies, typesDirectoryName } from "./lib/settings";
 
 export class AllPackages {
   static fromFS(dt: FS) {
@@ -83,14 +86,14 @@ export class AllPackages {
   }
 
   async tryResolve(dep: PackageId): Promise<PackageId> {
-    const typesDirectoryName = dep.typesDirectoryName ?? dep.name.slice(scopeName.length + 2);
+    const typesDirectoryName = dep.typesDirectoryName ?? tryTrimAtTypesPrefix(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
     return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
   async resolve(dep: PackageId): Promise<PackageIdWithDefiniteVersion> {
-    const typesDirectoryName = dep.typesDirectoryName ?? dep.name.slice(scopeName.length + 2);
+    const typesDirectoryName = dep.typesDirectoryName ?? tryTrimAtTypesPrefix(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     if (!versions) {
       throw new Error(`No typings found with directory name '${dep.typesDirectoryName}'.`);
@@ -126,7 +129,7 @@ export class AllPackages {
   }
 
   async tryGetTypingsData(pkg: PackageId): Promise<TypingsData | undefined> {
-    const typesDirectoryName = pkg.typesDirectoryName ?? pkg.name.slice(scopeName.length + 2);
+    const typesDirectoryName = pkg.typesDirectoryName ?? tryTrimAtTypesPrefix(pkg.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     return (
       versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))
@@ -176,9 +179,9 @@ export class AllPackages {
   /** Returns all of the dependencies *that are typed on DT*, ignoring others, and including test dependencies. */
   async *allDependencyTypings(pkg: TypingsData): AsyncIterable<TypingsData> {
     for (const [name, version] of pkg.allPackageJsonDependencies()) {
-      if (!name.startsWith(`@${scopeName}/`)) continue;
+      if (!isTypesPackageName(name)) continue;
       if (pkg.name === name) continue;
-      const typesDirectoryName = removeTypesScope(name);
+      const typesDirectoryName = mustTrimAtTypesPrefix(name);
       const versions = await this.tryGetTypingsVersions(typesDirectoryName);
       if (versions) {
         yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
@@ -203,10 +206,6 @@ export class AllPackages {
     );
     this.isComplete = true;
   }
-}
-
-export function removeTypesScope(name: string) {
-  return slicePrefixes(name, `@${scopeName}/`);
 }
 
 // Same as the function in moduleNameResolver.ts in typescript
@@ -252,7 +251,7 @@ export abstract class PackageBase {
    * Does not include the version directory.
    */
   get typesDirectoryName(): string {
-    return this.name.slice(scopeName.length + 2);
+    return mustTrimAtTypesPrefix(this.name);
   }
 
   /** Short description for debug output. */
@@ -309,7 +308,7 @@ export class NotNeededPackage extends PackageBase {
     super();
     assert(libraryName && name && asOfVersion);
     this.version = new semver.SemVer(asOfVersion);
-    this.name = name.startsWith(`@${scopeName}/`) ? name : `@${scopeName}/${name}`;
+    this.name = isTypesPackageName(name) ? name : `${atTypesSlash}${name}`;
   }
 
   get major(): number {
