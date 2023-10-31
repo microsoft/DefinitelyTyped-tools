@@ -14,8 +14,7 @@ export function checkPackageJson(
   if (!pathExistsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
-  const typesDirectoryName = packageNameFromPath(dirPath);
-  return header.validatePackageJson(typesDirectoryName, readJson(pkgJsonPath), typesVersions);
+  return header.validatePackageJson(packageNameFromPath(dirPath), readJson(pkgJsonPath), typesVersions);
 }
 /**
  * numbers in `CompilerOptions` might be enum values mapped from strings
