@@ -3,29 +3,18 @@
   "workspaces": {
     ".": {
       "ignoreBinaries": ["only-allow"],
-      "ignoreDependencies": [
-        "tslint",
-        "tslint-microsoft-contrib"
-      ]
+      "ignoreDependencies": ["tslint", "tslint-microsoft-contrib"]
     },
     "packages/definitions-parser": {
       "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/dts-critic": {
-      "entry": [
-        "develop.ts",
-        "dt.ts",
-        "index.ts"
-      ],
+      "entry": ["develop.ts", "dt.ts", "index.ts"],
       "project": "**/*.ts"
     },
     "packages/dtslint": {
-      "entry": [
-        "src/index.ts",
-        "src/updateConfig.ts",
-        "src/rules/*.ts"
-      ],
+      "entry": ["src/index.ts", "src/updateConfig.ts", "src/rules/*.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": [
         "@typescript-eslint/eslint-plugin",
@@ -73,10 +62,7 @@
       "project": "**/*.ts"
     },
     "packages/utils": {
-      "entry": [
-        "src/index.ts",
-        "src/types/*.ts"
-      ],
+      "entry": ["src/index.ts", "src/types/*.ts"],
       "project": "**/*.ts"
     }
   },
