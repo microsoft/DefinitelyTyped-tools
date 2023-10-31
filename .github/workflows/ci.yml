@@ -43,10 +43,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - uses: actions/setup-node@v2
       with:
         node-version: 'lts/*'
     - run: npm install -g pnpm
+    - run: pnpm install
     - name: Check for missing changesets
       run: |
         git switch -c changesets-temp
