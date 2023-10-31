@@ -53,5 +53,5 @@ jobs:
     - name: Check for missing changesets
       run: |
         git switch -c changesets-temp
-        git checkout master -- packages/definitions-parser/allowedPackageJsonDependencies.txt
-        pnpm changeset status --since=master
+        git checkout origin/master -- packages/definitions-parser/allowedPackageJsonDependencies.txt
+        pnpm changeset status --since=origin/master
