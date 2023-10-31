@@ -1,5 +1,6 @@
 {
   "name": "@definitelytyped/retag",
+  "private": true,
   "version": "0.0.186",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
