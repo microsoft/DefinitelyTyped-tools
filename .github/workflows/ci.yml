@@ -7,6 +7,12 @@ env:
   CI: true
   PNPM_CACHE_FOLDER: .pnpm-store
 
+# Ensure scripts are run with pipefail. See:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build_and_test:
     name: build and test
@@ -31,3 +37,21 @@ jobs:
   check-parse-results:
     needs: build_and_test
     uses: ./.github/workflows/check-parse-results.yml
+  
+  changesets:
+    name: changesets
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 'lts/*'
+    - run: npm install -g pnpm
+    - run: pnpm install
+    - name: Check for missing changesets
+      run: |
+        git switch -c changesets-temp
+        git checkout origin/master -- packages/definitions-parser/allowedPackageJsonDependencies.txt
+        pnpm changeset status --since=origin/master
