@@ -3,7 +3,6 @@
 @azure/functions
 @babel/code-frame
 @babel/core
-@babel/core
 @babel/generator
 @babel/parser
 @babel/template
