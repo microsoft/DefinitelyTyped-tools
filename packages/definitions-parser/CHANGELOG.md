@@ -1,5 +1,21 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.186
+
+### Patch Changes
+
+- Updated dependencies [f9e73605]
+  - @definitelytyped/header-parser@0.0.184
+
+## 0.0.185
+
+### Patch Changes
+
+- c0b13e4b: Allow PRs to delete files
+- Updated dependencies [2b3138a0]
+  - @definitelytyped/utils@0.0.182
+  - @definitelytyped/header-parser@0.0.183
+
 ## 0.0.184
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.185
+
+### Patch Changes
+
+- 1efaeab5: Allow imports of dependencies that are also devDependencies
+- Updated dependencies [2b3138a0]
+  - @definitelytyped/utils@0.0.182
+
 ## 0.0.184
 
 ### Patch Changes
