@@ -12,7 +12,7 @@ import {
   isTypesPackageName,
   mustTrimAtTypesPrefix,
   readFileAndThrowOnBOM,
-  tryTrimAtTypesPrefix,
+  trimAtTypesPrefixIfPresent,
   unique,
   unmangleScopedPackage,
 } from "@definitelytyped/utils";
@@ -86,14 +86,14 @@ export class AllPackages {
   }
 
   async tryResolve(dep: PackageId): Promise<PackageId> {
-    const typesDirectoryName = dep.typesDirectoryName ?? tryTrimAtTypesPrefix(dep.name);
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
     return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
   async resolve(dep: PackageId): Promise<PackageIdWithDefiniteVersion> {
-    const typesDirectoryName = dep.typesDirectoryName ?? tryTrimAtTypesPrefix(dep.name);
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     if (!versions) {
       throw new Error(`No typings found with directory name '${dep.typesDirectoryName}'.`);
@@ -129,7 +129,7 @@ export class AllPackages {
   }
 
   async tryGetTypingsData(pkg: PackageId): Promise<TypingsData | undefined> {
-    const typesDirectoryName = pkg.typesDirectoryName ?? tryTrimAtTypesPrefix(pkg.name);
+    const typesDirectoryName = pkg.typesDirectoryName ?? trimAtTypesPrefixIfPresent(pkg.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     return (
       versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))

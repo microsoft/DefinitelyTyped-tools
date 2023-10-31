@@ -71,7 +71,7 @@ function trimAtTypesPrefix(packageName: string): string {
   return packageName.slice(atTypesSlash.length);
 }
 
-export function tryTrimAtTypesPrefix(packageName: string): string {
+export function trimAtTypesPrefixIfPresent(packageName: string): string {
   if (isTypesPackageName(packageName)) {
     return trimAtTypesPrefix(packageName);
   }
