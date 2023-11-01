@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.187
+
+### Patch Changes
+
+- 046ac38e: Ignore non-types packages returned by pnpm
+
 ## 0.0.186
 
 ### Patch Changes
