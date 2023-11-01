@@ -52,8 +52,8 @@ jobs:
     - run: pnpm install
     - name: Check for missing changesets
       run: |
-        PR_CHANGESETS=$(ls .changeset | grep -v -E 'README\.md|config\.json' | wc -l)
-        MASTER_CHANGESETS=$(git ls-tree -r origin/master .changeset | grep -v -E 'README\.md|config\.json' | wc -l)
+        PR_CHANGESETS=$(ls .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
+        MASTER_CHANGESETS=$(git ls-tree -r origin/master .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
 
         # If the PR has no changesets, but master has changesets, assume this is PR is a versioning PR and exit
         if [[ $PR_CHANGESETS -eq 0 && $MASTER_CHANGESETS -gt 0 ]]; then
