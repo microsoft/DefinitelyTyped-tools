@@ -18,8 +18,7 @@ export function getTypesPackageForDeclarationFile(file: string) {
   if (!isDeclarationPath(file)) {
     return undefined;
   }
-  const info = findTypesPackage(file);
-  return info?.realName;
+  return findTypesPackage(file)?.realName;
 }
 
 export function commentsMatching(
