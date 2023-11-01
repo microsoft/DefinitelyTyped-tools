@@ -31,7 +31,7 @@ const rule = createRule({
           (node.id.value === packageName || node.id.value.startsWith(packageName + "/"))
         ) {
           const text = node.id.value;
-          const preferred = text === packageName ? '"index.d.ts"' : `"${text}.d.ts" or "${text}/index.d.ts`;
+          const preferred = text === packageName ? '"index.d.ts"' : `"${text}.d.ts" or "${text}/index.d.ts"`;
           context.report({
             messageId: "noDeclareCurrentPackage",
             data: { text, preferred },
