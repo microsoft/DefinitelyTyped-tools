@@ -56,8 +56,6 @@ export interface TypesPackageInfo {
   packageJson: PackageJSON;
   /** real package name being typed, like "@foo/bar-baz" */
   realName: string;
-  /** directory path relative to "types", like "foo__bar-baz" or "foo__bar-baz/v2" */
-  // subDirectoryPath: string;
 }
 
 export interface PackageJSON {
