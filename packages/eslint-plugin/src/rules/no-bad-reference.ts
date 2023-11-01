@@ -4,6 +4,12 @@ import * as ts from "typescript";
 import path from "path";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
+interface Reference {
+  kind: "path" | "import" | "types";
+  text: string;
+  range: ts.TextRange;
+}
+
 const rule = createRule({
   name: "no-bad-reference",
   defaultOptions: [],
@@ -138,12 +144,6 @@ function tsRangeToESLintLocation(range: ts.TextRange, sourceFile: ts.SourceFile)
     start: { line: pos.line + 1, column: pos.character + 1 },
     end: { line: end.line + 1, column: end.character + 1 },
   };
-}
-
-interface Reference {
-  kind: "path" | "import" | "types";
-  text: string;
-  range: ts.TextRange;
 }
 
 /**
