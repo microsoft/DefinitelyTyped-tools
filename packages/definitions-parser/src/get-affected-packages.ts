@@ -77,34 +77,20 @@ export async function getAffectedPackagesWorker(
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set([
     ...additions,
-    ...(await Promise.all(
-      changedDirs.map(
-        async (c) =>
-          assertDefined(
-            await allPackages.tryGetTypingsData(
-              assertDefined(getDependencyFromFile(c + "/index.d.ts"), "bad path " + c)
-            ),
-            "bad path " + JSON.stringify(getDependencyFromFile(c + "/index.d.ts"))
-          ).subDirectoryPath
-      )
-    )),
+    ...(await Promise.all(changedDirs.map(tryGetTypingsData))).filter((d): d is string => !!d),
   ]);
   const dependents = new Set(
-    (
-      await Promise.all(
-        dependentDirs.map(
-          async (d) =>
-            assertDefined(
-              await allPackages.tryGetTypingsData(
-                assertDefined(getDependencyFromFile(d + "/index.d.ts"), "bad path " + d)
-              ),
-              d + " package not found"
-            ).subDirectoryPath
-        )
-      )
-    ).filter((d) => !packageNames.has(d))
+    (await Promise.all(dependentDirs.map(tryGetTypingsData))).filter((d): d is string => !!d && !packageNames.has(d))
   );
   return { packageNames, dependents };
+
+  async function tryGetTypingsData(d: string) {
+    const dep = getDependencyFromFile(d + "/index.d.ts");
+    if (!dep) return undefined;
+    const data = await allPackages.tryGetTypingsData(dep);
+    if (!data) return undefined;
+    return data.subDirectoryPath;
+  }
 }
 
 function getDirectoryName(dt: string): (line: string) => string | undefined {
