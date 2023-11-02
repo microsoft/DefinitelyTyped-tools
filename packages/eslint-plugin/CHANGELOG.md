@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.186
+
+### Patch Changes
+
+- ad779df9: fix: position of reporting ESLint rule no-unnecessary-generics
+
 ## 0.0.185
 
 ### Patch Changes
