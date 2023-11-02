@@ -20,7 +20,7 @@ const f2 = <T>(): T => {};
       errors: [
         {
           line: 2,
-          column: 19,
+          column: 13,
           messageId: "sole",
         },
       ],
@@ -34,7 +34,7 @@ class C {
       errors: [
         {
           line: 3,
-          column: 21,
+          column: 15,
           messageId: "sole",
         },
       ],
@@ -46,7 +46,7 @@ function f<T>(): T { }
       errors: [
         {
           line: 2,
-          column: 18,
+          column: 12,
           messageId: "sole",
         },
       ],
@@ -70,7 +70,7 @@ function f<T, U extends T>(u: U): U;
       errors: [
         {
           line: 2,
-          column: 25,
+          column: 12,
           messageId: "sole",
         },
       ],
@@ -82,7 +82,7 @@ const f = function<T>(): T {};
       errors: [
         {
           line: 2,
-          column: 26,
+          column: 20,
           messageId: "sole",
         },
       ],
@@ -96,7 +96,7 @@ interface I {
       errors: [
         {
           line: 3,
-          column: 14,
+          column: 4,
           messageId: "sole",
         },
       ],
@@ -110,7 +110,7 @@ interface I {
       errors: [
         {
           line: 3,
-          column: 11,
+          column: 5,
           messageId: "sole",
         },
       ],
@@ -122,7 +122,7 @@ type Fn = <T>() => T;
       errors: [
         {
           line: 2,
-          column: 20,
+          column: 12,
           messageId: "sole",
         },
       ],
@@ -134,7 +134,7 @@ type Ctr = new<T>() => T;
       errors: [
         {
           line: 2,
-          column: 24,
+          column: 16,
           messageId: "sole",
         },
       ],
