@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.187
+
+### Patch Changes
+
+- @definitelytyped/utils@0.0.183
+
 ## 0.0.186
 
 ### Patch Changes
