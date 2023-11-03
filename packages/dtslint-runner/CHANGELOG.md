@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.193
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.188
+- @definitelytyped/dtslint@0.0.190
+- @definitelytyped/utils@0.0.183
+
 ## 0.0.192
 
 ### Patch Changes
