@@ -5,10 +5,10 @@ import assert = require("assert");
 import { readFile, existsSync } from "fs-extra";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
-import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
-import { checkPackageJson, checkTsconfig } from "./checks";
+import { assertNever, cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
+import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
-import { getCompilerOptions, packageNameFromPath } from "./util";
+import { getCompilerOptions, packageNameFromPath, readJson } from "./util";
 import { getTypesVersions } from "@definitelytyped/header-parser";
 
 async function main(): Promise<void> {
@@ -80,7 +80,10 @@ async function main(): Promise<void> {
     listen(dirPath, tsLocal, onlyTestTsNext);
   } else {
     await installTypeScriptAsNeeded(tsLocal, onlyTestTsNext);
-    await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal);
+    const output = await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal);
+    if (output) {
+      console.log(output);
+    }
   }
 }
 
@@ -116,10 +119,10 @@ function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNe
 
     await installationPromise;
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal)
-      .catch((e) => e.stack)
-      .then((maybeError) => {
-        process.send!({ path, status: maybeError === undefined ? "OK" : maybeError });
-      })
+      .then(
+        () => process.send!({ path, status: "OK" }),
+        e => process.send!({ path, status: e.stack })
+      )
       .catch((e) => console.error(e.stack));
   });
 }
@@ -129,7 +132,7 @@ async function runTests(
   onlyTestTsNext: boolean,
   expectOnly: boolean,
   tsLocal: string | undefined
-): Promise<void> {
+): Promise<string | undefined> {
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
   const packageName = packageNameFromPath(dirPath);
@@ -170,6 +173,41 @@ async function runTests(
       await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
     }
   }
+
+  if (!packageJson.nonNpm) {
+    const attwJson = joinPaths(dtRoot, "attw.json");
+    const failingPackages = readJson(attwJson).failingPackages;
+    const dirName = dirPath.slice(dtRoot.length + "/types/".length);
+    const expectError = failingPackages?.includes(dirName)
+    const { output, status } = runAreTheTypesWrong(dirPath, attwJson);
+    
+    switch (expectError) {
+      case true:
+        switch (status) {
+          case "error":
+            // No need to bother anyone with a version mismatch error or non-failure error.
+            return undefined;
+          case "fail":
+            // Show output without failing the build.
+            return `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`;;
+          case "pass":
+            throw new Error(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
+          default:
+            assertNever(status);
+        }
+      // eslint-disable-next-line no-fallthrough
+      case false:
+        switch (status) {
+          case "error":
+          case "fail":
+            throw new Error(`!@arethetypeswrong/cli\n${output}`);
+          case "pass":
+            // Don't show anything for passing attw - most lint rules have no output on success.
+            return undefined;
+        }
+      }
+  }
+  return undefined;
 }
 
 function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
