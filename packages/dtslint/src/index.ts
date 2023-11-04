@@ -195,7 +195,6 @@ async function runTests(
           default:
             assertNever(status);
         }
-      // eslint-disable-next-line no-fallthrough
       case false:
         switch (status) {
           case "error":
