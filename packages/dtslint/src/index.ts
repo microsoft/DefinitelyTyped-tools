@@ -195,6 +195,8 @@ async function runTests(
           default:
             assertNever(status);
         }
+        // @ts-ignore eslint is bugged
+        break;
       case false:
         switch (status) {
           case "error":
