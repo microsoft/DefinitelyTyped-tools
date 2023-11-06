@@ -174,7 +174,7 @@ async function runTests(
     }
   }
 
-  if (!packageJson.nonNpm) {
+  if (!packageJson.nonNpm && !expectOnly) {
     const attwJson = joinPaths(dtRoot, "attw.json");
     const failingPackages = readJson(attwJson).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
