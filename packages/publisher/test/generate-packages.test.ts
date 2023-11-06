@@ -155,7 +155,7 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
+    "typesPublisherContentHash": "05febc04df55db2687c2ac05a291177c2f4fd90f76d679faaf1b01896fe5600c",
     "typeScriptVersion": "4.5"
 }`);
   },

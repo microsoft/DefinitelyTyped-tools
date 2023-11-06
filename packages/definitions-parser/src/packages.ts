@@ -11,7 +11,6 @@ import {
   isDeclarationPath,
   isTypesPackageName,
   mustTrimAtTypesPrefix,
-  readFileAndThrowOnBOM,
   trimAtTypesPrefixIfPresent,
   unique,
   unmangleScopedPackage,
@@ -615,7 +614,22 @@ export function getDependencyFromFile(
 }
 
 function hash(files: readonly string[], fs: FS): string {
-  const fileContents = files.map((f) => `${f}**${readFileAndThrowOnBOM(f, fs)}`);
+  const fileContents = files.map((f) => {
+    let contents = fs.readFile(f);
+    if (f === "package.json") {
+      const parsed = JSON.parse(contents);
+      contents = JSON.stringify(sortedObject(parsed));
+    }
+    return `${f}**${contents}`;
+  });
   const allContent = fileContents.join("||");
   return computeHash(allContent);
+}
+
+function sortedObject(o: any): object {
+  const out: Record<string, unknown> = {};
+  for (const key of Object.keys(o).sort()) {
+    out[key] = o[key];
+  }
+  return out;
 }
