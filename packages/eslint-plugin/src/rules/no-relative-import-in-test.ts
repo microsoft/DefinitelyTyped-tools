@@ -1,6 +1,7 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 import { createRule } from "../util";
+import { isDeclarationPath } from "@definitelytyped/utils";
 
 const rule = createRule({
   name: "no-relative-import-in-test",
@@ -18,11 +19,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (
-      context.getFilename().endsWith(".d.ts") ||
-      context.getFilename().endsWith(".d.mts") ||
-      context.getFilename().endsWith(".d.cts")
-    ) {
+    if (isDeclarationPath(context.getFilename())) {
       return {};
     }
 

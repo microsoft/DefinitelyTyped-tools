@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
 import { createRule } from "../util";
+import { isDeclarationPath } from "@definitelytyped/utils";
 
 const rule = createRule({
   defaultOptions: [],
@@ -22,7 +23,7 @@ const rule = createRule({
       "VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
         if (
           node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType &&
-          context.getFilename().endsWith(".d.ts")
+          isDeclarationPath(context.getFilename())
         ) {
           context.report({
             messageId: "variableFunction",

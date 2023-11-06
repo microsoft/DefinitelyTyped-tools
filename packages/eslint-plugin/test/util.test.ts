@@ -1,24 +1,35 @@
-import { getTypesPackageForDeclarationFile } from "../src/util";
+import { findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
+import { getFixturePath } from "./fixtureTester";
 
 describe("getTypesPackageForDeclarationFile", () => {
   test.each([
-    ["types/abc/index.d.ts", "abc"],
-    ["types/abc/other.d.ts", "abc"],
-    ["types/scope__abc/other.d.ts", "@scope/abc"],
-    ["types/abc/nested/index.d.ts", "abc"],
-    ["types/abc/nested/other.d.ts", "abc"],
-    ["/types/abc/index.d.ts", "abc"],
-    ["/types/abc/other.d.ts", "abc"],
-    ["/types/scope__abc/other.d.ts", "@scope/abc"],
-    ["/types/abc/nested/index.d.ts", "abc"],
-    ["/types/abc/nested/other.d.ts", "abc"],
-    ["DefinitelyTyped/types/abc/index.d.ts", "abc"],
-    ["DefinitelyTyped/types/abc/other.d.ts", "abc"],
-    ["DefinitelyTyped/types/scope__abc/other.d.ts", "@scope/abc"],
-    ["DefinitelyTyped/types/abc/nested/index.d.ts", "abc"],
-    ["DefinitelyTyped/types/abc/nested/other.d.ts", "abc"],
-    ["DefinitelyTyped/types/scope__abc/nested/other.d.ts", "@scope/abc"],
+    ["types/foo/index.d.ts", "foo"],
+    ["types/foo/foo-tests.ts", undefined],
+    ["types/foo/v1/index.d.ts", "foo"],
+    ["types/foo/v1/foo-tests.ts", undefined],
+    ["types/scoped__foo/index.d.ts", "@scoped/foo"],
+    ["types/scoped__foo/scoped__foo-tests.ts", undefined],
+    ["types/scoped__foo/v1/index.d.ts", "@scoped/foo"],
+    ["types/scoped__foo/v1/scoped__foo-tests.ts", undefined],
+    ["bad.d.ts", undefined],
   ])("%s becomes %s", (input, expected) => {
-    expect(getTypesPackageForDeclarationFile(input)).toEqual(expected);
+    expect(getTypesPackageForDeclarationFile(getFixturePath(input))).toEqual(expected);
+  });
+});
+
+describe("findTypesPackage realName", () => {
+  test.each([
+    ["types/foo/index.d.ts", "foo"],
+    ["types/foo/foo-tests.ts", "foo"],
+    ["types/foo/v1/index.d.ts", "foo"],
+    ["types/foo/v1/foo-tests.ts", "foo"],
+    ["types/scoped__foo/index.d.ts", "@scoped/foo"],
+    ["types/scoped__foo/scoped__foo-tests.ts", "@scoped/foo"],
+    ["types/scoped__foo/v1/index.d.ts", "@scoped/foo"],
+    ["types/scoped__foo/v1/scoped__foo-tests.ts", "@scoped/foo"],
+    ["bad.d.ts", undefined],
+  ])("%s becomes %s", (input, expected) => {
+    const realName = findTypesPackage(getFixturePath(input))?.realName;
+    expect(realName).toEqual(expected);
   });
 });

@@ -1,134 +1,127 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { runTestsWithFixtures } from "./fixtureTester";
+import * as rule from "../src/rules/no-bad-reference";
 
-import * as noBadReference from "../src/rules/no-bad-reference";
-
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
-
-ruleTester.run("@definitelytyped/no-bad-reference", noBadReference, {
-  invalid: [
+runTestsWithFixtures("@definitelytyped/no-bad-reference", rule, {
+  valid: [
     {
-      code: `/// <reference path="../other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 28,
-          line: 1,
-          messageId: "referencePathTest",
-        },
-      ],
-      filename: "types.ts",
-    },
-    {
-      code: `/// <reference path="other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 25,
-          line: 1,
-          messageId: "referencePathTest",
-        },
-      ],
-      filename: "types.ts",
-    },
-    {
-      code: `/// <reference path="../other" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 28,
-          line: 1,
-          messageId: "referencePathPackage",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 25,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11/index" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 31,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v11/subdir/file" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 37,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v0.1" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 26,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
-    },
-    {
-      code: `/// <reference path="./v0.1/index" />`,
-      errors: [
-        {
-          column: 20,
-          endColumn: 32,
-          line: 1,
-          messageId: "referencePathOldVersion",
-        },
-      ],
-      filename: "types.d.ts",
+      filename: "types/foo/index.d.ts",
     },
   ],
-  valid: [
-    ``,
-    `// unrelated comment`,
-    `/// similar (reference path) comment`,
+  invalid: [
     {
-      code: `/// <reference path="other" />`,
-      filename: "types.d.ts",
+      filename: "types/no-relative-references/index.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../foo/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "./v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../foo" } },
+        { messageId: "importOutside", data: { text: "./v1" } },
+        { messageId: "importOutside", data: { text: "../foo/v1" } },
+        { messageId: "importOutside", data: { text: "no-relative-references/v1" } },
+      ],
     },
     {
-      code: `/// <reference path="./other" />`,
-      filename: "types.d.ts",
+      filename: "types/no-relative-references/other/other.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../foo/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../foo" } },
+        { messageId: "importOutside", data: { text: "../v1" } },
+        { messageId: "importOutside", data: { text: "../../foo/v1" } },
+      ],
     },
     {
-      code: `/// <reference path="./v1gardenpath" />`,
-      filename: "types.d.ts",
+      filename: "types/no-relative-references/v1/index.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../foo/index.d.ts" } },
+        { messageId: "referenceLeaves", data: { text: "../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../foo/v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../foo" } },
+        { messageId: "importLeaves", data: { text: "../v1" } },
+        { messageId: "importOutside", data: { text: "../../foo/v1" } },
+        { messageId: "importOutside", data: { text: "../index" } },
+        { messageId: "importOutside", data: { text: "../index" } },
+      ],
     },
     {
-      code: `/// <reference path="./v1verb/other" />`,
-      filename: "types.d.ts",
+      filename: "types/no-relative-references/v1/other/other.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../../foo/index.d.ts" } },
+        { messageId: "referenceLeaves", data: { text: "../../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../../foo" } },
+        { messageId: "importLeaves", data: { text: "../../v1" } },
+        { messageId: "importOutside", data: { text: "../../../foo/v1" } },
+      ],
     },
     {
-      code: `/// <reference path="other" />
-/// <reference path="other2" />`,
-      filename: "types.d.ts",
+      filename: "types/scoped__no-relative-references/index.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../foo/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "./v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../foo" } },
+        { messageId: "importOutside", data: { text: "./v1" } },
+        { messageId: "importOutside", data: { text: "../foo/v1" } },
+        { messageId: "importOutside", data: { text: "@scoped/no-relative-references/v1" } },
+      ],
+    },
+    {
+      filename: "types/scoped__no-relative-references/other/other.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../foo/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../foo" } },
+        { messageId: "importOutside", data: { text: "../v1" } },
+        { messageId: "importOutside", data: { text: "../../foo/v1" } },
+      ],
+    },
+    {
+      filename: "types/scoped__no-relative-references/v1/index.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../foo/index.d.ts" } },
+        { messageId: "referenceLeaves", data: { text: "../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../foo/v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../foo" } },
+        { messageId: "importLeaves", data: { text: "../v1" } },
+        { messageId: "importOutside", data: { text: "../../foo/v1" } },
+        { messageId: "importOutside", data: { text: "../index" } },
+        { messageId: "importOutside", data: { text: "../index" } },
+      ],
+    },
+    {
+      filename: "types/scoped__no-relative-references/v1/other/other.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../../../foo/index.d.ts" } },
+        { messageId: "referenceLeaves", data: { text: "../../v1/index.d.ts" } },
+        { messageId: "referenceOutside", data: { text: "../../../foo/v1/index.d.ts" } },
+        { messageId: "importOutside", data: { text: "../../../foo" } },
+        { messageId: "importLeaves", data: { text: "../../v1" } },
+        { messageId: "importOutside", data: { text: "../../../foo/v1" } },
+      ],
+    },
+    {
+      filename: "types/no-bad-reference/index.d.ts",
+      errors: [
+        { messageId: "referenceOutside", data: { text: "../other" } },
+        { messageId: "referenceOutside", data: { text: "./v11" } },
+        { messageId: "referenceOutside", data: { text: "./v11/index" } },
+        { messageId: "referenceOutside", data: { text: "./v11/subdir/file" } },
+        { messageId: "referenceOutside", data: { text: "./v0.1" } },
+        { messageId: "referenceOutside", data: { text: "./v0.1/index" } },
+        { messageId: "backslashes", line: 13 },
+      ],
+    },
+    {
+      filename: "types/no-bad-reference/no-bad-reference-tests.ts",
+      errors: [
+        { messageId: "testReference", data: { text: "../other" } },
+        { messageId: "testReference", data: { text: "other" } },
+      ],
     },
   ],
 });

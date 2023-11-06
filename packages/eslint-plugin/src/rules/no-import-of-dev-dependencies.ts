@@ -1,8 +1,6 @@
 import { TSESTree } from "@typescript-eslint/utils";
-import { createRule, commentsMatching, getTypesPackageForDeclarationFile } from "../util";
-import fs from "fs";
-import path from "path";
-import { unmangleScopedPackage } from "@definitelytyped/utils";
+import { createRule, commentsMatching, findTypesPackage } from "../util";
+import { isDeclarationPath, isTypesPackageName, typesPackageNameToRealName } from "@definitelytyped/utils";
 
 type MessageId = "noImportOfDevDependencies" | "noReferenceOfDevDependencies";
 const rule = createRule({
@@ -21,45 +19,47 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
-    if (context.getFilename().endsWith(".d.ts")) {
-      const packageJson = getPackageJson(context.getPhysicalFilename?.() ?? context.getFilename());
-      const devdeps = packageJson
-        ? Object.keys(packageJson.devDependencies).map((dep) => {
-            const withoutTypes = dep.replace(/^@types\//, "");
-            return unmangleScopedPackage(withoutTypes) || withoutTypes;
-          })
-        : [];
-      const deps = packageJson
-        ? Object.keys(packageJson.dependencies ?? {}).map((dep) => {
-            const withoutTypes = dep.replace(/^@types\//, "");
-            return unmangleScopedPackage(withoutTypes) || withoutTypes;
-          })
-        : [];
-      commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
-        if (devdeps.includes(ref) && ref !== packageName && !deps.includes(ref)) {
-          report(comment, "noReferenceOfDevDependencies");
-        }
-      });
-
-      return {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        ImportDeclaration(node) {
-          if (
-            devdeps.includes(node.source.value) &&
-            node.source.value !== packageName &&
-            !deps.includes(node.source.value)
-          ) {
-            context.report({
-              messageId: "noImportOfDevDependencies",
-              node,
-            });
-          }
-        },
-      };
-    } else {
+    if (!isDeclarationPath(context.getFilename())) {
       return {};
     }
+
+    const info = findTypesPackage(context.getFilename());
+    if (!info) {
+      return {};
+    }
+
+    const packageJson = info.packageJson;
+    if (!packageJson.devDependencies) {
+      return {};
+    }
+
+    const devDeps = Object.keys(packageJson.devDependencies)
+      .map((dep) => {
+        if (isTypesPackageName(dep)) {
+          return typesPackageNameToRealName(dep);
+        }
+        return dep;
+      })
+      .filter((dep) => dep !== info.realName && packageJson.dependencies?.[dep] === undefined); // TODO(jakebailey): add test for this case from https://github.com/microsoft/DefinitelyTyped-tools/pull/773
+
+    commentsMatching(context.getSourceCode(), /<reference\s+types\s*=\s*"(.+)"\s*\/>/, (ref, comment) => {
+      if (devDeps.includes(ref)) {
+        report(comment, "noReferenceOfDevDependencies");
+      }
+    });
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ImportDeclaration(node) {
+        if (devDeps.includes(node.source.value)) {
+          context.report({
+            messageId: "noImportOfDevDependencies",
+            node,
+          });
+        }
+      },
+    };
+
     function report(comment: TSESTree.Comment, messageId: MessageId) {
       context.report({
         loc: {
@@ -77,24 +77,5 @@ const rule = createRule({
     }
   },
 });
-function getPackageJson(
-  sourceFile: string
-): { dependencies?: Record<string, string>; devDependencies: Record<string, string> } | undefined {
-  let dir = path.dirname(sourceFile);
-  let text: string | undefined;
-  while (dir !== "/") {
-    try {
-      text = fs.readFileSync(path.join(dir, "package.json"), "utf8");
-      break;
-    } catch {
-      // presumably because file does not exist, so continue
-    }
-    dir = path.dirname(dir);
-  }
-  if (!text) return undefined;
-  const json = JSON.parse(text);
-  if ("devDependencies" in json) return json;
-  return undefined;
-}
 
 export = rule;

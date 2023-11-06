@@ -6,22 +6,18 @@ import {
   FS,
   InMemoryFS,
   assertDefined,
+  atTypesSlash,
   computeHash,
-  createModuleResolutionHost,
-  mapDefined,
+  isDeclarationPath,
+  isTypesPackageName,
+  mustTrimAtTypesPrefix,
+  trimAtTypesPrefixIfPresent,
   unique,
   unmangleScopedPackage,
 } from "@definitelytyped/utils";
 import * as semver from "semver";
-import {
-  FilesForSingleTypeScriptVersion,
-  getFiles,
-  getTypingInfo,
-  parseVersionFromDirectoryName,
-  readFileAndThrowOnBOM,
-} from "./lib/definition-parser";
-import { getAllowedPackageJsonDependencies, scopeName, typesDirectoryName } from "./lib/settings";
-import { slicePrefixes } from "./lib/utils";
+import { getFiles, getTypingInfo, parseVersionFromDirectoryName } from "./lib/definition-parser";
+import { getAllowedPackageJsonDependencies, typesDirectoryName } from "./lib/settings";
 
 export class AllPackages {
   static fromFS(dt: FS) {
@@ -58,7 +54,6 @@ export class AllPackages {
   /** Keys are `typesDirectoryName` strings */
   private readonly errors: Map<string, string[]> = new Map();
   private isComplete = false;
-  private moduleResolutionHost = createModuleResolutionHost(this.dt, this.dt.debugPath());
 
   private constructor(
     private dt: FS,
@@ -90,14 +85,14 @@ export class AllPackages {
   }
 
   async tryResolve(dep: PackageId): Promise<PackageId> {
-    const typesDirectoryName = dep.typesDirectoryName ?? dep.name.slice(scopeName.length + 2);
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
     return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
   async resolve(dep: PackageId): Promise<PackageIdWithDefiniteVersion> {
-    const typesDirectoryName = dep.typesDirectoryName ?? dep.name.slice(scopeName.length + 2);
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     if (!versions) {
       throw new Error(`No typings found with directory name '${dep.typesDirectoryName}'.`);
@@ -133,7 +128,7 @@ export class AllPackages {
   }
 
   async tryGetTypingsData(pkg: PackageId): Promise<TypingsData | undefined> {
-    const typesDirectoryName = pkg.typesDirectoryName ?? pkg.name.slice(scopeName.length + 2);
+    const typesDirectoryName = pkg.typesDirectoryName ?? trimAtTypesPrefixIfPresent(pkg.name);
     const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     return (
       versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))
@@ -156,7 +151,7 @@ export class AllPackages {
       this.errors.set(typesDirectoryName, raw.errors);
       return undefined;
     }
-    versions = new TypingsVersions(this.dt, raw, this.moduleResolutionHost);
+    versions = new TypingsVersions(this.dt, raw);
     this.types.set(typesDirectoryName, versions);
     return versions;
   }
@@ -183,9 +178,9 @@ export class AllPackages {
   /** Returns all of the dependencies *that are typed on DT*, ignoring others, and including test dependencies. */
   async *allDependencyTypings(pkg: TypingsData): AsyncIterable<TypingsData> {
     for (const [name, version] of pkg.allPackageJsonDependencies()) {
-      if (!name.startsWith(`@${scopeName}/`)) continue;
+      if (!isTypesPackageName(name)) continue;
       if (pkg.name === name) continue;
-      const typesDirectoryName = removeTypesScope(name);
+      const typesDirectoryName = mustTrimAtTypesPrefix(name);
       const versions = await this.tryGetTypingsVersions(typesDirectoryName);
       if (versions) {
         yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
@@ -210,10 +205,6 @@ export class AllPackages {
     );
     this.isComplete = true;
   }
-}
-
-export function removeTypesScope(name: string) {
-  return slicePrefixes(name, `@${scopeName}/`);
 }
 
 // Same as the function in moduleNameResolver.ts in typescript
@@ -259,7 +250,7 @@ export abstract class PackageBase {
    * Does not include the version directory.
    */
   get typesDirectoryName(): string {
-    return this.name.slice(scopeName.length + 2);
+    return mustTrimAtTypesPrefix(this.name);
   }
 
   /** Short description for debug output. */
@@ -316,7 +307,7 @@ export class NotNeededPackage extends PackageBase {
     super();
     assert(libraryName && name && asOfVersion);
     this.version = new semver.SemVer(asOfVersion);
-    this.name = name.startsWith(`@${scopeName}/`) ? name : `@${scopeName}/${name}`;
+    this.name = isTypesPackageName(name) ? name : `${atTypesSlash}${name}`;
   }
 
   get major(): number {
@@ -413,6 +404,11 @@ export interface TypingsDataRaw {
    * Can be either MIT or Apache v2, defaults to MIT when not explicitly defined in this package’s "package.json".
    */
   readonly license: License;
+
+  /**
+   * Which subdirectories of this package are older versions, e.g. `v1`, `v0.1`, `v15`.
+   */
+  readonly olderVersionDirectories: readonly string[];
 }
 
 export class TypingsVersions {
@@ -423,11 +419,7 @@ export class TypingsVersions {
    */
   private readonly versions: semver.SemVer[];
 
-  constructor(
-    dt: FS,
-    data: TypingsVersionsRaw,
-    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
-  ) {
+  constructor(dt: FS, data: TypingsVersionsRaw) {
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
@@ -436,10 +428,7 @@ export class TypingsVersions {
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
-      this.versions.map((version, i) => [
-        version,
-        new TypingsData(dt, data[`${version.major}.${version.minor}`], !i, this.moduleResolutionHost),
-      ])
+      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i)])
     );
   }
 
@@ -469,12 +458,7 @@ export class TypingsVersions {
 }
 
 export class TypingsData extends PackageBase {
-  constructor(
-    private dt: FS,
-    private readonly data: TypingsDataRaw,
-    readonly isLatest: boolean,
-    private moduleResolutionHost = createModuleResolutionHost(dt, dt.debugPath())
-  ) {
+  constructor(private dt: FS, private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
     super();
   }
 
@@ -508,17 +492,17 @@ export class TypingsData extends PackageBase {
     return this.data.typesVersions;
   }
 
-  private typesVersionsFiles: readonly FilesForSingleTypeScriptVersion[] | undefined;
+  private _files: readonly string[] | undefined;
   getFiles(): readonly string[] {
-    if (!this.typesVersionsFiles) {
-      const files = getFiles(this.dt, this, this.moduleResolutionHost);
-      this.typesVersionsFiles = files;
+    if (!this._files) {
+      const files = getFiles(this.dt, this, this.data.olderVersionDirectories);
+      this._files = files;
     }
-    return this.typesVersionsFiles.flatMap((v) => v.declFiles);
+    return this._files;
   }
 
   getDtsFiles(): readonly string[] {
-    return this.getFiles().filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+    return this.getFiles().filter(isDeclarationPath);
   }
 
   get license(): License {
@@ -543,7 +527,6 @@ export class TypingsData extends PackageBase {
   getContentHash(): string {
     return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
-      mapDefined(this.typesVersionsFiles!, (a) => a.tsconfigPathsForHash),
       this.dt.subDir("types").subDir(this.subDirectoryPath)
     ));
   }
@@ -630,11 +613,23 @@ export function getDependencyFromFile(
   return { typesDirectoryName: name, version: "*" };
 }
 
-function hash(files: readonly string[], tsconfigPathsForHash: readonly string[], fs: FS): string {
-  const fileContents = files.map((f) => `${f}**${readFileAndThrowOnBOM(f, fs)}`);
-  let allContent = fileContents.join("||");
-  for (const path of tsconfigPathsForHash) {
-    allContent += path;
-  }
+function hash(files: readonly string[], fs: FS): string {
+  const fileContents = files.map((f) => {
+    let contents = fs.readFile(f);
+    if (f === "package.json") {
+      const parsed = JSON.parse(contents);
+      contents = JSON.stringify(sortedObject(parsed));
+    }
+    return `${f}**${contents}`;
+  });
+  const allContent = fileContents.join("||");
   return computeHash(allContent);
+}
+
+function sortedObject(o: any): object {
+  const out: Record<string, unknown> = {};
+  for (const key of Object.keys(o).sort()) {
+    out[key] = o[key];
+  }
+  return out;
 }

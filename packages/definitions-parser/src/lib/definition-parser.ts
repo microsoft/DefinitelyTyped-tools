@@ -8,10 +8,8 @@ import {
   validatePackageJson,
 } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { FS, assertDefined, filter, hasWindowsSlashes, join, sort, split, withoutStart } from "@definitelytyped/utils";
+import { FS, assertDefined, atTypesSlash, isDeclarationPath, split } from "@definitelytyped/utils";
 import assert from "assert";
-import path from "path";
-import * as ts from "typescript";
 import {
   DirectoryParsedTypingVersion,
   TypingsData,
@@ -20,9 +18,7 @@ import {
   formatTypingVersion,
   getMangledNameForScopedPackage,
 } from "../packages";
-import { allReferencedFiles, createSourceFile } from "./module-info";
-import { getAllowedPackageJsonDependencies, scopeName } from "./settings";
-import { slicePrefixes } from "./utils";
+import { getAllowedPackageJsonDependencies } from "./settings";
 
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
@@ -69,7 +65,12 @@ export async function getTypingInfo(
   );
 
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
-  const latestDataResult = await getPackageJsonInfoForPackage(packageNameOrTypesDirectoryName, rootDirectoryLs, fs);
+  const latestDataResult = await getPackageJsonInfoForPackage(
+    packageNameOrTypesDirectoryName,
+    rootDirectoryLs,
+    fs,
+    olderVersionDirectories.map(({ directoryName }) => directoryName)
+  );
   if (Array.isArray(latestDataResult)) {
     return { errors: [...errors, ...latestDataResult] };
   }
@@ -89,7 +90,12 @@ export async function getTypingInfo(
 
       // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
-      const result = await getPackageJsonInfoForPackage(packageNameOrTypesDirectoryName, ls, fs.subDir(directoryName));
+      const result = await getPackageJsonInfoForPackage(
+        packageNameOrTypesDirectoryName,
+        ls,
+        fs.subDir(directoryName),
+        []
+      );
       if (Array.isArray(result)) {
         errors.push(...result);
         return result;
@@ -180,7 +186,8 @@ export function parseVersionFromDirectoryName(
 async function getPackageJsonInfoForPackage(
   typingsPackageName: string,
   ls: readonly string[],
-  fs: FS
+  fs: FS,
+  olderVersionDirectories: readonly string[]
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
   const errors = [];
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls);
@@ -216,7 +223,7 @@ async function getPackageJsonInfoForPackage(
       packageJson.devDependencies,
       packageJsonName,
       allowedDependencies,
-      `@${scopeName}/${typingsPackageName}`
+      `${atTypesSlash}${typingsPackageName}`
     )
   );
   const imports = checkPackageJsonImports(packageJson.imports, packageJsonName);
@@ -245,301 +252,48 @@ async function getPackageJsonInfoForPackage(
     imports: imports as object | undefined,
     exports: exports as string | object | undefined,
     type: packageJsonType as "module" | undefined,
+    olderVersionDirectories,
   };
 }
 
 export function getFiles(
   dt: FS,
   typingsData: TypingsData,
-  moduleResolutionHost: ts.ModuleResolutionHost
-): readonly FilesForSingleTypeScriptVersion[] {
-  const errors = [];
+  olderVersionDirectories: readonly string[]
+): readonly string[] {
   const rootDir = dt.subDir("types").subDir(typingsData.subDirectoryPath);
-  const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(rootDir.readdir());
-  if (Array.isArray(typesVersionAndPackageJson)) {
-    errors.push(...typesVersionAndPackageJson);
-  }
-  const { remainingLs, typesVersions } = Array.isArray(typesVersionAndPackageJson)
-    ? { remainingLs: [], typesVersions: [] }
-    : typesVersionAndPackageJson;
-  const dataForRoot = getFilesForSingleTypeScriptVersion(
-    undefined,
-    typingsData.typesDirectoryName,
-    remainingLs,
-    rootDir,
-    moduleResolutionHost
-  );
-  if (Array.isArray(dataForRoot)) {
-    errors.push(...dataForRoot);
-  }
-  const dataForOtherTypesVersions = typesVersions.map((tsVersion) => {
-    const subFs = rootDir.subDir(`ts${tsVersion}`);
-    const data = getFilesForSingleTypeScriptVersion(
-      tsVersion,
-      typingsData.typesDirectoryName,
-      subFs.readdir(),
-      subFs,
-      moduleResolutionHost
-    );
-    if (Array.isArray(data)) {
-      errors.push(...data);
-    }
-    return data;
-  });
 
-  if (errors.length) {
-    throw new Error(`Errors encountered resolving files for ${typingsData.name}:\n${errors.join("\n")}`);
-  }
-
-  return [dataForRoot, ...dataForOtherTypesVersions] as FilesForSingleTypeScriptVersion[];
-}
-
-export interface FilesForSingleTypeScriptVersion {
-  /** Undefined for root (which uses typeScriptVersion in package.json instead) */
-  readonly typescriptVersion: TypeScriptVersion | undefined;
-  readonly declFiles: readonly string[]; // TODO: Used to map file.d.ts to ts4.1/file.d.ts -- not sure why this is needed
-  readonly tsconfigPathsForHash: string | undefined;
-}
-
-/**
- * @param typescriptVersion Set if this is in e.g. a `ts3.1` directory.
- * @param typesDirectoryName Name of the outermost directory; e.g. for "node/v4" this is just "node".
- * @param ls All file/directory names in `directory`.
- * @param fs FS rooted at the directory for this particular TS version, e.g. `types/abs/ts3.1` or `types/abs` when typescriptVersion is undefined.
- */
-function getFilesForSingleTypeScriptVersion(
-  typescriptVersion: TypeScriptVersion | undefined,
-  typesDirectoryName: string,
-  ls: readonly string[],
-  fs: FS,
-  moduleResolutionHost: ts.ModuleResolutionHost
-): FilesForSingleTypeScriptVersion | string[] {
-  const errors = [];
-  const tsconfig = fs.readJson("tsconfig.json") as TsConfig;
-  const configHost: ts.ParseConfigHost = {
-    ...moduleResolutionHost,
-    readDirectory: (dir) => fs.readdir(dir),
-    useCaseSensitiveFileNames: true,
-  };
-
-  const compilerOptions = ts.parseJsonConfigFileContent(
-    tsconfig,
-    configHost,
-    path.resolve("/", fs.debugPath())
-  ).options;
-  errors.push(...checkFilesFromTsConfig(typesDirectoryName, tsconfig, fs.debugPath()));
-  let types, tests;
-  try {
-    ({ types, tests } = allReferencedFiles(
-      tsconfig.files ?? [],
-      fs,
-      typesDirectoryName,
-      moduleResolutionHost,
-      compilerOptions
-    ));
-  } catch (err) {
-    if (err instanceof Error) {
-      errors.push(err.message);
-    } else {
-      throw err;
-    }
-    return errors;
-  }
-  const usedFiles = new Set(
-    [...types.keys(), ...tests, "tsconfig.json", "tslint.json"].map((f) =>
-      slicePrefixes(f, "node_modules/@types/" + typesDirectoryName + "/")
-    )
-  );
-  const otherFiles = ls.includes(unusedFilesName)
-    ? fs
-        // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-        .readFile(unusedFilesName)
-        .split(/\r?\n/g)
-        .filter(Boolean)
-    : [];
-  if (ls.includes(unusedFilesName) && !otherFiles.length) {
-    errors.push(`In ${typesDirectoryName}: OTHER_FILES.txt is empty.`);
-  }
-  for (const file of otherFiles) {
-    if (!isRelativePath(file)) {
-      errors.push(`In ${typesDirectoryName}: A path segment is empty or all dots ${file}`);
+  const files: string[] = [];
+  function addFileIfDeclaration(path: string): void {
+    if (isDeclarationPath(path)) {
+      files.push(path);
     }
   }
-  // Note: findAllUnusedFiles also modifies usedFiles and otherFiles and errors
-  const unusedFiles = findAllUnusedFiles(ls, usedFiles, otherFiles, errors, typesDirectoryName, fs);
-  if (unusedFiles.length) {
-    errors.push(
-      "\n\t* " +
-        unusedFiles.map((unused) => `Unused file ${unused}`).join("\n\t* ") +
-        `\n\t(used files: ${JSON.stringify(Array.from(usedFiles))})`
-    );
-  }
-  for (const untestedTypeFile of filter(
-    otherFiles,
-    (name) => name.endsWith(".d.ts") || name.endsWith(".d.mts") || name.endsWith(".d.cts")
-  )) {
-    // add d.ts files from OTHER_FILES.txt in order get their dependencies
-    // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-    types.set(
-      untestedTypeFile,
-      createSourceFile(untestedTypeFile, fs.readFile(untestedTypeFile), moduleResolutionHost, compilerOptions)
-    );
-  }
 
-  if (errors.length) return errors;
-  const declFiles = sort(types.keys());
-  return {
-    typescriptVersion,
-    declFiles: typescriptVersion === undefined ? declFiles : declFiles.map((f) => `ts${typescriptVersion}/${f}`),
-    tsconfigPathsForHash: JSON.stringify(tsconfig.compilerOptions?.paths),
-  };
-}
+  function addFiles(root: FS, rootName: string, name: string): void {
+    const path = rootName ? `${rootName}/${name}` : name;
 
-function checkFilesFromTsConfig(packageName: string, tsconfig: TsConfig, directoryPath: string): string[] {
-  const errors = [];
-  const tsconfigPath = `${directoryPath}/tsconfig.json`;
-  if (tsconfig.include) {
-    errors.push(`In tsconfig, don't use "include", must use "files"`);
-  }
-
-  const files = tsconfig.files;
-  if (!files) {
-    errors.push(`${tsconfigPath} needs to specify  "files"`);
-    return errors;
-  }
-  for (const file of files) {
-    if (file.startsWith("./")) {
-      errors.push(`In ${tsconfigPath}: Unnecessary "./" at the start of ${file}`);
-    }
-    if (!isRelativePath(file)) {
-      errors.push(`In ${tsconfigPath}: A path segment is empty or all dots ${file}`);
-    }
-    if (file.endsWith(".d.ts") && file !== "index.d.ts") {
-      errors.push(`${packageName}: Only index.d.ts may be listed explicitly in tsconfig's "files" entry.
-Other d.ts files must either be referenced through index.d.ts, tests, or added to OTHER_FILES.txt.`);
+    if (!root.isDirectory(name)) {
+      addFileIfDeclaration(path);
+      return;
     }
 
-    if (!file.endsWith(".d.ts") && !file.startsWith("test/")) {
-      const expectedName = `${packageName}-tests.ts`;
-      if (file !== expectedName && file !== `${expectedName}x`) {
-        const message =
-          file.endsWith(".ts") || file.endsWith(".tsx")
-            ? `Expected file '${file}' to be named '${expectedName}' or to be inside a '${directoryPath}/test/' directory`
-            : `Unexpected file extension for '${file}' -- expected '.ts' or '.tsx' (maybe this should not be in "files", but ` +
-              "OTHER_FILES.txt)";
-        errors.push(message);
-      }
+    const newRoot = root.subDir(name);
+    for (const sub of root.readdir(name)) {
+      addFiles(newRoot, path, sub);
     }
   }
-  return errors;
-}
 
-function isRelativePath(path: string) {
-  return path.split(/\//).every((part) => part.length > 0 && !part.match(/^\.+$|[\\\n\r]/));
-}
-
-interface TsConfig {
-  include?: readonly string[];
-  files?: readonly string[];
-  compilerOptions: ts.CompilerOptions;
-}
-
-export function readFileAndThrowOnBOM(fileName: string, fs: FS): string {
-  // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
-  const text = fs.readFile(fileName);
-  if (text.charCodeAt(0) === 0xfeff) {
-    const commands = ["npm install -g strip-bom-cli", `strip-bom ${fileName} > fix`, `mv fix ${fileName}`];
-    throw new Error(`File '${fileName}' has a BOM. Try using:\n${commands.join("\n")}`);
-  }
-  return text;
-}
-
-const unusedFilesName = "OTHER_FILES.txt";
-
-/** Modifies usedFiles and otherFiles and errors */
-function findAllUnusedFiles(
-  ls: readonly string[],
-  usedFiles: Set<string>,
-  otherFiles: string[],
-  errors: string[],
-  packageName: string,
-  fs: FS
-): string[] {
-  // Double-check that no windows "\\" broke in.
-  for (const fileName of usedFiles) {
-    if (hasWindowsSlashes(fileName)) {
-      errors.push(`In ${packageName}: windows slash detected in ${fileName}`);
-    }
-  }
-  return findAllUnusedRecur(new Set(ls), usedFiles, new Set(otherFiles), errors, fs);
-}
-
-function findAllUnusedRecur(
-  ls: Iterable<string>,
-  usedFiles: Set<string>,
-  otherFiles: Set<string>,
-  errors: string[],
-  fs: FS
-): string[] {
-  const unused = [];
-  for (const lsEntry of ls) {
-    if (usedFiles.has(lsEntry)) {
-      continue;
-    }
-    if (otherFiles.has(lsEntry)) {
-      otherFiles.delete(lsEntry);
-      continue;
-    }
-
-    if (fs.isDirectory(lsEntry)) {
-      const subdir = fs.subDir(lsEntry);
-      // We allow a "scripts" directory to be used for scripts.
-      if (lsEntry === "node_modules" || lsEntry === "scripts") {
+  for (const name of rootDir.readdir()) {
+    if (rootDir.isDirectory(name)) {
+      // This emulates writing `!v16/**`, `!v0.2/**`, etc. in the files array,
+      // without trusting the user to have written the right thing.
+      if (olderVersionDirectories.includes(name)) {
         continue;
       }
-
-      const lssubdir = subdir.readdir();
-      if (lssubdir.length === 0) {
-        errors.push(`Empty directory ${subdir.debugPath()} (${join(usedFiles)})`);
-      }
-
-      function takeSubdirectoryOutOfSet(originalSet: Set<string>): Set<string> {
-        const subdirSet = new Set<string>();
-        for (const file of originalSet) {
-          const sub = withoutStart(file, `${lsEntry}/`);
-          if (sub !== undefined) {
-            originalSet.delete(file);
-            subdirSet.add(sub);
-          }
-        }
-        return subdirSet;
-      }
-      findAllUnusedRecur(
-        lssubdir,
-        takeSubdirectoryOutOfSet(usedFiles),
-        takeSubdirectoryOutOfSet(otherFiles),
-        errors,
-        subdir
-      );
-    } else {
-      if (
-        lsEntry.toLowerCase() !== "readme.md" &&
-        lsEntry !== "NOTICE" &&
-        lsEntry !== ".editorconfig" &&
-        lsEntry !== ".eslintrc.json" &&
-        lsEntry !== unusedFilesName
-      ) {
-        unused.push(`${fs.debugPath()}/${lsEntry}`);
-      }
     }
+    addFiles(rootDir, "", name);
   }
-  for (const otherFile of otherFiles) {
-    if (usedFiles.has(otherFile)) {
-      errors.push(
-        `File ${fs.debugPath()}${otherFile} listed in ${unusedFilesName} is already reachable from tsconfig.json.`
-      );
-    }
-    errors.push(`File ${fs.debugPath()}/${otherFile} listed in ${unusedFilesName} does not exist.`);
-  }
-  return unused;
+
+  return files;
 }

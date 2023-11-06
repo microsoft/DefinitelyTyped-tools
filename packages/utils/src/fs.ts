@@ -39,27 +39,6 @@ export interface FS {
   realPath(path: string): string;
 }
 
-export function createModuleResolutionHost(
-  fs: FS,
-  ignoreFilesAboveDirectory?: string
-): import("typescript").ModuleResolutionHost {
-  return {
-    fileExists: (fileName) => !isIgnored(fileName) && fs.exists(fileName),
-    readFile: (fileName) => (assert(!isIgnored(fileName)), fs.readFile(fileName)),
-    directoryExists: (directoryName) => !isIgnored(directoryName) && fs.exists(directoryName),
-    getCurrentDirectory: () => "",
-    realpath: (path) => path,
-    useCaseSensitiveFileNames: () => true,
-  };
-  function isIgnored(path: string): boolean {
-    return (
-      ignoreFilesAboveDirectory !== undefined &&
-      path !== ignoreFilesAboveDirectory &&
-      !path.startsWith(ignoreFilesAboveDirectory)
-    );
-  }
-}
-
 interface ReadonlyDir extends ReadonlyMap<string, ReadonlyDir | string> {
   readonly parent: Dir | undefined;
 }

@@ -1,59 +1,59 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-
 import * as noDeclareCurrentPackage from "../src/rules/no-declare-current-package";
+import { runTestsWithFixtures } from "./fixtureTester";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
-
-ruleTester.run("@definitelytyped/no-declare-current-package", noDeclareCurrentPackage, {
-  invalid: [
-    {
-      filename: "types/test/index.d.ts",
-      code: `module "test" { }`,
-      errors: [
-        {
-          line: 1,
-          messageId: "noDeclareCurrentPackage",
-        },
-      ],
-    },
-    {
-      filename: "types/test/deep/import.d.ts",
-      code: `module "test/deep/import" { }`,
-      errors: [
-        {
-          line: 1,
-          messageId: "noDeclareCurrentPackage",
-        },
-      ],
-    },
-    {
-      filename: "types/scope__name/index.d.ts",
-      code: `module "@scope/name" { }`,
-      errors: [
-        {
-          line: 1,
-          messageId: "noDeclareCurrentPackage",
-        },
-      ],
-    },
-  ],
+runTestsWithFixtures("@definitelytyped/no-declare-current-package", noDeclareCurrentPackage, {
   valid: [
     {
-      filename: "types/other/index.d.ts",
-      code: `module "foo" { }`,
+      filename: "types/foo/index.d.ts",
     },
     {
-      filename: "types/other/index.d.ts",
-      code: `module "foo/bar/baz" { }`,
+      filename: "types/no-declare-current-package-other/index.d.ts",
+    },
+  ],
+  invalid: [
+    {
+      filename: "types/no-declare-current-package/index.d.ts",
+      errors: [
+        {
+          messageId: "noDeclareCurrentPackage",
+          data: { text: "no-declare-current-package", preferred: '"index.d.ts"' },
+        },
+      ],
     },
     {
-      filename: "types/deep/other/index.d.ts",
-      code: `module "other" { }`,
+      filename: "types/no-declare-current-package/test/deep/import.d.ts",
+      errors: [
+        {
+          messageId: "noDeclareCurrentPackage",
+          data: {
+            text: "no-declare-current-package/deep/import",
+            preferred:
+              '"no-declare-current-package/deep/import.d.ts" or "no-declare-current-package/deep/import/index.d.ts"',
+          },
+        },
+      ],
+    },
+    {
+      filename: "types/scoped__no-declare-current-package/index.d.ts",
+      errors: [
+        {
+          messageId: "noDeclareCurrentPackage",
+          data: { text: "@scoped/no-declare-current-package", preferred: '"index.d.ts"' },
+        },
+      ],
+    },
+    {
+      filename: "types/scoped__no-declare-current-package/test/deep/import.d.ts",
+      errors: [
+        {
+          messageId: "noDeclareCurrentPackage",
+          data: {
+            text: "@scoped/no-declare-current-package/deep/import",
+            preferred:
+              '"@scoped/no-declare-current-package/deep/import.d.ts" or "@scoped/no-declare-current-package/deep/import/index.d.ts"',
+          },
+        },
+      ],
     },
   ],
 });

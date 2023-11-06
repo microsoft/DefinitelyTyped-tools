@@ -32,6 +32,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     license,
     dependencies: { "@types/madeira": "^1" },
     devDependencies: { "@types/jquery": "workspace:." },
+    olderVersionDirectories: [],
   };
 }
 
@@ -120,16 +121,9 @@ testo({
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
-    dt.pkgDir("jquery").set("other.d.ts", "").set("OTHER_FILES.txt", "other.d.ts");
+    dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
-  },
-  generatingPackageJsonFailsWhenFilesHaveErrors() {
-    const rawPkg = createRawPackage(License.Apache20);
-    const dt = defaultFS();
-    dt.pkgDir("jquery").set("unused.d.ts", "");
-    const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(() => createPackageJSON(typing, "1.0")).toThrowError("Unused file");
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
@@ -161,7 +155,7 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
+    "typesPublisherContentHash": "05febc04df55db2687c2ac05a291177c2f4fd90f76d679faaf1b01896fe5600c",
     "typeScriptVersion": "4.5"
 }`);
   },

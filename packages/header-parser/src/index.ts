@@ -123,6 +123,7 @@ export function validatePackageJson(
   let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
   let owners: Owner[] = [];
+  // let files: string[] = [];
   const nameResult = validateName();
   const versionResult = validateVersion();
   const nonNpmResult = validateNonNpm();

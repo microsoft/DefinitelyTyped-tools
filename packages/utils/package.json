@@ -24,6 +24,7 @@
     "@types/node": "^14.14.35",
     "charm": "^1.0.2",
     "fs-extra": "^8.1.0",
+    "minimatch": "^9.0.3",
     "tar": "^6.1.11",
     "tar-stream": "^2.1.4"
   },

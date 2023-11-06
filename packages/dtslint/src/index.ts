@@ -2,10 +2,15 @@
 
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { readFile, existsSync } from "fs-extra";
+import { readFile, existsSync, readdirSync } from "fs-extra";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
-import { cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
+import {
+  cleanTypeScriptInstalls,
+  deepEquals,
+  installAllTypeScriptVersions,
+  installTypeScriptNext,
+} from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
 import { getCompilerOptions, packageNameFromPath } from "./util";
@@ -143,6 +148,9 @@ async function runTests(
     throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
 
+  await assertNpmIgnoreExpected(dirPath);
+  assertNoOtherFiles(dirPath);
+
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
@@ -260,4 +268,38 @@ if (require.main === module) {
     console.error(err.stack);
     process.exit(1);
   });
+}
+
+async function assertNpmIgnoreExpected(dirPath: string) {
+  const expected = ["*", "!**/*.d.ts", "!**/*.d.cts", "!**/*.d.mts", "!**/*.d.*.ts"];
+
+  if (basename(dirname(dirPath)) === "types") {
+    for (const subdir of readdirSync(dirPath, { withFileTypes: true })) {
+      if (subdir.isDirectory() && /^v(\d+)(\.(\d+))?$/.test(subdir.name)) {
+        expected.push(`/${subdir.name}/`);
+      }
+    }
+  }
+
+  const expectedString = expected.join("\n");
+
+  const npmIgnorePath = joinPaths(dirPath, ".npmignore");
+  if (!existsSync(npmIgnorePath)) {
+    throw new Error(`${dirPath}: Missing '.npmignore'; should contain:\n${expectedString}`);
+  }
+
+  const actualRaw = await readFile(npmIgnorePath, "utf-8");
+  const actual = actualRaw.trim().split(/\r?\n/);
+
+  if (!deepEquals(actual, expected)) {
+    throw new Error(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedString}`);
+  }
+}
+
+function assertNoOtherFiles(dirPath: string) {
+  if (existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
+    throw new Error(
+      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`
+    );
+  }
 }

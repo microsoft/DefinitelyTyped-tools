@@ -10,6 +10,8 @@ import {
   cacheDir,
   nAtATime,
   compact,
+  isTypesPackageName,
+  mustTrimAtTypesPrefix,
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
@@ -64,8 +66,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
         // we haven't published them yet. Skip for any packages which are
         // definitely within the repo.
         // TODO: This could verify the version range is correct, but just checks for existence for now.
-        // TODO: This startsWith/slice could be a helper.
-        if (name.startsWith("@types/") && (await allPackages.tryGetLatestVersion(name.slice("@types/".length)))) {
+        if (isTypesPackageName(name) && (await allPackages.tryGetLatestVersion(mustTrimAtTypesPrefix(name)))) {
           continue;
         }
 

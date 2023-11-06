@@ -2,7 +2,6 @@ import { DiskFS } from "@definitelytyped/utils";
 import path from "path";
 import { getTypingInfo } from "../src/lib/definition-parser";
 import { createMockDT } from "../src/mocks";
-import { TypingsVersions } from "../src/packages";
 
 describe(getTypingInfo, () => {
   it("keys data by major.minor version", async () => {
@@ -372,16 +371,6 @@ import route = require('@ember/routing/route');
       throw new Error(info.errors.join("\n"));
     }
     expect(info["5.1"].dependencies).toEqual({ "@types/styled-components": "*" });
-  });
-
-  it("rejects relative references to other packages", async () => {
-    const dt = new DiskFS(path.resolve(__dirname, "fixtures/rejects-relative-references-to-other-packages/"));
-    const raw = (await getTypingInfo("referencing", dt))!;
-    if ("errors" in raw) {
-      throw new Error(raw.errors.join("\n"));
-    }
-    const typingData = new TypingsVersions(dt, raw).getLatest();
-    expect(() => typingData.getFiles()).toThrow("Definitions must use global references to other packages");
   });
 
   describe("concerning multiple versions", () => {

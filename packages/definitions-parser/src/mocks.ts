@@ -145,12 +145,6 @@ import australia = require('boring/commonjs');
 import { inane } from "boring/v1";
 `
   );
-  boring.set(
-    "OTHER_FILES.txt",
-    `
-untested.d.ts
-`
-  );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
   boring.set(
     "package.json",
