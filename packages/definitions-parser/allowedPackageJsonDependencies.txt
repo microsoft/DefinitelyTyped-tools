@@ -8,6 +8,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@commander-js/extra-typings
 @elastic/elasticsearch
 @electron/get
 @ember/test-helpers
