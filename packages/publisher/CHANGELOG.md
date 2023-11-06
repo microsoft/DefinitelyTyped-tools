@@ -1,5 +1,23 @@
 # @definitelytyped/publisher
 
+## 0.0.189
+
+### Patch Changes
+
+- a18ce6b1: Remove use of module resolution and OTHER_FILES, instead include all dts files in packages
+
+  Files in packages are no longer determined by import resolution stemming from `index.d.ts` and tests (along with those listed in `OTHER_FILES.txt`).
+  Instead, all files matching the glob `**/*.d.{ts,cts,mts,*.d.ts}` are included in the package, excluding those inside of versioned subdirectories.
+
+  While not used for automated package publishing, an `.npmignore` is now required in each package.
+  This allows for one-off `npm pack`-ing of packages, such that external tooling can get a rough approximation of what will be published for analysis.
+
+- Updated dependencies [a18ce6b1]
+  - @definitelytyped/definitions-parser@0.0.189
+  - @definitelytyped/header-parser@0.0.186
+  - @definitelytyped/utils@0.0.184
+  - @definitelytyped/retag@0.0.189
+
 ## 0.0.188
 
 ### Patch Changes
