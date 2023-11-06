@@ -145,7 +145,7 @@ export function runAreTheTypesWrong(dirPath: string, configPath: string): AttwRe
   const tarballName = `types-${mangledName}-${packageJsonContent.version}.tgz`;
   const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
   const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
-  execSync("npm pack", { cwd: dirPath, stdio: "ignore" });
+  execSync("npm pack", { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
   try {
     const output = execFileSync(
       attwBinPath,
