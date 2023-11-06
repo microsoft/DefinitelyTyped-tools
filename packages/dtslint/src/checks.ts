@@ -1,12 +1,12 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { pathExistsSync } from "fs-extra";
-import { join as joinPaths } from "path";
+import { dirname, join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 import { deepEquals, unmangleScopedPackage } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
-import { execSync } from "child_process";
+import { execFileSync, execSync } from "child_process";
 import { unlinkSync } from "fs";
 export function checkPackageJson(
   dirPath: string,
@@ -143,20 +143,26 @@ export function runAreTheTypesWrong(dirPath: string, configPath: string): AttwRe
   const mangledName = packageJsonContent.name.replace(/^@types\//, "");
   const unmangledName = unmangleScopedPackage(mangledName) || mangledName;
   const tarballName = `types-${mangledName}-${packageJsonContent.version}.tgz`;
+  const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
+  const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
   execSync("npm pack", { cwd: dirPath, stdio: "ignore" });
   try {
-    const output = execSync(`npx attw -p ${unmangledName} --definitely-typed ${tarballName} --config-path ${configPath}`, {
-      cwd: dirPath,
-      stdio: "pipe",
-      encoding: "utf8",
-    });
+    const output = execFileSync(
+      attwBinPath,
+      ["-p", unmangledName, "--definitely-typed", tarballName, "--config-path", configPath],
+      {
+        cwd: dirPath,
+        stdio: "pipe",
+        encoding: "utf8",
+      }
+    );
     return { status: "pass", output };
   } catch (err) {
-    const status = err && typeof err === "object" && "status" in err && err.status === 1
-      ? "fail"
-      : "error";
-    const stdout = err && typeof err === "object" && "stdout" in err && typeof err.stdout === "string" ? err.stdout : undefined;
-    const stderr = err && typeof err === "object" && "stderr" in err && typeof err.stderr === "string" ? err.stderr : undefined;
+    const status = err && typeof err === "object" && "status" in err && err.status === 1 ? "fail" : "error";
+    const stdout =
+      err && typeof err === "object" && "stdout" in err && typeof err.stdout === "string" ? err.stdout : undefined;
+    const stderr =
+      err && typeof err === "object" && "stderr" in err && typeof err.stderr === "string" ? err.stderr : undefined;
     return { status, output: [stdout, stderr].filter(Boolean).join("\n") };
   } finally {
     unlinkSync(joinPaths(dirPath, tarballName));

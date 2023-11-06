@@ -22,6 +22,7 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
+    "@arethetypeswrong/cli": "^0.13.1",
     "@definitelytyped/dts-critic": "workspace:*",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
@@ -40,7 +41,6 @@
     "yargs": "^15.1.0"
   },
   "peerDependencies": {
-    "@arethetypeswrong/cli": "^0.13.1",
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
