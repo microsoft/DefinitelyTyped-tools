@@ -66,6 +66,12 @@ if (require.main === module) {
         type: "boolean",
         default: false,
       },
+      noAttw: {
+        group: "dtslint options",
+        description: "Don’t run @arethetypeswrong/cli.",
+        type: "boolean",
+        default: false,
+      },
       // Only useful for repeated local runs, so I’m hiding it
       noInstall: {
         hidden: true,
@@ -101,6 +107,7 @@ if (require.main === module) {
     localTypeScriptPath: !args.onlyTestTsNext ? args.localTypeScriptPath : undefined,
     onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
+    noAttw: args.noAttw,
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
     writeFailures: args.writeFailures,

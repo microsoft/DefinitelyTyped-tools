@@ -18,6 +18,7 @@ async function main(): Promise<void> {
   let expectOnly = false;
   let shouldListen = false;
   let lookingForTsLocal = false;
+  let noAttw = false;
   let tsLocal: string | undefined;
 
   console.log(`dtslint@${require("../package.json").version}`);
@@ -50,6 +51,9 @@ async function main(): Promise<void> {
       case "--onlyTestTsNext":
         onlyTestTsNext = true;
         break;
+      case "--noAttw":
+        noAttw = true;
+        break;
       // Only for use by types-publisher.
       // Listens for { path, onlyTestTsNext } messages and outputs { path, status }.
       case "--listen":
@@ -80,7 +84,7 @@ async function main(): Promise<void> {
     listen(dirPath, tsLocal, onlyTestTsNext);
   } else {
     await installTypeScriptAsNeeded(tsLocal, onlyTestTsNext);
-    const output = await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal);
+    const output = await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal, noAttw);
     if (output) {
       console.log(output);
     }
@@ -96,13 +100,14 @@ async function installTypeScriptAsNeeded(tsLocal: string | undefined, onlyTestTs
 }
 
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path]");
+  console.error("Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--noAttw]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --installAll     Cleans and installs all TypeScript versions.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
+  console.error("  --noAttw         Don't run @arethetypeswrong/cli.")
   console.error("");
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
@@ -111,14 +116,15 @@ function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNe
   // Don't await this here to ensure that messages sent during installation aren't dropped.
   const installationPromise = installTypeScriptAsNeeded(tsLocal, alwaysOnlyTestTsNext);
   process.on("message", async (message: unknown) => {
-    const { path, onlyTestTsNext, expectOnly } = message as {
+    const { path, onlyTestTsNext, expectOnly, noAttw } = message as {
       path: string;
       onlyTestTsNext: boolean;
       expectOnly?: boolean;
+      noAttw?: boolean;
     };
 
     await installationPromise;
-    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal)
+    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal, !!noAttw)
       .then(
         () => process.send!({ path, status: "OK" }),
         e => process.send!({ path, status: e.stack })
@@ -131,7 +137,8 @@ async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
   expectOnly: boolean,
-  tsLocal: string | undefined
+  tsLocal: string | undefined,
+  noAttw: boolean,
 ): Promise<string | undefined> {
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
@@ -174,7 +181,7 @@ async function runTests(
     }
   }
 
-  if (!packageJson.nonNpm && !expectOnly) {
+  if (!packageJson.nonNpm && !expectOnly && !noAttw) {
     const attwJson = joinPaths(dtRoot, "attw.json");
     const failingPackages = readJson(attwJson).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
