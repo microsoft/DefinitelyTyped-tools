@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",
-    "@types/json-stable-stringify": "^1.0.35",
+    "@types/json-stable-stringify": "^1.0.36",
     "@types/strip-json-comments": "^0.0.28",
     "typescript": "next"
   },

@@ -21,7 +21,7 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@qiwi/npm-registry-client": "^8.9.1",
-    "@types/node": "^16.18.60",
+    "@types/node": "^16.18.61",
     "charm": "^1.0.2",
     "minimatch": "^9.0.3",
     "tar": "^6.2.0",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/charm": "^1.0.6",
-    "@types/tar": "^6.1.7",
+    "@types/tar": "^6.1.8",
     "@types/tar-stream": "^2.2.3"
   },
   "publishConfig": {

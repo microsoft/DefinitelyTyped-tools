@@ -27,9 +27,9 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@types/node": "^16.18.60",
-    "@types/pacote": "^11.1.7",
-    "@types/semver": "^7.5.4",
+    "@types/node": "^16.18.61",
+    "@types/pacote": "^11.1.8",
+    "@types/semver": "^7.5.5",
     "@types/yargs": "^15.0.17"
   },
   "main": "dist/index.js",
