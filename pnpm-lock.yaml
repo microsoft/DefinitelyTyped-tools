@@ -124,8 +124,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       '@types/semver':
-        specifier: ^6.2.6
-        version: 6.2.6
+        specifier: ^7.5.5
+        version: 7.5.5
       '@types/strip-json-comments':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1974,10 +1974,6 @@ packages:
     dependencies:
       '@types/glob': 8.1.0
       '@types/node': 20.9.0
-    dev: true
-
-  /@types/semver@6.2.6:
-    resolution: {integrity: sha512-6Xe+YAhzQKMxEytKnq01VdyhNwz+M/nJBnOcdIWxBHAl5MS6QOYzOX7PazFDUdtUhTSzvfLKZN9fq5ShKDaAvA==}
     dev: true
 
   /@types/semver@7.5.5:
@@ -6681,6 +6677,7 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+    requiresBuild: true
 
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
