@@ -597,20 +597,30 @@ export function getDependencyFromFile(
     return undefined;
   }
 
-  const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+  // types/[packageName]/[scripts]
+  // types/[packageName]/[tsVersion]/[scripts]
+  // types/[packageName]/[packageVersion]/[scripts]
+  // types/[packageName]/[packageVersion]/[tsVersion]/[scripts]
+  const [typesDirName, name, packageVersion, tsVersion, scripts] = parts;
 
-  if (typesDirName !== typesDirectoryName) {
+  const version = parseVersionFromDirectoryName(packageVersion)
+    ?? '*';
+  if (
+    // package is not in types directory
+    typesDirName !== typesDirectoryName
+    // is root package's scripts folder
+    || packageVersion === 'scripts'
+    // is root package's scripts folder with overridden tsVersion
+    || (/^ts\d+\.\d$/.test(packageVersion) && tsVersion === 'scripts')
+    // is root package's scripts folder with overridden packageVersion
+    || (version !== '*' && tsVersion === 'scripts')
+    // is root package's scripts folder with overridden packageVersion and tsVersion
+    || (version !== '*' && /^ts\d+\.\d$/.test(tsVersion) && scripts === 'scripts')
+  ) {
     return undefined;
   }
 
-  if (subDirName) {
-    const version = parseVersionFromDirectoryName(subDirName);
-    if (version !== undefined) {
-      return { typesDirectoryName: name, version };
-    }
-  }
-
-  return { typesDirectoryName: name, version: "*" };
+  return { typesDirectoryName: name, version };
 }
 
 function hash(files: readonly string[], fs: FS): string {
