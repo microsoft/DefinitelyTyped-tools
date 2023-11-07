@@ -2,8 +2,7 @@
   "$schema": "https://unpkg.com/knip@2/schema.json",
   "workspaces": {
     ".": {
-      "ignoreBinaries": ["only-allow"],
-      "ignoreDependencies": ["tslint", "tslint-microsoft-contrib"]
+      "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {
       "entry": "src/index.ts",
