@@ -101,9 +101,6 @@ importers:
       command-exists:
         specifier: ^1.2.9
         version: 1.2.9
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       semver:
         specifier: ^7.5.4
         version: 7.5.4
