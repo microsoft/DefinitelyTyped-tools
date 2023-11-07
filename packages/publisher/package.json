@@ -11,17 +11,17 @@
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "fs-extra": "^9.1.0",
-    "longjohn": "^0.2.11",
-    "pacote": "^13.6.1",
-    "semver": "^7.3.7",
+    "longjohn": "^0.2.12",
+    "pacote": "^13.6.2",
+    "semver": "^7.5.4",
     "typescript": "next",
     "yargs": "15.3.1"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.8",
-    "@types/pacote": "^11.1.5",
-    "@types/semver": "^7.5.2",
-    "@types/yargs": "^15.0.4"
+    "@types/fs-extra": "^9.0.13",
+    "@types/pacote": "^11.1.7",
+    "@types/semver": "^7.5.4",
+    "@types/yargs": "^15.0.17"
   },
   "scripts": {
     "build": "tsc -b",
