@@ -1,4 +1,4 @@
-import { ensureDir, removeSync } from "fs-extra";
+import fs from "fs";
 
 import { logDir } from "./lib/settings";
 import { joinPaths } from "./fs";
@@ -96,7 +96,7 @@ export function logPath(logName: string): string {
 }
 
 export async function writeLog(logName: string, contents: readonly string[]): Promise<void> {
-  await ensureDir(logDir);
+  await fs.promises.mkdir(logDir, { recursive: true });
   await writeFile(logPath(logName), contents.join("\r\n"));
 }
 
@@ -105,5 +105,5 @@ export function joinLogWithErrors({ infos, errors }: LogWithErrors): Log {
 }
 
 export function cleanLogDirectory() {
-  removeSync(logDir);
+  fs.rmSync(logDir, { recursive: true, force: true });
 }

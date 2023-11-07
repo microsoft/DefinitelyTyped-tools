@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import { pathExistsSync } from "fs-extra";
+import fs from "fs";
 import { join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
@@ -179,7 +179,7 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
 export function checkTslintJson(dirPath: string): void {
   const configPath = getConfigPath(dirPath);
   const shouldExtend = "@definitelytyped/dtslint/dt.json";
-  if (!pathExistsSync(configPath)) {
+  if (!fs.existsSync(configPath)) {
     throw new Error(`Missing \`tslint.json\` that contains \`{ "extends": "${shouldExtend}" }\`.`);
   }
   if (readJson(configPath).extends !== shouldExtend) {
@@ -198,7 +198,7 @@ function getLintConfig(
   maxVersion: TsVersion,
   tsLocal: string | undefined
 ): IConfigurationFile {
-  const configExists = pathExistsSync(expectedConfigPath);
+  const configExists = fs.existsSync(expectedConfigPath);
   const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
   // Second param to `findConfiguration` doesn't matter, since config path is provided.
   const config = Configuration.findConfiguration(configPath, "").results;

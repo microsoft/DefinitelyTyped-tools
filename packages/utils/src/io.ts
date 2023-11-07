@@ -1,11 +1,4 @@
-import {
-  readFile as readFileWithEncoding,
-  readFileSync as readFileWithEncodingSync,
-  stat,
-  writeFile as writeFileWithEncoding,
-  writeJson as writeJsonRaw,
-  createWriteStream,
-} from "fs-extra";
+import fs from "fs";
 import { Pack } from "tar";
 import tarStream from "tar-stream";
 import https, { Agent, request } from "https";
@@ -18,10 +11,9 @@ import { parseJson, withoutStart, sleep, tryParseJson, isObject } from "./miscel
 import { FS, Dir, InMemoryFS } from "./fs";
 import { assertDefined } from "./assertions";
 import { LoggerWithErrors } from "./logging";
-import { Stats } from "fs";
 
 export async function readFile(path: string): Promise<string> {
-  const res = await readFileWithEncoding(path, { encoding: "utf8" });
+  const res = await fs.promises.readFile(path, { encoding: "utf8" });
   if (res.includes("�")) {
     throw new Error(`Bad character in ${path}`);
   }
@@ -29,7 +21,7 @@ export async function readFile(path: string): Promise<string> {
 }
 
 export function readFileSync(path: string): string {
-  const res = readFileWithEncodingSync(path, { encoding: "utf8" });
+  const res = fs.readFileSync(path, { encoding: "utf8" });
   if (res.includes("�")) {
     throw new Error(`Bad character in ${path}`);
   }
@@ -65,11 +57,11 @@ export async function tryReadJson<T>(path: string, predicate?: (parsed: unknown)
 }
 
 export function writeFile(path: string, content: string): Promise<void> {
-  return writeFileWithEncoding(path, content, { encoding: "utf8" });
+  return fs.promises.writeFile(path, content, { encoding: "utf8" });
 }
 
 export function writeJson(path: string, content: unknown, formatted = true): Promise<void> {
-  return writeJsonRaw(path, content, { spaces: formatted ? 4 : 0 });
+  return fs.promises.writeFile(JSON.stringify(content, undefined, formatted ? 4 : undefined), path);
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {
@@ -173,7 +165,7 @@ function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: A
 }
 
 export async function isDirectory(path: string): Promise<boolean> {
-  return (await stat(path)).isDirectory();
+  return (await fs.promises.stat(path)).isDirectory();
 }
 
 const downloadTimeout = 1_000_000; // ms
@@ -255,7 +247,7 @@ export function unGzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {
 
 export function writeTgz(inputDirectory: string, outFileName: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    resolve(streamDone(createTgz(inputDirectory, reject).pipe(createWriteStream(outFileName))));
+    resolve(streamDone(createTgz(inputDirectory, reject).pipe(fs.createWriteStream(outFileName))));
   });
 }
 
@@ -281,7 +273,7 @@ function createTar(dir: string, onError: (error: Error) => void): NodeJS.Readabl
  * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
  * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
  */
-function addDirectoryExecutablePermission(_: string, stat: Stats): boolean {
+function addDirectoryExecutablePermission(_: string, stat: fs.Stats): boolean {
   if (stat.isDirectory()) {
     stat.mode = addExecutePermissionsFromReadPermissions(stat.mode);
   }

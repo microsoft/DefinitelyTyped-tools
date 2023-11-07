@@ -1,5 +1,5 @@
 import { makeTypesVersionsForPackageJson, License } from "@definitelytyped/header-parser";
-import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
+import fs from "fs";
 import path = require("path");
 import yargs = require("yargs");
 
@@ -32,7 +32,7 @@ import { outputDirPath, sourceBranch } from "./lib/settings";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
 
-const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
+const mitLicense = fs.readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (require.main === module) {
   const tgz = !!yargs.argv.tgz;
@@ -52,8 +52,8 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   const [log, logResult] = logger();
   log("\n## Generating packages");
 
-  await mkdirp(outputDirPath);
-  await emptyDir(outputDirPath);
+  await fs.promises.rm(outputDirPath, { recursive: true, force: true });
+  await fs.promises.mkdir(outputDirPath, { recursive: true });
 
   // warm the cache so we don't request this from GH concurrently
   await getAllowedPackageJsonDependencies();
@@ -95,7 +95,7 @@ ${pkg.libraryName} provides its own type definitions, so you don't need ${pkg.na
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
-  await mkdir(outputDirectory(pkg));
+  await fs.promises.mkdir(outputDirectory(pkg));
 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
@@ -112,7 +112,7 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
   const full = joinPaths(outputDirectory(pkg), filename);
   const dir = path.dirname(full);
   if (dir !== outputDirectory(pkg)) {
-    await mkdirp(dir);
+    await fs.promises.mkdir(dir, { recursive: true });
   }
   return full;
 }

@@ -23,14 +23,12 @@
     "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^16.18.60",
     "charm": "^1.0.2",
-    "fs-extra": "^8.1.0",
     "minimatch": "^9.0.3",
     "tar": "^6.2.0",
     "tar-stream": "^2.2.0"
   },
   "devDependencies": {
     "@types/charm": "^1.0.6",
-    "@types/fs-extra": "^8.1.4",
     "@types/tar": "^6.1.7",
     "@types/tar-stream": "^2.2.3"
   },

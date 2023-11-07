@@ -1,6 +1,6 @@
 import assert = require("assert");
 import process from "process";
-import { emptyDir } from "fs-extra";
+import fs from "fs";
 import * as yargs from "yargs";
 
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
@@ -93,7 +93,8 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
 }
 
 async function generate(registry: string, packageJson: {}): Promise<void> {
-  await emptyDir(registryOutputPath);
+  await fs.promises.rm(registryOutputPath, { recursive: true, force: true });
+  await fs.promises.mkdir(registryOutputPath, { recursive: true });
   await writeOutputJson("package.json", packageJson);
   await writeOutputFile("index.json", registry);
   await writeOutputFile("README.md", readme);
@@ -133,7 +134,8 @@ async function publish(
 }
 
 async function installForValidate(log: Logger): Promise<void> {
-  await emptyDir(validateOutputPath);
+  await fs.promises.rm(validateOutputPath, { recursive: true, force: true });
+  await fs.promises.mkdir(validateOutputPath, { recursive: true });
   await writeJson(joinPaths(validateOutputPath, "package.json"), {
     name: "validate",
     version: "0.0.0",

@@ -1,6 +1,6 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { pathExistsSync } from "fs-extra";
+import fs from "fs";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 import { deepEquals } from "@definitelytyped/utils";
@@ -11,7 +11,7 @@ export function checkPackageJson(
   typesVersions: readonly AllTypeScriptVersion[]
 ): header.Header | string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
-  if (!pathExistsSync(pkgJsonPath)) {
+  if (!fs.existsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
   return header.validatePackageJson(packageNameFromPath(dirPath), readJson(pkgJsonPath), typesVersions);
