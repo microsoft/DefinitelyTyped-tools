@@ -9,7 +9,7 @@ const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 export function exec(
   cmd: string,
   cwd?: string,
-  env?: NodeJS.ProcessEnv
+  env?: NodeJS.ProcessEnv,
 ): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
@@ -328,7 +328,7 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
 
 async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
   const debugArg = execArgv.findIndex(
-    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect="),
   );
   if (debugArg < 0) return execArgv;
 

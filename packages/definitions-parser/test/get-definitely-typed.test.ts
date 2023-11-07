@@ -9,7 +9,7 @@ testo({
         definitelyTypedPath: undefined,
         progress: false,
       },
-      quietLoggerWithErrors()[0]
+      quietLoggerWithErrors()[0],
     );
     expect(dt.exists("types")).toBe(true);
     expect(dt.exists("buncho")).toBe(false);

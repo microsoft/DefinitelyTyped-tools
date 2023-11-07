@@ -27,7 +27,7 @@ if (require.main === module) {
       await readChangedPackages(AllPackages.fromFS(dt)),
       dry,
       process.env.GH_API_TOKEN || "",
-      new Fetcher()
+      new Fetcher(),
     );
   });
 }
@@ -36,7 +36,7 @@ export default async function publishPackages(
   changedPackages: ChangedPackages,
   dry: boolean,
   githubAccessToken: string,
-  fetcher: Fetcher
+  fetcher: Fetcher,
 ): Promise<void> {
   const [log, logResult] = logger();
   if (dry) {
@@ -55,7 +55,7 @@ export default async function publishPackages(
     const commits = (await queryGithub(
       `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`,
       githubAccessToken,
-      fetcher
+      fetcher,
     )) as {
       sha: string;
       commit: {
@@ -72,7 +72,7 @@ export default async function publishPackages(
       const prs = (await queryGithub(
         `search/issues?q=is:pr%20is:merged%20${commits[0].sha}`,
         githubAccessToken,
-        fetcher
+        fetcher,
       )) as { items: { number: number }[] };
       let latestPr = 0;
       if (!prs.items) {
@@ -90,7 +90,7 @@ export default async function publishPackages(
       const latest = (await queryGithub(
         `repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`,
         githubAccessToken,
-        fetcher
+        fetcher,
       )) as { merged_at: string };
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
@@ -106,7 +106,7 @@ export default async function publishPackages(
           `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments`,
           { body: publishNotification },
           githubAccessToken,
-          fetcher
+          fetcher,
         );
         log("From github: " + JSON.stringify(commented).slice(0, 200));
       }

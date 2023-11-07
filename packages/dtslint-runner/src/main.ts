@@ -102,7 +102,7 @@ export async function runDTSLint({
                   .split(/\r?\n/)
                   .map((line) => `${prefix}${line}`)
                   .join("\n")
-              : status
+              : status,
           );
         }
       } else if (status === "OK") {
@@ -115,7 +115,7 @@ export async function runDTSLint({
                 .split(/\r?\n/)
                 .map((line) => `${prefix}${line}`)
                 .join("\n")
-            : status
+            : status,
         );
         allFailures.push([path, status]);
       }
@@ -178,7 +178,7 @@ function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<s
     (fs.readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .map((s) => s.trim())
-      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean)
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean),
   );
 }
 

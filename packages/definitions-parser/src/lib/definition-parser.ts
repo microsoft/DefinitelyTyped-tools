@@ -23,7 +23,7 @@ import { getAllowedPackageJsonDependencies } from "./settings";
 function matchesVersion(
   typingsDataRaw: TypingsDataRaw,
   version: DirectoryParsedTypingVersion,
-  considerLibraryMinorVersion: boolean
+  considerLibraryMinorVersion: boolean,
 ) {
   return (
     typingsDataRaw.header.libraryMajorVersion === version.major &&
@@ -39,7 +39,7 @@ function formattedLibraryVersion(typingsDataRaw: TypingsDataRaw): `${number}.${n
 
 export async function getTypingInfo(
   packageNameOrTypesDirectoryName: string,
-  dt: FS
+  dt: FS,
 ): Promise<TypingsVersionsRaw | undefined | { errors: string[] }> {
   const errors = [];
   if (packageNameOrTypesDirectoryName !== packageNameOrTypesDirectoryName.toLowerCase()) {
@@ -61,7 +61,7 @@ export async function getTypingInfo(
     (fileOrDirectoryName) => {
       const version = parseVersionFromDirectoryName(fileOrDirectoryName);
       return version === undefined ? undefined : { directoryName: fileOrDirectoryName, version };
-    }
+    },
   );
 
   const considerLibraryMinorVersion = olderVersionDirectories.some(({ version }) => version.minor !== undefined);
@@ -69,7 +69,7 @@ export async function getTypingInfo(
     packageNameOrTypesDirectoryName,
     rootDirectoryLs,
     fs,
-    olderVersionDirectories.map(({ directoryName }) => directoryName)
+    olderVersionDirectories.map(({ directoryName }) => directoryName),
   );
   if (Array.isArray(latestDataResult)) {
     return { errors: [...errors, ...latestDataResult] };
@@ -84,7 +84,7 @@ export async function getTypingInfo(
           `The latest version of the '${packageNameOrTypesDirectoryName}' package is ${latest}, so the subdirectory '${directoryName}' is not allowed` +
             (`v${latest}` === directoryName
               ? "."
-              : `; since it applies to any ${latestData.header.libraryMajorVersion}.* version, up to and including ${latest}.`)
+              : `; since it applies to any ${latestData.header.libraryMajorVersion}.* version, up to and including ${latest}.`),
         );
       }
 
@@ -94,7 +94,7 @@ export async function getTypingInfo(
         packageNameOrTypesDirectoryName,
         ls,
         fs.subDir(directoryName),
-        []
+        [],
       );
       if (Array.isArray(result)) {
         errors.push(...result);
@@ -108,17 +108,17 @@ export async function getTypingInfo(
             `Directory ${directoryName} indicates major.minor version ${directoryVersion.major}.${
               directoryVersion.minor ?? "*"
             }, ` +
-              `but package.json indicates major.minor version ${data.header.libraryMajorVersion}.${data.header.libraryMinorVersion}`
+              `but package.json indicates major.minor version ${data.header.libraryMajorVersion}.${data.header.libraryMinorVersion}`,
           );
         } else {
           errors.push(
             `Directory ${directoryName} indicates major version ${directoryVersion.major}, but package.json indicates major version ` +
-              data.header.libraryMajorVersion.toString()
+              data.header.libraryMajorVersion.toString(),
           );
         }
       }
       return data;
-    })
+    }),
   );
   if (errors.length) {
     return { errors };
@@ -171,7 +171,7 @@ function getTypesVersionsAndPackageJson(ls: readonly string[]): LsMinusTypesVers
  * ```
  */
 export function parseVersionFromDirectoryName(
-  directoryName: string | undefined
+  directoryName: string | undefined,
 ): DirectoryParsedTypingVersion | undefined {
   const match = /^v(\d+)(\.(\d+))?$/.exec(directoryName!);
   if (match === null) {
@@ -187,7 +187,7 @@ async function getPackageJsonInfoForPackage(
   typingsPackageName: string,
   ls: readonly string[],
   fs: FS,
-  olderVersionDirectories: readonly string[]
+  olderVersionDirectories: readonly string[],
 ): Promise<Omit<TypingsDataRaw, "libraryVersionDirectoryName"> | string[]> {
   const errors = [];
   const typesVersionAndPackageJson = getTypesVersionsAndPackageJson(ls);
@@ -223,8 +223,8 @@ async function getPackageJsonInfoForPackage(
       packageJson.devDependencies,
       packageJsonName,
       allowedDependencies,
-      `${atTypesSlash}${typingsPackageName}`
-    )
+      `${atTypesSlash}${typingsPackageName}`,
+    ),
   );
   const imports = checkPackageJsonImports(packageJson.imports, packageJsonName);
   if (Array.isArray(imports)) {
@@ -259,7 +259,7 @@ async function getPackageJsonInfoForPackage(
 export function getFiles(
   dt: FS,
   typingsData: TypingsData,
-  olderVersionDirectories: readonly string[]
+  olderVersionDirectories: readonly string[],
 ): readonly string[] {
   const rootDir = dt.subDir("types").subDir(typingsData.subDirectoryPath);
 

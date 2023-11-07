@@ -133,7 +133,7 @@ async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
   expectOnly: boolean,
-  tsLocal: string | undefined
+  tsLocal: string | undefined,
 ): Promise<void> {
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
@@ -142,7 +142,7 @@ async function runTests(
   assertPathIsNotBanned(packageName);
   assertPackageIsNotDeprecated(
     packageName,
-    await fs.promises.readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8")
+    await fs.promises.readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"),
   );
 
   const typesVersions = getTypesVersions(dirPath);
@@ -171,7 +171,7 @@ async function runTests(
       const hi = his[i];
       assert(
         parseFloat(hi) >= parseFloat(low),
-        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`
+        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`,
       );
       const isLatest = hi === TypeScriptVersion.latest;
       const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
@@ -201,7 +201,7 @@ async function testTypesVersion(
   hiVersion: TsVersion,
   expectOnly: boolean,
   tsLocal: string | undefined,
-  isLatest: boolean
+  isLatest: boolean,
 ): Promise<void> {
   checkTslintJson(dirPath);
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
@@ -231,7 +231,7 @@ function assertPathIsInDefinitelyTyped(dirPath: string, dtRoot: string): void {
       "Since this type definition includes a header (a comment starting with `// Type definitions for`), " +
         "assumed this was a DefinitelyTyped package.\n" +
         "But it is not in a `DefinitelyTyped/types/xxx` directory: " +
-        dirPath
+        dirPath,
     );
   }
 }
@@ -302,7 +302,7 @@ async function assertNpmIgnoreExpected(dirPath: string) {
 function assertNoOtherFiles(dirPath: string) {
   if (fs.existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
     throw new Error(
-      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`
+      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
     );
   }
 }

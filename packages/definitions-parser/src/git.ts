@@ -51,7 +51,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
 }
 
 export function gitChanges(
-  diffs: GitDiff[]
+  diffs: GitDiff[],
 ): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
   const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
   const errors = [];
@@ -68,7 +68,7 @@ export function gitChanges(
 You should ` +
           (diff.status === "A"
             ? `only add files that are part of packages.`
-            : "only delete files that are a part of removed packages.")
+            : "only delete files that are a part of removed packages."),
       );
     }
   }
@@ -82,7 +82,7 @@ You should ` +
 }
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
-  definitelyTypedPath: string
+  definitelyTypedPath: string,
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
@@ -148,7 +148,7 @@ it is supposed to replace, ${typings.version} of ${unneeded.name}.`);
  */
 export async function getNotNeededPackages(
   allPackages: AllPackages,
-  diffs: GitDiff[]
+  diffs: GitDiff[],
 ): Promise<{ errors: string[] } | NotNeededPackage[]> {
   const changes = gitChanges(diffs);
   if ("errors" in changes) return changes;

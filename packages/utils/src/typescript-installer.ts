@@ -42,7 +42,7 @@ export async function install(version: TsVersion | "next" | "rc"): Promise<void>
         dependencies: {
           typescript: version,
         },
-      })
+      }),
     );
     await execAndThrowErrors("npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links", dir);
     console.log("Installed!");

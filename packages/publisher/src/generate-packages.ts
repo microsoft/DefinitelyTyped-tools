@@ -82,7 +82,7 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
 
   await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
   await Promise.all(
-    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
+    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file))),
   );
 }
 
@@ -202,7 +202,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
-    }`
+    }`,
   );
   lines.push("");
 

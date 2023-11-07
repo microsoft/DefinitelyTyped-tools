@@ -31,7 +31,7 @@ export class AllPackages {
     return new AllPackages(
       fs,
       new Map(Object.entries(typingsVersionsRaw).map(([name, raw]) => [name, new TypingsVersions(fs, raw)])),
-      notNeeded
+      notNeeded,
     );
   }
 
@@ -59,7 +59,7 @@ export class AllPackages {
     private dt: FS,
     /** Keys are `typesDirectoryName` strings */
     private readonly types: Map<string, TypingsVersions>,
-    private readonly notNeeded: readonly NotNeededPackage[]
+    private readonly notNeeded: readonly NotNeededPackage[],
   ) {}
 
   getNotNeededPackage(typesDirectoryName: string): NotNeededPackage | undefined {
@@ -201,7 +201,7 @@ export class AllPackages {
           return;
         }
         await this.tryGetTypingsVersions(typesDirectoryName);
-      })
+      }),
     );
     this.isComplete = true;
   }
@@ -303,7 +303,11 @@ export class NotNeededPackage extends PackageBase {
     return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
   }
 
-  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
+  constructor(
+    readonly name: string,
+    readonly libraryName: string,
+    asOfVersion: string,
+  ) {
     super();
     assert(libraryName && name && asOfVersion);
     this.version = new semver.SemVer(asOfVersion);
@@ -428,7 +432,7 @@ export class TypingsVersions {
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
-      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i)])
+      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i)]),
     );
   }
 
@@ -458,7 +462,11 @@ export class TypingsVersions {
 }
 
 export class TypingsData extends PackageBase {
-  constructor(private dt: FS, private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
+  constructor(
+    private dt: FS,
+    private readonly data: TypingsDataRaw,
+    readonly isLatest: boolean,
+  ) {
     super();
   }
 
@@ -527,7 +535,7 @@ export class TypingsData extends PackageBase {
   getContentHash(): string {
     return (this._contentHash ??= hash(
       [...this.getFiles(), "package.json"],
-      this.dt.subDir("types").subDir(this.subDirectoryPath)
+      this.dt.subDir("types").subDir(this.subDirectoryPath),
     ));
   }
   get projectName(): string | undefined {
@@ -579,7 +587,7 @@ export interface PackageIdWithDefiniteVersion {
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
   return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map((entry) =>
-    NotNeededPackage.fromRaw(...entry)
+    NotNeededPackage.fromRaw(...entry),
   );
 }
 
@@ -589,7 +597,7 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
  * For "x", returns undefined.
  */
 export function getDependencyFromFile(
-  file: string
+  file: string,
 ): { typesDirectoryName: string; version: DirectoryParsedTypingVersion | "*" } | undefined {
   const parts = file.split("/");
   if (parts.length <= 2) {
