@@ -14,12 +14,12 @@
     "pacote": "^13.6.2",
     "semver": "^7.5.4",
     "typescript": "next",
-    "yargs": "^17.7.2"
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
     "@types/semver": "^7.5.5",
-    "@types/yargs": "^17.0.31"
+    "@types/yargs": "^15.0.18"
   },
   "scripts": {
     "build": "tsc -b",
