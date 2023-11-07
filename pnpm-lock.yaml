@@ -127,14 +127,14 @@ importers:
         specifier: ^6.2.6
         version: 6.2.6
       '@types/strip-json-comments':
-        specifier: 0.0.30
-        version: 0.0.30
+        specifier: ^3.0.0
+        version: 3.0.0
       '@types/tmp':
         specifier: ^0.2.6
         version: 0.2.6
       strip-json-comments:
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^3.1.1
+        version: 3.1.1
 
   packages/dtslint:
     dependencies:
@@ -175,8 +175,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       strip-json-comments:
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^3.1.1
+        version: 3.1.1
       tslint:
         specifier: 5.14.0
         version: 5.14.0(typescript@5.4.0-dev.20231107)
@@ -191,8 +191,8 @@ importers:
         specifier: ^1.0.36
         version: 1.0.36
       '@types/strip-json-comments':
-        specifier: ^0.0.28
-        version: 0.0.28
+        specifier: ^3.0.0
+        version: 3.0.0
       typescript:
         specifier: next
         version: 5.4.0-dev.20231107
@@ -1302,7 +1302,7 @@ packages:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
       '@types/node': 16.18.61
-      '@types/yargs': 17.0.30
+      '@types/yargs': 17.0.31
       chalk: 4.1.2
     dev: true
 
@@ -1997,12 +1997,11 @@ packages:
     resolution: {integrity: sha512-T+bzT53cbPbE0hMlCNZux1QuH6hQFNHIwRMTQCu3YPG0W7XUfeoULHl+TehJCjaxQx8cz4wlg5oQsOyG9LvZmA==}
     dev: true
 
-  /@types/strip-json-comments@0.0.28:
-    resolution: {integrity: sha512-hZmGfNqTx+GxPBCs5sfldJE9GykQbWDn88MrsIqtxkQrNorK4NNQFCeovawh/WEJeD/zvX5JGyma2FFUgLdS9g==}
-    dev: true
-
-  /@types/strip-json-comments@0.0.30:
-    resolution: {integrity: sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==}
+  /@types/strip-json-comments@3.0.0:
+    resolution: {integrity: sha512-+vSlZeCCGm/1Q3WwBJDUSGHvADTQjRl4Fve0AG9H+A4+xgJ7yAkWKoc4g7I9UoVqtwCzjv2g/GZn4xipokMYyQ==}
+    deprecated: This is a stub types definition. strip-json-comments provides its own type definitions, so you do not need this installed.
+    dependencies:
+      strip-json-comments: 3.1.1
     dev: true
 
   /@types/tar-stream@2.2.3:
@@ -2032,8 +2031,8 @@ packages:
       '@types/yargs-parser': 21.0.2
     dev: true
 
-  /@types/yargs@17.0.30:
-    resolution: {integrity: sha512-3SJLzYk3yz3EgI9I8OLoH06B3PdXIoU2imrBZzaGqUtUXf5iUNDtmAfCGuQrny1bnmyjh/GM/YNts6WK5jR5Rw==}
+  /@types/yargs@17.0.31:
+    resolution: {integrity: sha512-bocYSx4DI8TmdlvxqGpVNXOgCNR1Jj0gNPhhAY+iz1rgKDAaYrAYdFYnhDV1IFuiuVc9HkOwyDcFxaTElF3/wg==}
     dependencies:
       '@types/yargs-parser': 21.0.2
     dev: true
@@ -7038,10 +7037,6 @@ packages:
     dependencies:
       min-indent: 1.0.1
     dev: true
-
-  /strip-json-comments@2.0.1:
-    resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
-    engines: {node: '>=0.10.0'}
 
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
