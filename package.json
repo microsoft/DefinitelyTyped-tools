@@ -1,6 +1,9 @@
 {
   "name": "definitelytyped-tools",
   "private": true,
+  "engines": {
+    "node": ">=16.14.0"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint . --report-unused-disable-directives --ext .ts",

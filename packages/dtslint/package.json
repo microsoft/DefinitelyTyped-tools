@@ -50,7 +50,7 @@
     "typescript": "next"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=16.14.0"
   },
   "license": "MIT"
 }
