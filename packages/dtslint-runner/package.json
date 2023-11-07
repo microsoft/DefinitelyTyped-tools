@@ -27,15 +27,14 @@
     "@definitelytyped/dtslint": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "@octokit/rest": "^16.43.2",
-    "glob": "^8.1.0",
     "semver": "^7.5.4",
     "stats-lite": "^2.2.0",
     "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
     "@types/semver": "^7.5.5",
-    "@types/stats-lite": "^2.2.2"
+    "@types/stats-lite": "^2.2.2",
+    "glob": "^10.3.10"
   },
   "engines": {
     "node": ">=16.14.0"

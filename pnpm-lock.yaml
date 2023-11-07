@@ -211,9 +211,6 @@ importers:
       '@octokit/rest':
         specifier: ^16.43.2
         version: 16.43.2(@octokit/core@5.0.1)
-      glob:
-        specifier: ^8.1.0
-        version: 8.1.0
       semver:
         specifier: ^7.5.4
         version: 7.5.4
@@ -224,15 +221,15 @@ importers:
         specifier: ^15.4.1
         version: 15.4.1
     devDependencies:
-      '@types/glob':
-        specifier: ^8.1.0
-        version: 8.1.0
       '@types/semver':
         specifier: ^7.5.5
         version: 7.5.5
       '@types/stats-lite':
         specifier: ^2.2.2
         version: 2.2.2
+      glob:
+        specifier: ^10.3.10
+        version: 10.3.10
 
   packages/eslint-plugin:
     dependencies:
@@ -1634,6 +1631,7 @@ packages:
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+    requiresBuild: true
     dev: true
 
   /@pnpm/constants@7.1.1:
