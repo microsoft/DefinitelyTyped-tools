@@ -24,13 +24,13 @@
     "@definitelytyped/utils": "workspace:*",
     "pacote": "^13.6.2",
     "semver": "^7.5.4",
-    "yargs": "^15.4.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^16.18.61",
     "@types/pacote": "^11.1.8",
     "@types/semver": "^7.5.5",
-    "@types/yargs": "^15.0.18"
+    "@types/yargs": "^17.0.31"
   },
   "main": "dist/index.js",
   "bin": {

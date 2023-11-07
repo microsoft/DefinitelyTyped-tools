@@ -36,7 +36,7 @@
     "json-stable-stringify": "^1.0.2",
     "strip-json-comments": "^3.1.1",
     "tslint": "5.14.0",
-    "yargs": "^15.4.1"
+    "yargs": "^17.7.2"
   },
   "peerDependencies": {
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"

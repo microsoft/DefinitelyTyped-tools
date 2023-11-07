@@ -29,7 +29,7 @@
     "@octokit/rest": "^16.43.2",
     "semver": "^7.5.4",
     "stats-lite": "^2.2.0",
-    "yargs": "^15.4.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/semver": "^7.5.5",
