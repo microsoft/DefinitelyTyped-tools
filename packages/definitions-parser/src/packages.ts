@@ -603,19 +603,18 @@ export function getDependencyFromFile(
   // types/[packageName]/[packageVersion]/[tsVersion]/[scripts]
   const [typesDirName, name, packageVersion, tsVersion, scripts] = parts;
 
-  const version = parseVersionFromDirectoryName(packageVersion)
-    ?? '*';
+  const version = parseVersionFromDirectoryName(packageVersion) ?? "*";
   if (
     // package is not in types directory
-    typesDirName !== typesDirectoryName
+    typesDirName !== typesDirectoryName ||
     // is root package's scripts folder
-    || packageVersion === 'scripts'
+    packageVersion === "scripts" ||
     // is root package's scripts folder with overridden tsVersion
-    || (/^ts\d+\.\d$/.test(packageVersion) && tsVersion === 'scripts')
+    (/^ts\d+\.\d$/.test(packageVersion) && tsVersion === "scripts") ||
     // is root package's scripts folder with overridden packageVersion
-    || (version !== '*' && tsVersion === 'scripts')
+    (version !== "*" && tsVersion === "scripts") ||
     // is root package's scripts folder with overridden packageVersion and tsVersion
-    || (version !== '*' && /^ts\d+\.\d$/.test(tsVersion) && scripts === 'scripts')
+    (version !== "*" && /^ts\d+\.\d$/.test(tsVersion) && scripts === "scripts")
   ) {
     return undefined;
   }
