@@ -1,10 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as noDeadReference from "../src/rules/no-dead-reference";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("@definitelytyped/no-dead-reference", noDeadReference, {
   invalid: [

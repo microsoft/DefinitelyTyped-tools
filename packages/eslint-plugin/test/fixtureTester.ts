@@ -1,4 +1,5 @@
-import { TSESLint, ESLintUtils } from "@typescript-eslint/utils";
+import { TSESLint } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 import path from "path";
 import fs from "fs";
 
@@ -53,9 +54,7 @@ export function runTestsWithFixtures<TMessageIds extends string, TOptions extend
   rule: TSESLint.RuleModule<TMessageIds, TOptions>,
   tests: RunTests<TMessageIds, TOptions>,
 ): void {
-  const ruleTester = new ESLintUtils.RuleTester({
-    parser: "@typescript-eslint/parser",
-  });
+  const ruleTester = new RuleTester();
 
   return ruleTester.run(name, rule, {
     valid: tests.valid.map(convertTestCase<TOptions>),

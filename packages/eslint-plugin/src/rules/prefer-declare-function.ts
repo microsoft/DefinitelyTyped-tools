@@ -8,7 +8,6 @@ const rule = createRule({
   meta: {
     docs: {
       description: "Forbids `const x: () => void`.",
-      recommended: "error",
     },
     messages: {
       variableFunction: "Use a function declaration instead of a variable of function type.",

@@ -10,7 +10,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbids test (non-declaration) files to use relative imports.",
-      recommended: "error",
     },
     messages: {
       useGlobalImport:

@@ -1,10 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as preferDeclareFunction from "../src/rules/prefer-declare-function";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("@definitelytyped/prefer-declare-function", preferDeclareFunction, {
   invalid: [

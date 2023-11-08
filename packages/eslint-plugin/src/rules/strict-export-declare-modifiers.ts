@@ -9,7 +9,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Enforces strict rules about where the 'export' and 'declare' modifiers may appear.",
-      recommended: "error",
     },
     messages: {
       missingExplicitExport:
@@ -74,9 +73,13 @@ const rule = createRule({
           });
         }
         if (autoExportEnabled && !isExport(node)) {
+          const n = (node as ts.DeclarationStatement).name || node;
           context.report({
             messageId: "missingExplicitExport",
-            node: services.tsNodeToESTreeNodeMap.get((node as ts.DeclarationStatement).name || node),
+            loc: {
+              end: sourceCode.getLocFromIndex(n.end),
+              start: sourceCode.getLocFromIndex(n.getStart(sourceFile)),
+            },
           });
         }
       }

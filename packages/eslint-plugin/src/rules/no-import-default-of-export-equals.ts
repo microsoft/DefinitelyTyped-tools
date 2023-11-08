@@ -10,7 +10,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbid a default import to reference an `export =` module.",
-      recommended: "error",
     },
     messages: {
       noImportDefaultOfExportEquals: `The module {{moduleName}} uses \`export = \`. Import with \`import {{importName}} = require({{moduleName}})\`.`,

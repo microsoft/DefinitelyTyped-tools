@@ -18,7 +18,6 @@ const rule = createRule({
     docs: {
       description:
         "Forbids bad references, including those that resolve outside of the package or path references in non-declaration files.",
-      recommended: "error",
     },
     messages: {
       importOutside:

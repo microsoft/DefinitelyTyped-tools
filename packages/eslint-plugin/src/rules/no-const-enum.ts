@@ -7,7 +7,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbid `const enum`",
-      recommended: "error",
     },
     messages: {
       constEnum: "Use of `const enum` is forbidden.",
@@ -17,11 +16,13 @@ const rule = createRule({
   create(context) {
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      "TSEnumDeclaration[const]"(node) {
-        context.report({
-          messageId: "constEnum",
-          node,
-        });
+      TSEnumDeclaration(node) {
+        if (node.const) {
+          context.report({
+            messageId: "constEnum",
+            node,
+          });
+        }
       },
     };
   },

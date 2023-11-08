@@ -7,7 +7,6 @@ const rule = createRule({
     docs: {
       description:
         "Forbids declaration files to import the current package using a global import or old versions with a relative import.",
-      recommended: "error",
     },
     messages: {
       useRelativeImport: "Declaration file should not use a global import of itself. Use a relative import.",

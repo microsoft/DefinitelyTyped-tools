@@ -1,10 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as strictExportDeclareModifiers from "../src/rules/strict-export-declare-modifiers";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("strict-export-declare-modifiers", strictExportDeclareModifiers, {
   invalid: [

@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/types": "^5.62.0",
-    "@typescript-eslint/utils": "^5.62.0"
+    "@typescript-eslint/types": "^6.10.0",
+    "@typescript-eslint/utils": "^6.10.0"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",
+    "@typescript-eslint/rule-tester": "^6.10.0",
     "typescript": "^5.2.2"
   },
   "engines": {

@@ -16,7 +16,6 @@ const rule = createRule({
   meta: {
     docs: {
       description: "Forbids signatures using a generic parameter only once.",
-      recommended: "error",
     },
     messages: {
       never: "Type parameter {{name}} is never used.",

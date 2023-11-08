@@ -8,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbids `[T]`, which should be `T[]`.",
-      recommended: "error",
     },
     messages: {
       singleElementTupleType: `Type [T] is a single-element tuple type. You probably meant T[].`,
