@@ -24,7 +24,7 @@
     "@definitelytyped/utils": "workspace:*",
     "@types/node": "^16.18.61",
     "@types/semver": "^7.5.5",
-    "pacote": "^13.6.2",
+    "pacote": "^17.0.4",
     "semver": "^7.5.4"
   },
   "devDependencies": {
