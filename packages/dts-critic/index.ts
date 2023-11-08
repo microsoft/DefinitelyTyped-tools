@@ -164,7 +164,8 @@ function main() {
       type: "boolean",
       default: false,
     })
-    .help().argv;
+    .help()
+    .parseSync();
 
   let opts;
   switch (argv.mode) {

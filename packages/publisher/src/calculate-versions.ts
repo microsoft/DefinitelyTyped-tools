@@ -22,8 +22,9 @@ const npmRegistryParallelism = 10;
 if (require.main === module) {
   const log = loggerWithErrors()[0];
   const options = { ...defaultLocalOptions };
-  if (yargs.argv.path) {
-    options.definitelyTypedPath = yargs.argv.path as string;
+  const argv = yargs.parseSync();
+  if (argv.path) {
+    options.definitelyTypedPath = argv.path as string;
   }
   logUncaughtErrors(async () =>
     calculateVersions(await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log), log),

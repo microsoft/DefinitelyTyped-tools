@@ -9,7 +9,8 @@ import { defaultLocalOptions } from "./lib/common";
 import publishPackages from "./publish-packages";
 
 if (require.main === module) {
-  const dry = !!yargs.argv.dry;
+  const argv = yargs.parseSync();
+  const dry = !!argv.dry;
   logUncaughtErrors(
     full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0]),
   );

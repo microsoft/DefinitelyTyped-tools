@@ -16,11 +16,12 @@ import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
 
 if (require.main === module) {
-  const dry = !!yargs.argv.dry;
+  const argv = yargs.parseSync();
+  const dry = !!argv.dry;
   logUncaughtErrors(async () => {
     const options = { ...defaultLocalOptions };
-    if (yargs.argv.path) {
-      options.definitelyTypedPath = yargs.argv.path as string;
+    if (argv.path) {
+      options.definitelyTypedPath = argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(

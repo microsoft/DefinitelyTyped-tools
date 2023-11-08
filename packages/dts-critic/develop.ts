@@ -440,6 +440,6 @@ function main() {
       getNonNpm,
     )
     .demandCommand(1)
-    .help().argv;
+    .help().parseSync();
 }
 main();

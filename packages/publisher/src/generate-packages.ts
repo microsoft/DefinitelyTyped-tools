@@ -35,12 +35,13 @@ import { outputDirectory } from "./util/util";
 const mitLicense = fs.readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (require.main === module) {
-  const tgz = !!yargs.argv.tgz;
+  const argv = yargs.parseSync();
+  const tgz = !!argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
     const options = { ...defaultLocalOptions };
-    if (yargs.argv.path) {
-      options.definitelyTypedPath = yargs.argv.path as string;
+    if (argv.path) {
+      options.definitelyTypedPath = argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, log);
     const allPackages = AllPackages.fromFS(dt);

@@ -51,7 +51,8 @@ function main() {
         throw new Error(`Rules ${unsupportedRules.join(", ")} are not supported at the moment.`);
       }
       return true;
-    }).argv;
+    })
+    .parseSync();
 
   if (args.package) {
     updatePackage(args.package, dtConfig(args.rules));
