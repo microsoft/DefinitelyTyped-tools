@@ -250,7 +250,6 @@ function isNpmPackage(name: string, header?: headerParser.Header, isNpmJson: IsN
 }
 
 function main() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   yargs
     .usage("$0 <command>")
     .command(
@@ -440,6 +439,7 @@ function main() {
       getNonNpm,
     )
     .demandCommand(1)
-    .help().parseSync();
+    .help()
+    .parseSync();
 }
 main();
