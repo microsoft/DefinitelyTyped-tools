@@ -48,6 +48,6 @@
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dts-critic#readme",
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=16.17.0"
   }
 }
