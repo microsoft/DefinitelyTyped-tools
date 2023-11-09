@@ -24,7 +24,7 @@ export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: 
     log.info(dataDirPath + " exists.");
     return downloadAndExtractFile(definitelyTypedZipUrl, log);
   }
-  const { error, stderr, stdout } = await exec("git diff --name-only", options.definitelyTypedPath);
+  const { error, stderr, stdout } = await exec("git", ["diff", "--name-only"], options.definitelyTypedPath);
   if (error) {
     throw new Error(error.message + ": " + (error as ExecException).cmd);
   }

@@ -143,10 +143,10 @@ async function installForValidate(log: Logger): Promise<void> {
     repository: {},
   });
 
-  const cmd = `npm install types-registry@next`;
-  log(cmd);
+  const cmd: [string, string[]] = ["npm", ["install", "types-registry@next"]];
+  log(`${cmd[0]} ${cmd[1].join(" ")}`);
   const err = (
-    await execAndThrowErrors(cmd, validateOutputPath, { ...process.env, COREPACK_ENABLE_STRICT: "0" })
+    await execAndThrowErrors(cmd[0], cmd[1], validateOutputPath, { ...process.env, COREPACK_ENABLE_STRICT: "0" })
   ).trim();
   if (err) {
     console.error(err);

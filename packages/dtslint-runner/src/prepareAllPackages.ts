@@ -25,12 +25,12 @@ export async function prepareAllPackages(definitelyTypedPath: string, clone: boo
 const npmRetryCount = 5;
 async function installAllDependencies(definitelyTypedPath: string): Promise<void> {
   console.log("Installing NPM dependencies...");
-  const cmd = `pnpm install --no-save`;
-  console.log(`  ${definitelyTypedPath}: ${cmd}`);
+  const cmd: [string, string[]] = ["pnpm", ["install", "--no-save"]];
+  console.log(`  ${definitelyTypedPath}: ${cmd[0]} ${cmd[1].join(" ")}}`);
   let lastError;
   for (let i = 0; i < npmRetryCount; i++) {
     try {
-      await execAndThrowErrors(cmd, definitelyTypedPath);
+      await execAndThrowErrors(cmd[0], cmd[1], definitelyTypedPath);
       lastError = undefined;
       break;
     } catch (e) {

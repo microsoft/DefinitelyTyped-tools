@@ -184,24 +184,25 @@ function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<s
 }
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {
+  type Command = [string, string[]];
   if (sha) {
-    const cmd = "git init DefinitelyTyped";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
+    const cmd: Command = ["git", ["init", "DefinitelyTyped"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
     cwd = `${cwd}/DefinitelyTyped`;
-    const commands = [
-      "git remote add origin https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-      "git fetch origin master --depth 50", // We can't clone the commit directly, so assume the commit is from
-      `git checkout ${sha}`, // recent history, pull down some recent commits, then check it out
+    const commands: Command[] = [
+      ["git", ["remote", "add", "origin", "https://github.com/DefinitelyTyped/DefinitelyTyped.git"]],
+      ["git", ["fetch", "origin", "master", "--depth", "50"]], // We can't clone the commit directly, so assume the commit is from
+      ["git", ["checkout", sha]], // recent history, pull down some recent commits, then check it out
     ];
-    for (const command of commands) {
-      console.log(command);
-      await execAndThrowErrors(command, cwd);
+    for (const cmd of commands) {
+      console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+      await execAndThrowErrors(cmd[0], cmd[1], cwd);
     }
   } else {
-    const cmd = "git clone https://github.com/DefinitelyTyped/DefinitelyTyped.git --depth 1";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
+    const cmd: Command = ["git", ["clone", "https://github.com/DefinitelyTyped/DefinitelyTyped.git", "--depth", "1"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
   }
 }
 
