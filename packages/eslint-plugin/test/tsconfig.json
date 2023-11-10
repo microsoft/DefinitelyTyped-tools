@@ -1,10 +1,13 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
+    "types": ["node", "jest"],
+    "composite": false,
+    "noEmit": true
   },
-    "files": [
-        "file.ts"
-    ]
+  "references": [
+    { "path": ".." },
+    { "path": "../../utils" }
+  ],
+  "exclude": ["fixtures"]
 }

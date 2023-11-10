@@ -1,5 +1,4 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
-import path from "path";
 
 import rule from "../src/rules/no-single-declare-module";
 
