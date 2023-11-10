@@ -1,4 +1,4 @@
-import { assertDefined, execAndThrowErrors, mapDefined, withoutStart } from "@definitelytyped/utils";
+import { assertDefined, execAndThrowErrors, mapDefined, normalizeSlashes, withoutStart } from "@definitelytyped/utils";
 import { sourceBranch, sourceRemote } from "./lib/settings";
 import { AllPackages, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
@@ -18,7 +18,8 @@ export async function getAffectedPackages(
   const errors = [];
   // No ... prefix; we only want packages that were actually edited.
   const changedPackageDirectories = await execAndThrowErrors(
-    `pnpm ls -r --depth -1 --parseable --filter '@types/**[${sourceRemote}/${sourceBranch}]'`,
+    "pnpm",
+    ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${sourceRemote}/${sourceBranch}]`],
     definitelyTypedPath
   );
 
@@ -31,7 +32,7 @@ export async function getAffectedPackages(
   const addedPackageDirectories = mapDefined(additions, (id) => id.typesDirectoryName);
   const allDependentDirectories = [];
   // Start the filter off with all packages that were touched along with those that depend on them.
-  const filters = [`--filter '...@types/**[${sourceRemote}/${sourceBranch}]'`];
+  const filters = ["--filter", `...@types/**[${sourceRemote}/${sourceBranch}]`];
   // For packages that have been deleted, they won't appear in the graph anymore; look for packages
   // that still depend on the package (but via npm) and manually add them.
   for (const d of deletions) {
@@ -41,7 +42,7 @@ export async function getAffectedPackages(
           "@types/" + d.typesDirectoryName === name &&
           (d.version === "*" || satisfies(formatTypingVersion(d.version), version))
         ) {
-          filters.push(`--filter '...${dep.name}'`);
+          filters.push("--filter", `...${dep.name}`);
           break;
         }
       }
@@ -51,7 +52,8 @@ export async function getAffectedPackages(
   for (let i = 0; i < filters.length; i += 100) {
     allDependentDirectories.push(
       await execAndThrowErrors(
-        `pnpm ls -r --depth -1 --parseable ${filters.slice(i, i + 100).join(" ")}`,
+        "pnpm",
+        ["ls", "-r", "--depth", "-1", "--parseable", ...filters.slice(i, i + 100)],
         definitelyTypedPath
       )
     );
@@ -85,7 +87,7 @@ export async function getAffectedPackagesWorker(
   return { packageNames, dependents };
 
   async function tryGetTypingsData(d: string) {
-    const dep = getDependencyFromFile(d + "/index.d.ts");
+    const dep = getDependencyFromFile(normalizeSlashes(d + "/index.d.ts"));
     if (!dep) return undefined;
     const data = await allPackages.tryGetTypingsData(dep);
     if (!data) return undefined;
@@ -94,6 +96,11 @@ export async function getAffectedPackagesWorker(
 }
 
 function getDirectoryName(dt: string): (line: string) => string | undefined {
-  return (line) =>
-    line && line !== dt ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt) : undefined;
+  dt = normalizeSlashes(dt);
+  return (line) => {
+    line = normalizeSlashes(line);
+    return line && line !== dt
+      ? assertDefined(withoutStart(line, dt + "/"), line + " is missing prefix " + dt)
+      : undefined;
+  };
 }
