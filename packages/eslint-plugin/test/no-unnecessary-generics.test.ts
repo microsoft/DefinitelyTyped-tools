@@ -6,7 +6,7 @@ const ruleTester = new RuleTester({
   parserOptions: {
     ecmaVersion: 2018,
     tsconfigRootDir: __dirname,
-    project: "./tsconfig.json",
+    project: "./tsconfig.test.json",
   },
   parser: "@typescript-eslint/parser",
 });

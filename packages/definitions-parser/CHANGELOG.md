@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.190
+
+### Patch Changes
+
+- 8272a9d2: Don't treat script dirs as types packages
+
 ## 0.0.189
 
 ### Patch Changes

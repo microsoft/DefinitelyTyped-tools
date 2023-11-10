@@ -1,5 +1,4 @@
 import { RuleTester } from "@typescript-eslint/rule-tester";
-import path from "path";
 
 import rule from "../src/rules/no-single-declare-module";
 
