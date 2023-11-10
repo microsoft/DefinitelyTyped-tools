@@ -1,5 +1,14 @@
 # @definitelytyped/retag
 
+## 0.0.191
+
+### Patch Changes
+
+- Updated dependencies [5d83a8ed]
+- Updated dependencies [5d83a8ed]
+  - @definitelytyped/utils@0.0.185
+  - @definitelytyped/definitions-parser@0.0.191
+
 ## 0.0.190
 
 ### Patch Changes
