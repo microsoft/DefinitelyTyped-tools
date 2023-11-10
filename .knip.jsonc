@@ -62,7 +62,8 @@
     },
     "packages/utils": {
       "entry": ["src/index.ts", "src/types/*.ts"],
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": ["@qiwi/npm-types"]
     }
   },
   "ignore": ["**/fixtures", "**/testsource", "**/dtslint/test/*/**", "**/*.d.ts"],
