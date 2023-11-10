@@ -22,7 +22,6 @@ export async function getAffectedPackages(
     ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${sourceRemote}/${sourceBranch}]`],
     definitelyTypedPath
   );
-  console.log("changedPackageDirectories", changedPackageDirectories);
 
   const git = gitChanges(diffs);
   if ("errors" in git) {
