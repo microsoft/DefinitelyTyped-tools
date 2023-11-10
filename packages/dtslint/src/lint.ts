@@ -18,7 +18,7 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
-  tsLocal: string | undefined,
+  tsLocal: string | undefined
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   const estree = await import(require.resolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }));
@@ -82,7 +82,7 @@ function testDependencies(
   version: TsVersion,
   dirPath: string,
   lintProgram: TsType.Program,
-  tsLocal: string | undefined,
+  tsLocal: string | undefined
 ): string | undefined {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   assert(version !== "local" || tsLocal);
@@ -105,7 +105,7 @@ function testDependencies(
 
   // Add an edge-case for someone needing to `npm install` in react when they first edit a DT module which depends on it - #226
   const cannotFindDepsDiags = diagnostics.find(
-    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"),
+    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module")
   );
   if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
     return `
@@ -196,7 +196,7 @@ function getLintConfig(
   tsconfigPath: string,
   minVersion: TsVersion,
   maxVersion: TsVersion,
-  tsLocal: string | undefined,
+  tsLocal: string | undefined
 ): IConfigurationFile {
   const configExists = pathExistsSync(expectedConfigPath);
   const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");

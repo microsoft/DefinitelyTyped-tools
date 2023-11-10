@@ -39,7 +39,7 @@ const rule = createRule({
       !sourceFile.statements.some(
         (s) =>
           s.kind === ts.SyntaxKind.ExportAssignment ||
-          (s.kind === ts.SyntaxKind.ExportDeclaration && !!(s as ts.ExportDeclaration).exportClause),
+          (s.kind === ts.SyntaxKind.ExportDeclaration && !!(s as ts.ExportDeclaration).exportClause)
       ) &&
       ts.isExternalModule(sourceFile);
 

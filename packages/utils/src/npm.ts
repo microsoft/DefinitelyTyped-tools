@@ -22,7 +22,7 @@ export class NpmPublishClient {
   private constructor(
     private readonly client: RegClient,
     private readonly auth: NeedToFixNpmRegistryClientTypings,
-    private readonly registry: string,
+    private readonly registry: string
   ) {}
 
   async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
@@ -46,9 +46,9 @@ export class NpmPublishClient {
                   metadata: metadata as NeedToFixNpmRegistryClientTypings,
                   body: body as NeedToFixNpmRegistryClientTypings,
                 },
-                cb,
+                cb
               );
-            }),
+            })
       );
     });
   }

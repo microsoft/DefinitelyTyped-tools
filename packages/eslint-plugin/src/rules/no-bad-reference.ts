@@ -85,7 +85,7 @@ const rule = createRule({
       const p = ref.text.startsWith(realNamePlusSlash)
         ? path.posix.join(
             path.posix.relative(containingDirectory, typesPackage.dir),
-            ref.text.slice(realNamePlusSlash.length),
+            ref.text.slice(realNamePlusSlash.length)
           )
         : ref.text;
 
