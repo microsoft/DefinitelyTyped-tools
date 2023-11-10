@@ -24,27 +24,27 @@ If editing this code, be sure to test on both full and shallow clones.
 */
 export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise<GitDiff[]> {
   try {
-    await run(`git rev-parse --verify ${sourceBranch}`);
+    await run("git", ["rev-parse", "--verify", sourceBranch]);
     // If this succeeds, we got the full clone.
   } catch (_) {
     // This is a shallow clone.
-    await run(`git fetch ${sourceRemote} ${sourceBranch}`);
-    await run(`git branch ${sourceBranch} FETCH_HEAD`);
+    await run("git", ["fetch", sourceRemote, sourceBranch]);
+    await run("git", ["branch", sourceBranch, "FETCH_HEAD"]);
   }
 
-  let diff = (await run(`git diff ${sourceBranch} --name-status`)).trim();
+  let diff = (await run("git", ["diff", sourceBranch, "--name-status"])).trim();
   if (diff === "") {
     // We are probably already on master, so compare to the last commit.
-    diff = (await run(`git diff ${sourceBranch}~1 --name-status`)).trim();
+    diff = (await run("git", ["diff", `${sourceBranch}~1`, "--name-status"])).trim();
   }
   return diff.split("\n").map((line) => {
     const [status, file] = line.split(/\s+/, 2);
     return { status: status.trim(), file: file.trim() } as GitDiff;
   });
 
-  async function run(cmd: string): Promise<string> {
-    log(`Running: ${cmd}`);
-    const stdout = await execAndThrowErrors(cmd, definitelyTypedPath);
+  async function run(cmd: string, args: readonly string[]): Promise<string> {
+    log(`Running: ${cmd} ${args.join(" ")}`);
+    const stdout = await execAndThrowErrors(cmd, args, definitelyTypedPath);
     log(stdout);
     return stdout;
   }

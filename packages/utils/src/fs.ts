@@ -1,5 +1,5 @@
 import assert from "assert";
-import { relative, resolve } from "path";
+import { relative, resolve, isAbsolute } from "path";
 import { assertDefined } from "./assertions";
 import fs from "fs";
 import { readFileSync, readJsonSync } from "./io";
@@ -175,7 +175,7 @@ export class InMemoryFS implements FS {
 
 export class DiskFS implements FS {
   constructor(private readonly rootPrefix: string) {
-    assert(rootPrefix.startsWith("/"), "DiskFS must use absolute paths");
+    assert(isAbsolute(rootPrefix), "DiskFS must use absolute paths");
     this.rootPrefix = ensureTrailingSlash(rootPrefix);
   }
 
