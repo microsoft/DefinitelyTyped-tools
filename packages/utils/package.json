@@ -21,6 +21,7 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@qiwi/npm-registry-client": "^8.9.1",
+    "@qiwi/npm-types": "^1.0.3",
     "@types/node": "^16.18.61",
     "charm": "^1.0.2",
     "minimatch": "^9.0.3",

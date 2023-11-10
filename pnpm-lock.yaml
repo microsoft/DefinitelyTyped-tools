@@ -248,7 +248,7 @@ importers:
         version: 8.44.7
       '@typescript-eslint/rule-tester':
         specifier: ^6.10.0
-        version: 6.10.0(@eslint/eslintrc@2.0.0)(eslint@8.35.0)(typescript@5.2.2)
+        version: 6.10.0(@eslint/eslintrc@2.1.3)(eslint@8.35.0)(typescript@5.2.2)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -353,6 +353,9 @@ importers:
       '@qiwi/npm-registry-client':
         specifier: ^8.9.1
         version: 8.9.1
+      '@qiwi/npm-types':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/node':
         specifier: ^16.18.61
         version: 16.18.61
@@ -1784,6 +1787,10 @@ packages:
       npmlog: 4.1.2
     dev: false
 
+  /@qiwi/npm-types@1.0.3:
+    resolution: {integrity: sha512-fHUud+Fo8JiGOPMmnVaOYd/crEnBM+qB8qXrSRz1AkYZAj8BtudFYcsiFweL6DcYXguq7+iXKdzx42dGCEPHiQ==}
+    dev: false
+
   /@sigstore/bundle@2.1.0:
     resolution: {integrity: sha512-89uOo6yh/oxaU8AeOUnVrTdVMcGk9Q1hJa7Hkvalc6G3Z3CupWk4Xe9djSgJm9fMkH69s0P0cVHUoKSOemLdng==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -2209,14 +2216,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@typescript-eslint/rule-tester@6.10.0(@eslint/eslintrc@2.0.0)(eslint@8.35.0)(typescript@5.2.2):
+  /@typescript-eslint/rule-tester@6.10.0(@eslint/eslintrc@2.1.3)(eslint@8.35.0)(typescript@5.2.2):
     resolution: {integrity: sha512-I0ZY+9ei73dlOuXwIYWsn/r/ue26Ygf4yEJPxeJRPI06YWDawmR1FI1dXL6ChAWVrmBQRvWep/1PxnV41zfcMA==}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       '@eslint/eslintrc': '>=2'
       eslint: '>=8'
     dependencies:
-      '@eslint/eslintrc': 2.0.0
+      '@eslint/eslintrc': 2.1.3
       '@typescript-eslint/typescript-estree': 6.10.0(typescript@5.2.2)
       '@typescript-eslint/utils': 6.10.0(eslint@8.35.0)(typescript@5.2.2)
       ajv: 6.12.6
