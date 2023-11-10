@@ -59,8 +59,8 @@ function defaultFS() {
           devDependencies: { "@types/jquery": "workspace:." },
         },
         undefined,
-        4
-      )
+        4,
+      ),
     )
     .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
     .set("index.d.ts", `type T = import("./types");\n`)
@@ -81,14 +81,14 @@ testo({
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("This package contains type definitions for")
+      expect.stringContaining("This package contains type definitions for"),
     );
   },
   readmeContainsContributors() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)")
+      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"),
     );
   },
   readmeContainsProjectName() {
@@ -100,7 +100,7 @@ testo({
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
+      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)"),
     );
   },
   readmeMultipleDependencies() {
@@ -109,8 +109,8 @@ testo({
     typing.dependencies["@types/example"] = "*";
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
       expect.stringContaining(
-        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"
-      )
+        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)",
+      ),
     );
   },
   readmeContainsSingleFileDTS() {

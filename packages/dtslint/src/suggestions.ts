@@ -44,7 +44,7 @@ export function addSuggestion<T>(ctx: WalkContext<T>, message: string, start?: n
     fs.writeFileSync(
       path.join(suggestionsDir, packageName + ".txt"),
       flag === "a" ? "\n" + formatSuggestion(suggestion) : formatSuggestion(suggestion),
-      { flag, encoding: "utf8" }
+      { flag, encoding: "utf8" },
     );
   } catch (e) {
     console.log(`Could not write suggestions for package ${packageName}. ${(e as Error).message || ""}`);

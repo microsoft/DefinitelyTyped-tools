@@ -74,13 +74,13 @@ describe("dtslint", () => {
       });
       it("allows paths: matching ../reference/index.d.ts", () => {
         expect(
-          checkTsconfig("reactive-dep", { ...base, paths: { "react-native": ["../react-native/index.d.ts"] } })
+          checkTsconfig("reactive-dep", { ...base, paths: { "react-native": ["../react-native/index.d.ts"] } }),
         ).toEqual([]);
         expect(
           checkTsconfig("reactive-dep", {
             ...base,
             paths: { "react-native": ["../react-native/index.d.ts"], react: ["../react/v16/index.d.ts"] },
-          })
+          }),
         ).toEqual([]);
       });
       it("forbids paths: mapping to multiple things", () => {
@@ -88,19 +88,19 @@ describe("dtslint", () => {
           checkTsconfig("reactive-dep", {
             ...base,
             paths: { "react-native": ["./index.d.ts", "../react-native/v0.68/index.d.ts"] },
-          })
+          }),
         ).toEqual([`reactive-dep/tsconfig.json: "paths" must map each module specifier to only one file.`]);
       });
       it("allows paths: matching ../reference/version/index.d.ts", () => {
         expect(checkTsconfig("reactive-dep", { ...base, paths: { react: ["../react/v16/index.d.ts"] } })).toEqual([]);
         expect(
-          checkTsconfig("reactive-dep", { ...base, paths: { "react-native": ["../react-native/v0.69/index.d.ts"] } })
+          checkTsconfig("reactive-dep", { ...base, paths: { "react-native": ["../react-native/v0.69/index.d.ts"] } }),
         ).toEqual([]);
         expect(
           checkTsconfig("reactive-dep/v1", {
             ...base,
             paths: { "react-native": ["../../react-native/v0.69/index.d.ts"] },
-          })
+          }),
         ).toEqual([]);
       });
       it("forbids paths: mapping to self-contained file", () => {
@@ -120,24 +120,24 @@ describe("dtslint", () => {
       });
       it("forbids paths: mismatching ../react-native/NOT/index.d.ts", () => {
         expect(
-          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/deep/index.d.ts"] } })
+          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/deep/index.d.ts"] } }),
         ).toEqual([`rrrr/tsconfig.json: "paths" must map 'react-native' to react-native's index.d.ts.`]);
       });
       it("forbids paths: mismatching ../react-native/version/NOT/index.d.ts", () => {
         expect(
-          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/v0.68/deep/index.d.ts"] } })
+          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/v0.68/deep/index.d.ts"] } }),
         ).toEqual([`rrrr/tsconfig.json: "paths" must map 'react-native' to react-native's index.d.ts.`]);
       });
       it("forbids paths: mismatching ../react-native/version/NOT.d.ts", () => {
         expect(
-          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/v0.70/other.d.ts"] } })
+          checkTsconfig("rrrr", { ...base, paths: { "react-native": ["../react-native/v0.70/other.d.ts"] } }),
         ).toEqual([`rrrr/tsconfig.json: "paths" must map 'react-native' to react-native's index.d.ts.`]);
       });
     });
     describe("assertPackageIsNotDeprecated", () => {
       it("disallows packages that are in notNeededPackages.json", () => {
         expect(() => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }')).toThrow(
-          "notNeededPackages.json has an entry for foo."
+          "notNeededPackages.json has an entry for foo.",
         );
       });
       it("allows packages that are not in notNeededPackages.json", () => {

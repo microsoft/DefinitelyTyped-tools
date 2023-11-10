@@ -9,7 +9,7 @@ export async function publishTypingsPackage(
   client: NpmPublishClient,
   changedTyping: ChangedTyping,
   dry: boolean,
-  log: Logger
+  log: Logger,
 ): Promise<void> {
   const { pkg, version, latestVersion } = changedTyping;
   await common(client, pkg, log, dry);
@@ -29,7 +29,7 @@ export async function publishNotNeededPackage(
   client: NpmPublishClient,
   pkg: NotNeededPackage,
   dry: boolean,
-  log: Logger
+  log: Logger,
 ): Promise<void> {
   log(`Deprecating ${pkg.name}`);
   await common(client, pkg, log, dry);

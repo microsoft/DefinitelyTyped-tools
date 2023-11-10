@@ -54,7 +54,7 @@ export function logger(): [Logger, () => Log] {
 
 /** Helper for creating `info` and `error` loggers together. */
 function loggerWithErrorsHelper(
-  loggerOrQuietLogger: () => [Logger, () => Log]
+  loggerOrQuietLogger: () => [Logger, () => Log],
 ): [LoggerWithErrors, () => LogWithErrors] {
   const [info, infoResult] = loggerOrQuietLogger();
   const [error, errorResult] = loggerOrQuietLogger();
@@ -85,7 +85,7 @@ export function moveLogs(dest: Logger, src: Log, mapper?: (message: string) => s
 export function moveLogsWithErrors(
   dest: LoggerWithErrors,
   { infos, errors }: LogWithErrors,
-  mapper?: (message: string) => string
+  mapper?: (message: string) => string,
 ): void {
   moveLogs(dest.info, infos, mapper);
   moveLogs(dest.error, errors, mapper);

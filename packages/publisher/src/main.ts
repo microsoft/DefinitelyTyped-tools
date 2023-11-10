@@ -27,6 +27,6 @@ export default async function main() {
       definitelyTypedPath,
       progress: false,
     },
-    log
+    log,
   );
 }

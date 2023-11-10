@@ -17,7 +17,7 @@ export class DTMock {
             asOfVersion: "1.2.3",
           },
         },
-      })
+      }),
     );
     this.fs = new InMemoryFS(this.root, "/DefinitelyTyped/");
   }
@@ -85,7 +85,7 @@ export function createMockDT() {
     `
 import * as React from 'react';
 export const drills: number;
-`
+`,
   );
   boring.set(
     "secondary.d.ts",
@@ -99,20 +99,20 @@ declare module "boring/fake" {
 declare module "other" {
     export const augmented: true;
 }
-`
+`,
   );
   boring.set(
     "tertiary.d.ts",
     `
 import { stuff } from 'things';
 export var stock: number;
-`
+`,
   );
   boring.set(
     "quaternary.d.ts",
     `
 export const mammoths: object;
-`
+`,
   );
   boring.set(
     "commonjs.d.ts",
@@ -120,20 +120,20 @@ export const mammoths: object;
 import vortex = require('vorticon');
 declare const australia: {};
 export = australia;
-`
+`,
   );
   boring.set(
     "v1.d.ts",
     `
 export const inane: true | false;
-`
+`,
   );
   boring.set(
     "untested.d.ts",
     `
 import { help } from 'manual';
 export const fungible: false;
-`
+`,
   );
   boring.set(
     "boring-tests.ts",
@@ -143,7 +143,7 @@ import { drills } from "boring";
 import { hovercars } from "boring/secondary";
 import australia = require('boring/commonjs');
 import { inane } from "boring/v1";
-`
+`,
   );
   boring.set("tsconfig.json", tsconfig(["boring-tests.ts"]));
   boring.set(
@@ -155,7 +155,7 @@ import { inane } from "boring/v1";
       "@types/vorticon": "*",
       "@types/manual": "*",
       "@types/super-big-fun-hus": "*",
-    })
+    }),
   );
 
   const globby = dt.pkgDir("globby");
@@ -164,27 +164,27 @@ import { inane } from "boring/v1";
     `/// <reference path="./sneaky.d.ts" />
 /// <reference types="andere/snee" />
 declare var x: number
-`
+`,
   );
 
   globby.set(
     "sneaky.d.ts",
     `
 declare var ka: number
-`
+`,
   );
   globby.set(
     "globby-tests.ts",
     `
 var z = x;
-`
+`,
   );
   const tests = globby.subdir("test");
   tests.set(
     "other-tests.ts",
     `
 var z = y;
-`
+`,
   );
   globby.set("tsconfig.json", tsconfig(["globby-tests.ts", "test/other-tests.ts"]));
   globby.set("package.json", packageJson("globby", "1.0", { "@types/andere": "*" }));
@@ -200,18 +200,18 @@ var z = y;
   hasOlderTestDependency.set(
     "has-older-test-dependency-tests.ts",
     `import "jquery";
-`
+`,
   );
   hasOlderTestDependency.set(
     "tsconfig.json",
     JSON.stringify({
       compilerOptions: {},
       files: ["index.d.ts", "has-older-test-dependency-tests.ts"],
-    })
+    }),
   );
   hasOlderTestDependency.set(
     "package.json",
-    packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" })
+    packageJson("has-older-test-dependency", "1.0", { "@types/jquery": "1.0" }),
   );
 
   const jquery = dt.pkgDir("jquery");
@@ -219,20 +219,20 @@ var z = y;
     "JQuery.d.ts",
     `
 declare var jQuery: 1;
-`
+`,
   );
   jquery.set(
     "index.d.ts",
     `/// <reference path="JQuery.d.ts" />
 
 export = jQuery;
-`
+`,
   );
   jquery.set(
     "jquery-tests.ts",
     `
 console.log(jQuery);
-`
+`,
   );
   jquery.set("tsconfig.json", tsconfig(["jquery-tests.ts"]));
   jquery.set("package.json", packageJson("jquery", "3.3", {}));
@@ -241,7 +241,7 @@ console.log(jQuery);
   scoped.set(
     "index.d.ts",
     `
-`
+`,
   );
   scoped.set("package.json", packageJson("wordpress__plugins", "1.0", {}));
   scoped.set(
@@ -253,7 +253,7 @@ console.log(jQuery);
         },
       },
       files: ["index.d.ts"],
-    })
+    }),
   );
 
   return dt;

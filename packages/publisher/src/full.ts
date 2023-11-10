@@ -11,7 +11,7 @@ import publishPackages from "./publish-packages";
 if (require.main === module) {
   const dry = !!yargs.argv.dry;
   logUncaughtErrors(
-    full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0])
+    full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0]),
   );
 }
 
@@ -20,7 +20,7 @@ export default async function full(
   githubAccessToken: string,
   fetcher: Fetcher,
   options: ParseDefinitionsOptions,
-  log: LoggerWithErrors
+  log: LoggerWithErrors,
 ): Promise<void> {
   clean();
   const dt = await getDefinitelyTyped(options, log);

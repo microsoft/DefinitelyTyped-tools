@@ -42,10 +42,10 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
         pkg: await allPackages.getTypingsData(id),
         version,
         latestVersion,
-      }))
+      })),
     ),
     changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>
-      assertDefined(allPackages.getNotNeededPackage(id))
+      assertDefined(allPackages.getNotNeededPackage(id)),
     ),
   };
 }

@@ -26,7 +26,7 @@ if (require.main === module) {
     options.definitelyTypedPath = yargs.argv.path as string;
   }
   logUncaughtErrors(async () =>
-    calculateVersions(await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log), log)
+    calculateVersions(await getDefinitelyTyped(process.env.GITHUB_ACTIONS ? defaultRemoteOptions : options, log), log),
   );
 }
 
@@ -39,12 +39,12 @@ export default async function calculateVersions(dt: FS, log: LoggerWithErrors): 
 
 async function computeAndSaveChangedPackages(
   allPackages: AllPackages,
-  log: LoggerWithErrors
+  log: LoggerWithErrors,
 ): Promise<ChangedPackages> {
   const cp = await computeChangedPackages(allPackages, log);
   const json: ChangedPackagesJson = {
     changedTypings: cp.changedTypings.map(
-      ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion })
+      ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion }),
     ),
     changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.typesDirectoryName),
   };
@@ -74,7 +74,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
           throw reason.code === "E404"
             ? new Error(
                 `'${pkg.name}' depends on '${name}' which does not exist on npm. All dependencies must exist.`,
-                { cause: reason }
+                { cause: reason },
               )
             : reason;
         });

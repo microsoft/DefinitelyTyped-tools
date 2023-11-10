@@ -11,7 +11,7 @@ export function testo(o: { [s: string]: () => void }) {
 export function createTypingsVersionRaw(
   libraryName: string,
   dependencies: { readonly [name: string]: string },
-  devDependencies: { readonly [name: string]: string }
+  devDependencies: { readonly [name: string]: string },
 ): TypingsVersionsRaw {
   return {
     "1.0": {

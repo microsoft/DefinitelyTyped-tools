@@ -163,7 +163,7 @@ function doRequest(options: FetchOptions, makeRequest: typeof request, agent?: A
         res.on("end", () => {
           resolve(text);
         });
-      }
+      },
     );
     if (options.body !== undefined) {
       req.write(options.body);
@@ -202,7 +202,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
       .get(url, { timeout: connectionTimeout }, (response) => {
         if (response.statusCode !== 200) {
           return rejectAndClearTimeout(
-            new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`)
+            new Error(`DefinitelyTyped download failed with status code ${response.statusCode}`),
           );
         }
 

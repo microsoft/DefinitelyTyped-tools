@@ -45,7 +45,7 @@ if (require.main === module) {
   logUncaughtErrors(async () => {
     const dt = await getDefinitelyTyped(
       process.env.GITHUB_ACTIONS ? defaultRemoteOptions : defaultLocalOptions,
-      loggerWithErrors()[0]
+      loggerWithErrors()[0],
     );
     await publishRegistry(dt, AllPackages.fromFS(dt), dry);
   });
@@ -117,7 +117,7 @@ async function publish(
   packageJson: {},
   version: string,
   dry: boolean,
-  log: Logger
+  log: Logger,
 ): Promise<void> {
   await client.publish(registryOutputPath, packageJson, dry, log);
   // Sleep for 60 seconds to let NPM update.
@@ -191,13 +191,13 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
       case "number":
         assert(
           newer[key] >= older[key],
-          `${key} in ${parent} did not match: newer[key] (${newer[key]}) < older[key] (${older[key]})`
+          `${key} in ${parent} did not match: newer[key] (${newer[key]}) < older[key] (${older[key]})`,
         );
         break;
       case "boolean":
         assert(
           newer[key] === older[key],
-          `${key} in ${parent} did not match: newer[key] (${newer[key]}) !== older[key] (${older[key]})`
+          `${key} in ${parent} did not match: newer[key] (${newer[key]}) !== older[key] (${older[key]})`,
         );
         break;
       default:
@@ -234,14 +234,14 @@ async function generateRegistry(typings: readonly TypingsData[]): Promise<Regist
         typings.map(async (typing) => [
           typing.typesDirectoryName,
           filterTags((await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"]),
-        ])
-      )
+        ]),
+      ),
     ),
   };
 
   function filterTags(tags: pacote.Packument["dist-tags"]): { readonly [tag: string]: string } {
     return Object.fromEntries(
-      Object.entries(tags).filter(([tag, version]) => tag === "latest" || version !== tags.latest)
+      Object.entries(tags).filter(([tag, version]) => tag === "latest" || version !== tags.latest),
     );
   }
 }
