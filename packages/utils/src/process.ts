@@ -29,7 +29,7 @@ export async function execAndThrowErrors(
   cmd: string,
   args: readonly string[],
   cwd?: string,
-  env?: NodeJS.ProcessEnv
+  env?: NodeJS.ProcessEnv,
 ): Promise<string> {
   const { error, stdout, stderr } = await exec(cmd, args, cwd, env);
   if (error) {
