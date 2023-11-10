@@ -257,19 +257,15 @@ export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.
   return gzip(createTar(dir, onError));
 }
 
-// TODO(jakebailey): https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67367
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const Pack_ = Pack as unknown as new (options: { cwd: string; filter: (path: string, stat: fs.Stats) => boolean }) => Pack;
-
 function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
   const dirSegments = resolve(dir).split(sep);
   const parentDir = dirSegments.slice(0, dirSegments.length - 1).join(sep);
   const entryToAdd = dirSegments[dirSegments.length - 1];
-  const packer = new Pack_({ cwd: parentDir, filter: addDirectoryExecutablePermission });
+  const packer = new Pack({ cwd: parentDir, filter: addDirectoryExecutablePermission });
   packer.on("error", onError);
   const stream = packer.add(entryToAdd);
   packer.end();
-  // TODO(jakebailey): types need to be updated
+  // Shady, but minipass is compatible enough with ReadableStream for this use.
   return stream as unknown as NodeJS.ReadableStream;
 }
 
