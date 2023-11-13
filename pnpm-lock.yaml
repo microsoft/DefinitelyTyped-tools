@@ -79,13 +79,13 @@ importers:
       semver:
         specifier: ^7.5.4
         version: 7.5.4
-      typescript:
-        specifier: '*'
-        version: 5.2.2
     devDependencies:
       '@types/pacote':
         specifier: ^11.1.8
         version: 11.1.8
+      typescript:
+        specifier: next
+        version: 5.4.0-dev.20231113
 
   packages/dts-critic:
     dependencies:
@@ -102,8 +102,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1
       typescript:
-        specifier: '*'
-        version: 5.2.2
+        specifier: next
+        version: 5.4.0-dev.20231113
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -6824,6 +6824,7 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /typescript@5.4.0-dev.20231113:
     resolution: {integrity: sha512-5K165L/tImARYZDKwwT2ER9qKt0n56E8jxldXfAVpq8qNqX5o2SvpoPrzCi+eddkHJHl1gPf26xiE+7R6//1Gg==}

@@ -28,7 +28,8 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@types/pacote": "^11.1.8"
+    "@types/pacote": "^11.1.8",
+    "typescript": "next"
   },
   "peerDependencies": {
     "typescript": "*"
