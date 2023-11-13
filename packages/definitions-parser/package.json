@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "typescript": "next"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "typescript": "*"
