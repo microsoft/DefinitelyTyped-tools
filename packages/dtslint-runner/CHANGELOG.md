@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.196
+
+### Patch Changes
+
+- 5d83a8ed: Fix command execution, paths on Windows
+- Updated dependencies [5d83a8ed]
+- Updated dependencies [5d83a8ed]
+  - @definitelytyped/utils@0.0.185
+  - @definitelytyped/definitions-parser@0.0.191
+  - @definitelytyped/dtslint@0.0.192
+
 ## 0.0.195
 
 ### Patch Changes

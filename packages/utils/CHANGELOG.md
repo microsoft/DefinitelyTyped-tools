@@ -1,5 +1,12 @@
 # @definitelytyped/utils
 
+## 0.0.185
+
+### Patch Changes
+
+- 5d83a8ed: Fix loading on Windows
+- 5d83a8ed: Fix command execution, paths on Windows
+
 ## 0.0.184
 
 ### Patch Changes
