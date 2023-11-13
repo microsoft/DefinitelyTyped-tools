@@ -45,7 +45,7 @@
     "@types/eslint": "^8.44.7",
     "@types/json-stable-stringify": "^1.0.36",
     "@types/strip-json-comments": "^3.0.0",
-    "typescript": "5.4.0-dev.20231113"
+    "typescript": "next"
   },
   "engines": {
     "node": ">=16.17.0"
