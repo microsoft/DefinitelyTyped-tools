@@ -53,8 +53,8 @@ function getStatements(decl: ts.Declaration): readonly ts.Statement[] | undefine
   return ts.isSourceFile(decl)
     ? decl.statements
     : ts.isModuleDeclaration(decl)
-    ? getModuleDeclarationStatements(decl)
-    : undefined;
+      ? getModuleDeclarationStatements(decl)
+      : undefined;
 }
 
 function getModuleDeclarationStatements(node: ts.ModuleDeclaration): readonly ts.Statement[] | undefined {
