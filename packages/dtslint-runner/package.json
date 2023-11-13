@@ -26,17 +26,17 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/dtslint": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@octokit/rest": "^16.43.2",
-    "fs-extra": "^9.0.0",
-    "glob": "^8.1.0",
-    "semver": "^7.3.7",
+    "@octokit/rest": "^19.0.13",
+    "semver": "^7.5.4",
     "stats-lite": "^2.2.0",
-    "yargs": "^15.3.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.1.0",
-    "@types/glob": "^8.1.0",
-    "@types/semver": "^7.5.2",
-    "@types/stats-lite": "^2.2.0"
+    "@types/semver": "^7.5.5",
+    "@types/stats-lite": "^2.2.2",
+    "glob": "^10.3.10"
+  },
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

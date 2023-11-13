@@ -22,15 +22,15 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "pacote": "^13.6.1",
-    "semver": "^7.3.7",
-    "yargs": "^15.3.1"
+    "pacote": "^17.0.4",
+    "semver": "^7.5.4",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^10.17.21",
-    "@types/pacote": "^11.1.5",
-    "@types/semver": "^7.5.2",
-    "@types/yargs": "^15.0.5"
+    "@types/node": "^16.18.61",
+    "@types/pacote": "^11.1.8",
+    "@types/semver": "^7.5.5",
+    "@types/yargs": "^17.0.31"
   },
   "main": "dist/index.js",
   "bin": {
@@ -38,5 +38,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

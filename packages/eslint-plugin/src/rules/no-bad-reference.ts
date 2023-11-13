@@ -18,7 +18,6 @@ const rule = createRule({
     docs: {
       description:
         "Forbids bad references, including those that resolve outside of the package or path references in non-declaration files.",
-      recommended: "error",
     },
     messages: {
       importOutside:
@@ -85,7 +84,7 @@ const rule = createRule({
       const p = ref.text.startsWith(realNamePlusSlash)
         ? path.posix.join(
             path.posix.relative(containingDirectory, typesPackage.dir),
-            ref.text.slice(realNamePlusSlash.length)
+            ref.text.slice(realNamePlusSlash.length),
           )
         : ref.text;
 

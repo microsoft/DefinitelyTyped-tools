@@ -1,6 +1,6 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { pathExistsSync } from "fs-extra";
+import fs from "fs";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 import { deepEquals } from "@definitelytyped/utils";
@@ -8,10 +8,10 @@ import { deepEquals } from "@definitelytyped/utils";
 import { readJson, packageNameFromPath } from "./util";
 export function checkPackageJson(
   dirPath: string,
-  typesVersions: readonly AllTypeScriptVersion[]
+  typesVersions: readonly AllTypeScriptVersion[],
 ): header.Header | string[] {
   const pkgJsonPath = joinPaths(dirPath, "package.json");
-  if (!pathExistsSync(pkgJsonPath)) {
+  if (!fs.existsSync(pkgJsonPath)) {
     throw new Error(`${dirPath}: Missing 'package.json'`);
   }
   return header.validatePackageJson(packageNameFromPath(dirPath), readJson(pkgJsonPath), typesVersions);
@@ -39,8 +39,8 @@ export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): str
     if (!deepEquals(expected, actual)) {
       errors.push(
         `Expected compilerOptions[${JSON.stringify(key)}] === ${JSON.stringify(expected)}, but got ${JSON.stringify(
-          actual
-        )}`
+          actual,
+        )}`,
       );
     }
   }
@@ -111,7 +111,7 @@ export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): str
   if (options.types && options.types.length) {
     errors.push(
       'Use `/// <reference types="..." />` directives in source files and ensure ' +
-        'that the "types" field in your tsconfig is an empty array.'
+        'that the "types" field in your tsconfig is an empty array.',
     );
   }
   if (options.paths) {

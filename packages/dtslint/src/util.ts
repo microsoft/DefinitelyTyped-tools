@@ -1,5 +1,5 @@
 import assert = require("assert");
-import { pathExistsSync, readFileSync } from "fs-extra";
+import fs from "fs";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
@@ -9,7 +9,7 @@ export function packageNameFromPath(path: string): string {
   return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base;
 }
 export function readJson(path: string) {
-  const text = readFileSync(path, "utf-8");
+  const text = fs.readFileSync(path, "utf-8");
   return JSON.parse(stripJsonComments(text));
 }
 
@@ -19,7 +19,7 @@ export function failure(ruleName: string, s: string): string {
 
 export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
   const tsconfigPath = join(dirPath, "tsconfig.json");
-  if (!pathExistsSync(tsconfigPath)) {
+  if (!fs.existsSync(tsconfigPath)) {
     throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
   }
   return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;

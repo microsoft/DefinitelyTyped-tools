@@ -8,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Don't use an ambient module declaration of the current package; use a normal module.",
-      recommended: "error",
     },
     messages: {
       noDeclareCurrentPackage:

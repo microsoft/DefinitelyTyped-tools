@@ -83,7 +83,8 @@ if (require.main === module) {
         default: "",
       },
     })
-    .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
+    .wrap(Math.min(yargs.terminalWidth(), 120))
+    .parseSync();
 
   const options: RunDTSLintOptions = {
     definitelyTypedAcquisition: args.clone

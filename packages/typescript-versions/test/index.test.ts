@@ -55,7 +55,7 @@ describe("tagsToUpdate", () => {
   });
   it("allows 4.5 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("4.5")).toEqual(
-      TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
+      TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest"),
     );
   });
 });

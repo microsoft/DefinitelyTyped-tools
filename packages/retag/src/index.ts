@@ -24,11 +24,13 @@ if (require.main === module) {
 }
 
 async function main() {
-  const { dry, path, name } = yargs.options({
-    dry: { type: "boolean", default: false },
-    path: { type: "string", default: "../DefinitelyTyped" },
-    name: { type: "string" },
-  }).argv;
+  const { dry, path, name } = yargs
+    .options({
+      dry: { type: "boolean", default: false },
+      path: { type: "string", default: "../DefinitelyTyped" },
+      name: { type: "string" },
+    })
+    .parseSync();
   await tag(dry, path, name);
 }
 
@@ -69,7 +71,7 @@ export async function updateTypeScriptVersionTags(
   version: string,
   client: NpmPublishClient,
   log: Logger,
-  dry: boolean
+  dry: boolean,
 ): Promise<void> {
   const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
   const name = pkg.name;
@@ -88,7 +90,7 @@ export async function updateLatestTag(
   version: string,
   client: NpmPublishClient,
   log: Logger,
-  dry: boolean
+  dry: boolean,
 ): Promise<void> {
   log(`   but tag ${fullName}@${version} as "latest"`);
   if (dry) {
@@ -105,7 +107,7 @@ export async function getLatestTypingVersion(pkg: TypingsData): Promise<string> 
 export async function fetchTypesPackageVersionInfo(
   pkg: TypingsData,
   canPublish: boolean,
-  log?: LoggerWithErrors
+  log?: LoggerWithErrors,
 ): Promise<{ version: string; needsPublish: boolean }> {
   const spec = `${pkg.name}@~${pkg.major}.${pkg.minor}`;
   let info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, offline: true }).catch((reason) => {
@@ -129,7 +131,7 @@ export async function fetchTypesPackageVersionInfo(
     // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
     assert(
       pkg.typesDirectoryName === "angular-ui-router" || pkg.typesDirectoryName === "ui-router-extras",
-      `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
+      `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`,
     );
   }
   const needsPublish = canPublish && pkg.getContentHash() !== info.typesPublisherContentHash;

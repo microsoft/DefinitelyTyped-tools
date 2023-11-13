@@ -13,14 +13,14 @@ export interface PreparePackagesResult {
 export async function getAffectedPackages(
   allPackages: AllPackages,
   diffs: GitDiff[],
-  definitelyTypedPath: string
+  definitelyTypedPath: string,
 ): Promise<{ errors: string[] } | PreparePackagesResult> {
   const errors = [];
   // No ... prefix; we only want packages that were actually edited.
   const changedPackageDirectories = await execAndThrowErrors(
     "pnpm",
     ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${sourceRemote}/${sourceBranch}]`],
-    definitelyTypedPath
+    definitelyTypedPath,
   );
 
   const git = gitChanges(diffs);
@@ -54,8 +54,8 @@ export async function getAffectedPackages(
       await execAndThrowErrors(
         "pnpm",
         ["ls", "-r", "--depth", "-1", "--parseable", ...filters.slice(i, i + 100)],
-        definitelyTypedPath
-      )
+        definitelyTypedPath,
+      ),
     );
   }
   return getAffectedPackagesWorker(
@@ -63,7 +63,7 @@ export async function getAffectedPackages(
     changedPackageDirectories,
     addedPackageDirectories,
     allDependentDirectories,
-    definitelyTypedPath
+    definitelyTypedPath,
   );
 }
 /** This function is exported for testing, since it's determined entirely by its inputs. */
@@ -72,7 +72,7 @@ export async function getAffectedPackagesWorker(
   changedOutput: string,
   additions: string[],
   dependentOutputs: string[],
-  definitelyTypedPath: string
+  definitelyTypedPath: string,
 ): Promise<PreparePackagesResult> {
   const dt = resolve(definitelyTypedPath);
   const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
@@ -82,7 +82,7 @@ export async function getAffectedPackagesWorker(
     ...(await Promise.all(changedDirs.map(tryGetTypingsData))).filter((d): d is string => !!d),
   ]);
   const dependents = new Set(
-    (await Promise.all(dependentDirs.map(tryGetTypingsData))).filter((d): d is string => !!d && !packageNames.has(d))
+    (await Promise.all(dependentDirs.map(tryGetTypingsData))).filter((d): d is string => !!d && !packageNames.has(d)),
   );
   return { packageNames, dependents };
 

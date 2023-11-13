@@ -1,9 +1,7 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 import * as noUselessFiles from "../src/rules/no-useless-files";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("@definitelytyped/no-useless-files", noUselessFiles, {
   invalid: [

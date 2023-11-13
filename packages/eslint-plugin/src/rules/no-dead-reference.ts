@@ -7,7 +7,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Ensures that all `/// <reference>` comments go at the top of the file.",
-      recommended: "error",
     },
     messages: {
       referenceAtTop: "`/// <reference>` directive must be at top of file to take effect.",

@@ -4,7 +4,6 @@ import fs = require("fs");
 import cp = require("child_process");
 import path = require("path");
 import semver = require("semver");
-import rimraf = require("rimraf");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 import * as tmp from "tmp";
@@ -64,16 +63,16 @@ export function dtsCritic(
   dtsPath: string,
   sourcePath?: string,
   options: CheckOptions = defaultOpts,
-  debug = false
+  debug = false,
 ): CriticError[] {
   if (!commandExistsSync("tar")) {
     throw new Error(
-      "You need to have tar installed to run dts-critic, you can get it from https://www.gnu.org/software/tar"
+      "You need to have tar installed to run dts-critic, you can get it from https://www.gnu.org/software/tar",
     );
   }
   if (!commandExistsSync("npm")) {
     throw new Error(
-      "You need to have npm installed to run dts-critic, you can get it from https://www.npmjs.com/get-npm"
+      "You need to have npm installed to run dts-critic, you can get it from https://www.npmjs.com/get-npm",
     );
   }
 
@@ -119,7 +118,7 @@ If you want to check the declaration against the JavaScript source code, you mus
       const errors = checkSource(name, dtsPath, sourceEntry, options.errors, debug);
       if (packagePath) {
         // Delete the source afterward to avoid running out of space
-        rimraf.sync(packagePath);
+        fs.rmSync(packagePath, { recursive: true, force: true });
       }
       return errors;
     }
@@ -131,7 +130,7 @@ If you want to check the declaration against the JavaScript source code, you mus
 function parsePackageJson(
   packageName: string,
   packageJson: Record<string, unknown>,
-  dirPath: string
+  dirPath: string,
 ): headerParser.Header | undefined {
   const result = headerParser.validatePackageJson(packageName, packageJson, headerParser.getTypesVersions(dirPath));
   if (Array.isArray(result)) console.log(result.join("\n"));
@@ -143,7 +142,7 @@ export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, Er
 function main() {
   const argv = yargs
     .usage(
-      "$0 --dts path-to-d.ts [--js path-to-source] [--mode mode] [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm."
+      "$0 --dts path-to-d.ts [--js path-to-source] [--mode mode] [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm.",
     )
     .option("dts", {
       describe: "Path of declaration file to be critiqued.",
@@ -165,7 +164,8 @@ function main() {
       type: "boolean",
       default: false,
     })
-    .help().argv;
+    .help()
+    .parseSync();
 
   let opts;
   switch (argv.mode) {
@@ -341,7 +341,7 @@ export function checkSource(
   dtsPath: string,
   srcPath: string,
   enabledErrors: Map<ExportErrorKind, boolean>,
-  debug: boolean
+  debug: boolean,
 ): ExportError[] {
   const diagnostics = checkExports(name, dtsPath, srcPath);
   if (debug) {
@@ -447,7 +447,7 @@ To learn more about 'export =' syntax, see ${exportEqualsLink}.`,
     name,
     sourceDiagnostics.exportType,
     dtsDiagnostics.exportType,
-    dtsDiagnostics.exportKind
+    dtsDiagnostics.exportKind,
   );
 
   if (isSuccess(compatibility)) {
@@ -505,7 +505,7 @@ function getJsExportKind(sourceFile: ts.SourceFile): InferenceResult<JsExportKin
 function getJSExportType(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
-  exportKind: InferenceResult<JsExportKind>
+  exportKind: InferenceResult<JsExportKind>,
 ): InferenceResult<ts.Type> {
   if (isSuccess(exportKind)) {
     switch (exportKind.result) {
@@ -621,7 +621,7 @@ function createDtProgram(dtsPath: string): ts.Program {
 function getDtsModuleSymbol(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
-  name: string
+  name: string,
 ): InferenceResult<ts.Symbol> {
   if (matches(sourceFile, (node) => ts.isModuleDeclaration(node))) {
     const npmName = dtToNpmName(name);
@@ -655,7 +655,7 @@ function getDtsExportType(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
   symbolResult: InferenceResult<ts.Symbol>,
-  exportKindResult: InferenceResult<DtsExportKind>
+  exportKindResult: InferenceResult<DtsExportKind>,
 ): InferenceResult<ts.Type> {
   if (isSuccess(symbolResult) && isSuccess(exportKindResult)) {
     const symbol = symbolResult.result;
@@ -726,7 +726,7 @@ function exportTypesCompatibility(
   name: string,
   sourceType: InferenceResult<ts.Type>,
   dtsType: InferenceResult<ts.Type>,
-  dtsExportKind: InferenceResult<DtsExportKind>
+  dtsExportKind: InferenceResult<DtsExportKind>,
 ): InferenceResult<MissingExport[]> {
   if (isError(sourceType)) {
     return inferenceError("Could not get type of exports of source module.");

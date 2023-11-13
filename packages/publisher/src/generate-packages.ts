@@ -1,5 +1,5 @@
 import { makeTypesVersionsForPackageJson, License } from "@definitelytyped/header-parser";
-import { emptyDir, mkdir, mkdirp, readFileSync } from "fs-extra";
+import fs from "fs";
 import path = require("path");
 import yargs = require("yargs");
 
@@ -32,15 +32,16 @@ import { outputDirPath, sourceBranch } from "./lib/settings";
 import { ChangedPackages, readChangedPackages } from "./lib/versions";
 import { outputDirectory } from "./util/util";
 
-const mitLicense = readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
+const mitLicense = fs.readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (require.main === module) {
-  const tgz = !!yargs.argv.tgz;
+  const argv = yargs.parseSync();
+  const tgz = !!argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];
     const options = { ...defaultLocalOptions };
-    if (yargs.argv.path) {
-      options.definitelyTypedPath = yargs.argv.path as string;
+    if (argv.path) {
+      options.definitelyTypedPath = argv.path as string;
     }
     const dt = await getDefinitelyTyped(options, log);
     const allPackages = AllPackages.fromFS(dt);
@@ -52,8 +53,8 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   const [log, logResult] = logger();
   log("\n## Generating packages");
 
-  await mkdirp(outputDirPath);
-  await emptyDir(outputDirPath);
+  await fs.promises.rm(outputDirPath, { recursive: true, force: true });
+  await fs.promises.mkdir(outputDirPath, { recursive: true });
 
   // warm the cache so we don't request this from GH concurrently
   await getAllowedPackageJsonDependencies();
@@ -82,7 +83,7 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
 
   await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
   await Promise.all(
-    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file)))
+    typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file))),
   );
 }
 
@@ -95,7 +96,7 @@ ${pkg.libraryName} provides its own type definitions, so you don't need ${pkg.na
 }
 
 async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: string): Promise<void> {
-  await mkdir(outputDirectory(pkg));
+  await fs.promises.mkdir(outputDirectory(pkg));
 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
@@ -112,7 +113,7 @@ async function outputFilePath(pkg: AnyPackage, filename: string): Promise<string
   const full = joinPaths(outputDirectory(pkg), filename);
   const dir = path.dirname(full);
   if (dir !== outputDirectory(pkg)) {
-    await mkdirp(dir);
+    await fs.promises.mkdir(dir, { recursive: true });
   }
   return full;
 }
@@ -202,7 +203,7 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
-    }`
+    }`,
   );
   lines.push("");
 

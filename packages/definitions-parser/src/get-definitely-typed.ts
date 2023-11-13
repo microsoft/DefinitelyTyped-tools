@@ -1,4 +1,4 @@
-import { ensureDir } from "fs-extra";
+import fs from "fs";
 import { DiskFS, downloadAndExtractFile, LoggerWithErrors, FS, exec } from "@definitelytyped/utils";
 
 import { dataDirPath, definitelyTypedZipUrl } from "./lib/settings";
@@ -20,7 +20,7 @@ export interface ParseDefinitionsOptions {
 export async function getDefinitelyTyped(options: ParseDefinitionsOptions, log: LoggerWithErrors): Promise<FS> {
   if (options.definitelyTypedPath === undefined) {
     log.info("Downloading Definitely Typed ...");
-    await ensureDir(dataDirPath);
+    await fs.promises.mkdir(dataDirPath, { recursive: true });
     log.info(dataDirPath + " exists.");
     return downloadAndExtractFile(definitelyTypedZipUrl, log);
   }

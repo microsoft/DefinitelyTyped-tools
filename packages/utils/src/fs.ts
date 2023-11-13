@@ -1,7 +1,7 @@
 import assert from "assert";
 import { relative, resolve, isAbsolute } from "path";
 import { assertDefined } from "./assertions";
-import { pathExistsSync, readdirSync, realpathSync, statSync } from "fs-extra";
+import fs from "fs";
 import { readFileSync, readJsonSync } from "./io";
 
 /** Convert a path to use "/" instead of "\\" for consistency. (This affects content hash.) */
@@ -77,7 +77,10 @@ function ensureTrailingSlash(dir: string) {
 }
 
 export class InMemoryFS implements FS {
-  constructor(readonly curDir: ReadonlyDir, readonly rootPrefix: string) {
+  constructor(
+    readonly curDir: ReadonlyDir,
+    readonly rootPrefix: string,
+  ) {
     this.rootPrefix = ensureTrailingSlash(rootPrefix);
     assert(rootPrefix[0] === "/", `rootPrefix must be absolute: ${rootPrefix}`);
   }
@@ -104,7 +107,7 @@ export class InMemoryFS implements FS {
       }
       if (!(entry instanceof Dir)) {
         throw new Error(
-          `No file system entry at ${this.rootPrefix}/${path}. Siblings are: ${Array.from(dir.keys()).toString()}`
+          `No file system entry at ${this.rootPrefix}/${path}. Siblings are: ${Array.from(dir.keys()).toString()}`,
         );
       }
       dir = entry;
@@ -181,13 +184,14 @@ export class DiskFS implements FS {
   }
 
   readdir(dirPath?: string): readonly string[] {
-    return readdirSync(this.getPath(dirPath))
+    return fs
+      .readdirSync(this.getPath(dirPath))
       .sort()
       .filter((name) => name !== ".DS_Store");
   }
 
   isDirectory(dirPath: string): boolean {
-    return statSync(this.getPath(dirPath)).isDirectory();
+    return fs.statSync(this.getPath(dirPath)).isDirectory();
   }
 
   readJson(path: string): unknown {
@@ -199,7 +203,7 @@ export class DiskFS implements FS {
   }
 
   exists(path: string): boolean {
-    return pathExistsSync(this.getPath(path));
+    return fs.existsSync(this.getPath(path));
   }
 
   subDir(path: string): FS {
@@ -211,6 +215,6 @@ export class DiskFS implements FS {
   }
 
   realPath(path: string): string {
-    return realpathSync(this.getPath(path));
+    return fs.realpathSync(this.getPath(path));
   }
 }

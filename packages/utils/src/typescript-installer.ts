@@ -1,6 +1,6 @@
 import assert = require("assert");
 import { exec } from "child_process";
-import * as fs from "fs-extra";
+import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import * as process from "process";
@@ -30,17 +30,20 @@ export async function install(version: TsVersion | "next" | "rc"): Promise<void>
     return;
   }
   const dir = installDir(version);
-  if (!(await fs.pathExists(dir))) {
+  if (!fs.existsSync(dir)) {
     console.log(`Installing to ${dir}...`);
-    await fs.mkdirp(dir);
-    await fs.writeJson(path.join(dir, "package.json"), {
-      description: `Installs typescript@${version}`,
-      repository: "N/A",
-      license: "MIT",
-      dependencies: {
-        typescript: version,
-      },
-    });
+    await fs.promises.mkdir(dir, { recursive: true });
+    await fs.promises.writeFile(
+      path.join(dir, "package.json"),
+      JSON.stringify({
+        description: `Installs typescript@${version}`,
+        repository: "N/A",
+        license: "MIT",
+        dependencies: {
+          typescript: version,
+        },
+      }),
+    );
     await execAndThrowErrors("npm install --ignore-scripts --no-shrinkwrap --no-package-lock --no-bin-links", dir);
     console.log("Installed!");
     console.log("");
@@ -48,7 +51,7 @@ export async function install(version: TsVersion | "next" | "rc"): Promise<void>
 }
 
 export function cleanTypeScriptInstalls(): Promise<void> {
-  return fs.remove(installsDir);
+  return fs.promises.rm(installsDir, { recursive: true, force: true });
 }
 
 export function typeScriptPath(version: TsVersion | "next" | "rc", tsLocal: string | undefined): string {

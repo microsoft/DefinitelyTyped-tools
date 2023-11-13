@@ -7,7 +7,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbids files with no content.",
-      recommended: "error",
     },
     messages: {
       noContent: "File has no content.",

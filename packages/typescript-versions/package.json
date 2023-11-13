@@ -16,5 +16,8 @@
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

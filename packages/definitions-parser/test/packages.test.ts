@@ -43,19 +43,19 @@ describe(AllPackages, () => {
         await allPackages.hasTypingFor({
           name: "@types/jquery",
           version: "*",
-        })
+        }),
       ).toBe(true);
       expect(
         await allPackages.hasTypingFor({
           typesDirectoryName: "jquery",
           version: "*",
-        })
+        }),
       ).toBe(true);
       expect(
         await allPackages.hasTypingFor({
           name: "@types/nonExistent",
           version: "*",
-        })
+        }),
       ).toBe(false);
     });
   });
@@ -105,10 +105,10 @@ describe(TypingsVersions, () => {
 
   it("formats missing version error nicely", () => {
     expect(() => versions.get(new Range("111.1001"))).toThrow(
-      "Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. "
+      "Could not match version >=111.1001.0 <111.1002.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. ",
     );
     expect(() => versions.get(new Range("111"))).toThrow(
-      "Could not match version >=111.0.0 <112.0.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. "
+      "Could not match version >=111.0.0 <112.0.0-0 in 3.3.9999,2.5.9999,2.0.9999,1.0.9999. ",
     );
   });
 });
@@ -123,7 +123,7 @@ describe(TypingsData, () => {
         "package.json",
         JSON.stringify({
           name: "@types/known",
-        })
+        }),
       )
       .set("index.d.ts", "declare const x: number;")
       .set("tsconfig.json", `{ "files": ["index.d.ts"] }`);
@@ -135,7 +135,7 @@ describe(TypingsData, () => {
       },
       {
         "@types/known": "workspace:.",
-      }
+      },
     );
     data = new TypingsData(dt.fs, versions["1.0"], true);
   });
@@ -233,19 +233,19 @@ describe(NotNeededPackage, () => {
     expect(data.isNotNeeded()).toBe(true);
     expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
     expect(data.deprecatedMessage()).toBe(
-      "This is a stub types definition. real-package provides its own type definitions, so you do not need this installed."
+      "This is a stub types definition. real-package provides its own type definitions, so you do not need this installed.",
     );
   });
 
   describe("fromRaw", () => {
     it("throws on uppercase package name", () => {
       expect(() =>
-        NotNeededPackage.fromRaw("noUISlider", { libraryName: "nouislider", asOfVersion: "16.0.0" })
+        NotNeededPackage.fromRaw("noUISlider", { libraryName: "nouislider", asOfVersion: "16.0.0" }),
       ).toThrow("not-needed package 'noUISlider' must use all lower-case letters.");
     });
     it("throws on uppercase library name", () => {
       expect(() =>
-        NotNeededPackage.fromRaw("nouislider", { libraryName: "noUISlider", asOfVersion: "16.0.0" })
+        NotNeededPackage.fromRaw("nouislider", { libraryName: "noUISlider", asOfVersion: "16.0.0" }),
       ).toThrow("not-needed package 'nouislider' must use a libraryName that is all lower-case letters.");
     });
   });

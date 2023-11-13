@@ -8,7 +8,6 @@ const rule = createRule({
   meta: {
     docs: {
       description: "Don't use an ambient module declaration if there's just one -- write it as a normal module.",
-      recommended: "error",
     },
     messages: {
       oneModuleDeclaration:

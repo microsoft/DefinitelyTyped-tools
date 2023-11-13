@@ -8,22 +8,21 @@
   },
   "dependencies": {
     "@definitelytyped/header-parser": "workspace:*",
-    "command-exists": "^1.2.8",
-    "rimraf": "^3.0.2",
-    "semver": "^7.5.2",
+    "command-exists": "^1.2.9",
+    "semver": "^7.5.4",
     "tmp": "^0.2.1",
-    "yargs": "^15.3.1"
+    "typescript": "^5.2.2",
+    "yargs": "^17.7.2"
   },
   "peerDependencies": {
     "typescript": "*"
   },
   "devDependencies": {
-    "@types/command-exists": "^1.2.0",
-    "@types/rimraf": "^3.0.0",
-    "@types/semver": "^6.0.1",
-    "@types/strip-json-comments": "0.0.30",
-    "@types/tmp": "^0.2.0",
-    "strip-json-comments": "^2.0.1"
+    "@types/command-exists": "^1.2.3",
+    "@types/semver": "^7.5.5",
+    "@types/strip-json-comments": "^3.0.0",
+    "@types/tmp": "^0.2.6",
+    "strip-json-comments": "^3.1.1"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -50,6 +49,6 @@
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dts-critic#readme",
   "engines": {
-    "node": ">=10.17.0"
+    "node": ">=16.17.0"
   }
 }

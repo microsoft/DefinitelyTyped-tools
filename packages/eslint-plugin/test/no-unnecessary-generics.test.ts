@@ -1,8 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as rule from "../src/rules/no-unnecessary-generics";
 
-const ruleTester = new ESLintUtils.RuleTester({
+const ruleTester = new RuleTester({
   parserOptions: {
     ecmaVersion: 2018,
     tsconfigRootDir: __dirname,

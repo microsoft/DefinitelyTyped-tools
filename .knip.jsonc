@@ -2,8 +2,7 @@
   "$schema": "https://unpkg.com/knip@2/schema.json",
   "workspaces": {
     ".": {
-      "ignoreBinaries": ["only-allow"],
-      "ignoreDependencies": ["tslint", "tslint-microsoft-contrib"]
+      "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {
       "entry": "src/index.ts",
@@ -63,7 +62,8 @@
     },
     "packages/utils": {
       "entry": ["src/index.ts", "src/types/*.ts"],
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": ["@qiwi/npm-types"]
     }
   },
   "ignore": ["**/fixtures", "**/testsource", "**/dtslint/test/*/**", "**/*.d.ts"],

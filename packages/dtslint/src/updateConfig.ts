@@ -24,7 +24,7 @@ function main() {
   const args = yargs
     .usage(
       `\`$0 --dt=path-to-dt\` or \`$0 --package=path-to-dt-package\`
-'dt.json' is used as the base tslint config for running the linter.`
+'dt.json' is used as the base tslint config for running the linter.`,
     )
     .option("package", {
       describe: "Path of DT package.",
@@ -51,7 +51,8 @@ function main() {
         throw new Error(`Rules ${unsupportedRules.join(", ")} are not supported at the moment.`);
       }
       return true;
-    }).argv;
+    })
+    .parseSync();
 
   if (args.package) {
     updatePackage(args.package, dtConfig(args.rules));
@@ -114,7 +115,7 @@ function installDependencies(pkgPath: string): void {
 function mergeConfigRules(
   config: Config.RawConfigFile,
   newRules: Config.RawRulesConfig,
-  baseConfig: Config.IConfigurationFile
+  baseConfig: Config.IConfigurationFile,
 ): Config.RawConfigFile {
   const activeRules: string[] = [];
   baseConfig.rules.forEach((ruleOpts, ruleName) => {

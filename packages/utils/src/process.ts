@@ -11,7 +11,7 @@ export function exec(
   cmd: string,
   args: readonly string[],
   cwd?: string,
-  env?: NodeJS.ProcessEnv
+  env?: NodeJS.ProcessEnv,
 ): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
@@ -29,7 +29,7 @@ export async function execAndThrowErrors(
   cmd: string,
   args: readonly string[],
   cwd?: string,
-  env?: NodeJS.ProcessEnv
+  env?: NodeJS.ProcessEnv,
 ): Promise<string> {
   const { error, stdout, stderr } = await exec(cmd, args, cwd, env);
   if (error) {
@@ -335,7 +335,7 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
 
 async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
   const debugArg = execArgv.findIndex(
-    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect="),
   );
   if (debugArg < 0) return execArgv;
 

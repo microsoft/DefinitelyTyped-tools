@@ -29,7 +29,7 @@ describe(getTypingInfo, () => {
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {},
-      })
+      }),
     );
     d.set(
       "package.json",
@@ -47,7 +47,7 @@ describe(getTypingInfo, () => {
         devDependencies: {
           "@types/example": "workspace:.",
         },
-      })
+      }),
     );
 
     const info = await getTypingInfo("example", dt.fs);
@@ -63,7 +63,7 @@ describe(getTypingInfo, () => {
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {},
-      })
+      }),
     );
     scopedWithOlderScopedDependency.set(
       "package.json",
@@ -84,7 +84,7 @@ describe(getTypingInfo, () => {
         devDependencies: {
           "@types/ckeditor__ckeditor5-engine": "workspace:.",
         },
-      })
+      }),
     );
 
     const olderScopedPackage = dt.pkgDir("ckeditor__ckeditor5-utils");
@@ -92,14 +92,14 @@ describe(getTypingInfo, () => {
       "index.d.ts",
       `
 export function myFunction(arg:string): string;
- `
+ `,
     );
     olderScopedPackage.set(
       "tsconfig.json",
       JSON.stringify({
         files: ["index.d.ts"],
         compilerOptions: {},
-      })
+      }),
     );
     olderScopedPackage.set(
       "package.json",
@@ -118,7 +118,7 @@ export function myFunction(arg:string): string;
         devDependencies: {
           "@types/ckeditor__ckeditor5-utils": "workspace:.",
         },
-      })
+      }),
     );
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.9999");
 
@@ -135,7 +135,7 @@ export function myFunction(arg:string): string;
       `
 /// <reference types="node" />
 export * from 'buffer';
-`
+`,
     );
     safer.set("safer-tests.ts", "");
     safer.set(
@@ -167,7 +167,7 @@ export * from 'buffer';
         "index.d.ts",
         "safer-tests.ts"
     ]
-} `
+} `,
     );
     safer.set(
       "package.json",
@@ -188,7 +188,7 @@ export * from 'buffer';
         devDependencies: {
           "@types/safer": "workspace:.",
         },
-      })
+      }),
     );
 
     const info = await getTypingInfo("safer", dt.fs);
@@ -212,14 +212,14 @@ export * from 'buffer';
 /// <reference types="node" />
 import webpack = require('webpack');
 export = webpack;
-`
+`,
     );
     webpack.set(
       "webpack-tests.ts",
       `
 import webpack = require('webpack');
 const a = new webpack.AutomaticPrefetchPlugin();
-`
+`,
     );
     webpack.set(
       "tsconfig.json",
@@ -255,7 +255,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
         "index.d.ts",
         "webpack-tests.ts"
     ]
-}`
+}`,
     );
     webpack.set(
       "package.json",
@@ -273,7 +273,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
         devDependencies: {
           "@types/webpack": "workspace:.",
         },
-      })
+      }),
     );
 
     const info = await getTypingInfo("webpack", dt.fs);
@@ -283,7 +283,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
-      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/"))
+      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/")),
     );
     expect("errors" in info!).toBeFalsy();
   });
@@ -298,13 +298,13 @@ declare module '@ember/routing/route' {
 }
 declare module '@ember/routing/rotorooter' {
 }
-`
+`,
     );
     ember.set(
       "ember-tests.ts",
       `
 import route = require('@ember/routing/route');
-`
+`,
     );
     ember.set(
       "tsconfig.json",
@@ -329,7 +329,7 @@ import route = require('@ember/routing/route');
         "index.d.ts",
         "ember-tests.ts"
     ]
-}`
+}`,
     );
     ember.set(
       "package.json",
@@ -352,7 +352,7 @@ import route = require('@ember/routing/route');
             "githubUsername": "chriskrycho"
         }
     ]
-}`
+}`,
     );
 
     const info = (await getTypingInfo("ember", dt.fs))!;
@@ -365,7 +365,7 @@ import route = require('@ember/routing/route');
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
     const info = (await getTypingInfo(
       "styled-components-react-native",
-      new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/"))
+      new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")),
     ))!;
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));

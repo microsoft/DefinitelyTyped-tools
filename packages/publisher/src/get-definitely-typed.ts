@@ -5,7 +5,8 @@ import { getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import { defaultLocalOptions, defaultRemoteOptions } from "./lib/common";
 
 if (require.main === module) {
-  const dry = !!yargs.argv.dry;
+  const argv = yargs.parseSync();
+  const dry = !!argv.dry;
   console.log("gettingDefinitelyTyped: " + (dry ? "from github" : "locally"));
   logUncaughtErrors(async () => {
     const dt = await getDefinitelyTyped(dry ? defaultRemoteOptions : defaultLocalOptions, loggerWithErrors()[0]);

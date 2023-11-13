@@ -1,6 +1,6 @@
 import * as os from "os";
 import process from "process";
-import { readFile } from "fs-extra";
+import fs from "fs";
 import RegClient from "@qiwi/npm-registry-client";
 import { resolve as resolveUrl } from "url";
 import { joinPaths } from "./fs";
@@ -22,11 +22,11 @@ export class NpmPublishClient {
   private constructor(
     private readonly client: RegClient,
     private readonly auth: NeedToFixNpmRegistryClientTypings,
-    private readonly registry: string
+    private readonly registry: string,
   ) {}
 
   async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
-    const readme = await readFile(joinPaths(publishedDirectory, "README.md"));
+    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"));
 
     return new Promise<void>((resolve, reject) => {
       const body = createTgz(publishedDirectory, reject);
@@ -46,9 +46,9 @@ export class NpmPublishClient {
                   metadata: metadata as NeedToFixNpmRegistryClientTypings,
                   body: body as NeedToFixNpmRegistryClientTypings,
                 },
-                cb
+                cb,
               );
-            })
+            }),
       );
     });
   }

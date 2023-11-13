@@ -30,7 +30,7 @@ testo({
       packageOutput,
       [],
       [dependentOutput],
-      "/dt"
+      "/dt",
     );
     expect(packageNames).toEqual(new Set(["jquery"]));
     expect(dependents).toEqual(new Set(["known-test", "most-recent"]));
@@ -43,7 +43,7 @@ testo({
       packageOutput,
       [],
       [dependentOutput],
-      "/dt"
+      "/dt",
     );
     expect(packageNames).toEqual(new Set([]));
     expect(dependents).toEqual(new Set(["unknown-test"]));
@@ -68,7 +68,7 @@ testo({
       packageOutput,
       ["mistake"],
       [dependentOutput],
-      "/dt"
+      "/dt",
     );
     expect(packageNames).toEqual(new Set(["mistake"]));
     expect(dependents).toEqual(new Set([]));
@@ -83,7 +83,7 @@ testo({
       packageOutput,
       [],
       [dependentOutput],
-      "/dt"
+      "/dt",
     );
     expect(packageNames).toEqual(new Set(["jquery"]));
     expect(dependents).toEqual(new Set(["has-older-test-dependency", "known"]));

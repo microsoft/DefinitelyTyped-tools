@@ -6,8 +6,9 @@ import { currentTimeStamp } from "./util/util";
 
 export default async function main() {
   const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
-  const dry = !!(yargs.argv.dry || process.env.WEBHOOK_FORCE_DRY);
-  const definitelyTypedPath = yargs.argv.path || undefined;
+  const argv = yargs.parseSync();
+  const dry = !!(argv.dry || process.env.WEBHOOK_FORCE_DRY);
+  const definitelyTypedPath = argv.path || undefined;
   if (definitelyTypedPath !== undefined && typeof definitelyTypedPath !== "string")
     throw new Error("path must be a string");
 
@@ -27,6 +28,6 @@ export default async function main() {
       definitelyTypedPath,
       progress: false,
     },
-    log
+    log,
   );
 }

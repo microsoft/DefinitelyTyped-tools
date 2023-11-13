@@ -1,4 +1,5 @@
-import { TSESLint, ESLintUtils } from "@typescript-eslint/utils";
+import { TSESLint } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 import path from "path";
 import fs from "fs";
 
@@ -28,15 +29,15 @@ interface RunTests<TMessageIds extends string, TOptions extends Readonly<unknown
 }
 
 function convertTestCase<TOptions extends Readonly<unknown[]>>(
-  test: ValidTestCase<TOptions>
+  test: ValidTestCase<TOptions>,
 ): TSESLint.ValidTestCase<TOptions>;
 function convertTestCase<TMessageIds extends string, TOptions extends Readonly<unknown[]>>(
-  test: InvalidTestCase<TMessageIds, TOptions>
+  test: InvalidTestCase<TMessageIds, TOptions>,
 ): TSESLint.InvalidTestCase<TMessageIds, TOptions>;
 function convertTestCase<
   TMessageIds extends string,
   TOptions extends Readonly<unknown[]>,
-  T extends ValidTestCase<TOptions> | InvalidTestCase<TMessageIds, TOptions>
+  T extends ValidTestCase<TOptions> | InvalidTestCase<TMessageIds, TOptions>,
 >(test: T): TSESLint.ValidTestCase<TOptions> | TSESLint.InvalidTestCase<TMessageIds, TOptions> {
   const fixture = getFixturePath(test.filename);
   const code = fs.readFileSync(fixture, "utf8");
@@ -51,11 +52,9 @@ function convertTestCase<
 export function runTestsWithFixtures<TMessageIds extends string, TOptions extends Readonly<unknown[]>>(
   name: string,
   rule: TSESLint.RuleModule<TMessageIds, TOptions>,
-  tests: RunTests<TMessageIds, TOptions>
+  tests: RunTests<TMessageIds, TOptions>,
 ): void {
-  const ruleTester = new ESLintUtils.RuleTester({
-    parser: "@typescript-eslint/parser",
-  });
+  const ruleTester = new RuleTester();
 
   return ruleTester.run(name, rule, {
     valid: tests.valid.map(convertTestCase<TOptions>),

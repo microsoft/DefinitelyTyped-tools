@@ -10,7 +10,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbid imports and references to devDependencies inside .d.ts files.",
-      recommended: "error",
     },
     messages: {
       noImportOfDevDependencies: `.d.ts files may not import packages in devDependencies.`,

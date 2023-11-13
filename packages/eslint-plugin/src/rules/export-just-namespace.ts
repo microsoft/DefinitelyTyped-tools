@@ -13,7 +13,6 @@ const rule = createRule({
     docs: {
       description:
         "Forbids `export = foo` where `foo` is a namespace and isn't merged with a function/class/type/interface.",
-      recommended: "error",
     },
     messages: {
       useTheBody: "Instead of `export =`-ing a namespace, use the body of the namespace as the module body.",

@@ -1,10 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as exportJustNamespace from "../src/rules/export-just-namespace";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("@definitelytyped/export-just-namespace", exportJustNamespace, {
   invalid: [

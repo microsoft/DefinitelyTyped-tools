@@ -10,18 +10,16 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "fs-extra": "^9.1.0",
-    "longjohn": "^0.2.11",
-    "pacote": "^13.6.1",
-    "semver": "^7.3.7",
-    "typescript": "next",
-    "yargs": "15.3.1"
+    "longjohn": "^0.2.12",
+    "pacote": "^17.0.4",
+    "semver": "^7.5.4",
+    "typescript": "^5.2.2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.8",
-    "@types/pacote": "^11.1.5",
-    "@types/semver": "^7.5.2",
-    "@types/yargs": "^15.0.4"
+    "@types/pacote": "^11.1.8",
+    "@types/semver": "^7.5.5",
+    "@types/yargs": "^17.0.31"
   },
   "scripts": {
     "build": "tsc -b",
@@ -49,7 +47,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=6.10.0"
+    "node": ">=16.17.0"
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/publisher#readme"
 }

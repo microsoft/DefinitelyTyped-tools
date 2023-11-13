@@ -8,11 +8,10 @@ import {
   installAllTypeScriptVersions,
   installTypeScriptNext,
 } from "@definitelytyped/utils";
-import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
+import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
-import { writeFileSync } from "fs";
 
 const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
@@ -34,14 +33,14 @@ export async function runDTSLint({
   if (definitelyTypedAcquisition.kind === "clone") {
     definitelyTypedPath = joinPaths(process.cwd(), "DefinitelyTyped");
     if (!noInstall) {
-      await remove(definitelyTypedPath);
+      await fs.promises.rm(definitelyTypedPath, { recursive: true, force: true });
       await cloneDefinitelyTyped(process.cwd(), definitelyTypedAcquisition.sha);
     }
   } else {
     definitelyTypedPath = definitelyTypedAcquisition.path;
   }
 
-  if (!(await pathExists(definitelyTypedPath))) {
+  if (!fs.existsSync(definitelyTypedPath)) {
     throw new Error(`Path '${definitelyTypedPath}' does not exist.`);
   }
 
@@ -103,7 +102,7 @@ export async function runDTSLint({
                   .split(/\r?\n/)
                   .map((line) => `${prefix}${line}`)
                   .join("\n")
-              : status
+              : status,
           );
         }
       } else if (status === "OK") {
@@ -116,7 +115,7 @@ export async function runDTSLint({
                 .split(/\r?\n/)
                 .map((line) => `${prefix}${line}`)
                 .join("\n")
-            : status
+            : status,
         );
         allFailures.push([path, status]);
       }
@@ -148,8 +147,8 @@ export async function runDTSLint({
   for (const packageName of packageNames) {
     const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
     const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-    if (await pathExists(path)) {
-      const suggestions = readFileSync(path, "utf8").split("\n");
+    if (fs.existsSync(path)) {
+      const suggestions = fs.readFileSync(path, "utf8").split("\n");
       suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
     }
   }
@@ -158,7 +157,7 @@ export async function runDTSLint({
   logPerformance();
 
   if (writeFailures) {
-    writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
+    fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
   }
 
   if (allFailures.length === 0) {
@@ -176,10 +175,10 @@ export async function runDTSLint({
 
 function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<string>) {
   return new Set(
-    (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
+    (fs.readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .map((s) => s.trim())
-      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean)
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean),
   );
 }
 
@@ -209,10 +208,10 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
 function logPerformance() {
   const big: [string, number][] = [];
   const types: number[] = [];
-  if (existsSync(perfDir)) {
+  if (fs.existsSync(perfDir)) {
     console.log("\n\n=== PERFORMANCE ===\n");
-    for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
-      const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
+    for (const filename of fs.readdirSync(perfDir, { encoding: "utf8" })) {
+      const x = JSON.parse(fs.readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
         [s: string]: { types: number; memory: number };
       };
       for (const k of Object.keys(x)) {

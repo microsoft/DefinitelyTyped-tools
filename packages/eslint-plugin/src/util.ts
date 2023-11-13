@@ -1,17 +1,20 @@
 import { isDeclarationPath, typesPackageNameToRealName } from "@definitelytyped/utils";
-import { TSESTree, ESLintUtils } from "@typescript-eslint/utils";
-import { RuleWithMetaAndName } from "@typescript-eslint/utils/dist/eslint-utils";
-import { RuleListener, RuleModule, SourceCode } from "@typescript-eslint/utils/dist/ts-eslint";
+import { TSESLint, TSESTree, ESLintUtils } from "@typescript-eslint/utils";
 import path from "path";
 import fs from "fs";
 
 // Possible TS bug can't figure out how to do declaration emit of created rules
 // without an explicit type annotation here due to pnpm symlink stuff
+export type RuleModule<TOptions extends readonly unknown[], TMessageIds extends string> = TSESLint.RuleModule<
+  TMessageIds,
+  TOptions
+>;
+
 export const createRule: <TOptions extends readonly unknown[], TMessageIds extends string>(
-  opts: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, RuleListener>>
-) => RuleModule<TMessageIds, TOptions> = ESLintUtils.RuleCreator(
+  opts: Readonly<ESLintUtils.RuleWithMetaAndName<TOptions, TMessageIds>>,
+) => RuleModule<TOptions, TMessageIds> = ESLintUtils.RuleCreator(
   (name) =>
-    `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`
+    `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`,
 );
 
 export function getTypesPackageForDeclarationFile(file: string) {
@@ -22,9 +25,9 @@ export function getTypesPackageForDeclarationFile(file: string) {
 }
 
 export function commentsMatching(
-  sourceFile: Readonly<SourceCode>,
+  sourceFile: Readonly<TSESLint.SourceCode>,
   regex: RegExp,
-  f: (match: string, c: TSESTree.Comment) => void
+  f: (match: string, c: TSESTree.Comment) => void,
 ): void {
   for (const comment of sourceFile.ast.comments) {
     const m = comment.value.match(regex);

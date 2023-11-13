@@ -38,7 +38,7 @@ export class Rule extends Lint.Rules.TypedRule {
     const options = this.ruleArguments[0] as Options | undefined;
     if (!options) {
       return this.applyWithFunction(sourceFile, (ctx) =>
-        walk(ctx, lintProgram, TsType, "next", /*nextHigherVersion*/ undefined)
+        walk(ctx, lintProgram, TsType, "next", /*nextHigherVersion*/ undefined),
       );
     }
 
@@ -47,13 +47,13 @@ export class Rule extends Lint.Rules.TypedRule {
     const getFailures = (
       { versionName, path }: VersionToTest,
       nextHigherVersion: string | undefined,
-      writeOutput: boolean
+      writeOutput: boolean,
     ) => {
       const ts = require(path);
       ts.performance.enable();
       const program = getProgram(tsconfigPath, ts, versionName, lintProgram);
       const failures = this.applyWithFunction(sourceFile, (ctx) =>
-        walk(ctx, program, ts, versionName, nextHigherVersion)
+        walk(ctx, program, ts, versionName, nextHigherVersion),
       );
       if (writeOutput) {
         const packageName = basename(dirname(tsconfigPath));
@@ -211,7 +211,7 @@ function walk(
   program: Program,
   ts: typeof TsType,
   versionName: string,
-  nextHigherVersion: string | undefined
+  nextHigherVersion: string | undefined,
 ): void {
   const { fileName } = ctx.sourceFile;
   const sourceFile = program.getSourceFile(fileName)!;
@@ -220,7 +220,7 @@ function walk(
       0,
       0,
       `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${TsType.version}, but did not find it in ts@${versionName}.`
+        `Expected to find a file '${fileName}' present in ${TsType.version}, but did not find it in ts@${versionName}.`,
     );
     return;
   }
@@ -402,7 +402,7 @@ function getExpectTypeFailures(
   sourceFile: SourceFile,
   typeAssertions: Map<number, string>,
   checker: TsType.TypeChecker,
-  ts: typeof TsType
+  ts: typeof TsType,
 ): ExpectTypeFailures {
   const unmetExpectations: { node: TsType.Node; expected: string; actual: string }[] = [];
   // Match assertions to the first node that appears on the line they apply to.

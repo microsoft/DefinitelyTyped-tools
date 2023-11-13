@@ -192,7 +192,7 @@ function walk(ctx: Lint.WalkContext<CriticOptions>): void {
               ctx.addFailureAt(
                 error.position.start,
                 error.position.length,
-                failure(Rule.metadata.ruleName, errorMessage(error, ctx.options))
+                failure(Rule.metadata.ruleName, errorMessage(error, ctx.options)),
               );
             } else {
               ctx.addFailure(0, 1, failure(Rule.metadata.ruleName, errorMessage(error, ctx.options)));
@@ -293,7 +293,7 @@ export function disabler(failures: Lint.IRuleFailureJson[]): false | [true, Conf
     } else if (
       message.includes(
         "declaration specifies 'export default' but the JavaScript source \
-            does not mention 'default' anywhere"
+            does not mention 'default' anywhere",
       )
     ) {
       disabledErrors.add(ErrorKind.NoDefaultExport);

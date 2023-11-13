@@ -8,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: `Forbids <reference path="./vNN"/> in all files, <reference path="../etc"/> in declaration files, and all <reference path> in test files.`,
-      recommended: "error",
     },
     messages: {
       noOldDTHeader:

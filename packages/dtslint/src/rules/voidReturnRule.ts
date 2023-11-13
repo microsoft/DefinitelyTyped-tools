@@ -16,7 +16,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
   static FAILURE_STRING = failure(
     Rule.metadata.ruleName,
-    "Use the `void` type for return types only. Otherwise, use `undefined`."
+    "Use the `void` type for return types only. Otherwise, use `undefined`.",
   );
 
   apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {

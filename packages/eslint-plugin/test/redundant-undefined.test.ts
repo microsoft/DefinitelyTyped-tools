@@ -1,10 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { RuleTester } from "@typescript-eslint/rule-tester";
 
 import * as redundantUndefined from "../src/rules/redundant-undefined";
 
-const ruleTester = new ESLintUtils.RuleTester({
-  parser: "@typescript-eslint/parser",
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run("@definitelytyped/redundant-undefined", redundantUndefined, {
   invalid: [
