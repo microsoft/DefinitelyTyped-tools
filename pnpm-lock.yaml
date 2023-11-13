@@ -353,9 +353,6 @@ importers:
       '@qiwi/npm-registry-client':
         specifier: ^8.9.1
         version: 8.9.1
-      '@qiwi/npm-types':
-        specifier: ^1.0.3
-        version: 1.0.3
       '@types/node':
         specifier: ^16.18.61
         version: 16.18.61
@@ -375,6 +372,9 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
+      '@qiwi/npm-types':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/charm':
         specifier: ^1.0.6
         version: 1.0.6
@@ -1681,7 +1681,7 @@ packages:
 
   /@qiwi/npm-types@1.0.3:
     resolution: {integrity: sha512-fHUud+Fo8JiGOPMmnVaOYd/crEnBM+qB8qXrSRz1AkYZAj8BtudFYcsiFweL6DcYXguq7+iXKdzx42dGCEPHiQ==}
-    dev: false
+    dev: true
 
   /@sigstore/bundle@2.1.0:
     resolution: {integrity: sha512-89uOo6yh/oxaU8AeOUnVrTdVMcGk9Q1hJa7Hkvalc6G3Z3CupWk4Xe9djSgJm9fMkH69s0P0cVHUoKSOemLdng==}
