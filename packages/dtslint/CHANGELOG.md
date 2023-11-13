@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.0.193
+
+### Patch Changes
+
+- 5b0559f6: Update and clean up dependencies
+- Updated dependencies [5b0559f6]
+  - @definitelytyped/typescript-versions@0.0.181
+  - @definitelytyped/header-parser@0.0.188
+  - @definitelytyped/dts-critic@0.0.189
+  - @definitelytyped/utils@0.0.186
+
 ## 0.0.192
 
 ### Patch Changes
