@@ -1,5 +1,14 @@
 # @definitelytyped/header-parser
 
+## 0.0.188
+
+### Patch Changes
+
+- 5b0559f6: Update and clean up dependencies
+- Updated dependencies [5b0559f6]
+  - @definitelytyped/typescript-versions@0.0.181
+  - @definitelytyped/utils@0.0.186
+
 ## 0.0.187
 
 ### Patch Changes

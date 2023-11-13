@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.197
+
+### Patch Changes
+
+- 5b0559f6: Update and clean up dependencies
+- Updated dependencies [5b0559f6]
+  - @definitelytyped/definitions-parser@0.0.192
+  - @definitelytyped/dtslint@0.0.193
+  - @definitelytyped/utils@0.0.186
+
 ## 0.0.196
 
 ### Patch Changes
