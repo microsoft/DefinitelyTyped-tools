@@ -15,6 +15,6 @@
     },
     "files": [
         "index.d.ts",
-        "foo-tests.ts"
+        "other-tests.ts"
     ]
 }

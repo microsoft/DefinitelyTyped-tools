@@ -15,6 +15,7 @@
     },
     "files": [
         "index.d.ts",
+        "other/other.d.ts",
         "no-relative-references-tests.ts"
     ]
 }
