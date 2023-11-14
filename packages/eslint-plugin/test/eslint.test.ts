@@ -27,6 +27,7 @@ for (const fixture of allFixtures) {
       const formatter = await eslint.loadFormatter("stylish");
       const formatted = await formatter.format(results);
       const resultText = stripAnsi(formatted);
+      expect(resultText).not.toContain("Parsing error");
       expect(resultText).toMatchSnapshot("results");
     });
   });
