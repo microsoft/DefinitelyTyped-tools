@@ -34,7 +34,7 @@ const rule = createRule({
           context.report({
             messageId: "noDeclareCurrentPackage",
             data: { text, preferred },
-            node,
+            node: node.id,
           });
         }
       },
