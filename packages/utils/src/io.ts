@@ -61,7 +61,7 @@ export function writeFile(path: string, content: string): Promise<void> {
 }
 
 export function writeJson(path: string, content: unknown, formatted = true): Promise<void> {
-  return fs.promises.writeFile(JSON.stringify(content, undefined, formatted ? 4 : undefined), path);
+  return fs.promises.writeFile(path, JSON.stringify(content, undefined, formatted ? 4 : undefined));
 }
 
 export function streamOfString(text: string): NodeJS.ReadableStream {
