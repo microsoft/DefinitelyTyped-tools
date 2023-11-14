@@ -1,1 +1,1 @@
-/// <reference types="bar" />/// <reference path="foo" />
+/// <reference types="bar" />
