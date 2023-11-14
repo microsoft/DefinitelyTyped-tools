@@ -4,7 +4,7 @@ import stripAnsi from "strip-ansi";
 import { fixtureRoot } from "./fixtureTester";
 import { globSync } from "glob";
 
-const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts"], { cwd: fixtureRoot });
+const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
 
 let eslint: ESLint;
 
@@ -16,6 +16,7 @@ afterAll(() => {
   eslint = undefined as any;
 });
 
+// Force one test per fixture so we can see when a file has no errors.
 for (const fixture of allFixtures) {
   describe(`fixture ${fixture}`, () => {
     it("should lint", async () => {
