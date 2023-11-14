@@ -119,6 +119,26 @@ types/no-bad-reference/v11/no-bad-reference-tests.ts
 "
 `;
 
+exports[`fixture types/no-const-enum/bad.d.ts should lint: results 1`] = `
+"
+types/no-const-enum/bad.d.ts
+  1:1  error  Use of \`const enum\` is forbidden  @definitelytyped/no-const-enum
+
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-const-enum/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-const-enum/no-const-enum-tests.ts should lint: results 1`] = `
+"
+types/no-const-enum/no-const-enum-tests.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
 exports[`fixture types/no-declare-current-package/index.d.ts should lint: results 1`] = `
 "
 types/no-declare-current-package/index.d.ts
