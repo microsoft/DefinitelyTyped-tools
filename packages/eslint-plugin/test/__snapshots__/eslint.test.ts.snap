@@ -139,6 +139,46 @@ types/no-const-enum/no-const-enum-tests.ts
 "
 `;
 
+exports[`fixture types/no-dead-reference/bad.d.ts should lint: results 1`] = `
+"
+types/no-dead-reference/bad.d.ts
+  2:1  error  \`/// <reference>\` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-dead-reference/bad2.d.ts should lint: results 1`] = `
+"
+types/no-dead-reference/bad2.d.ts
+  2:1  error  \`/// <reference>\` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+  3:1  error  \`/// <reference>\` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-dead-reference/bad3.d.ts should lint: results 1`] = `
+"
+types/no-dead-reference/bad3.d.ts
+  2:1  error  \`/// <reference>\` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+  4:1  error  \`/// <reference>\` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-dead-reference/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-dead-reference/no-dead-reference-tests.ts should lint: results 1`] = `
+"
+types/no-dead-reference/no-dead-reference-tests.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
 exports[`fixture types/no-declare-current-package/index.d.ts should lint: results 1`] = `
 "
 types/no-declare-current-package/index.d.ts
