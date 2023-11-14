@@ -9,6 +9,11 @@ overrides:
   semver@<5.7.2: '>=5.7.2'
   semver@>=6.0.0 <6.3.1: '>=6.3.1'
 
+patchedDependencies:
+  jest-file-snapshot@0.5.0:
+    hash: onu36a7gyyhv46dluxj27tjeqe
+    path: patches/jest-file-snapshot@0.5.0.patch
+
 importers:
 
   .:
@@ -257,7 +262,7 @@ importers:
         version: 10.3.10
       jest-file-snapshot:
         specifier: ^0.5.0
-        version: 0.5.0
+        version: 0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe)
       strip-ansi:
         specifier: ^6.0.1
         version: 6.0.1
@@ -4567,7 +4572,7 @@ packages:
       jest-util: 29.7.0
     dev: true
 
-  /jest-file-snapshot@0.5.0:
+  /jest-file-snapshot@0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe):
     resolution: {integrity: sha512-A3cqn9RRB6yl/bMsN9+EiNU94JTptLmoFqmSfSeuku22UYotYF6C/Ntw7C2Kai0C7deirYfpDwRpdlyLhItvMQ==}
     dependencies:
       chalk: 4.1.2
@@ -4575,6 +4580,7 @@ packages:
       jest-diff: 26.6.2
       mkdirp: 1.0.4
     dev: true
+    patched: true
 
   /jest-get-type@26.3.0:
     resolution: {integrity: sha512-TpfaviN1R2pQWkIihlfEanwOXK0zcxrKEE4MlU6Tn7keoXdN6/3gK/xl0yEh8DOunn5pOVGKf8hB4R9gVh04ig==}
