@@ -1,4 +1,3 @@
-
 types/no-const-enum/bad.d.ts
   1:1  error  Use of `const enum` is forbidden  @definitelytyped/no-const-enum
 

@@ -1,4 +1,3 @@
-
 types/no-import-of-dev-dependencies/bad.d.ts
   1:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies
   2:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies

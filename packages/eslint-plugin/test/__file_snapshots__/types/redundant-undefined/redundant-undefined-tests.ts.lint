@@ -1,4 +1,3 @@
-
 types/redundant-undefined/redundant-undefined-tests.ts
   1:17  error  Including `any` in a union will override all other members of the union  @definitelytyped/no-any-union
 

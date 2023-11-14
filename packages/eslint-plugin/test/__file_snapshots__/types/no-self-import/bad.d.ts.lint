@@ -1,4 +1,3 @@
-
 types/no-self-import/bad.d.ts
   1:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
   2:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import

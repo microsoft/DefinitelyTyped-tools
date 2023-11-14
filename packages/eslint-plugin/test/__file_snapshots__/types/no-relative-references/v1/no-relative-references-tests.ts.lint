@@ -1,4 +1,3 @@
-
 types/no-relative-references/v1/no-relative-references-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 

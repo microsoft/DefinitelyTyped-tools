@@ -1,4 +1,3 @@
-
 types/scoped__no-relative-references/v1/index.d.ts
    1:22  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
    2:22  error  The reference "../v1/index.d.ts" resolves to the current package, but uses relative paths                                             @definitelytyped/no-bad-reference

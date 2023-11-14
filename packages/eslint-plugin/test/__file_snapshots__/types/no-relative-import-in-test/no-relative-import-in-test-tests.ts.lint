@@ -1,4 +1,3 @@
-
 types/no-relative-import-in-test/no-relative-import-in-test-tests.ts
   1:17  error  Test file should not use a relative import. Use a global import as if this were a user of the package  @definitelytyped/no-relative-import-in-test
 

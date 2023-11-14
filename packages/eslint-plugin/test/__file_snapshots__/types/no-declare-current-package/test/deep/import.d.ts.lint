@@ -1,4 +1,3 @@
-
 types/no-declare-current-package/test/deep/import.d.ts
   1:16  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block                                                                @definitelytyped/no-single-declare-module
   1:16  error  Instead of declaring a module with `declare module "no-declare-current-package/deep/import"`, write its contents in directly in "no-declare-current-package/deep/import.d.ts" or "no-declare-current-package/deep/import/index.d.ts"  @definitelytyped/no-declare-current-package

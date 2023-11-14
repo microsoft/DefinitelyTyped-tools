@@ -1,4 +1,3 @@
-
 types/no-single-declare-module/bad.d.ts
   1:16  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block  @definitelytyped/no-single-declare-module
 

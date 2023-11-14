@@ -1,4 +1,3 @@
-
 types/redundant-undefined/bad.d.ts
   1:23  error  Parameter is optional, so no need to include `undefined` in the type  @definitelytyped/redundant-undefined
   3:29  error  Parameter is optional, so no need to include `undefined` in the type  @definitelytyped/redundant-undefined

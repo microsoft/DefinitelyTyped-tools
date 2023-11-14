@@ -1,4 +1,3 @@
-
 types/no-old-dt-header/ok2.d.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 

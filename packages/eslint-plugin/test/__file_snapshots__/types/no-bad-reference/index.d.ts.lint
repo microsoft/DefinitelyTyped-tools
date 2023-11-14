@@ -1,4 +1,3 @@
-
 types/no-bad-reference/index.d.ts
    1:22  error  The reference "../other" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
    2:22  error  The reference "./v11" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference

@@ -1,4 +1,3 @@
-
 types/no-old-dt-header/index.d.ts
   1:1  error  Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`  @definitelytyped/no-old-dt-header
 

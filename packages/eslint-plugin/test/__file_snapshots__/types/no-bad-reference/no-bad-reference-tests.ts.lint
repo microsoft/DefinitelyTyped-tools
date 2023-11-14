@@ -1,4 +1,3 @@
-
 types/no-bad-reference/no-bad-reference-tests.ts
   1:22  error  The path reference "../other" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead  @definitelytyped/no-bad-reference
   2:22  error  The path reference "other" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead     @definitelytyped/no-bad-reference

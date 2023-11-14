@@ -31,10 +31,10 @@ for (const fixture of allFixtures) {
       }
       const formatter = await eslint.loadFormatter("stylish");
       const formatted = await formatter.format(results);
-      const resultText = stripAnsi(formatted);
+      const resultText = stripAnsi(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
-      expect(resultText + "\n" + newOutput).toMatchFile(path.join(snapshotDir, `${fixture}.lint`));
+      expect(resultText + "\n\n" + newOutput).toMatchFile(path.join(snapshotDir, `${fixture}.lint`));
     });
   });
 }

@@ -1,4 +1,3 @@
-
 types/no-unnecessary-generics/no-unnecessary-generics-tests.ts
    1:13  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
    3:17  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
