@@ -1,8 +1,8 @@
 import { ESLint } from "eslint";
 import path from "path";
 import stripAnsi from "strip-ansi";
-import { fixtureRoot } from "./fixtureTester";
 import { globSync } from "glob";
+import { fixtureRoot } from "./util";
 
 const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
 
