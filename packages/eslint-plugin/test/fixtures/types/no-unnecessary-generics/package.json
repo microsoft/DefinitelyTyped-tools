@@ -1,0 +1,8 @@
+{
+    "name": "@types/no-unnecessary-generics",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/no-unnecessary-generics": "workspace:."
+    }
+}
