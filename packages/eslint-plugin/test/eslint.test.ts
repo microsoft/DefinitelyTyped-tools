@@ -63,23 +63,13 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
 
     const sourceText = fs.readFileSync(path.join(fixtureRoot, result.filePath), "utf-8");
 
-    const messagesWithPositions: Linter.LintMessage[] = [];
-
-    for (const message of result.messages) {
-      if (message.line !== undefined) {
-        messagesWithPositions.push(message);
-        continue;
-      }
-      pushMessage(message);
-    }
-
     const lines = sourceText.split(/\r?\n/);
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       output.push(indent + line);
 
-      for (const message of messagesWithPositions) {
+      for (const message of result.messages) {
         const startLine = message.line - 1;
         const endLine = message.endLine === undefined ? startLine : message.endLine - 1;
         const startColumn = message.column - 1;
@@ -101,5 +91,5 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
     output.push("");
   }
 
-  return output.join("\n");
+  return output.join("\n").trim() + "\n";
 }

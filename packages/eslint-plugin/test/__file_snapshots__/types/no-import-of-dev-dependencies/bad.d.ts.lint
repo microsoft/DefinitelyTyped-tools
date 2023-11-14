@@ -21,4 +21,3 @@ types/no-import-of-dev-dependencies/bad.d.ts
     import * as otherdevdep from "otherdevdep";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
-    

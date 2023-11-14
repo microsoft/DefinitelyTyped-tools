@@ -21,4 +21,3 @@ types/no-old-dt-header/index.d.ts
     
     import * as anime from "animejs";
     import * as three from "three";
-    

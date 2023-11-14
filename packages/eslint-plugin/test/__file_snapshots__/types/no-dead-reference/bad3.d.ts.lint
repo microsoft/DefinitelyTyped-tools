@@ -15,4 +15,3 @@ types/no-dead-reference/bad3.d.ts
     ~
 !!! @definitelytyped/no-dead-reference: `/// <reference>` directive must be at top of file to take effect.
     export class E { }
-    

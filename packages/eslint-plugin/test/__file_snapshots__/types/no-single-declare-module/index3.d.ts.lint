@@ -3,4 +3,3 @@ No errors
 ==== types/no-single-declare-module/index3.d.ts ====
 
     declare module "*.svg" {}
-    

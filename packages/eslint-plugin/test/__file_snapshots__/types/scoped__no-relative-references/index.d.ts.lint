@@ -43,4 +43,3 @@ types/scoped__no-relative-references/index.d.ts
                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "@scoped/no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages.
     }
-    

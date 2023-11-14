@@ -12,4 +12,3 @@ types/no-bad-reference/no-bad-reference-tests.ts
     /// <reference path="other" />
                          ~~~~~
 !!! @definitelytyped/no-bad-reference: The path reference "other" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.
-    

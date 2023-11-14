@@ -3,4 +3,3 @@ No errors
 ==== types/no-useless-files/index3.d.ts ====
 
     /// <reference types="bar" />
-    

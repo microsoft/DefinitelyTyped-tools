@@ -33,4 +33,3 @@ types/no-self-import/bad.d.ts
     import old5 from "./v0.1/index"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
-    

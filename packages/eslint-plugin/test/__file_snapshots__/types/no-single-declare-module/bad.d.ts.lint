@@ -11,4 +11,3 @@ types/no-single-declare-module/bad.d.ts
     
     // Other global declarations don't affect this. They should go in "declare global".
     interface I {}
-    

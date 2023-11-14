@@ -49,4 +49,3 @@ types/scoped__no-relative-references/v1/index.d.ts
                          ~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "../index" resolves outside of the package. Use a bare import to reference other packages.
     }
-    

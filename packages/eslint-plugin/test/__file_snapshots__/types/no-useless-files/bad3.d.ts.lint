@@ -8,4 +8,3 @@ types/no-useless-files/bad3.d.ts
     /// <reference lib="baz" />
     ~
 !!! @definitelytyped/no-useless-files: File has no content.
-    

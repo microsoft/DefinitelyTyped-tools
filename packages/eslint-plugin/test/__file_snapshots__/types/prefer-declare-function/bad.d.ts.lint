@@ -31,4 +31,3 @@ types/prefer-declare-function/bad.d.ts
               ~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.
     }
-    

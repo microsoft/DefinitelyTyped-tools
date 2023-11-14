@@ -13,4 +13,3 @@ types/redundant-undefined/bad.d.ts
     export function f2([a, b]?: [number, number] | undefined): void;
                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/redundant-undefined: Parameter is optional, so no need to include `undefined` in the type.
-    

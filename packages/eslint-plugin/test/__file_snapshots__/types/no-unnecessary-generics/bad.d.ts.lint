@@ -12,4 +12,3 @@ types/no-unnecessary-generics/bad.d.ts
     type Ctr = new<T>() => T;
                    ~
 !!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
-    

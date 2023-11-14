@@ -8,4 +8,3 @@ types/no-const-enum/bad.d.ts
     const enum E { }
     ~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-const-enum: Use of `const enum` is forbidden.
-    

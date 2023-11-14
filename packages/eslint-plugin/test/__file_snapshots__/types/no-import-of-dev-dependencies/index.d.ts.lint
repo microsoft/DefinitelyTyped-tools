@@ -11,4 +11,3 @@ types/no-import-of-dev-dependencies/index.d.ts
     import self from "no-import-of-dev-dependencies";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
-    

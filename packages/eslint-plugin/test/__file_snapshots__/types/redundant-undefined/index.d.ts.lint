@@ -7,4 +7,3 @@ No errors
         s?: string;
         almost?: number | string;
     }
-    

@@ -12,4 +12,3 @@ types/prefer-declare-function/index.d.ts
     export const example2: () => void;
                  ~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.
-    

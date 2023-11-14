@@ -8,4 +8,3 @@ types/no-any-union/bad.d.ts
     export const y: string | any;
                     ~~~~~~~~~~~~
 !!! @definitelytyped/no-any-union: Including `any` in a union will override all other members of the union.
-    

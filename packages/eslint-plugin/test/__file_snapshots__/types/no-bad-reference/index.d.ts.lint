@@ -41,4 +41,3 @@ types/no-bad-reference/index.d.ts
     
     // unrelated comment
     /// similar (reference path) comment
-    

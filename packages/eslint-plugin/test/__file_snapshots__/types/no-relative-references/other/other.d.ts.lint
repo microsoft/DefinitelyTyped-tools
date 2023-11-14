@@ -29,4 +29,3 @@ types/no-relative-references/other/other.d.ts
     import * as foo3 from "../../foo/v1";
                           ~~~~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "../../foo/v1" resolves outside of the package. Use a bare import to reference other packages.
-    

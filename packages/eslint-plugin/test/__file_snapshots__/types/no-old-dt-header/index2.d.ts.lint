@@ -12,4 +12,3 @@ types/no-old-dt-header/index2.d.ts
     ~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-old-dt-header: Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`
     // Definitions by: Paul Shannon <https://github.com/devpaul>
-    

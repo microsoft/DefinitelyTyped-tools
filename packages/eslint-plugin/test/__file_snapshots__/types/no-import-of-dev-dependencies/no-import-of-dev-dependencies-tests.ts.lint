@@ -11,4 +11,3 @@ No errors
     
     import devdep from "devdep";
     import * as otherdevdep from "otherdevdep";
-    

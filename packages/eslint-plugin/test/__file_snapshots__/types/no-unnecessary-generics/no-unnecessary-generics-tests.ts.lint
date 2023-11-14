@@ -42,4 +42,3 @@ types/no-unnecessary-generics/no-unnecessary-generics-tests.ts
           ~
 !!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
     }
-    
