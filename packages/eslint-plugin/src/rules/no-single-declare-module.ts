@@ -46,7 +46,7 @@ const rule = createRule({
     if (moduleDeclaration) {
       context.report({
         messageId: "oneModuleDeclaration",
-        node: services.tsNodeToESTreeNodeMap.get(moduleDeclaration),
+        node: services.tsNodeToESTreeNodeMap.get(moduleDeclaration.name),
       });
     }
 
