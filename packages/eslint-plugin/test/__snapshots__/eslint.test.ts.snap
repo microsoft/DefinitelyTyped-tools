@@ -1,13 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`eslint should lint: results 1`] = `
+exports[`fixture types/foo/foo-tests.ts should lint: results 1`] = `
 "
 types/foo/foo-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/foo/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/foo/v1/foo-tests.ts should lint: results 1`] = `
+"
 types/foo/v1/foo-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/foo/v1/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-bad-reference/index.d.ts should lint: results 1`] = `
+"
 types/no-bad-reference/index.d.ts
    1:23  error  The reference "../other" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
    2:23  error  The reference "./v11" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
@@ -17,10 +33,22 @@ types/no-bad-reference/index.d.ts
    6:23  error  The reference "./v0.1/index" resolves outside of the package. Use a global reference to reference other packages       @definitelytyped/no-bad-reference
   13:23  error  Use forward slashes in paths                                                                                           @definitelytyped/no-bad-reference
 
+✖ 7 problems (7 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-bad-reference/no-bad-reference-tests.ts should lint: results 1`] = `
+"
 types/no-bad-reference/no-bad-reference-tests.ts
   1:23  error  The path reference "../other" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead  @definitelytyped/no-bad-reference
   2:23  error  The path reference "other" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead     @definitelytyped/no-bad-reference
 
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-bad-reference/v0.1/index.d.ts should lint: results 1`] = `
+"
 types/no-bad-reference/v0.1/index.d.ts
    1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages       @definitelytyped/no-bad-reference
    2:23  error  The reference "../v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
@@ -32,9 +60,21 @@ types/no-bad-reference/v0.1/index.d.ts
    9:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                           @definitelytyped/no-bad-reference
   14:23  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                           @definitelytyped/no-bad-reference
 
+✖ 9 problems (9 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-bad-reference/v0.1/no-bad-reference-tests.ts should lint: results 1`] = `
+"
 types/no-bad-reference/v0.1/no-bad-reference-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-bad-reference/v11/index.d.ts should lint: results 1`] = `
+"
 types/no-bad-reference/v11/index.d.ts
    1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
    2:23  error  The reference "../v11/index.d.ts" resolves to the current package, but uses relative paths                                   @definitelytyped/no-bad-reference
@@ -46,32 +86,84 @@ types/no-bad-reference/v11/index.d.ts
    9:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                         @definitelytyped/no-bad-reference
   14:23  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                         @definitelytyped/no-bad-reference
 
+✖ 9 problems (9 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-bad-reference/v11/no-bad-reference-tests.ts should lint: results 1`] = `
+"
 types/no-bad-reference/v11/no-bad-reference-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
-types/no-declare-current-package-other/no-declare-current-package-other-tests.ts
-  1:1  error  File has no content  @definitelytyped/no-useless-files
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
 
+exports[`fixture types/no-declare-current-package/index.d.ts should lint: results 1`] = `
+"
 types/no-declare-current-package/index.d.ts
   1:1  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block  @definitelytyped/no-single-declare-module
   1:1  error  Instead of declaring a module with \`declare module "no-declare-current-package"\`, write its contents in directly in "index.d.ts"                                        @definitelytyped/no-declare-current-package
 
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-declare-current-package/no-declare-current-package-tests.ts should lint: results 1`] = `
+"
 types/no-declare-current-package/no-declare-current-package-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-declare-current-package/test/deep/import.d.ts should lint: results 1`] = `
+"
 types/no-declare-current-package/test/deep/import.d.ts
   1:1  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block                                                                @definitelytyped/no-single-declare-module
   1:1  error  Instead of declaring a module with \`declare module "no-declare-current-package/deep/import"\`, write its contents in directly in "no-declare-current-package/deep/import.d.ts" or "no-declare-current-package/deep/import/index.d.ts"  @definitelytyped/no-declare-current-package
 
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-declare-current-package-other/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-declare-current-package-other/no-declare-current-package-other-tests.ts should lint: results 1`] = `
+"
+types/no-declare-current-package-other/no-declare-current-package-other-tests.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-import-of-dev-dependencies/bad.d.ts should lint: results 1`] = `
+"
 types/no-import-of-dev-dependencies/bad.d.ts
   1:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies
   2:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies
   4:1   error  .d.ts files may not import packages in devDependencies                  @definitelytyped/no-import-of-dev-dependencies
   5:1   error  .d.ts files may not import packages in devDependencies                  @definitelytyped/no-import-of-dev-dependencies
 
+✖ 4 problems (4 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-import-of-dev-dependencies/index.d.ts should lint: results 1`] = `
+"
 types/no-import-of-dev-dependencies/index.d.ts
   4:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-import-of-dev-dependencies/no-import-of-dev-dependencies-tests.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-relative-references/index.d.ts should lint: results 1`] = `
+"
 types/no-relative-references/index.d.ts
    1:23  error  The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages         @definitelytyped/no-bad-reference
    2:23  error  The reference "./v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
@@ -83,9 +175,21 @@ types/no-relative-references/index.d.ts
    9:1   error  Instead of declaring a module with \`declare module "no-relative-references"\`, write its contents in directly in "index.d.ts"  @definitelytyped/no-declare-current-package
   11:23  error  The import "no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages         @definitelytyped/no-bad-reference
 
+✖ 9 problems (9 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-relative-references/no-relative-references-tests.ts should lint: results 1`] = `
+"
 types/no-relative-references/no-relative-references-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-relative-references/other/other.d.ts should lint: results 1`] = `
+"
 types/no-relative-references/other/other.d.ts
   1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
   2:23  error  The reference "../v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages         @definitelytyped/no-bad-reference
@@ -94,6 +198,12 @@ types/no-relative-references/other/other.d.ts
   6:23  error  The import "../v1" resolves outside of the package. Use a bare import to reference other packages                            @definitelytyped/no-bad-reference
   7:23  error  The import "../../foo/v1" resolves outside of the package. Use a bare import to reference other packages                     @definitelytyped/no-bad-reference
 
+✖ 6 problems (6 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-relative-references/v1/index.d.ts should lint: results 1`] = `
+"
 types/no-relative-references/v1/index.d.ts
    1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages      @definitelytyped/no-bad-reference
    2:23  error  The reference "../v1/index.d.ts" resolves to the current package, but uses relative paths                                     @definitelytyped/no-bad-reference
@@ -106,9 +216,21 @@ types/no-relative-references/v1/index.d.ts
   11:1   error  Instead of declaring a module with \`declare module "no-relative-references"\`, write its contents in directly in "index.d.ts"  @definitelytyped/no-declare-current-package
   14:23  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                          @definitelytyped/no-bad-reference
 
+✖ 10 problems (10 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-relative-references/v1/no-relative-references-tests.ts should lint: results 1`] = `
+"
 types/no-relative-references/v1/no-relative-references-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-relative-references/v1/other/other.d.ts should lint: results 1`] = `
+"
 types/no-relative-references/v1/other/other.d.ts
   1:23  error  The reference "../../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
   2:23  error  The reference "../../v1/index.d.ts" resolves to the current package, but uses relative paths                                    @definitelytyped/no-bad-reference
@@ -117,6 +239,12 @@ types/no-relative-references/v1/other/other.d.ts
   6:23  error  The import "../../v1" resolves to the current package, but uses relative paths                                                  @definitelytyped/no-bad-reference
   7:23  error  The import "../../../foo/v1" resolves outside of the package. Use a bare import to reference other packages                     @definitelytyped/no-bad-reference
 
+✖ 6 problems (6 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-self-import/bad.d.ts should lint: results 1`] = `
+"
 types/no-self-import/bad.d.ts
   1:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
   2:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
@@ -126,29 +254,89 @@ types/no-self-import/bad.d.ts
   7:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
   8:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
 
+✖ 7 problems (7 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/no-self-import/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/no-self-import/no-self-import-tests.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/other/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/other/other-tests.ts should lint: results 1`] = `
+"
 types/other/other-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/other/v1/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/other/v1/other-tests.ts should lint: results 1`] = `
+"
 types/other/v1/other-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__foo/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/scoped__foo/scoped__foo-tests.ts should lint: results 1`] = `
+"
 types/scoped__foo/scoped__foo-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__foo/v1/index.d.ts should lint: results 1`] = `""`;
+
+exports[`fixture types/scoped__foo/v1/scoped__foo-tests.ts should lint: results 1`] = `
+"
 types/scoped__foo/v1/scoped__foo-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-declare-current-package/index.d.ts should lint: results 1`] = `
+"
 types/scoped__no-declare-current-package/index.d.ts
   1:1  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block  @definitelytyped/no-single-declare-module
   1:1  error  Instead of declaring a module with \`declare module "@scoped/no-declare-current-package"\`, write its contents in directly in "index.d.ts"                                @definitelytyped/no-declare-current-package
 
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-declare-current-package/no-declare-current-package-tests.ts should lint: results 1`] = `
+"
 types/scoped__no-declare-current-package/no-declare-current-package-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-declare-current-package/test/deep/import.d.ts should lint: results 1`] = `
+"
 types/scoped__no-declare-current-package/test/deep/import.d.ts
   1:1  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block                                                                                        @definitelytyped/no-single-declare-module
   1:1  error  Instead of declaring a module with \`declare module "@scoped/no-declare-current-package/deep/import"\`, write its contents in directly in "@scoped/no-declare-current-package/deep/import.d.ts" or "@scoped/no-declare-current-package/deep/import/index.d.ts"  @definitelytyped/no-declare-current-package
 
+✖ 2 problems (2 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/index.d.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/index.d.ts
    1:23  error  The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                 @definitelytyped/no-bad-reference
    2:23  error  The reference "./v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                   @definitelytyped/no-bad-reference
@@ -160,9 +348,21 @@ types/scoped__no-relative-references/index.d.ts
    9:1   error  Instead of declaring a module with \`declare module "@scoped/no-relative-references"\`, write its contents in directly in "index.d.ts"  @definitelytyped/no-declare-current-package
   11:23  error  The import "@scoped/no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages         @definitelytyped/no-bad-reference
 
+✖ 9 problems (9 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/no-relative-references-tests.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/no-relative-references-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/other/other.d.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/other/other.d.ts
   1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
   2:23  error  The reference "../v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages         @definitelytyped/no-bad-reference
@@ -171,6 +371,12 @@ types/scoped__no-relative-references/other/other.d.ts
   6:23  error  The import "../v1" resolves outside of the package. Use a bare import to reference other packages                            @definitelytyped/no-bad-reference
   7:23  error  The import "../../foo/v1" resolves outside of the package. Use a bare import to reference other packages                     @definitelytyped/no-bad-reference
 
+✖ 6 problems (6 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/v1/index.d.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/v1/index.d.ts
    1:23  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
    2:23  error  The reference "../v1/index.d.ts" resolves to the current package, but uses relative paths                                             @definitelytyped/no-bad-reference
@@ -183,9 +389,21 @@ types/scoped__no-relative-references/v1/index.d.ts
   11:1   error  Instead of declaring a module with \`declare module "@scoped/no-relative-references"\`, write its contents in directly in "index.d.ts"  @definitelytyped/no-declare-current-package
   14:23  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                                  @definitelytyped/no-bad-reference
 
+✖ 10 problems (10 errors, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/v1/no-relative-references-tests.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/v1/no-relative-references-tests.ts
   1:1  error  File has no content  @definitelytyped/no-useless-files
 
+✖ 1 problem (1 error, 0 warnings)
+"
+`;
+
+exports[`fixture types/scoped__no-relative-references/v1/other/other.d.ts should lint: results 1`] = `
+"
 types/scoped__no-relative-references/v1/other/other.d.ts
   1:23  error  The reference "../../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
   2:23  error  The reference "../../v1/index.d.ts" resolves to the current package, but uses relative paths                                    @definitelytyped/no-bad-reference
@@ -194,6 +412,6 @@ types/scoped__no-relative-references/v1/other/other.d.ts
   6:23  error  The import "../../v1" resolves to the current package, but uses relative paths                                                  @definitelytyped/no-bad-reference
   7:23  error  The import "../../../foo/v1" resolves outside of the package. Use a bare import to reference other packages                     @definitelytyped/no-bad-reference
 
-✖ 124 problems (124 errors, 0 warnings)
+✖ 6 problems (6 errors, 0 warnings)
 "
 `;
