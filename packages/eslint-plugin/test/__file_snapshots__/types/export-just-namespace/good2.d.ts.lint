@@ -1,0 +1,5 @@
+No errors
+
+==== types/export-just-namespace/good2.d.ts ====
+
+    export default class Hello {}

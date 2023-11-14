@@ -1,0 +1,2 @@
+namespace Stuff {}
+export = Stuff;
