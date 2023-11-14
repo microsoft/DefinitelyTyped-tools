@@ -1,0 +1,5 @@
+
+==== types/no-any-union/index.d.ts ====
+
+    export const x: any;
+    

@@ -1,0 +1,5 @@
+
+==== types/scoped__foo/index.d.ts ====
+
+    export const foo = 1234;
+    
