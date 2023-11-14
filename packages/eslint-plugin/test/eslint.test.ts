@@ -43,9 +43,14 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
   const output: string[] = [];
 
   function pushMessage(message: Linter.LintMessage): void {
-    const prefix = `!!! ${message.ruleId}: `;
+    const ruleId = message.ruleId;
+    if (!ruleId) {
+      throw new Error("Expected ruleId");
+    }
     const lines = message.message.split(/\r?\n/);
-    for (const line of lines) {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const prefix = `!!! ${i === 0 ? ruleId : " ".repeat(ruleId.length)}: `;
       output.push(prefix + line);
     }
   }
