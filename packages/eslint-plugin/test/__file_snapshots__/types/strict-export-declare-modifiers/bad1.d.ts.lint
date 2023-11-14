@@ -1,0 +1,10 @@
+types/strict-export-declare-modifiers/bad1.d.ts
+  1:1  error  'declare' keyword is redundant here  @definitelytyped/strict-export-declare-modifiers
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/strict-export-declare-modifiers/bad1.d.ts ====
+
+    declare interface I {}
+    ~~~~~~~
+!!! @definitelytyped/strict-export-declare-modifiers: 'declare' keyword is redundant here.
