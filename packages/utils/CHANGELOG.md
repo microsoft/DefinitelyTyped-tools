@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.0.187
+
+### Patch Changes
+
+- 85379bf8: Fix writeJson helper, path and contents swapped
+
 ## 0.0.186
 
 ### Patch Changes
