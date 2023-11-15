@@ -34,6 +34,8 @@ for (const fixture of allFixtures) {
       const resultText = stripAnsi(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
+      // TODO: jest-file-snapshot doesn't delete unused snapshots.
+      // But, we're using it because having every snapshot in one file is a pain.
       expect(resultText + "\n\n" + newOutput).toMatchFile(path.join(snapshotDir, `${fixture}.lint`));
     });
   });
