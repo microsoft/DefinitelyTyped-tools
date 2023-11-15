@@ -1,0 +1,8 @@
+{
+    "name": "@types/no-import-default-of-export-equals",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/no-import-default-of-export-equals": "workspace:."
+    }
+}

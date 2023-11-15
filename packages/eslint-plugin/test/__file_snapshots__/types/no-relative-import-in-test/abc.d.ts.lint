@@ -1,0 +1,6 @@
+No errors
+
+==== types/no-relative-import-in-test/abc.d.ts ====
+
+    export const value = 0;
+    export default value;

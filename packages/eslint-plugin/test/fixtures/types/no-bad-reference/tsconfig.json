@@ -15,6 +15,6 @@
     },
     "files": [
         "index.d.ts",
-        "no-relative-references-tests.ts"
+        "no-bad-reference-tests.ts"
     ]
 }

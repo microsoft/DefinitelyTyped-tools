@@ -1,0 +1,10 @@
+types/no-useless-files/bad3.d.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-useless-files/bad3.d.ts ====
+
+    /// <reference lib="baz" />
+    ~
+!!! @definitelytyped/no-useless-files: File has no content.

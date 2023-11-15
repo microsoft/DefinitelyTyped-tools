@@ -1,0 +1,13 @@
+types/scoped__no-declare-current-package/test/deep/import.d.ts
+  1:16  error  File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block                                                                                        @definitelytyped/no-single-declare-module
+  1:16  error  Instead of declaring a module with `declare module "@scoped/no-declare-current-package/deep/import"`, write its contents in directly in "@scoped/no-declare-current-package/deep/import.d.ts" or "@scoped/no-declare-current-package/deep/import/index.d.ts"  @definitelytyped/no-declare-current-package
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/scoped__no-declare-current-package/test/deep/import.d.ts ====
+
+    declare module "@scoped/no-declare-current-package/deep/import" { }
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-single-declare-module: File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block.
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-declare-current-package: Instead of declaring a module with `declare module "@scoped/no-declare-current-package/deep/import"`, write its contents in directly in "@scoped/no-declare-current-package/deep/import.d.ts" or "@scoped/no-declare-current-package/deep/import/index.d.ts".

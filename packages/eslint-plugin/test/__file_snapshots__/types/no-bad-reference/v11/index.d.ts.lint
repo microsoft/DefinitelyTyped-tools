@@ -1,0 +1,48 @@
+types/no-bad-reference/v11/index.d.ts
+   1:22  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
+   2:22  error  The reference "../v11/index.d.ts" resolves to the current package, but uses relative paths                                   @definitelytyped/no-bad-reference
+   3:22  error  The reference "../../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages  @definitelytyped/no-bad-reference
+   4:22  error  The reference "../index.d.ts" resolves outside of the package. Use a global reference to reference other packages            @definitelytyped/no-bad-reference
+   6:22  error  The import "../../foo" resolves outside of the package. Use a bare import to reference other packages                        @definitelytyped/no-bad-reference
+   7:23  error  The import "../v11" resolves to the current package, but uses relative paths                                                 @definitelytyped/no-bad-reference
+   8:23  error  The import "../../foo/v11" resolves outside of the package. Use a bare import to reference other packages                    @definitelytyped/no-bad-reference
+   9:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                         @definitelytyped/no-bad-reference
+  14:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                         @definitelytyped/no-bad-reference
+
+✖ 9 problems (9 errors, 0 warnings)
+
+==== types/no-bad-reference/v11/index.d.ts ====
+
+    /// <reference path="../../foo/index.d.ts" />
+                         ~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="../v11/index.d.ts" />
+                         ~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../v11/index.d.ts" resolves to the current package, but uses relative paths.
+    /// <reference path="../../foo/v1/index.d.ts" />
+                         ~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="../index.d.ts" />
+                         ~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    
+    import * as foo from "../../foo";
+                         ~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../../foo" resolves outside of the package. Use a bare import to reference other packages.
+    import * as foo2 from "../v11";
+                          ~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../v11" resolves to the current package, but uses relative paths.
+    import * as foo3 from "../../foo/v11";
+                          ~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../../foo/v11" resolves outside of the package. Use a bare import to reference other packages.
+    import * as va4 from "../index";
+                         ~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../index" resolves outside of the package. Use a bare import to reference other packages.
+    
+    declare module "no-relative-references" {
+      import A = require("no-relative-references/blah"); // Okay; relative
+      import B = require("no-relative-references/v11"); // Okay; no versioned dir here
+      import C = require("../index"); // Bad; parent dir
+                         ~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../index" resolves outside of the package. Use a bare import to reference other packages.
+    }

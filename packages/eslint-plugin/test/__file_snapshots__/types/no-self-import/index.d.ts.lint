@@ -1,0 +1,11 @@
+No errors
+
+==== types/no-self-import/index.d.ts ====
+
+    import other from "other-package";
+    
+    import other from "other-package/this-package";
+    
+    import old from "./v1gardenpath"
+    
+    import old from "./v1verb/other"

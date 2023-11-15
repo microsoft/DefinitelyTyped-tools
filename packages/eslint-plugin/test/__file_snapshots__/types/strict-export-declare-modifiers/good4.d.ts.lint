@@ -1,0 +1,5 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good4.d.ts ====
+
+    declare namespace N {}

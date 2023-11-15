@@ -1,0 +1,5 @@
+No errors
+
+==== types/export-just-namespace/good5.d.ts ====
+
+    export = stuff;

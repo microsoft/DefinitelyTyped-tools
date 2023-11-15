@@ -1,0 +1,7 @@
+No errors
+
+==== types/export-just-namespace/good7.d.ts ====
+
+    class Stuff {}
+    namespace Stuff {}
+    export = Stuff;

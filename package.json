@@ -40,6 +40,9 @@
         "@types/strip-json-comments",
         "strip-json-comments"
       ]
+    },
+    "patchedDependencies": {
+      "jest-file-snapshot@0.5.0": "patches/jest-file-snapshot@0.5.0.patch"
     }
   },
   "packageManager": "pnpm@8.10.4"

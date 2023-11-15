@@ -1,0 +1,43 @@
+types/no-bad-reference/index.d.ts
+   1:22  error  The reference "../other" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
+   2:22  error  The reference "./v11" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
+   3:22  error  The reference "./v11/index" resolves outside of the package. Use a global reference to reference other packages        @definitelytyped/no-bad-reference
+   4:22  error  The reference "./v11/subdir/file" resolves outside of the package. Use a global reference to reference other packages  @definitelytyped/no-bad-reference
+   5:22  error  The reference "./v0.1" resolves outside of the package. Use a global reference to reference other packages             @definitelytyped/no-bad-reference
+   6:22  error  The reference "./v0.1/index" resolves outside of the package. Use a global reference to reference other packages       @definitelytyped/no-bad-reference
+  13:22  error  Use forward slashes in paths                                                                                           @definitelytyped/no-bad-reference
+
+✖ 7 problems (7 errors, 0 warnings)
+
+==== types/no-bad-reference/index.d.ts ====
+
+    /// <reference path="../other" />
+                         ~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../other" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v11" />
+                         ~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v11" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v11/index" />
+                         ~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v11/index" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v11/subdir/file" />
+                         ~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v11/subdir/file" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v0.1" />
+                         ~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v0.1" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v0.1/index" />
+                         ~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v0.1/index" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="other" />
+    /// <reference path="./other" />
+    /// <reference path="./v1gardenpath" />
+    /// <reference path="./v1verb/other" />
+    /// <reference path="other" />
+    /// <reference path="other2" />
+    /// <reference path="..\index.d.ts" />
+                         ~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: Use forward slashes in paths.
+    
+    // unrelated comment
+    /// similar (reference path) comment

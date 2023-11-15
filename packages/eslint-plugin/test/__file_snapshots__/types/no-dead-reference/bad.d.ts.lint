@@ -1,0 +1,18 @@
+types/no-dead-reference/bad.d.ts
+  2:1  error  `/// <reference>` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+  6:1  error  `/// <reference>` directive must be at top of file to take effect  @definitelytyped/no-dead-reference
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/no-dead-reference/bad.d.ts ====
+
+    export class C { }
+    /// <reference types="terms" />
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-dead-reference: `/// <reference>` directive must be at top of file to take effect.
+    
+    
+    
+    /// <reference types="blah" />
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-dead-reference: `/// <reference>` directive must be at top of file to take effect.

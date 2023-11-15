@@ -1,0 +1,13 @@
+types/no-import-of-dev-dependencies/index.d.ts
+  4:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-import-of-dev-dependencies/index.d.ts ====
+
+    /// <reference types="other"/>
+    
+    import other from "other";
+    import self from "no-import-of-dev-dependencies";
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.

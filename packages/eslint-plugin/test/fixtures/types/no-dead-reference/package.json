@@ -1,0 +1,8 @@
+{
+    "name": "@types/no-dead-reference",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/no-self-union": "workspace:."
+    }
+}

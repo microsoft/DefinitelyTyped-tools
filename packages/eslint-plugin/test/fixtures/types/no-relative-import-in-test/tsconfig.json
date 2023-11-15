@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "bad.d.ts",
+        "no-relative-import-in-test-tests.ts",
+        "no-relative-import-in-test-tests2.ts",
+        "./abc.d.ts",
+        "./no-relative-import-in-test/abc.d.ts"
+    ]
+}

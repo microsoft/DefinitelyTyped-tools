@@ -1,0 +1,14 @@
+types/no-old-dt-header/index2.d.ts
+  1:1  error  File has no content                                                                                   @definitelytyped/no-useless-files
+  1:1  error  Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`  @definitelytyped/no-old-dt-header
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/no-old-dt-header/index2.d.ts ====
+
+    // Type definitions for AFRAME 1.2
+    ~
+!!! @definitelytyped/no-useless-files: File has no content.
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-old-dt-header: Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`
+    // Definitions by: Paul Shannon <https://github.com/devpaul>

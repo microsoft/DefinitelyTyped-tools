@@ -1,0 +1,8 @@
+{
+    "name": "@types/prefer-declare-function",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/prefer-declare-function": "workspace:."
+    }
+}

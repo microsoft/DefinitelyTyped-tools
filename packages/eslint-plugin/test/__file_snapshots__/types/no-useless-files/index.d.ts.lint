@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-useless-files/index.d.ts ====
+
+    export default "I am useful";

@@ -1,0 +1,45 @@
+types/scoped__no-relative-references/index.d.ts
+   1:22  error  The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                 @definitelytyped/no-bad-reference
+   2:22  error  The reference "./v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                   @definitelytyped/no-bad-reference
+   3:22  error  The reference "../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
+   5:22  error  The import "../foo" resolves outside of the package. Use a bare import to reference other packages                                    @definitelytyped/no-bad-reference
+   6:1   error  Don't import an old version of the current package                                                                                    @definitelytyped/no-self-import
+   6:23  error  The import "./v1" resolves outside of the package. Use a bare import to reference other packages                                      @definitelytyped/no-bad-reference
+   7:23  error  The import "../foo/v1" resolves outside of the package. Use a bare import to reference other packages                                 @definitelytyped/no-bad-reference
+   9:16  error  Instead of declaring a module with `declare module "@scoped/no-relative-references"`, write its contents in directly in "index.d.ts"  @definitelytyped/no-declare-current-package
+  11:22  error  The import "@scoped/no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages         @definitelytyped/no-bad-reference
+
+✖ 9 problems (9 errors, 0 warnings)
+
+==== types/scoped__no-relative-references/index.d.ts ====
+
+    /// <reference path="../foo/index.d.ts" />
+                         ~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="./v1/index.d.ts" />
+                         ~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "./v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    /// <reference path="../foo/v1/index.d.ts" />
+                         ~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The reference "../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
+    
+    import * as foo from "../foo";
+                         ~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../foo" resolves outside of the package. Use a bare import to reference other packages.
+    import * as foo2 from "./v1";
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+                          ~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "./v1" resolves outside of the package. Use a bare import to reference other packages.
+    import * as foo3 from "../foo/v1";
+                          ~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "../foo/v1" resolves outside of the package. Use a bare import to reference other packages.
+    
+    declare module "@scoped/no-relative-references" {
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-declare-current-package: Instead of declaring a module with `declare module "@scoped/no-relative-references"`, write its contents in directly in "index.d.ts".
+      import A = require("@scoped/no-relative-references/blah"); // Okay; relative
+      import B = require("@scoped/no-relative-references/v1"); // Bad; versioned subdir
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-bad-reference: The import "@scoped/no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages.
+    }

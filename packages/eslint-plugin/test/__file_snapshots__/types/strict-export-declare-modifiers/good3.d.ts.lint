@@ -1,0 +1,5 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good3.d.ts ====
+
+    declare function g(): void;
