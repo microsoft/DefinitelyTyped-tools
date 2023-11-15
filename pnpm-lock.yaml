@@ -249,7 +249,7 @@ importers:
         version: 44.2.7(eslint@8.53.0)
     devDependencies:
       '@definitelytyped/eslint-plugin':
-        specifier: workspace:.
+        specifier: link:./
         version: 'link:'
       '@types/eslint':
         specifier: ^8.44.7
