@@ -8,8 +8,8 @@ types/no-dead-reference/bad2.d.ts
 
     export class C { }
     /// <reference types="terms" />
-    ~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-dead-reference: `/// <reference>` directive must be at top of file to take effect.
     /// <reference types="multiple" />
-    ~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-dead-reference: `/// <reference>` directive must be at top of file to take effect.
