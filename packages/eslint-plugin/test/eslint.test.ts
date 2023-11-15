@@ -11,6 +11,18 @@ const snapshotDir = path.join(__dirname, "__file_snapshots__");
 
 const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
 
+function getLintSnapshotPath(fixture: string): string {
+  return path.join(snapshotDir, `${fixture}.lint`);
+}
+
+function getAllLintSnapshots() {
+  return new Set(globSync("**/*.lint", { cwd: snapshotDir, absolute: true }));
+}
+
+function getAllExpectedLintSnapshots() {
+  return new Set(allFixtures.map(getLintSnapshotPath));
+}
+
 let eslint: ESLint;
 
 beforeAll(() => {
@@ -34,9 +46,7 @@ for (const fixture of allFixtures) {
       const resultText = stripAnsi(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
-      // TODO: jest-file-snapshot doesn't delete unused snapshots.
-      // But, we're using it because having every snapshot in one file is a pain.
-      expect(resultText + "\n\n" + newOutput).toMatchFile(path.join(snapshotDir, `${fixture}.lint`));
+      expect(resultText + "\n\n" + newOutput).toMatchFile(getLintSnapshotPath(fixture));
     });
   });
 }
@@ -95,3 +105,26 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
 
   return output.join("\n").trim() + "\n";
 }
+
+// Similar to https://github.com/storybookjs/storybook/blob/df357020e010f49e7c325942f0c891e6702527d6/code/addons/storyshots-core/src/api/integrityTestTemplate.ts
+describe("lint snapshots", () => {
+  it("abandoned snapshots", () => {
+    const expectedSnapshots = getAllExpectedLintSnapshots();
+    const actualSnapshots = getAllLintSnapshots();
+    const abandonedSnapshots = [...actualSnapshots].filter((s) => !expectedSnapshots.has(s));
+
+    if (abandonedSnapshots.length === 0) {
+      return;
+    }
+
+    // https://github.com/jestjs/jest/issues/8732#issuecomment-516445064
+    if (expect.getState().snapshotState._updateSnapshot === "all") {
+      for (const abandoned of abandonedSnapshots) {
+        fs.rmSync(abandoned);
+      }
+      return;
+    }
+
+    expect(abandonedSnapshots).toHaveLength(0);
+  });
+});
