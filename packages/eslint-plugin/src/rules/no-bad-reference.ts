@@ -46,7 +46,7 @@ const rule = createRule({
       return name.startsWith(".") || name.startsWith(realNamePlusSlash);
     }
 
-    const ast = context.getSourceCode().ast;
+    const ast = context.sourceCode.ast;
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 

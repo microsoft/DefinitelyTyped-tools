@@ -16,7 +16,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const text = context.getSourceCode().text;
+    const text = context.sourceCode.text;
     if (
       isDeclarationPath(context.filename) &&
       text.indexOf("// Type definitions for ") === 0 &&
