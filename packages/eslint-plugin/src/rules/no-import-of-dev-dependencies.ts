@@ -18,11 +18,11 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (!isDeclarationPath(context.getFilename())) {
+    if (!isDeclarationPath(context.filename)) {
       return {};
     }
 
-    const info = findTypesPackage(context.getFilename());
+    const info = findTypesPackage(context.filename);
     if (!info) {
       return {};
     }

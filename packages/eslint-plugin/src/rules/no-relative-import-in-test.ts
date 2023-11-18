@@ -18,7 +18,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    if (isDeclarationPath(context.getFilename())) {
+    if (isDeclarationPath(context.filename)) {
       return {};
     }
 

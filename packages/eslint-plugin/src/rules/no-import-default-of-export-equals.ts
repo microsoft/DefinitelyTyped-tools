@@ -19,7 +19,7 @@ const rule = createRule({
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context);
     const checker = parserServices.program.getTypeChecker();
-    if (isDeclarationPath(context.getFilename())) {
+    if (isDeclarationPath(context.filename)) {
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {

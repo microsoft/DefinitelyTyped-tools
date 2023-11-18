@@ -18,7 +18,7 @@ const rule = createRule({
   create(context) {
     const text = context.getSourceCode().text;
     if (
-      isDeclarationPath(context.getFilename()) &&
+      isDeclarationPath(context.filename) &&
       text.indexOf("// Type definitions for ") === 0 &&
       text.indexOf("// Definitions by: ") > 0
     ) {

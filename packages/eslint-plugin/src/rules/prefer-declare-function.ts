@@ -22,7 +22,7 @@ const rule = createRule({
       "VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
         if (
           node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType &&
-          isDeclarationPath(context.getFilename())
+          isDeclarationPath(context.filename)
         ) {
           context.report({
             messageId: "variableFunction",

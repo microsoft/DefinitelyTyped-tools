@@ -33,7 +33,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const containingFileName = context.getFilename();
+    const containingFileName = context.filename;
     const typesPackage = findTypesPackage(containingFileName);
     if (!typesPackage) {
       return {};
