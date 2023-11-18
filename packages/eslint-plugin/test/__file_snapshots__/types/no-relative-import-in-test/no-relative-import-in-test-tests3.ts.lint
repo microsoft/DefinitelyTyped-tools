@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-relative-import-in-test/no-relative-import-in-test-tests3.ts ====
+
+    import util = require('./');
