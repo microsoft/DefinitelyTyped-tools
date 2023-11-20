@@ -57,6 +57,21 @@ const rule = createRule({
           });
         }
       },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      TSImportEqualsDeclaration(node) {
+        if (
+          node.moduleReference.type === "TSExternalModuleReference" &&
+          node.moduleReference.expression.type === "Literal" &&
+          typeof node.moduleReference.expression.value === "string"
+        ) {
+          if (devDeps.includes(node.moduleReference.expression.value)) {
+            context.report({
+              messageId: "noImportOfDevDependencies",
+              node,
+            });
+          }
+        }
+      },
     };
 
     function report(comment: TSESTree.Comment, messageId: MessageId) {
