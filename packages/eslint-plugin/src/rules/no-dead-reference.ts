@@ -14,7 +14,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const source = context.getSourceCode();
+    const source = context.sourceCode;
     if (source.ast.body.length) {
       // 'm' flag makes it multiline, so `^` matches the beginning of any line.
       // 'g' flag lets us set rgx.lastIndex

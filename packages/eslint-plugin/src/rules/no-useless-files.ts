@@ -16,7 +16,7 @@ const rule = createRule({
   create(context) {
     const {
       ast: { tokens, comments },
-    } = context.getSourceCode();
+    } = context.sourceCode;
 
     if (tokens.length === 0) {
       if (comments.length === 0) {
@@ -24,7 +24,7 @@ const rule = createRule({
       } else {
         const referenceRegExp = /^\/\s*<reference\s*(types|path)\s*=\s*["|'](.*)["|']/;
         let noReferenceFound = true;
-        commentsMatching(context.getSourceCode(), referenceRegExp, () => {
+        commentsMatching(context.sourceCode, referenceRegExp, () => {
           noReferenceFound = false;
         });
 

@@ -33,7 +33,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const containingFileName = context.getFilename();
+    const containingFileName = context.filename;
     const typesPackage = findTypesPackage(containingFileName);
     if (!typesPackage) {
       return {};
@@ -46,7 +46,7 @@ const rule = createRule({
       return name.startsWith(".") || name.startsWith(realNamePlusSlash);
     }
 
-    const ast = context.getSourceCode().ast;
+    const ast = context.sourceCode.ast;
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 

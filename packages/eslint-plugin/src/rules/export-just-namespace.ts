@@ -20,7 +20,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const ast = context.getSourceCode().ast;
+    const ast = context.sourceCode.ast;
 
     const exportEqualsNode = ast.body.find(isExportEqualsWithIdentifier);
     if (!exportEqualsNode) {
