@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.0.195
+
+### Patch Changes
+
+- 6f685060: Port tslint builtins -> eslint
+
 ## 0.0.194
 
 ### Patch Changes
