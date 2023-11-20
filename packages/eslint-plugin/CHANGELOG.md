@@ -1,5 +1,14 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.192
+
+### Patch Changes
+
+- 6d711988: Fix error spans of various lint rules
+- db9bf605: Fix incorrect ts-eslint peer deps
+- ed3ce17d: Minor refactor for tests
+- 6f685060: Port tslint builtins -> eslint
+
 ## 0.0.191
 
 ### Patch Changes
