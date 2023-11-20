@@ -2,4 +2,4 @@ No errors
 
 ==== types/strict-export-declare-modifiers/good5.d.ts ====
 
-    interface J {}
+    interface J { j: any }
