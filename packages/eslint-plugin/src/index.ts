@@ -1,5 +1,5 @@
-import { all } from "./configs/all.js";
-export { rules } from "./rules/index.js";
+import { all } from "./configs/all";
+export { rules } from "./rules/index";
 
 export const configs = {
   all,

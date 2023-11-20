@@ -1,4 +1,4 @@
-import { rules } from "../rules/index.js";
+import { rules } from "../rules";
 import { Linter } from "eslint";
 
 export const all: Linter.BaseConfig = {
