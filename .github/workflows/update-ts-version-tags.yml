@@ -39,8 +39,11 @@ jobs:
           ${{ runner.os }}-pnpm-store-cache-
     - run: pnpm install
     - run: pnpm build
+    - run: git clone --depth 1 https://github.com/DefinitelyTyped/DefinitelyTyped ../DefinitelyTyped
+    - run: pnpm install
+      working-directory: ../DefinitelyTyped
     - name: retag
-      run: node packages/retag/dist/index.js
+      run: node packages/retag/dist/index.js --path ../DefinitelyTyped
       env:
         NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
         GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
