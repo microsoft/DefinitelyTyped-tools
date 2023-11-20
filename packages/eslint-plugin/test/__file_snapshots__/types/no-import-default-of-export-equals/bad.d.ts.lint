@@ -6,7 +6,7 @@ types/no-import-default-of-export-equals/bad.d.ts
 ==== types/no-import-default-of-export-equals/bad.d.ts ====
 
     declare module "a" {
-        interface I {}
+        interface I { i: any }
         export = I;
     }
     

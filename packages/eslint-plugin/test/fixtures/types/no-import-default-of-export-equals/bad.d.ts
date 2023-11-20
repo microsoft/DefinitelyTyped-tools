@@ -1,5 +1,5 @@
 declare module "a" {
-    interface I {}
+    interface I { i: any }
     export = I;
 }
 

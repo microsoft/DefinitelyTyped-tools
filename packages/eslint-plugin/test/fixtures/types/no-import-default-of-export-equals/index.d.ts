@@ -1,5 +1,5 @@
 declare module "agood" {
-    interface I {}
+    interface I { i: any }
     export default I;
 }
 

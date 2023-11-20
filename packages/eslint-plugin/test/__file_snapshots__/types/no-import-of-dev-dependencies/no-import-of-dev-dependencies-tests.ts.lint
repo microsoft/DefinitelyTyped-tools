@@ -1,10 +1,21 @@
-No errors
+types/no-import-of-dev-dependencies/no-import-of-dev-dependencies-tests.ts
+  1:1  error  Do not use a triple slash reference for devdep, use `import` style instead       @typescript-eslint/triple-slash-reference
+  2:1  error  Do not use a triple slash reference for otherdevdep, use `import` style instead  @typescript-eslint/triple-slash-reference
+  3:1  error  Do not use a triple slash reference for other, use `import` style instead        @typescript-eslint/triple-slash-reference
+
+✖ 3 problems (3 errors, 0 warnings)
 
 ==== types/no-import-of-dev-dependencies/no-import-of-dev-dependencies-tests.ts ====
 
     /// <reference types="devdep"/>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for devdep, use `import` style instead.
     /// <reference types="otherdevdep"/>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for otherdevdep, use `import` style instead.
     /// <reference types="other"/>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for other, use `import` style instead.
     
     import other from "other";
     import self from "no-import-of-dev-dependencies";
