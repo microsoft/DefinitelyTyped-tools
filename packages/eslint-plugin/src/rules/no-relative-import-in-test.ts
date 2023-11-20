@@ -1,6 +1,6 @@
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import * as ts from "typescript";
-import { createRule } from "../util";
+import { createRule, getImportSource } from "../util";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
 const rule = createRule({
@@ -25,7 +25,12 @@ const rule = createRule({
     const services = ESLintUtils.getParserServices(context);
     const checker = services.program.getTypeChecker();
 
-    function lint(source: TSESTree.StringLiteral) {
+    function lint(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) {
+      const source = getImportSource(node);
+      if (!source) {
+        return;
+      }
+
       if (!source.value.startsWith(".")) {
         return;
       }
@@ -54,17 +59,11 @@ const rule = createRule({
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ImportDeclaration(node) {
-        lint(node.source);
+        lint(node);
       },
       // eslint-disable-next-line @typescript-eslint/naming-convention
       TSImportEqualsDeclaration(node) {
-        if (
-          node.moduleReference.type === "TSExternalModuleReference" &&
-          node.moduleReference.expression.type === "Literal" &&
-          typeof node.moduleReference.expression.value === "string"
-        ) {
-          lint(node.moduleReference.expression);
-        }
+        lint(node);
       },
     };
   },
