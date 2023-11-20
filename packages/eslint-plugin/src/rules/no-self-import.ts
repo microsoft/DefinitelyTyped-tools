@@ -30,12 +30,12 @@ const rule = createRule({
       if (source.value === packageName || source.value.startsWith(packageName + "/")) {
         context.report({
           messageId: "useRelativeImport",
-          node: source,
+          node,
         });
       } else if (source.value.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
         context.report({
           messageId: "useOnlyCurrentVersion",
-          node: source,
+          node,
         });
       }
     }
