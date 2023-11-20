@@ -33,7 +33,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const containingFileName = context.getFilename();
+    const containingFileName = context.filename;
     const typesPackage = findTypesPackage(containingFileName);
     if (!typesPackage) {
       return {};
@@ -46,7 +46,7 @@ const rule = createRule({
       return name.startsWith(".") || name.startsWith(realNamePlusSlash);
     }
 
-    const ast = context.getSourceCode().ast;
+    const ast = context.sourceCode.ast;
     const parserServices = ESLintUtils.getParserServices(context, true);
     const sourceFile = parserServices.esTreeNodeToTSNodeMap.get(ast);
 
@@ -69,7 +69,7 @@ const rule = createRule({
     }
     for (const ref of imports(sourceFile)) {
       if (isRelativeOrSelf(ref.text)) {
-        refs.push({ kind: "import", text: ref.text, range: ref });
+        refs.push({ kind: "import", text: ref.text, range: { pos: ref.getStart(), end: ref.getEnd() } });
       }
     }
 
@@ -140,8 +140,9 @@ function tsRangeToESLintLocation(range: ts.TextRange, sourceFile: ts.SourceFile)
   const pos = sourceFile.getLineAndCharacterOfPosition(range.pos);
   const end = sourceFile.getLineAndCharacterOfPosition(range.end);
   return {
-    start: { line: pos.line + 1, column: pos.character + 1 },
-    end: { line: end.line + 1, column: end.character + 1 },
+    // line is 1 indexed, but column is 0 indexed. >.<
+    start: { line: pos.line + 1, column: pos.character },
+    end: { line: end.line + 1, column: end.character },
   };
 }
 

@@ -1,0 +1,5 @@
+No errors
+
+==== types/foo/v1/index.d.ts ====
+
+    export const foo = 1234;

@@ -1,0 +1,5 @@
+No errors
+
+==== types/export-just-namespace/good3.d.ts ====
+
+    import * as fs from "fs";

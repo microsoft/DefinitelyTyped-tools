@@ -1,0 +1,5 @@
+No errors
+
+==== types/export-just-namespace/good1.d.ts ====
+
+    export const value = 3;

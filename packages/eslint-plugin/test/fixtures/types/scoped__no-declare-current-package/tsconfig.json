@@ -15,6 +15,7 @@
     },
     "files": [
         "index.d.ts",
-        "no-import-of-dev-dependencies-tests.ts"
+        "test/deep/import.d.ts",
+        "no-declare-current-package-tests.ts"
     ]
 }

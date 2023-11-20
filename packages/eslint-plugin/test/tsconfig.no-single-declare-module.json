@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "strict": true,
-    "target": "esnext"
-  },
-  "files": ["file.ts"]
-}

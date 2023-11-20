@@ -1,5 +1,10 @@
+import path from "path";
 import { findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
-import { getFixturePath } from "./fixtureTester";
+import { fixtureRoot } from "./util";
+
+function getFixturePath(filename: string): string {
+  return path.join(fixtureRoot, filename);
+}
 
 describe("getTypesPackageForDeclarationFile", () => {
   test.each([

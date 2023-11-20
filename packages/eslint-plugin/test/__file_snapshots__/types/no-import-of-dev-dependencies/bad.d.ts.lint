@@ -1,0 +1,23 @@
+types/no-import-of-dev-dependencies/bad.d.ts
+  1:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies
+  2:21  error  .d.ts files may not triple-slash reference packages in devDependencies  @definitelytyped/no-import-of-dev-dependencies
+  4:1   error  .d.ts files may not import packages in devDependencies                  @definitelytyped/no-import-of-dev-dependencies
+  5:1   error  .d.ts files may not import packages in devDependencies                  @definitelytyped/no-import-of-dev-dependencies
+
+✖ 4 problems (4 errors, 0 warnings)
+
+==== types/no-import-of-dev-dependencies/bad.d.ts ====
+
+    /// <reference types="devdep"/>
+                        ~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not triple-slash reference packages in devDependencies.
+    /// <reference types="otherdevdep"/>
+                        ~~~~~~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not triple-slash reference packages in devDependencies.
+    
+    import devdep from "devdep";
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+    import * as otherdevdep from "otherdevdep";
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.

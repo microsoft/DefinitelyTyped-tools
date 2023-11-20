@@ -1,0 +1,10 @@
+types/no-relative-import-in-test/index.d.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-relative-import-in-test/index.d.ts ====
+
+    
+    ~
+!!! @definitelytyped/no-useless-files: File has no content.

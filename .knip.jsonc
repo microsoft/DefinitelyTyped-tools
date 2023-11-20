@@ -29,7 +29,8 @@
     },
     "packages/eslint-plugin": {
       "entry": "src/index.ts",
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": ["@definitelytyped/eslint-plugin"]
     },
     "packages/header-parser": {
       "entry": "src/index.ts",

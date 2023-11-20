@@ -17,7 +17,7 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
+    const packageName = getTypesPackageForDeclarationFile(context.filename);
     if (!packageName) {
       return {};
     }
@@ -34,7 +34,7 @@ const rule = createRule({
           context.report({
             messageId: "noDeclareCurrentPackage",
             data: { text, preferred },
-            node,
+            node: node.id,
           });
         }
       },

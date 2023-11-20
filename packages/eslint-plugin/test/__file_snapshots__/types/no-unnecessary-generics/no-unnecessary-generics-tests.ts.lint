@@ -1,0 +1,44 @@
+types/no-unnecessary-generics/no-unnecessary-generics-tests.ts
+   1:13  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+   3:17  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+   5:13  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+   6:13  error  Type parameter T is never used      @definitelytyped/no-unnecessary-generics
+   7:13  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+   8:21  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+  10:6   error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+  13:7   error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+
+✖ 8 problems (8 errors, 0 warnings)
+
+==== types/no-unnecessary-generics/no-unnecessary-generics-tests.ts ====
+
+    const f1 = <T>(): T => {};
+                ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    class C {
+        constructor<T>(x: T) {}
+                    ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    }
+    function f2<T>(): T { }
+                ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    function f3<T>(x: { T: number }): void;
+                ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is never used.
+    function f4<T, U extends T>(u: U): U;
+                ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    const f5 = function<T>(): T {};
+                        ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    interface I {
+        <T>(value: T): void;
+         ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    }
+    interface I {
+        m<T>(x: T): void;
+          ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    }

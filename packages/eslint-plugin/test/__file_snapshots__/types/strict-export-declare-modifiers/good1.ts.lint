@@ -1,0 +1,5 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good1.ts ====
+
+    export declare class C {}

@@ -1,0 +1,12 @@
+types/no-old-dt-header/ok4.d.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-old-dt-header/ok4.d.ts ====
+
+    // A line before the old header
+    ~
+!!! @definitelytyped/no-useless-files: File has no content.
+    // Type definitions for AFRAME 1.2
+    // Definitions by: Paul Shannon <https://github.com/devpaul>

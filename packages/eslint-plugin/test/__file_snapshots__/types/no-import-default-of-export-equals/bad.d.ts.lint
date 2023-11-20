@@ -1,0 +1,17 @@
+types/no-import-default-of-export-equals/bad.d.ts
+  7:12  error  The module a uses `export = `. Import with `import a = require(a)`  @definitelytyped/no-import-default-of-export-equals
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-import-default-of-export-equals/bad.d.ts ====
+
+    declare module "a" {
+        interface I {}
+        export = I;
+    }
+    
+    declare module "b" {
+        import a from "a";
+               ~
+!!! @definitelytyped/no-import-default-of-export-equals: The module a uses `export = `. Import with `import a = require(a)`.
+    }

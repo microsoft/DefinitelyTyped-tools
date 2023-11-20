@@ -30,7 +30,7 @@ const rule = createRule({
   // to switch it to using TSESTree nodes like other ESLint rules.
   create(context) {
     const services = ESLintUtils.getParserServices(context, true);
-    const sourceCode = context.getSourceCode();
+    const sourceCode = context.sourceCode;
     const sourceFile = services.esTreeNodeToTSNodeMap.get(sourceCode.ast);
 
     const isExternal =

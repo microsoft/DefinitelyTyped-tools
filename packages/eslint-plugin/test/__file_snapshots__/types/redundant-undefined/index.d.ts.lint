@@ -1,0 +1,9 @@
+No errors
+
+==== types/redundant-undefined/index.d.ts ====
+
+    interface I {
+        ok?: string | undefined;
+        s?: string;
+        almost?: number | string;
+    }

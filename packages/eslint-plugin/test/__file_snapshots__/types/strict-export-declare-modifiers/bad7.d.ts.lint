@@ -1,0 +1,14 @@
+types/strict-export-declare-modifiers/bad7.d.ts
+  1:1   error  'declare' keyword is redundant here                                                                                                                                                                                                   @definitelytyped/strict-export-declare-modifiers
+  1:19  error  All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting  @definitelytyped/strict-export-declare-modifiers
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/strict-export-declare-modifiers/bad7.d.ts ====
+
+    declare namespace N {}
+    ~~~~~~~
+!!! @definitelytyped/strict-export-declare-modifiers: 'declare' keyword is redundant here.
+                      ~
+!!! @definitelytyped/strict-export-declare-modifiers: All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.
+    export namespace M {}
