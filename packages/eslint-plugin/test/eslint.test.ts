@@ -4,6 +4,7 @@ import stripAnsi from "strip-ansi";
 import { globSync } from "glob";
 import { fixtureRoot } from "./util";
 import { toMatchFile } from "jest-file-snapshot";
+import * as plugin from "../src/index";
 import fs from "fs";
 
 expect.extend({ toMatchFile });
@@ -26,7 +27,10 @@ function getAllExpectedLintSnapshots() {
 let eslint: ESLint;
 
 beforeAll(() => {
-  eslint = new ESLint({ cwd: fixtureRoot });
+  eslint = new ESLint({
+    cwd: fixtureRoot,
+    plugins: { "@definitelytyped/eslint-plugin": plugin as unknown as ESLint.Plugin },
+  });
 });
 
 afterAll(() => {
