@@ -1,7 +1,6 @@
 {
 	"extends": "./dtslint.json",
 	"rules": {
-		"no-redundant-jsdoc": false,
 		"npm-naming": [true, { "mode": "code" }]
 	}
 }

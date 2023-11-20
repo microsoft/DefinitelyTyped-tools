@@ -10,4 +10,4 @@ types/no-single-declare-module/bad.d.ts
 !!! @definitelytyped/no-single-declare-module: File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block.
     
     // Other global declarations don't affect this. They should go in "declare global".
-    interface I {}
+    interface I { i: any }

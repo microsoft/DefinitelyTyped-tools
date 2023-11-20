@@ -5,6 +5,6 @@ types/strict-export-declare-modifiers/bad1.d.ts
 
 ==== types/strict-export-declare-modifiers/bad1.d.ts ====
 
-    declare interface I {}
+    declare interface I { i: any }
     ~~~~~~~
 !!! @definitelytyped/strict-export-declare-modifiers: 'declare' keyword is redundant here.

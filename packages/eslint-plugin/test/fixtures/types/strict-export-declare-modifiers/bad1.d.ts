@@ -1,1 +1,1 @@
-declare interface I {}
+declare interface I { i: any }

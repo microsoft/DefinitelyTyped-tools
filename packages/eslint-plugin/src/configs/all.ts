@@ -146,7 +146,34 @@ export const all: Linter.BaseConfig = {
             "ts-check": false,
           },
         ],
+        // ported from tslint builtin rules
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            types: { "{}": false },
+            extendDefaults: true,
+          },
+        ],
         "@typescript-eslint/prefer-namespace-keyword": "error",
+        "@typescript-eslint/triple-slash-reference": ["error", { types: "prefer-import", path: "always" }],
+        "@typescript-eslint/no-empty-interface": "error",
+        "no-duplicate-imports": "error",
+        "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "interface",
+            format: [],
+            custom: {
+              regex: "^I[A-Z]",
+              match: false,
+            },
+          },
+        ],
+        "@typescript-eslint/explicit-member-accessibility": ["error", { accessibility: "no-public" }],
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/consistent-type-definitions": "error",
       },
     },
   ],

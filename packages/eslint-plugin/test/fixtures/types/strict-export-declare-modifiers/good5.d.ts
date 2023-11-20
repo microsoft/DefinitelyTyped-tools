@@ -1,1 +1,1 @@
-interface J {}
+interface J { j: any }

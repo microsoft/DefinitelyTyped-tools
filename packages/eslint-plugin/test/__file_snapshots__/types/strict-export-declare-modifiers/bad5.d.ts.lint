@@ -5,7 +5,7 @@ types/strict-export-declare-modifiers/bad5.d.ts
 
 ==== types/strict-export-declare-modifiers/bad5.d.ts ====
 
-    interface I {}
+    interface I { i: any }
               ~
 !!! @definitelytyped/strict-export-declare-modifiers: All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.
     export namespace M {}

@@ -3,7 +3,7 @@ No errors
 ==== types/no-import-default-of-export-equals/index.d.ts ====
 
     declare module "agood" {
-        interface I {}
+        interface I { i: any }
         export default I;
     }
     
