@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.0.196
+
+### Patch Changes
+
+- 59076828: Remove void-return, switch on no-invalid-void-type
+
 ## 0.0.195
 
 ### Patch Changes
