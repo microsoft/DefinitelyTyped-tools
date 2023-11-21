@@ -801,6 +801,7 @@ react-draggable
 react-final-form
 react-intl
 react-map-gl
+react-native
 react-native-fs
 react-native-gesture-handler
 react-native-maps
