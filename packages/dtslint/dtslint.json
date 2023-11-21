@@ -2,7 +2,6 @@
     "rulesDirectory": "./dist/rules",
     "rules": {
         "expect": true,
-        "void-return": true,
         "npm-naming": true
     }
 }
