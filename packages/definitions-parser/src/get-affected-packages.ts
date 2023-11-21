@@ -29,7 +29,11 @@ export async function getAffectedPackages(
     return { errors };
   }
   const { additions, deletions } = git;
-  const addedPackageDirectories = mapDefined(additions, (id) => id.typesDirectoryName);
+  const addedPackageDirectories = mapDefined(additions, (pkg) => {
+    if (!pkg.typesDirectoryName) return undefined;
+    if (!pkg.version || pkg.version === "*") return pkg.typesDirectoryName;
+    return `${pkg.typesDirectoryName}/v${formatTypingVersion(pkg.version)}`;
+  });
   const allDependentDirectories = [];
   // Start the filter off with all packages that were touched along with those that depend on them.
   const filters = ["--filter", `...@types/**[${sourceRemote}/${sourceBranch}]`];
