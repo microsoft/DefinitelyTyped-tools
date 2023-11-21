@@ -1,4 +1,5 @@
-import { createRule, getTypesPackageForDeclarationFile } from "../util";
+import { TSESTree } from "@typescript-eslint/utils";
+import { createRule, getImportSource, getTypesPackageForDeclarationFile } from "../util";
 const rule = createRule({
   name: "no-self-import",
   defaultOptions: [],
@@ -20,20 +21,33 @@ const rule = createRule({
       return {};
     }
 
+    function lint(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) {
+      const source = getImportSource(node);
+      if (!source) {
+        return;
+      }
+
+      if (source.value === packageName || source.value.startsWith(packageName + "/")) {
+        context.report({
+          messageId: "useRelativeImport",
+          node,
+        });
+      } else if (source.value.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
+        context.report({
+          messageId: "useOnlyCurrentVersion",
+          node,
+        });
+      }
+    }
+
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ImportDeclaration(node) {
-        if (node.source.value === packageName || node.source.value.startsWith(packageName + "/")) {
-          context.report({
-            messageId: "useRelativeImport",
-            node,
-          });
-        } else if (node.source.value.match(/^\.\/v\d+(?:\.\d+)?(?:\/.*)?$/)) {
-          context.report({
-            messageId: "useOnlyCurrentVersion",
-            node,
-          });
-        }
+        lint(node);
+      },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      TSImportEqualsDeclaration(node) {
+        lint(node);
       },
     };
   },

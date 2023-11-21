@@ -98,3 +98,21 @@ export function findTypesPackage(file: string): TypesPackageInfo | undefined {
     };
   });
 }
+
+export function getImportSource(
+  node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration,
+): TSESTree.StringLiteral | undefined {
+  if (node.type === "ImportDeclaration") {
+    return node.source;
+  }
+
+  if (
+    node.moduleReference.type === "TSExternalModuleReference" &&
+    node.moduleReference.expression.type === "Literal" &&
+    typeof node.moduleReference.expression.value === "string"
+  ) {
+    return node.moduleReference.expression;
+  }
+
+  return undefined;
+}

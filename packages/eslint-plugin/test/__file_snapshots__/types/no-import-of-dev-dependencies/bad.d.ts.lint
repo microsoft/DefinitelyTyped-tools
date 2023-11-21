@@ -1,21 +1,29 @@
 types/no-import-of-dev-dependencies/bad.d.ts
   1:1   error  Do not use a triple slash reference for devdep, use `import` style instead       @typescript-eslint/triple-slash-reference
+  1:1   error  Do not use a triple slash reference for devdep, use `import` style instead       @typescript-eslint/triple-slash-reference
   1:21  error  .d.ts files may not triple-slash reference packages in devDependencies           @definitelytyped/no-import-of-dev-dependencies
+  2:1   error  Do not use a triple slash reference for otherdevdep, use `import` style instead  @typescript-eslint/triple-slash-reference
   2:1   error  Do not use a triple slash reference for otherdevdep, use `import` style instead  @typescript-eslint/triple-slash-reference
   2:21  error  .d.ts files may not triple-slash reference packages in devDependencies           @definitelytyped/no-import-of-dev-dependencies
   4:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
   5:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  7:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  8:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
 
-✖ 6 problems (6 errors, 0 warnings)
+✖ 10 problems (10 errors, 0 warnings)
 
 ==== types/no-import-of-dev-dependencies/bad.d.ts ====
 
     /// <reference types="devdep"/>
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for devdep, use `import` style instead.
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for devdep, use `import` style instead.
                         ~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not triple-slash reference packages in devDependencies.
     /// <reference types="otherdevdep"/>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for otherdevdep, use `import` style instead.
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for otherdevdep, use `import` style instead.
                         ~~~~~~~~~~~
@@ -26,4 +34,11 @@ types/no-import-of-dev-dependencies/bad.d.ts
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
     import * as otherdevdep from "otherdevdep";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+    
+    import devdep2 = require("devdep");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+    import otherdevdep2 = require("otherdevdep");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.

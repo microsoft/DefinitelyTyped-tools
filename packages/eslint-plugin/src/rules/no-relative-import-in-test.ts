@@ -1,6 +1,6 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import * as ts from "typescript";
-import { createRule } from "../util";
+import { createRule, getImportSource } from "../util";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
 const rule = createRule({
@@ -25,28 +25,45 @@ const rule = createRule({
     const services = ESLintUtils.getParserServices(context);
     const checker = services.program.getTypeChecker();
 
+    function lint(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) {
+      const source = getImportSource(node);
+      if (!source) {
+        return;
+      }
+
+      if (!source.value.startsWith(".")) {
+        return;
+      }
+
+      const moduleSymbol = checker.getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(source));
+      if (!moduleSymbol) {
+        // TODO(jakebailey): generally speaking, this should be an error; you can't import a non-module.
+        return;
+      }
+
+      if (!moduleSymbol.declarations) {
+        return;
+      }
+
+      for (const declaration of moduleSymbol.declarations) {
+        if (ts.isSourceFile(declaration) && declaration.isDeclarationFile) {
+          context.report({
+            messageId: "useGlobalImport",
+            node: source,
+          });
+          return;
+        }
+      }
+    }
+
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ImportDeclaration(node) {
-        const { source } = node;
-        if (!source.value.startsWith(".")) {
-          return;
-        }
-
-        const moduleSymbol = checker.getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(source));
-        if (!moduleSymbol?.declarations) {
-          return;
-        }
-
-        for (const declaration of moduleSymbol.declarations) {
-          if (ts.isSourceFile(declaration) && declaration.isDeclarationFile) {
-            context.report({
-              messageId: "useGlobalImport",
-              node: source,
-            });
-            return;
-          }
-        }
+        lint(node);
+      },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      TSImportEqualsDeclaration(node) {
+        lint(node);
       },
     };
   },

@@ -1,5 +1,5 @@
 import { TSESTree } from "@typescript-eslint/utils";
-import { createRule, commentsMatching, findTypesPackage } from "../util";
+import { createRule, commentsMatching, findTypesPackage, getImportSource } from "../util";
 import { isDeclarationPath, isTypesPackageName, typesPackageNameToRealName } from "@definitelytyped/utils";
 
 type MessageId = "noImportOfDevDependencies" | "noReferenceOfDevDependencies";
@@ -47,15 +47,28 @@ const rule = createRule({
       }
     });
 
+    function lint(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) {
+      const source = getImportSource(node);
+      if (!source) {
+        return;
+      }
+
+      if (devDeps.includes(source.value)) {
+        context.report({
+          messageId: "noImportOfDevDependencies",
+          node,
+        });
+      }
+    }
+
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ImportDeclaration(node) {
-        if (devDeps.includes(node.source.value)) {
-          context.report({
-            messageId: "noImportOfDevDependencies",
-            node,
-          });
-        }
+        lint(node);
+      },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      TSImportEqualsDeclaration(node) {
+        lint(node);
       },
     };
 

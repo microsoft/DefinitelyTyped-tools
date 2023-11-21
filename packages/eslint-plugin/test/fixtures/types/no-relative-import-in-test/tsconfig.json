@@ -18,6 +18,7 @@
         "bad.d.ts",
         "no-relative-import-in-test-tests.ts",
         "no-relative-import-in-test-tests2.ts",
+        "no-relative-import-in-test-tests3.ts",
         "./abc.d.ts",
         "./no-relative-import-in-test/abc.d.ts"
     ]

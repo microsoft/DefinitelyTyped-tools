@@ -1,13 +1,20 @@
 types/no-self-import/bad.d.ts
-  1:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-  2:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-  4:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  5:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  6:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  7:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  8:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+   1:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+   2:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+   4:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+   5:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+   6:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+   7:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+   8:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+  10:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+  11:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+  13:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+  14:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+  15:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+  16:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
+  17:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
 
-✖ 7 problems (7 errors, 0 warnings)
+✖ 14 problems (14 errors, 0 warnings)
 
 ==== types/no-self-import/bad.d.ts ====
 
@@ -32,4 +39,27 @@ types/no-self-import/bad.d.ts
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
     import old5 from "./v0.1/index"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+    
+    import myselfRequired = require("no-self-import");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
+    import abcRequired = require("no-self-import/abc.d.ts");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
+    
+    import old1Required = require("./v11");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+    import old2Required = require("./v11/index");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+    import old3Required = require("./v11/subdir/file");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+    import old4Required = require("./v0.1");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-self-import: Don't import an old version of the current package.
+    import old5Required = require("./v0.1/index");
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
