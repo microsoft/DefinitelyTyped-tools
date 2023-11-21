@@ -29,7 +29,7 @@ let eslint: ESLint;
 beforeAll(() => {
   eslint = new ESLint({
     cwd: fixtureRoot,
-    plugins: { "@definitelytyped/eslint-plugin": plugin as unknown as ESLint.Plugin },
+    plugins: { [plugin.meta.name]: plugin },
   });
 });
 
