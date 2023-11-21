@@ -174,6 +174,7 @@ export const all: Linter.BaseConfig = {
         "@typescript-eslint/explicit-member-accessibility": ["error", { accessibility: "no-public" }],
         "@typescript-eslint/no-misused-new": "error",
         "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/no-invalid-void-type": ["error", { allowAsThisParameter: true, allowInGenericTypeArguments: true }],
       },
     },
   ],
