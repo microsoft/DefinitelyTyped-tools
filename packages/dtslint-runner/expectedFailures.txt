@@ -1,2 +1,4 @@
 bookshelf
 graphql-resolvers
+knex-db-manager
+knex-cleaner
