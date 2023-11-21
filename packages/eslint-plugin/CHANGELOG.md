@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.194
+
+### Patch Changes
+
+- 59076828: Remove void-return, switch on no-invalid-void-type
+
 ## 0.0.193
 
 ### Patch Changes

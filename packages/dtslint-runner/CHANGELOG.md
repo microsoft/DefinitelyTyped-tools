@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.201
+
+### Patch Changes
+
+- 2f8019b5: Add knex-\* to expected failures
+- Updated dependencies [59076828]
+  - @definitelytyped/dtslint@0.0.196
+
 ## 0.0.200
 
 ### Patch Changes

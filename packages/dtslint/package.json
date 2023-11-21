@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.195",
+  "version": "0.0.196",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
