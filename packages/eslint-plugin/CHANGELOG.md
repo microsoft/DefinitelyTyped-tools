@@ -1,5 +1,12 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.193
+
+### Patch Changes
+
+- 0a3c2d5b: Fully type eslint plugin export and add metadata
+- 7af66e7d: Handle `import = require()` in lint rules
+
 ## 0.0.192
 
 ### Patch Changes
