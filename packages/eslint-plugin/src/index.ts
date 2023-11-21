@@ -4,7 +4,7 @@ import { rules } from "./rules/index";
 
 const packageJson = require("../package.json");
 
-const plugin: ESLint.Plugin = {
+const plugin = {
   meta: {
     name: packageJson.name,
     version: packageJson.version,
@@ -13,6 +13,6 @@ const plugin: ESLint.Plugin = {
     all,
   },
   rules: rules as any,
-};
+} satisfies ESLint.Plugin;
 
 export = plugin;
