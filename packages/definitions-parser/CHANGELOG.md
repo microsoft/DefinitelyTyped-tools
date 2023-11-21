@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.194
+
+### Patch Changes
+
+- 926d5ab0: Fix getAffectedPackages for PRs which modify only versioned dirs
+
 ## 0.0.193
 
 ### Patch Changes
