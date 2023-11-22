@@ -1,10 +1,10 @@
 import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
-import * as TsType from "typescript";
+import * as ts from "typescript";
 
-type Program = TsType.Program;
-type SourceFile = TsType.SourceFile;
+type TSModule = typeof ts;
+const globalTsVersion = ts.version;
 
 const rule = createRule({
   name: "expect",
@@ -21,7 +21,7 @@ const rule = createRule({
       {
         type: "object",
         properties: {
-          runAllTypeScriptVersions: {
+          isEditor: {
             type: "boolean",
           },
         },
@@ -31,7 +31,7 @@ const rule = createRule({
   },
   defaultOptions: [
     {
-      runAllTypeScriptVersions: false,
+      isEditor: false,
     },
   ],
   create(context) {
@@ -43,8 +43,10 @@ const rule = createRule({
 
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      Program() {
-        walk(context, parserServices.program, TsType, TsType.version, undefined);
+      Program(node) {
+        // Grab the filename as known by TS, just to make sure we get the right normalization.
+        const fileName = parserServices.esTreeNodeToTSNodeMap.get(node).fileName;
+        walk(context, fileName, parserServices.program, ts, undefined);
       },
     };
   },
@@ -55,19 +57,18 @@ type Context = Parameters<(typeof rule)["create"]>[0];
 // type Messages = keyof (typeof rule)["meta"]["messages"];
 
 function walk(
-  ctx: Context,
-  program: Program,
-  ts: typeof TsType,
-  versionName: string,
+  ctx: Pick<Context, "report" | "sourceCode">,
+  fileName: string,
+  program: ts.Program,
+  ts: TSModule,
   nextHigherVersion: string | undefined,
 ): void {
-  const { fileName } = ESLintUtils.getParserServices(ctx).esTreeNodeToTSNodeMap.get(ctx.sourceCode.ast);
   const sourceFile = program.getSourceFile(fileName)!;
   if (!sourceFile) {
     addFailureAtLine(
       0,
       `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${TsType.version}, but did not find it in ts@${versionName}.`,
+        `Expected to find a file '${fileName}' present in ${globalTsVersion}, but did not find it in ts@${ts.version}.`,
     );
     return;
   }
@@ -96,7 +97,7 @@ function walk(
       data: {
         expectedType: expected,
         actualType: actual,
-        expectedVersion: versionName,
+        expectedVersion: ts.version,
       },
       loc: {
         start: ctx.sourceCode.getLocFromIndex(node.getStart(sourceFile)),
@@ -111,7 +112,7 @@ function walk(
     );
   }
 
-  function addDiagnosticFailure(diagnostic: TsType.Diagnostic): void {
+  function addDiagnosticFailure(diagnostic: ts.Diagnostic): void {
     const intro = getIntro();
     if (diagnostic.file === sourceFile) {
       const msg = `${intro}\n${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`;
@@ -141,9 +142,9 @@ function walk(
 
   function getIntro(): string {
     if (nextHigherVersion === undefined) {
-      return `TypeScript@${versionName} compile error: `;
+      return `TypeScript@${ts.version} compile error: `;
     } else {
-      const msg = `Compile error in typescript@${versionName} but not in typescript@${nextHigherVersion}.\n`;
+      const msg = `Compile error in typescript@${ts.version} but not in typescript@${nextHigherVersion}.\n`;
       const explain =
         nextHigherVersion === "next"
           ? "TypeScript@next features not yet supported."
@@ -161,7 +162,7 @@ function walk(
     ctx.report({
       messageId: "FAILURE_STRING_GENERIC",
       data: {
-        message: `TypeScript@${versionName}: ${failure}`,
+        message: `TypeScript@${ts.version}: ${failure}`,
       },
       loc: {
         start: ctx.sourceCode.getLocFromIndex(start),
@@ -178,7 +179,7 @@ interface Assertions {
   readonly duplicates: readonly number[];
 }
 
-function parseAssertions(sourceFile: SourceFile): Assertions {
+function parseAssertions(sourceFile: ts.SourceFile): Assertions {
   const typeAssertions = new Map<number, string>();
   const duplicates: number[] = [];
 
@@ -231,7 +232,7 @@ function isFirstOnLine(text: string, lineStart: number, pos: number): boolean {
 
 interface ExpectTypeFailures {
   /** Lines with an $ExpectType, but a different type was there. */
-  readonly unmetExpectations: readonly { node: TsType.Node; expected: string; actual: string }[];
+  readonly unmetExpectations: readonly { node: ts.Node; expected: string; actual: string }[];
   /** Lines with an $ExpectType, but no node could be found. */
   readonly unusedAssertions: Iterable<number>;
 }
@@ -287,12 +288,12 @@ function matchReadonlyArray(actual: string, expected: string) {
 }
 
 function getExpectTypeFailures(
-  sourceFile: SourceFile,
+  sourceFile: ts.SourceFile,
   typeAssertions: Map<number, string>,
-  checker: TsType.TypeChecker,
-  ts: typeof TsType,
+  checker: ts.TypeChecker,
+  ts: TSModule,
 ): ExpectTypeFailures {
-  const unmetExpectations: { node: TsType.Node; expected: string; actual: string }[] = [];
+  const unmetExpectations: { node: ts.Node; expected: string; actual: string }[] = [];
   // Match assertions to the first node that appears on the line they apply to.
   // `forEachChild` isn't available as a method in older TypeScript versions, so must use `ts.forEachChild` instead.
   ts.forEachChild(sourceFile, function iterate(node) {
@@ -301,7 +302,7 @@ function getExpectTypeFailures(
     if (expected !== undefined) {
       // https://github.com/Microsoft/TypeScript/issues/14077
       if (node.kind === ts.SyntaxKind.ExpressionStatement) {
-        node = (node as TsType.ExpressionStatement).expression;
+        node = (node as ts.ExpressionStatement).expression;
       }
 
       const type = checker.getTypeAtLocation(getNodeForExpectType(node, ts));
@@ -322,12 +323,12 @@ function getExpectTypeFailures(
   return { unmetExpectations, unusedAssertions: typeAssertions.keys() };
 }
 
-function getNodeForExpectType(node: TsType.Node, ts: typeof TsType): TsType.Node {
+function getNodeForExpectType(node: ts.Node, ts: TSModule): ts.Node {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     // ts2.0 doesn't have `isVariableStatement`
     const {
       declarationList: { declarations },
-    } = node as TsType.VariableStatement;
+    } = node as ts.VariableStatement;
     if (declarations.length === 1) {
       const { initializer } = declarations[0];
       if (initializer) {
@@ -338,7 +339,7 @@ function getNodeForExpectType(node: TsType.Node, ts: typeof TsType): TsType.Node
   return node;
 }
 
-function lineOfPosition(pos: number, sourceFile: SourceFile): number {
+function lineOfPosition(pos: number, sourceFile: ts.SourceFile): number {
   return sourceFile.getLineAndCharacterOfPosition(pos).line;
 }
 
