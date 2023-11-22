@@ -90,8 +90,10 @@ const rule = createRule<Options, MessageIds>({
         }
 
         // TODO: can we avoid running each and everyone one of these, like dtslint used to do?
+        // I think it'd be better to test each of these anyway, but the messages need to be deduped.
+        // The interface should not use the context; instead it should push into a common Map.
         for (const version of versionsToTest) {
-          const ts = require(version.path);
+          const ts = require(version.path) as TSModule;
           const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
           walk(context, fileName, program, ts, ts.versionMajorMinor, /*nextHigherVersion*/ undefined);
         }

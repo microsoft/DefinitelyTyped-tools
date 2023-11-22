@@ -64,16 +64,47 @@ export async function lint(
   }
   const result = linter.getResult();
   let output = result.failures.length ? result.output : "";
-  if (!expectOnly) {
-    const cwd = process.cwd();
-    process.chdir(dirPath);
-    const eslint = new ESLint();
-    const formatter = await eslint.loadFormatter("stylish");
-    const eresults = await eslint.lintFiles(esfiles);
-    output += formatter.format(eresults);
-    estree.clearCaches();
-    process.chdir(cwd);
+
+  const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
+    versionName,
+    path: typeScriptPath(versionName, tsLocal),
+  }));
+
+  const cwd = process.cwd();
+  process.chdir(dirPath);
+
+  const options: ESLint.Options = {
+    overrideConfig: {
+      overrides: [
+        {
+          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
+          rules: {
+            "@definitelytyped/expect": ["error", { versionsToTest }],
+          },
+        },
+      ],
+    },
+  };
+
+  if (expectOnly) {
+    // Disable the regular config, instead load only the plugins and use just the rule above.
+    // TODO(jakebailey): share this with eslint-plugin
+    options.useEslintrc = false;
+    options.overrideConfig!.plugins = ["@definitelytyped", "@typescript-eslint", "jsdoc"];
+    const override = options.overrideConfig!.overrides![0];
+    override.parser = "@typescript-eslint/parser";
+    override.parserOptions = {
+      project: true,
+      warnOnUnsupportedTypeScriptVersion: false,
+    };
   }
+
+  const eslint = new ESLint(options);
+  const formatter = await eslint.loadFormatter("stylish");
+  const eresults = await eslint.lintFiles(esfiles);
+  output += formatter.format(eresults);
+  estree.clearCaches();
+  process.chdir(cwd);
 
   return output;
 }
