@@ -1,12 +1,13 @@
 import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule, findUp } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
-import * as ts from "typescript";
+import type * as ts from "typescript";
 import path from "path";
 import fs from "fs";
 
 type TSModule = typeof ts;
-const localTsVersion = ts.version;
+const localTypeScript = require("typescript") as TSModule;
+
 type Options = [
   {
     versionsToTest?: {
@@ -85,7 +86,7 @@ const rule = createRule<Options, MessageIds>({
         const versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
           // In the editor, just use the local install of TypeScript.
-          walk(context, fileName, parserServices.program, ts, "local", undefined);
+          walk(context, fileName, parserServices.program, localTypeScript, "local", undefined);
           return;
         }
 
@@ -158,7 +159,7 @@ function walk(
     addFailureAtLine(
       0,
       `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${localTsVersion}, but did not find it in ts@${versionName}.`,
+        `Expected to find a file '${fileName}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@${versionName}.`,
     );
     return;
   }
