@@ -1,0 +1,5 @@
+No errors
+
+==== types/expect/index.d.ts ====
+
+    export const foo = 1234;

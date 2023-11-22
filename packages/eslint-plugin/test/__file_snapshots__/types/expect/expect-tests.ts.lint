@@ -1,0 +1,51 @@
+types/expect/expect-tests.ts
+   6:1  error  TypeScript@5.2.2 expected type to be:
+  number
+got:
+  1234         @definitelytyped/expect
+  14:1  error  TypeScript@5.2.2 expected type to be:
+  NotRightAtAll
+got:
+  1234  @definitelytyped/expect
+  18:1  error  TypeScript@5.2.2 expected type to be:
+  Oops
+got:
+  any            @definitelytyped/expect
+
+✖ 3 problems (3 errors, 0 warnings)
+
+==== types/expect/expect-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from "./";
+    
+    
+    // $ExpectType number
+    expect.foo;
+    ~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@5.2.2 expected type to be:
+!!!                        :   number
+!!!                        : got:
+!!!                        :   1234
+    
+    
+    // $ExpectType 1234
+    expect.foo;
+    
+    
+    // $ExpectType NotRightAtAll
+    expect.foo;
+    ~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@5.2.2 expected type to be:
+!!!                        :   NotRightAtAll
+!!!                        : got:
+!!!                        :   1234
+    
+    
+    // $ExpectType Oops
+    
+    ~
+!!! @definitelytyped/expect: TypeScript@5.2.2 expected type to be:
+!!!                        :   Oops
+!!!                        : got:
+!!!                        :   any
