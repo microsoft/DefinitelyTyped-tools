@@ -88,7 +88,8 @@ const rule = createRule<Options, MessageIds>({
         const versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
           // In the editor, just use the global install of TypeScript.
-          walk(context, fileName, parserServices.program, ts, ts.versionMajorMinor, undefined);
+          // TODO: better version string (or no version string) here; right now this is hardcoded to make test baselines consistent
+          walk(context, fileName, parserServices.program, ts, "?", undefined);
           return;
         }
 

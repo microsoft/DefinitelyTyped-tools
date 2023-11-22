@@ -1,13 +1,13 @@
 types/expect/expect-tests.ts
-   6:1  error  TypeScript@5.2 expected type to be:
+   6:1  error  TypeScript@? expected type to be:
   number
 got:
   1234         @definitelytyped/expect
-  14:1  error  TypeScript@5.2 expected type to be:
+  14:1  error  TypeScript@? expected type to be:
   NotRightAtAll
 got:
   1234  @definitelytyped/expect
-  18:1  error  TypeScript@5.2 expected type to be:
+  18:1  error  TypeScript@? expected type to be:
   Oops
 got:
   any            @definitelytyped/expect
@@ -23,7 +23,7 @@ got:
     // $ExpectType number
     expect.foo;
     ~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript@5.2 expected type to be:
+!!! @definitelytyped/expect: TypeScript@? expected type to be:
 !!!                        :   number
 !!!                        : got:
 !!!                        :   1234
@@ -36,7 +36,7 @@ got:
     // $ExpectType NotRightAtAll
     expect.foo;
     ~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript@5.2 expected type to be:
+!!! @definitelytyped/expect: TypeScript@? expected type to be:
 !!!                        :   NotRightAtAll
 !!!                        : got:
 !!!                        :   1234
@@ -45,7 +45,7 @@ got:
     // $ExpectType Oops
     
     ~
-!!! @definitelytyped/expect: TypeScript@5.2 expected type to be:
+!!! @definitelytyped/expect: TypeScript@? expected type to be:
 !!!                        :   Oops
 !!!                        : got:
 !!!                        :   any
