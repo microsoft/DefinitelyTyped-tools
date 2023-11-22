@@ -1,12 +1,26 @@
 import { isDeclarationPath } from "@definitelytyped/utils";
-import { createRule } from "../util";
+import { createRule, findUp } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
 import * as ts from "typescript";
+import path from "path";
+import fs from "fs";
 
 type TSModule = typeof ts;
 const globalTsVersion = ts.version;
 
-const rule = createRule({
+interface VersionToTest {
+  readonly versionName: string;
+  readonly path: string;
+}
+
+type Options = [
+  {
+    versionsToTest?: VersionToTest[];
+  },
+];
+type MessageIds = "FAILURE_STRING" | "FAILURE_STRING_GENERIC";
+
+const rule = createRule<Options, MessageIds>({
   name: "expect",
   meta: {
     type: "problem",
@@ -21,21 +35,45 @@ const rule = createRule({
       {
         type: "object",
         properties: {
-          isEditor: {
-            type: "boolean",
+          versionsToTest: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                versionName: { type: "string" },
+                path: { type: "string" },
+              },
+              required: ["versionName", "path"],
+              additionalProperties: false,
+            },
           },
         },
         additionalProperties: false,
       },
     ],
   },
-  defaultOptions: [
-    {
-      isEditor: false,
-    },
-  ],
+  defaultOptions: [{}],
   create(context) {
     if (isDeclarationPath(context.filename) || !context.sourceCode.text.includes("$ExpectType")) {
+      return {};
+    }
+
+    const tsconfigPath = findUp(context.filename, (dir) => {
+      const tsconfig = path.join(dir, "tsconfig.json");
+      return fs.existsSync(tsconfig) ? tsconfig : undefined;
+    });
+
+    if (!tsconfigPath) {
+      context.report({
+        messageId: "FAILURE_STRING_GENERIC",
+        data: {
+          message: `Could not find a tsconfig.json file.`,
+        },
+        loc: {
+          start: { line: 0, column: 0 },
+          end: { line: 0, column: 0 },
+        },
+      });
       return {};
     }
 
@@ -46,21 +84,74 @@ const rule = createRule({
       Program(node) {
         // Grab the filename as known by TS, just to make sure we get the right normalization.
         const fileName = parserServices.esTreeNodeToTSNodeMap.get(node).fileName;
-        walk(context, fileName, parserServices.program, ts, undefined);
+
+        const versionsToTest = context.options[0]?.versionsToTest;
+        if (!versionsToTest?.length) {
+          // In the editor, just use the global install of TypeScript.
+          walk(context, fileName, parserServices.program, ts, ts.versionMajorMinor, undefined);
+          return;
+        }
+
+        // TODO: can we avoid running each and everyone one of these, like dtslint used to do?
+        for (const version of versionsToTest) {
+          const ts = require(version.path);
+          const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
+          walk(context, fileName, program, ts, ts.versionMajorMinor, /*nextHigherVersion*/ undefined);
+        }
       },
     };
   },
 });
 
-type Context = Parameters<(typeof rule)["create"]>[0];
+const programCache = new WeakMap<ts.Program, Map<string, ts.Program>>();
+/** Maps a tslint Program to one created with the version specified in `options`. */
+function getProgram(configFile: string, ts: TSModule, versionName: string, lintProgram: ts.Program): ts.Program {
+  let versionToProgram = programCache.get(lintProgram);
+  if (versionToProgram === undefined) {
+    versionToProgram = new Map<string, ts.Program>();
+    programCache.set(lintProgram, versionToProgram);
+  }
 
-// type Messages = keyof (typeof rule)["meta"]["messages"];
+  let newProgram = versionToProgram.get(versionName);
+  if (newProgram === undefined) {
+    newProgram = createProgram(configFile, ts);
+    versionToProgram.set(versionName, newProgram);
+  }
+  return newProgram;
+}
+
+function createProgram(configFile: string, ts: TSModule): ts.Program {
+  const projectDirectory = path.dirname(configFile);
+  const { config } = ts.readConfigFile(configFile, ts.sys.readFile);
+  const parseConfigHost: ts.ParseConfigHost = {
+    fileExists: fs.existsSync,
+    readDirectory: ts.sys.readDirectory,
+    readFile: (file) => fs.readFileSync(file, "utf8"),
+    useCaseSensitiveFileNames: true,
+  };
+  const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, path.resolve(projectDirectory), {
+    noEmit: true,
+  });
+
+  if (config.compilerOptions?.module === "node16" && parsed.options.module === undefined) {
+    // TypeScript version is too old to handle the "node16" module option,
+    // but we can run tests falling back to commonjs/node.
+    parsed.options.module = ts.ModuleKind.CommonJS;
+    parsed.options.moduleResolution = ts.ModuleResolutionKind.NodeJs;
+  }
+
+  const host = ts.createCompilerHost(parsed.options, true);
+  return ts.createProgram(parsed.fileNames, parsed.options, host);
+}
+
+type Context = Parameters<(typeof rule)["create"]>[0];
 
 function walk(
   ctx: Pick<Context, "report" | "sourceCode">,
   fileName: string,
   program: ts.Program,
   ts: TSModule,
+  versionName: string,
   nextHigherVersion: string | undefined,
 ): void {
   const sourceFile = program.getSourceFile(fileName)!;
@@ -68,7 +159,7 @@ function walk(
     addFailureAtLine(
       0,
       `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${globalTsVersion}, but did not find it in ts@${ts.version}.`,
+        `Expected to find a file '${fileName}' present in ${globalTsVersion}, but did not find it in ts@${versionName}.`,
     );
     return;
   }
@@ -97,7 +188,7 @@ function walk(
       data: {
         expectedType: expected,
         actualType: actual,
-        expectedVersion: ts.version,
+        expectedVersion: versionName,
       },
       loc: {
         start: ctx.sourceCode.getLocFromIndex(node.getStart(sourceFile)),
@@ -142,9 +233,9 @@ function walk(
 
   function getIntro(): string {
     if (nextHigherVersion === undefined) {
-      return `TypeScript@${ts.version} compile error: `;
+      return `TypeScript@${versionName} compile error: `;
     } else {
-      const msg = `Compile error in typescript@${ts.version} but not in typescript@${nextHigherVersion}.\n`;
+      const msg = `Compile error in typescript@${versionName} but not in typescript@${nextHigherVersion}.\n`;
       const explain =
         nextHigherVersion === "next"
           ? "TypeScript@next features not yet supported."
@@ -162,7 +253,7 @@ function walk(
     ctx.report({
       messageId: "FAILURE_STRING_GENERIC",
       data: {
-        message: `TypeScript@${ts.version}: ${failure}`,
+        message: `TypeScript@${versionName}: ${failure}`,
       },
       loc: {
         start: ctx.sourceCode.getLocFromIndex(start),
