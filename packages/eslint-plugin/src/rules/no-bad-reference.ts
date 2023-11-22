@@ -57,7 +57,7 @@ const rule = createRule({
       } else {
         context.report({
           messageId: "testReference",
-          loc: tsRangeToESLintLocation(ref, sourceFile),
+          loc: tsRangeToESLintLocation(ref),
           data: { text: ref.fileName },
         });
       }
@@ -77,7 +77,7 @@ const rule = createRule({
       if (ref.text.includes("\\")) {
         context.report({
           messageId: "backslashes",
-          loc: tsRangeToESLintLocation(ref.range, sourceFile),
+          loc: tsRangeToESLintLocation(ref.range),
         });
       }
 
@@ -116,7 +116,7 @@ const rule = createRule({
 
             context.report({
               messageId: ref.kind === "import" ? "importLeaves" : "referenceLeaves",
-              loc: tsRangeToESLintLocation(ref.range, sourceFile),
+              loc: tsRangeToESLintLocation(ref.range),
               data: { text: ref.text },
             });
           }
@@ -127,24 +127,22 @@ const rule = createRule({
 
       context.report({
         messageId: ref.kind === "import" ? "importOutside" : "referenceOutside",
-        loc: tsRangeToESLintLocation(ref.range, sourceFile),
+        loc: tsRangeToESLintLocation(ref.range),
         data: { text: ref.text },
       });
     }
 
     return {};
+
+    function tsRangeToESLintLocation(range: ts.TextRange): TSESTree.SourceLocation {
+      return {
+        // line is 1 indexed, but column is 0 indexed. >.<
+        start: context.sourceCode.getLocFromIndex(range.pos),
+        end: context.sourceCode.getLocFromIndex(range.end),
+      };
+    }
   },
 });
-
-function tsRangeToESLintLocation(range: ts.TextRange, sourceFile: ts.SourceFile): TSESTree.SourceLocation {
-  const pos = sourceFile.getLineAndCharacterOfPosition(range.pos);
-  const end = sourceFile.getLineAndCharacterOfPosition(range.end);
-  return {
-    // line is 1 indexed, but column is 0 indexed. >.<
-    start: { line: pos.line + 1, column: pos.character },
-    end: { line: end.line + 1, column: end.character },
-  };
-}
 
 /**
  * All strings referenced in `import` statements.
