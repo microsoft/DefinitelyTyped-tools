@@ -69,10 +69,8 @@ export async function lint(
     path: typeScriptPath(versionName, tsLocal),
   }));
 
-  const cwd = process.cwd();
-  process.chdir(dirPath);
-
   const options: ESLint.Options = {
+    cwd: dirPath,
     overrideConfig: {
       overrides: [
         {
@@ -103,7 +101,6 @@ export async function lint(
   const eresults = await eslint.lintFiles(esfiles);
   output += formatter.format(eresults);
   estree.clearCaches();
-  process.chdir(cwd);
 
   return output;
 }
