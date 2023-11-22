@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 
 type TSModule = typeof ts;
-const globalTsVersion = ts.version;
+const localTsVersion = ts.version;
 type Options = [
   {
     versionsToTest?: {
@@ -84,9 +84,8 @@ const rule = createRule<Options, MessageIds>({
 
         const versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
-          // In the editor, just use the global install of TypeScript.
-          // TODO: better version string (or no version string) here; right now this is hardcoded to make test baselines consistent
-          walk(context, fileName, parserServices.program, ts, "?", undefined);
+          // In the editor, just use the local install of TypeScript.
+          walk(context, fileName, parserServices.program, ts, "local", undefined);
           return;
         }
 
@@ -157,7 +156,7 @@ function walk(
     addFailureAtLine(
       0,
       `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${globalTsVersion}, but did not find it in ts@${versionName}.`,
+        `Expected to find a file '${fileName}' present in ${localTsVersion}, but did not find it in ts@${versionName}.`,
     );
     return;
   }
