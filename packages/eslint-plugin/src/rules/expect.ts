@@ -7,15 +7,12 @@ import fs from "fs";
 
 type TSModule = typeof ts;
 const globalTsVersion = ts.version;
-
-interface VersionToTest {
-  readonly versionName: string;
-  readonly path: string;
-}
-
 type Options = [
   {
-    versionsToTest?: VersionToTest[];
+    versionsToTest?: {
+      readonly versionName: string;
+      readonly path: string;
+    }[];
   },
 ];
 type MessageIds = "FAILURE_STRING" | "FAILURE_STRING_GENERIC";
