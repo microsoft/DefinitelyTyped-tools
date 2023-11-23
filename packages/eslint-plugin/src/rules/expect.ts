@@ -1,9 +1,10 @@
 import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule, findUp } from "../util";
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import type * as ts from "typescript";
 import path from "path";
 import fs from "fs";
+import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
 
 type TSModule = typeof ts;
 const localTypeScript = require("typescript") as TSModule;
@@ -16,7 +17,7 @@ type Options = [
     }[];
   },
 ];
-type MessageIds = "FAILURE_STRING" | "FAILURE_STRING_GENERIC";
+type MessageIds = "noTsconfig" | "twoAssertions" | "failure" | "diagnostic" | "programContents" | "noMatch";
 
 const rule = createRule<Options, MessageIds>({
   name: "expect",
@@ -26,8 +27,15 @@ const rule = createRule<Options, MessageIds>({
       description: "Asserts types with $ExpectType.",
     },
     messages: {
-      FAILURE_STRING: `TypeScript@{{expectedVersion}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
-      FAILURE_STRING_GENERIC: `{{message}}`,
+      noTsconfig: `Could not find a tsconfig.json file.`,
+      twoAssertions: "This line has 2 $ExpectType assertions.",
+      failure: `TypeScript@{{versionNameString}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
+      diagnostic: `{{message}}`,
+      programContents:
+        `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
+        `Expected to find a file '{{fileName}}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
+      noMatch:
+        "Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
     },
     schema: [
       {
@@ -63,10 +71,7 @@ const rule = createRule<Options, MessageIds>({
 
     if (!tsconfigPath) {
       context.report({
-        messageId: "FAILURE_STRING_GENERIC",
-        data: {
-          message: `Could not find a tsconfig.json file.`,
-        },
+        messageId: "noTsconfig",
         loc: {
           start: { line: 0, column: 0 },
           end: { line: 0, column: 0 },
@@ -82,21 +87,53 @@ const rule = createRule<Options, MessageIds>({
       Program(node) {
         // Grab the filename as known by TS, just to make sure we get the right normalization.
         const fileName = parserServices.esTreeNodeToTSNodeMap.get(node).fileName;
+        const getLocFromIndex = (index: number) => context.getSourceCode().getLocFromIndex(index);
+
+        const toReport = new Map<
+          string,
+          {
+            messageId: MessageIds;
+            data: ReportDescriptorMessageData | undefined;
+            loc: Readonly<TSESTree.SourceLocation>;
+            versions: Set<string>;
+          }
+        >();
+        const reporter: Reporter = ({ versionName, messageId, data, loc }) => {
+          const key = JSON.stringify({ messageId, data, loc });
+
+          let existing = toReport.get(key);
+          if (existing === undefined) {
+            toReport.set(key, (existing = { messageId, data, loc, versions: new Set() }));
+          }
+          existing.versions.add(versionName);
+        };
 
         const versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
           // In the editor, just use the local install of TypeScript.
-          walk(context, fileName, parserServices.program, localTypeScript, "local", undefined);
-          return;
+          walk(getLocFromIndex, reporter, fileName, parserServices.program, localTypeScript, "local", undefined);
+        } else {
+          for (const version of versionsToTest) {
+            const ts = require(version.path) as TSModule;
+            const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
+            walk(
+              getLocFromIndex,
+              reporter,
+              fileName,
+              program,
+              ts,
+              ts.versionMajorMinor,
+              /*nextHigherVersion*/ undefined,
+            );
+          }
         }
 
-        // TODO: can we avoid running each and everyone one of these, like dtslint used to do?
-        // I think it'd be better to test each of these anyway, but the messages need to be deduped.
-        // The interface should not use the context; instead it should push into a common Map.
-        for (const version of versionsToTest) {
-          const ts = require(version.path) as TSModule;
-          const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
-          walk(context, fileName, program, ts, ts.versionMajorMinor, /*nextHigherVersion*/ undefined);
+        for (const { messageId, data, loc, versions } of toReport.values()) {
+          context.report({
+            messageId,
+            data: { ...data, versionNameString: [...versions].sort().join(", ") },
+            loc,
+          });
         }
       },
     };
@@ -144,10 +181,23 @@ function createProgram(configFile: string, ts: TSModule): ts.Program {
   return ts.createProgram(parsed.fileNames, parsed.options, host);
 }
 
-type Context = Parameters<(typeof rule)["create"]>[0];
+interface ReporterInfo {
+  versionName: string;
+  messageId: MessageIds;
+  data?: ReportDescriptorMessageData;
+  loc: Readonly<TSESTree.SourceLocation>;
+}
+
+type Reporter = (info: ReporterInfo) => void;
+
+const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
+  start: { line: 0, column: 0 },
+  end: { line: 0, column: 0 },
+};
 
 function walk(
-  ctx: Pick<Context, "report" | "sourceCode">,
+  getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
+  report: Reporter,
   fileName: string,
   program: ts.Program,
   ts: TSModule,
@@ -156,11 +206,12 @@ function walk(
 ): void {
   const sourceFile = program.getSourceFile(fileName)!;
   if (!sourceFile) {
-    addFailureAtLine(
-      0,
-      `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '${fileName}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@${versionName}.`,
-    );
+    report({
+      versionName,
+      messageId: "programContents",
+      data: { fileName, versionName },
+      loc: zeroSourceLocation,
+    });
     return;
   }
 
@@ -178,28 +229,32 @@ function walk(
   const { typeAssertions, duplicates } = parseAssertions(sourceFile);
 
   for (const line of duplicates) {
-    addFailureAtLine(line, "This line has 2 $ExpectType assertions.");
+    addFailureAtLine(report, { versionName, messageId: "twoAssertions" }, line);
   }
 
   const { unmetExpectations, unusedAssertions } = getExpectTypeFailures(sourceFile, typeAssertions, checker, ts);
   for (const { node, expected, actual } of unmetExpectations) {
-    ctx.report({
-      messageId: "FAILURE_STRING",
+    report({
+      versionName,
+      messageId: "failure",
       data: {
         expectedType: expected,
         actualType: actual,
-        expectedVersion: versionName,
       },
       loc: {
-        start: ctx.sourceCode.getLocFromIndex(node.getStart(sourceFile)),
-        end: ctx.sourceCode.getLocFromIndex(node.getEnd()),
+        start: getLocFromIndex(node.getStart(sourceFile)),
+        end: getLocFromIndex(node.getEnd()),
       },
     });
   }
   for (const line of unusedAssertions) {
     addFailureAtLine(
+      report,
+      {
+        versionName,
+        messageId: "noMatch",
+      },
       line,
-      "Can not match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
     );
   }
 
@@ -207,26 +262,21 @@ function walk(
     const intro = getIntro();
     if (diagnostic.file === sourceFile) {
       const msg = `${intro}\n${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`;
-      ctx.report({
-        messageId: "FAILURE_STRING_GENERIC",
-        data: {
-          message: msg,
-        },
+      report({
+        versionName,
+        messageId: "diagnostic",
+        data: { message: msg },
         loc: {
-          start: ctx.sourceCode.getLocFromIndex(diagnostic.start!),
-          end: ctx.sourceCode.getLocFromIndex(diagnostic.start! + diagnostic.length!),
+          start: getLocFromIndex(diagnostic.start!),
+          end: getLocFromIndex(diagnostic.start! + diagnostic.length!),
         },
       });
     } else {
-      ctx.report({
-        messageId: "FAILURE_STRING_GENERIC",
-        data: {
-          message: `${intro}\n${fileName}${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`,
-        },
-        loc: {
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 0 },
-        },
+      report({
+        versionName,
+        messageId: "diagnostic",
+        data: { message: `${intro}\n${fileName}${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}` },
+        loc: zeroSourceLocation,
       });
     }
   }
@@ -244,20 +294,17 @@ function walk(
     }
   }
 
-  function addFailureAtLine(line: number, failure: string): void {
+  function addFailureAtLine(report: Reporter, info: Omit<ReporterInfo, "loc">, line: number): void {
     const start = sourceFile.getPositionOfLineAndCharacter(line, 0);
     let end = start + sourceFile.text.split("\n")[line].length;
     if (sourceFile.text[end - 1] === "\r") {
       end--;
     }
-    ctx.report({
-      messageId: "FAILURE_STRING_GENERIC",
-      data: {
-        message: `TypeScript@${versionName}: ${failure}`,
-      },
+    report({
+      ...info,
       loc: {
-        start: ctx.sourceCode.getLocFromIndex(start),
-        end: ctx.sourceCode.getLocFromIndex(end),
+        start: getLocFromIndex(start),
+        end: getLocFromIndex(end),
       },
     });
   }
