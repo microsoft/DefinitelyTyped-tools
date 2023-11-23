@@ -30,7 +30,7 @@ const rule = createRule<Options, MessageIds>({
       noTsconfig: `Could not find a tsconfig.json file.`,
       twoAssertions: "This line has 2 $ExpectType assertions.",
       failure: `TypeScript@{{versionNameString}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
-      diagnostic: `{{message}}`,
+      diagnostic: `TypeScript@{{versionNameString}} {{message}}`,
       programContents:
         `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
         `Expected to find a file '{{fileName}}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
@@ -201,6 +201,10 @@ function walk(
   for (const diagnostic of diagnostics) {
     addDiagnosticFailure(diagnostic);
   }
+  if (diagnostics.length > 0) {
+    // TODO(jakebailey): we didn't do this before, but maybe we should bail?
+    return;
+  }
   if (sourceFile.isDeclarationFile || !sourceFile.text.includes("$ExpectType")) {
     // Normal file.
     return;
@@ -263,7 +267,7 @@ function walk(
 
   function getIntro(): string {
     if (nextHigherVersion === undefined) {
-      return `TypeScript@${versionName} compile error: `;
+      return `compile error: `;
     } else {
       const msg = `Compile error in typescript@${versionName} but not in typescript@${nextHigherVersion}.\n`;
       const explain =
