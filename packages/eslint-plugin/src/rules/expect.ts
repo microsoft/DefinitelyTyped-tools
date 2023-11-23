@@ -87,20 +87,11 @@ const rule = createRule<Options, MessageIds>({
       Program(node) {
         // Grab the filename as known by TS, just to make sure we get the right normalization.
         const fileName = parserServices.esTreeNodeToTSNodeMap.get(node).fileName;
-        const getLocFromIndex = (index: number) => context.getSourceCode().getLocFromIndex(index);
+        const getLocFromIndex = (index: number) => context.sourceCode.getLocFromIndex(index);
 
-        const toReport = new Map<
-          string,
-          {
-            messageId: MessageIds;
-            data: ReportDescriptorMessageData | undefined;
-            loc: Readonly<TSESTree.SourceLocation>;
-            versions: Set<string>;
-          }
-        >();
+        const toReport = new Map<string, Omit<ReporterInfo, "versionName"> & { versions: Set<string> }>();
         const reporter: Reporter = ({ versionName, messageId, data, loc }) => {
           const key = JSON.stringify({ messageId, data, loc });
-
           let existing = toReport.get(key);
           if (existing === undefined) {
             toReport.set(key, (existing = { messageId, data, loc, versions: new Set() }));
@@ -108,24 +99,16 @@ const rule = createRule<Options, MessageIds>({
           existing.versions.add(versionName);
         };
 
-        const versionsToTest = context.options[0]?.versionsToTest;
+        let versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
           // In the editor, just use the local install of TypeScript.
-          walk(getLocFromIndex, reporter, fileName, parserServices.program, localTypeScript, "local", undefined);
-        } else {
-          for (const version of versionsToTest) {
-            const ts = require(version.path) as TSModule;
-            const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
-            walk(
-              getLocFromIndex,
-              reporter,
-              fileName,
-              program,
-              ts,
-              ts.versionMajorMinor,
-              /*nextHigherVersion*/ undefined,
-            );
-          }
+          versionsToTest = [{ versionName: "local", path: require.resolve("typescript") }];
+        }
+
+        for (const version of versionsToTest) {
+          const ts = require(version.path) as TSModule;
+          const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
+          walk(getLocFromIndex, reporter, fileName, program, ts, version.versionName, /*nextHigherVersion*/ undefined);
         }
 
         for (const { messageId, data, loc, versions } of toReport.values()) {
