@@ -1,5 +1,5 @@
 import { isDeclarationPath } from "@definitelytyped/utils";
-import { createRule, findUp } from "../util";
+import { createRule, findTypesPackage, findUp } from "../util";
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import type * as ts from "typescript";
 import path from "path";
@@ -17,7 +17,14 @@ type Options = [
     }[];
   },
 ];
-type MessageIds = "noTsconfig" | "twoAssertions" | "failure" | "diagnostic" | "programContents" | "noMatch";
+type MessageIds =
+  | "noTsconfig"
+  | "twoAssertions"
+  | "failure"
+  | "diagnostic"
+  | "programContents"
+  | "noMatch"
+  | "needInstall";
 
 const rule = createRule<Options, MessageIds>({
   name: "expect",
@@ -36,6 +43,13 @@ const rule = createRule<Options, MessageIds>({
         `Expected to find a file '{{fileName}}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
       noMatch:
         "Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
+      needInstall: `A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
+
+Before you debug, first try running:
+
+   pnpm install -w --filter '...{./types/{{dirPath}}}...'
+
+Then re-run.`,
     },
     schema: [
       {
@@ -201,6 +215,35 @@ function walk(
   for (const diagnostic of diagnostics) {
     addDiagnosticFailure(diagnostic);
   }
+
+  const cannotFindDepsDiags = diagnostics.find(
+    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"),
+  );
+  if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
+    const packageInfo = findTypesPackage(fileName);
+    if (!packageInfo) {
+      throw new Error("Could not find package info for " + fileName);
+    }
+    const dtRoot = findUp(packageInfo.dir, (dir) => {
+      if (fs.existsSync(path.join(dir, "notNeededPackages.json"))) {
+        return dir;
+      }
+      return undefined;
+    });
+    if (!dtRoot) {
+      throw new Error("Could not find DT root for " + packageInfo.dir);
+    }
+
+    const dirPath = path.relative(dtRoot, path.dirname(packageInfo.dir));
+
+    report({
+      versionName,
+      messageId: "needInstall",
+      data: { dirPath },
+      loc: zeroSourceLocation,
+    });
+  }
+
   if (diagnostics.length > 0) {
     // TODO(jakebailey): we didn't do this before, but maybe we should bail?
     return;
