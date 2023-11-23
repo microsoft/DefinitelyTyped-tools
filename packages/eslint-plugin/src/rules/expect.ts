@@ -72,10 +72,7 @@ const rule = createRule<Options, MessageIds>({
     if (!tsconfigPath) {
       context.report({
         messageId: "noTsconfig",
-        loc: {
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 0 },
-        },
+        loc: zeroSourceLocation,
       });
       return {};
     }
