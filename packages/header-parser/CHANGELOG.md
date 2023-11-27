@@ -1,5 +1,13 @@
 # @definitelytyped/header-parser
 
+## 0.0.190
+
+### Patch Changes
+
+- Updated dependencies [8288affb]
+  - @definitelytyped/typescript-versions@0.0.182
+  - @definitelytyped/utils@0.0.188
+
 ## 0.0.189
 
 ### Patch Changes
