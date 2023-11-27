@@ -394,6 +394,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@definitelytyped/typescript-packages':
+        specifier: workspace:*
+        version: link:../typescript-packages
       '@definitelytyped/typescript-versions':
         specifier: workspace:*
         version: link:../typescript-versions

@@ -5,12 +5,7 @@ import assert = require("assert");
 import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
-import {
-  cleanTypeScriptInstalls,
-  deepEquals,
-  installAllTypeScriptVersions,
-  installTypeScriptNext,
-} from "@definitelytyped/utils";
+import { deepEquals } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
 import { checkTslintJson, lint, TsVersion } from "./lint";
 import { getCompilerOptions, packageNameFromPath } from "./util";
@@ -37,12 +32,6 @@ async function main(): Promise<void> {
       continue;
     }
     switch (arg) {
-      case "--installAll":
-        console.log("Cleaning old installs and installing for all TypeScript versions...");
-        console.log("Working...");
-        await cleanTypeScriptInstalls();
-        await installAllTypeScriptVersions();
-        return;
       case "--localTs":
         lookingForTsLocal = true;
         break;
@@ -82,19 +71,10 @@ async function main(): Promise<void> {
   }
 
   if (shouldListen) {
-    listen(dirPath, tsLocal, onlyTestTsNext);
+    listen(dirPath, tsLocal);
   } else {
-    await installTypeScriptAsNeeded(tsLocal, onlyTestTsNext);
     await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal);
   }
-}
-
-async function installTypeScriptAsNeeded(tsLocal: string | undefined, onlyTestTsNext: boolean): Promise<void> {
-  if (tsLocal) return;
-  if (onlyTestTsNext) {
-    return installTypeScriptNext();
-  }
-  return installAllTypeScriptVersions();
 }
 
 function usage(): void {
@@ -109,9 +89,8 @@ function usage(): void {
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
 
-function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNext: boolean): void {
+function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
-  const installationPromise = installTypeScriptAsNeeded(tsLocal, alwaysOnlyTestTsNext);
   process.on("message", async (message: unknown) => {
     const { path, onlyTestTsNext, expectOnly } = message as {
       path: string;
@@ -119,7 +98,6 @@ function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNe
       expectOnly?: boolean;
     };
 
-    await installationPromise;
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal)
       .catch((e) => e.stack)
       .then((maybeError) => {
