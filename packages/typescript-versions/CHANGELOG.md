@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.0.182
+
+### Patch Changes
+
+- 8288affb: Ship TS 5.3, remove TS 4.5
+
 ## 0.0.181
 
 ### Patch Changes
