@@ -25,13 +25,6 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  for (const version of [maxVersion, minVersion]) {
-    const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
-    if (errors) {
-      return errors;
-    }
-  }
-
   const linter = new Linter({ fix: false, formatter: "stylish" }, lintProgram);
   const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
@@ -103,51 +96,6 @@ export async function lint(
   estree.clearCaches();
 
   return output;
-}
-
-function testDependencies(
-  version: TsVersion,
-  dirPath: string,
-  lintProgram: TsType.Program,
-  tsLocal: string | undefined,
-): string | undefined {
-  const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
-  assert(version !== "local" || tsLocal);
-  const ts: typeof TsType = require(typeScriptPath(version, tsLocal));
-  const program = getProgram(tsconfigPath, ts, version, lintProgram);
-  const diagnostics = ts
-    .getPreEmitDiagnostics(program)
-    .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program));
-  if (!diagnostics.length) {
-    return undefined;
-  }
-
-  const showDiags = ts.formatDiagnostics(diagnostics, {
-    getCanonicalFileName: (f) => f,
-    getCurrentDirectory: () => dirPath,
-    getNewLine: () => "\n",
-  });
-
-  const message = `Errors in typescript@${version} for external dependencies:\n${showDiags}`;
-
-  // Add an edge-case for someone needing to `npm install` in react when they first edit a DT module which depends on it - #226
-  const cannotFindDepsDiags = diagnostics.find(
-    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"),
-  );
-  if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
-    return `
-A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
-
-Before you debug, first try running:
-
-   pnpm install -w --filter '...{./types/${dirPath}}...'
-
-Then re-run. Full error logs are below.
-
-${message}`;
-  } else {
-    return message;
-  }
 }
 
 export function isExternalDependency(file: TsType.SourceFile, dirPath: string, program: TsType.Program): boolean {

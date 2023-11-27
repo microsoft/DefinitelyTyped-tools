@@ -91,6 +91,9 @@ Then re-run.`,
       return {};
     }
 
+    // TODO: determine TS versions to run based on this package
+    const dirPath = path.dirname(tsconfigPath);
+
     const parserServices = ESLintUtils.getParserServices(context);
 
     return {
@@ -119,7 +122,16 @@ Then re-run.`,
         for (const version of versionsToTest) {
           const ts = require(version.path) as TSModule;
           const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
-          walk(getLocFromIndex, reporter, fileName, program, ts, version.versionName, /*nextHigherVersion*/ undefined);
+          walk(
+            getLocFromIndex,
+            reporter,
+            fileName,
+            program,
+            ts,
+            version.versionName,
+            /*nextHigherVersion*/ undefined,
+            dirPath,
+          );
         }
 
         for (const { messageId, data, loc, versions } of toReport.values()) {
@@ -197,6 +209,7 @@ function walk(
   ts: TSModule,
   versionName: string,
   nextHigherVersion: string | undefined,
+  dirPath: string,
 ): void {
   const sourceFile = program.getSourceFile(fileName)!;
   if (!sourceFile) {
@@ -216,9 +229,9 @@ function walk(
     addDiagnosticFailure(diagnostic);
   }
 
-  const cannotFindDepsDiags = diagnostics.find(
-    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"),
-  );
+  const cannotFindDepsDiags = diagnostics
+    .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program))
+    .find((d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"));
   if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
     const packageInfo = findTypesPackage(fileName);
     if (!packageInfo) {
@@ -335,6 +348,25 @@ function walk(
       },
     });
   }
+}
+
+// TODO(jakebailey): dedupe these copied frunctions from dtslint
+function normalizePath(file: string) {
+  // replaces '\' with '/' and forces all DOS drive letters to be upper-case
+  return path
+    .normalize(file)
+    .replace(/\\/g, "/")
+    .replace(/^[a-z](?=:)/, (c) => c.toUpperCase());
+}
+
+function startsWithDirectory(filePath: string, dirPath: string): boolean {
+  const normalFilePath = normalizePath(filePath);
+  const normalDirPath = normalizePath(dirPath).replace(/\/$/, "");
+  return normalFilePath.startsWith(normalDirPath + "/") || normalFilePath.startsWith(normalDirPath + "\\");
+}
+
+function isExternalDependency(file: ts.SourceFile, dirPath: string, program: ts.Program): boolean {
+  return !startsWithDirectory(file.fileName, dirPath) || program.isSourceFileFromExternalLibrary(file);
 }
 
 interface Assertions {
