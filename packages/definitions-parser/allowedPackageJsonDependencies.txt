@@ -478,6 +478,7 @@
 @react-native/virtualized-lists
 @react-navigation/native
 @react-navigation/stack
+@redux-saga/types
 @sentry/browser
 @serverless/typescript
 @sinonjs/fake-timers
