@@ -26,6 +26,10 @@ async function main(): Promise<void> {
   let tsLocal: string | undefined;
 
   console.log(`dtslint@${require("../package.json").version}`);
+  if (args.length === 1 && args[0] === "types") {
+    console.log("Please provide a package name to test.\nTo test all changed packages at once, run `pnpm run test-all`.");
+    process.exit(1);
+  }
 
   for (const arg of args) {
     if (lookingForTsLocal) {
