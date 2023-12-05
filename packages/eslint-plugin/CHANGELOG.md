@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.196
+
+### Patch Changes
+
+- 7805956b: Require eslint ^8.40.0 as peerDependency
+
 ## 0.0.195
 
 ### Patch Changes
