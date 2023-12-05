@@ -2,7 +2,7 @@ import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
 import fs from "fs";
-import { join as joinPaths, normalize, dirname, resolve as resolvePath } from "path";
+import { join as joinPaths, normalize } from "path";
 import { Configuration, Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
@@ -200,50 +200,3 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
 }
 
 export type TsVersion = TypeScriptVersion | "local";
-
-// TODO(jakebailey): this is also copied into the eslint-plugin; find a way to share it or remove.
-const programCache = new WeakMap<TsType.Program, Map<string, TsType.Program>>();
-/** Maps a tslint Program to one created with the version specified in `options`. */
-export function getProgram(
-  configFile: string,
-  ts: typeof TsType,
-  versionName: string,
-  lintProgram: TsType.Program,
-): TsType.Program {
-  let versionToProgram = programCache.get(lintProgram);
-  if (versionToProgram === undefined) {
-    versionToProgram = new Map<string, TsType.Program>();
-    programCache.set(lintProgram, versionToProgram);
-  }
-
-  let newProgram = versionToProgram.get(versionName);
-  if (newProgram === undefined) {
-    newProgram = createProgram(configFile, ts);
-    versionToProgram.set(versionName, newProgram);
-  }
-  return newProgram;
-}
-
-function createProgram(configFile: string, ts: typeof TsType): TsType.Program {
-  const projectDirectory = dirname(configFile);
-  const { config } = ts.readConfigFile(configFile, ts.sys.readFile);
-  const parseConfigHost: TsType.ParseConfigHost = {
-    fileExists: fs.existsSync,
-    readDirectory: ts.sys.readDirectory,
-    readFile: (file) => fs.readFileSync(file, "utf8"),
-    useCaseSensitiveFileNames: true,
-  };
-  const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, resolvePath(projectDirectory), {
-    noEmit: true,
-  });
-
-  if (config.compilerOptions?.module === "node16" && parsed.options.module === undefined) {
-    // TypeScript version is too old to handle the "node16" module option,
-    // but we can run tests falling back to commonjs/node.
-    parsed.options.module = ts.ModuleKind.CommonJS;
-    parsed.options.moduleResolution = ts.ModuleResolutionKind.NodeJs;
-  }
-
-  const host = ts.createCompilerHost(parsed.options, true);
-  return ts.createProgram(parsed.fileNames, parsed.options, host);
-}
