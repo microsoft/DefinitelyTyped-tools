@@ -7,7 +7,7 @@ import fs from "fs";
 import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
 
 type TSModule = typeof ts;
-const localTypeScript = require("typescript") as TSModule;
+const builtinTypeScript = require("typescript") as TSModule;
 
 type Options = [
   {
@@ -36,11 +36,11 @@ const rule = createRule<Options, MessageIds>({
     messages: {
       noTsconfig: `Could not find a tsconfig.json file.`,
       twoAssertions: "This line has 2 $ExpectType assertions.",
-      failure: `TypeScript@{{versionNameString}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
-      diagnostic: `TypeScript@{{versionNameString}} {{message}}`,
+      failure: `TypeScript{{versionNameString}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
+      diagnostic: `TypeScript{{versionNameString}} {{message}}`,
       programContents:
         `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '{{fileName}}' present in ${localTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
+        `Expected to find a file '{{fileName}}' present in ${builtinTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
       noMatch:
         "Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
       needInstall: `A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
@@ -115,8 +115,8 @@ Then re-run.`,
 
         let versionsToTest = context.options[0]?.versionsToTest;
         if (!versionsToTest?.length) {
-          // In the editor, just use the local install of TypeScript.
-          versionsToTest = [{ versionName: "local", path: require.resolve("typescript") }];
+          // In the editor, just use the built-in install of TypeScript.
+          versionsToTest = [{ versionName: "", path: require.resolve("typescript") }];
         }
 
         for (const version of versionsToTest) {
@@ -135,9 +135,10 @@ Then re-run.`,
         }
 
         for (const { messageId, data, loc, versions } of toReport.values()) {
+          const versionNames = [...versions].sort().join(", ");
           context.report({
             messageId,
-            data: { ...data, versionNameString: [...versions].sort().join(", ") },
+            data: { ...data, versionNameString: versionNames ? `@${versionNames}` : "" },
             loc,
           });
         }
@@ -223,44 +224,42 @@ function walk(
   }
 
   const checker = program.getTypeChecker();
-  // Don't care about emit errors.
-  const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
-  for (const diagnostic of diagnostics) {
-    addDiagnosticFailure(diagnostic);
-  }
 
-  const cannotFindDepsDiags = diagnostics
-    .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program))
-    .find((d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"));
-  if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
-    const packageInfo = findTypesPackage(fileName);
-    if (!packageInfo) {
-      throw new Error("Could not find package info for " + fileName);
+  if (versionName) {
+    // If we're using the built-in version of TS, then we're in the editor and tsserver will report diagnostics.
+
+    // Don't care about emit errors.
+    const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
+    for (const diagnostic of diagnostics) {
+      addDiagnosticFailure(diagnostic);
     }
-    const dtRoot = findUp(packageInfo.dir, (dir) => {
-      if (fs.existsSync(path.join(dir, "notNeededPackages.json"))) {
-        return dir;
+
+    const cannotFindDepsDiags = diagnostics
+      .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program))
+      .find((d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"));
+    if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
+      const packageInfo = findTypesPackage(fileName);
+      if (!packageInfo) {
+        throw new Error("Could not find package info for " + fileName);
       }
-      return undefined;
-    });
-    if (!dtRoot) {
-      throw new Error("Could not find DT root for " + packageInfo.dir);
+      const dtRoot = findUp(packageInfo.dir, (dir) => {
+        if (fs.existsSync(path.join(dir, "notNeededPackages.json"))) {
+          return dir;
+        }
+        return undefined;
+      });
+      if (dtRoot) {
+        const dirPath = path.relative(dtRoot, path.dirname(packageInfo.dir));
+        report({
+          versionName,
+          messageId: "needInstall",
+          data: { dirPath },
+          loc: zeroSourceLocation,
+        });
+      }
     }
-
-    const dirPath = path.relative(dtRoot, path.dirname(packageInfo.dir));
-
-    report({
-      versionName,
-      messageId: "needInstall",
-      data: { dirPath },
-      loc: zeroSourceLocation,
-    });
   }
 
-  if (diagnostics.length > 0) {
-    // TODO(jakebailey): we didn't do this before, but maybe we should bail?
-    return;
-  }
   if (sourceFile.isDeclarationFile || !sourceFile.text.includes("$ExpectType")) {
     // Normal file.
     return;
