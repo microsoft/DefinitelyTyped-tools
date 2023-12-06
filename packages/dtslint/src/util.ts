@@ -1,4 +1,3 @@
-import assert = require("assert");
 import fs from "fs";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
