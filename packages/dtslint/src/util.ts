@@ -25,11 +25,6 @@ export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
   return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
 }
 
-export function last<T>(a: readonly T[]): T {
-  assert(a.length !== 0);
-  return a[a.length - 1];
-}
-
 export function isMainFile(fileName: string, allowNested: boolean) {
   // Linter may be run with cwd of the package. We want `index.d.ts` but not `submodule/index.d.ts` to match.
   if (fileName === "index.d.ts") {
