@@ -433,56 +433,6 @@ interface ExpectTypeFailures {
   readonly unusedAssertions: Iterable<number>;
 }
 
-function matchReadonlyArray(actual: string, expected: string) {
-  if (!(/\breadonly\b/.test(actual) && /\bReadonlyArray\b/.test(expected))) return false;
-  const readonlyArrayRegExp = /\bReadonlyArray</y;
-  const readonlyModifierRegExp = /\breadonly /y;
-
-  // A<ReadonlyArray<B<ReadonlyArray<C>>>>
-  // A<readonly B<readonly C[]>[]>
-
-  let expectedPos = 0;
-  let actualPos = 0;
-  let depth = 0;
-  while (expectedPos < expected.length && actualPos < actual.length) {
-    const expectedChar = expected.charAt(expectedPos);
-    const actualChar = actual.charAt(actualPos);
-    if (expectedChar === actualChar) {
-      expectedPos++;
-      actualPos++;
-      continue;
-    }
-
-    // check for end of readonly array
-    if (
-      depth > 0 &&
-      expectedChar === ">" &&
-      actualChar === "[" &&
-      actualPos < actual.length - 1 &&
-      actual.charAt(actualPos + 1) === "]"
-    ) {
-      depth--;
-      expectedPos++;
-      actualPos += 2;
-      continue;
-    }
-
-    // check for start of readonly array
-    readonlyArrayRegExp.lastIndex = expectedPos;
-    readonlyModifierRegExp.lastIndex = actualPos;
-    if (readonlyArrayRegExp.test(expected) && readonlyModifierRegExp.test(actual)) {
-      depth++;
-      expectedPos += 14; // "ReadonlyArray<".length;
-      actualPos += 9; // "readonly ".length;
-      continue;
-    }
-
-    return false;
-  }
-
-  return true;
-}
-
 function getExpectTypeFailures(
   sourceFile: ts.SourceFile,
   typeAssertions: Map<number, string>,
@@ -507,7 +457,23 @@ function getExpectTypeFailures(
         ? checker.typeToString(type, /*enclosingDeclaration*/ undefined, ts.TypeFormatFlags.NoTruncation)
         : "";
 
-      if (!expected.split(/\s*\|\|\s*/).some((s) => actual === s || matchReadonlyArray(actual, s))) {
+      let actualNormalized: string | undefined;
+
+      const candidates = expected.split(/\s*\|\|\s*/).map((s) => s.trim());
+
+      if (
+        !(
+          // Fast path
+          (
+            candidates.some((s) => s === actual) ||
+            candidates.some((s) => {
+              actualNormalized ??= normalizedTypeToString(ts, actual);
+              const normalized = normalizedTypeToString(ts, s);
+              return normalized === actualNormalized;
+            })
+          )
+        )
+      ) {
         unmetExpectations.push({ node, expected, actual });
       }
 
@@ -517,6 +483,50 @@ function getExpectTypeFailures(
     ts.forEachChild(node, iterate);
   });
   return { unmetExpectations, unusedAssertions: typeAssertions.keys() };
+}
+
+function normalizedTypeToString(ts: TSModule, type: string) {
+  const sourceFile = ts.createSourceFile("foo.ts", `declare var x: ${type};`, ts.ScriptTarget.Latest);
+  const typeNode = (sourceFile.statements[0] as ts.VariableStatement).declarationList.declarations[0].type!;
+
+  const printer = ts.createPrinter({});
+  function print(node: ts.Node) {
+    return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
+  }
+  // TODO: pass undefined instead once https://github.com/microsoft/TypeScript/pull/52941 is released
+  const context = (ts as any).nullTransformationContext;
+
+  function visit(node: ts.Node) {
+    node = ts.visitEachChild(node, visit, context);
+
+    if (ts.isUnionTypeNode(node)) {
+      const types = node.types
+        .map((t) => [t, print(t)] as const)
+        .sort((a, b) => (a[1] < b[1] ? -1 : 1))
+        .map((t) => t[0]);
+      return ts.factory.updateUnionTypeNode(node, ts.factory.createNodeArray(types));
+    }
+
+    if (
+      ts.isTypeOperatorNode(node) &&
+      node.operator === ts.SyntaxKind.ReadonlyKeyword &&
+      ts.isArrayTypeNode(node.type)
+    ) {
+      // It's possible that this would conflict with a library which defines their own type with this name,
+      // but that's unlikely (and was not previously handled in a prior revision of type string normalization).
+      return ts.factory.createTypeReferenceNode("ReadonlyArray", [skipTypeParentheses(ts, node.type.elementType)]);
+    }
+
+    return node;
+  }
+
+  const visited = visit(typeNode);
+  return print(visited);
+}
+
+function skipTypeParentheses(ts: TSModule, node: ts.TypeNode): ts.TypeNode {
+  while (ts.isParenthesizedTypeNode(node)) node = node.type;
+  return node;
 }
 
 function getNodeForExpectType(node: ts.Node, ts: TSModule): ts.Node {

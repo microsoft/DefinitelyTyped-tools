@@ -2,46 +2,18 @@ types/expect/expect-tests.ts
    6:1  error  TypeScript expected type to be:
   number
 got:
-  1234                                                                                                                                                                                                      @definitelytyped/expect
+  1234                                                                    @definitelytyped/expect
   14:1  error  TypeScript expected type to be:
   NotRightAtAll
 got:
-  1234                                                                                                                                                                                               @definitelytyped/expect
-  21:1  error  TypeScript expected type to be:
-  string | undefined | number
-got:
-  string | number | undefined                                                                                                                                                          @definitelytyped/expect
-  24:1  error  TypeScript expected type to be:
-  number | string | undefined
-got:
-  string | number | undefined                                                                                                                                                          @definitelytyped/expect
-  27:1  error  TypeScript expected type to be:
-  number | undefined | string
-got:
-  string | number | undefined                                                                                                                                                          @definitelytyped/expect
-  30:1  error  TypeScript expected type to be:
-  undefined | string | number
-got:
-  string | number | undefined                                                                                                                                                          @definitelytyped/expect
-  33:1  error  TypeScript expected type to be:
-  undefined | number | string
-got:
-  string | number | undefined                                                                                                                                                          @definitelytyped/expect
-  36:1  error  TypeScript expected type to be:
-  any || undefined | number | string
-got:
-  string | number | undefined                                                                                                                                                   @definitelytyped/expect
-  42:1  error  TypeScript expected type to be:
-  { prop1: "c" | "b" | "a"; prop2: ReadonlyArray<number | string>; prop3: ReadonlyArray<string | number>; }
-got:
-  { prop1: "a" | "b" | "c"; prop2: readonly (string | number)[]; prop3: readonly (string | number)[]; }  @definitelytyped/expect
-  46:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above                                                                                                                                    @definitelytyped/expect
+  1234                                                             @definitelytyped/expect
+  46:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
   50:1  error  TypeScript expected type to be:
   NotMatched
 got:
-  any                                                                                                                                                                                                   @definitelytyped/expect
+  any                                                                 @definitelytyped/expect
 
-✖ 11 problems (11 errors, 0 warnings)
+✖ 4 problems (4 errors, 0 warnings)
 
 ==== types/expect/expect-tests.ts ====
 
@@ -76,62 +48,27 @@ got:
     
     // $ExpectType string | undefined | number
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   string | undefined | number
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType number | string | undefined
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   number | string | undefined
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType number | undefined | string
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   number | undefined | string
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType undefined | string | number
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   undefined | string | number
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType undefined | number | string
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   undefined | number | string
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType any || undefined | number | string
     expect.aUnion;
-    ~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   any || undefined | number | string
-!!!                        : got:
-!!!                        :   string | number | undefined
     
     // $ExpectType { prop1: "a" | "b" | "c"; prop2: readonly (string | number)[]; prop3: readonly (string | number)[]; }
     expect.complicatedUnion(1, 2);
     
     // $ExpectType { prop1: "c" | "b" | "a"; prop2: ReadonlyArray<number | string>; prop3: ReadonlyArray<string | number>; }
     expect.complicatedUnion(1, 2);
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   { prop1: "c" | "b" | "a"; prop2: ReadonlyArray<number | string>; prop3: ReadonlyArray<string | number>; }
-!!!                        : got:
-!!!                        :   { prop1: "a" | "b" | "c"; prop2: readonly (string | number)[]; prop3: readonly (string | number)[]; }
     
     
     // $ExpectType NotMatched
