@@ -25,7 +25,8 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  const linter = new Linter({ fix: false, formatter: "stylish" }, lintProgram);
+  // tslint no longer checks ExpectType; skip linting entirely if we're only checking ExpectType.
+  const linter = !expectOnly ? new Linter({ fix: false, formatter: "stylish" }, lintProgram) : undefined;
   const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
@@ -50,12 +51,12 @@ export async function lint(
     // External dependencies should have been handled by `testDependencies`;
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
-      linter.lint(fileName, text, config);
+      linter?.lint(fileName, text, config);
       esfiles.push(fileName);
     }
   }
-  const result = linter.getResult();
-  let output = result.failures.length ? result.output : "";
+  const result = linter?.getResult();
+  let output = result?.failures.length ? result.output : "";
 
   const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
     versionName,
