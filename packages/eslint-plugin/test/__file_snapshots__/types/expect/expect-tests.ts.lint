@@ -7,8 +7,8 @@ got:
   NotRightAtAll
 got:
   1234                                                             @definitelytyped/expect
-  46:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
-  50:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  45:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  49:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
 
 ✖ 4 problems (4 errors, 0 warnings)
 
@@ -69,12 +69,11 @@ got:
     
     
     // $ExpectType NotMatched
-    // Whoops
-    ~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/expect: Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.
+    // Whoops
     
     
     // $ExpectType NotMatched
-    
-    ~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/expect: Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.

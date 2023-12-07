@@ -293,7 +293,7 @@ function walk(
         versionName,
         messageId: "noMatch",
       },
-      line,
+      line - 1,
     );
   }
 
