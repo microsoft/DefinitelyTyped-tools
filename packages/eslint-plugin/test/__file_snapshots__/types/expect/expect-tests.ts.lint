@@ -8,10 +8,7 @@ got:
 got:
   1234                                                             @definitelytyped/expect
   46:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
-  50:1  error  TypeScript expected type to be:
-  NotMatched
-got:
-  any                                                                 @definitelytyped/expect
+  50:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
 
 ✖ 4 problems (4 errors, 0 warnings)
 
@@ -80,7 +77,4 @@ got:
     // $ExpectType NotMatched
     
     ~
-!!! @definitelytyped/expect: TypeScript expected type to be:
-!!!                        :   NotMatched
-!!!                        : got:
-!!!                        :   any
+!!! @definitelytyped/expect: Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.

@@ -443,6 +443,10 @@ function getExpectTypeFailures(
   // Match assertions to the first node that appears on the line they apply to.
   // `forEachChild` isn't available as a method in older TypeScript versions, so must use `ts.forEachChild` instead.
   ts.forEachChild(sourceFile, function iterate(node) {
+    if (node.kind === ts.SyntaxKind.EndOfFileToken) {
+      return;
+    }
+
     const line = lineOfPosition(node.getStart(sourceFile), sourceFile);
     const expected = typeAssertions.get(line);
     if (expected !== undefined) {
