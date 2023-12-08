@@ -1,4 +1,7 @@
 module.exports = {
-    root: true,
     extends: ["plugin:@definitelytyped/all"],
+    root: true,
+    rules: {
+        "@definitelytyped/npm-naming": "off"
+    }
 };
