@@ -5,8 +5,10 @@ import {
   ExportErrorKind,
   Mode,
   parseExportErrorKind,
+  CriticError,
 } from "@definitelytyped/dts-critic";
 
+import { addSuggestion } from "../suggestions";
 import { createRule, isMainFile } from "../util";
 import { CodeRawOptionError, NpmNamingOptions } from "./npm-naming/types";
 
@@ -30,7 +32,7 @@ function parseRawOptions(rawOptions: NpmNamingOptions): CriticOptions {
   }
 }
 
-const enabledSuggestions = [ErrorKind.JsPropertyNotInDts, ErrorKind.JsSignatureNotInDts] as const;
+const enabledSuggestions: ExportErrorKind[] = [ErrorKind.JsPropertyNotInDts, ErrorKind.JsSignatureNotInDts];
 
 function toOptionsWithSuggestions(options: CriticOptions): CriticOptions {
   if (options.mode === Mode.NameOnly) {
@@ -58,7 +60,7 @@ function eslintDisableOption(error: ErrorKind): string {
     case ErrorKind.JsPropertyNotInDts:
     case ErrorKind.DtsSignatureNotInJs:
     case ErrorKind.DtsPropertyNotInJs:
-      return JSON.stringify(["error", { mode: Mode.Code, errors: [[error, false]] }], null, 2);
+      return JSON.stringify(["error", { mode: Mode.Code, errors: [[error, false]] }]);
   }
 }
 
@@ -120,7 +122,6 @@ you can disable this check by adding the following options to your project's tsl
                   minItems: 2,
                   maxItems: 2,
                 },
-                default: [],
               },
             },
           },
@@ -135,7 +136,8 @@ you can disable this check by adding the following options to your project's tsl
 
     const options = parseRawOptions(rawOptions);
     const optionsWithSuggestions = toOptionsWithSuggestions(options);
-    const errors = critic(context.filename, /* sourcePath */ undefined, optionsWithSuggestions);
+    const diagnostics = critic(context.filename, /* sourcePath */ undefined, optionsWithSuggestions);
+    const errors = filterErrors(diagnostics);
 
     for (const error of errors) {
       switch (error.kind) {
@@ -175,6 +177,34 @@ you can disable this check by adding the following options to your project's tsl
     }
 
     return {};
+
+    function filterErrors(diagnostics: CriticError[]): CriticError[] {
+      const errors: CriticError[] = [];
+
+      diagnostics.forEach((diagnostic) => {
+        if (isSuggestion(diagnostic)) {
+          addSuggestion(
+            context.filename,
+            "npm-naming",
+            diagnostic.message,
+            diagnostic.position?.start,
+            diagnostic.position?.length,
+          );
+        } else {
+          errors.push(diagnostic);
+        }
+      });
+
+      return errors;
+    }
+
+    function isSuggestion(diagnostic: CriticError): boolean {
+      return (
+        options.mode === Mode.Code &&
+        enabledSuggestions.includes(diagnostic.kind as ExportErrorKind) &&
+        !(options.errors as Map<ErrorKind, boolean>).get(diagnostic.kind)
+      );
+    }
   },
 });
 

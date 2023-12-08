@@ -14,15 +14,16 @@ ruleTester.run("npm-naming", npmNaming, {
       errors: [
         {
           data: {
-            explanation: `The declaration doesn't match the JavaScript module 'dts-critic'. Reason:
-            The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and 'module.exports' can be called or constructed.
-            
-            To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
-            option: `["error", { "mode": "code", "errors": [["NeedsExportEquals", false]] } ]`,
+            error: `The declaration doesn't match the JavaScript module 'dts-critic'. Reason:
+The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and 'module.exports' can be called or constructed.
+
+To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
+            option: `["error",{"mode":"code","errors":[["NeedsExportEquals",false]]}]`,
           },
           column: 1,
-          endColumn: 2,
+          endColumn: 1,
           line: 1,
+          endLine: 2,
           messageId: "error",
         },
       ],
@@ -42,8 +43,9 @@ To resolve this error, either:
             option: `"off"`,
           },
           column: 1,
-          endColumn: 2,
+          endColumn: 1,
           line: 1,
+          endLine: 2,
           messageId: "error",
         },
       ],
