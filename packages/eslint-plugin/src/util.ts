@@ -35,7 +35,7 @@ export function commentsMatching(
   }
 }
 
-function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined): T | undefined {
+export function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined): T | undefined {
   p = path.resolve(p);
   const root = path.parse(p).root;
 

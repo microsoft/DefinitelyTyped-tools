@@ -9,7 +9,6 @@ import * as TsType from "typescript";
 type Configuration = typeof Configuration;
 type IConfigurationFile = Configuration.IConfigurationFile;
 
-import { getProgram, Options as ExpectOptions } from "./rules/expectRule";
 import { readJson } from "./util";
 
 export async function lint(
@@ -26,18 +25,12 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  for (const version of [maxVersion, minVersion]) {
-    const errors = testDependencies(version, dirPath, lintProgram, tsLocal);
-    if (errors) {
-      return errors;
-    }
-  }
-
-  const linter = new Linter({ fix: false, formatter: "stylish" }, lintProgram);
-  const configPath = expectOnly ? joinPaths(__dirname, "..", "dtslint-expect-only.json") : getConfigPath(dirPath);
+  // tslint no longer checks ExpectType; skip linting entirely if we're only checking ExpectType.
+  const linter = !expectOnly ? new Linter({ fix: false, formatter: "stylish" }, lintProgram) : undefined;
+  const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const config = getLintConfig(configPath, tsconfigPath, minVersion, maxVersion, tsLocal);
+  const config = getLintConfig(configPath);
   const esfiles = [];
 
   for (const file of lintProgram.getSourceFiles()) {
@@ -58,69 +51,52 @@ export async function lint(
     // External dependencies should have been handled by `testDependencies`;
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
-      linter.lint(fileName, text, config);
+      linter?.lint(fileName, text, config);
       esfiles.push(fileName);
     }
   }
-  const result = linter.getResult();
-  let output = result.failures.length ? result.output : "";
-  if (!expectOnly) {
-    const cwd = process.cwd();
-    process.chdir(dirPath);
-    const eslint = new ESLint();
-    const formatter = await eslint.loadFormatter("stylish");
-    const eresults = await eslint.lintFiles(esfiles);
-    output += formatter.format(eresults);
-    estree.clearCaches();
-    process.chdir(cwd);
+  const result = linter?.getResult();
+  let output = result?.failures.length ? result.output : "";
+
+  const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
+    versionName,
+    path: typeScriptPath(versionName, tsLocal),
+  }));
+
+  const options: ESLint.Options = {
+    cwd: dirPath,
+    overrideConfig: {
+      overrides: [
+        {
+          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
+          rules: {
+            "@definitelytyped/expect": ["error", { versionsToTest }],
+          },
+        },
+      ],
+    },
+  };
+
+  if (expectOnly) {
+    // Disable the regular config, instead load only the plugins and use just the rule above.
+    // TODO(jakebailey): share this with eslint-plugin
+    options.useEslintrc = false;
+    options.overrideConfig!.plugins = ["@definitelytyped", "@typescript-eslint", "jsdoc"];
+    const override = options.overrideConfig!.overrides![0];
+    override.parser = "@typescript-eslint/parser";
+    override.parserOptions = {
+      project: true,
+      warnOnUnsupportedTypeScriptVersion: false,
+    };
   }
+
+  const eslint = new ESLint(options);
+  const formatter = await eslint.loadFormatter("stylish");
+  const eresults = await eslint.lintFiles(esfiles);
+  output += formatter.format(eresults);
+  estree.clearCaches();
 
   return output;
-}
-
-function testDependencies(
-  version: TsVersion,
-  dirPath: string,
-  lintProgram: TsType.Program,
-  tsLocal: string | undefined,
-): string | undefined {
-  const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
-  assert(version !== "local" || tsLocal);
-  const ts: typeof TsType = require(typeScriptPath(version, tsLocal));
-  const program = getProgram(tsconfigPath, ts, version, lintProgram);
-  const diagnostics = ts
-    .getPreEmitDiagnostics(program)
-    .filter((d) => !d.file || isExternalDependency(d.file, dirPath, program));
-  if (!diagnostics.length) {
-    return undefined;
-  }
-
-  const showDiags = ts.formatDiagnostics(diagnostics, {
-    getCanonicalFileName: (f) => f,
-    getCurrentDirectory: () => dirPath,
-    getNewLine: () => "\n",
-  });
-
-  const message = `Errors in typescript@${version} for external dependencies:\n${showDiags}`;
-
-  // Add an edge-case for someone needing to `npm install` in react when they first edit a DT module which depends on it - #226
-  const cannotFindDepsDiags = diagnostics.find(
-    (d) => d.code === 2307 && d.messageText.toString().includes("Cannot find module"),
-  );
-  if (cannotFindDepsDiags && cannotFindDepsDiags.file) {
-    return `
-A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
-
-Before you debug, first try running:
-
-   pnpm install -w --filter '...{./types/${dirPath}}...'
-
-Then re-run. Full error logs are below.
-
-${message}`;
-  } else {
-    return message;
-  }
 }
 
 export function isExternalDependency(file: TsType.SourceFile, dirPath: string, program: TsType.Program): boolean {
@@ -191,13 +167,7 @@ function getConfigPath(dirPath: string): string {
   return joinPaths(dirPath, "tslint.json");
 }
 
-function getLintConfig(
-  expectedConfigPath: string,
-  tsconfigPath: string,
-  minVersion: TsVersion,
-  maxVersion: TsVersion,
-  tsLocal: string | undefined,
-): IConfigurationFile {
+function getLintConfig(expectedConfigPath: string): IConfigurationFile {
   const configExists = fs.existsSync(expectedConfigPath);
   const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
   // Second param to `findConfiguration` doesn't matter, since config path is provided.
@@ -206,18 +176,6 @@ function getLintConfig(
     throw new Error(`Could not load config at ${configPath}`);
   }
 
-  const expectRule = config.rules.get("expect");
-  if (!expectRule || expectRule.ruleSeverity !== "error") {
-    throw new Error("'expect' rule should be enabled, else compile errors are ignored");
-  }
-  if (expectRule) {
-    const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
-      versionName,
-      path: typeScriptPath(versionName, tsLocal),
-    }));
-    const expectOptions: ExpectOptions = { tsconfigPath, versionsToTest };
-    expectRule.ruleArguments = [expectOptions];
-  }
   return config;
 }
 

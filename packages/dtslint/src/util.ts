@@ -1,4 +1,3 @@
-import assert = require("assert");
 import fs from "fs";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
@@ -23,11 +22,6 @@ export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
     throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
   }
   return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
-}
-
-export function last<T>(a: readonly T[]): T {
-  assert(a.length !== 0);
-  return a[a.length - 1];
 }
 
 export function isMainFile(fileName: string, allowNested: boolean) {
