@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.203
+
+### Patch Changes
+
+- 5ea955db: Remove knex-cleaner from expected failures
+- Updated dependencies [3d6c2ffd]
+  - @definitelytyped/dtslint@0.0.198
+
 ## 0.0.202
 
 ### Patch Changes

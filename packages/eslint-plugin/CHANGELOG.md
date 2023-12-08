@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.197
+
+### Patch Changes
+
+- 3d6c2ffd: Port expect rule from tslint to eslint
+
 ## 0.0.196
 
 ### Patch Changes
