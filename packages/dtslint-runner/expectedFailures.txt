@@ -1,3 +1,2 @@
 bookshelf
 graphql-resolvers
-knex-db-manager
