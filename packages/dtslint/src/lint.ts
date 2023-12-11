@@ -73,6 +73,7 @@ export async function lint(
           files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
           rules: {
             "@definitelytyped/expect": ["error", { versionsToTest }],
+            "@definitelytyped/npm-naming": "error",
           },
         },
       ],
