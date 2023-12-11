@@ -185,14 +185,6 @@ Disable all the lint rules except the one that checks for type correctness.
 ```sh
 dtslint --expectOnly types
 ```
-- `--npmNamingOnly`
-
-Disable all the lint rules except the one that checks for npm naming correctness.
-
-```sh
-dtslint --npmNamingOnly types
-```
-
 
 # Contributing
 

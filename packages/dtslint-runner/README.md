@@ -20,8 +20,6 @@ $ node node_modules/@definitelytyped/dtslint-runner/dist/index.js --path . --sel
 $ node node_modules/@definitelytyped/dtslint-runner/dist/index.js --path . --selection all --noInstall --expectOnly
 # or test only with the $ExpectType rule, which type checks
 $ node node_modules/@definitelytyped/dtslint-runner/dist/index.js --path . --selection all --noInstall --expectOnly
-# or test only with the npm-naming rule
-$ node node_modules/@definitelytyped/dtslint-runner/dist/index.js --path . --selection all --noInstall --npmNamingOnly
 # and you might just want to test on the latest Typescript
 $ node node_modules/@definitelytyped/dtslint-runner/dist/index.js --path . --selection all --noInstall --expectOnly --onlyTestTsNext
 # or a local build of Typescript
