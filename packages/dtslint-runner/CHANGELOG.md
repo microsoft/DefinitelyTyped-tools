@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.205
+
+### Patch Changes
+
+- a7f527c1: Remove knex-db-manager from expectedFailures.txt
+
 ## 0.0.204
 
 ### Patch Changes
