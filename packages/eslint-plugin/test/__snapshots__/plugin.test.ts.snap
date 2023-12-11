@@ -34,7 +34,6 @@ exports[`plugin should have the expected exports 1`] = `
             "@definitelytyped/no-single-element-tuple-type": "error",
             "@definitelytyped/no-unnecessary-generics": "error",
             "@definitelytyped/no-useless-files": "error",
-            "@definitelytyped/npm-naming": "error",
             "@definitelytyped/prefer-declare-function": "error",
             "@definitelytyped/redundant-undefined": "error",
             "@definitelytyped/strict-export-declare-modifiers": "error",
