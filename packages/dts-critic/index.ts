@@ -206,7 +206,7 @@ export function getNpmInfo(name: string): NpmInfo {
   }
   return {
     isNpm: true,
-    versions: info.versions as string[],
+    versions: Array.isArray(info.versions) ? info.versions : [info.versions],
     tags: info["dist-tags"] as { [tag: string]: string | undefined },
   };
 }
