@@ -66,6 +66,12 @@ if (require.main === module) {
         type: "boolean",
         default: false,
       },
+      npmNamingOnly: {
+        group: "dtslint options",
+        description: "Run only the npm-naming lint rule.",
+        type: "boolean",
+        default: false,
+      },
       // Only useful for repeated local runs, so I’m hiding it
       noInstall: {
         hidden: true,
@@ -102,6 +108,7 @@ if (require.main === module) {
     localTypeScriptPath: !args.onlyTestTsNext ? args.localTypeScriptPath : undefined,
     onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
+    npmNamingOnly: args.npmNamingOnly,
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
     writeFailures: args.writeFailures,

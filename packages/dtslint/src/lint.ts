@@ -17,6 +17,7 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
+  npmNamingOnly: boolean,
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
@@ -27,8 +28,10 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  // tslint no longer checks ExpectType; skip linting entirely if we're only checking ExpectType.
-  const linter = !expectOnly ? new Linter({ fix: false, formatter: "stylish" }, lintProgram) : undefined;
+  // tslint no longer checks ExpectType or npm-naming; skip linting entirely if we're only checking either.
+  // TODO: soon we shall remove tslint altogether!
+  const linter =
+    !expectOnly && !npmNamingOnly ? new Linter({ fix: false, formatter: "stylish" }, lintProgram) : undefined;
   const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
@@ -79,7 +82,7 @@ export async function lint(
     },
   };
 
-  if (expectOnly) {
+  if (expectOnly || npmNamingOnly) {
     // Disable the regular config, instead load only the plugins and use just the rule above.
     // TODO(jakebailey): share this with eslint-plugin
     options.useEslintrc = false;
