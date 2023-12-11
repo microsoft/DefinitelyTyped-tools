@@ -1,5 +1,17 @@
 # @definitelytyped/dtslint
 
+## 0.0.199
+
+### Patch Changes
+
+- 30730f22: Use a direct require when finding estree import
+
+## 0.0.198
+
+### Patch Changes
+
+- 3d6c2ffd: Port expect rule from tslint to eslint
+
 ## 0.0.197
 
 ### Patch Changes
