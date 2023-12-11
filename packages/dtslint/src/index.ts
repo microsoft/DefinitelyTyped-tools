@@ -98,9 +98,7 @@ async function installTypeScriptAsNeeded(tsLocal: string | undefined, onlyTestTs
 }
 
 function usage(): void {
-  console.error(
-    "Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path]",
-  );
+  console.error("Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --installAll     Cleans and installs all TypeScript versions.");
