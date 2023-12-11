@@ -79,7 +79,7 @@ const rule = createRule<[NpmNamingOptions], "error">({
     messages: {
       error: `{{ error }}
 If you won't fix this error now or you think this error is wrong,
-you can disable this check by adding the following options to your project's tslint.json file under "rules":
+you can disable this check by adding the following options to your project's .eslintrc.json file under "rules":
 
     "npm-naming": {{ option }}`,
     },
