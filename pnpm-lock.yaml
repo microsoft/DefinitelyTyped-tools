@@ -131,9 +131,6 @@ importers:
 
   packages/dtslint:
     dependencies:
-      '@definitelytyped/dts-critic':
-        specifier: workspace:*
-        version: link:../dts-critic
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
