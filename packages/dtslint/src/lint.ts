@@ -67,13 +67,22 @@ export async function lint(
 
   const options: ESLint.Options = {
     cwd: dirPath,
+    baseConfig: {
+      overrides: [
+        {
+          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
+          rules: {
+            "@definitelytyped/npm-naming": "error",
+          },
+        },
+      ],
+    },
     overrideConfig: {
       overrides: [
         {
           files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
           rules: {
             "@definitelytyped/expect": ["error", { versionsToTest }],
-            "@definitelytyped/npm-naming": "error",
           },
         },
       ],
