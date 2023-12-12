@@ -93,6 +93,10 @@ const rule = createRule({
           return symbolDefinedOutsidePackage(node.name);
         }
 
+        if (ts.isModuleDeclaration(node) && !(ts.isIdentifier(node.name) && node.name.escapedText === "global")) {
+          return symbolDefinedOutsidePackage(node.name);
+        }
+
         return ts.forEachChild(node, containsValueDeclaration) ?? false;
       }
 
