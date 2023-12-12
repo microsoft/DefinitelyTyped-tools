@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.0.200
+
+### Patch Changes
+
+- 414ae487: Move npm-naming lint rule from tslint to eslint
+- ae742dde: Special-case a useful error for `pnpm test` without arguments
+
 ## 0.0.199
 
 ### Patch Changes

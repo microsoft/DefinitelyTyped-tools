@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.0.192
+
+### Patch Changes
+
+- 414ae487: Move npm-naming lint rule from tslint to eslint
+
 ## 0.0.191
 
 ### Patch Changes

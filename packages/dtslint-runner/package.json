@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint-runner",
-  "version": "0.0.205",
+  "version": "0.0.206",
   "description": "Run dtslint on DefinitelyTyped packages",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dtslint-runner#readme",
   "license": "MIT",
