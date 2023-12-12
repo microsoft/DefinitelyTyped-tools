@@ -31,12 +31,15 @@ const rule = createRule({
     let hasValueDeclaration = false;
     let hasNonEmptyFile = false;
 
+    function isOutsidePackage(fileName: string): boolean {
+      return fileName.includes("node_modules") || path.relative(pkg!.dir, fileName).startsWith("..");
+    }
+
     for (const sourceFile of program.getSourceFiles()) {
       if (
         !sourceFile.isDeclarationFile ||
-        sourceFile.fileName.includes("node_modules") ||
         sourceFile.statements.length === 0 ||
-        path.relative(pkg.dir, sourceFile.fileName).startsWith("..")
+        isOutsidePackage(sourceFile.fileName)
       ) {
         continue;
       }
@@ -60,22 +63,35 @@ const rule = createRule({
         return symbol?.getDeclarations()?.some(isValueDeclaration) ?? false;
       }
 
+      function symbolDefinedOutsidePackage(node: ts.Node): boolean {
+        const checker = program.getTypeChecker();
+        const symbol = checker.getSymbolAtLocation(node);
+        return (
+          symbol?.getDeclarations()?.some((declaration) => isOutsidePackage(declaration.getSourceFile().fileName)) ??
+          false
+        );
+      }
+
       function containsValueDeclaration(node: ts.Node): boolean {
         if (isValueDeclaration(node)) {
           return true;
         }
 
-        // if (ts.isExportAssignment(node)) {
-        //   return symbolIsValue(node.expression);
-        // }
+        if (ts.isExportAssignment(node)) {
+          return symbolIsValue(node.expression);
+        }
 
-        // if (ts.isNamespaceExportDeclaration(node)) {
-        //   return symbolIsValue(node.name);
-        // }
+        if (ts.isNamespaceExportDeclaration(node)) {
+          return symbolIsValue(node.name);
+        }
 
-        // if (ts.isNamedExports(node)) {
-        //   return node.elements.some((element) => symbolIsValue(element));
-        // }
+        if (ts.isNamedExports(node)) {
+          return node.elements.some((element) => symbolIsValue(element.name));
+        }
+
+        if (ts.isInterfaceDeclaration(node) || ts.isModuleDeclaration(node)) {
+          return symbolDefinedOutsidePackage(node.name);
+        }
 
         return ts.forEachChild(node, containsValueDeclaration) ?? false;
       }
