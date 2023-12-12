@@ -100,6 +100,10 @@ const rule = createRule({
           return node.elements.some((element) => symbolIsValue(element.name));
         }
 
+        if (ts.isExportDeclaration(node) && !node.isTypeOnly && !node.exportClause && node.moduleSpecifier) {
+          return symbolIsValue(node.moduleSpecifier);
+        }
+
         if (ts.isInterfaceDeclaration(node)) {
           // If we're extending the interface of an external declaration, allow it.
           return symbolDefinedOutsidePackage(node.name);
