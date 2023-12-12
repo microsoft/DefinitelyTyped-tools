@@ -58,18 +58,24 @@ const rule = createRule({
         return false;
       }
 
-      function symbolIsValue(node: ts.Node): boolean {
+      function getSymbol(node: ts.Node): ts.Symbol | undefined {
         const checker = program.getTypeChecker();
-        const symbol = checker.getSymbolAtLocation(node);
-        return symbol?.getDeclarations()?.some(isValueDeclaration) ?? false;
+        let symbol = checker.getSymbolAtLocation(node);
+        if (symbol && symbol.flags & ts.SymbolFlags.Alias) {
+          symbol = checker.getAliasedSymbol(symbol);
+        }
+        return symbol;
+      }
+
+      function symbolIsValue(node: ts.Node): boolean {
+        return getSymbol(node)?.getDeclarations()?.some(isValueDeclaration) ?? false;
       }
 
       function symbolDefinedOutsidePackage(node: ts.Node): boolean {
-        const checker = program.getTypeChecker();
-        const symbol = checker.getSymbolAtLocation(node);
         return (
-          symbol?.getDeclarations()?.some((declaration) => isOutsidePackage(declaration.getSourceFile().fileName)) ??
-          false
+          getSymbol(node)
+            ?.getDeclarations()
+            ?.some((declaration) => isOutsidePackage(declaration.getSourceFile().fileName)) ?? false
         );
       }
 
