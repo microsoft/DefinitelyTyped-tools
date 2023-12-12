@@ -90,11 +90,16 @@ const rule = createRule({
         }
 
         if (ts.isInterfaceDeclaration(node)) {
+          // If we're extending the interface of an external declaration, allow it.
           return symbolDefinedOutsidePackage(node.name);
         }
 
         if (ts.isModuleDeclaration(node) && !(ts.isIdentifier(node.name) && node.name.escapedText === "global")) {
-          return symbolDefinedOutsidePackage(node.name);
+          if (symbolDefinedOutsidePackage(node.name)) {
+            // If we're extending a namespace in another package, allow it.
+            return true;
+          }
+          // Otherwise, recurse and check for a value component.
         }
 
         return ts.forEachChild(node, containsValueDeclaration) ?? false;
