@@ -51,6 +51,7 @@ const rule = createRule({
           case ts.SyntaxKind.VariableDeclaration:
           case ts.SyntaxKind.FunctionDeclaration:
           case ts.SyntaxKind.ClassDeclaration:
+          case ts.SyntaxKind.EnumDeclaration:
             return true;
         }
 
