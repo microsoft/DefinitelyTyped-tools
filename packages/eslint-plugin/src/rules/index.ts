@@ -16,6 +16,7 @@ import strictExportDeclareModifiers = require("./strict-export-declare-modifiers
 import noSingleDeclareModule = require("./no-single-declare-module");
 import noOldDTHeader = require("./no-old-dt-header");
 import noImportOfDevDependencies = require("./no-import-of-dev-dependencies");
+import npmNaming = require("./npm-naming");
 import expect = require("./expect");
 
 export const rules = {
@@ -37,5 +38,6 @@ export const rules = {
   "no-single-declare-module": noSingleDeclareModule,
   "no-old-dt-header": noOldDTHeader,
   "no-import-of-dev-dependencies": noImportOfDevDependencies,
+  "npm-naming": npmNaming,
   expect,
 };

@@ -27,8 +27,8 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  // tslint no longer checks ExpectType; skip linting entirely if we're only checking ExpectType.
-  const linter = !expectOnly ? new Linter({ fix: false, formatter: "stylish" }, lintProgram) : undefined;
+  // TODO: remove tslint entirely
+  const linter = undefined as Linter | undefined;
   const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
@@ -67,6 +67,16 @@ export async function lint(
 
   const options: ESLint.Options = {
     cwd: dirPath,
+    baseConfig: {
+      overrides: [
+        {
+          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
+          rules: {
+            "@definitelytyped/npm-naming": "error",
+          },
+        },
+      ],
+    },
     overrideConfig: {
       overrides: [
         {

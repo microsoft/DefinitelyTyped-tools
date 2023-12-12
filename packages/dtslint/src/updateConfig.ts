@@ -15,7 +15,6 @@ import { Configuration as Config, ILinterOptions, IRuleFailureJson, Linter, Lint
 import * as ts from "typescript";
 import yargs = require("yargs");
 import { isExternalDependency } from "./lint";
-import { disabler as npmNamingDisabler } from "./rules/npmNamingRule";
 
 // Rule "expect" needs TypeScript version information, which this script doesn't collect.
 const ignoredRules: string[] = ["expect"];
@@ -216,12 +215,6 @@ function isVersionDir(dirName: string): boolean {
   return /^ts\d+\.\d$/.test(dirName) || /^v\d+(\.\d+)?$/.test(dirName);
 }
 
-type RuleOptions = boolean | unknown[];
-type RuleDisabler = (failures: IRuleFailureJson[]) => RuleOptions;
-const defaultDisabler: RuleDisabler = () => {
-  return false;
-};
-
 function disableRules(allFailures: RuleFailure[]): Config.RawRulesConfig {
   const ruleToFailures: Map<string, IRuleFailureJson[]> = new Map();
   for (const failure of allFailures) {
@@ -234,14 +227,11 @@ function disableRules(allFailures: RuleFailure[]): Config.RawRulesConfig {
   }
 
   const newRulesConfig: Config.RawRulesConfig = {};
-  ruleToFailures.forEach((failures, rule) => {
-    if (ignoredRules.includes(rule)) {
-      return;
+  for (const rule of ruleToFailures.keys()) {
+    if (!ignoredRules.includes(rule)) {
+      newRulesConfig[rule] = false;
     }
-    const disabler = rule === "npm-naming" ? npmNamingDisabler : defaultDisabler;
-    const opts: RuleOptions = disabler(failures);
-    newRulesConfig[rule] = opts;
-  });
+  }
 
   return newRulesConfig;
 }

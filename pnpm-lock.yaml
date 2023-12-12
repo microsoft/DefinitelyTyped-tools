@@ -131,9 +131,6 @@ importers:
 
   packages/dtslint:
     dependencies:
-      '@definitelytyped/dts-critic':
-        specifier: workspace:*
-        version: link:../dts-critic
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
@@ -226,6 +223,9 @@ importers:
 
   packages/eslint-plugin:
     dependencies:
+      '@definitelytyped/dts-critic':
+        specifier: workspace:*
+        version: link:../dts-critic
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
@@ -254,6 +254,9 @@ importers:
       '@types/eslint':
         specifier: ^8.44.7
         version: 8.44.7
+      '@typescript-eslint/rule-tester':
+        specifier: ^6.11.0
+        version: 6.11.0(@eslint/eslintrc@2.1.3)(eslint@8.53.0)(typescript@5.2.2)
       glob:
         specifier: ^10.3.10
         version: 10.3.10
@@ -2034,6 +2037,25 @@ packages:
       typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
+
+  /@typescript-eslint/rule-tester@6.11.0(@eslint/eslintrc@2.1.3)(eslint@8.53.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-4OQn7HuOnqtg2yDjBvshUs7NnQ4ySKjylh+dbmGojkau7wX8laUcIRUEu3qS2+LyQAmt1yoM7lKdGzJSG3TXyQ==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      '@eslint/eslintrc': '>=2'
+      eslint: '>=8'
+    dependencies:
+      '@eslint/eslintrc': 2.1.3
+      '@typescript-eslint/typescript-estree': 6.11.0(typescript@5.2.2)
+      '@typescript-eslint/utils': 6.11.0(eslint@8.53.0)(typescript@5.2.2)
+      ajv: 6.12.6
+      eslint: 8.53.0
+      lodash.merge: 4.6.2
+      semver: 7.5.4
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
 
   /@typescript-eslint/scope-manager@6.11.0:
     resolution: {integrity: sha512-0A8KoVvIURG4uhxAdjSaxy8RdRE//HztaZdG8KiHLP8WOXSk0vlF7Pvogv+vlJA5Rnjj/wDcFENvDaHb+gKd1A==}

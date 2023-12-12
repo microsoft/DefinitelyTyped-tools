@@ -1,0 +1,655 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`plugin should have the expected exports 1`] = `
+{
+  "configs": {
+    "all": {
+      "overrides": [
+        {
+          "files": [
+            "*.cts",
+            "*.mts",
+            "*.ts",
+            "*.tsx",
+          ],
+          "parser": "@typescript-eslint/parser",
+          "parserOptions": {
+            "project": true,
+            "warnOnUnsupportedTypeScriptVersion": false,
+          },
+          "rules": {
+            "@definitelytyped/expect": "error",
+            "@definitelytyped/export-just-namespace": "error",
+            "@definitelytyped/no-any-union": "error",
+            "@definitelytyped/no-bad-reference": "error",
+            "@definitelytyped/no-const-enum": "error",
+            "@definitelytyped/no-dead-reference": "error",
+            "@definitelytyped/no-declare-current-package": "error",
+            "@definitelytyped/no-import-default-of-export-equals": "error",
+            "@definitelytyped/no-import-of-dev-dependencies": "error",
+            "@definitelytyped/no-old-dt-header": "error",
+            "@definitelytyped/no-relative-import-in-test": "error",
+            "@definitelytyped/no-self-import": "error",
+            "@definitelytyped/no-single-declare-module": "error",
+            "@definitelytyped/no-single-element-tuple-type": "error",
+            "@definitelytyped/no-unnecessary-generics": "error",
+            "@definitelytyped/no-useless-files": "error",
+            "@definitelytyped/prefer-declare-function": "error",
+            "@definitelytyped/redundant-undefined": "error",
+            "@definitelytyped/strict-export-declare-modifiers": "error",
+            "@typescript-eslint/adjacent-overload-signatures": "error",
+            "@typescript-eslint/array-type": [
+              "error",
+              {
+                "default": "array-simple",
+              },
+            ],
+            "@typescript-eslint/ban-ts-comment": [
+              "error",
+              {
+                "ts-check": false,
+                "ts-expect-error": false,
+                "ts-ignore": "allow-with-description",
+                "ts-nocheck": true,
+              },
+            ],
+            "@typescript-eslint/ban-types": [
+              "error",
+              {
+                "extendDefaults": true,
+                "types": {
+                  "{}": false,
+                },
+              },
+            ],
+            "@typescript-eslint/consistent-type-definitions": "error",
+            "@typescript-eslint/explicit-member-accessibility": [
+              "error",
+              {
+                "accessibility": "no-public",
+              },
+            ],
+            "@typescript-eslint/naming-convention": [
+              "error",
+              {
+                "custom": {
+                  "match": false,
+                  "regex": "^I[A-Z]",
+                },
+                "format": [],
+                "selector": "interface",
+              },
+            ],
+            "@typescript-eslint/no-empty-interface": "error",
+            "@typescript-eslint/no-invalid-void-type": [
+              "error",
+              {
+                "allowAsThisParameter": true,
+                "allowInGenericTypeArguments": true,
+              },
+            ],
+            "@typescript-eslint/no-misused-new": "error",
+            "@typescript-eslint/prefer-namespace-keyword": "error",
+            "@typescript-eslint/triple-slash-reference": [
+              "error",
+              {
+                "path": "always",
+                "types": "prefer-import",
+              },
+            ],
+            "no-duplicate-imports": "error",
+            "unicode-bom": [
+              "error",
+              "never",
+            ],
+          },
+        },
+      ],
+      "plugins": [
+        "@definitelytyped",
+        "@typescript-eslint",
+        "jsdoc",
+      ],
+      "rules": {
+        "jsdoc/check-tag-names": [
+          "error",
+          {
+            "definedTags": [
+              "addVersion",
+              "also",
+              "api",
+              "author",
+              "beta",
+              "brief",
+              "category",
+              "cfg",
+              "chainable",
+              "check",
+              "checkReturnValue",
+              "classDescription",
+              "condparamprivilege",
+              "constraint",
+              "credits",
+              "declaration",
+              "defApiFeature",
+              "defaultValue",
+              "detail",
+              "end",
+              "eventproperty",
+              "experimental",
+              "export",
+              "expose",
+              "extendscript",
+              "factory",
+              "field",
+              "final",
+              "fixme",
+              "fluent",
+              "for",
+              "governance",
+              "header",
+              "hidden-property",
+              "hidden",
+              "id",
+              "jsx",
+              "jsxImportSource",
+              "label",
+              "language",
+              "legacy",
+              "link",
+              "listen",
+              "locus",
+              "methodOf",
+              "minVersion",
+              "ngdoc",
+              "nonstandard",
+              "note",
+              "npm",
+              "observable",
+              "option",
+              "optionobject",
+              "options",
+              "packageDocumentation",
+              "param",
+              "parent",
+              "platform",
+              "plugin",
+              "preserve",
+              "privateRemarks",
+              "privilegeLevel",
+              "privilegeName",
+              "proposed",
+              "range",
+              "readOnly",
+              "related",
+              "remark",
+              "remarks",
+              "required",
+              "requires",
+              "restriction",
+              "returnType",
+              "section",
+              "see",
+              "since",
+              "const",
+              "singleton",
+              "source",
+              "struct",
+              "suppress",
+              "targetfolder",
+              "enum",
+              "title",
+              "record",
+              "title",
+              "TODO",
+              "trigger",
+              "triggers",
+              "typeparam",
+              "typeParam",
+              "unsupported",
+              "url",
+              "usage",
+              "warn",
+              "warning",
+              "version",
+            ],
+            "typed": true,
+          },
+        ],
+      },
+      "settings": {
+        "jsdoc": {
+          "tagNamePreference": {
+            "argument": "argument",
+            "exception": "exception",
+            "function": "function",
+            "method": "method",
+            "param": "param",
+            "return": "return",
+            "returns": "returns",
+          },
+        },
+      },
+    },
+  },
+  "meta": {
+    "name": "@definitelytyped/eslint-plugin",
+    "version": "0.0.197",
+  },
+  "rules": {
+    "expect": {
+      "create": [Function],
+      "defaultOptions": [
+        {},
+      ],
+      "meta": {
+        "docs": {
+          "description": "Asserts types with $ExpectType.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/expect.md",
+        },
+        "messages": {
+          "diagnostic": "TypeScript{{versionNameString}} {{message}}",
+          "failure": "TypeScript{{versionNameString}} expected type to be:
+  {{expectedType}}
+got:
+  {{actualType}}",
+          "needInstall": "A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
+
+Before you debug, first try running:
+
+   pnpm install -w --filter '...{./types/{{dirPath}}}...'
+
+Then re-run.",
+          "noMatch": "Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
+          "noTsconfig": "Could not find a tsconfig.json file.",
+          "programContents": "Program source files differ between TypeScript versions. This may be a dtslint bug.
+Expected to find a file '{{fileName}}' present in 5.2, but did not find it in ts@{{versionName}}.",
+          "twoAssertions": "This line has 2 $ExpectType assertions.",
+        },
+        "schema": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "versionsToTest": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                    },
+                    "versionName": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "versionName",
+                    "path",
+                  ],
+                  "type": "object",
+                },
+                "type": "array",
+              },
+            },
+            "type": "object",
+          },
+        ],
+        "type": "problem",
+      },
+    },
+    "export-just-namespace": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids \`export = foo\` where \`foo\` is a namespace and isn't merged with a function/class/type/interface.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/export-just-namespace.md",
+        },
+        "messages": {
+          "useTheBody": "Instead of \`export =\`-ing a namespace, use the body of the namespace as the module body.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-any-union": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbid a union to contain \`any\`",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-any-union.md",
+        },
+        "messages": {
+          "anyUnion": "Including \`any\` in a union will override all other members of the union.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-bad-reference": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids bad references, including those that resolve outside of the package or path references in non-declaration files.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-bad-reference.md",
+        },
+        "messages": {
+          "backslashes": "Use forward slashes in paths.",
+          "importLeaves": "The import "{{text}}" resolves to the current package, but uses relative paths.",
+          "importOutside": "The import "{{text}}" resolves outside of the package. Use a bare import to reference other packages.",
+          "referenceLeaves": "The reference "{{text}}" resolves to the current package, but uses relative paths.",
+          "referenceOutside": "The reference "{{text}}" resolves outside of the package. Use a global reference to reference other packages.",
+          "testReference": "The path reference "{{text}}" is disallowed outside declaration files. Use "<reference types>" or include the file in tsconfig instead.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-const-enum": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbid \`const enum\`",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-const-enum.md",
+        },
+        "messages": {
+          "constEnum": "Use of \`const enum\` is forbidden.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-dead-reference": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Ensures that all \`/// <reference>\` comments go at the top of the file.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-dead-reference.md",
+        },
+        "messages": {
+          "referenceAtTop": "\`/// <reference>\` directive must be at top of file to take effect.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-declare-current-package": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Don't use an ambient module declaration of the current package; use a normal module.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-declare-current-package.md",
+        },
+        "messages": {
+          "noDeclareCurrentPackage": "Instead of declaring a module with \`declare module "{{ text }}"\`, write its contents in directly in {{ preferred }}.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-import-default-of-export-equals": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbid a default import to reference an \`export =\` module.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-import-default-of-export-equals.md",
+        },
+        "messages": {
+          "noImportDefaultOfExportEquals": "The module {{moduleName}} uses \`export = \`. Import with \`import {{importName}} = require({{moduleName}})\`.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-import-of-dev-dependencies": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbid imports and references to devDependencies inside .d.ts files.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-import-of-dev-dependencies.md",
+        },
+        "messages": {
+          "noImportOfDevDependencies": ".d.ts files may not import packages in devDependencies.",
+          "noReferenceOfDevDependencies": ".d.ts files may not triple-slash reference packages in devDependencies.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-old-dt-header": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids <reference path="./vNN"/> in all files, <reference path="../etc"/> in declaration files, and all <reference path> in test files.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-bad-reference.md",
+        },
+        "messages": {
+          "noOldDTHeader": "Specify package metadata in package.json. Do not use a header like \`// Type definitions for foo 1.2\`",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-relative-import-in-test": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids test (non-declaration) files to use relative imports.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-relative-import-in-test.md",
+        },
+        "messages": {
+          "useGlobalImport": "Test file should not use a relative import. Use a global import as if this were a user of the package.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-self-import": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids declaration files to import the current package using a global import or old versions with a relative import.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-self-import.md",
+        },
+        "messages": {
+          "useOnlyCurrentVersion": "Don't import an old version of the current package.",
+          "useRelativeImport": "Declaration file should not use a global import of itself. Use a relative import.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-single-declare-module": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Don't use an ambient module declaration if there's just one -- write it as a normal module.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-single-declare-module.md",
+        },
+        "messages": {
+          "oneModuleDeclaration": "File has only 1 ambient module declaration. Move the contents outside the ambient module block, rename the file to match the ambient module name, and remove the block.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-single-element-tuple-type": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids \`[T]\`, which should be \`T[]\`.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-single-element-tuple-type.md",
+        },
+        "messages": {
+          "singleElementTupleType": "Type [T] is a single-element tuple type. You probably meant T[].",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-unnecessary-generics": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids signatures using a generic parameter only once.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-unnecessary-generics.md",
+        },
+        "messages": {
+          "never": "Type parameter {{name}} is never used.",
+          "sole": "Type parameter {{name}} is used only once.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-useless-files": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids files with no content.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-useless-files.md",
+        },
+        "messages": {
+          "noContent": "File has no content.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "npm-naming": {
+      "create": [Function],
+      "defaultOptions": [
+        {
+          "mode": "name-only",
+        },
+      ],
+      "meta": {
+        "docs": {
+          "description": "Ensure that package name and DefinitelyTyped header match npm package info.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/npm-naming.md",
+        },
+        "messages": {
+          "error": "{{ error }}
+If you won't fix this error now or you think this error is wrong,
+you can disable this check by adding the following options to your project's .eslintrc.json file under "rules":
+
+    "@definitelytyped/npm-naming": {{ option }}",
+        },
+        "schema": [
+          {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "name-only",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "type": "object",
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "errors": {
+                    "items": {
+                      "items": [
+                        {
+                          "description": "Name of the check.",
+                          "enum": [
+                            "NeedsExportEquals",
+                            "NoDefaultExport",
+                          ],
+                          "type": "string",
+                        },
+                        {
+                          "description": "Whether the check is enabled or disabled.",
+                          "type": "boolean",
+                        },
+                      ],
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array",
+                    },
+                    "type": "array",
+                  },
+                  "mode": {
+                    "enum": [
+                      "code",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "type": "object",
+              },
+            ],
+          },
+        ],
+        "type": "problem",
+      },
+    },
+    "prefer-declare-function": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids \`const x: () => void\`.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/prefer-declare-function.md",
+        },
+        "messages": {
+          "variableFunction": "Use a function declaration instead of a variable of function type.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "redundant-undefined": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids optional parameters from including an explicit \`undefined\` in their type; requires it in optional properties.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/redundant-undefined.md",
+        },
+        "messages": {
+          "redundantUndefined": "Parameter is optional, so no need to include \`undefined\` in the type.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "strict-export-declare-modifiers": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Enforces strict rules about where the 'export' and 'declare' modifiers may appear.",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/strict-export-declare-modifiers.md",
+        },
+        "messages": {
+          "missingExplicitExport": "All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.",
+          "redundantDeclare": "'declare' keyword is redundant here.",
+          "redundantExport": "'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting.",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+  },
+}
+`;

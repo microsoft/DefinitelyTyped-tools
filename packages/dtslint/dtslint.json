@@ -1,6 +1,4 @@
 {
     "rulesDirectory": "./dist/rules",
-    "rules": {
-        "npm-naming": true
-    }
+    "rules": {}
 }
