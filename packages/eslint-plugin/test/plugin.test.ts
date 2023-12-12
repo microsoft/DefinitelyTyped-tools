@@ -8,6 +8,7 @@ describe("plugin", () => {
         ...plugin.meta,
         version: "version",
       },
+      rules: Object.keys(plugin.rules),
     }).toMatchSnapshot();
   });
 });
