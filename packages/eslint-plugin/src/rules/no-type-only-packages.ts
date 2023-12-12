@@ -78,6 +78,10 @@ const rule = createRule({
           return true;
         }
 
+        if (ts.isImportDeclaration(node) || ts.isImportEqualsDeclaration(node)) {
+          return false;
+        }
+
         if (ts.isExportAssignment(node)) {
           return symbolIsValue(node.expression);
         }
