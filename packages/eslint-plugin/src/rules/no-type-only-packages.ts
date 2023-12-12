@@ -89,7 +89,7 @@ const rule = createRule({
           return node.elements.some((element) => symbolIsValue(element.name));
         }
 
-        if (ts.isInterfaceDeclaration(node) || ts.isModuleDeclaration(node)) {
+        if (ts.isInterfaceDeclaration(node)) {
           return symbolDefinedOutsidePackage(node.name);
         }
 
