@@ -3,11 +3,9 @@ import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
 import fs from "fs";
 import { join as joinPaths, normalize } from "path";
-import { Configuration, Linter } from "tslint";
+import { Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
-type Configuration = typeof Configuration;
-type IConfigurationFile = Configuration.IConfigurationFile;
 
 import { readJson } from "./util";
 
@@ -27,12 +25,8 @@ export async function lint(
   // TODO: To remove tslint, replace this with a ts.createProgram (probably)
   const lintProgram = Linter.createProgram(tsconfigPath);
 
-  // TODO: remove tslint entirely
-  const linter = undefined as Linter | undefined;
-  const configPath = getConfigPath(dirPath);
   // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
   //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const config = getLintConfig(configPath);
   const esfiles = [];
 
   for (const file of lintProgram.getSourceFiles()) {
@@ -53,12 +47,10 @@ export async function lint(
     // External dependencies should have been handled by `testDependencies`;
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
-      linter?.lint(fileName, text, config);
       esfiles.push(fileName);
     }
   }
-  const result = linter?.getResult();
-  let output = result?.failures.length ? result.output : "";
+  let output = "";
 
   const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
     versionName,
@@ -177,18 +169,6 @@ export function checkTslintJson(dirPath: string): void {
 
 function getConfigPath(dirPath: string): string {
   return joinPaths(dirPath, "tslint.json");
-}
-
-function getLintConfig(expectedConfigPath: string): IConfigurationFile {
-  const configExists = fs.existsSync(expectedConfigPath);
-  const configPath = configExists ? expectedConfigPath : joinPaths(__dirname, "..", "dtslint.json");
-  // Second param to `findConfiguration` doesn't matter, since config path is provided.
-  const config = Configuration.findConfiguration(configPath, "").results;
-  if (!config) {
-    throw new Error(`Could not load config at ${configPath}`);
-  }
-
-  return config;
 }
 
 function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {
