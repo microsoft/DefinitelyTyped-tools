@@ -152,7 +152,6 @@ export const all: Linter.BaseConfig = {
             "ts-check": false,
           },
         ],
-        // ported from tslint builtin rules
         "@typescript-eslint/adjacent-overload-signatures": "error",
         "@typescript-eslint/ban-types": [
           "error",

@@ -148,7 +148,7 @@ Then re-run.`,
 });
 
 const programCache = new WeakMap<ts.Program, Map<string, ts.Program>>();
-/** Maps a tslint Program to one created with the version specified in `options`. */
+/** Maps a ts.Program to one created with the version specified in `options`. */
 function getProgram(configFile: string, ts: TSModule, versionName: string, lintProgram: ts.Program): ts.Program {
   let versionToProgram = programCache.get(lintProgram);
   if (versionToProgram === undefined) {

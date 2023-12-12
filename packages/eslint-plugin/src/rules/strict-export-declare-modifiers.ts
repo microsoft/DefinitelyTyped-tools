@@ -170,7 +170,6 @@ function isDefault(node: ts.Node): boolean {
   return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword);
 }
 
-// tslint:disable-next-line:max-line-length
 // Copied from https://github.com/Microsoft/TypeScript/blob/dd9b8cab34a3e389e924d768eb656cf50656f582/src/compiler/binder.ts#L1571-L1581
 function hasExportDeclarations(node: ts.SourceFile | ts.ModuleDeclaration): boolean {
   const body = node.kind === ts.SyntaxKind.SourceFile ? node : node.body;

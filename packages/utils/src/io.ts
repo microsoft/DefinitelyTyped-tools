@@ -67,7 +67,7 @@ export function writeJson(path: string, content: unknown, formatted = true): Pro
 export function streamOfString(text: string): NodeJS.ReadableStream {
   const s = new ReadableStream();
   s.push(text);
-  s.push(null); // tslint:disable-line no-null-keyword
+  s.push(null);
   return s;
 }
 
@@ -285,7 +285,7 @@ function addExecutePermissionsFromReadPermissions(mode: number): number {
   const allExecutePermissions = 0o111;
   // Moves the bits for read permissions into the place for execute permissions.
   // In other words, a component will have execute permissions if it has read permissions.
-  const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions; // tslint:disable-line no-bitwise
+  const readPermissionsAsExecutePermissions = (mode >>> 2) & allExecutePermissions;
   // Add these additional execute permissions to the mode.
-  return mode | readPermissionsAsExecutePermissions; // tslint:disable-line no-bitwise
+  return mode | readPermissionsAsExecutePermissions;
 }

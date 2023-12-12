@@ -585,7 +585,7 @@ export interface PackageIdWithDefiniteVersion {
 }
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
-  const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
+  const rawJson = dt.readJson("notNeededPackages.json");
   return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map((entry) =>
     NotNeededPackage.fromRaw(...entry),
   );

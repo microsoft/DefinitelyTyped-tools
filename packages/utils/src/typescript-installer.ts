@@ -70,7 +70,6 @@ function installDir(version: TsVersion | "next" | "rc"): string {
 
 /** Run a command and return the stdout, or if there was an error, throw. */
 async function execAndThrowErrors(cmd: string, cwd?: string): Promise<void> {
-  // tslint:disable-next-line:promise-must-complete
   return new Promise<void>((resolve, reject) => {
     const env = { ...process.env };
     if (env.NODE_OPTIONS && env.NODE_OPTIONS.includes("--require")) {

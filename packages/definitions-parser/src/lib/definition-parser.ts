@@ -88,7 +88,6 @@ export async function getTypingInfo(
         );
       }
 
-      // tslint:disable-next-line:non-literal-fs-path -- Not a reference to the fs package
       const ls = fs.readdir(directoryName);
       const result = await getPackageJsonInfoForPackage(
         packageNameOrTypesDirectoryName,
@@ -179,7 +178,7 @@ export function parseVersionFromDirectoryName(
   }
   return {
     major: Number(match[1]),
-    minor: match[3] !== undefined ? Number(match[3]) : undefined, // tslint:disable-line strict-type-predicates (false positive)
+    minor: match[3] !== undefined ? Number(match[3]) : undefined,
   };
 }
 
