@@ -1,0 +1,10 @@
+types/no-type-only-packages-reexport-all/index.d.ts
+  1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-type-only-packages-reexport-all/index.d.ts ====
+
+    export * from "eslint";
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
