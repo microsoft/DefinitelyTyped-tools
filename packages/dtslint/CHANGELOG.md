@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.0.201
+
+### Patch Changes
+
+- 92b5cd51: Remove more tslint code to make dtslint work again
+
 ## 0.0.200
 
 ### Patch Changes
