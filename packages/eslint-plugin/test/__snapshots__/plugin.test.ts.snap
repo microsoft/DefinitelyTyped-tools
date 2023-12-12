@@ -32,6 +32,7 @@ exports[`plugin should have the expected exports 1`] = `
             "@definitelytyped/no-self-import": "error",
             "@definitelytyped/no-single-declare-module": "error",
             "@definitelytyped/no-single-element-tuple-type": "error",
+            "@definitelytyped/no-type-only-packages": "error",
             "@definitelytyped/no-unnecessary-generics": "error",
             "@definitelytyped/no-useless-files": "error",
             "@definitelytyped/prefer-declare-function": "error",
@@ -493,6 +494,21 @@ Expected to find a file '{{fileName}}' present in 5.2, but did not find it in ts
         },
         "messages": {
           "singleElementTupleType": "Type [T] is a single-element tuple type. You probably meant T[].",
+        },
+        "schema": [],
+        "type": "problem",
+      },
+    },
+    "no-type-only-packages": {
+      "create": [Function],
+      "defaultOptions": [],
+      "meta": {
+        "docs": {
+          "description": "Forbids type-only packages",
+          "url": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/no-type-only-packages.md",
+        },
+        "messages": {
+          "onlyTypes": "Packages should contain value components, not just types.",
         },
         "schema": [],
         "type": "problem",

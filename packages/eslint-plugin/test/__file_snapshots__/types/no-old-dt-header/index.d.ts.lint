@@ -1,13 +1,16 @@
 types/no-old-dt-header/index.d.ts
   1:1  error  Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`  @definitelytyped/no-old-dt-header
+  1:1  error  Packages should contain value components, not just types                                              @definitelytyped/no-type-only-packages
 
-✖ 1 problem (1 error, 0 warnings)
+✖ 2 problems (2 errors, 0 warnings)
 
 ==== types/no-old-dt-header/index.d.ts ====
 
     // Type definitions for AFRAME 1.2
     ~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-old-dt-header: Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
     // Project: https://aframe.io/
     // Definitions by: Paul Shannon <https://github.com/devpaul>
     //                 Roberto Ritger <https://github.com/bertoritger>
