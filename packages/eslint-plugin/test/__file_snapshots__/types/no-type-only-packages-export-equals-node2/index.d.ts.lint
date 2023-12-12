@@ -1,13 +1,8 @@
-types/no-type-only-packages-export-equals-node2/index.d.ts
-  1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
-
-✖ 1 problem (1 error, 0 warnings)
+No errors
 
 ==== types/no-type-only-packages-export-equals-node2/index.d.ts ====
 
     /// <reference types="node" />
-    ~
-!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
     
     import { once } from "events";
     

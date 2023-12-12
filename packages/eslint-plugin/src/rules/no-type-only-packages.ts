@@ -68,7 +68,7 @@ const rule = createRule({
       }
 
       function symbolIsValue(node: ts.Node): boolean {
-        return getSymbol(node)?.getDeclarations()?.some(isValueDeclaration) ?? false;
+        return !!getSymbol(node)?.valueDeclaration;
       }
 
       function symbolDefinedOutsidePackage(node: ts.Node): boolean {
