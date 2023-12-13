@@ -31,48 +31,22 @@ import assert from "assert";
 */
 
 /** Parseable but unsupported TypeScript versions. */
-export type UnsupportedTypeScriptVersion =
-  | "2.0"
-  | "2.1"
-  | "2.2"
-  | "2.3"
-  | "2.4"
-  | "2.5"
-  | "2.6"
-  | "2.7"
-  | "2.8"
-  | "2.9"
-  | "3.0"
-  | "3.1"
-  | "3.2"
-  | "3.3"
-  | "3.4"
-  | "3.5"
-  | "3.6"
-  | "3.7"
-  | "3.8"
-  | "3.9"
-  | "4.0"
-  | "4.1"
-  | "4.2"
-  | "4.3"
-  | "4.4"
-  | "4.5";
+export type UnsupportedTypeScriptVersion = typeof TypeScriptVersion.unsupported[number];
 /**
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on Definitely Typed.
  */
-export type TypeScriptVersion = "4.6" | "4.7" | "4.8" | "4.9" | "5.0" | "5.1" | "5.2" | "5.3" | "5.4";
+export type TypeScriptVersion = typeof TypeScriptVersion.supported[number];
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
-  export const shipped: readonly TypeScriptVersion[] = ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"];
+  export const shipped = ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"] as const;
   /** Add to this list when a version is available as typescript@next */
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "5.4"];
+  export const supported = [...shipped, "5.4"] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
-  export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
+  export const unsupported = [
     "2.0",
     "2.1",
     "2.2",
@@ -99,7 +73,7 @@ export namespace TypeScriptVersion {
     "4.3",
     "4.4",
     "4.5",
-  ];
+  ] as const;
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
   /** Latest version that may be specified in a `// TypeScript Version:` header. */
