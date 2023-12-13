@@ -8,33 +8,11 @@ describe("package.json", () => {
       Object.entries(dependencies).filter(([name]) => name.startsWith("typescript-")),
     );
 
-    function getAndDeleteEntry(name: string): string {
-      name = `typescript-${name}`;
-      const version = typescripts.get(name);
-      expect(version).toBeTruthy();
+    for (const version of TypeScriptVersion.supported) {
+      const name = `typescript-${version}`;
+      const entry = typescripts.get(name);
+      expect(entry).toBe(`npm:typescript@~${version}.0-0`);
       typescripts.delete(name);
-      return version!;
-    }
-
-    for (const version of TypeScriptVersion.shipped) {
-      expect(getAndDeleteEntry(version)).toBe(`npm:typescript@~${version}`);
-    }
-
-    const unshipped = TypeScriptVersion.supported.slice(TypeScriptVersion.shipped.length);
-    switch (unshipped.length) {
-      case 1:
-        // If there's only one unshipped version, it's next.
-        const next = unshipped[0];
-        expect(getAndDeleteEntry(next)).toBe(`npm:typescript@next`);
-        break;
-      case 2:
-        // If there are two unshipped versions, the first is next and the second is beta.
-        const [rc, beta] = unshipped;
-        expect(getAndDeleteEntry(rc)).toBe(`npm:typescript@next`);
-        expect(getAndDeleteEntry(beta)).toBe(`npm:typescript@beta`);
-        break;
-      default:
-        throw new Error(`Unexpected number of unshipped versions: ${unshipped.length}`);
     }
 
     expect([...typescripts]).toStrictEqual([]);

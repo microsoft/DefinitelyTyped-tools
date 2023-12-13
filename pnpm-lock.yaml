@@ -366,31 +366,31 @@ importers:
         specifier: workspace:*
         version: link:../typescript-versions
       typescript-4.6:
-        specifier: npm:typescript@~4.6
+        specifier: npm:typescript@~4.6.0-0
         version: /typescript@4.6.4
       typescript-4.7:
-        specifier: npm:typescript@~4.7
+        specifier: npm:typescript@~4.7.0-0
         version: /typescript@4.7.4
       typescript-4.8:
-        specifier: npm:typescript@~4.8
+        specifier: npm:typescript@~4.8.0-0
         version: /typescript@4.8.4
       typescript-4.9:
-        specifier: npm:typescript@~4.9
+        specifier: npm:typescript@~4.9.0-0
         version: /typescript@4.9.5
       typescript-5.0:
-        specifier: npm:typescript@~5.0
+        specifier: npm:typescript@~5.0.0-0
         version: /typescript@5.0.4
       typescript-5.1:
-        specifier: npm:typescript@~5.1
+        specifier: npm:typescript@~5.1.0-0
         version: /typescript@5.1.6
       typescript-5.2:
-        specifier: npm:typescript@~5.2
+        specifier: npm:typescript@~5.2.0-0
         version: /typescript@5.2.2
       typescript-5.3:
-        specifier: npm:typescript@~5.3
-        version: /typescript@5.3.2
+        specifier: npm:typescript@~5.3.0-0
+        version: /typescript@5.3.3
       typescript-5.4:
-        specifier: npm:typescript@next
+        specifier: npm:typescript@~5.4.0-0
         version: /typescript@5.4.0-dev.20231212
 
   packages/typescript-versions: {}
@@ -6845,8 +6845,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  /typescript@5.3.2:
-    resolution: {integrity: sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==}
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
