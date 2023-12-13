@@ -21,9 +21,6 @@ export async function lint(
   ) as typeof import("@typescript-eslint/typescript-estree");
   process.env.TSESTREE_SINGLE_RUN = "true";
   const lintProgram = createProgram(tsconfigPath);
-
-  // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
-  //   Also: expect-rule should be renamed to expect-type or check-type or something
   const files = [];
 
   for (const file of lintProgram.getSourceFiles()) {
