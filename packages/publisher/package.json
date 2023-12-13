@@ -20,7 +20,6 @@
   "devDependencies": {
     "@npm/types": "^1.0.2",
     "@types/libnpmpublish": "^4.0.3",
-    "@types/npm-registry-fetch": "^8.0.7",
     "@types/pacote": "^11.1.8",
     "@types/semver": "^7.5.5",
     "@types/yargs": "^17.0.31"
