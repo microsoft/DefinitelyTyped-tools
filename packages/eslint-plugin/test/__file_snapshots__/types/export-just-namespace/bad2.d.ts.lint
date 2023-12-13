@@ -1,0 +1,11 @@
+types/export-just-namespace/bad2.d.ts
+  2:1  error  Instead of `export =`-ing a namespace, use the body of the namespace as the module body  @definitelytyped/export-just-namespace
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/export-just-namespace/bad2.d.ts ====
+
+    namespace Stuff {}
+    export = Stuff;
+    ~~~~~~~~~~~~~~~
+!!! @definitelytyped/export-just-namespace: Instead of `export =`-ing a namespace, use the body of the namespace as the module body.

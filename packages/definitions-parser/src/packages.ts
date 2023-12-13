@@ -1,162 +1,209 @@
 import assert = require("assert");
-import { Author } from "@definitelytyped/header-parser";
-import { FS, mapValues, assertSorted, unmangleScopedPackage, assertDefined, unique } from "@definitelytyped/utils";
-import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import { Contributor, Header, License } from "@definitelytyped/header-parser";
+import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
+import {
+  Dir,
+  FS,
+  InMemoryFS,
+  assertDefined,
+  atTypesSlash,
+  computeHash,
+  isDeclarationPath,
+  isTypesPackageName,
+  mustTrimAtTypesPrefix,
+  trimAtTypesPrefixIfPresent,
+  unique,
+  unmangleScopedPackage,
+} from "@definitelytyped/utils";
 import * as semver from "semver";
-import { readDataFile } from "./data-file";
-import { scopeName, typesDirectoryName } from "./lib/settings";
-import { parseVersionFromDirectoryName } from "./lib/definition-parser";
+import { getFiles, getTypingInfo, parseVersionFromDirectoryName } from "./lib/definition-parser";
+import { getAllowedPackageJsonDependencies, typesDirectoryName } from "./lib/settings";
 
 export class AllPackages {
-  static async read(dt: FS): Promise<AllPackages> {
-    return AllPackages.from(await readTypesDataFile(), readNotNeededPackages(dt));
+  static fromFS(dt: FS) {
+    return new AllPackages(dt, new Map(), readNotNeededPackages(dt));
   }
 
-  static from(data: TypesDataFile, notNeeded: readonly NotNeededPackage[]): AllPackages {
+  static fromTestData(typingsVersionsRaw: Record<string, TypingsVersionsRaw>, notNeeded: readonly NotNeededPackage[]) {
+    const rootDir = new Dir(/*parent*/ undefined);
+    rootDir.set("types", new Dir(/*parent*/ rootDir));
+    const fs = new InMemoryFS(rootDir, "/");
     return new AllPackages(
-      mapValues(new Map(Object.entries(data)), (raw) => new TypingsVersions(raw)),
-      notNeeded
+      fs,
+      new Map(Object.entries(typingsVersionsRaw).map(([name, raw]) => [name, new TypingsVersions(fs, raw)])),
+      notNeeded,
     );
   }
 
-  static async readTypings(): Promise<readonly TypingsData[]> {
-    return AllPackages.from(await readTypesDataFile(), []).allTypings();
-  }
-  static async readLatestTypings(): Promise<readonly TypingsData[]> {
-    return AllPackages.from(await readTypesDataFile(), []).allLatestTypings();
-  }
-
   /** Use for `--single` tasks only. Do *not* call this in a loop! */
-  static async readSingle(name: string): Promise<TypingsData> {
-    const data = await readTypesDataFile();
-    const raw = data[name];
-    if (!raw) {
+  static async readSingle(dt: FS, name: string): Promise<TypingsData> {
+    const data = await getTypingInfo(name, dt);
+    if (!data) {
       throw new Error(`Can't find package ${name}`);
     }
-    const versions = Object.values(raw);
+    if ("errors" in data) {
+      throw new Error(`Errors while reading package ${name}: ${data.errors.join("\n")}`);
+    }
+    const versions = Object.values(data);
     if (versions.length > 1) {
       throw new Error(`Package ${name} has multiple versions.`);
     }
-    return new TypingsData(versions[0], /*isLatest*/ true);
+    return new TypingsData(dt, versions[0], /*isLatest*/ true);
   }
 
-  static readSingleNotNeeded(name: string, dt: FS): NotNeededPackage {
-    const notNeeded = readNotNeededPackages(dt);
-    const pkg = notNeeded.find((p) => p.name === name);
-    if (pkg === undefined) {
-      throw new Error(`Cannot find not-needed package ${name}`);
-    }
-    return pkg;
-  }
+  /** Keys are `typesDirectoryName` strings */
+  private readonly errors: Map<string, string[]> = new Map();
+  private isComplete = false;
 
   private constructor(
-    private readonly data: ReadonlyMap<string, TypingsVersions>,
-    private readonly notNeeded: readonly NotNeededPackage[]
+    private dt: FS,
+    /** Keys are `typesDirectoryName` strings */
+    private readonly types: Map<string, TypingsVersions>,
+    private readonly notNeeded: readonly NotNeededPackage[],
   ) {}
 
-  getNotNeededPackage(name: string): NotNeededPackage | undefined {
-    return this.notNeeded.find((p) => p.name === name);
+  getNotNeededPackage(typesDirectoryName: string): NotNeededPackage | undefined {
+    return this.notNeeded.find((p) => p.typesDirectoryName === typesDirectoryName);
   }
 
-  hasTypingFor(dep: PackageId): boolean {
-    return this.tryGetTypingsData(dep) !== undefined;
+  async hasTypingFor(dep: PackageId): Promise<boolean> {
+    return (await this.tryGetTypingsData(dep)) !== undefined;
+  }
+
+  getErrorsAsArray() {
+    return Array.from(this.errors.entries()).map(([name, errors]) => `${name}: ${errors.join("\n")}`);
   }
 
   /**
    * Whether a package maintains multiple minor versions of typings simultaneously by
    * using minor-versioned directories like 'react-native/v14.1'
    */
-  hasSeparateMinorVersions(name: string) {
-    const versions = Array.from(assertDefined(this.data.get(getMangledNameForScopedPackage(name))).getAll());
+  async hasSeparateMinorVersions(typesDirectoryName: string) {
+    const versions = Array.from(assertDefined(await this.tryGetTypingsVersions(typesDirectoryName)).getAll());
     const minors = versions.map((v) => v.minor);
     return minors.length !== unique(minors).length;
   }
 
-  tryResolve(dep: PackageId): PackageId {
-    const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
-    return (versions && versions.tryGet(dep.version)?.id) || dep;
+  async tryResolve(dep: PackageId): Promise<PackageId> {
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
+    const versions = await this.tryGetTypingsVersions(typesDirectoryName);
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
+    return (versions && versions.tryGet(depVersion)?.id) || dep;
   }
 
-  resolve(dep: PackageId): PackageIdWithDefiniteVersion {
-    const versions = this.data.get(getMangledNameForScopedPackage(dep.name));
+  async resolve(dep: PackageId): Promise<PackageIdWithDefiniteVersion> {
+    const typesDirectoryName = dep.typesDirectoryName ?? trimAtTypesPrefixIfPresent(dep.name);
+    const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     if (!versions) {
-      throw new Error(`No typings found with name '${dep.name}'.`);
+      throw new Error(`No typings found with directory name '${dep.typesDirectoryName}'.`);
     }
-    return versions.get(dep.version).id;
+    const depVersion = new semver.Range(dep.version === "*" ? "*" : `^${formatTypingVersion(dep.version)}`);
+    return versions.get(depVersion).id;
   }
 
   /** Gets the latest version of a package. E.g. getLatest(node v6) was node v10 (before node v11 came out). */
-  getLatest(pkg: TypingsData): TypingsData {
-    return pkg.isLatest ? pkg : this.getLatestVersion(pkg.name);
+  async getLatest(pkg: TypingsData): Promise<TypingsData> {
+    return pkg.isLatest ? pkg : this.getLatestVersion(pkg.typesDirectoryName);
   }
 
-  private getLatestVersion(packageName: string): TypingsData {
-    const latest = this.tryGetLatestVersion(packageName);
+  private async getLatestVersion(typesDirectoryName: string): Promise<TypingsData> {
+    const latest = await this.tryGetLatestVersion(typesDirectoryName);
     if (!latest) {
-      throw new Error(`No such package ${packageName}.`);
+      throw new Error(`No such package ${typesDirectoryName}.`);
     }
     return latest;
   }
 
-  tryGetLatestVersion(packageName: string): TypingsData | undefined {
-    const versions = this.data.get(getMangledNameForScopedPackage(packageName));
+  async tryGetLatestVersion(typesDirectoryName: string): Promise<TypingsData | undefined> {
+    const versions = await this.tryGetTypingsVersions(typesDirectoryName);
     return versions && versions.getLatest();
   }
 
-  getTypingsData(id: PackageId): TypingsData {
-    const pkg = this.tryGetTypingsData(id);
+  async getTypingsData(id: PackageId): Promise<TypingsData> {
+    const pkg = await this.tryGetTypingsData(id);
     if (!pkg) {
       throw new Error(`No typings available for ${JSON.stringify(id)}`);
     }
     return pkg;
   }
 
-  tryGetTypingsData({ name, version }: PackageId): TypingsData | undefined {
-    const versions = this.data.get(getMangledNameForScopedPackage(name));
-    return versions && versions.tryGet(version);
+  async tryGetTypingsData(pkg: PackageId): Promise<TypingsData | undefined> {
+    const typesDirectoryName = pkg.typesDirectoryName ?? trimAtTypesPrefixIfPresent(pkg.name);
+    const versions = await this.tryGetTypingsVersions(typesDirectoryName);
+    return (
+      versions && versions.tryGet(new semver.Range(pkg.version === "*" ? "*" : `^${formatTypingVersion(pkg.version)}`))
+    );
   }
 
-  allPackages(): readonly AnyPackage[] {
-    return [...this.allTypings(), ...this.allNotNeeded()];
+  private async tryGetTypingsVersions(typesDirectoryName: string): Promise<TypingsVersions | undefined> {
+    let versions = this.types.get(typesDirectoryName);
+    if (versions) {
+      return versions;
+    }
+    if (this.errors.has(typesDirectoryName)) {
+      return undefined;
+    }
+    const raw = await getTypingInfo(typesDirectoryName, this.dt);
+    if (!raw) {
+      return undefined;
+    }
+    if ("errors" in raw) {
+      this.errors.set(typesDirectoryName, raw.errors);
+      return undefined;
+    }
+    versions = new TypingsVersions(this.dt, raw);
+    this.types.set(typesDirectoryName, versions);
+    return versions;
+  }
+
+  async allPackages(): Promise<readonly AnyPackage[]> {
+    return [...(await this.allTypings()), ...this.allNotNeeded()];
   }
 
   /** Note: this includes older version directories (`foo/v0`) */
-  allTypings(): readonly TypingsData[] {
-    return assertSorted(Array.from(flattenData(this.data)), (t) => t.name);
+  async allTypings(): Promise<readonly TypingsData[]> {
+    await this.readAllTypings();
+    return Array.from(flattenData(this.types));
   }
 
-  allLatestTypings(): readonly TypingsData[] {
-    return assertSorted(
-      Array.from(this.data.values()).map((versions) => versions.getLatest()),
-      (t) => t.name
-    );
+  async allLatestTypings(): Promise<readonly TypingsData[]> {
+    await this.readAllTypings();
+    return Array.from(this.types.values()).map((versions) => versions.getLatest());
   }
 
   allNotNeeded(): readonly NotNeededPackage[] {
     return this.notNeeded;
   }
 
-  /** Returns all of the dependences *that have typings*, ignoring others, and including test dependencies. */
-  *allDependencyTypings(pkg: TypingsData): Iterable<TypingsData> {
-    for (const [name, version] of Object.entries(pkg.dependencies)) {
-      const versions = this.data.get(getMangledNameForScopedPackage(name));
+  /** Returns all of the dependencies *that are typed on DT*, ignoring others, and including test dependencies. */
+  async *allDependencyTypings(pkg: TypingsData): AsyncIterable<TypingsData> {
+    for (const [name, version] of pkg.allPackageJsonDependencies()) {
+      if (!isTypesPackageName(name)) continue;
+      if (pkg.name === name) continue;
+      const typesDirectoryName = mustTrimAtTypesPrefix(name);
+      const versions = await this.tryGetTypingsVersions(typesDirectoryName);
       if (versions) {
-        yield versions.get(
-          version,
-          pkg.pathMappings[name]
-            ? `${pkg.name} references this version of ${name} in its path mappings in tsconfig.json. If you are deleting this version, update ${pkg.name}’s path mappings accordingly.\n`
-            : undefined
-        );
+        yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
       }
     }
+  }
 
-    for (const name of pkg.testDependencies) {
-      const versions = this.data.get(getMangledNameForScopedPackage(name));
-      if (versions) {
-        const version = pkg.pathMappings[name];
-        yield version ? versions.get(version) : versions.getLatest();
-      }
+  private async readAllTypings() {
+    if (this.isComplete) {
+      return;
     }
+    // populate cache so every directory doesn't try to request this from GH
+    await getAllowedPackageJsonDependencies();
+    const types = this.dt.subDir("types");
+    await Promise.all(
+      types.readdir().map(async (typesDirectoryName) => {
+        if (!types.isDirectory(typesDirectoryName) || !types.subDir(typesDirectoryName).exists("package.json")) {
+          return;
+        }
+        await this.tryGetTypingsVersions(typesDirectoryName);
+      }),
+    );
+    this.isComplete = true;
   }
 }
 
@@ -171,8 +218,6 @@ export function getMangledNameForScopedPackage(packageName: string): string {
   return packageName;
 }
 
-export const typesDataFilename = "definitions.json";
-
 function* flattenData(data: ReadonlyMap<string, TypingsVersions>): Iterable<TypingsData> {
   for (const versions of data.values()) {
     yield* versions.getAll();
@@ -181,27 +226,31 @@ function* flattenData(data: ReadonlyMap<string, TypingsVersions>): Iterable<Typi
 
 export type AnyPackage = NotNeededPackage | TypingsData;
 
-interface BaseRaw {
-  /**
-   * The name of the library.
-   *
-   * A human readable version, e.g. it might be "Moment.js" even though `packageName` is "moment".
-   */
-  readonly libraryName: string;
-}
-
 /** Prefer to use `AnyPackage` instead of this. */
 export abstract class PackageBase {
   static compare(a: PackageBase, b: PackageBase): number {
     return a.name.localeCompare(b.name);
   }
 
-  /** Note: for "foo__bar" this is still "foo__bar", not "@foo/bar". */
+  /** The package.json "name" field */
   abstract readonly name: string;
-  readonly libraryName: string;
+  /**
+   * For non-npm packages, the human-readable library name recorded in
+   * the package.json "nonNpmDescription" field. Otherwise, the name of
+   * the implementation library, as computed from the package.json "name".
+   */
+  abstract readonly libraryName: string;
+  abstract readonly major: number;
+  abstract readonly minor: number;
+  abstract readonly isLatest: boolean;
 
-  get unescapedName(): string {
-    return unmangleScopedPackage(this.name) || this.name;
+  /**
+   * The immediate subdirectory name in DefinitelyTyped/types/.
+   * Must be equal to the package.json "name" field without the "@types/" prefix.
+   * Does not include the version directory.
+   */
+  get typesDirectoryName(): string {
+    return mustTrimAtTypesPrefix(this.name);
   }
 
   /** Short description for debug output. */
@@ -209,37 +258,20 @@ export abstract class PackageBase {
     return this.isLatest ? this.name : `${this.name} v${this.major}.${this.minor}`;
   }
 
-  constructor(data: BaseRaw) {
-    this.libraryName = data.libraryName;
+  get id(): PackageIdWithDefiniteVersion {
+    return { typesDirectoryName: this.typesDirectoryName, version: { major: this.major, minor: this.minor } };
   }
 
   isNotNeeded(): this is NotNeededPackage {
     return this instanceof NotNeededPackage;
   }
-
-  abstract readonly isLatest: boolean;
-  abstract readonly declaredModules: readonly string[];
-  abstract readonly globals: readonly string[];
-  abstract readonly minTypeScriptVersion: TypeScriptVersion;
-
-  /** '@types/foo' for a package 'foo'. */
-  get fullNpmName(): string {
-    return getFullNpmName(this.name);
-  }
-
-  abstract readonly major: number;
-  abstract readonly minor: number;
-
-  get id(): PackageIdWithDefiniteVersion {
-    return { name: this.name, version: { major: this.major, minor: this.minor } };
-  }
 }
 
-export function getFullNpmName(packageName: string): string {
-  return `@${scopeName}/${getMangledNameForScopedPackage(packageName)}`;
-}
-
-interface NotNeededPackageRaw extends BaseRaw {
+interface NotNeededPackageRaw {
+  /**
+   * The npm name of the implementation library that the types package was for.
+   */
+  readonly libraryName: string;
   /**
    * If this is available, @types typings are deprecated as of this version.
    * This is useful for packages that previously had DefinitelyTyped definitions but which now provide their own.
@@ -271,10 +303,15 @@ export class NotNeededPackage extends PackageBase {
     return new NotNeededPackage(name, raw.libraryName, raw.asOfVersion);
   }
 
-  constructor(readonly name: string, readonly libraryName: string, asOfVersion: string) {
-    super({ libraryName });
+  constructor(
+    readonly name: string,
+    readonly libraryName: string,
+    asOfVersion: string,
+  ) {
+    super();
     assert(libraryName && name && asOfVersion);
     this.version = new semver.SemVer(asOfVersion);
+    this.name = isTypesPackageName(name) ? name : `${atTypesSlash}${name}`;
   }
 
   get major(): number {
@@ -287,12 +324,6 @@ export class NotNeededPackage extends PackageBase {
   // A not-needed package has no other versions. (that would be possible to allow but nobody has really needed it yet)
   get isLatest(): boolean {
     return true;
-  }
-  get declaredModules(): readonly string[] {
-    return [];
-  }
-  get globals(): readonly string[] {
-    return this.globals;
   }
   get minTypeScriptVersion(): TypeScriptVersion {
     return TypeScriptVersion.lowest;
@@ -323,32 +354,14 @@ export function formatTypingVersion(version: DirectoryParsedTypingVersion) {
   return `${version.major}${version.minor === undefined ? "" : `.${version.minor}`}`;
 }
 
-/** If no version is specified, uses "*". */
-export type DependencyVersion = DirectoryParsedTypingVersion | "*";
+/** Maps name to version */
+export type PackageJsonDependencies = Record<string, string>;
 
-export function formatDependencyVersion(version: DependencyVersion) {
-  return version === "*" ? "*" : formatTypingVersion(version);
-}
-
-export interface PackageJsonDependency {
-  readonly name: string;
-  readonly version: string;
-}
-
-export interface TypingsDataRaw extends BaseRaw {
+export interface TypingsDataRaw {
   /**
-   * The NPM name to publish this under, e.g. "jquery".
-   *
-   * This does not include "@types".
+   * Header info contained in package.json
    */
-  readonly typingsPackageName: string;
-
-  /**
-   * Other definitions, that exist in the same typings repo, that this package depends on.
-   *
-   * These will refer to *package names*, not *folder names*.
-   */
-  readonly dependencies: { readonly [name: string]: DependencyVersion };
+  readonly header: Header;
 
   /**
    * Package `imports`, as read in the `package.json` file
@@ -366,31 +379,15 @@ export interface TypingsDataRaw extends BaseRaw {
   readonly type?: string;
 
   /**
-   * Other definitions, that exist in the same typings repo, that the tests, but not the types, of this package depend on.
-   *
-   * These are always the latest version and will not include anything already in `dependencies`.
+   * Packages that provide definitions that this package depends on.
+   * NOTE: Includes `@types/` packages.
    */
-  readonly testDependencies: readonly string[];
+  readonly dependencies: PackageJsonDependencies;
 
   /**
-   * External packages, from outside the typings repo, that provide definitions that this package depends on.
+   * Packages that this package's tests or other development depends on.
    */
-  readonly packageJsonDependencies: readonly PackageJsonDependency[];
-
-  /**
-   * Represents that there was a path mapping to a package.
-   *
-   * Not all path mappings are direct dependencies, they may be necessary for transitive dependencies. However, where `dependencies` and
-   * `pathMappings` share a key, they *must* share the same value.
-   */
-  readonly pathMappings: { readonly [packageName: string]: DirectoryParsedTypingVersion };
-
-  /**
-   * List of people that have contributed to the definitions in this package.
-   *
-   * These people will be requested for issue/PR review in the https://github.com/DefinitelyTyped/DefinitelyTyped repo.
-   */
-  readonly contributors: readonly Author[];
+  readonly devDependencies: PackageJsonDependencies;
 
   /**
    * The [older] version of the library that this definition package refers to, as represented *on-disk*.
@@ -400,36 +397,10 @@ export interface TypingsDataRaw extends BaseRaw {
   readonly libraryVersionDirectoryName?: string;
 
   /**
-   * Major version of the library.
-   *
-   * This data is parsed from a header comment in the entry point `.d.ts` and will be `0` if the file did not specify a version.
-   */
-  readonly libraryMajorVersion: number;
-
-  /**
-   * Minor version of the library.
-   *
-   * This data is parsed from a header comment in the entry point `.d.ts` and will be `0` if the file did not specify a version.
-   */
-  readonly libraryMinorVersion: number;
-
-  /**
-   * Minimum required TypeScript version to consume the definitions from this package.
-   */
-  readonly minTsVersion: AllTypeScriptVersion;
-
-  /**
    * List of TS versions that have their own directories, and corresponding "typesVersions" in package.json.
    * Usually empty.
    */
   readonly typesVersions: readonly TypeScriptVersion[];
-
-  /**
-   * Files that should be published with this definition, e.g. ["jquery.d.ts", "jquery-extras.d.ts"]
-   *
-   * Does *not* include a partial `package.json` because that will not be copied directly.
-   */
-  readonly files: readonly string[];
 
   /**
    * The license that this definition package is released under.
@@ -439,48 +410,9 @@ export interface TypingsDataRaw extends BaseRaw {
   readonly license: License;
 
   /**
-   * A hash of the names and contents of the `files` list, used for versioning.
+   * Which subdirectories of this package are older versions, e.g. `v1`, `v0.1`, `v15`.
    */
-  readonly contentHash: string;
-
-  /**
-   * Name or URL of the project, e.g. "http://cordova.apache.org".
-   */
-  readonly projectName: string;
-
-  /**
-   * A list of *values* declared in the global namespace.
-   *
-   * @note This does not include *types* declared in the global namespace.
-   */
-  readonly globals: readonly string[];
-
-  /**
-   * External modules declared by this package. Includes the containing folder name when applicable (e.g. proper module).
-   */
-  readonly declaredModules: readonly string[];
-}
-
-// Note that BSD is not supported -- for that, we'd have to choose a *particular* BSD license from the list at https://spdx.org/licenses/
-export const enum License {
-  MIT = "MIT",
-  Apache20 = "Apache-2.0",
-}
-const allLicenses = [License.MIT, License.Apache20];
-export function getLicenseFromPackageJson(packageJsonLicense: unknown): License {
-  if (packageJsonLicense === undefined) {
-    // tslint:disable-line strict-type-predicates (false positive)
-    return License.MIT;
-  }
-  if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
-    throw new Error(`Specifying '"license": "MIT"' is redundant, this is the default.`);
-  }
-  if (allLicenses.includes(packageJsonLicense as License)) {
-    return packageJsonLicense as License;
-  }
-  throw new Error(
-    `'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(allLicenses)}}`
-  );
+  readonly olderVersionDirectories: readonly string[];
 }
 
 export class TypingsVersions {
@@ -491,112 +423,124 @@ export class TypingsVersions {
    */
   private readonly versions: semver.SemVer[];
 
-  constructor(data: TypingsVersionsRaw) {
+  constructor(dt: FS, data: TypingsVersionsRaw) {
     /**
      * Sorted from latest to oldest so that we publish the current version first.
      * This is important because older versions repeatedly reset the "latest" tag to the current version.
      */
-    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.0`));
+    this.versions = Object.keys(data).map((key) => new semver.SemVer(`${key}.9999`));
     this.versions.sort(semver.rcompare);
 
     this.map = new Map(
-      this.versions.map((version, i) => [version, new TypingsData(data[`${version.major}.${version.minor}`], !i)])
+      this.versions.map((version, i) => [version, new TypingsData(dt, data[`${version.major}.${version.minor}`], !i)]),
     );
   }
 
   getAll(): Iterable<TypingsData> {
     return this.map.values();
   }
-
-  get(version: DependencyVersion, errorMessage?: string): TypingsData {
-    return version === "*" ? this.getLatest() : this.getLatestMatch(version, errorMessage);
+  get(version: semver.Range, errorMessage?: string): TypingsData {
+    const data = this.tryGet(version);
+    if (!data) {
+      throw new Error(`Could not match version ${version} in ${this.versions}. ${errorMessage || ""}`);
+    }
+    return data;
   }
-
-  tryGet(version: DependencyVersion): TypingsData | undefined {
-    return version === "*" ? this.getLatest() : this.tryGetLatestMatch(version);
+  tryGet(version: semver.Range): TypingsData | undefined {
+    try {
+      const found = this.versions.find((v) => version.test(v));
+      return found && this.map.get(found);
+    } catch (e) {
+      console.log(version);
+      throw e;
+    }
   }
 
   getLatest(): TypingsData {
     return this.map.get(this.versions[0])!;
   }
-
-  private getLatestMatch(version: DirectoryParsedTypingVersion, errorMessage?: string): TypingsData {
-    const data = this.tryGetLatestMatch(version);
-    if (!data) {
-      throw new Error(`Could not find version ${version.major}.${version.minor ?? "*"}. ${errorMessage || ""}`);
-    }
-    return data;
-  }
-
-  private tryGetLatestMatch(version: DirectoryParsedTypingVersion): TypingsData | undefined {
-    const found = this.versions.find(
-      (v) => v.major === version.major && (version.minor === undefined || v.minor === version.minor)
-    );
-    return found && this.map.get(found);
-  }
 }
 
 export class TypingsData extends PackageBase {
-  constructor(private readonly data: TypingsDataRaw, readonly isLatest: boolean) {
-    super(data);
+  constructor(
+    private dt: FS,
+    private readonly data: TypingsDataRaw,
+    readonly isLatest: boolean,
+  ) {
+    super();
   }
 
-  get name() {
-    return this.data.typingsPackageName;
+  get name(): string {
+    return this.data.header.name;
   }
-
-  get testDependencies(): readonly string[] {
-    return this.data.testDependencies;
+  get libraryName(): string {
+    return (
+      this.data.header.nonNpmDescription ?? unmangleScopedPackage(this.typesDirectoryName) ?? this.typesDirectoryName
+    );
   }
-  get contributors(): readonly Author[] {
-    return this.data.contributors;
+  get contributors(): readonly Contributor[] {
+    return this.data.header.owners.map((o) => ({
+      ...o,
+      url: "githubUsername" in o ? `https://github.com/${o.githubUsername}` : o.url,
+    }));
   }
   get major(): number {
-    return this.data.libraryMajorVersion;
+    return this.data.header.libraryMajorVersion;
   }
   get minor(): number {
-    return this.data.libraryMinorVersion;
+    return this.data.header.libraryMinorVersion;
   }
 
   get minTypeScriptVersion(): TypeScriptVersion {
-    return TypeScriptVersion.isSupported(this.data.minTsVersion) ? this.data.minTsVersion : TypeScriptVersion.lowest;
+    return TypeScriptVersion.isSupported(this.data.header.minimumTypeScriptVersion)
+      ? this.data.header.minimumTypeScriptVersion
+      : TypeScriptVersion.lowest;
   }
   get typesVersions(): readonly TypeScriptVersion[] {
     return this.data.typesVersions;
   }
 
-  get files(): readonly string[] {
-    return this.data.files;
+  private _files: readonly string[] | undefined;
+  getFiles(): readonly string[] {
+    if (!this._files) {
+      const files = getFiles(this.dt, this, this.data.olderVersionDirectories);
+      this._files = files;
+    }
+    return this._files;
   }
-  get dtsFiles(): readonly string[] {
-    return this.data.files.filter((f) => f.endsWith(".d.ts") || f.endsWith(".d.mts") || f.endsWith(".d.cts"));
+
+  getDtsFiles(): readonly string[] {
+    return this.getFiles().filter(isDeclarationPath);
   }
+
   get license(): License {
     return this.data.license;
   }
-  get packageJsonDependencies(): readonly PackageJsonDependency[] {
-    return this.data.packageJsonDependencies;
+  get dependencies(): PackageJsonDependencies {
+    return this.data.dependencies ?? {};
   }
-  get contentHash(): string {
-    return this.data.contentHash;
+  get devDependencies(): PackageJsonDependencies {
+    return this.data.devDependencies ?? {};
   }
-  get declaredModules(): readonly string[] {
-    return this.data.declaredModules;
-  }
-  get projectName(): string {
-    return this.data.projectName;
-  }
-  get globals(): readonly string[] {
-    return this.data.globals;
-  }
-  get pathMappings(): { readonly [packageName: string]: DirectoryParsedTypingVersion } {
-    return this.data.pathMappings;
+  *allPackageJsonDependencies(): Iterable<[string, string]> {
+    for (const [name, version] of Object.entries(this.dependencies)) {
+      yield [name, version];
+    }
+    for (const [name, version] of Object.entries(this.devDependencies)) {
+      yield [name, version];
+    }
   }
 
-  get dependencies(): { readonly [name: string]: DependencyVersion } {
-    return this.data.dependencies;
+  private _contentHash: string | undefined;
+  getContentHash(): string {
+    return (this._contentHash ??= hash(
+      [...this.getFiles(), "package.json"],
+      this.dt.subDir("types").subDir(this.subDirectoryPath),
+    ));
   }
-
+  get projectName(): string | undefined {
+    return this.data.header.projects[0];
+  }
   get type() {
     return this.data.type;
   }
@@ -609,38 +553,41 @@ export class TypingsData extends PackageBase {
     return this.data.exports;
   }
 
+  get nonNpm() {
+    return this.data.header.nonNpm;
+  }
+
   get versionDirectoryName() {
     return this.data.libraryVersionDirectoryName && `v${this.data.libraryVersionDirectoryName}`;
   }
 
   /** Path to this package, *relative* to the DefinitelyTyped directory. */
   get subDirectoryPath(): string {
-    return this.isLatest ? this.name : `${this.name}/${this.versionDirectoryName}`;
+    return this.isLatest ? this.typesDirectoryName : `${this.typesDirectoryName}/${this.versionDirectoryName}`;
   }
 }
 
 /** Uniquely identifies a package. */
-export interface PackageId {
-  readonly name: string;
-  readonly version: DependencyVersion;
-}
+export type PackageId =
+  | {
+      readonly typesDirectoryName: string;
+      readonly version: DirectoryParsedTypingVersion | "*";
+    }
+  | {
+      readonly name: string;
+      readonly typesDirectoryName?: undefined;
+      readonly version: DirectoryParsedTypingVersion | "*";
+    };
 
 export interface PackageIdWithDefiniteVersion {
-  readonly name: string;
+  readonly typesDirectoryName: string;
   readonly version: HeaderParsedTypingVersion;
-}
-
-export interface TypesDataFile {
-  readonly [packageName: string]: TypingsVersionsRaw;
-}
-function readTypesDataFile(): Promise<TypesDataFile> {
-  return readDataFile("parse-definitions", typesDataFilename) as Promise<TypesDataFile>;
 }
 
 export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
   const rawJson = dt.readJson("notNeededPackages.json"); // tslint:disable-line await-promise (tslint bug)
   return Object.entries((rawJson as { readonly packages: readonly NotNeededPackageRaw[] }).packages).map((entry) =>
-    NotNeededPackage.fromRaw(...entry)
+    NotNeededPackage.fromRaw(...entry),
   );
 }
 
@@ -649,25 +596,57 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
  * For "types/a/v3/c", returns { name: "a", version: 3 }.
  * For "x", returns undefined.
  */
-export function getDependencyFromFile(file: string): PackageId | undefined {
+export function getDependencyFromFile(
+  file: string,
+): { typesDirectoryName: string; version: DirectoryParsedTypingVersion | "*" } | undefined {
   const parts = file.split("/");
   if (parts.length <= 2) {
     // It's not in a typings directory at all.
     return undefined;
   }
 
-  const [typesDirName, name, subDirName] = parts; // Ignore any other parts
+  // types/[packageName]/[scripts]
+  // types/[packageName]/[tsVersion]/[scripts]
+  // types/[packageName]/[packageVersion]/[scripts]
+  // types/[packageName]/[packageVersion]/[tsVersion]/[scripts]
+  const [typesDirName, name, packageVersion, tsVersion, scripts] = parts;
 
-  if (typesDirName !== typesDirectoryName) {
+  const version = parseVersionFromDirectoryName(packageVersion) ?? "*";
+  if (
+    // package is not in types directory
+    typesDirName !== typesDirectoryName ||
+    // is root package's scripts folder
+    packageVersion === "scripts" ||
+    // is root package's scripts folder with overridden tsVersion
+    (/^ts\d+\.\d$/.test(packageVersion) && tsVersion === "scripts") ||
+    // is root package's scripts folder with overridden packageVersion
+    (version !== "*" && tsVersion === "scripts") ||
+    // is root package's scripts folder with overridden packageVersion and tsVersion
+    (version !== "*" && /^ts\d+\.\d$/.test(tsVersion) && scripts === "scripts")
+  ) {
     return undefined;
   }
 
-  if (subDirName) {
-    const version = parseVersionFromDirectoryName(subDirName);
-    if (version !== undefined) {
-      return { name, version };
-    }
-  }
+  return { typesDirectoryName: name, version };
+}
 
-  return { name, version: "*" };
+function hash(files: readonly string[], fs: FS): string {
+  const fileContents = files.map((f) => {
+    let contents = fs.readFile(f);
+    if (f === "package.json") {
+      const parsed = JSON.parse(contents);
+      contents = JSON.stringify(sortedObject(parsed));
+    }
+    return `${f}**${contents}`;
+  });
+  const allContent = fileContents.join("||");
+  return computeHash(allContent);
+}
+
+function sortedObject(o: any): object {
+  const out: Record<string, unknown> = {};
+  for (const key of Object.keys(o).sort()) {
+    out[key] = o[key];
+  }
+  return out;
 }

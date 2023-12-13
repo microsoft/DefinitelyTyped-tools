@@ -8,7 +8,7 @@ import { assertDefined, logUncaughtErrors } from "@definitelytyped/utils";
 
 export { runDTSLint, RunDTSLintOptions };
 
-if (!module.parent) {
+if (require.main === module) {
   const args = yargs
     .options({
       clone: {
@@ -66,14 +66,25 @@ if (!module.parent) {
         type: "boolean",
         default: false,
       },
-      // Not sure why you’d use this, so I’m hiding it
+      // Only useful for repeated local runs, so I’m hiding it
       noInstall: {
         hidden: true,
         type: "boolean",
         default: false,
       },
+      childRestartTaskInterval: {
+        type: "number",
+        description:
+          "How often to restart child processes, in number of tasks. Useful to work around memory leaks. Default is not to restart.",
+      },
+      writeFailures: {
+        type: "string",
+        description: "Path to which all failures will be written.",
+        default: "",
+      },
     })
-    .wrap(Math.min(yargs.terminalWidth(), 120)).argv;
+    .wrap(Math.min(yargs.terminalWidth(), 120))
+    .parseSync();
 
   const options: RunDTSLintOptions = {
     definitelyTypedAcquisition: args.clone
@@ -92,6 +103,8 @@ if (!module.parent) {
     onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
     noInstall: args.noInstall,
+    childRestartTaskInterval: args.childRestartTaskInterval,
+    writeFailures: args.writeFailures,
   };
 
   logUncaughtErrors(async () => {

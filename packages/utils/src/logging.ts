@@ -1,4 +1,4 @@
-import { ensureDir, removeSync } from "fs-extra";
+import fs from "fs";
 
 import { logDir } from "./lib/settings";
 import { joinPaths } from "./fs";
@@ -54,7 +54,7 @@ export function logger(): [Logger, () => Log] {
 
 /** Helper for creating `info` and `error` loggers together. */
 function loggerWithErrorsHelper(
-  loggerOrQuietLogger: () => [Logger, () => Log]
+  loggerOrQuietLogger: () => [Logger, () => Log],
 ): [LoggerWithErrors, () => LogWithErrors] {
   const [info, infoResult] = loggerOrQuietLogger();
   const [error, errorResult] = loggerOrQuietLogger();
@@ -85,7 +85,7 @@ export function moveLogs(dest: Logger, src: Log, mapper?: (message: string) => s
 export function moveLogsWithErrors(
   dest: LoggerWithErrors,
   { infos, errors }: LogWithErrors,
-  mapper?: (message: string) => string
+  mapper?: (message: string) => string,
 ): void {
   moveLogs(dest.info, infos, mapper);
   moveLogs(dest.error, errors, mapper);
@@ -96,7 +96,7 @@ export function logPath(logName: string): string {
 }
 
 export async function writeLog(logName: string, contents: readonly string[]): Promise<void> {
-  await ensureDir(logDir);
+  await fs.promises.mkdir(logDir, { recursive: true });
   await writeFile(logPath(logName), contents.join("\r\n"));
 }
 
@@ -105,5 +105,5 @@ export function joinLogWithErrors({ infos, errors }: LogWithErrors): Log {
 }
 
 export function cleanLogDirectory() {
-  removeSync(logDir);
+  fs.rmSync(logDir, { recursive: true, force: true });
 }

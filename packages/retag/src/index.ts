@@ -3,7 +3,6 @@
 import assert = require("assert");
 import yargs from "yargs";
 import process = require("process");
-import os = require("os");
 
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import {
@@ -14,28 +13,25 @@ import {
   loggerWithErrors,
   LoggerWithErrors,
   cacheDir,
+  nAtATime,
 } from "@definitelytyped/utils";
-import {
-  AnyPackage,
-  TypingsData,
-  AllPackages,
-  parseDefinitions,
-  getDefinitelyTyped,
-} from "@definitelytyped/definitions-parser";
+import { AnyPackage, TypingsData, AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
 import * as semver from "semver";
 
-if (!module.parent) {
+if (require.main === module) {
   logUncaughtErrors(main);
 }
 
 async function main() {
-  const { dry, nProcesses, name } = yargs.options({
-    dry: { type: "boolean", default: false },
-    nProcesses: { type: "number", default: os.cpus().length },
-    name: { type: "string" },
-  }).argv;
-  await tag(dry, nProcesses, name);
+  const { dry, path, name } = yargs
+    .options({
+      dry: { type: "boolean", default: false },
+      path: { type: "string", default: "../DefinitelyTyped" },
+      name: { type: "string" },
+    })
+    .parseSync();
+  await tag(dry, path, name);
 }
 
 /**
@@ -46,32 +42,24 @@ async function main() {
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  */
-async function tag(dry: boolean, nProcesses: number, name?: string) {
+async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
   const log = loggerWithErrors()[0];
-  const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
-  await parseDefinitions(
-    await getDefinitelyTyped(options, log),
-    { nProcesses: nProcesses || os.cpus().length, definitelyTypedPath: "../DefinitelyTyped" },
-    log
-  );
-
+  const options = { definitelyTypedPath, progress: true };
+  const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 
   const publishClient = new NpmPublishClient(token);
   if (name) {
-    const pkg = await AllPackages.readSingle(name);
+    const pkg = await AllPackages.readSingle(dt, name);
     const version = await getLatestTypingVersion(pkg);
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
   } else {
-    await Promise.all(
-      (
-        await AllPackages.readLatestTypings()
-      ).map(async (pkg) => {
-        // Only update tags for the latest version of the package.
-        const version = await getLatestTypingVersion(pkg);
-        await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-      })
-    );
+    const allPackages = AllPackages.fromFS(dt);
+    await nAtATime(5, await allPackages.allLatestTypings(), async (pkg) => {
+      // Only update tags for the latest version of the package.
+      const version = await getLatestTypingVersion(pkg);
+      await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+    });
   }
   // Don't tag notNeeded packages
 }
@@ -81,10 +69,10 @@ export async function updateTypeScriptVersionTags(
   version: string,
   client: NpmPublishClient,
   log: Logger,
-  dry: boolean
+  dry: boolean,
 ): Promise<void> {
   const tags = TypeScriptVersion.tagsToUpdate(pkg.minTypeScriptVersion);
-  const name = pkg.fullNpmName;
+  const name = pkg.name;
   log(`Tag ${name}@${version} as ${JSON.stringify(tags)}`);
   if (dry) {
     log("(dry) Skip tag");
@@ -102,14 +90,14 @@ export async function getLatestTypingVersion(pkg: TypingsData): Promise<string> 
 export async function fetchTypesPackageVersionInfo(
   pkg: TypingsData,
   canPublish: boolean,
-  log?: LoggerWithErrors
+  log?: LoggerWithErrors,
 ): Promise<{ version: string; needsPublish: boolean }> {
-  const spec = `${pkg.fullNpmName}@~${pkg.major}.${pkg.minor}`;
+  const spec = `${pkg.name}@~${pkg.major}.${pkg.minor}`;
   let info = await pacote.manifest(spec, { cache: cacheDir, fullMetadata: true, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED" && reason.code !== "ETARGET") throw reason;
     return undefined;
   });
-  if (!info || info.typesPublisherContentHash !== pkg.contentHash) {
+  if (!info || info.typesPublisherContentHash !== pkg.getContentHash()) {
     if (log) {
       log.info(`Version info not cached for ${pkg.desc}@${info ? info.version : "(no latest version)"}`);
     }
@@ -125,10 +113,10 @@ export async function fetchTypesPackageVersionInfo(
   if (info.deprecated) {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
     assert(
-      pkg.name === "angular-ui-router" || pkg.name === "ui-router-extras",
-      `Package ${pkg.name} has been deprecated, so we shouldn't have parsed it. Was it re-added?`
+      pkg.typesDirectoryName === "angular-ui-router" || pkg.typesDirectoryName === "ui-router-extras",
+      `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`,
     );
   }
-  const needsPublish = canPublish && pkg.contentHash !== info.typesPublisherContentHash;
+  const needsPublish = canPublish && pkg.getContentHash() !== info.typesPublisherContentHash;
   return { version: needsPublish ? semver.inc(info.version, "patch")! : info.version, needsPublish };
 }

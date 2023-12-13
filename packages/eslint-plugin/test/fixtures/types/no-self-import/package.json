@@ -1,0 +1,11 @@
+{
+    "name": "@types/no-self-import",
+    "version": "2.0.9999",
+    "owners": [],
+    "dependencies": {
+        "other-package": "*"
+    },
+    "devDependencies": {
+        "@types/no-self-import": "workspace:."
+    }
+}

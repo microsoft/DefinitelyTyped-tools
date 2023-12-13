@@ -83,7 +83,7 @@ function testsource(filename: string) {
 suite("checkSource", {
   noErrors() {
     expect(checkSource("noErrors", testsource("noErrors.d.ts"), testsource("noErrors.js"), allErrors, false)).toEqual(
-      []
+      [],
     );
   },
   missingJsProperty() {
@@ -93,8 +93,8 @@ suite("checkSource", {
         testsource("missingJsProperty.d.ts"),
         testsource("missingJsProperty.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -102,7 +102,7 @@ suite("checkSource", {
           message: `The declaration doesn't match the JavaScript module 'missingJsProperty'. Reason:
 The JavaScript module exports a property named 'foo', which is missing from the declaration module.`,
         },
-      ])
+      ]),
     );
   },
   noMissingWebpackProperty() {
@@ -112,8 +112,8 @@ The JavaScript module exports a property named 'foo', which is missing from the 
         testsource("webpackPropertyNames.d.ts"),
         testsource("webpackPropertyNames.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toHaveLength(0);
   },
   missingDtsProperty() {
@@ -123,8 +123,8 @@ The JavaScript module exports a property named 'foo', which is missing from the 
         testsource("missingDtsProperty.d.ts"),
         testsource("missingDtsProperty.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -136,7 +136,7 @@ The declaration module exports a property named 'foo', which is missing from the
             length: 11,
           },
         },
-      ])
+      ]),
     );
   },
   missingDefaultExport() {
@@ -146,8 +146,8 @@ The declaration module exports a property named 'foo', which is missing from the
         testsource("missingDefault.d.ts"),
         testsource("missingDefault.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -162,7 +162,7 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
             length: 33,
           },
         },
-      ])
+      ]),
     );
   },
   missingJsSignatureExportEquals() {
@@ -172,8 +172,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
         testsource("missingJsSignatureExportEquals.d.ts"),
         testsource("missingJsSignatureExportEquals.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -181,7 +181,7 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
           message: `The declaration doesn't match the JavaScript module 'missingJsSignatureExportEquals'. Reason:
 The JavaScript module can be called or constructed, but the declaration module cannot.`,
         },
-      ])
+      ]),
     );
   },
   missingJsSignatureNoExportEquals() {
@@ -191,8 +191,8 @@ The JavaScript module can be called or constructed, but the declaration module c
         testsource("missingJsSignatureNoExportEquals.d.ts"),
         testsource("missingJsSignatureNoExportEquals.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -203,7 +203,7 @@ The JavaScript module can be called or constructed, but the declaration module c
 The most common way to resolve this error is to use 'export =' syntax.
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
         },
-      ])
+      ]),
     );
   },
   missingDtsSignature() {
@@ -213,8 +213,8 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
         testsource("missingDtsSignature.d.ts"),
         testsource("missingDtsSignature.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -222,7 +222,7 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
           message: `The declaration doesn't match the JavaScript module 'missingDtsSignature'. Reason:
 The declaration module can be called or constructed, but the JavaScript module cannot.`,
         },
-      ])
+      ]),
     );
   },
   missingExportEquals() {
@@ -232,8 +232,8 @@ The declaration module can be called or constructed, but the JavaScript module c
         testsource("missingExportEquals.d.ts"),
         testsource("missingExportEquals.js"),
         allErrors,
-        false
-      )
+        false,
+      ),
     ).toEqual(
       expect.arrayContaining([
         {
@@ -243,7 +243,7 @@ The declaration should use 'export =' syntax because the JavaScript source uses 
 
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
         },
-      ])
+      ]),
     );
   },
 });
@@ -252,23 +252,19 @@ suite("dtsCritic", {
     expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
   },
   noMatchingNpmPackage() {
-    expect(dtsCritic(testsource("wenceslas.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("no-matching-package/wenceslas.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmPackage,
         message: `Declaration file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-// Type definitions for non-npm package wenceslas-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
+   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
       },
     ]);
   },
   noMatchingNpmVersion() {
-    expect(dtsCritic(testsource("typescript.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("typescript/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NoMatchingNpmVersion,
         message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
@@ -277,13 +273,13 @@ You should copy the major and minor version from the package on npm.`),
     ]);
   },
   nonNpmHasMatchingPackage() {
-    expect(dtsCritic(testsource("tslib.d.ts"))).toEqual([
+    expect(dtsCritic(testsource("example/index.d.ts"))).toEqual([
       {
         kind: ErrorKind.NonNpmHasMatchingPackage,
-        message: `The non-npm package 'tslib' conflicts with the existing npm package 'tslib'.
+        message: `The non-npm package 'example' conflicts with the existing npm package 'example'.
 Try adding -browser to the end of the name to get
 
-    tslib-browser
+    example-browser
 `,
       },
     ]);

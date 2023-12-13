@@ -1,0 +1,13 @@
+{
+    "extends": "../../../tsconfig.base.json",
+    "compilerOptions": {
+      "types": ["node", "jest"],
+      "composite": false,
+      "noEmit": true
+    },
+    "references": [
+      { "path": ".." }
+    ],
+    "exclude": ["fixtures"]
+  }
+  

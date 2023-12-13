@@ -1,0 +1,29 @@
+name: Check parse results
+#description: Confirm check parse results and the DT repo are in sync, to avoid potential DT CI outages.
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
+jobs:
+  check-parse-results:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - run: npm install -g pnpm
+      - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - run: pnpm install
+      - run: pnpm build
+      - name: Check parse results
+        run: pnpm run --filter @definitelytyped/dtslint-runner check-parse-results
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}
+          path: packages/definitions-parser/data/

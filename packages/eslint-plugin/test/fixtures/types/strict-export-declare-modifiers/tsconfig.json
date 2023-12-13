@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "good1.ts",
+        "good2.d.ts",
+        "good3.d.ts",
+        "good4.d.ts",
+        "good5.d.ts",
+        "good6.ts",
+        "good7.d.ts",
+        "good8.d.ts",
+        "good9.d.ts",
+        "bad1.d.ts",
+        "bad2.d.ts",
+        "bad3.d.ts",
+        "bad4.d.ts",
+        "bad5.d.ts",
+        "bad6.d.ts",
+        "bad7.d.ts",
+        "strict-export-declare-modifiers-tests.ts"
+    ]
+}

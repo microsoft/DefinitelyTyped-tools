@@ -1,4 +1,4 @@
-import { NotNeededPackage, TypingsData } from "@definitelytyped/definitions-parser";
+import { NotNeededPackage, TypingsData, createMockDT } from "@definitelytyped/definitions-parser";
 import * as libpub from "libnpmpublish";
 import { publishNotNeededPackage, publishTypingsPackage } from "../src/lib/package-publisher";
 
@@ -7,12 +7,14 @@ jest.mock("pacote", () => ({ async manifest() {}, async tarball() {} }));
 
 const client = { async tag() {} };
 
+const dt = createMockDT();
+
 const latestVersion = {
-  pkg: new TypingsData({ typingsPackageName: "some-package" } as never, /*isLatest*/ true),
+  pkg: new TypingsData(dt.fs, { typingsPackageName: "some-package" } as never, /*isLatest*/ true),
   version: "1.2.3",
 };
 const oldVersion = {
-  pkg: new TypingsData({ typingsPackageName: "some-package" } as never, /*isLatest*/ false),
+  pkg: new TypingsData(dt.fs, { typingsPackageName: "some-package" } as never, /*isLatest*/ false),
   version: "1.2.3",
 };
 const notNeeded = new NotNeededPackage("not-needed", "not-needed", "1.2.3");

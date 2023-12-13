@@ -11,7 +11,7 @@ export async function nAtATime<T, U>(
   n: number,
   inputs: readonly T[],
   use: (t: T) => Awaitable<U>,
-  progressOptions?: ProgressOptions<T, U>
+  progressOptions?: ProgressOptions<T, U>,
 ): Promise<U[]> {
   const progress = progressOptions ? new ProgressBar({ name: progressOptions.name }) : undefined;
 
@@ -31,7 +31,7 @@ export async function nAtATime<T, U>(
           progress!.update(index / inputs.length, progressOptions!.flavor(input, output));
         }
       }
-    })
+    }),
   );
   if (progress) {
     progress.done();
@@ -62,7 +62,7 @@ export async function filterNAtATimeOrdered<T>(
   n: number,
   inputs: readonly T[],
   shouldKeep: (input: T) => Awaitable<boolean>,
-  progress?: ProgressOptions<T, boolean>
+  progress?: ProgressOptions<T, boolean>,
 ): Promise<T[]> {
   const shouldKeeps: boolean[] = await nAtATime(n, inputs, shouldKeep, progress);
   return inputs.filter((_, idx) => shouldKeeps[idx]);

@@ -1,0 +1,10 @@
+types/no-single-element-tuple-type/bad.d.ts
+  1:16  error  Type [T] is a single-element tuple type. You probably meant T[]  @definitelytyped/no-single-element-tuple-type
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-single-element-tuple-type/bad.d.ts ====
+
+    type Test<T> = [T];
+                   ~~~
+!!! @definitelytyped/no-single-element-tuple-type: Type [T] is a single-element tuple type. You probably meant T[].

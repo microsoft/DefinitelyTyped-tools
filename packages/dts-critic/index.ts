@@ -4,7 +4,6 @@ import fs = require("fs");
 import cp = require("child_process");
 import path = require("path");
 import semver = require("semver");
-import rimraf = require("rimraf");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 import * as tmp from "tmp";
@@ -64,26 +63,26 @@ export function dtsCritic(
   dtsPath: string,
   sourcePath?: string,
   options: CheckOptions = defaultOpts,
-  debug = false
+  debug = false,
 ): CriticError[] {
   if (!commandExistsSync("tar")) {
     throw new Error(
-      "You need to have tar installed to run dts-critic, you can get it from https://www.gnu.org/software/tar"
+      "You need to have tar installed to run dts-critic, you can get it from https://www.gnu.org/software/tar",
     );
   }
   if (!commandExistsSync("npm")) {
     throw new Error(
-      "You need to have npm installed to run dts-critic, you can get it from https://www.npmjs.com/get-npm"
+      "You need to have npm installed to run dts-critic, you can get it from https://www.npmjs.com/get-npm",
     );
   }
 
-  const dts = fs.readFileSync(dtsPath, "utf-8");
-  const header = parseDtHeader(dts);
-
   const name = findDtsName(dtsPath);
+  const packageJsonPath = path.join(path.dirname(path.resolve(dtsPath)), "package.json");
   const npmInfo = getNpmInfo(name);
-
-  if (isNonNpm(header)) {
+  const header = parsePackageJson(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")), path.dirname(dtsPath));
+  if (header === undefined) {
+    return [];
+  } else if (header.nonNpm) {
     const errors: CriticError[] = [];
     const nonNpmError = checkNonNpm(name, npmInfo);
     if (nonNpmError) {
@@ -94,7 +93,7 @@ export function dtsCritic(
       if (options.mode === Mode.Code) {
         errors.push(...checkSource(name, dtsPath, sourcePath, options.errors, debug));
       }
-    } else if (!module.parent) {
+    } else if (require.main === module) {
       console.log(`Warning: declaration provided is for a non-npm package.
 If you want to check the declaration against the JavaScript source code, you must provide a path to the source file.`);
     }
@@ -119,7 +118,7 @@ If you want to check the declaration against the JavaScript source code, you mus
       const errors = checkSource(name, dtsPath, sourceEntry, options.errors, debug);
       if (packagePath) {
         // Delete the source afterward to avoid running out of space
-        rimraf.sync(packagePath);
+        fs.rmSync(packagePath, { recursive: true, force: true });
       }
       return errors;
     }
@@ -128,16 +127,14 @@ If you want to check the declaration against the JavaScript source code, you mus
   }
 }
 
-function parseDtHeader(dts: string): headerParser.Header | undefined {
-  try {
-    return headerParser.parseHeaderOrFail(dts);
-  } catch (e) {
-    return undefined;
-  }
-}
-
-function isNonNpm(header: headerParser.Header | undefined): boolean {
-  return !!header && header.nonNpm;
+function parsePackageJson(
+  packageName: string,
+  packageJson: Record<string, unknown>,
+  dirPath: string,
+): headerParser.Header | undefined {
+  const result = headerParser.validatePackageJson(packageName, packageJson, headerParser.getTypesVersions(dirPath));
+  if (Array.isArray(result)) console.log(result.join("\n"));
+  return Array.isArray(result) ? undefined : result;
 }
 
 export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport];
@@ -145,7 +142,7 @@ export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, Er
 function main() {
   const argv = yargs
     .usage(
-      "$0 --dts path-to-d.ts [--js path-to-source] [--mode mode] [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm."
+      "$0 --dts path-to-d.ts [--js path-to-source] [--mode mode] [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm.",
     )
     .option("dts", {
       describe: "Path of declaration file to be critiqued.",
@@ -167,7 +164,8 @@ function main() {
       type: "boolean",
       default: false,
     })
-    .help().argv;
+    .help()
+    .parseSync();
 
   let opts;
   switch (argv.mode) {
@@ -193,6 +191,7 @@ export function getNpmInfo(name: string): NpmInfo {
   const npmName = dtToNpmName(name);
   const infoResult = cp.spawnSync("npm", ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
     encoding: "utf8",
+    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
   });
   const info = JSON.parse(infoResult.stdout || infoResult.stderr);
   if (info.error !== undefined) {
@@ -207,7 +206,7 @@ export function getNpmInfo(name: string): NpmInfo {
   }
   return {
     isNpm: true,
-    versions: info.versions as string[],
+    versions: Array.isArray(info.versions) ? info.versions : [info.versions],
     tags: info["dist-tags"] as { [tag: string]: string | undefined },
   };
 }
@@ -233,50 +232,38 @@ Try adding -browser to the end of the name to get
  * Checks DefinitelyTyped npm package.
  * If all checks are successful, returns the npm version that matches the header.
  */
-function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header | undefined): NpmError | string {
+function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header): NpmError | string {
   if (!npmInfo.isNpm) {
     return {
       kind: ErrorKind.NoMatchingNpmPackage,
       message: `Declaration file must have a matching npm package.
 To resolve this error, either:
 1. Change the name to match an npm package.
-2. Add a Definitely Typed header with the first line
-
-
-// Type definitions for non-npm package ${name}-browser
-
-Add -browser to the end of your name to make sure it doesn't conflict with existing npm packages.`,
+2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
+   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
     };
   }
-  const target = getHeaderVersion(header);
+  const target =
+    header.libraryMajorVersion === 0 && header.libraryMinorVersion === 0
+      ? undefined
+      : `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
   const npmVersion = getMatchingVersion(target, npmInfo);
   if (!npmVersion) {
     const versions = npmInfo.versions;
     const verstring = versions.join(", ");
     const lateststring = versions[versions.length - 1];
-    const headerstring = target || "NO HEADER VERSION FOUND";
     return {
       kind: ErrorKind.NoMatchingNpmVersion,
       message: `The types for '${name}' must match a version that exists on npm.
 You should copy the major and minor version from the package on npm.
 
-To resolve this error, change the version in the header, ${headerstring},
+To resolve this error, change the version in the package.json, ${target},
 to match one on npm: ${verstring}.
 
 For example, if you're trying to match the latest version, use ${lateststring}.`,
     };
   }
   return npmVersion;
-}
-
-function getHeaderVersion(header: headerParser.Header | undefined): string | undefined {
-  if (!header) {
-    return undefined;
-  }
-  if (header.libraryMajorVersion === 0 && header.libraryMinorVersion === 0) {
-    return undefined;
-  }
-  return `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
 }
 
 /**
@@ -312,7 +299,11 @@ export function findDtsName(dtsPath: string) {
 function downloadNpmPackage(name: string, version: string, outDir: string): string {
   const npmName = dtToNpmName(name);
   const fullName = `${npmName}@${version}`;
-  const cpOpts = { encoding: "utf8", maxBuffer: 100 * 1024 * 1024 } as const;
+  const cpOpts = {
+    encoding: "utf8",
+    maxBuffer: 100 * 1024 * 1024,
+    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
+  } as const;
   const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
   // https://github.com/npm/cli/issues/3405
   const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
@@ -350,7 +341,7 @@ export function checkSource(
   dtsPath: string,
   srcPath: string,
   enabledErrors: Map<ExportErrorKind, boolean>,
-  debug: boolean
+  debug: boolean,
 ): ExportError[] {
   const diagnostics = checkExports(name, dtsPath, srcPath);
   if (debug) {
@@ -456,7 +447,7 @@ To learn more about 'export =' syntax, see ${exportEqualsLink}.`,
     name,
     sourceDiagnostics.exportType,
     dtsDiagnostics.exportType,
-    dtsDiagnostics.exportKind
+    dtsDiagnostics.exportKind,
   );
 
   if (isSuccess(compatibility)) {
@@ -514,7 +505,7 @@ function getJsExportKind(sourceFile: ts.SourceFile): InferenceResult<JsExportKin
 function getJSExportType(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
-  exportKind: InferenceResult<JsExportKind>
+  exportKind: InferenceResult<JsExportKind>,
 ): InferenceResult<ts.Type> {
   if (isSuccess(exportKind)) {
     switch (exportKind.result) {
@@ -630,7 +621,7 @@ function createDtProgram(dtsPath: string): ts.Program {
 function getDtsModuleSymbol(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
-  name: string
+  name: string,
 ): InferenceResult<ts.Symbol> {
   if (matches(sourceFile, (node) => ts.isModuleDeclaration(node))) {
     const npmName = dtToNpmName(name);
@@ -664,7 +655,7 @@ function getDtsExportType(
   sourceFile: ts.SourceFile,
   checker: ts.TypeChecker,
   symbolResult: InferenceResult<ts.Symbol>,
-  exportKindResult: InferenceResult<DtsExportKind>
+  exportKindResult: InferenceResult<DtsExportKind>,
 ): InferenceResult<ts.Type> {
   if (isSuccess(symbolResult) && isSuccess(exportKindResult)) {
     const symbol = symbolResult.result;
@@ -735,7 +726,7 @@ function exportTypesCompatibility(
   name: string,
   sourceType: InferenceResult<ts.Type>,
   dtsType: InferenceResult<ts.Type>,
-  dtsExportKind: InferenceResult<DtsExportKind>
+  dtsExportKind: InferenceResult<DtsExportKind>,
 ): InferenceResult<MissingExport[]> {
   if (isError(sourceType)) {
     return inferenceError("Could not get type of exports of source module.");
@@ -829,8 +820,8 @@ function isExportConstruct(node: ts.Node): boolean {
 }
 
 function hasExportModifier(node: ts.Node): boolean {
-  if (node.modifiers) {
-    return node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
+  if (ts.canHaveModifiers(node)) {
+    return !!ts.getModifiers(node)?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword);
   }
   return false;
 }
@@ -1032,6 +1023,6 @@ function mergeErrors(...results: (InferenceResult<unknown> | string)[]): Inferen
   return inferenceError(reasons.join(" "));
 }
 
-if (!module.parent) {
+if (require.main === module) {
   main();
 }

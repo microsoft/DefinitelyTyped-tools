@@ -1,0 +1,6 @@
+No errors
+
+==== types/no-single-declare-module/index.d.ts ====
+
+    import x from "x";
+    declare module "foo" {}

@@ -36,18 +36,6 @@ export async function mapDefinedAsync<T, U>(arr: Iterable<T>, mapper: (t: T) => 
   return out;
 }
 
-export function* mapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => U): Iterable<U> {
-  for (const input of inputs) {
-    yield mapper(input);
-  }
-}
-
-export function* flatMapIterable<T, U>(inputs: Iterable<T>, mapper: (t: T) => Iterable<U>): Iterable<U> {
-  for (const input of inputs) {
-    yield* mapper(input);
-  }
-}
-
 export function sort<T>(values: Iterable<T>, comparer?: (a: T, b: T) => number): T[] {
   return Array.from(values).sort(comparer);
 }
@@ -98,13 +86,13 @@ export function addRange<T>(
   to: T[] | undefined,
   from: readonly T[] | undefined,
   start?: number,
-  end?: number
+  end?: number,
 ): T[] | undefined;
 export function addRange<T>(
   to: T[] | undefined,
   from: readonly T[] | undefined,
   start?: number,
-  end?: number
+  end?: number,
 ): T[] | undefined {
   if (from === undefined || from.length === 0) return to;
   if (to === undefined) return from.slice(start, end);
@@ -128,7 +116,7 @@ export function addRange<T>(
  */
 export function append<TArray extends any[] | undefined, TValue extends NonNullable<TArray>[number] | undefined>(
   to: TArray,
-  value: TValue
+  value: TValue,
 ): [undefined, undefined] extends [TArray, TValue] ? TArray : NonNullable<TArray>[number][];
 export function append<T>(to: T[], value: T | undefined): T[];
 export function append<T>(to: T[] | undefined, value: T): T[];
@@ -148,26 +136,16 @@ export function isArray(value: any): value is readonly {}[] {
 }
 
 /**
- * Maps an array. If the mapped value is an array, it is spread into the result.
+ * Maps an array. The mapped value is spread into the result.
  *
  * @param array The array to map.
  * @param mapfn The callback used to map the result into one or more values.
  */
-export function flatMap<T, U>(
-  array: readonly T[] | undefined,
-  mapfn: (x: T, i: number) => U | readonly U[] | undefined
-): readonly U[] {
+export function flatMap<T, U>(array: readonly T[] | undefined, mapfn: (x: T, i: number) => readonly U[]): readonly U[] {
   let result: U[] | undefined;
   if (array) {
     for (let i = 0; i < array.length; i++) {
-      const v = mapfn(array[i], i);
-      if (v) {
-        if (isArray(v)) {
-          result = addRange(result, v);
-        } else {
-          result = append(result, v);
-        }
-      }
+      result = addRange(result, mapfn(array[i], i));
     }
   }
   return result || [];
@@ -175,14 +153,6 @@ export function flatMap<T, U>(
 
 export function unique<T>(arr: Iterable<T>): T[] {
   return [...new Set(arr)];
-}
-
-export function sortObjectKeys<T extends { [key: string]: unknown }>(data: T): T {
-  const out = {} as T;
-  for (const key of Object.keys(data).sort()) {
-    out[key as keyof T] = data[key as keyof T];
-  }
-  return out;
 }
 
 export function min<T>(array: readonly [T, ...(T | undefined)[]]): T;
@@ -193,7 +163,7 @@ export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
     : array.reduce((previousValue, currentValue) =>
         (compare ? compare(currentValue, previousValue) < 0 : currentValue < previousValue)
           ? currentValue
-          : previousValue
+          : previousValue,
       );
 }
 
@@ -205,6 +175,10 @@ export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
     : array.reduce((previousValue, currentValue) =>
         (compare ? compare(currentValue, previousValue) > 0 : currentValue > previousValue)
           ? currentValue
-          : previousValue
+          : previousValue,
       );
+}
+
+export function compact<T>(array: readonly (T | undefined)[]): T[] {
+  return array.filter((x): x is T => x !== undefined);
 }

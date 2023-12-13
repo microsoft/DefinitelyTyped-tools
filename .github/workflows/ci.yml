@@ -1,72 +1,66 @@
 on:
-  push:
-    branches:
-    - master
   pull_request:
     branches:
-    - master
+    - main
+      
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
+# Ensure scripts are run with pipefail. See:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build_and_test:
     name: build and test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ '12', '14' ]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node }}
-    - name: check dependencies
-      run: |
-        if grep "@definitelytyped/" yarn.lock; then
-          echo ""
-          echo "A package in this monorepo is depending on an older version of one of its siblings. \
-        Ensure all '@definitelytyped/*' dependencies in package.json files use the version \
-        listed in lerna.json to let lerna automatically keep them in sync."
-
-          echo ""
-          echo "yarn.lock"
-          cat yarn.lock | grep -A 5 -n "@definitelytyped/"
-          exit 1
-        fi
+        node-version: 'lts/*'
+    - run: npm install -g pnpm
+    - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
     - name: install
-      run: yarn install --frozen-lockfile
+      run: pnpm install
     - name: lint
-      run: yarn lint
+      run: pnpm lint
+    - name: build
+      run: pnpm build
     - name: test
-      run: yarn test
-  publish_alpha:
-    name: publish alpha release
-    runs-on: ubuntu-latest
+      run: pnpm test
+    - name: knip
+      run: pnpm knip
+  check-parse-results:
     needs: build_and_test
-    if: github.event_name == 'push'
+    uses: ./.github/workflows/check-parse-results.yml
+  
+  changesets:
+    name: changesets
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: fetch tags
-      run: git fetch origin +refs/tags/*:refs/tags/*
-    - name: configure git
-      run: |
-        git config user.email "typescriptbot@microsoft.com"
-        git config user.name "TypeScript Bot"
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v2
       with:
-        node-version: 12.x
-        registry-url: https://registry.npmjs.org
-    - name: install
-      run: yarn install --frozen-lockfile
-    - name: format
+        node-version: 'lts/*'
+    - run: npm install -g pnpm
+    - run: pnpm install
+    - name: Check for missing changesets
       run: |
-        yarn format
-        if [ -n "`git status -s`" ]; then
-          git commit -am "Format"
-          git push
+        PR_CHANGESETS=$(ls .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
+        MAIN_CHANGESETS=$(git ls-tree -r origin/main .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
+
+        # If the PR has no changesets, but main has changesets, assume this is PR is a versioning PR and exit
+        if [[ $PR_CHANGESETS -eq 0 && $MAIN_CHANGESETS -gt 0 ]]; then
+          echo "This PR is a versioning PR, exiting"
+          exit 0
         fi
-    - name: build
-      run: yarn build
-    - name: publish alpha
-      run: yarn lerna publish prerelease -y --pre-dist-tag next --preid next
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+        git switch -c changesets-temp
+        git checkout origin/main -- packages/definitions-parser/allowedPackageJsonDependencies.txt
+        pnpm changeset status --since=origin/main

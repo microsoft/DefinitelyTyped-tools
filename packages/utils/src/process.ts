@@ -1,96 +1,41 @@
 import assert from "assert";
-import { ChildProcess, exec as node_exec, fork, Serializable } from "child_process";
+import { ChildProcess, execFile as node_execFile, fork, Serializable } from "child_process";
 import { Socket } from "net";
+import which from "which";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
+const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
-export function exec(cmd: string, cwd?: string): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
+export function exec(
+  cmd: string,
+  args: readonly string[],
+  cwd?: string,
+  env?: NodeJS.ProcessEnv,
+): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
     const maxBuffer = 1024 * 1024 * 1; // Max = 1 MiB, default is 200 KiB
 
-    node_exec(cmd, { encoding: "utf8", cwd, maxBuffer }, (error, stdout, stderr) => {
+    node_execFile(which.sync(cmd), args, { encoding: "utf8", cwd, maxBuffer, env }, (error, stdout, stderr) => {
       resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
     });
   });
 }
 
 /** Run a command and return the stdout, or if there was an error, throw. */
-export async function execAndThrowErrors(cmd: string, cwd?: string): Promise<string> {
-  const { error, stdout, stderr } = await exec(cmd, cwd);
+export async function execAndThrowErrors(
+  cmd: string,
+  args: readonly string[],
+  cwd?: string,
+  env?: NodeJS.ProcessEnv,
+): Promise<string> {
+  const { error, stdout, stderr } = await exec(cmd, args, cwd, env);
   if (error) {
     throw new Error(`${error.stack}\n${stderr}`);
   }
-  return stdout + stderr;
-}
-
-export interface RunWithChildProcessesOptions<In> {
-  readonly inputs: readonly In[];
-  readonly commandLineArgs: string[];
-  readonly workerFile: string;
-  readonly nProcesses: number;
-  handleOutput(output: unknown): void;
-}
-export function runWithChildProcesses<In>({
-  inputs,
-  commandLineArgs,
-  workerFile,
-  nProcesses,
-  handleOutput,
-}: RunWithChildProcessesOptions<In>): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    const nPerProcess = Math.floor(inputs.length / nProcesses);
-    let processesLeft = nProcesses;
-    let rejected = false;
-    const allChildren: ChildProcess[] = [];
-    for (let i = 0; i < nProcesses; i++) {
-      const lo = nPerProcess * i;
-      const hi = i === nProcesses - 1 ? inputs.length : lo + nPerProcess;
-      let outputsLeft = hi - lo; // Expect one output per input
-      if (outputsLeft === 0) {
-        // No work for this process to do, so don't launch it
-        processesLeft--;
-        continue;
-      }
-      const child = fork(workerFile, commandLineArgs, {
-        execArgv: await getChildProcessExecArgv(i),
-      });
-      allChildren.push(child);
-      child.send(inputs.slice(lo, hi));
-      child.on("message", (outputMessage) => {
-        handleOutput(outputMessage as unknown);
-        assert(outputsLeft > 0);
-        outputsLeft--;
-        if (outputsLeft === 0) {
-          assert(processesLeft > 0);
-          processesLeft--;
-          if (processesLeft === 0) {
-            resolve();
-          }
-          child.kill();
-        }
-      });
-      child.on("disconnect", () => {
-        if (outputsLeft !== 0) {
-          fail(new Error(`disconnect with ${outputsLeft} outputs left`));
-        }
-      });
-      child.on("close", () => {
-        assert(rejected || outputsLeft === 0);
-      });
-      child.on("error", fail);
-    }
-
-    function fail(e: Error): void {
-      rejected = true;
-      for (const child of allChildren) {
-        child.kill();
-      }
-      reject(e);
-    }
-  });
+  return stdout;
 }
 
 export const enum CrashRecoveryState {
@@ -108,6 +53,7 @@ interface RunWithListeningChildProcessesOptions<In> {
   readonly cwd: string;
   readonly crashRecovery?: boolean;
   readonly crashRecoveryMaxOldSpaceSize?: number;
+  readonly childRestartTaskInterval?: number;
   readonly softTimeoutMs?: number;
   handleOutput(output: unknown, processIndex: number | undefined): void;
   handleStart?(input: In, processIndex: number | undefined): void;
@@ -122,6 +68,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   handleOutput,
   crashRecovery,
   crashRecoveryMaxOldSpaceSize = DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE,
+  childRestartTaskInterval = DEFAULT_CHILD_RESTART_TASK_INTERVAL,
   handleStart,
   handleCrash,
   softTimeoutMs = Infinity,
@@ -129,6 +76,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
   return new Promise(async (resolve, reject) => {
     let inputIndex = 0;
     let processesLeft = nProcesses;
+    let tasksSoFar = 0;
     let rejected = false;
     const runningChildren = new Set<ChildProcess>();
     const maxOldSpaceSize = getMaxOldSpaceSize(process.execArgv) || 0;
@@ -146,6 +94,7 @@ export function runWithListeningChildProcesses<In extends Serializable>({
 
       const onMessage = (outputMessage: unknown) => {
         try {
+          tasksSoFar++;
           const oldCrashRecoveryState = crashRecoveryState;
           crashRecoveryState = CrashRecoveryState.Normal;
           handleOutput(outputMessage as {}, processIndex);
@@ -156,6 +105,11 @@ export function runWithListeningChildProcesses<In extends Serializable>({
               // retry attempt succeeded, restart the child for further tests.
               console.log(`${processIndex}> Restarting...`);
               restartChild(nextTask, process.execArgv);
+            } else if (tasksSoFar >= childRestartTaskInterval) {
+              // restart the child to avoid memory leaks.
+              stopChild(/*done*/ false);
+              startChild(nextTask, process.execArgv);
+              tasksSoFar = 0;
             } else {
               nextTask();
             }
@@ -381,7 +335,7 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
 
 async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
   const debugArg = execArgv.findIndex(
-    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect="),
   );
   if (debugArg < 0) return execArgv;
 

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "index2.d.ts",
+        "index3.d.ts",
+        "bad.d.ts",
+        "bad2.d.ts",
+        "bad3.d.ts",
+        "no-useless-files-tests.ts"
+    ]
+}

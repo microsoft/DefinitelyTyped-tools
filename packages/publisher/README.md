@@ -1,9 +1,7 @@
 
-[![Build Status](https://travis-ci.org/microsoft/types-publisher.svg?branch=master)](https://travis-ci.org/microsoft/types-publisher)
-
 # About
 
-This is the source code for the types-publisher service, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
+This is the source code for the Definitely Typed publisher action, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
 
 # Disclaimer
 
@@ -16,7 +14,7 @@ If you don't like the contents of a given definition, file an issue (or pull req
 
 # Manually running
 
-Normally, types-publisher is run on a loop every 2,000 seconds (33 minutes), but to test it out you can do it yourself.
+Normally, the publisher is run every 30 minutes following a cron schedule in .github/workflows/publish-packages.yml, but to test it out you can do it yourself.
 You will need to see the [Environment variables](#environment-variables) section first.
 
 ```
@@ -25,32 +23,31 @@ cat settings.json
 Make sure your settings are correct.
 
 ```
-npm run build
-npm run full
+pnpm run build
+pnpm run full
 ```
 
 *or*
 ```
-npm run build
-npm run clean
-npm run parse
-npm run calculate-versions
-npm run generate
-npm run publish-packages
-npm run upload-blobs
+pnpm run build
+pnpm run clean
+pnpm run parse
+pnpm run calculate-versions
+pnpm run generate
+pnpm run publish-packages
 ```
 
 and optionally (in production, these run once a week):
 
 ```
-npm run publish-registry
-npm run validate
+pnpm run publish-registry
+pnpm run validate
 ```
 
 You can run tests with
 
 ```
-npm run test
+pnpm run test
 ```
 
 # Overview
@@ -121,16 +118,7 @@ This file is a key/value mapping used by other steps in the process.
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],
-            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
-            "globals": [
-                "$",
-                "Symbol",
-                "jQuery"
-            ],
-            "declaredModules": [
-                "jquery",
-                "jquery/dist/jquery.slim"
-            ]
+            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b"
 		}
 	}
 }
@@ -324,40 +312,3 @@ npm run validate node express jquery
 will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
-
-### Republishing Packages to Github Mirror
-
-Rarely, the publisher can crash between publishing to npm and publishing to the github mirror.
-Because it uses npm as the source of truth, it will then fail to publish to github.
-In that case, you can republish a single package to github `@types` mirror by name.
-
-Usage:
-
-``` sh
-$ node dist/republish-single-github-mirror-package.js aframe
-```
-
-This will fail if the github version of the package is up-to-date, so you don't need to worry about publishing extra versions by mistake.
-You need to set the environment variable GH_API_TOKEN to a token with publish rights to the `@types` org on github.
-
-#### Why Isn't This Fixed
-
-The github mirror is not super valuable and it's only happened 3 times in the last year. It's only noticeable when updating ATA tags.
-
-## Debugging Azure
-
-While the server is running, you can view logs live:
-
-```sh
-npm install -g azure-cli
-azure config mode asm
-azure login
-azure site log tail types-publisher
-```
-
-If the server is working normally, you can view log files [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html).
-
-You can view the full server logs at [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
-For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
-You can also download a ZIP using the azure-cli command `azure site log download`.
-The most useful logs are in LogFiles/Application.

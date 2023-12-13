@@ -5,7 +5,7 @@ Lint rules new to dtslint are documented in the [docs](docs) directory.
 
 # Just looking for ExpectType and ExpectError?
 
-[Use tsd instead](https://github.com/SamVerschueren/tsd).
+[Use tsd](https://github.com/SamVerschueren/tsd) or [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type#readme) instead.
 
 # Setup
 
@@ -28,8 +28,8 @@ Read more on bundling types [here](http://www.typescriptlang.org/docs/handbook/d
 
 #### `types/index.d.ts`
 
-Only `index.d.ts` needs to be published to NPM. Other files are just for testing.
-Write your type definitions here.
+Only `index.d.ts` and `package.json` need to be published to NPM. The other files will be required by Definitely Typed for testing.
+Write your type definitions in `index.d.ts`.
 Refer to the [handbook](http://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html) or `dts-gen`'s templates for how to do this.
 
 
@@ -39,32 +39,78 @@ Refer to the [handbook](http://www.typescriptlang.org/docs/handbook/declaration-
 {
     "compilerOptions": {
         "module": "commonjs",
-        "lib": ["es6"],
+        "lib": [
+            "es6",
+        ],
         "noImplicitAny": true,
         "noImplicitThis": true,
-        "strictFunctionTypes": true,
         "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "types": [],
         "noEmit": true,
-        "forceConsistentCasingInFileNames": true,
-
-        // If the library is an external module (uses `export`), this allows your test file to import "mylib" instead of "./index".
-        // If the library is global (cannot be imported via `import` or `require`), leave this out.
-        "baseUrl": ".",
-        "paths": { "mylib": ["."] }
-    }
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "PACKAGE-NAME-tests.ts",
+    ]
 }
 ```
 
 You may extend `"lib"` to, for example, `["es6", "dom"]` if you need those typings.
 You may also have to add `"target": "es6"` if using certain language features.
 
+#### `types/package.json`
 
-#### `types/tslint.json`
+```json5
+{
+    "private": true,
+    "name": "@types/PACKAGE-NAME",
+    "version": "1.2.9999",
+    "projects": [
+        "https://example.com/"
+    ],
+    "dependencies": {
+        "@types/DEPENDENCY-1": "*",
+        "@types/DEPENDENCY-2": "*"
+    },
+    "devDependencies": {
+        "@types/PACKAGE-NAME": "workspace:."
+    },
+    "owners": [
+        {
+            "name": "My Self",
+            "githubUsername": "ghost"
+        }
+    ]
+}
+```
 
-If you are using the default rules, this is optional.
+1. If the types are for a scoped package, you must name-mangle `@scope/package` to `@types/scope__package`.
+2. The major and minor versions should match some published version of the npm package. The patch version must be 9999; Definitely Typed will increment published patch versions starting at 0, and the patch version of the types will not match the patch version of the npm package.
+3. `"projects"` is a link to the source project.
+4. There might not be any dependencies if the *types* don't rely on anything but standard types.
+5. `"devDependencies"` must include a self-reference like `"@types/PACKAGE-NAME": "workspace:.`. Plus any dependencies used only by tests.
+6. Non-`@types` dependencies must be added to `allowedPackageJsonDependencies.txt` in the definitions-parser package. The PR must be approved by a Typescript team member.
+7. If you do not have a github user name, you can provide a `"url"` of your own instead.
 
-If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/dtslint.json) settings.
+Also:
+
+For types that do not have a matching NPM package, add two properties:
+
+1. `"nonNpm": true`
+2. `"nonNpmDescription"`, a human-readable name for the project that is being typed.
+
+#### `types/tslint.json` or `types/.eslintrc.json`
+
+Definitely Typed is in the process of migrating from tslint to eslint.
+If you are using the default rules, .eslintrc.json is optional; tslint.json should be
+
+```json5
+{ "extends": "@definitelytyped/dtslint/dt.json" }
+```
+
+If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint/dtslint.json) settings.
 You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
 
 ```json5
@@ -77,18 +123,19 @@ You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or d
 }
 ```
 
+Please don't do this without a good reason.
+Disabling lint rules makes a Definitely Typed PR less likely to be merged, and will definitely take longer to review.
+
 
 #### `types/test.ts`
 
 You can have any number of test files you want, with any names. See below on what to put in them.
 
-
-
 ## Write tests
 
 A test file should be a piece of sample code that tests using the library. Tests are type-checked, but not run.
 To assert that an expression is of a given type, use `$ExpectType`.
-To assert that an expression causes a compile error, use `$ExpectError`.
+To assert that an expression causes a compile error, use `@ts-expect-error`.
 (Assertions will be checked by the `expect` lint rule.)
 
 ```ts
@@ -100,23 +147,21 @@ f(1);
 // Can also write the assertion on the same line (but not if it's a multiline function call).
 f(2); // $ExpectType void
 
-// $ExpectError
+// @ts-expect-error
 f("one");
 ```
 
 
 ## Specify a TypeScript version
 
-Normally packages will be tested using TypeScript 2.0.
-To use a newer version, specify it by including a comment like so:
+Normally packages will be tested according to [DefinitelyType's support window](https://github.com/DefinitelyTyped/DefinitelyTyped#support-window).
+To restrict testing to new versions only, specify it in package.json:
 
 ```ts
-// Minimum TypeScript Version: 2.1
+"minimumTypeScriptVersion: 5.0"
 ```
 
-For DefinitelyTyped packages, this should go just under the header (on line 5).
-For bundled typings, this can go on any line (but should be near the top).
-
+This tests only 5.0 and above, although people can still depend on the package with lower versions of Typescript if they want.
 
 ## Run tests
 
@@ -141,7 +186,6 @@ Disable all the lint rules except the one that checks for type correctness.
 dtslint --expectOnly types
 ```
 
-
 # Contributing
 
 ## Build
@@ -153,13 +197,9 @@ npm run watch
 
 ## Test
 
-Use `npm run test` to run all tests.
+Use `pnpm test` to run all tests.
+
 To run a single test: `node node_modules/tslint/bin/tslint --rules-dir dist/rules --test test/expect`.
-
-## Publish
-
-1. Change the version in the `package.json`
-2. Push to master
 
 ## Code of Conduct
 
@@ -171,7 +211,7 @@ I'm getting an error about a missing typescript install.
 Error: Cannot find module '/node_modules/dtslint/typescript-installs/3.1/node_modules/typescript`
 ```
 Your dependencies may be out of date.
-[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
+[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
 
 Alternatively this error can be caused by concurrent dtslint invocations trampling each other's TypeScript installations, especially in the context of continuous integration, if dtslint is installed from scratch in each run.
 If for example you use [Lerna](https://github.com/lerna/lerna/tree/main/commands/run#readme), try running dtslint with [`lerna --concurrency 1 run ...`](https://github.com/lerna/lerna/tree/main/core/global-options#--concurrency).

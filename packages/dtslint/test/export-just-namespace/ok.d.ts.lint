@@ -1,5 +1,0 @@
-namespace N {
-    export const x: number;
-}
-function N(): void;
-export = N;

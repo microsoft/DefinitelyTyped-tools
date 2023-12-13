@@ -1,0 +1,15 @@
+types/redundant-undefined/bad.d.ts
+  1:23  error  Parameter is optional, so no need to include `undefined` in the type  @definitelytyped/redundant-undefined
+  3:29  error  Parameter is optional, so no need to include `undefined` in the type  @definitelytyped/redundant-undefined
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/redundant-undefined/bad.d.ts ====
+
+    export function f(s?: string | undefined): void;
+                          ~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/redundant-undefined: Parameter is optional, so no need to include `undefined` in the type.
+    
+    export function f2([a, b]?: [number, number] | undefined): void;
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/redundant-undefined: Parameter is optional, so no need to include `undefined` in the type.

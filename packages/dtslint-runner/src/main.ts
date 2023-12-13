@@ -1,19 +1,15 @@
 import os from "os";
-import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
   CrashRecoveryState,
-  installAllTypeScriptVersions,
-  installTypeScriptNext,
 } from "@definitelytyped/utils";
-import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
+import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
 
-const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
@@ -25,38 +21,33 @@ export async function runDTSLint({
   localTypeScriptPath,
   nProcesses,
   shard,
+  childRestartTaskInterval,
+  writeFailures,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
+  console.log("Node version: ", process.version);
   if (definitelyTypedAcquisition.kind === "clone") {
     definitelyTypedPath = joinPaths(process.cwd(), "DefinitelyTyped");
     if (!noInstall) {
-      await remove(definitelyTypedPath);
+      await fs.promises.rm(definitelyTypedPath, { recursive: true, force: true });
       await cloneDefinitelyTyped(process.cwd(), definitelyTypedAcquisition.sha);
     }
   } else {
     definitelyTypedPath = definitelyTypedAcquisition.path;
   }
 
-  if (!(await pathExists(definitelyTypedPath))) {
+  if (!fs.existsSync(definitelyTypedPath)) {
     throw new Error(`Path '${definitelyTypedPath}' does not exist.`);
   }
 
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
   const { packageNames, dependents } = onlyRunAffectedPackages
-    ? await prepareAffectedPackages({ definitelyTypedPath, nProcesses, noInstall })
-    : await prepareAllPackages({ definitelyTypedPath, nProcesses, noInstall });
-
-  if (!noInstall && !localTypeScriptPath) {
-    if (onlyTestTsNext) {
-      await installTypeScriptNext();
-    } else {
-      await installAllTypeScriptVersions();
-    }
-  }
+    ? await prepareAffectedPackages(definitelyTypedPath)
+    : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
 
   const allFailures: [string, string][] = [];
-  const expectedFailures = getExpectedFailures(onlyRunAffectedPackages);
+  const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
   const allPackages = [...packageNames, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
@@ -70,8 +61,8 @@ export async function runDTSLint({
   await runWithListeningChildProcesses({
     inputs: testedPackages.map((path) => ({
       path,
-      onlyTestTsNext: onlyTestTsNext || !packageNames.includes(path),
-      expectOnly: expectOnly || !packageNames.includes(path),
+      onlyTestTsNext: onlyTestTsNext || !packageNames.has(path),
+      expectOnly: expectOnly || !packageNames.has(path),
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),
@@ -79,6 +70,7 @@ export async function runDTSLint({
     cwd: typesPath,
     crashRecovery: true,
     crashRecoveryMaxOldSpaceSize: 0, // disable retry with more memory
+    childRestartTaskInterval,
     handleStart(input, processIndex) {
       const prefix = processIndex === undefined ? "" : `${processIndex}> `;
       console.log(`${prefix}${input.path} START`);
@@ -89,7 +81,7 @@ export async function runDTSLint({
       if (expectedFailures?.has(path)) {
         if (status === "OK") {
           console.error(`${prefix}${path} passed, but was expected to fail.`);
-          allFailures.push([path, status]);
+          allFailures.push([path, "Passed but was expected to fail."]);
         } else {
           console.error(`${prefix}${path} failed as expected:`);
           console.error(
@@ -98,7 +90,7 @@ export async function runDTSLint({
                   .split(/\r?\n/)
                   .map((line) => `${prefix}${line}`)
                   .join("\n")
-              : status
+              : status,
           );
         }
       } else if (status === "OK") {
@@ -111,7 +103,7 @@ export async function runDTSLint({
                 .split(/\r?\n/)
                 .map((line) => `${prefix}${line}`)
                 .join("\n")
-            : status
+            : status,
         );
         allFailures.push([path, status]);
       }
@@ -126,8 +118,12 @@ export async function runDTSLint({
           console.warn(`${prefix}${input.path} Out of memory: retrying with increased memory (4096M)`);
           break;
         case CrashRecoveryState.Crashed:
-          console.error(`${prefix}${input.path} Out of memory: failed`);
-          allFailures.push([input.path, "Out of memory"]);
+          if (expectedFailures?.has(input.path)) {
+            console.error(`${prefix}${input.path} failed as expected: out of memory.`);
+          } else {
+            console.error(`${prefix}${input.path} Out of memory: failed`);
+            allFailures.push([input.path, "Out of memory"]);
+          }
           break;
         default:
       }
@@ -139,14 +135,16 @@ export async function runDTSLint({
   for (const packageName of packageNames) {
     const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
     const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-    if (await pathExists(path)) {
-      const suggestions = readFileSync(path, "utf8").split("\n");
+    if (fs.existsSync(path)) {
+      const suggestions = fs.readFileSync(path, "utf8").split("\n");
       suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
     }
   }
   console.log(`{${suggestionLines.join(",")}}`);
 
-  logPerformance();
+  if (writeFailures) {
+    fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
+  }
 
   if (allFailures.length === 0) {
     return 0;
@@ -161,69 +159,34 @@ export async function runDTSLint({
   return allFailures.length;
 }
 
-function getExpectedFailures(onlyRunAffectedPackages: boolean) {
-  if (onlyRunAffectedPackages) {
-    return undefined;
-  }
-
+function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<string>) {
   return new Set(
-    (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
+    (fs.readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
-      .filter(Boolean)
       .map((s) => s.trim())
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean),
   );
 }
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {
+  type Command = [string, string[]];
   if (sha) {
-    const cmd = "git init DefinitelyTyped";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
+    const cmd: Command = ["git", ["init", "DefinitelyTyped"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
     cwd = `${cwd}/DefinitelyTyped`;
-    const commands = [
-      "git remote add origin https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-      "git fetch origin master --depth 50", // We can't clone the commit directly, so assume the commit is from
-      `git checkout ${sha}`, // recent history, pull down some recent commits, then check it out
+    const commands: Command[] = [
+      ["git", ["remote", "add", "origin", "https://github.com/DefinitelyTyped/DefinitelyTyped.git"]],
+      ["git", ["fetch", "origin", "master", "--depth", "50"]], // We can't clone the commit directly, so assume the commit is from
+      ["git", ["checkout", sha]], // recent history, pull down some recent commits, then check it out
     ];
-    for (const command of commands) {
-      console.log(command);
-      await execAndThrowErrors(command, cwd);
+    for (const cmd of commands) {
+      console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+      await execAndThrowErrors(cmd[0], cmd[1], cwd);
     }
   } else {
-    const cmd = "git clone https://github.com/DefinitelyTyped/DefinitelyTyped.git --depth 1";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
-  }
-}
-
-function logPerformance() {
-  const big: [string, number][] = [];
-  const types: number[] = [];
-  if (existsSync(perfDir)) {
-    console.log("\n\n=== PERFORMANCE ===\n");
-    for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
-      const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
-        [s: string]: { typeCount: number; memory: number };
-      };
-      for (const k of Object.keys(x)) {
-        big.push([k, x[k].typeCount]);
-        types.push(x[k].typeCount);
-      }
-    }
-    console.log(
-      "{" +
-        big
-          .sort((a, b) => b[1] - a[1])
-          .map(([name, count]) => ` "${name}": ${count}`)
-          .join(",") +
-        "}"
-    );
-
-    console.log("  * Percentiles: ");
-    console.log("99:", percentile(types, 0.99));
-    console.log("95:", percentile(types, 0.95));
-    console.log("90:", percentile(types, 0.9));
-    console.log("70:", percentile(types, 0.7));
-    console.log("50:", percentile(types, 0.5));
+    const cmd: Command = ["git", ["clone", "https://github.com/DefinitelyTyped/DefinitelyTyped.git", "--depth", "1"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
   }
 }

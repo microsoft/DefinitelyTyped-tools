@@ -1,200 +1,102 @@
-import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { parseHeaderOrFail, parseTypeScriptVersionLine, makeTypesVersionsForPackageJson } from "../src";
+import { validatePackageJson, makeTypesVersionsForPackageJson, License, getLicenseFromPackageJson } from "../src";
 
-describe("parse", () => {
-  it("works", () => {
-    const src = dedent`
-            // Type definitions for foo 1.2
-            // Project: https://github.com/foo/foo, https://foo.com
-            // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
-            // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-            // TypeScript Version: 2.2
-
-            ...file content...`;
-    expect(parseHeaderOrFail(src)).toStrictEqual({
-      libraryName: "foo",
-      libraryMajorVersion: 1,
-      libraryMinorVersion: 2,
-      typeScriptVersion: "2.2",
-      nonNpm: false,
-      projects: ["https://github.com/foo/foo", "https://foo.com"],
-      contributors: [
-        { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
-      ],
-    });
-  });
-
-  it("works with spacing", () => {
-    const src = dedent`
-            // Type definitions for foo 1.2
-            // Project: https://github.com/foo/foo,
-            //          https://foo.com
-            // Definitions by: My Self <https://github.com/me>,
-            //                 Some Other Guy <https://github.com/otherguy>
-            // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-            ...file content...`;
-
-    expect(parseHeaderOrFail(src)).toStrictEqual({
-      libraryName: "foo",
-      libraryMajorVersion: 1,
-      libraryMinorVersion: 2,
-      typeScriptVersion: "4.0",
-      nonNpm: false,
-      projects: ["https://github.com/foo/foo", "https://foo.com"],
-      contributors: [
-        { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
-      ],
-    });
-  });
-
-  it("works with slash end", () => {
-    const src = dedent`
-        // Type definitions for foo 1.2
-        // Project: https://github.com/foo/foo,
-        //          https://foo.com
-        // Definitions by: My Self <https://github.com/me/>,
-        //                 Some Other Guy <https://github.com/otherguy/>
-        // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-        ...file content...`;
-
-    expect(parseHeaderOrFail(src)).toStrictEqual({
-      libraryName: "foo",
-      libraryMajorVersion: 1,
-      libraryMinorVersion: 2,
-      typeScriptVersion: "4.0",
-      nonNpm: false,
-      projects: ["https://github.com/foo/foo", "https://foo.com"],
-      contributors: [
-        { name: "My Self", url: "https://github.com/me", githubUsername: "me" },
-        { name: "Some Other Guy", url: "https://github.com/otherguy", githubUsername: "otherguy" },
-      ],
-    });
-  });
-
-  it("works with bad url", () => {
-    const src = dedent`
-            // Type definitions for foo 1.2
-            // Project: https://github.com/foo/foo
-            // Definitions by: Bad Url <sptth://hubgit.moc/em>
-            // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped`;
-    expect(parseHeaderOrFail(src).contributors).toStrictEqual([
-      { name: "Bad Url", url: "sptth://hubgit.moc/em", githubUsername: undefined },
+describe("validatePackageJson", () => {
+  const pkgJson: Record<string, unknown> = {
+    private: true,
+    name: "@types/hapi",
+    version: "18.0.9999",
+    projects: ["https://github.com/hapijs/hapi", "https://hapijs.com"],
+    minimumTypeScriptVersion: "4.2",
+    dependencies: {
+      "@types/boom": "*",
+      "@types/catbox": "*",
+      "@types/iron": "*",
+      "@types/mimos": "*",
+      "@types/node": "*",
+      "@types/podium": "*",
+      "@types/shot": "*",
+      joi: "^17.3.0",
+    },
+    devDependencies: {
+      "@types/hapi": "workspace:.",
+    },
+    owners: [
+      {
+        name: "Rafael Souza Fijalkowski",
+        githubUsername: "rafaelsouzaf",
+      },
+      {
+        name: "Justin Simms",
+        url: "https://example.com/jhsimms",
+      },
+      {
+        name: "Simon Schick",
+        githubUsername: "SimonSchick",
+      },
+      {
+        name: "Rodrigo Saboya",
+        githubUsername: "saboya",
+      },
+    ],
+  };
+  const header = { ...pkgJson, nonNpm: false, libraryMajorVersion: 18, libraryMinorVersion: 0 };
+  delete (header as any).dependencies;
+  delete (header as any).devDependencies;
+  delete (header as any).private;
+  delete (header as any).version;
+  it("requires private: true", () => {
+    const pkg = { ...pkgJson };
+    delete pkg.private;
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json has bad "private": must be \`"private": true\``,
     ]);
   });
-
-  it("allows 'non-npm' on Type definitions line", () => {
-    const src = dedent`
-            // Type definitions for non-npm package foo 1.2
-            // Project: https://github.com/foo/foo, https://foo.com
-            // Definitions by: My Self <https://github.com/me>, Some Other Guy <https://github.com/otherguy>
-            // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-            // TypeScript Version: 2.2
-
-            ...file content...`;
-    expect(parseHeaderOrFail(src).nonNpm).toBe(true);
+  it("requires name", () => {
+    const pkg = { ...pkgJson };
+    delete pkg.name;
+    expect(validatePackageJson("hapi", pkg, [])).toEqual(['hapi\'s package.json should have `"name": "@types/hapi"`']);
   });
-});
-
-describe("parseTypeScriptVersionLine", () => {
-  it("works", () => {
-    const src = "// TypeScript Version: 2.1";
-    expect(parseTypeScriptVersionLine(src)).toBe("2.1");
-
-    const minimum = "// Minimum TypeScript Version: 2.8";
-    expect(parseTypeScriptVersionLine(minimum)).toBe("2.8");
-
-    const wrong = "// TypeScript Version: 3.14";
-    expect(() => parseTypeScriptVersionLine(wrong)).toThrow();
-  });
-
-  it("allows typescript 2.3", () => {
-    const src = "// TypeScript Version: 2.3";
-    expect(parseTypeScriptVersionLine(src)).toBe("2.3");
-  });
-
-  it("allows post 3 version tags", () => {
-    const src = "// TypeScript Version: 3.0";
-    expect(parseTypeScriptVersionLine(src)).toBe("3.0");
-  });
-
-  it("does not allow unallowed version tags", () => {
-    const src = "// TypeScript Version: 5.7";
-    expect(() => parseTypeScriptVersionLine(src)).toThrow(`Could not parse version: line is '${src}'`);
-  });
-});
-
-describe("unsupported", () => {
-  it("contains at least 2.9", () => {
-    expect(TypeScriptVersion.unsupported.includes("2.9")).toBeTruthy();
-  });
-});
-
-describe("all", () => {
-  it("doesn't have any holes", () => {
-    let prev = TypeScriptVersion.all[0];
-    for (const version of TypeScriptVersion.all.slice(1)) {
-      expect(+version * 10 - +prev * 10).toEqual(1);
-      prev = version;
-    }
-  });
-});
-
-describe("isSupported", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.isSupported("4.5")).toBeTruthy();
-  });
-  it("supports 4.0", () => {
-    expect(TypeScriptVersion.isSupported("4.0")).toBeTruthy();
-  });
-  it("does not support 3.9", () => {
-    expect(!TypeScriptVersion.isSupported("3.9")).toBeTruthy();
-  });
-});
-
-describe("isTypeScriptVersion", () => {
-  it("accepts in-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("4.5")).toBeTruthy();
-  });
-  it("rejects out-of-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
-  });
-  it("rejects garbage", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi")).toBeFalsy();
-  });
-});
-
-describe("range", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual(["4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8"]);
-  });
-  it("includes 4.0 onwards", () => {
-    expect(TypeScriptVersion.range("4.0")).toEqual(TypeScriptVersion.supported);
-  });
-});
-
-describe("tagsToUpdate", () => {
-  it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.0")).toEqual([
-      "ts4.0",
-      "ts4.1",
-      "ts4.2",
-      "ts4.3",
-      "ts4.4",
-      "ts4.5",
-      "ts4.6",
-      "ts4.7",
-      "ts4.8",
-      "latest",
+  it("requires name to match", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, name: "@types/sad" }, [])).toEqual([
+      'hapi\'s package.json should have `"name": "@types/hapi"`',
     ]);
   });
-  it("allows 4.0 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.0")).toEqual(
-      TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest")
-    );
+  it("requires devDependencies", () => {
+    const pkg = { ...pkgJson };
+    delete pkg.devDependencies;
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``,
+    ]);
+  });
+  it("requires devDependencies to contain self-package", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, devDependencies: {} }, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``,
+    ]);
+  });
+  it("requires devDependencies to contain self-package version 'workspace:.'", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, devDependencies: { "@types/hapi": "*" } }, [])).toEqual([
+      `hapi's package.json has bad "devDependencies": must include \`"@types/hapi": "workspace:."\``,
+    ]);
+  });
+  it("requires version", () => {
+    const pkg = { ...pkgJson };
+    delete pkg.version;
+    expect(validatePackageJson("hapi", pkg, [])).toEqual([
+      `hapi's package.json should have \`"version"\` matching the version of the implementation package.`,
+    ]);
+  });
+  it("requires version to be NN.NN.NN", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, version: "hi there" }, [])).toEqual([
+      `hapi's package.json has bad "version": "hi there" should look like "NN.NN.9999"`,
+    ]);
+  });
+  it("requires version to end with .9999", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, version: "1.2.3" }, [])).toEqual([
+      `hapi's package.json has bad "version": 1.2.3 must end with ".9999"`,
+    ]);
+  });
+  it("works with old-version packages", () => {
+    expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.9999" }, []))).toBeFalsy();
   });
 });
 
@@ -203,54 +105,71 @@ describe("makeTypesVersionsForPackageJson", () => {
     expect(makeTypesVersionsForPackageJson([])).toBeUndefined();
   });
   it("works for one version", () => {
-    expect(makeTypesVersionsForPackageJson(["4.0"])).toEqual({
-      "<=4.0": {
-        "*": ["ts4.0/*"],
+    expect(makeTypesVersionsForPackageJson(["4.5"])).toEqual({
+      "<=4.5": {
+        "*": ["ts4.5/*"],
       },
     });
   });
   it("orders versions old to new  with old-to-new input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.1", "4.3", "4.6"]), undefined, 4)).toEqual(`{
-    "<=4.1": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.7", "5.0", "5.2"]), undefined, 4)).toEqual(`{
+    "<=4.7": {
         "*": [
-            "ts4.1/*"
+            "ts4.7/*"
         ]
     },
-    "<=4.3": {
+    "<=5.0": {
         "*": [
-            "ts4.3/*"
+            "ts5.0/*"
         ]
     },
-    "<=4.6": {
+    "<=5.2": {
         "*": [
-            "ts4.6/*"
+            "ts5.2/*"
         ]
     }
 }`);
   });
   it("orders versions old to new  with new-to-old input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.6", "4.3", "4.1"]), undefined, 4)).toEqual(`{
-    "<=4.1": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["5.2", "5.0", "4.7"]), undefined, 4)).toEqual(`{
+    "<=4.7": {
         "*": [
-            "ts4.1/*"
+            "ts4.7/*"
         ]
     },
-    "<=4.3": {
+    "<=5.0": {
         "*": [
-            "ts4.3/*"
+            "ts5.0/*"
         ]
     },
-    "<=4.6": {
+    "<=5.2": {
         "*": [
-            "ts4.6/*"
+            "ts5.2/*"
         ]
     }
 }`);
   });
 });
 
-function dedent(strings: TemplateStringsArray): string {
-  expect(strings).toHaveLength(1);
-  const x = strings[0].trim();
-  return x.replace(/\n +/g, "\n");
-}
+describe(getLicenseFromPackageJson, () => {
+  it("returns MIT by default", () => {
+    expect(getLicenseFromPackageJson(undefined)).toBe(License.MIT);
+  });
+
+  it("throws if license is MIT", () => {
+    expect(getLicenseFromPackageJson("MIT")).toEqual([
+      'Specifying \'"license": "MIT"\' is redundant, this is the default.',
+    ]);
+  });
+
+  it("returns known licenses", () => {
+    expect(getLicenseFromPackageJson(License.Apache20)).toBe(License.Apache20);
+  });
+
+  it("throws if unknown license", () => {
+    expect(getLicenseFromPackageJson("nonsense")).toEqual([
+      `'package.json' license is "nonsense".
+Expected one of: ["MIT","Apache-2.0"]}`,
+    ]);
+  });
+});

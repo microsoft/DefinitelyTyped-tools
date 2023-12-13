@@ -1,9 +1,0 @@
-declare module "a" {
-    interface I {}
-    export default I;
-}
-
-declare module "b" {
-    import a from "a";
-}
-

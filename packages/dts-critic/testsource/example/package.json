@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "name": "@types/example",
+    "nonNpm": true,
+    "nonNpmDescription": "example",
+    "version": "1.0.9999",
+    "projects": [
+        "https://github.com/microsoft/TypeScript"
+    ],
+    "devDependencies": {
+        "@types/example": "workspace:."
+    },
+    "owners": [
+        {
+            "name": "Typescript Bot",
+            "githubUsername": "typescript-bot"
+        }
+    ]
+}

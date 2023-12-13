@@ -1,4 +1,3 @@
-import applicationinsights = require("applicationinsights");
 import * as yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
@@ -16,15 +15,20 @@ import { readChangedPackages, ChangedPackages } from "./lib/versions";
 import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
 
-if (!module.parent) {
-  const dry = !!yargs.argv.dry;
+if (require.main === module) {
+  const argv = yargs.parseSync();
+  const dry = !!argv.dry;
   logUncaughtErrors(async () => {
-    const dt = await getDefinitelyTyped(defaultLocalOptions, loggerWithErrors()[0]);
+    const options = { ...defaultLocalOptions };
+    if (argv.path) {
+      options.definitelyTypedPath = argv.path as string;
+    }
+    const dt = await getDefinitelyTyped(options, loggerWithErrors()[0]);
     await publishPackages(
-      await readChangedPackages(await AllPackages.read(dt)),
+      await readChangedPackages(AllPackages.fromFS(dt)),
       dry,
       process.env.GH_API_TOKEN || "",
-      new Fetcher()
+      new Fetcher(),
     );
   });
 }
@@ -33,7 +37,7 @@ export default async function publishPackages(
   changedPackages: ChangedPackages,
   dry: boolean,
   githubAccessToken: string,
-  fetcher: Fetcher
+  fetcher: Fetcher,
 ): Promise<void> {
   const [log, logResult] = logger();
   if (dry) {
@@ -42,7 +46,7 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const token = await getSecret(Secret.NPM_TOKEN);
+  const token = await getSecret(Secret.NPM_TYPES_TOKEN);
   const client = new NpmPublishClient(token);
 
   for (const cp of changedPackages.changedTypings) {
@@ -53,7 +57,7 @@ export default async function publishPackages(
     const commits = (await queryGithub(
       `repos/DefinitelyTyped/DefinitelyTyped/commits?path=types%2f${cp.pkg.subDirectoryPath}`,
       githubAccessToken,
-      fetcher
+      fetcher,
     )) as {
       sha: string;
       commit: {
@@ -70,9 +74,12 @@ export default async function publishPackages(
       const prs = (await queryGithub(
         `search/issues?q=is:pr%20is:merged%20${commits[0].sha}`,
         githubAccessToken,
-        fetcher
+        fetcher,
       )) as { items: { number: number }[] };
       let latestPr = 0;
+      if (!prs.items) {
+        console.log(prs);
+      }
       for (const pr of prs.items) {
         if (pr.number > latestPr) {
           latestPr = pr.number;
@@ -85,16 +92,14 @@ export default async function publishPackages(
       const latest = (await queryGithub(
         `repos/DefinitelyTyped/DefinitelyTyped/pulls/${latestPr}`,
         githubAccessToken,
-        fetcher
+        fetcher,
       )) as { merged_at: string };
-      const latency = Date.now() - new Date(latest.merged_at).valueOf();
-      const commitlatency = Date.now() - new Date(commits[0].commit.author.date).valueOf();
       log("Current date is " + new Date(Date.now()).toString());
       log("  Merge date is " + new Date(latest.merged_at).toString());
 
-      const published = cp.pkg.fullNpmName + "@" + cp.version;
+      const published = cp.pkg.name + "@" + cp.version;
       const publishNotification =
-        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.fullNpmName + ").";
+        "I just published [`" + published + "` to npm](https://www.npmjs.com/package/" + cp.pkg.name + ").";
       log(publishNotification);
       if (dry) {
         log("(dry) Skip publishing notification to github.");
@@ -103,26 +108,9 @@ export default async function publishPackages(
           `repos/DefinitelyTyped/DefinitelyTyped/issues/${latestPr}/comments`,
           { body: publishNotification },
           githubAccessToken,
-          fetcher
+          fetcher,
         );
         log("From github: " + JSON.stringify(commented).slice(0, 200));
-      }
-      if (dry) {
-        log("(dry) Not logging latency");
-      } else {
-        applicationinsights.defaultClient.trackEvent({
-          name: "publish package",
-          properties: {
-            name: cp.pkg.desc,
-            latency: latency.toString(),
-            commitLatency: commitlatency.toString(),
-            authorCommit: commits[0].sha,
-            pr: latestPr.toString(),
-          },
-        });
-        applicationinsights.defaultClient.trackMetric({ name: "publish latency", value: latency });
-        applicationinsights.defaultClient.trackMetric({ name: "author commit latency", value: commitlatency });
-        log("Done logging latency");
       }
     }
   }

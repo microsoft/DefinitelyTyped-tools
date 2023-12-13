@@ -7,18 +7,23 @@ import assert from "assert";
   For the RC:
 
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
-  2. Update failing tests.
+    `supported` now contains the shipped versions, the RC, and the nightly.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   For the release:
 
   1. Move the newly-released version from `supported` to `shipped`.
-  2. Update failing tests.
+    `supported` now contains the shipped versions and the nightly.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   # How to deprecate an old version on Definitely Typed #
 
   1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
   2. Move the old version from `shipped` to `unsupported`.
-  3. Update failing tests.
+  3. Remove the old version from `packages/typescript-packages/package.json`.
+  4. Update failing tests.
 
   Currently, it's possible to release a new version and deprecate an old version
   at the same time because of the way release schedule overlaps.
@@ -46,20 +51,26 @@ export type UnsupportedTypeScriptVersion =
   | "3.6"
   | "3.7"
   | "3.8"
-  | "3.9";
+  | "3.9"
+  | "4.0"
+  | "4.1"
+  | "4.2"
+  | "4.3"
+  | "4.4"
+  | "4.5";
 /**
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on Definitely Typed.
  */
-export type TypeScriptVersion = "4.0" | "4.1" | "4.2" | "4.3" | "4.4" | "4.5" | "4.6" | "4.7" | "4.8";
+export type TypeScriptVersion = "4.6" | "4.7" | "4.8" | "4.9" | "5.0" | "5.1" | "5.2" | "5.3" | "5.4";
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
-  export const shipped: readonly TypeScriptVersion[] = ["4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7"];
+  export const shipped: readonly TypeScriptVersion[] = ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"];
   /** Add to this list when a version is available as typescript@next */
-  export const supported: readonly TypeScriptVersion[] = [...shipped, "4.8"];
+  export const supported: readonly TypeScriptVersion[] = [...shipped, "5.4"];
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported: readonly UnsupportedTypeScriptVersion[] = [
     "2.0",
@@ -82,6 +93,12 @@ export namespace TypeScriptVersion {
     "3.7",
     "3.8",
     "3.9",
+    "4.0",
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "4.5",
   ];
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
@@ -112,11 +129,17 @@ export namespace TypeScriptVersion {
     return index === 0 ? undefined : supported[index - 1];
   }
 
-  export function isRedirectable(v: TypeScriptVersion): boolean {
+  export function next(v: TypeScriptVersion): TypeScriptVersion | undefined {
+    const index = supported.indexOf(v);
+    assert(index !== -1);
+    return index === supported.length - 1 ? undefined : supported[index + 1];
+  }
+
+  export function isRedirectable(v: AllTypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
 
-  export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+  export function isTypeScriptVersion(str: string): str is AllTypeScriptVersion {
     return all.includes(str as TypeScriptVersion);
   }
 }

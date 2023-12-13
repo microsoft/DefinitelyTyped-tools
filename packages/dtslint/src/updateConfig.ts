@@ -15,7 +15,6 @@ import { Configuration as Config, ILinterOptions, IRuleFailureJson, Linter, Lint
 import * as ts from "typescript";
 import yargs = require("yargs");
 import { isExternalDependency } from "./lint";
-import { disabler as npmNamingDisabler } from "./rules/npmNamingRule";
 
 // Rule "expect" needs TypeScript version information, which this script doesn't collect.
 const ignoredRules: string[] = ["expect"];
@@ -24,7 +23,7 @@ function main() {
   const args = yargs
     .usage(
       `\`$0 --dt=path-to-dt\` or \`$0 --package=path-to-dt-package\`
-'dt.json' is used as the base tslint config for running the linter.`
+'dt.json' is used as the base tslint config for running the linter.`,
     )
     .option("package", {
       describe: "Path of DT package.",
@@ -51,7 +50,8 @@ function main() {
         throw new Error(`Rules ${unsupportedRules.join(", ")} are not supported at the moment.`);
       }
       return true;
-    }).argv;
+    })
+    .parseSync();
 
   if (args.package) {
     updatePackage(args.package, dtConfig(args.rules));
@@ -114,7 +114,7 @@ function installDependencies(pkgPath: string): void {
 function mergeConfigRules(
   config: Config.RawConfigFile,
   newRules: Config.RawRulesConfig,
-  baseConfig: Config.IConfigurationFile
+  baseConfig: Config.IConfigurationFile,
 ): Config.RawConfigFile {
   const activeRules: string[] = [];
   baseConfig.rules.forEach((ruleOpts, ruleName) => {
@@ -215,12 +215,6 @@ function isVersionDir(dirName: string): boolean {
   return /^ts\d+\.\d$/.test(dirName) || /^v\d+(\.\d+)?$/.test(dirName);
 }
 
-type RuleOptions = boolean | unknown[];
-type RuleDisabler = (failures: IRuleFailureJson[]) => RuleOptions;
-const defaultDisabler: RuleDisabler = () => {
-  return false;
-};
-
 function disableRules(allFailures: RuleFailure[]): Config.RawRulesConfig {
   const ruleToFailures: Map<string, IRuleFailureJson[]> = new Map();
   for (const failure of allFailures) {
@@ -233,18 +227,15 @@ function disableRules(allFailures: RuleFailure[]): Config.RawRulesConfig {
   }
 
   const newRulesConfig: Config.RawRulesConfig = {};
-  ruleToFailures.forEach((failures, rule) => {
-    if (ignoredRules.includes(rule)) {
-      return;
+  for (const rule of ruleToFailures.keys()) {
+    if (!ignoredRules.includes(rule)) {
+      newRulesConfig[rule] = false;
     }
-    const disabler = rule === "npm-naming" ? npmNamingDisabler : defaultDisabler;
-    const opts: RuleOptions = disabler(failures);
-    newRulesConfig[rule] = opts;
-  });
+  }
 
   return newRulesConfig;
 }
 
-if (!module.parent) {
+if (require.main === module) {
   main();
 }

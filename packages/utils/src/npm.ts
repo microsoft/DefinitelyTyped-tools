@@ -4,7 +4,7 @@ import RegClient from "@qiwi/npm-registry-client";
 import { joinPaths } from "./fs";
 import { Logger } from "./logging";
 
-export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "..") : os.tmpdir(), "cache");
+export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
 export class NpmPublishClient {
   private readonly client = new RegClient();
@@ -20,7 +20,7 @@ export class NpmPublishClient {
       this.client.distTags.add(
         "https://registry.npmjs.org",
         { package: packageName, version, distTag, auth: { token: this.token } },
-        cb
+        cb,
       );
     });
   }

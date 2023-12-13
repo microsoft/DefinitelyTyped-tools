@@ -1,58 +1,44 @@
 {
   "name": "@definitelytyped/publisher",
   "private": true,
-  "version": "0.0.122-next.4",
+  "version": "0.0.196",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",
   "dependencies": {
-    "@azure/functions": "^1.2.3",
-    "@azure/identity": "^1.5.2",
-    "@azure/keyvault-secrets": "^4.3.0",
-    "@definitelytyped/definitions-parser": "^0.0.122-next.4",
-    "@definitelytyped/header-parser": "^0.0.121",
-    "@definitelytyped/retag": "^0.0.122-next.4",
-    "@definitelytyped/typescript-versions": "^0.0.121",
-    "@definitelytyped/utils": "^0.0.122-next.3",
-    "@octokit/rest": "^16.1.0",
-    "applicationinsights": "^1.0.7",
-    "fs-extra": "^9.1.0",
-    "fstream": "^1.0.12",
-    "hh-mm-ss": "^1.2.0",
+    "@definitelytyped/definitions-parser": "workspace:*",
+    "@definitelytyped/header-parser": "workspace:*",
+    "@definitelytyped/retag": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
     "libnpmpublish": "^6.0.4",
-    "longjohn": "^0.2.11",
-    "pacote": "^13.6.1",
-    "semver": "^7.3.7",
-    "source-map-support": "^0.4.0",
-    "typescript": "^4.1.0",
-    "yargs": "15.3.1"
+    "longjohn": "^0.2.12",
+    "pacote": "^17.0.4",
+    "semver": "^7.5.4",
+    "typescript": "^5.2.2",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@npm/types": "^1.0.2",
-    "@types/fs-extra": "^9.0.8",
-    "@types/hh-mm-ss": "^1.2.1",
     "@types/libnpmpublish": "^4.0.3",
-    "@types/mz": "^0.0.31",
-    "@types/pacote": "^11.1.5",
-    "@types/source-map-support": "^0.4.0",
-    "@types/yargs": "^15.0.4"
+    "@types/npm-registry-fetch": "^8.0.7",
+    "@types/pacote": "^11.1.8",
+    "@types/semver": "^7.5.5",
+    "@types/yargs": "^17.0.31"
   },
   "scripts": {
     "build": "tsc -b",
-    "oryx": "echo 'Skipping build, should already have built with tsc during CI, before deployment.'",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
-    "clean": "node -r source-map-support/register dist/clean.js",
-    "get-definitely-typed": "node -r source-map-support/register dist/get-definitely-typed.js",
-    "parse": "node -r source-map-support/register dist/parse-definitions.js",
-    "calculate-versions": "node -r source-map-support/register dist/calculate-versions.js",
-    "generate": "node -r source-map-support/register dist/generate-packages.js",
-    "validate": "node -r source-map-support/register dist/validate.js",
-    "publish-packages": "node -r source-map-support/register dist/publish-packages.js",
-    "publish-packages-dry": "node -r source-map-support/register dist/publish-packages.js --dry",
-    "publish-registry": "node -r source-map-support/register dist/publish-registry.js",
-    "full": "node -r source-map-support/register dist/full.js",
-    "full-dry": "node -r source-map-support/register dist/full.js --dry",
-    "test-tsNext": "node -r source-map-support/register dist/tester/test.js --all --tsNext"
+    "clean": "node --enable-source-maps dist/clean.js",
+    "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
+    "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
+    "generate": "node --enable-source-maps dist/generate-packages.js",
+    "validate": "node --enable-source-maps dist/validate.js",
+    "publish-packages": "node --enable-source-maps dist/publish-packages.js",
+    "publish-packages-dry": "node --enable-source-maps dist/publish-packages.js --dry",
+    "publish-registry": "node --enable-source-maps dist/publish-registry.js",
+    "full": "node --enable-source-maps dist/full.js",
+    "full-dry": "node --enable-source-maps dist/full.js --dry",
+    "test-tsNext": "node --enable-source-maps dist/tester/test.js --all --tsNext"
   },
   "repository": {
     "type": "git",
@@ -65,7 +51,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=6.10.0"
+    "node": ">=16.17.0"
   },
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/publisher#readme"
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/publisher#readme"
 }

@@ -1,0 +1,6 @@
+No errors
+
+==== types/no-dead-reference/index.d.ts ====
+
+    /// <reference types="tones" />
+    export class K {}
