@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches:
-    - master
+    - main
       
 env:
   CI: true
@@ -53,14 +53,14 @@ jobs:
     - name: Check for missing changesets
       run: |
         PR_CHANGESETS=$(ls .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
-        MASTER_CHANGESETS=$(git ls-tree -r origin/master .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
+        MAIN_CHANGESETS=$(git ls-tree -r origin/main .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
 
-        # If the PR has no changesets, but master has changesets, assume this is PR is a versioning PR and exit
-        if [[ $PR_CHANGESETS -eq 0 && $MASTER_CHANGESETS -gt 0 ]]; then
+        # If the PR has no changesets, but main has changesets, assume this is PR is a versioning PR and exit
+        if [[ $PR_CHANGESETS -eq 0 && $MAIN_CHANGESETS -gt 0 ]]; then
           echo "This PR is a versioning PR, exiting"
           exit 0
         fi
 
         git switch -c changesets-temp
-        git checkout origin/master -- packages/definitions-parser/allowedPackageJsonDependencies.txt
-        pnpm changeset status --since=origin/master
+        git checkout origin/main -- packages/definitions-parser/allowedPackageJsonDependencies.txt
+        pnpm changeset status --since=origin/main

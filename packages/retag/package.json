@@ -4,7 +4,7 @@
   "version": "0.0.196",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/retag#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/retag#readme",
   "license": "MIT",
   "repository": {
     "type": "git",

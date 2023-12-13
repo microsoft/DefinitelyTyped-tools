@@ -2,7 +2,7 @@
   "name": "@definitelytyped/utils",
   "version": "0.0.189",
   "description": "Shared utilities for DefinitelyTyped tools",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/utils#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/utils#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

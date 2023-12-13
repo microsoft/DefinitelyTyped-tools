@@ -110,7 +110,7 @@ If you are using the default rules, .eslintrc.json is optional; tslint.json shou
 { "extends": "@definitelytyped/dtslint/dt.json" }
 ```
 
-If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/dtslint.json) settings.
+If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint/dtslint.json) settings.
 You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
 
 ```json5
@@ -211,7 +211,7 @@ I'm getting an error about a missing typescript install.
 Error: Cannot find module '/node_modules/dtslint/typescript-installs/3.1/node_modules/typescript`
 ```
 Your dependencies may be out of date.
-[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
+[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
 
 Alternatively this error can be caused by concurrent dtslint invocations trampling each other's TypeScript installations, especially in the context of continuous integration, if dtslint is installed from scratch in each run.
 If for example you use [Lerna](https://github.com/lerna/lerna/tree/main/commands/run#readme), try running dtslint with [`lerna --concurrency 1 run ...`](https://github.com/lerna/lerna/tree/main/core/global-options#--concurrency).
