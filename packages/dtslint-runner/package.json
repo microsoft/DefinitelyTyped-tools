@@ -1,8 +1,8 @@
 {
   "name": "@definitelytyped/dtslint-runner",
-  "version": "0.0.65-next.3",
+  "version": "0.0.208",
   "description": "Run dtslint on DefinitelyTyped packages",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/dtslint-runner#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "bin": "dist/index.js",
@@ -11,28 +11,30 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git"
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/dtslint-runner"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
-    "build": "tsc -b ."
+    "build": "tsc -b .",
+    "check-parse-results": "node --enable-source-maps dist/check-parse-results.js",
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/definitions-parser": "^0.0.65-next.3",
-    "@definitelytyped/utils": "^0.0.64",
-    "fs-extra": "^9.0.0",
-    "stats-lite": "^2.2.0",
-    "yargs": "^15.3.1"
+    "@definitelytyped/definitions-parser": "workspace:*",
+    "@definitelytyped/dtslint": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
+    "@octokit/rest": "^19.0.13",
+    "semver": "^7.5.4",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.1.0",
-    "@types/stats-lite": "^2.2.0",
-    "dtslint": "^4.0.6"
+    "@types/semver": "^7.5.5",
+    "glob": "^10.3.10"
   },
-  "peerDependencies": {
-    "dtslint": "*"
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

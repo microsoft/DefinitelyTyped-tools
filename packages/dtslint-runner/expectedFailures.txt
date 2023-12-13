@@ -1,4 +1,2 @@
-electron-clipboard-extended
-electron-json-storage
-electron-notifications
-electron-notify
+bookshelf
+graphql-resolvers

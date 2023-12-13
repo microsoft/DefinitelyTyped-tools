@@ -1,0 +1,41 @@
+name: Publish registry
+on:
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    - cron: 0 0 * * 0
+  workflow_dispatch:
+
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
+jobs:
+  publish-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - run: npm install -g pnpm
+      - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: actions/cache/restore@v3
+        with:
+          path: ./cache
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
+          restore-keys: pacote-cache-
+      - name: Publish registry
+        run: pnpm run --filter @definitelytyped/publisher publish-registry
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          path: packages/definitions-parser/data/
+      - uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ./cache
+          key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}

@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "name": "@types/fail",
+    "version": "1.0.9999",
+    "projects": [
+        "https://youtube.com/typeref-fails"
+    ],
+    "devDependencies": {
+        "@types/fail": "workspace:."
+    },
+    "owners": [
+        {
+            "name": "Type Ref Fails",
+            "url": "https://youtube.com/typeref-fails"
+        }
+    ]
+}

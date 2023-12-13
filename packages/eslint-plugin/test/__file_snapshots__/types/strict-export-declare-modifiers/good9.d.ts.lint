@@ -1,0 +1,7 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good9.d.ts ====
+
+    import * as bar from "bar";
+    import bar = require("bar");
+    export as namespace Bar;

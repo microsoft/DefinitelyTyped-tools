@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src"
+    },
+    "include": ["src", "src/rules"],
+    "references": [
+        { "path": "../dts-critic" },
+        { "path": "../header-parser" },
+        { "path": "../typescript-versions" },
+        { "path": "../utils" }
+    ]
+}

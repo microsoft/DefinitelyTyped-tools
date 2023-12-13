@@ -3,9 +3,9 @@
     "compilerOptions": {
         "outDir": "dist",
         "rootDir": "src",
-        "baseUrl": ".",
+        "lib": ["es2022", "dom"],
         "paths": {
-            "*": ["src/types/*"]
+            "*": ["./src/types/*"]
         }
     },
     "include": ["src"],

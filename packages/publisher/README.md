@@ -1,9 +1,7 @@
 
-[![Build Status](https://travis-ci.org/microsoft/types-publisher.svg?branch=master)](https://travis-ci.org/microsoft/types-publisher)
-
 # About
 
-This is the source code for the types-publisher service, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
+This is the source code for the Definitely Typed publisher action, which publishes the contents of [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) to npm.
 
 # Disclaimer
 
@@ -16,7 +14,7 @@ If you don't like the contents of a given definition, file an issue (or pull req
 
 # Manually running
 
-Normally, types-publisher is run on a loop every 2,000 seconds (33 minutes), but to test it out you can do it yourself.
+Normally, the publisher is run every 30 minutes following a cron schedule in .github/workflows/publish-packages.yml, but to test it out you can do it yourself.
 You will need to see the [Environment variables](#environment-variables) section first.
 
 ```
@@ -25,27 +23,31 @@ cat settings.json
 Make sure your settings are correct.
 
 ```
-npm run build
-npm run full
+pnpm run build
+pnpm run full
 ```
 
 *or*
 ```
-npm run build
-npm run clean
-npm run parse
-npm run check
-npm run calculate-versions
-npm run generate
-npm run index
-npm run publish-packages
-npm run upload-blobs
+pnpm run build
+pnpm run clean
+pnpm run parse
+pnpm run calculate-versions
+pnpm run generate
+pnpm run publish-packages
+```
+
+and optionally (in production, these run once a week):
+
+```
+pnpm run publish-registry
+pnpm run validate
 ```
 
 You can run tests with
 
 ```
-npm run test
+pnpm run test
 ```
 
 # Overview
@@ -53,10 +55,8 @@ npm run test
 To update the types packages, the following steps must be performed:
 
 	* Parse the definitions
-	* Check for conflicts
 	* Calculate versions
 	* Generate packages on disk
-	* Create a search index
 	* Publish packages on disk
 
 Importantly, each of these steps is *idempotent*.
@@ -67,7 +67,7 @@ Running the entire sequence twice should not have any different results unless o
 First, obtain a local copy of the DefinitelyTyped repo. For running
 locally, the script assumes that it is at `../DefinitelyTyped` and
 checks to make sure that it has no outstanding changes. It does *not*
-check that it has master checked. For running in the cloud, the script
+check that it has master checked out. For running in the cloud, the script
 downloads a gzipped copy and unzips it into memory. This saves a lot
 of time if the filesystem is very slow.
 
@@ -114,20 +114,11 @@ This file is a key/value mapping used by other steps in the process.
             "license": "MIT",
             "dependencies": {
                 "sizzle": "*"
-            }
+            },
             "testDependencies": [],
             "pathMappings": [],
             "packageJsonDependencies": [],
-            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
-            "globals": [
-                "$",
-                "Symbol",
-                "jQuery"
-            ],
-            "declaredModules": [
-                "jquery",
-                "jquery/dist/jquery.slim"
-            ]
+            "contentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b"
 		}
 	}
 }
@@ -175,27 +166,6 @@ Determine which is correct and rename the folder or the module declaration appro
 Nearly all package names should be lowercased to conform with NPM naming standards.
 This warning might not be appropriate; consider logging an issue.
 
-# Check for conflicts
-
-> `npm run check`
-
-This is an optional script that checks for multiple declaration packages with the same library name or same project name.
-
-### Contents of `logs/conflicts.md`
-
-> * Duplicate Library Name descriptions "Marked"
->   * marked
->   * ngwysiwyg
-
-Examine these declarations and change them to have distinct library names, if possible.
-
-> * Duplicate Project Name descriptions "https://github.com/jaredhanson/passport-facebook"
->   * passport-facebook
->   * passport-google-oauth
->   * passport-twitter
-
-Examine these declarations and change them to have distinct package names, if possible.
-
 # Calculate versions
 
 This generates `versions.json` based on the last uploaded `versions.json` and by the content hashes computed during parsing.
@@ -204,48 +174,6 @@ This generates `versions.json` based on the last uploaded `versions.json` and by
 
 The `--forceUpdate` argument will cause a build version bump even if the `contentHash` of the originating types folder has not changed.
 This argument may be needed during development, but should not be used during routine usage.
-
-# Create a search index
-
-> `npm run index`
-
-This script creates `data/search-index-min.json`, which (in the upload step) will be uploaded to Azure and used by [TypeSearch](https://github.com/microsoft/typesearch).
-This step is not necessary for other steps in the process.
-
-### Arguments to `create-search-index`
-
-You can generate a prettier output in `data/search-index-full.json`.
-This version is for human review only and is not compatible with TypeSearch.
-
-By default, `create-search-index` fetches download counts from NPM for use in search result ranking.
-The argument `--skipDownloads` disables this behavior.
-
-### Search Entries
-
-Each `search-*.json` file consists of an array.
-An example unminified entry is:
-```js
-{
-	"projectName": "http://backgridjs.com/",
-	"libraryName": "Backgrid",
-	"globals": [
-		"Backgrid"
-	],
-	"typePackageName": "backgrid",
-	"declaredExternalModules": [
-		"backgrid"
-	],
-	"downloads": 532234
-},
-```
-These fields should hopefully be self-explanatory.
-`downloads` refers to the number in the past month.
-If `--skipDownloads` was specified, `downloads` will be -1.
-In the case where the type package name is different from the NPM package name, or no NPM package name exists, `downloads` will be 0.
-
-In the minified files, the properties are simply renamed. See `src/lib/search-index-generator.ts` for documentation.
-
-Empty arrays may be elided in future versions of the minified files.
 
 # Generate packages on disk
 
@@ -384,40 +312,3 @@ npm run validate node express jquery
 will try to install the three packages, and run the tsc compiler on them.
 
 Specifing no options to the command will validate **all** known packages.
-
-### Republishing Packages to Github Mirror
-
-Rarely, the publisher can crash between publishing to npm and publishing to the github mirror.
-Because it uses npm as the source of truth, it will then fail to publish to github.
-In that case, you can republish a single package to github `@types` mirror by name.
-
-Usage:
-
-``` sh
-$ node dist/republish-single-github-mirror-package.js aframe
-```
-
-This will fail if the github version of the package is up-to-date, so you don't need to worry about publishing extra versions by mistake.
-You need to set the environment variable GH_API_TOKEN to a token with publish rights to the `@types` org on github.
-
-#### Why Isn't This Fixed
-
-The github mirror is not super valuable and it's only happened 3 times in the last year. It's only noticeable when updating ATA tags.
-
-## Debugging Azure
-
-While the server is running, you can view logs live:
-
-```sh
-npm install -g azure-cli
-azure config mode asm
-azure login
-azure site log tail types-publisher
-```
-
-If the server is working normally, you can view log files [here](https://typespublisher.blob.core.windows.net/typespublisher/index.html).
-
-You can view the full server logs at [ftp](ftp://waws-prod-bay-011.ftp.azurewebsites.windows.net).
-For FTP credentials, ask Andy or reset them by going to https://ms.portal.azure.com → types-publisher → Quick Start → Reset deployment credentials.
-You can also download a ZIP using the azure-cli command `azure site log download`.
-The most useful logs are in LogFiles/Application.

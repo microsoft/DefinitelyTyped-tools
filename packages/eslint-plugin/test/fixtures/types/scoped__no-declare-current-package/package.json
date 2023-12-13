@@ -1,0 +1,8 @@
+{
+    "name": "@types/scoped__no-declare-current-package",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/scoped__no-declare-current-package": "workspace:."
+    }
+}

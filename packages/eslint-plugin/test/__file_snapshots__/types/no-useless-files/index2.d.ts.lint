@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-useless-files/index2.d.ts ====
+
+    /// <reference path="foo" />

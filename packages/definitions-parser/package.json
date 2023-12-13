@@ -1,14 +1,14 @@
 {
   "name": "@definitelytyped/definitions-parser",
-  "version": "0.0.65-next.3",
+  "version": "0.0.196",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/definitions-parser#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/definitions-parser#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
     "directory": "packages/definitions-parser"
   },
   "scripts": {
@@ -19,20 +19,25 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/header-parser": "^0.0.64",
-    "@definitelytyped/typescript-versions": "^0.0.64",
-    "@definitelytyped/utils": "^0.0.64",
-    "@types/node": "^12.12.29",
-    "fs-extra": "^8.1.0"
+    "@definitelytyped/header-parser": "workspace:*",
+    "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/utils": "workspace:*",
+    "@types/node": "^16.18.61",
+    "@types/semver": "^7.5.5",
+    "pacote": "^17.0.4",
+    "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.1.0",
-    "typescript": "^4.1.0"
+    "@types/pacote": "^11.1.8",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "typescript": "*"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

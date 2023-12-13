@@ -1,3 +1,11 @@
 node_modules
 dist
 packages/publisher/output
+
+packages/dts-critic/testsource
+**/fixtures/**
+
+*.json
+*.yml
+*.yaml
+*.md

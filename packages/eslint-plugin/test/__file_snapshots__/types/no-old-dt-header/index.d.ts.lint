@@ -1,0 +1,23 @@
+types/no-old-dt-header/index.d.ts
+  1:1  error  Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`  @definitelytyped/no-old-dt-header
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-old-dt-header/index.d.ts ====
+
+    // Type definitions for AFRAME 1.2
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-old-dt-header: Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`
+    // Project: https://aframe.io/
+    // Definitions by: Paul Shannon <https://github.com/devpaul>
+    //                 Roberto Ritger <https://github.com/bertoritger>
+    //                 Trygve Wastvedt <https://github.com/twastvedt>
+    // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+    // TypeScript Version: 4.4
+    
+    /**
+     * Extended tests and examples available at https://github.com/devpaul/aframe-experiments.git
+     */
+    
+    import * as anime from "animejs";
+    import * as three from "three";

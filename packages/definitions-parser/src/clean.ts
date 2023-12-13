@@ -1,6 +1,6 @@
-import { removeSync } from "fs-extra";
+import fs from "fs";
 import { dataDirPath } from "./lib/settings";
 
 export function clean() {
-  removeSync(dataDirPath);
+  fs.rmSync(dataDirPath, { recursive: true, force: true });
 }

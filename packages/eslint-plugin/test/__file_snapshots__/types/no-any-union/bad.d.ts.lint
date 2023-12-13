@@ -1,0 +1,10 @@
+types/no-any-union/bad.d.ts
+  1:17  error  Including `any` in a union will override all other members of the union  @definitelytyped/no-any-union
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-any-union/bad.d.ts ====
+
+    export const y: string | any;
+                    ~~~~~~~~~~~~
+!!! @definitelytyped/no-any-union: Including `any` in a union will override all other members of the union.

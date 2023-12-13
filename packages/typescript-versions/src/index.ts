@@ -7,21 +7,26 @@ import assert from "assert";
   For the RC:
 
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
-  2. Update failing tests.
-  3. Publish and update dependents. Outside the monorepo, current dependents are dtslint, dts-critic.
+    `supported` now contains the shipped versions, the RC, and the nightly.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   For the release:
 
   1. Move the newly-released version from `supported` to `shipped`.
-  2. Update failing tests.
-  3. Publish and update dependents. (dtslint and dts-critic)
+    `supported` now contains the shipped versions and the nightly.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   # How to deprecate an old version on Definitely Typed #
 
   1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
   2. Move the old version from `shipped` to `unsupported`.
+  3. Remove the old version from `packages/typescript-packages/package.json`.
   4. Update failing tests.
-  5. Publish and update dependents. (dtslint and dts-critic)
+
+  Currently, it's possible to release a new version and deprecate an old version
+  at the same time because of the way release schedule overlaps.
 
 */
 
@@ -29,17 +34,17 @@ import assert from "assert";
 export type UnsupportedTypeScriptVersion = typeof TypeScriptVersion.unsupported[number];
 /**
  * Parseable and supported TypeScript versions.
- * Only add to this list if we will support this version on DefinitelyTyped.
+ * Only add to this list if we will support this version on Definitely Typed.
  */
 export type TypeScriptVersion = typeof TypeScriptVersion.supported[number];
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
 export namespace TypeScriptVersion {
-  /** Add to this list when a version actual ships.  */
-  export const shipped = ["3.3", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9", "4.0", "4.1"] as const;
+  /** Add to this list when a version actually ships.  */
+  export const shipped = ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"] as const;
   /** Add to this list when a version is available as typescript@next */
-  export const supported = [...shipped, "4.2"] as const;
+  export const supported = [...shipped, "5.4"] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported = [
     "2.0",
@@ -54,7 +59,20 @@ export namespace TypeScriptVersion {
     "2.9",
     "3.0",
     "3.1",
-    "3.2"
+    "3.2",
+    "3.3",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.7",
+    "3.8",
+    "3.9",
+    "4.0",
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "4.5",
   ] as const;
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
@@ -66,7 +84,7 @@ export namespace TypeScriptVersion {
   }
 
   export function range(min: TypeScriptVersion): readonly TypeScriptVersion[] {
-    return supported.filter(v => v >= min);
+    return supported.filter((v) => v >= min);
   }
 
   /** List of NPM tags that should be changed to point to the latest version. */
@@ -75,7 +93,7 @@ export namespace TypeScriptVersion {
     assert(idx !== -1);
     return supported
       .slice(idx)
-      .map(v => "ts" + v)
+      .map((v) => "ts" + v)
       .concat("latest");
   }
 
@@ -85,11 +103,17 @@ export namespace TypeScriptVersion {
     return index === 0 ? undefined : supported[index - 1];
   }
 
-  export function isRedirectable(v: TypeScriptVersion): boolean {
+  export function next(v: TypeScriptVersion): TypeScriptVersion | undefined {
+    const index = supported.indexOf(v);
+    assert(index !== -1);
+    return index === supported.length - 1 ? undefined : supported[index + 1];
+  }
+
+  export function isRedirectable(v: AllTypeScriptVersion): boolean {
     return all.indexOf(v) >= all.indexOf("3.1");
   }
 
-  export function isTypeScriptVersion(str: string): str is TypeScriptVersion {
+  export function isTypeScriptVersion(str: string): str is AllTypeScriptVersion {
     return all.includes(str as TypeScriptVersion);
   }
 }

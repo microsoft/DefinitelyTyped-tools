@@ -1,150 +1,130 @@
-import { NpmInfo } from "@definitelytyped/utils";
+import * as util from "util";
+import * as pacote from "pacote";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage } from "../src/git";
-import { NotNeededPackage, TypesDataFile, AllPackages } from "../src/packages";
+import { NotNeededPackage, AllPackages } from "../src/packages";
 
-const typesData: TypesDataFile = {
-  jquery: createTypingsVersionRaw("jquery", [], []),
-  known: createTypingsVersionRaw("known", [{ name: "jquery", version: { major: 1 } }], []),
-  "known-test": createTypingsVersionRaw("known-test", [], ["jquery"]),
-  "most-recent": createTypingsVersionRaw("most-recent", [{ name: "jquery", version: "*" }], []),
-  unknown: createTypingsVersionRaw("unknown", [{ name: "COMPLETELY-UNKNOWN", version: { major: 1 } }], []),
-  "unknown-test": createTypingsVersionRaw("unknown-test", [], ["WAT"])
+const typesData = {
+  jquery: createTypingsVersionRaw("jquery", {}, {}),
+  known: createTypingsVersionRaw("known", { "@types/jquery": "1.0.0" }, {}),
+  "known-test": createTypingsVersionRaw("known-test", {}, { "@types/jquery": "*" }),
+  "most-recent": createTypingsVersionRaw("most-recent", { "@types/jquery": "*" }, {}),
+  unknown: createTypingsVersionRaw("unknown", { "@types/COMPLETELY-UNKNOWN": "1.0.0" }, {}),
+  "unknown-test": createTypingsVersionRaw("unknown-test", {}, { "@types/WAT": "*" }),
 };
 
-const jestNotNeeded = [
-  new NotNeededPackage({
-    typingsPackageName: "jest",
-    libraryName: "jest",
-    asOfVersion: "100.0.0"
-  })
-];
-const allPackages = AllPackages.from(typesData, jestNotNeeded);
+const jestNotNeeded = [new NotNeededPackage("jest", "jest", "100.0.0")];
+const allPackages = AllPackages.fromTestData(typesData, jestNotNeeded);
 
 const deleteJestDiffs: GitDiff[] = [
   { status: "M", file: "notNeededPackages.json" },
   { status: "D", file: "types/jest/index.d.ts" },
-  { status: "D", file: "types/jest/jest-tests.d.ts" }
+  { status: "D", file: "types/jest/jest-tests.d.ts" },
 ];
 
 testo({
-  ok() {
-    expect(Array.from(getNotNeededPackages(allPackages, deleteJestDiffs))).toEqual(jestNotNeeded);
+  async ok() {
+    expect(await getNotNeededPackages(allPackages, deleteJestDiffs)).toEqual(jestNotNeeded);
   },
-  forgotToDeleteFiles() {
-    expect(() =>
-      Array.from(
-        getNotNeededPackages(
-          AllPackages.from({ jest: createTypingsVersionRaw("jest", [], []) }, jestNotNeeded),
-          deleteJestDiffs
-        )
-      )
-    ).toThrow("Please delete all files in jest");
+  async forgotToDeleteFiles() {
+    expect(
+      await getNotNeededPackages(
+        AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
+        deleteJestDiffs,
+      ),
+    ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
-  tooManyDeletes() {
-    expect(() => Array.from(getNotNeededPackages(allPackages, [{ status: "D", file: "oops.txt" }]))).toThrow(
-      "Unexpected file deleted: oops.txt"
-    );
+  async tooManyDeletes() {
+    expect(await getNotNeededPackages(allPackages, [{ status: "D", file: "types/oops/oops.txt" }])).toEqual([]);
   },
-  extraneousFile() {
-    Array.from(
-      getNotNeededPackages(allPackages, [
-        { status: "A", file: "oooooooooooops.txt" },
-        { status: "M", file: "notNeededPackages.json" },
-        { status: "D", file: "types/jest/index.d.ts" },
-        { status: "D", file: "types/jest/jest-tests.d.ts" }
-      ])
-    );
+  async deleteInOtherPackage() {
+    expect(
+      await getNotNeededPackages(allPackages, [
+        ...deleteJestDiffs,
+        { status: "D", file: "types/most-recent/extra-tests.ts" },
+      ]),
+    ).toEqual(jestNotNeeded);
   },
-  forgotToUpdateNotNeededJson() {
-    expect(() =>
-      Array.from(
-        getNotNeededPackages(AllPackages.from(typesData, []), [{ status: "D", file: "types/jest/index.d.ts" }])
-      )
-    ).toThrow("Deleted package jest is not in notNeededPackages.json.");
+  async extraneousFile() {
+    expect(
+      await getNotNeededPackages(allPackages, [
+        ...deleteJestDiffs,
+        { status: "A", file: "types/oops/oooooooooooops.txt" },
+      ]),
+    ).toEqual(jestNotNeeded);
   },
-  scoped() {
-    Array.from(
-      getNotNeededPackages(
-        AllPackages.from(typesData, [
-          new NotNeededPackage({
-            typingsPackageName: "ember__object",
-            libraryName: "@ember/object",
-            asOfVersion: "1.0.0"
-          })
-        ]),
-        [{ status: "D", file: "types/ember__object/index.d.ts" }]
-      )
-    );
-  }
+  async scoped() {
+    expect(
+      await getNotNeededPackages(
+        AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
+        [{ status: "D", file: "types/ember__object/index.d.ts" }],
+      ),
+    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
+  },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
 });
 
-const empty: NpmInfo = {
-  distTags: new Map(),
-  versions: new Map(),
-  time: new Map()
-};
+jest.mock("pacote", () => ({
+  async manifest(spec: string, opts: pacote.Options) {
+    switch (spec) {
+      case "jest@4.0.0": // Older than the @types/jest package.
+      case "jest@50.0.0": // The same version as the @types/jest package.
+      case "jest@100.0.0": // Newer than the @types/jest package.
+        // These versions exist (don't throw).
+        return;
+      case "jest@999.0.0": // A nonexistent version of the replacement package.
+        // eslint-disable-next-line no-throw-literal
+        throw { code: "ETARGET" };
+      case "@types/jest": // The @types/jest package.
+        return { version: "50.0.0" };
+      case "nonexistent@100.0.0": // A nonexistent replacement package.
+      case "@types/nonexistent": // A nonexistent @types package.
+        // eslint-disable-next-line no-throw-literal
+        throw { code: opts.offline ? "ENOTCACHED" : "E404" };
+    }
+    throw new Error(`Unexpected npm registry fetch: ${util.inspect(spec)}`);
+  },
+}));
+
+const newerReplacement = new NotNeededPackage("jest", "jest", "100.0.0");
+const olderReplacement = new NotNeededPackage("jest", "jest", "4.0.0");
+const sameVersion = new NotNeededPackage("jest", "jest", "50.0.0");
+const nonexistentReplacementVersion = new NotNeededPackage("jest", "jest", "999.0.0");
+const nonexistentReplacementPackage = new NotNeededPackage("jest", "nonexistent", "100.0.0");
+const nonexistentTypesPackage = new NotNeededPackage("nonexistent", "jest", "100.0.0");
+
 testo({
-  missingSource() {
-    expect(() => checkNotNeededPackage(jestNotNeeded[0], undefined, empty)).toThrow(
-      "The entry for @types/jest in notNeededPackages.json"
-    );
+  async missingSource() {
+    return expect(await checkNotNeededPackage(nonexistentReplacementPackage)).toEqual([
+      `The entry for @types/jest in notNeededPackages.json has
+"libraryName": "nonexistent", but there is no npm package with this name.
+Unneeded packages have to be replaced with a package on npm.`,
+    ]);
   },
-  missingTypings() {
-    expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, undefined)).toThrow(
-      "@types package not found for @types/jest"
-    );
+  async missingTypings() {
+    return expect(await checkNotNeededPackage(nonexistentTypesPackage)).toEqual([
+      "Unexpected error: @types package not found for @types/nonexistent",
+    ]);
   },
-  missingTypingsLatest() {
-    expect(() => checkNotNeededPackage(jestNotNeeded[0], empty, empty)).toThrow(
-      '@types/jest is missing the "latest" tag'
-    );
+  async deprecatedSameVersion() {
+    return expect(await checkNotNeededPackage(sameVersion)).toEqual([
+      `The specified version 50.0.0 of jest must be newer than the version
+it is supposed to replace, 50.0.0 of @types/jest.`,
+    ]);
   },
-  deprecatedSameVersion() {
-    expect(() => {
-      checkNotNeededPackage(jestNotNeeded[0], empty, {
-        distTags: new Map([["latest", "100.0.0"]]),
-        versions: new Map(),
-        time: new Map([["modified", ""]])
-      });
-    }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
-it is supposed to replace, 100.0.0 of @types/jest.`);
+  async deprecatedOlderVersion() {
+    return expect(await checkNotNeededPackage(olderReplacement)).toEqual([
+      `The specified version 4.0.0 of jest must be newer than the version
+it is supposed to replace, 50.0.0 of @types/jest.`,
+    ]);
   },
-  deprecatedOlderVersion() {
-    expect(() => {
-      checkNotNeededPackage(jestNotNeeded[0], empty, {
-        distTags: new Map([["latest", "999.0.0"]]),
-        versions: new Map(),
-        time: new Map([["modified", ""]])
-      });
-    }).toThrow(`The specified version 100.0.0 of jest must be newer than the version
-it is supposed to replace, 999.0.0 of @types/jest.`);
-  },
-  missingNpmVersion() {
-    expect(() => {
-      checkNotNeededPackage(jestNotNeeded[0], empty, {
-        distTags: new Map([["latest", "4.0.0"]]),
-        versions: new Map(),
-        time: new Map([["modified", ""]])
-      });
-    }).toThrow("The specified version 100.0.0 of jest is not on npm.");
-  },
-  olderNpmVersion() {
-    expect(() =>
-      checkNotNeededPackage(
-        jestNotNeeded[0],
-        { distTags: new Map(), versions: new Map([["50.0.0", {}]]), time: new Map([["modified", ""]]) },
-        { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), time: new Map([["modified", ""]]) }
-      )
-    ).toThrow("The specified version 100.0.0 of jest is not on npm.");
+  async missingNpmVersion() {
+    return expect(await checkNotNeededPackage(nonexistentReplacementVersion)).toEqual([
+      "The specified version 999.0.0 of jest is not on npm.",
+    ]);
   },
   ok() {
-    checkNotNeededPackage(
-      jestNotNeeded[0],
-      { distTags: new Map(), versions: new Map([["100.0.0", {}]]), time: new Map([["modified", ""]]) },
-      { distTags: new Map([["latest", "4.0.0"]]), versions: new Map(), time: new Map([["modified", ""]]) }
-    );
-  }
+    return checkNotNeededPackage(newerReplacement);
+  },
 });

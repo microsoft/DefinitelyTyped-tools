@@ -1,100 +1,147 @@
 import {
+  AllPackages,
+  DTMock,
+  NotNeededPackage,
+  TypingsData,
+  TypingsDataRaw,
+} from "@definitelytyped/definitions-parser";
+import { License } from "@definitelytyped/header-parser";
+import {
   createNotNeededPackageJSON,
   createPackageJSON,
   createReadme,
-  getLicenseFileText
+  getLicenseFileText,
 } from "../src/generate-packages";
-import {
-  AllPackages,
-  License,
-  NotNeededPackage,
-  readNotNeededPackages,
-  TypesDataFile,
-  TypingsData,
-  TypingsDataRaw,
-  createMockDT
-} from "@definitelytyped/definitions-parser";
 import { testo } from "./utils";
-import { Registry } from "@definitelytyped/utils";
 
 function createRawPackage(license: License): TypingsDataRaw {
   return {
-    libraryName: "jquery",
-    typingsPackageName: "jquery",
-    dependencies: { madeira: { major: 1 } },
-    testDependencies: [],
-    pathMappings: [],
-    contributors: [{ name: "A", url: "b@c.d", githubUsername: "e" }],
-    libraryMajorVersion: 1,
-    libraryMinorVersion: 0,
-    minTsVersion: "3.2",
-    typesVersions: [],
-    files: ["index.d.ts", "jquery.test.ts"],
-    license,
-    packageJsonDependencies: [{ name: "balzac", version: "~3" }],
-    contentHash: "11",
-    projectName: "jquery.org",
-    globals: [],
-    declaredModules: ["jquery"]
-  };
-}
-function createTypesData(): TypesDataFile {
-  return {
-    jquery: {
-      1: createRawPackage(License.MIT)
+    header: {
+      name: "@types/jquery",
+      owners: [
+        { name: "A", url: "b@c.d" },
+        { name: "E", githubUsername: "e" },
+      ],
+      libraryMajorVersion: 1,
+      libraryMinorVersion: 0,
+      minimumTypeScriptVersion: "3.2",
+      projects: ["jquery.org"],
+      nonNpm: false,
     },
-    madeira: {
-      1: createRawPackage(License.Apache20)
-    }
+    typesVersions: [],
+    license,
+    dependencies: { "@types/madeira": "^1" },
+    devDependencies: { "@types/jquery": "workspace:." },
+    olderVersionDirectories: [],
   };
 }
+
 function createUnneededPackage() {
-  return new NotNeededPackage({
-    libraryName: "alternate",
-    typingsPackageName: "absalom",
-    asOfVersion: "1.1.1"
-  });
+  return new NotNeededPackage("absalom", "alternate", "1.1.1");
 }
+
+function defaultFS() {
+  const dt = new DTMock();
+  dt.pkgDir("jquery")
+    .set(
+      "package.json",
+      JSON.stringify(
+        {
+          private: true,
+          name: "@types/jquery",
+          version: "1.0.9999",
+          projects: ["jquery.org"],
+          owners: [
+            { name: "A", url: "b@c.d" },
+            { name: "E", githubUsername: "e" },
+          ],
+          dependencies: { "@types/madeira": "^1" },
+          devDependencies: { "@types/jquery": "workspace:." },
+        },
+        undefined,
+        4,
+      ),
+    )
+    .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
+    .set("index.d.ts", `type T = import("./types");\n`)
+    .set("jquery-tests.ts", "// tests");
+  return dt;
+}
+
 testo({
   mitLicenseText() {
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
     expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("MIT License"));
   },
   apacheLicenseText() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
+    const typing = new TypingsData(defaultFS().fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("Apache License, Version 2.0"));
   },
   basicReadme() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("This package contains type definitions for"));
-  },
-  readmeContainsProjectName() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("jquery.org"));
-  },
-  readmeOneDependency() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(
-      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
+      expect.stringContaining("This package contains type definitions for"),
     );
   },
-  readmeNoGlobals() {
-    const typing = new TypingsData(createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing)).toEqual(expect.stringContaining("Global values: none"));
+  readmeContainsContributors() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
+      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"),
+    );
+  },
+  readmeContainsProjectName() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(expect.stringContaining("jquery.org"));
+  },
+  readmeOneDependency() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
+      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)"),
+    );
+  },
+  readmeMultipleDependencies() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    typing.dependencies["@types/example"] = "*";
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
+      expect.stringContaining(
+        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)",
+      ),
+    );
+  },
+  readmeContainsSingleFileDTS() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toContain("type T = import");
+  },
+  readmeContainsManyDTSFilesDoesNotAmendREADME() {
+    const rawPkg = createRawPackage(License.Apache20);
+    const dt = defaultFS();
+    dt.pkgDir("jquery").set("other.d.ts", "");
+    const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
+    expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
   },
   basicPackageJson() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages, Registry.NPM)).toEqual(`{
+    const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
+    expect(createPackageJSON(typing, "1.0")).toEqual(`{
     "name": "@types/jquery",
     "version": "1.0",
     "description": "TypeScript definitions for jquery",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery",
     "license": "MIT",
     "contributors": [
         {
             "name": "A",
-            "url": "b@c.d",
-            "githubUsername": "e"
+            "url": "b@c.d"
+        },
+        {
+            "name": "E",
+            "githubUsername": "e",
+            "url": "https://github.com/e"
         }
     ],
     "main": "",
@@ -106,67 +153,53 @@ testo({
     },
     "scripts": {},
     "dependencies": {
-        "@types/madeira": "^1",
-        "balzac": "~3"
+        "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "11",
-    "typeScriptVersion": "3.3"
+    "typesPublisherContentHash": "05febc04df55db2687c2ac05a291177c2f4fd90f76d679faaf1b01896fe5600c",
+    "typeScriptVersion": "4.6"
 }`);
   },
-  githubPackageJsonName() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0", packages, Registry.Github)).toEqual(
-      expect.stringContaining('"name": "@types/jquery"')
-    );
-  },
-  githubPackageJsonRegistry() {
-    const packages = AllPackages.from(createTypesData(), readNotNeededPackages(createMockDT().fs));
-    const typing = new TypingsData(createRawPackage(License.MIT), /*isLatest*/ true);
-    const s = createPackageJSON(typing, "1.0", packages, Registry.Github);
-    expect(s).toEqual(expect.stringContaining("publishConfig"));
-    expect(s).toEqual(expect.stringContaining('"registry": "https://npm.pkg.github.com/"'));
-  },
   basicNotNeededPackageJson() {
-    const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.NPM);
+    const s = createNotNeededPackageJSON(createUnneededPackage());
     expect(s).toEqual(`{
     "name": "@types/absalom",
     "version": "1.1.1",
-    "typings": null,
     "description": "Stub TypeScript definitions entry for alternate, which provides its own types definitions",
     "main": "",
     "scripts": {},
-    "author": "",
     "license": "MIT",
     "dependencies": {
         "alternate": "*"
-    }
+    },
+    "deprecated": "This is a stub types definition. alternate provides its own type definitions, so you do not need this installed."
 }`);
   },
   scopedNotNeededPackageJson() {
-    const scopedUnneeded = new NotNeededPackage({
-      libraryName: "@google-cloud/chubdub",
-      typingsPackageName: "google-cloud__pubsub",
-      asOfVersion: "0.26.0"
-    });
-    const s = createNotNeededPackageJSON(scopedUnneeded, Registry.NPM);
+    const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
+    const s = createNotNeededPackageJSON(scopedUnneeded);
     expect(s).toEqual(`{
     "name": "@types/google-cloud__pubsub",
     "version": "0.26.0",
-    "typings": null,
     "description": "Stub TypeScript definitions entry for @google-cloud/chubdub, which provides its own types definitions",
     "main": "",
     "scripts": {},
-    "author": "",
     "license": "MIT",
     "dependencies": {
         "@google-cloud/chubdub": "*"
-    }
+    },
+    "deprecated": "This is a stub types definition. @google-cloud/chubdub provides its own type definitions, so you do not need this installed."
 }`);
   },
-  githubNotNeededPackageJson() {
-    const s = createNotNeededPackageJSON(createUnneededPackage(), Registry.Github);
-    expect(s).toEqual(expect.stringContaining("@types"));
-    expect(s).toEqual(expect.stringContaining("npm.pkg.github.com"));
-  }
+  async versionedPackage() {
+    const dt = defaultFS();
+    dt.addOldVersionOfPackage("jquery", "0", "0.0.9999");
+    dt.pkgDir("jquery")
+      .subdir("v0")
+      .set("index.d.ts", "import {} from './only-in-v0';")
+      .set("only-in-v0.d.ts", "export const x: number;");
+    const allPackages = AllPackages.fromFS(dt.fs);
+    const typing = await allPackages.getTypingsData({ name: "@types/jquery", version: { major: 0 } })!;
+    expect(typing.getFiles()).toContain("only-in-v0.d.ts");
+    expect(typing.getContentHash()).toBeTruthy(); // used to crash
+  },
 });

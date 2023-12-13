@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
+    "target": "es2019",
+    "module": "node16",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,6 +13,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "composite": true,
-    "types": ["node"]
+    "types": ["node"],
+    "lib": ["es2022"]
   }
 }

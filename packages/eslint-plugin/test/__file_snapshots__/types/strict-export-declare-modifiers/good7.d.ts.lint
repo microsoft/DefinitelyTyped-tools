@@ -1,0 +1,6 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good7.d.ts ====
+
+    declare class Foo2 {}
+    export { Foo2 as Bar2 }

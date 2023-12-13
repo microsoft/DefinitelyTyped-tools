@@ -4,7 +4,7 @@ import {
   NotNeededPackage,
   PackageId,
   TypingsData,
-  readDataFile
+  readDataFile,
 } from "@definitelytyped/definitions-parser";
 
 export const versionsFilename = "versions.json";
@@ -19,6 +19,7 @@ export interface ChangedTyping {
 
 export interface ChangedPackagesJson {
   readonly changedTypings: readonly ChangedTypingJson[];
+  /** Values are `typesDirectoryName` strings (keys of notNeededPackages.json) */
   readonly changedNotNeededPackages: readonly string[];
 }
 
@@ -36,15 +37,15 @@ export interface ChangedPackages {
 export async function readChangedPackages(allPackages: AllPackages): Promise<ChangedPackages> {
   const json = (await readDataFile("calculate-versions", versionsFilename)) as ChangedPackagesJson;
   return {
-    changedTypings: json.changedTypings.map(
-      ({ id, version, latestVersion }): ChangedTyping => ({
-        pkg: allPackages.getTypingsData(id),
+    changedTypings: await Promise.all(
+      json.changedTypings.map(async ({ id, version, latestVersion }) => ({
+        pkg: await allPackages.getTypingsData(id),
         version,
-        latestVersion
-      })
+        latestVersion,
+      })),
     ),
-    changedNotNeededPackages: json.changedNotNeededPackages.map(id =>
-      assertDefined(allPackages.getNotNeededPackage(id))
-    )
+    changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>
+      assertDefined(allPackages.getNotNeededPackage(id)),
+    ),
   };
 }

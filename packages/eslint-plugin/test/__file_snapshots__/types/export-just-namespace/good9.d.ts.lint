@@ -1,0 +1,15 @@
+types/export-just-namespace/good9.d.ts
+  3:25  error  Type parameter U is used only once  @definitelytyped/no-unnecessary-generics
+  3:28  error  Type parameter S is used only once  @definitelytyped/no-unnecessary-generics
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/export-just-namespace/good9.d.ts ====
+
+    declare namespace Second {}
+    export = Second
+    declare function Second<U, S>(s: U): S
+                            ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter U is used only once.
+                               ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter S is used only once.

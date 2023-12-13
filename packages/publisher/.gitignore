@@ -1,5 +1,4 @@
 bin/
-cache/
 data/
 logs/
 node_modules/
@@ -7,3 +6,5 @@ output/
 validateOutput/
 \#*
 .\#*
+local.settings.json
+lock.json

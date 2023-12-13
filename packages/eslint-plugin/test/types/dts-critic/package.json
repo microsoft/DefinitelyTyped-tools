@@ -1,0 +1,17 @@
+{
+    "devDependencies": {
+        "@types/dts-critic": "workspace:."
+    },
+    "private": true,
+    "projects": [
+        "https://typescriptlang.org"
+    ],
+    "version": "1.0.9999",
+    "name": "@types/dts-critic",
+    "owners": [
+        {
+            "githubUsername": "ghost",
+            "name": "Not Default"
+        }
+    ]
+}
