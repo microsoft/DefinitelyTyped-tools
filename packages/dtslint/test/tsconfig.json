@@ -9,6 +9,6 @@
       { "path": ".." },
       { "path": "../../utils" }
     ],
-    "exclude": ["expect", "npm-naming"]
+    "exclude": ["expect"]
   }
   

@@ -1,5 +1,31 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.198
+
+### Patch Changes
+
+- 414ae487: Move npm-naming lint rule from tslint to eslint
+- Updated dependencies [414ae487]
+  - @definitelytyped/dts-critic@0.0.192
+
+## 0.0.197
+
+### Patch Changes
+
+- 3d6c2ffd: Port expect rule from tslint to eslint
+
+## 0.0.196
+
+### Patch Changes
+
+- 7805956b: Require eslint ^8.40.0 as peerDependency
+
+## 0.0.195
+
+### Patch Changes
+
+- @definitelytyped/utils@0.0.188
+
 ## 0.0.194
 
 ### Patch Changes

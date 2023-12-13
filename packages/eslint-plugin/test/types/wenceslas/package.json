@@ -1,0 +1,17 @@
+{
+    "devDependencies": {
+        "@types/wenceslas": "workspace:."
+    },
+    "private": true,
+    "projects": [
+        "https://typescriptlang.org"
+    ],
+    "version": "0.9.9999",
+    "name": "@types/wenceslas",
+    "owners": [
+        {
+            "githubUsername": "ghost",
+            "name": "Not Default"
+        }
+    ]
+}

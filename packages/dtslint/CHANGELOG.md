@@ -1,5 +1,40 @@
 # @definitelytyped/dtslint
 
+## 0.0.201
+
+### Patch Changes
+
+- 92b5cd51: Remove more tslint code to make dtslint work again
+
+## 0.0.200
+
+### Patch Changes
+
+- 414ae487: Move npm-naming lint rule from tslint to eslint
+- ae742dde: Special-case a useful error for `pnpm test` without arguments
+
+## 0.0.199
+
+### Patch Changes
+
+- 30730f22: Use a direct require when finding estree import
+
+## 0.0.198
+
+### Patch Changes
+
+- 3d6c2ffd: Port expect rule from tslint to eslint
+
+## 0.0.197
+
+### Patch Changes
+
+- Updated dependencies [8288affb]
+  - @definitelytyped/typescript-versions@0.0.182
+  - @definitelytyped/header-parser@0.0.190
+  - @definitelytyped/utils@0.0.188
+  - @definitelytyped/dts-critic@0.0.191
+
 ## 0.0.196
 
 ### Patch Changes

@@ -1,5 +1,49 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.207
+
+### Patch Changes
+
+- Updated dependencies [92b5cd51]
+  - @definitelytyped/dtslint@0.0.201
+
+## 0.0.206
+
+### Patch Changes
+
+- Updated dependencies [414ae487]
+- Updated dependencies [ae742dde]
+  - @definitelytyped/dtslint@0.0.200
+
+## 0.0.205
+
+### Patch Changes
+
+- a7f527c1: Remove knex-db-manager from expectedFailures.txt
+
+## 0.0.204
+
+### Patch Changes
+
+- Updated dependencies [30730f22]
+  - @definitelytyped/dtslint@0.0.199
+
+## 0.0.203
+
+### Patch Changes
+
+- 5ea955db: Remove knex-cleaner from expected failures
+- Updated dependencies [3d6c2ffd]
+  - @definitelytyped/dtslint@0.0.198
+
+## 0.0.202
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.195
+- @definitelytyped/dtslint@0.0.197
+- @definitelytyped/utils@0.0.188
+
 ## 0.0.201
 
 ### Patch Changes

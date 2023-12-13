@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.0.196",
+  "version": "0.0.201",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -22,7 +22,6 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@definitelytyped/dts-critic": "workspace:*",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",

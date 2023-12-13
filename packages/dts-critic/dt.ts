@@ -2,26 +2,26 @@ import { dtsCritic as critic, ErrorKind } from "./index";
 import fs = require("fs");
 import stripJsonComments = require("strip-json-comments");
 
-function hasNpmNamingLintRule(tslintPath: string): boolean {
-  if (fs.existsSync(tslintPath)) {
-    const tslint = JSON.parse(stripJsonComments(fs.readFileSync(tslintPath, "utf-8")));
-    if (tslint.rules && tslint.rules["npm-naming"] !== undefined) {
-      return !!tslint.rules["npm-naming"];
+function hasNpmNamingLintRule(eslintPath: string): boolean {
+  if (fs.existsSync(eslintPath)) {
+    const eslint = JSON.parse(stripJsonComments(fs.readFileSync(eslintPath, "utf-8")));
+    if (eslint.rules?.["@definitelytyped/npm-naming"] !== undefined) {
+      return !!eslint.rules["@definitelytyped/npm-naming"];
     }
     return true;
   }
   return false;
 }
 
-function addNpmNamingLintRule(tslintPath: string): void {
-  if (fs.existsSync(tslintPath)) {
-    const tslint = JSON.parse(stripJsonComments(fs.readFileSync(tslintPath, "utf-8")));
-    if (tslint.rules) {
-      tslint.rules["npm-naming"] = false;
+function addNpmNamingLintRule(eslintPath: string): void {
+  if (fs.existsSync(eslintPath)) {
+    const eslint = JSON.parse(stripJsonComments(fs.readFileSync(eslintPath, "utf-8")));
+    if (eslint.rules) {
+      eslint.rules["@definitelytyped/npm-naming"] = false;
     } else {
-      tslint.rules = { "npm-naming": false };
+      eslint.rules = { "@definitelytyped/npm-naming": false };
     }
-    fs.writeFileSync(tslintPath, JSON.stringify(tslint, undefined, 4), "utf-8");
+    fs.writeFileSync(eslintPath, JSON.stringify(eslint, undefined, 4), "utf-8");
   }
 }
 
@@ -29,7 +29,7 @@ function main() {
   for (const item of fs.readdirSync("../DefinitelyTyped/types")) {
     const entry = "../DefinitelyTyped/types/" + item;
     try {
-      if (hasNpmNamingLintRule(entry + "/tslint.json")) {
+      if (hasNpmNamingLintRule(entry + "/.eslintrc.json")) {
         const errors = critic(entry + "/index.d.ts");
         for (const error of errors) {
           switch (error.kind) {
@@ -57,7 +57,7 @@ function main() {
                 const npmvers = m[2].split(",").map((s: string) => parseFloat(s.trim()));
                 const fixto = npmvers.every((v: number) => headerver > v) ? -1.0 : Math.max(...npmvers);
                 console.log(`npm-version:${item}:${m[1]}:${m[2]}:${fixto}`);
-                addNpmNamingLintRule(entry + "/tslint.json");
+                addNpmNamingLintRule(entry + "/.eslintrc.json");
               } else {
                 console.log("could not parse error message: ", error.message);
               }

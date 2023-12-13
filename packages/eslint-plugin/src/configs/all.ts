@@ -135,7 +135,13 @@ export const all: Linter.BaseConfig = {
         warnOnUnsupportedTypeScriptVersion: false,
       },
       rules: {
-        ...Object.fromEntries(Object.keys(rules).map((name) => [`@definitelytyped/${name}`, "error"])),
+        ...Object.fromEntries(
+          Object.keys(rules)
+            // npm-naming is only enabled within dtslint.
+            // Leave it out of the preset so editors / he tests don't hit the network.
+            .filter((name) => name !== "npm-naming")
+            .map((name) => [`@definitelytyped/${name}`, "error"]),
+        ),
         "unicode-bom": ["error", "never"],
         "@typescript-eslint/ban-ts-comment": [
           "error",

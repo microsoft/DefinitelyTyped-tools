@@ -1,6 +1,3 @@
 {
-	"extends": "./dtslint.json",
-	"rules": {
-		"npm-naming": [true, { "mode": "code" }]
-	}
+	"extends": "./dtslint.json"
 }
