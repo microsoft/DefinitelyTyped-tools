@@ -31,12 +31,12 @@ import assert from "assert";
 */
 
 /** Parseable but unsupported TypeScript versions. */
-export type UnsupportedTypeScriptVersion = typeof TypeScriptVersion.unsupported[number];
+export type UnsupportedTypeScriptVersion = (typeof TypeScriptVersion.unsupported)[number];
 /**
  * Parseable and supported TypeScript versions.
  * Only add to this list if we will support this version on Definitely Typed.
  */
-export type TypeScriptVersion = typeof TypeScriptVersion.supported[number];
+export type TypeScriptVersion = (typeof TypeScriptVersion.supported)[number];
 
 export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVersion;
 
