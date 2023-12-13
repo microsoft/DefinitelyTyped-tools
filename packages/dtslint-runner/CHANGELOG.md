@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.208
+
+### Patch Changes
+
+- f53f17f6: Use package dependencies to manage TypeScript, instead of `$HOME/.dts`
+- 99c345ac: Remove performance logging
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/dtslint@0.0.202
+  - @definitelytyped/utils@0.0.189
+  - @definitelytyped/definitions-parser@0.0.196
+
 ## 0.0.207
 
 ### Patch Changes
