@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
+    "@definitelytyped/typescript-packages": "workspace:*",
     "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^16.18.61",
     "charm": "^1.0.2",

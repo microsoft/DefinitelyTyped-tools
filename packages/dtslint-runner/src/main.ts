@@ -4,8 +4,6 @@ import {
   joinPaths,
   runWithListeningChildProcesses,
   CrashRecoveryState,
-  installAllTypeScriptVersions,
-  installTypeScriptNext,
 } from "@definitelytyped/utils";
 import fs from "fs";
 import { RunDTSLintOptions } from "./types";
@@ -47,14 +45,6 @@ export async function runDTSLint({
   const { packageNames, dependents } = onlyRunAffectedPackages
     ? await prepareAffectedPackages(definitelyTypedPath)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
-
-  if (!noInstall && !localTypeScriptPath) {
-    if (onlyTestTsNext) {
-      await installTypeScriptNext();
-    } else {
-      await installAllTypeScriptVersions();
-    }
-  }
 
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
