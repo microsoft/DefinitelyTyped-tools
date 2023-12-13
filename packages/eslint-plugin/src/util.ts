@@ -13,8 +13,7 @@ export type RuleModule<TOptions extends readonly unknown[], TMessageIds extends 
 export const createRule: <TOptions extends readonly unknown[], TMessageIds extends string>(
   opts: Readonly<ESLintUtils.RuleWithMetaAndName<TOptions, TMessageIds>>,
 ) => RuleModule<TOptions, TMessageIds> = ESLintUtils.RuleCreator(
-  (name) =>
-    `https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/eslint-plugin/docs/rules/${name}.md`,
+  (name) => `https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/eslint-plugin/docs/rules/${name}.md`,
 );
 
 export function getTypesPackageForDeclarationFile(file: string) {

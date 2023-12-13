@@ -49,5 +49,5 @@
   "engines": {
     "node": ">=16.17.0"
   },
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/publisher#readme"
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/publisher#readme"
 }

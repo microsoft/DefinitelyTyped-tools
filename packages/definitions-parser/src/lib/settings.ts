@@ -12,7 +12,7 @@ export const typesDirectoryName = "types";
 export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/tar.gz/master";
 
 const allowedPackageJsonDependenciesUrl =
-  "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/master/packages/definitions-parser/allowedPackageJsonDependencies.txt";
+  "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/main/packages/definitions-parser/allowedPackageJsonDependencies.txt";
 
 export const getAllowedPackageJsonDependencies = withCache(60 * 60 * 1000, () => {
   return new Promise<ReadonlySet<string>>(async (resolve) => {

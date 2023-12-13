@@ -47,7 +47,7 @@
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/dts-critic#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/dts-critic#readme",
   "engines": {
     "node": ">=16.17.0"
   }
