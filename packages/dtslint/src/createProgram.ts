@@ -1,3 +1,7 @@
+// This file is intentionally similar to TSLint's old Linter.createProgram API:
+// https://github.com/palantir/tslint/blob/285fc1db18d1fd24680d6a2282c6445abf1566ee/src/linter.ts#L54
+// TODO: creating a program to get a list of files is pretty heavyweight.
+
 import * as fs from "fs";
 import * as path from "path";
 import * as ts from "typescript";
@@ -26,22 +30,19 @@ export function createProgram(configFile: string): ts.Program {
     noEmit: true,
   });
 
-  if (parsed.errors !== undefined) {
-    // ignore warnings and 'TS18003: No inputs were found in config file ...'
-    const errors = parsed.errors.filter((d) => d.category === ts.DiagnosticCategory.Error && d.code !== 18003);
-    if (errors.length !== 0) {
-      throw new Error(
-        ts.formatDiagnostics(errors, {
-          getCanonicalFileName: (f) => f,
-          getCurrentDirectory: process.cwd,
-          getNewLine: () => "\n",
-        }),
-      );
-    }
+  // ignore warnings and 'TS18003: No inputs were found in config file ...'
+  const errors = parsed.errors?.filter((d) => d.category === ts.DiagnosticCategory.Error && d.code !== 18003);
+  if (errors?.length) {
+    throw new Error(
+      ts.formatDiagnostics(errors, {
+        getCanonicalFileName: (f) => f,
+        getCurrentDirectory: process.cwd,
+        getNewLine: () => "\n",
+      }),
+    );
   }
 
   const host = ts.createCompilerHost(parsed.options, true);
-  const program = ts.createProgram(parsed.fileNames, parsed.options, host);
 
-  return program;
+  return ts.createProgram(parsed.fileNames, parsed.options, host);
 }
