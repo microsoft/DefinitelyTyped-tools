@@ -147,6 +147,9 @@ importers:
       '@arethetypeswrong/cli':
         specifier: ^0.13.1
         version: 0.13.1
+      '@arethetypeswrong/core':
+        specifier: ^0.13.0
+        version: 0.13.0
       '@definitelytyped/dts-critic':
         specifier: workspace:*
         version: link:../dts-critic

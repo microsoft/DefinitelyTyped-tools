@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@arethetypeswrong/cli": "^0.13.1",
+    "@arethetypeswrong/core": "^0.13.0",
     "@definitelytyped/dts-critic": "workspace:*",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
