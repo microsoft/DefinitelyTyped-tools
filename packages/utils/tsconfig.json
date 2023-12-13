@@ -6,6 +6,7 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../typescript-versions" }
+    { "path": "../typescript-versions" },
+    { "path": "../typescript-packages" }
   ]
 }

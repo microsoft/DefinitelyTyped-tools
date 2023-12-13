@@ -1,5 +1,23 @@
 # @definitelytyped/utils
 
+## 0.0.190
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-packages@0.0.3
+  - @definitelytyped/typescript-versions@0.0.183
+
+## 0.0.189
+
+### Patch Changes
+
+- f53f17f6: Use package dependencies to manage TypeScript, instead of `$HOME/.dts`
+- Updated dependencies [f53f17f6]
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/typescript-packages@0.0.2
+
 ## 0.0.188
 
 ### Patch Changes

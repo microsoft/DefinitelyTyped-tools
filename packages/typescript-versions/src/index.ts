@@ -8,19 +8,22 @@ import assert from "assert";
 
   1. Add a new version to the end of `TypeScriptVersion` and `supported`.
     `supported` now contains the shipped versions, the RC, and the nightly.
-  2. Update failing tests.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   For the release:
 
   1. Move the newly-released version from `supported` to `shipped`.
     `supported` now contains the shipped versions and the nightly.
-  2. Update failing tests.
+  2. Add the new version to `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   # How to deprecate an old version on Definitely Typed #
 
   1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
   2. Move the old version from `shipped` to `unsupported`.
-  3. Update failing tests.
+  3. Remove the old version from `packages/typescript-packages/package.json`.
+  4. Update failing tests.
 
   Currently, it's possible to release a new version and deprecate an old version
   at the same time because of the way release schedule overlaps.

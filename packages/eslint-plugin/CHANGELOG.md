@@ -1,5 +1,22 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.200
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/dts-critic@0.0.194
+  - @definitelytyped/utils@0.0.190
+
+## 0.0.199
+
+### Patch Changes
+
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/utils@0.0.189
+  - @definitelytyped/dts-critic@0.0.193
+
 ## 0.0.198
 
 ### Patch Changes

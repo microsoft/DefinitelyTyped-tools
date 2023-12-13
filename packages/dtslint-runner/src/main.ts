@@ -1,19 +1,15 @@
 import os from "os";
-import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
   CrashRecoveryState,
-  installAllTypeScriptVersions,
-  installTypeScriptNext,
 } from "@definitelytyped/utils";
 import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
 
-const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
@@ -49,14 +45,6 @@ export async function runDTSLint({
   const { packageNames, dependents } = onlyRunAffectedPackages
     ? await prepareAffectedPackages(definitelyTypedPath)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
-
-  if (!noInstall && !localTypeScriptPath) {
-    if (onlyTestTsNext) {
-      await installTypeScriptNext();
-    } else {
-      await installAllTypeScriptVersions();
-    }
-  }
 
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
@@ -154,8 +142,6 @@ export async function runDTSLint({
   }
   console.log(`{${suggestionLines.join(",")}}`);
 
-  logPerformance();
-
   if (writeFailures) {
     fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
   }
@@ -202,29 +188,5 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
     const cmd: Command = ["git", ["clone", "https://github.com/DefinitelyTyped/DefinitelyTyped.git", "--depth", "1"]];
     console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
     await execAndThrowErrors(cmd[0], cmd[1], cwd);
-  }
-}
-
-function logPerformance() {
-  const big: [string, number][] = [];
-  const types: number[] = [];
-  if (fs.existsSync(perfDir)) {
-    console.log("\n\n=== PERFORMANCE ===\n");
-    for (const filename of fs.readdirSync(perfDir, { encoding: "utf8" })) {
-      const x = JSON.parse(fs.readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
-        [s: string]: { types: number; memory: number };
-      };
-      for (const k of Object.keys(x)) {
-        big.push([k, x[k].types]);
-        types.push(x[k].types);
-      }
-    }
-
-    console.log("  * Percentiles: ");
-    console.log("99:", percentile(types, 0.99));
-    console.log("95:", percentile(types, 0.95));
-    console.log("90:", percentile(types, 0.9));
-    console.log("70:", percentile(types, 0.7));
-    console.log("50:", percentile(types, 0.5));
   }
 }
