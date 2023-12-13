@@ -84,10 +84,9 @@ async function main(): Promise<void> {
 }
 
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path]");
+  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
-  console.error("  --installAll     Cleans and installs all TypeScript versions.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
