@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.0.183
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+
 ## 0.0.182
 
 ### Patch Changes

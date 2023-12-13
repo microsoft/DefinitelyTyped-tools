@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.0.194
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/header-parser@0.0.192
+
 ## 0.0.193
 
 ### Patch Changes
