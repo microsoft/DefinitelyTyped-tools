@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint
 
+## 0.0.202
+
+### Patch Changes
+
+- f53f17f6: Use package dependencies to manage TypeScript, instead of `$HOME/.dts`
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/utils@0.0.189
+  - @definitelytyped/header-parser@0.0.191
+
 ## 0.0.201
 
 ### Patch Changes

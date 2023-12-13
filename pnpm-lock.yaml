@@ -204,9 +204,6 @@ importers:
       semver:
         specifier: ^7.5.4
         version: 7.5.4
-      stats-lite:
-        specifier: ^2.2.0
-        version: 2.2.0
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -214,9 +211,6 @@ importers:
       '@types/semver':
         specifier: ^7.5.5
         version: 7.5.5
-      '@types/stats-lite':
-        specifier: ^2.2.2
-        version: 2.2.2
       glob:
         specifier: ^10.3.10
         version: 10.3.10
@@ -360,10 +354,46 @@ importers:
         specifier: ^17.0.31
         version: 17.0.31
 
+  packages/typescript-packages:
+    dependencies:
+      '@definitelytyped/typescript-versions':
+        specifier: workspace:*
+        version: link:../typescript-versions
+      typescript-4.6:
+        specifier: npm:typescript@~4.6.0-0
+        version: /typescript@4.6.4
+      typescript-4.7:
+        specifier: npm:typescript@~4.7.0-0
+        version: /typescript@4.7.4
+      typescript-4.8:
+        specifier: npm:typescript@~4.8.0-0
+        version: /typescript@4.8.4
+      typescript-4.9:
+        specifier: npm:typescript@~4.9.0-0
+        version: /typescript@4.9.5
+      typescript-5.0:
+        specifier: npm:typescript@~5.0.0-0
+        version: /typescript@5.0.4
+      typescript-5.1:
+        specifier: npm:typescript@~5.1.0-0
+        version: /typescript@5.1.6
+      typescript-5.2:
+        specifier: npm:typescript@~5.2.0-0
+        version: /typescript@5.2.2
+      typescript-5.3:
+        specifier: npm:typescript@~5.3.0-0
+        version: /typescript@5.3.3
+      typescript-5.4:
+        specifier: npm:typescript@~5.4.0-0
+        version: /typescript@5.4.0-dev.20231212
+
   packages/typescript-versions: {}
 
   packages/utils:
     dependencies:
+      '@definitelytyped/typescript-packages':
+        specifier: workspace:*
+        version: link:../typescript-packages
       '@definitelytyped/typescript-versions':
         specifier: workspace:*
         version: link:../typescript-versions
@@ -1940,10 +1970,6 @@ packages:
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
-    dev: true
-
-  /@types/stats-lite@2.2.2:
-    resolution: {integrity: sha512-T+bzT53cbPbE0hMlCNZux1QuH6hQFNHIwRMTQCu3YPG0W7XUfeoULHl+TehJCjaxQx8cz4wlg5oQsOyG9LvZmA==}
     dev: true
 
   /@types/strip-json-comments@3.0.0:
@@ -4193,10 +4219,6 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /isnumber@1.0.0:
-    resolution: {integrity: sha512-JLiSz/zsZcGFXPrB4I/AGBvtStkt+8QmksyZBZnVXnnK9XdTEyz0tX8CRYljtwYDuIuZzih6DpHQdi+3Q6zHPw==}
-    dev: false
-
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
     dev: false
@@ -6277,13 +6299,6 @@ packages:
       escape-string-regexp: 2.0.0
     dev: true
 
-  /stats-lite@2.2.0:
-    resolution: {integrity: sha512-/Kz55rgUIv2KP2MKphwYT/NCuSfAlbbMRv2ZWw7wyXayu230zdtzhxxuXXcvsc6EmmhS8bSJl3uS1wmMHFumbA==}
-    engines: {node: '>=2.0.0'}
-    dependencies:
-      isnumber: 1.0.0
-    dev: false
-
   /stream-transform@2.1.3:
     resolution: {integrity: sha512-9GHUiM5hMiCi6Y03jD2ARC1ettBXkQBoQAe7nJsPknnI0ow10aXjTnew8QtYQmLjzn974BnmWEAJgCY6ZP1DeQ==}
     dependencies:
@@ -6768,10 +6783,58 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
+  /typescript@4.6.4:
+    resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
+
+  /typescript@4.7.4:
+    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
+
+  /typescript@4.8.4:
+    resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
+
+  /typescript@4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
+
+  /typescript@5.0.4:
+    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
+    engines: {node: '>=12.20'}
+    hasBin: true
+    dev: false
+
+  /typescript@5.1.6:
+    resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
+
   /typescript@5.2.2:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
+
+  /typescript@5.4.0-dev.20231212:
+    resolution: {integrity: sha512-h3fO+IfEsmtTuje/ZBrinHekd9rob7fO0QJFxedSXrd8vy/aJeyqjv4PNZpW2peM/jxNaexpp1wC6eTjfrtEwg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
