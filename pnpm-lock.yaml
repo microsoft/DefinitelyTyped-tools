@@ -204,9 +204,6 @@ importers:
       semver:
         specifier: ^7.5.4
         version: 7.5.4
-      stats-lite:
-        specifier: ^2.2.0
-        version: 2.2.0
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -214,9 +211,6 @@ importers:
       '@types/semver':
         specifier: ^7.5.5
         version: 7.5.5
-      '@types/stats-lite':
-        specifier: ^2.2.2
-        version: 2.2.2
       glob:
         specifier: ^10.3.10
         version: 10.3.10
@@ -1940,10 +1934,6 @@ packages:
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
-    dev: true
-
-  /@types/stats-lite@2.2.2:
-    resolution: {integrity: sha512-T+bzT53cbPbE0hMlCNZux1QuH6hQFNHIwRMTQCu3YPG0W7XUfeoULHl+TehJCjaxQx8cz4wlg5oQsOyG9LvZmA==}
     dev: true
 
   /@types/strip-json-comments@3.0.0:
@@ -4193,10 +4183,6 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /isnumber@1.0.0:
-    resolution: {integrity: sha512-JLiSz/zsZcGFXPrB4I/AGBvtStkt+8QmksyZBZnVXnnK9XdTEyz0tX8CRYljtwYDuIuZzih6DpHQdi+3Q6zHPw==}
-    dev: false
-
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
     dev: false
@@ -6276,13 +6262,6 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
-
-  /stats-lite@2.2.0:
-    resolution: {integrity: sha512-/Kz55rgUIv2KP2MKphwYT/NCuSfAlbbMRv2ZWw7wyXayu230zdtzhxxuXXcvsc6EmmhS8bSJl3uS1wmMHFumbA==}
-    engines: {node: '>=2.0.0'}
-    dependencies:
-      isnumber: 1.0.0
-    dev: false
 
   /stream-transform@2.1.3:
     resolution: {integrity: sha512-9GHUiM5hMiCi6Y03jD2ARC1ettBXkQBoQAe7nJsPknnI0ow10aXjTnew8QtYQmLjzn974BnmWEAJgCY6ZP1DeQ==}

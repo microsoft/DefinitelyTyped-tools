@@ -28,12 +28,10 @@
     "@definitelytyped/utils": "workspace:*",
     "@octokit/rest": "^19.0.13",
     "semver": "^7.5.4",
-    "stats-lite": "^2.2.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/semver": "^7.5.5",
-    "@types/stats-lite": "^2.2.2",
     "glob": "^10.3.10"
   },
   "engines": {
