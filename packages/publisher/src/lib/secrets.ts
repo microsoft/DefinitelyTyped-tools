@@ -21,3 +21,7 @@ export enum Secret {
 export async function getSecret(secretId: Secret): Promise<string> {
   return assertDefined(process.env[Secret[secretId]], `Missing secret ${Secret[secretId]}`);
 }
+
+export function ignoreMe() {
+  console.log("ignore me");
+}
