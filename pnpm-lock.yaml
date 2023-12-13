@@ -362,9 +362,9 @@ importers:
 
   packages/typescript-packages:
     dependencies:
-      typescript-4.5:
-        specifier: npm:typescript@~4.5
-        version: /typescript@4.5.5
+      '@definitelytyped/typescript-versions':
+        specifier: workspace:*
+        version: link:../typescript-versions
       typescript-4.6:
         specifier: npm:typescript@~4.6
         version: /typescript@4.6.4
@@ -389,9 +389,9 @@ importers:
       typescript-5.3:
         specifier: npm:typescript@~5.3
         version: /typescript@5.3.2
-      typescript-next:
+      typescript-5.4:
         specifier: npm:typescript@next
-        version: /typescript@5.4.0-dev.20231127
+        version: /typescript@5.4.0-dev.20231212
 
   packages/typescript-versions: {}
 
@@ -6804,12 +6804,6 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typescript@4.5.5:
-    resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: false
-
   /typescript@4.6.4:
     resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
     engines: {node: '>=4.2.0'}
@@ -6857,8 +6851,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.0-dev.20231127:
-    resolution: {integrity: sha512-uMH221WFT99TGfR5vMcI1AaoMc9CnpzMFps1zxzLkdweS+IKrF6SlMK0y5fYztaf0BdNOHcdpyyET9cEoJy8+w==}
+  /typescript@5.4.0-dev.20231212:
+    resolution: {integrity: sha512-h3fO+IfEsmtTuje/ZBrinHekd9rob7fO0QJFxedSXrd8vy/aJeyqjv4PNZpW2peM/jxNaexpp1wC6eTjfrtEwg==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false

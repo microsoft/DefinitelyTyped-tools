@@ -3,7 +3,7 @@ import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 
 export type TsVersion = TypeScriptVersion | "local";
 
-export function typeScriptPath(version: TsVersion | "next", tsLocal: string | undefined): string {
+export function typeScriptPath(version: TsVersion, tsLocal: string | undefined): string {
   if (version === "local") {
     return tsLocal! + "/typescript.js";
   }
