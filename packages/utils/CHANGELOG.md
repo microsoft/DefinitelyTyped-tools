@@ -1,5 +1,14 @@
 # @definitelytyped/utils
 
+## 0.0.190
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-packages@0.0.3
+  - @definitelytyped/typescript-versions@0.0.183
+
 ## 0.0.189
 
 ### Patch Changes

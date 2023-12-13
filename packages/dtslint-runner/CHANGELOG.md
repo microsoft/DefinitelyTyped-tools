@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.209
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/definitions-parser@0.0.197
+  - @definitelytyped/dtslint@0.0.203
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.208
 
 ### Patch Changes

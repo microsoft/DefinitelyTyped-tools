@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint
 
+## 0.0.203
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-versions@0.0.183
+  - @definitelytyped/header-parser@0.0.192
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.202
 
 ### Patch Changes
