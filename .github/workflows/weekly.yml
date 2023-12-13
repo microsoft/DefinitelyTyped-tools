@@ -1,0 +1,13 @@
+name: Weekly
+#description: Update npm tags, then publish the types-registry package.
+on:
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    - cron: 0 0 * * 0
+jobs:
+  publish-registry:
+    needs: retag
+    uses: ./.github/workflows/publish-registry.yml
+  retag:
+    if: github.repository == 'microsoft/DefinitelyTyped-tools'
+    uses: ./.github/workflows/update-ts-version-tags.yml

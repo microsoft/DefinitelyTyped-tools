@@ -5,15 +5,13 @@ name: Update ts* tags for ATA
 
 # For production
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       checkout:
         description: ref to deploy
         required: true
         default: master
-  schedule:
-    # https://crontab.guru/#5_8_*_*_1
-    - cron: "5 8 * * 1"
 
 env:
   CI: true
