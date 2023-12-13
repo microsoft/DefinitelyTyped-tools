@@ -1,5 +1,13 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.196
+
+### Patch Changes
+
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/utils@0.0.189
+  - @definitelytyped/header-parser@0.0.191
+
 ## 0.0.195
 
 ### Patch Changes
