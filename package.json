@@ -38,7 +38,8 @@
     "updateConfig": {
       "ignoreDependencies": [
         "@types/strip-json-comments",
-        "strip-json-comments"
+        "strip-json-comments",
+        "typescript-*.*"
       ]
     },
     "patchedDependencies": {
