@@ -85,6 +85,7 @@ export async function lint(
     // Disable the regular config, instead load only the plugins and use just the rule above.
     // TODO(jakebailey): share this with eslint-plugin
     options.useEslintrc = false;
+    options.baseConfig = undefined;
     options.overrideConfig!.plugins = ["@definitelytyped", "@typescript-eslint", "jsdoc"];
     const override = options.overrideConfig!.overrides![0];
     override.parser = "@typescript-eslint/parser";
