@@ -305,7 +305,7 @@ function getMaxOldSpaceSizeArg(argv: readonly string[]): MaxOldSpaceSizeArgument
     const match = maxOldSpaceSizeRegExp.exec(argv[index]);
     if (match) {
       const value = match[1] ? parseInt(match[1], 10) : argv[index + 1] ? parseInt(argv[index + 1], 10) : undefined;
-      const size = match[1] ? 1 : 2; // tslint:disable-line:no-magic-numbers
+      const size = match[1] ? 1 : 2;
       return { index, size, value };
     }
   }

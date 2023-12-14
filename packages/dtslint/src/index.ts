@@ -7,7 +7,7 @@ import { basename, dirname, join as joinPaths, resolve } from "path";
 
 import { deepEquals } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig } from "./checks";
-import { checkTslintJson, lint, TsVersion } from "./lint";
+import { lint, TsVersion } from "./lint";
 import { getCompilerOptions, packageNameFromPath } from "./util";
 import { getTypesVersions } from "@definitelytyped/header-parser";
 
@@ -186,7 +186,6 @@ async function testTypesVersion(
   tsLocal: string | undefined,
   isLatest: boolean,
 ): Promise<void> {
-  checkTslintJson(dirPath);
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));

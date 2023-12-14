@@ -1,13 +1,11 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import fs from "fs";
 import { join as joinPaths, normalize } from "path";
-import { Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
-import { readJson } from "./util";
+import { createProgram } from "./createProgram";
 
 export async function lint(
   dirPath: string,
@@ -22,12 +20,8 @@ export async function lint(
     require.resolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
   ) as typeof import("@typescript-eslint/typescript-estree");
   process.env.TSESTREE_SINGLE_RUN = "true";
-  // TODO: To remove tslint, replace this with a ts.createProgram (probably)
-  const lintProgram = Linter.createProgram(tsconfigPath);
-
-  // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
-  //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const esfiles = [];
+  const lintProgram = createProgram(tsconfigPath);
+  const files = [];
 
   for (const file of lintProgram.getSourceFiles()) {
     if (lintProgram.isSourceFileDefaultLibrary(file)) {
@@ -36,7 +30,7 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err = testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text);
+      const err = testNoLintDisables(text);
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
@@ -47,7 +41,7 @@ export async function lint(
     // External dependencies should have been handled by `testDependencies`;
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
-      esfiles.push(fileName);
+      files.push(fileName);
     }
   }
   let output = "";
@@ -97,8 +91,8 @@ export async function lint(
 
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
-  const eresults = await eslint.lintFiles(esfiles);
-  output += formatter.format(eresults);
+  const results = await eslint.lintFiles(files);
+  output += formatter.format(results);
   estree.clearCaches();
 
   return output;
@@ -132,7 +126,8 @@ interface Err {
   pos: number;
   message: string;
 }
-function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
+function testNoLintDisables(text: string): Err | undefined {
+  const disabler = "eslint-disable";
   let lastIndex = 0;
   while (true) {
     const pos = text.indexOf(disabler, lastIndex);
@@ -142,34 +137,15 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
     const end = pos + disabler.length;
     const nextChar = text.charAt(end);
     const nextChar2 = text.charAt(end + 1);
-    if (
-      nextChar !== "-" &&
-      !(disabler === "tslint:disable" && nextChar === ":") &&
-      !(disabler === "eslint-disable" && nextChar === " " && nextChar2 !== "*")
-    ) {
+    if (nextChar !== "-" && !(nextChar === " " && nextChar2 !== "*")) {
       const message =
         `'${disabler}' is forbidden. ` +
         "Per-line and per-rule disabling is allowed, for example: " +
-        "'tslint:disable:rulename', tslint:disable-line' and 'tslint:disable-next-line' are allowed.";
+        "'eslint-disable:rulename', eslint-disable-line' and 'eslint-disable-next-line' are allowed.";
       return { pos, message };
     }
     lastIndex = end;
   }
-}
-
-export function checkTslintJson(dirPath: string): void {
-  const configPath = getConfigPath(dirPath);
-  const shouldExtend = "@definitelytyped/dtslint/dt.json";
-  if (!fs.existsSync(configPath)) {
-    throw new Error(`Missing \`tslint.json\` that contains \`{ "extends": "${shouldExtend}" }\`.`);
-  }
-  if (readJson(configPath).extends !== shouldExtend) {
-    throw new Error(`'tslint.json' must extend "${shouldExtend}"`);
-  }
-}
-
-function getConfigPath(dirPath: string): string {
-  return joinPaths(dirPath, "tslint.json");
 }
 
 function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {

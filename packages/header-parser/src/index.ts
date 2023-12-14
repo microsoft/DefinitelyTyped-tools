@@ -289,7 +289,7 @@ export function validatePackageJson(
 
 export function getTypesVersions(dirPath: string): readonly TypeScriptVersion[] {
   return mapDefined(fs.readdirSync(dirPath), (name) => {
-    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
+    if (name === "tsconfig.json" || name === "tsutils") {
       return undefined;
     }
     const version = withoutStart(name, "ts");
@@ -361,7 +361,6 @@ export const enum License {
 const allLicenses = [License.MIT, License.Apache20];
 export function getLicenseFromPackageJson(packageJsonLicense: unknown): License | string[] {
   if (packageJsonLicense === undefined) {
-    // tslint:disable-line strict-type-predicates (false positive)
     return License.MIT;
   }
   if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {

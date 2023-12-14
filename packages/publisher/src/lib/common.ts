@@ -3,7 +3,7 @@ import path from "path";
 
 if (process.env.LONGJOHN) {
   console.log("=== USING LONGJOHN ===");
-  const longjohn = require("longjohn") as { async_trace_limit: number }; // tslint:disable-line no-var-requires
+  const longjohn = require("longjohn") as { async_trace_limit: number };
   longjohn.async_trace_limit = -1; // unlimited
 }
 

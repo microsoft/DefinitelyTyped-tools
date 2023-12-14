@@ -25,8 +25,8 @@ export interface LogWithErrors {
 
 /** Logger that *just* outputs to the console and does not save anything. */
 export const consoleLogger: LoggerWithErrors = {
-  info: console.log, // tslint:disable-line no-unbound-method
-  error: console.error, // tslint:disable-line no-unbound-method
+  info: console.log,
+  error: console.error,
 };
 
 /** Logger that *just* records writes and does not output to console. */
