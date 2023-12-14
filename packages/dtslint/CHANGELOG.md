@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.1.0
+
+### Minor Changes
+
+- 02c11c32: Remove TSLint remnants
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
 ## 0.0.204
 
 ### Patch Changes

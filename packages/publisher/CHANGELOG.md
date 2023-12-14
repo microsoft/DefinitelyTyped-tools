@@ -1,5 +1,14 @@
 # @definitelytyped/publisher
 
+## 0.0.199
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+  - @definitelytyped/definitions-parser@0.0.199
+  - @definitelytyped/retag@0.0.199
+
 ## 0.0.198
 
 ### Patch Changes

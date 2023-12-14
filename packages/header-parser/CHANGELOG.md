@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.1.0
+
+### Minor Changes
+
+- 02c11c32: Remove TSLint remnants
+
 ## 0.0.193
 
 ### Patch Changes

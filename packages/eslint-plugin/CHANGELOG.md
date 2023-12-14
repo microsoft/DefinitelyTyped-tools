@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.202
+
+### Patch Changes
+
+- @definitelytyped/dts-critic@0.0.196
+
 ## 0.0.201
 
 ### Patch Changes
