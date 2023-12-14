@@ -111,8 +111,8 @@ We recommend not adding an `.eslintrc.json` file.
 { "extends": "@definitelytyped/dtslint/dt.json" }
 ```
 
-If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint/dtslint.json) settings.
-You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
+If present, this will override `dtslint`'s default "[`all`](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/eslint-plugin/src/configs/all.ts)" config.
+You can specify new [lint rules](https://eslint.org/docs/latest/rules/), or disable some. An example:
 
 ```json5
 {
