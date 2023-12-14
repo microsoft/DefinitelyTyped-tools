@@ -1,5 +1,14 @@
 # @definitelytyped/publisher
 
+## 0.0.198
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.198
+- @definitelytyped/header-parser@0.0.193
+- @definitelytyped/retag@0.0.198
+- @definitelytyped/utils@0.0.191
+
 ## 0.0.197
 
 ### Patch Changes
