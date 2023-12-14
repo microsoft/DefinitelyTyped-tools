@@ -1,7 +1,7 @@
 {
   "name": "@definitelytyped/publisher",
   "private": true,
-  "version": "0.0.197",
+  "version": "0.0.198",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Publish DefinitelyTyped definitions to NPM",

@@ -1,7 +1,7 @@
 {
   "name": "@definitelytyped/retag",
   "private": true,
-  "version": "0.0.197",
+  "version": "0.0.198",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "author": "Nathan Shively-Sanders <293473+sandersn@users.noreply.github.com>",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/retag#readme",
