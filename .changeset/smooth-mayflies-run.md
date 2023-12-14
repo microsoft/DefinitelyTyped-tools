@@ -1,5 +1,5 @@
 ---
-"dts-gen": patch
+"dts-gen": minor
 ---
 
 Add dts-gen to repo
