@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.1.1
+
+### Patch Changes
+
+- 10ad5d01: Clean up eslint options contruction
+- Updated dependencies [987c9d5d]
+  - @definitelytyped/header-parser@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
