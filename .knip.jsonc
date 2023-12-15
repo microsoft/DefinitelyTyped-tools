@@ -60,7 +60,7 @@
     "packages/typescript-packages": {
       "entry": "src/index.ts",
       "project": "**/*.ts",
-      "ignoreDependencies": ["typescript-.*"]
+      "ignoreDependencies": ["^typescript-.*"]
     },
     "packages/typescript-versions": {
       "entry": "src/index.ts",
