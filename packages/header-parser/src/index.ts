@@ -289,7 +289,7 @@ export function validatePackageJson(
 
 export function getTypesVersions(dirPath: string): readonly TypeScriptVersion[] {
   return mapDefined(fs.readdirSync(dirPath), (name) => {
-    if (name === "tsconfig.json" || name === "tsutils") {
+    if (name === "tsconfig.json") {
       return undefined;
     }
     const version = withoutStart(name, "ts");
