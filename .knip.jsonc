@@ -60,19 +60,7 @@
     "packages/typescript-packages": {
       "entry": "src/index.ts",
       "project": "**/*.ts",
-      "ignoreDependencies": [
-        // A regex should work, but doesn't.
-        "typescript-4.5",
-        "typescript-4.6",
-        "typescript-4.7",
-        "typescript-4.8",
-        "typescript-4.9",
-        "typescript-5.0",
-        "typescript-5.1",
-        "typescript-5.2",
-        "typescript-5.3",
-        "typescript-5.4"
-      ]
+      "ignoreDependencies": ["^typescript-.*"]
     },
     "packages/typescript-versions": {
       "entry": "src/index.ts",
