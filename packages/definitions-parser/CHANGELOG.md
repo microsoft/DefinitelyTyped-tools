@@ -1,5 +1,21 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.199
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.198
+
+### Patch Changes
+
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/header-parser@0.0.193
+  - @definitelytyped/utils@0.0.191
+
 ## 0.0.197
 
 ### Patch Changes
