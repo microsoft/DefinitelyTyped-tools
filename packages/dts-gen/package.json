@@ -1,0 +1,43 @@
+{
+  "name": "dts-gen",
+  "version": "0.7.4",
+  "description": "TypeScript Definition File Generator",
+  "author": "Ryan Cavanaugh <ryanca@microsoft.com> (https://www.github.com/RyanCavanaugh)",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/typescript-packages#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "bin": {
+    "dts-gen": "dist/run.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools.git",
+    "directory": "packages/dts-gen"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
+  },
+  "engines": {
+    "node": ">=16.17.0"
+  },
+  "dependencies": {
+    "dts-dom": "^3.7.0",
+    "parse-git-config": "^1.1.1",
+    "typescript": "^5.3.3",
+    "yargs": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.61",
+    "@types/parse-git-config": "^1.1.0",
+    "@types/yargs": "latest",
+    "ecurve": "1.0.5",
+    "jquery": "3.7.1",
+    "lodash": "4.17.21"
+  },
+  "keywords": [
+    "typescript"
+  ]
+}
