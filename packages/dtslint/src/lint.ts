@@ -48,8 +48,8 @@ export async function lint(
   const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
-  const eresults = await eslint.lintFiles(esfiles);
-  const output = formatter.format(eresults);
+  const results = await eslint.lintFiles(files);
+  const output = formatter.format(results);
   estree.clearCaches();
   return output;
 }
