@@ -1,6 +1,7 @@
 {
   "name": "dts-gen",
   "version": "0.8.0",
+  "private": true,
   "description": "TypeScript Definition File Generator",
   "author": "Ryan Cavanaugh <ryanca@microsoft.com> (https://www.github.com/RyanCavanaugh)",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/typescript-packages#readme",
