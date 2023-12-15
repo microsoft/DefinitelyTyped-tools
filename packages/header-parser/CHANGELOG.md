@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.1.1
+
+### Patch Changes
+
+- 987c9d5d: Remove tsutils exemption from header-parser
+
 ## 0.1.0
 
 ### Minor Changes
