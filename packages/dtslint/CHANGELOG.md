@@ -1,5 +1,26 @@
 # @definitelytyped/dtslint
 
+## 0.1.0
+
+### Minor Changes
+
+- 02c11c32: Remove TSLint remnants
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.204
+
+### Patch Changes
+
+- efd262c9: Prevent npm-naming from being enabled in expectOnly
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/header-parser@0.0.193
+  - @definitelytyped/utils@0.0.191
+
 ## 0.0.203
 
 ### Patch Changes

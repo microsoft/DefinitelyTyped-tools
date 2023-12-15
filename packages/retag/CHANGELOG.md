@@ -1,5 +1,20 @@
 # @definitelytyped/retag
 
+## 0.0.199
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.199
+
+## 0.0.198
+
+### Patch Changes
+
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/definitions-parser@0.0.198
+  - @definitelytyped/utils@0.0.191
+
 ## 0.0.197
 
 ### Patch Changes

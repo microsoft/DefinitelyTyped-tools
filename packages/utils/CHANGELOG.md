@@ -1,5 +1,13 @@
 # @definitelytyped/utils
 
+## 0.0.191
+
+### Patch Changes
+
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/typescript-packages@0.0.4
+
 ## 0.0.190
 
 ### Patch Changes
