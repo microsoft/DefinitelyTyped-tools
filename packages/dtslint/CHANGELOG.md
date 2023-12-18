@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.1.2
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- 6ff1c7bf: Require index.d.ts
+
 ## 0.1.1
 
 ### Patch Changes

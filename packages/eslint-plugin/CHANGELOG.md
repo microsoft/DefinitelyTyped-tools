@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.204
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- Updated dependencies [1a5fdc83]
+  - @definitelytyped/dts-critic@0.0.198
+
 ## 0.0.203
 
 ### Patch Changes
