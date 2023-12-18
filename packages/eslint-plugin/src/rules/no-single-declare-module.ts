@@ -8,7 +8,6 @@ const rule = createRule({
   meta: {
     docs: {
       description: "Don't use an ambient module declaration if there's just one -- write it as a normal module.",
-      recommended: "error",
     },
     messages: {
       oneModuleDeclaration:
@@ -20,7 +19,7 @@ const rule = createRule({
   name: "no-single-declare-module",
   create(context) {
     const services = ESLintUtils.getParserServices(context);
-    const sourceFile = services.esTreeNodeToTSNodeMap.get(context.getSourceCode().ast);
+    const sourceFile = services.esTreeNodeToTSNodeMap.get(context.sourceCode.ast);
 
     // If it's an external module, any module declarations inside are augmentations.
     if (ts.isExternalModule(sourceFile)) {
@@ -47,7 +46,7 @@ const rule = createRule({
     if (moduleDeclaration) {
       context.report({
         messageId: "oneModuleDeclaration",
-        node: services.tsNodeToESTreeNodeMap.get(moduleDeclaration),
+        node: services.tsNodeToESTreeNodeMap.get(moduleDeclaration.name),
       });
     }
 

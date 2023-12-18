@@ -1,6 +1,7 @@
 import assert from "assert";
-import { ChildProcess, exec as node_exec, fork, Serializable } from "child_process";
+import { ChildProcess, execFile as node_execFile, fork, Serializable } from "child_process";
 import { Socket } from "net";
+import which from "which";
 
 const DEFAULT_CRASH_RECOVERY_MAX_OLD_SPACE_SIZE = 4096;
 const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
@@ -8,23 +9,29 @@ const DEFAULT_CHILD_RESTART_TASK_INTERVAL = 1_000_000;
 /** Run a command and return the error, stdout, and stderr. (Never throws.) */
 export function exec(
   cmd: string,
+  args: readonly string[],
   cwd?: string,
-  env?: NodeJS.ProcessEnv
+  env?: NodeJS.ProcessEnv,
 ): Promise<{ error: Error | undefined; stdout: string; stderr: string }> {
   return new Promise<{ error: Error | undefined; stdout: string; stderr: string }>((resolve) => {
     // Fix "stdout maxBuffer exceeded" error
     // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26545#issuecomment-402274021
     const maxBuffer = 1024 * 1024 * 1; // Max = 1 MiB, default is 200 KiB
 
-    node_exec(cmd, { encoding: "utf8", cwd, maxBuffer, env }, (error, stdout, stderr) => {
+    node_execFile(which.sync(cmd), args, { encoding: "utf8", cwd, maxBuffer, env }, (error, stdout, stderr) => {
       resolve({ error: error === null ? undefined : error, stdout: stdout.trim(), stderr: stderr.trim() });
     });
   });
 }
 
 /** Run a command and return the stdout, or if there was an error, throw. */
-export async function execAndThrowErrors(cmd: string, cwd?: string, env?: NodeJS.ProcessEnv): Promise<string> {
-  const { error, stdout, stderr } = await exec(cmd, cwd, env);
+export async function execAndThrowErrors(
+  cmd: string,
+  args: readonly string[],
+  cwd?: string,
+  env?: NodeJS.ProcessEnv,
+): Promise<string> {
+  const { error, stdout, stderr } = await exec(cmd, args, cwd, env);
   if (error) {
     throw new Error(`${error.stack}\n${stderr}`);
   }
@@ -298,7 +305,7 @@ function getMaxOldSpaceSizeArg(argv: readonly string[]): MaxOldSpaceSizeArgument
     const match = maxOldSpaceSizeRegExp.exec(argv[index]);
     if (match) {
       const value = match[1] ? parseInt(match[1], 10) : argv[index + 1] ? parseInt(argv[index + 1], 10) : undefined;
-      const size = match[1] ? 1 : 2; // tslint:disable-line:no-magic-numbers
+      const size = match[1] ? 1 : 2;
       return { index, size, value };
     }
   }
@@ -328,7 +335,7 @@ function getExecArgvWithoutMaxOldSpaceSize(): readonly string[] {
 
 async function getChildProcessExecArgv(portOffset = 0, execArgv = process.execArgv) {
   const debugArg = execArgv.findIndex(
-    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect=")
+    (arg) => arg === "--inspect" || arg === "--inspect-brk" || arg.startsWith("--inspect="),
   );
   if (debugArg < 0) return execArgv;
 

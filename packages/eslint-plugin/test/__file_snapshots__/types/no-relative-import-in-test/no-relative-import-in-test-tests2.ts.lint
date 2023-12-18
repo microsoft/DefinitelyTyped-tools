@@ -1,0 +1,7 @@
+No errors
+
+==== types/no-relative-import-in-test/no-relative-import-in-test-tests2.ts ====
+
+    import ts from "does-not-exist";
+    import ts2 from "typescript";
+    import other from "./does-not-exit";

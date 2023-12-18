@@ -32,6 +32,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     license,
     dependencies: { "@types/madeira": "^1" },
     devDependencies: { "@types/jquery": "workspace:." },
+    olderVersionDirectories: [],
   };
 }
 
@@ -58,8 +59,8 @@ function defaultFS() {
           devDependencies: { "@types/jquery": "workspace:." },
         },
         undefined,
-        4
-      )
+        4,
+      ),
     )
     .set("tsconfig.json", `{ "files": ["index.d.ts", "jquery-tests.ts"] }`)
     .set("index.d.ts", `type T = import("./types");\n`)
@@ -80,14 +81,14 @@ testo({
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("This package contains type definitions for")
+      expect.stringContaining("This package contains type definitions for"),
     );
   },
   readmeContainsContributors() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)")
+      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"),
     );
   },
   readmeContainsProjectName() {
@@ -99,7 +100,7 @@ testo({
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)")
+      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)"),
     );
   },
   readmeMultipleDependencies() {
@@ -108,8 +109,8 @@ testo({
     typing.dependencies["@types/example"] = "*";
     expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
       expect.stringContaining(
-        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)"
-      )
+        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)",
+      ),
     );
   },
   readmeContainsSingleFileDTS() {
@@ -120,16 +121,9 @@ testo({
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
-    dt.pkgDir("jquery").set("other.d.ts", "").set("OTHER_FILES.txt", "other.d.ts");
+    dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
     expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
-  },
-  generatingPackageJsonFailsWhenFilesHaveErrors() {
-    const rawPkg = createRawPackage(License.Apache20);
-    const dt = defaultFS();
-    dt.pkgDir("jquery").set("unused.d.ts", "");
-    const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(() => createPackageJSON(typing, "1.0")).toThrowError("Unused file");
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
@@ -161,8 +155,8 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "c8b5c9b0632c3785eec3a72ae860fdfc53732a11f821b172cb7a2efac00ff195",
-    "typeScriptVersion": "4.5"
+    "typesPublisherContentHash": "05febc04df55db2687c2ac05a291177c2f4fd90f76d679faaf1b01896fe5600c",
+    "typeScriptVersion": "4.6"
 }`);
   },
   basicNotNeededPackageJson() {

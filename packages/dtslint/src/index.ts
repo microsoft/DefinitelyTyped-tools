@@ -2,13 +2,13 @@
 
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
-import { readFile, existsSync } from "fs-extra";
+import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
-import { assertNever, cleanTypeScriptInstalls, installAllTypeScriptVersions, installTypeScriptNext } from "@definitelytyped/utils";
+import { assertNever, deepEquals, readJson } from "@definitelytyped/utils";
 import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
-import { checkTslintJson, lint, TsVersion } from "./lint";
-import { getCompilerOptions, packageNameFromPath, readJson } from "./util";
+import { lint, TsVersion } from "./lint";
+import { getCompilerOptions, packageNameFromPath } from "./util";
 import { getTypesVersions } from "@definitelytyped/header-parser";
 
 async function main(): Promise<void> {
@@ -22,6 +22,12 @@ async function main(): Promise<void> {
   let tsLocal: string | undefined;
 
   console.log(`dtslint@${require("../package.json").version}`);
+  if (args.length === 1 && args[0] === "types") {
+    console.log(
+      "Please provide a package name to test.\nTo test all changed packages at once, run `pnpm run test-all`.",
+    );
+    process.exit(1);
+  }
 
   for (const arg of args) {
     if (lookingForTsLocal) {
@@ -33,12 +39,6 @@ async function main(): Promise<void> {
       continue;
     }
     switch (arg) {
-      case "--installAll":
-        console.log("Cleaning old installs and installing for all TypeScript versions...");
-        console.log("Working...");
-        await cleanTypeScriptInstalls();
-        await installAllTypeScriptVersions();
-        return;
       case "--localTs":
         lookingForTsLocal = true;
         break;
@@ -81,9 +81,8 @@ async function main(): Promise<void> {
   }
 
   if (shouldListen) {
-    listen(dirPath, tsLocal, onlyTestTsNext);
+    listen(dirPath, tsLocal);
   } else {
-    await installTypeScriptAsNeeded(tsLocal, onlyTestTsNext);
     const output = await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal, noAttw);
     if (output) {
       console.log(output);
@@ -91,19 +90,10 @@ async function main(): Promise<void> {
   }
 }
 
-async function installTypeScriptAsNeeded(tsLocal: string | undefined, onlyTestTsNext: boolean): Promise<void> {
-  if (tsLocal) return;
-  if (onlyTestTsNext) {
-    return installTypeScriptNext();
-  }
-  return installAllTypeScriptVersions();
-}
-
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--installAll] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--noAttw]");
+  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--noAttw]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
-  console.error("  --installAll     Cleans and installs all TypeScript versions.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
@@ -112,9 +102,8 @@ function usage(): void {
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
 
-function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNext: boolean): void {
+function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
-  const installationPromise = installTypeScriptAsNeeded(tsLocal, alwaysOnlyTestTsNext);
   process.on("message", async (message: unknown) => {
     const { path, onlyTestTsNext, expectOnly, noAttw } = message as {
       path: string;
@@ -123,7 +112,6 @@ function listen(dirPath: string, tsLocal: string | undefined, alwaysOnlyTestTsNe
       noAttw?: boolean;
     };
 
-    await installationPromise;
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal, !!noAttw)
       .then(
         () => process.send!({ path, status: "OK" }),
@@ -145,13 +133,19 @@ async function runTests(
   const packageName = packageNameFromPath(dirPath);
   assertPathIsInDefinitelyTyped(dirPath, dtRoot);
   assertPathIsNotBanned(packageName);
-  assertPackageIsNotDeprecated(packageName, await readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"));
+  assertPackageIsNotDeprecated(
+    packageName,
+    await fs.promises.readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"),
+  );
 
   const typesVersions = getTypesVersions(dirPath);
   const packageJson = checkPackageJson(dirPath, typesVersions);
   if (Array.isArray(packageJson)) {
     throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
+
+  await assertNpmIgnoreExpected(dirPath);
+  assertNoOtherFiles(dirPath);
 
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
@@ -170,7 +164,7 @@ async function runTests(
       const hi = his[i];
       assert(
         parseFloat(hi) >= parseFloat(low),
-        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`
+        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`,
       );
       const isLatest = hi === TypeScriptVersion.latest;
       const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
@@ -183,7 +177,7 @@ async function runTests(
 
   if (!packageJson.nonNpm && !expectOnly && !noAttw) {
     const attwJson = joinPaths(dtRoot, "attw.json");
-    const failingPackages = readJson(attwJson).failingPackages;
+    const failingPackages = (readJson(attwJson) as any).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
     const expectError = failingPackages?.includes(dirName)
     const { output, status } = runAreTheTypesWrong(dirPath, attwJson);
@@ -236,9 +230,8 @@ async function testTypesVersion(
   hiVersion: TsVersion,
   expectOnly: boolean,
   tsLocal: string | undefined,
-  isLatest: boolean
+  isLatest: boolean,
 ): Promise<void> {
-  checkTslintJson(dirPath);
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
@@ -261,12 +254,12 @@ function assertPathIsInDefinitelyTyped(dirPath: string, dtRoot: string): void {
   // TODO: It's not clear whether this assertion makes sense, and it's broken on Azure Pipelines (perhaps because DT isn't cloned into DefinitelyTyped)
   // Re-enable it later if it makes sense.
   // if (basename(dtRoot) !== "DefinitelyTyped")) {
-  if (!existsSync(joinPaths(dtRoot, "types"))) {
+  if (!fs.existsSync(joinPaths(dtRoot, "types"))) {
     throw new Error(
       "Since this type definition includes a header (a comment starting with `// Type definitions for`), " +
         "assumed this was a DefinitelyTyped package.\n" +
         "But it is not in a `DefinitelyTyped/types/xxx` directory: " +
-        dirPath
+        dirPath,
     );
   }
 }
@@ -306,4 +299,38 @@ if (require.main === module) {
     console.error(err.stack);
     process.exit(1);
   });
+}
+
+async function assertNpmIgnoreExpected(dirPath: string) {
+  const expected = ["*", "!**/*.d.ts", "!**/*.d.cts", "!**/*.d.mts", "!**/*.d.*.ts"];
+
+  if (basename(dirname(dirPath)) === "types") {
+    for (const subdir of fs.readdirSync(dirPath, { withFileTypes: true })) {
+      if (subdir.isDirectory() && /^v(\d+)(\.(\d+))?$/.test(subdir.name)) {
+        expected.push(`/${subdir.name}/`);
+      }
+    }
+  }
+
+  const expectedString = expected.join("\n");
+
+  const npmIgnorePath = joinPaths(dirPath, ".npmignore");
+  if (!fs.existsSync(npmIgnorePath)) {
+    throw new Error(`${dirPath}: Missing '.npmignore'; should contain:\n${expectedString}`);
+  }
+
+  const actualRaw = await fs.promises.readFile(npmIgnorePath, "utf-8");
+  const actual = actualRaw.trim().split(/\r?\n/);
+
+  if (!deepEquals(actual, expected)) {
+    throw new Error(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedString}`);
+  }
+}
+
+function assertNoOtherFiles(dirPath: string) {
+  if (fs.existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
+    throw new Error(
+      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
+    );
+  }
 }

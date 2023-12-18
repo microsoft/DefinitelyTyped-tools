@@ -1,0 +1,6 @@
+No errors
+
+==== types/no-single-declare-module/index2.d.ts ====
+
+    declare module "foo" {}
+    declare module "bar" {}

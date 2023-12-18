@@ -16,7 +16,6 @@ const rule = createRule({
   meta: {
     docs: {
       description: "Forbids signatures using a generic parameter only once.",
-      recommended: "error",
     },
     messages: {
       never: "Type parameter {{name}} is never used.",
@@ -47,31 +46,25 @@ const rule = createRule({
         const checker = parserServices.program.getTypeChecker();
 
         for (const typeParameter of tsNode.typeParameters) {
-          const name = typeParameter.name.text;
-          const res = getSoleUse(tsNode, assertDefined(checker.getSymbolAtLocation(typeParameter.name)), checker);
-          switch (res.type) {
-            case "sole":
-              context.report({
-                data: { name },
-                messageId: "sole",
-                node: parserServices.tsNodeToESTreeNodeMap.get(res.soleUse),
-              });
-              break;
-            case "never":
-              context.report({
-                data: { name },
-                messageId: "never",
-                node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
-              });
-              break;
+          const result = getSoleUse(tsNode, assertDefined(checker.getSymbolAtLocation(typeParameter.name)), checker);
+
+          if (result === "ok") {
+            continue;
           }
+
+          context.report({
+            data: { name: typeParameter.name.text },
+            messageId: result,
+            node: parserServices.tsNodeToESTreeNodeMap.get(typeParameter),
+          });
         }
       },
     };
   },
 });
 
-type Result = { type: "ok" | "never" } | { type: "sole"; soleUse: ts.Identifier };
+type Result = "ok" | "never" | "sole";
+
 function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol, checker: ts.TypeChecker): Result {
   const exit = {};
   let soleUse: ts.Identifier | undefined;
@@ -94,12 +87,12 @@ function getSoleUse(sig: ts.SignatureDeclaration, typeParameterSymbol: ts.Symbol
     }
   } catch (err) {
     if (err === exit) {
-      return { type: "ok" };
+      return "ok";
     }
     throw err;
   }
 
-  return soleUse ? { type: "sole", soleUse } : { type: "never" };
+  return soleUse ? "sole" : "never";
 
   function recur(node: ts.Node): void {
     if (ts.isIdentifier(node)) {

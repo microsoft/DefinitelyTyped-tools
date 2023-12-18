@@ -1,0 +1,12 @@
+types/strict-export-declare-modifiers/bad2.d.ts
+  2:5  error  'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting  @definitelytyped/strict-export-declare-modifiers
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/strict-export-declare-modifiers/bad2.d.ts ====
+
+    declare namespace M {
+        export const x: number;
+        ~~~~~~
+!!! @definitelytyped/strict-export-declare-modifiers: 'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting.
+    }

@@ -8,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Don't use an ambient module declaration of the current package; use a normal module.",
-      recommended: "error",
     },
     messages: {
       noDeclareCurrentPackage:
@@ -18,7 +17,10 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const packageName = getTypesPackageForDeclarationFile(context.getFilename());
+    const packageName = getTypesPackageForDeclarationFile(context.filename);
+    if (!packageName) {
+      return {};
+    }
 
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,11 +30,11 @@ const rule = createRule({
           (node.id.value === packageName || node.id.value.startsWith(packageName + "/"))
         ) {
           const text = node.id.value;
-          const preferred = text === packageName ? '"index.d.ts"' : `"${text}.d.ts" or "${text}/index.d.ts`;
+          const preferred = text === packageName ? '"index.d.ts"' : `"${text}.d.ts" or "${text}/index.d.ts"`;
           context.report({
             messageId: "noDeclareCurrentPackage",
             data: { text, preferred },
-            node,
+            node: node.id,
           });
         }
       },

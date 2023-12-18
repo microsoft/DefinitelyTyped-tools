@@ -1,5 +1,84 @@
 # @definitelytyped/dts-critic
 
+## 0.0.197
+
+### Patch Changes
+
+- Updated dependencies [987c9d5d]
+  - @definitelytyped/header-parser@0.1.1
+
+## 0.0.196
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.195
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.193
+
+## 0.0.194
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/header-parser@0.0.192
+
+## 0.0.193
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.191
+
+## 0.0.192
+
+### Patch Changes
+
+- 414ae487: Move npm-naming lint rule from tslint to eslint
+
+## 0.0.191
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.190
+
+## 0.0.190
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.189
+
+## 0.0.189
+
+### Patch Changes
+
+- 5b0559f6: Update and clean up dependencies
+- Updated dependencies [5b0559f6]
+  - @definitelytyped/header-parser@0.0.188
+
+## 0.0.188
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.187
+
+## 0.0.187
+
+### Patch Changes
+
+- Updated dependencies [a18ce6b1]
+  - @definitelytyped/header-parser@0.0.186
+
+## 0.0.186
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.185
+
 ## 0.0.185
 
 ### Patch Changes

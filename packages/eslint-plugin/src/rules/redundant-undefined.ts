@@ -10,7 +10,6 @@ const rule = createRule({
     docs: {
       description:
         "Forbids optional parameters from including an explicit `undefined` in their type; requires it in optional properties.",
-      recommended: "error",
     },
     messages: {
       redundantUndefined: `Parameter is optional, so no need to include \`undefined\` in the type.`,

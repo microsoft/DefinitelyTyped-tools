@@ -86,13 +86,13 @@ export function addRange<T>(
   to: T[] | undefined,
   from: readonly T[] | undefined,
   start?: number,
-  end?: number
+  end?: number,
 ): T[] | undefined;
 export function addRange<T>(
   to: T[] | undefined,
   from: readonly T[] | undefined,
   start?: number,
-  end?: number
+  end?: number,
 ): T[] | undefined {
   if (from === undefined || from.length === 0) return to;
   if (to === undefined) return from.slice(start, end);
@@ -116,7 +116,7 @@ export function addRange<T>(
  */
 export function append<TArray extends any[] | undefined, TValue extends NonNullable<TArray>[number] | undefined>(
   to: TArray,
-  value: TValue
+  value: TValue,
 ): [undefined, undefined] extends [TArray, TValue] ? TArray : NonNullable<TArray>[number][];
 export function append<T>(to: T[], value: T | undefined): T[];
 export function append<T>(to: T[] | undefined, value: T): T[];
@@ -163,7 +163,7 @@ export function min<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
     : array.reduce((previousValue, currentValue) =>
         (compare ? compare(currentValue, previousValue) < 0 : currentValue < previousValue)
           ? currentValue
-          : previousValue
+          : previousValue,
       );
 }
 
@@ -175,7 +175,7 @@ export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
     : array.reduce((previousValue, currentValue) =>
         (compare ? compare(currentValue, previousValue) > 0 : currentValue > previousValue)
           ? currentValue
-          : previousValue
+          : previousValue,
       );
 }
 

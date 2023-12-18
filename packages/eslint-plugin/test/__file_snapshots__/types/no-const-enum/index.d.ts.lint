@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-const-enum/index.d.ts ====
+
+    enum F {}

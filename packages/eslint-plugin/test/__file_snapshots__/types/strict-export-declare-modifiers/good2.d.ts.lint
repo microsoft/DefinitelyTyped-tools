@@ -1,0 +1,5 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good2.d.ts ====
+
+    export function f() {}

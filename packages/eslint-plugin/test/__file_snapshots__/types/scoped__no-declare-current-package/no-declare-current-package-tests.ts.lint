@@ -1,0 +1,10 @@
+types/scoped__no-declare-current-package/no-declare-current-package-tests.ts
+  1:1  error  File has no content  @definitelytyped/no-useless-files
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/scoped__no-declare-current-package/no-declare-current-package-tests.ts ====
+
+    
+    ~
+!!! @definitelytyped/no-useless-files: File has no content.

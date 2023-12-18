@@ -1,5 +1,5 @@
 `dtslint` tests a TypeScript declaration file for style and correctness.
-It will install `typescript` and `tslint` for you, so this is the only tool you need to test a type definition.
+It will install `typescript` and `eslint` for you, so this is the only tool you need to test a type definition.
 
 Lint rules new to dtslint are documented in the [docs](docs) directory.
 
@@ -101,24 +101,23 @@ For types that do not have a matching NPM package, add two properties:
 1. `"nonNpm": true`
 2. `"nonNpmDescription"`, a human-readable name for the project that is being typed.
 
-#### `types/tslint.json` or `types/.eslintrc.json`
+#### `types/.eslintrc.json`
 
-Definitely Typed is in the process of migrating from tslint to eslint.
-If you are using the default rules, .eslintrc.json is optional; tslint.json should be
+An `.eslintrc.json` file is optional.
+You can skip it if you don't need to modify any lint rule settings.
+We recommend not adding an `.eslintrc.json` file.
 
 ```json5
 { "extends": "@definitelytyped/dtslint/dt.json" }
 ```
 
-If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/master/packages/dtslint/dtslint.json) settings.
-You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
+If present, this will override `dtslint`'s default "[`all`](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/eslint-plugin/src/configs/all.ts)" config.
+You can specify new [lint rules](https://eslint.org/docs/latest/rules/), or disable some. An example:
 
 ```json5
 {
-    "extends": "@definitelytyped/dtslint/dtslint.json", // Or "@definitelytyped/dtslint/dt.json" if on DefinitelyTyped
     "rules": {
-        "semicolon": false,
-        "indent": [true, "tabs"]
+        "@definitelytyped/no-unnecessary-generics": "off"
     }
 }
 ```
@@ -199,8 +198,6 @@ npm run watch
 
 Use `pnpm test` to run all tests.
 
-To run a single test: `node node_modules/tslint/bin/tslint --rules-dir dist/rules --test test/expect`.
-
 ## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
@@ -211,7 +208,7 @@ I'm getting an error about a missing typescript install.
 Error: Cannot find module '/node_modules/dtslint/typescript-installs/3.1/node_modules/typescript`
 ```
 Your dependencies may be out of date.
-[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
+[@definitelytyped/typescript-versions](https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/typescript-versions) is the package that contains the list of TypeScript versions to install.
 
 Alternatively this error can be caused by concurrent dtslint invocations trampling each other's TypeScript installations, especially in the context of continuous integration, if dtslint is installed from scratch in each run.
 If for example you use [Lerna](https://github.com/lerna/lerna/tree/main/commands/run#readme), try running dtslint with [`lerna --concurrency 1 run ...`](https://github.com/lerna/lerna/tree/main/core/global-options#--concurrency).

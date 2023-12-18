@@ -9,7 +9,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Enforces strict rules about where the 'export' and 'declare' modifiers may appear.",
-      recommended: "error",
     },
     messages: {
       missingExplicitExport:
@@ -31,7 +30,7 @@ const rule = createRule({
   // to switch it to using TSESTree nodes like other ESLint rules.
   create(context) {
     const services = ESLintUtils.getParserServices(context, true);
-    const sourceCode = context.getSourceCode();
+    const sourceCode = context.sourceCode;
     const sourceFile = services.esTreeNodeToTSNodeMap.get(sourceCode.ast);
 
     const isExternal =
@@ -39,7 +38,7 @@ const rule = createRule({
       !sourceFile.statements.some(
         (s) =>
           s.kind === ts.SyntaxKind.ExportAssignment ||
-          (s.kind === ts.SyntaxKind.ExportDeclaration && !!(s as ts.ExportDeclaration).exportClause)
+          (s.kind === ts.SyntaxKind.ExportDeclaration && !!(s as ts.ExportDeclaration).exportClause),
       ) &&
       ts.isExternalModule(sourceFile);
 
@@ -74,9 +73,13 @@ const rule = createRule({
           });
         }
         if (autoExportEnabled && !isExport(node)) {
+          const n = (node as ts.DeclarationStatement).name || node;
           context.report({
             messageId: "missingExplicitExport",
-            node: services.tsNodeToESTreeNodeMap.get((node as ts.DeclarationStatement).name || node),
+            loc: {
+              end: sourceCode.getLocFromIndex(n.end),
+              start: sourceCode.getLocFromIndex(n.getStart(sourceFile)),
+            },
           });
         }
       }
@@ -167,7 +170,6 @@ function isDefault(node: ts.Node): boolean {
   return ts.canHaveModifiers(node) && !!ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword);
 }
 
-// tslint:disable-next-line:max-line-length
 // Copied from https://github.com/Microsoft/TypeScript/blob/dd9b8cab34a3e389e924d768eb656cf50656f582/src/compiler/binder.ts#L1571-L1581
 function hasExportDeclarations(node: ts.SourceFile | ts.ModuleDeclaration): boolean {
   const body = node.kind === ts.SyntaxKind.SourceFile ? node : node.body;

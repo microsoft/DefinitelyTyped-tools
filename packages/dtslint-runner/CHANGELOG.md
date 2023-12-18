@@ -1,5 +1,178 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.212
+
+### Patch Changes
+
+- Updated dependencies [10ad5d01]
+  - @definitelytyped/dtslint@0.1.1
+  - @definitelytyped/definitions-parser@0.0.200
+
+## 0.0.211
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/dtslint@0.1.0
+  - @definitelytyped/definitions-parser@0.0.199
+
+## 0.0.210
+
+### Patch Changes
+
+- Updated dependencies [efd262c9]
+  - @definitelytyped/dtslint@0.0.204
+  - @definitelytyped/definitions-parser@0.0.198
+  - @definitelytyped/utils@0.0.191
+
+## 0.0.209
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/definitions-parser@0.0.197
+  - @definitelytyped/dtslint@0.0.203
+  - @definitelytyped/utils@0.0.190
+
+## 0.0.208
+
+### Patch Changes
+
+- f53f17f6: Use package dependencies to manage TypeScript, instead of `$HOME/.dts`
+- 99c345ac: Remove performance logging
+- Updated dependencies [f53f17f6]
+  - @definitelytyped/dtslint@0.0.202
+  - @definitelytyped/utils@0.0.189
+  - @definitelytyped/definitions-parser@0.0.196
+
+## 0.0.207
+
+### Patch Changes
+
+- Updated dependencies [92b5cd51]
+  - @definitelytyped/dtslint@0.0.201
+
+## 0.0.206
+
+### Patch Changes
+
+- Updated dependencies [414ae487]
+- Updated dependencies [ae742dde]
+  - @definitelytyped/dtslint@0.0.200
+
+## 0.0.205
+
+### Patch Changes
+
+- a7f527c1: Remove knex-db-manager from expectedFailures.txt
+
+## 0.0.204
+
+### Patch Changes
+
+- Updated dependencies [30730f22]
+  - @definitelytyped/dtslint@0.0.199
+
+## 0.0.203
+
+### Patch Changes
+
+- 5ea955db: Remove knex-cleaner from expected failures
+- Updated dependencies [3d6c2ffd]
+  - @definitelytyped/dtslint@0.0.198
+
+## 0.0.202
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.195
+- @definitelytyped/dtslint@0.0.197
+- @definitelytyped/utils@0.0.188
+
+## 0.0.201
+
+### Patch Changes
+
+- 2f8019b5: Add knex-\* to expected failures
+- Updated dependencies [59076828]
+  - @definitelytyped/dtslint@0.0.196
+
+## 0.0.200
+
+### Patch Changes
+
+- Updated dependencies [926d5ab0]
+  - @definitelytyped/definitions-parser@0.0.194
+
+## 0.0.199
+
+### Patch Changes
+
+- Updated dependencies [6f685060]
+  - @definitelytyped/dtslint@0.0.195
+
+## 0.0.198
+
+### Patch Changes
+
+- Updated dependencies [85379bf8]
+  - @definitelytyped/utils@0.0.187
+  - @definitelytyped/definitions-parser@0.0.193
+  - @definitelytyped/dtslint@0.0.194
+
+## 0.0.197
+
+### Patch Changes
+
+- 5b0559f6: Update and clean up dependencies
+- Updated dependencies [5b0559f6]
+  - @definitelytyped/definitions-parser@0.0.192
+  - @definitelytyped/dtslint@0.0.193
+  - @definitelytyped/utils@0.0.186
+
+## 0.0.196
+
+### Patch Changes
+
+- 5d83a8ed: Fix command execution, paths on Windows
+- Updated dependencies [5d83a8ed]
+- Updated dependencies [5d83a8ed]
+  - @definitelytyped/utils@0.0.185
+  - @definitelytyped/definitions-parser@0.0.191
+  - @definitelytyped/dtslint@0.0.192
+
+## 0.0.195
+
+### Patch Changes
+
+- Updated dependencies [8272a9d2]
+  - @definitelytyped/definitions-parser@0.0.190
+
+## 0.0.194
+
+### Patch Changes
+
+- Updated dependencies [a18ce6b1]
+  - @definitelytyped/definitions-parser@0.0.189
+  - @definitelytyped/dtslint@0.0.191
+  - @definitelytyped/utils@0.0.184
+
+## 0.0.193
+
+### Patch Changes
+
+- @definitelytyped/definitions-parser@0.0.188
+- @definitelytyped/dtslint@0.0.190
+- @definitelytyped/utils@0.0.183
+
+## 0.0.192
+
+### Patch Changes
+
+- Updated dependencies [046ac38e]
+  - @definitelytyped/definitions-parser@0.0.187
+
 ## 0.0.191
 
 ### Patch Changes

@@ -1,0 +1,6 @@
+No errors
+
+==== types/no-declare-current-package-other/index.d.ts ====
+
+    declare module "no-declare-current-package" { }
+    declare module "@scoped/no-declare-current-package" { }

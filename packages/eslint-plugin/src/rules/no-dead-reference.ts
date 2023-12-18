@@ -7,7 +7,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Ensures that all `/// <reference>` comments go at the top of the file.",
-      recommended: "error",
     },
     messages: {
       referenceAtTop: "`/// <reference>` directive must be at top of file to take effect.",
@@ -15,11 +14,11 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const source = context.getSourceCode();
+    const source = context.sourceCode;
     if (source.ast.body.length) {
       // 'm' flag makes it multiline, so `^` matches the beginning of any line.
       // 'g' flag lets us set rgx.lastIndex
-      const rgx = /^\s*(\/\/\/ <reference)/gm;
+      const rgx = /^\s*(\/\/\/ <reference.*)/gm;
 
       // Start search at the first statement. (`/// <reference>` before that is OK.)
       rgx.lastIndex = source.ast.body[0].range?.[0] ?? 0;
@@ -34,7 +33,10 @@ const rule = createRule({
         const start = match.index + match[0].length - length;
         context.report({
           messageId: "referenceAtTop",
-          loc: source.getLocFromIndex(start),
+          loc: {
+            start: source.getLocFromIndex(start),
+            end: source.getLocFromIndex(start + match[1].length),
+          },
         });
       }
     }

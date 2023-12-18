@@ -3,6 +3,7 @@ dist
 packages/publisher/output
 
 packages/dts-critic/testsource
+**/fixtures/**
 
 *.json
 *.yml

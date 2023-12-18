@@ -1,0 +1,8 @@
+{
+    "name": "@types/export-just-namespace",
+    "version": "2.0.9999",
+    "owners": [],
+    "devDependencies": {
+        "@types/export-just-namespace": "workspace:."
+    }
+}

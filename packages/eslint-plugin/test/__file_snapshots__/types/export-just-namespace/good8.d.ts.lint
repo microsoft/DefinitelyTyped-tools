@@ -1,0 +1,7 @@
+No errors
+
+==== types/export-just-namespace/good8.d.ts ====
+
+    export = First
+    namespace First {}
+    declare function First()

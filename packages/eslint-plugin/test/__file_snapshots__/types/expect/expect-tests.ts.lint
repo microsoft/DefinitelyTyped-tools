@@ -1,0 +1,79 @@
+types/expect/expect-tests.ts
+   6:1  error  TypeScript expected type to be:
+  number
+got:
+  1234                                                                    @definitelytyped/expect
+  14:1  error  TypeScript expected type to be:
+  NotRightAtAll
+got:
+  1234                                                             @definitelytyped/expect
+  45:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  49:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+
+✖ 4 problems (4 errors, 0 warnings)
+
+==== types/expect/expect-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from "./";
+    
+    
+    // $ExpectType number
+    expect.foo;
+    ~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript expected type to be:
+!!!                        :   number
+!!!                        : got:
+!!!                        :   1234
+    
+    
+    // $ExpectType 1234
+    expect.foo;
+    
+    
+    // $ExpectType NotRightAtAll
+    expect.foo;
+    ~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript expected type to be:
+!!!                        :   NotRightAtAll
+!!!                        : got:
+!!!                        :   1234
+    
+    
+    // $ExpectType string | number | undefined
+    expect.aUnion;
+    
+    // $ExpectType string | undefined | number
+    expect.aUnion;
+    
+    // $ExpectType number | string | undefined
+    expect.aUnion;
+    
+    // $ExpectType number | undefined | string
+    expect.aUnion;
+    
+    // $ExpectType undefined | string | number
+    expect.aUnion;
+    
+    // $ExpectType undefined | number | string
+    expect.aUnion;
+    
+    // $ExpectType any || undefined | number | string
+    expect.aUnion;
+    
+    // $ExpectType { prop1: "a" | "b" | "c"; prop2: readonly (string | number)[]; prop3: readonly (string | number)[]; }
+    expect.complicatedUnion(1, 2);
+    
+    // $ExpectType { prop1: "c" | "b" | "a"; prop2: ReadonlyArray<number | string>; prop3: ReadonlyArray<string | number>; }
+    expect.complicatedUnion(1, 2);
+    
+    
+    // $ExpectType NotMatched
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/expect: Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.
+    // Whoops
+    
+    
+    // $ExpectType NotMatched
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/expect: Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.

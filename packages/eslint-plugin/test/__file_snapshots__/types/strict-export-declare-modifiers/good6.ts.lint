@@ -1,0 +1,7 @@
+No errors
+
+==== types/strict-export-declare-modifiers/good6.ts ====
+
+    namespace N {
+        export const x: number;
+    }

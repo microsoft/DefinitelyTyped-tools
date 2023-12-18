@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "index2.d.ts",
+        "ok1.ts",
+        "ok2.d.ts",
+        "ok3.d.ts",
+        "ok4.d.ts",
+        "no-old-dt-header-tests.ts"
+    ]
+}

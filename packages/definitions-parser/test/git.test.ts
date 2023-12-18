@@ -30,8 +30,8 @@ testo({
     expect(
       await getNotNeededPackages(
         AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
-        deleteJestDiffs
-      )
+        deleteJestDiffs,
+      ),
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
   async tooManyDeletes() {
@@ -42,7 +42,7 @@ testo({
       await getNotNeededPackages(allPackages, [
         ...deleteJestDiffs,
         { status: "D", file: "types/most-recent/extra-tests.ts" },
-      ])
+      ]),
     ).toEqual(jestNotNeeded);
   },
   async extraneousFile() {
@@ -50,15 +50,15 @@ testo({
       await getNotNeededPackages(allPackages, [
         ...deleteJestDiffs,
         { status: "A", file: "types/oops/oooooooooooops.txt" },
-      ])
+      ]),
     ).toEqual(jestNotNeeded);
   },
   async scoped() {
     expect(
       await getNotNeededPackages(
         AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
-        [{ status: "D", file: "types/ember__object/index.d.ts" }]
-      )
+        [{ status: "D", file: "types/ember__object/index.d.ts" }],
+      ),
     ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
   },
   // TODO: Test npm info (and with scoped names)

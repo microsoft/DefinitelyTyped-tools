@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-relative-import-in-test/index.d.ts ====
+
+    export function getFoo(): "foo";

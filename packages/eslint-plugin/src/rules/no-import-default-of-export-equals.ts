@@ -1,3 +1,4 @@
+import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule } from "../util";
 import { ESLintUtils } from "@typescript-eslint/utils";
 import * as ts from "typescript";
@@ -9,7 +10,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbid a default import to reference an `export =` module.",
-      recommended: "error",
     },
     messages: {
       noImportDefaultOfExportEquals: `The module {{moduleName}} uses \`export = \`. Import with \`import {{importName}} = require({{moduleName}})\`.`,
@@ -19,7 +19,7 @@ const rule = createRule({
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context);
     const checker = parserServices.program.getTypeChecker();
-    if (context.getFilename().endsWith(".d.ts")) {
+    if (isDeclarationPath(context.filename)) {
       return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         ImportDeclaration(node) {
@@ -31,8 +31,8 @@ const rule = createRule({
           const source = parserServices.esTreeNodeToTSNodeMap.get(node.source);
           const sym = checker.getSymbolAtLocation(source);
           if (
-            sym?.declarations?.some((d) =>
-              getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals)
+            sym?.declarations?.some(
+              (d) => getStatements(d)?.some((s) => ts.isExportAssignment(s) && !!s.isExportEquals),
             )
           ) {
             context.report({
@@ -53,8 +53,8 @@ function getStatements(decl: ts.Declaration): readonly ts.Statement[] | undefine
   return ts.isSourceFile(decl)
     ? decl.statements
     : ts.isModuleDeclaration(decl)
-    ? getModuleDeclarationStatements(decl)
-    : undefined;
+      ? getModuleDeclarationStatements(decl)
+      : undefined;
 }
 
 function getModuleDeclarationStatements(node: ts.ModuleDeclaration): readonly ts.Statement[] | undefined {

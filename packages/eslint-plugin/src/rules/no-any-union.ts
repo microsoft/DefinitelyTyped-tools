@@ -8,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: "Forbid a union to contain `any`",
-      recommended: "error",
     },
     messages: {
       anyUnion: "Including `any` in a union will override all other members of the union.",

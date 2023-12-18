@@ -47,7 +47,7 @@ export function makeTypesVersionsForPackageJson(typesVersions: readonly AllTypeS
 export function validatePackageJson(
   typesDirectoryName: string,
   packageJson: Record<string, unknown>,
-  typesVersions: readonly AllTypeScriptVersion[]
+  typesVersions: readonly AllTypeScriptVersion[],
 ): Header | string[] {
   const errors = [];
   const needsTypesVersions = typesVersions.length !== 0;
@@ -73,7 +73,7 @@ export function validatePackageJson(
       case "types":
         if (!needsTypesVersions) {
           errors.push(
-            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'tsX.X' directories exist.`
+            `${typesDirectoryName}'s package.json doesn't need to set "${key}" when no 'tsX.X' directories exist.`,
           );
         }
         break;
@@ -92,7 +92,7 @@ export function validatePackageJson(
     (packageJson.devDependencies as any)["@types/" + typesDirectoryName] !== "workspace:."
   ) {
     errors.push(
-      `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``
+      `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``,
     );
   }
   // typesVersions
@@ -100,7 +100,7 @@ export function validatePackageJson(
     assert.strictEqual(
       packageJson.types,
       "index",
-      `"types" in '${typesDirectoryName}'s package.json' should be "index".`
+      `"types" in '${typesDirectoryName}'s package.json' should be "index".`,
     );
     const expected = makeTypesVersionsForPackageJson(typesVersions) as Record<string, object>;
     if (!deepEquals(packageJson.typesVersions, expected)) {
@@ -108,8 +108,8 @@ export function validatePackageJson(
         `'${typesDirectoryName}'s package.json' has bad "typesVersions". Should be: ${JSON.stringify(
           expected,
           undefined,
-          4
-        )}`
+          4,
+        )}`,
       );
     }
   }
@@ -123,6 +123,7 @@ export function validatePackageJson(
   let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
   let owners: Owner[] = [];
+  // let files: string[] = [];
   const nameResult = validateName();
   const versionResult = validateVersion();
   const nonNpmResult = validateNonNpm();
@@ -191,15 +192,15 @@ export function validatePackageJson(
     const errors = [];
     if (!packageJson.version || typeof packageJson.version !== "string") {
       errors.push(
-        `${typesDirectoryName}'s package.json should have \`"version"\` matching the version of the implementation package.`
+        `${typesDirectoryName}'s package.json should have \`"version"\` matching the version of the implementation package.`,
       );
     } else {
       const version = semver.parse(packageJson.version);
       if (version === null) {
         errors.push(
           `${typesDirectoryName}'s package.json has bad "version": ${JSON.stringify(
-            packageJson.version
-          )} should look like "NN.NN.9999"`
+            packageJson.version,
+          )} should look like "NN.NN.9999"`,
         );
       } else if (version.patch !== 9999) {
         errors.push(`${typesDirectoryName}'s package.json has bad "version": ${version} must end with ".9999"`);
@@ -216,7 +217,7 @@ export function validatePackageJson(
         errors.push(`${typesDirectoryName}'s package.json has bad "nonNpm": must be true if present.`);
       } else if (!packageJson.nonNpmDescription) {
         errors.push(
-          `${typesDirectoryName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`
+          `${typesDirectoryName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`,
         );
       } else if (typeof packageJson.nonNpmDescription !== "string") {
         errors.push(`${typesDirectoryName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
@@ -259,7 +260,7 @@ export function validatePackageJson(
       !packageJson.projects.every((p) => typeof p === "string")
     ) {
       errors.push(
-        `${typesDirectoryName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`
+        `${typesDirectoryName}'s package.json has bad "projects": must be an array of strings that point to the project web site(s).`,
       );
     } else if (packageJson.projects.length === 0) {
       errors.push(`${typesDirectoryName}'s package.json has bad "projects": must have at least one project URL.`);
@@ -272,7 +273,7 @@ export function validatePackageJson(
     const errors: string[] = [];
     if (!packageJson.owners || !Array.isArray(packageJson.owners)) {
       errors.push(
-        `${typesDirectoryName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`
+        `${typesDirectoryName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string, githubUsername: string}>.`,
       );
     } else {
       const es = checkPackageJsonOwners(typesDirectoryName, packageJson.owners);
@@ -288,7 +289,7 @@ export function validatePackageJson(
 
 export function getTypesVersions(dirPath: string): readonly TypeScriptVersion[] {
   return mapDefined(fs.readdirSync(dirPath), (name) => {
-    if (name === "tsconfig.json" || name === "tslint.json" || name === "tsutils") {
+    if (name === "tsconfig.json") {
       return undefined;
     }
     const version = withoutStart(name, "ts");
@@ -310,7 +311,7 @@ function checkPackageJsonOwners(packageName: string, packageJsonOwners: readonly
   for (const c of packageJsonOwners) {
     if (typeof c !== "object" || c === null) {
       errors.push(
-        `${packageName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`
+        `${packageName}'s package.json has bad "owners": must be an array of type Array<{ name: string, url: string } | { name: string, githubUsername: string}>.`,
       );
       continue;
     }
@@ -328,8 +329,8 @@ Must be an object of type { name: string, url: string } | { name: string, github
       } else if ("url" in c) {
         errors.push(
           `${packageName}'s package.json has bad owner: should not have both "githubUsername" and "url" properties in owner ${JSON.stringify(
-            c
-          )}`
+            c,
+          )}`,
         );
       }
     } else if ("url" in c && typeof c.url !== "string") {
@@ -344,7 +345,7 @@ Must be an object of type { name: string, url: string } | { name: string, github
           break;
         default:
           errors.push(
-            `${packageName}'s package.json has bad owner: should not include property ${key} in ${JSON.stringify(c)}`
+            `${packageName}'s package.json has bad owner: should not include property ${key} in ${JSON.stringify(c)}`,
           );
       }
     }
@@ -360,7 +361,6 @@ export const enum License {
 const allLicenses = [License.MIT, License.Apache20];
 export function getLicenseFromPackageJson(packageJsonLicense: unknown): License | string[] {
   if (packageJsonLicense === undefined) {
-    // tslint:disable-line strict-type-predicates (false positive)
     return License.MIT;
   }
   if (typeof packageJsonLicense === "string" && packageJsonLicense === "MIT") {
@@ -371,7 +371,7 @@ export function getLicenseFromPackageJson(packageJsonLicense: unknown): License 
   }
   return [
     `'package.json' license is ${JSON.stringify(packageJsonLicense)}.\nExpected one of: ${JSON.stringify(
-      allLicenses
+      allLicenses,
     )}}`,
   ];
 }
@@ -419,7 +419,7 @@ export function checkPackageJsonDependencies(
   dependencies: unknown,
   path: string,
   allowedDependencies: ReadonlySet<string>,
-  devDependencySelfName?: string
+  devDependencySelfName?: string,
 ): string[] {
   if (dependencies === undefined) {
     return [];
@@ -445,8 +445,8 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
     if (selfDependency === undefined || selfDependency !== "workspace:.") {
       errors.push(
         `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(
-          devDependencySelfName
-        )}: "workspace:."`
+          devDependencySelfName,
+        )}: "workspace:."`,
       );
     }
   }

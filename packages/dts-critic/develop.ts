@@ -115,7 +115,7 @@ function getNonNpm(args: { dtPath: string }): void {
     const header = headerParser.validatePackageJson(
       item,
       packageJson,
-      headerParser.getTypesVersions(path.join(dtTypesPath, item))
+      headerParser.getTypesVersions(path.join(dtTypesPath, item)),
     );
     if (!isNpmPackage(item, Array.isArray(header) ? undefined : header, isNpmJson)) {
       nonNpm.push(item);
@@ -250,7 +250,6 @@ function isNpmPackage(name: string, header?: headerParser.Header, isNpmJson: IsN
 }
 
 function main() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   yargs
     .usage("$0 <command>")
     .command(
@@ -284,7 +283,7 @@ function main() {
           describe: "Format output result as json.",
         },
       },
-      checkAll
+      checkAll,
     )
     .command(
       "check-popular",
@@ -323,7 +322,7 @@ function main() {
           describe: "Format output result as json.",
         },
       },
-      checkPopular
+      checkPopular,
     )
     .command(
       "check-unpopular",
@@ -362,7 +361,7 @@ function main() {
           describe: "Format output result as json.",
         },
       },
-      checkUnpopular
+      checkUnpopular,
     )
     .command(
       "check-package",
@@ -401,7 +400,7 @@ function main() {
           describe: "Format output result as json.",
         },
       },
-      checkPackage
+      checkPackage,
     )
     .command(
       "check-file",
@@ -425,7 +424,7 @@ function main() {
           describe: "Turn debug logging on.",
         },
       },
-      checkFile
+      checkFile,
     )
     .command(
       "get-non-npm",
@@ -437,9 +436,10 @@ function main() {
           describe: "Path of DT repository cloned locally.",
         },
       },
-      getNonNpm
+      getNonNpm,
     )
     .demandCommand(1)
-    .help().argv;
+    .help()
+    .parseSync();
 }
 main();

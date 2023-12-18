@@ -1,0 +1,14 @@
+types/no-unnecessary-generics/bad.d.ts
+  1:12  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+  2:16  error  Type parameter T is used only once  @definitelytyped/no-unnecessary-generics
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/no-unnecessary-generics/bad.d.ts ====
+
+    type Fn = <T>() => T;
+               ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.
+    type Ctr = new<T>() => T;
+                   ~
+!!! @definitelytyped/no-unnecessary-generics: Type parameter T is used only once.

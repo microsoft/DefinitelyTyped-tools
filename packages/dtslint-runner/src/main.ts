@@ -1,20 +1,15 @@
 import os from "os";
-import { percentile } from "stats-lite";
 import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
   CrashRecoveryState,
-  installAllTypeScriptVersions,
-  installTypeScriptNext,
 } from "@definitelytyped/utils";
-import { remove, readFileSync, pathExists, readdirSync, existsSync } from "fs-extra";
+import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
-import { writeFileSync } from "fs";
 
-const perfDir = joinPaths(os.homedir(), ".dts", "perf");
 const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
@@ -35,14 +30,14 @@ export async function runDTSLint({
   if (definitelyTypedAcquisition.kind === "clone") {
     definitelyTypedPath = joinPaths(process.cwd(), "DefinitelyTyped");
     if (!noInstall) {
-      await remove(definitelyTypedPath);
+      await fs.promises.rm(definitelyTypedPath, { recursive: true, force: true });
       await cloneDefinitelyTyped(process.cwd(), definitelyTypedAcquisition.sha);
     }
   } else {
     definitelyTypedPath = definitelyTypedAcquisition.path;
   }
 
-  if (!(await pathExists(definitelyTypedPath))) {
+  if (!fs.existsSync(definitelyTypedPath)) {
     throw new Error(`Path '${definitelyTypedPath}' does not exist.`);
   }
 
@@ -51,14 +46,6 @@ export async function runDTSLint({
   const { packageNames, dependents } = onlyRunAffectedPackages
     ? await prepareAffectedPackages(definitelyTypedPath)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
-
-  if (!noInstall && !localTypeScriptPath) {
-    if (onlyTestTsNext) {
-      await installTypeScriptNext();
-    } else {
-      await installAllTypeScriptVersions();
-    }
-  }
 
   const allFailures: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
@@ -105,7 +92,7 @@ export async function runDTSLint({
                   .split(/\r?\n/)
                   .map((line) => `${prefix}${line}`)
                   .join("\n")
-              : status
+              : status,
           );
         }
       } else if (status === "OK") {
@@ -118,7 +105,7 @@ export async function runDTSLint({
                 .split(/\r?\n/)
                 .map((line) => `${prefix}${line}`)
                 .join("\n")
-            : status
+            : status,
         );
         allFailures.push([path, status]);
       }
@@ -150,17 +137,15 @@ export async function runDTSLint({
   for (const packageName of packageNames) {
     const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
     const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-    if (await pathExists(path)) {
-      const suggestions = readFileSync(path, "utf8").split("\n");
+    if (fs.existsSync(path)) {
+      const suggestions = fs.readFileSync(path, "utf8").split("\n");
       suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
     }
   }
   console.log(`{${suggestionLines.join(",")}}`);
 
-  logPerformance();
-
   if (writeFailures) {
-    writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
+    fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
   }
 
   if (allFailures.length === 0) {
@@ -178,55 +163,32 @@ export async function runDTSLint({
 
 function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<string>) {
   return new Set(
-    (readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
+    (fs.readFileSync(joinPaths(__dirname, "../expectedFailures.txt"), "utf8") as string)
       .split("\n")
       .map((s) => s.trim())
-      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean)
+      .filter(onlyRunAffectedPackages ? (line) => line && dependents.has(line) : Boolean),
   );
 }
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {
+  type Command = [string, string[]];
   if (sha) {
-    const cmd = "git init DefinitelyTyped";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
+    const cmd: Command = ["git", ["init", "DefinitelyTyped"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
     cwd = `${cwd}/DefinitelyTyped`;
-    const commands = [
-      "git remote add origin https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-      "git fetch origin master --depth 50", // We can't clone the commit directly, so assume the commit is from
-      `git checkout ${sha}`, // recent history, pull down some recent commits, then check it out
+    const commands: Command[] = [
+      ["git", ["remote", "add", "origin", "https://github.com/DefinitelyTyped/DefinitelyTyped.git"]],
+      ["git", ["fetch", "origin", "master", "--depth", "50"]], // We can't clone the commit directly, so assume the commit is from
+      ["git", ["checkout", sha]], // recent history, pull down some recent commits, then check it out
     ];
-    for (const command of commands) {
-      console.log(command);
-      await execAndThrowErrors(command, cwd);
+    for (const cmd of commands) {
+      console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+      await execAndThrowErrors(cmd[0], cmd[1], cwd);
     }
   } else {
-    const cmd = "git clone https://github.com/DefinitelyTyped/DefinitelyTyped.git --depth 1";
-    console.log(cmd);
-    await execAndThrowErrors(cmd, cwd);
-  }
-}
-
-function logPerformance() {
-  const big: [string, number][] = [];
-  const types: number[] = [];
-  if (existsSync(perfDir)) {
-    console.log("\n\n=== PERFORMANCE ===\n");
-    for (const filename of readdirSync(perfDir, { encoding: "utf8" })) {
-      const x = JSON.parse(readFileSync(joinPaths(perfDir, filename), { encoding: "utf8" })) as {
-        [s: string]: { types: number; memory: number };
-      };
-      for (const k of Object.keys(x)) {
-        big.push([k, x[k].types]);
-        types.push(x[k].types);
-      }
-    }
-
-    console.log("  * Percentiles: ");
-    console.log("99:", percentile(types, 0.99));
-    console.log("95:", percentile(types, 0.95));
-    console.log("90:", percentile(types, 0.9));
-    console.log("70:", percentile(types, 0.7));
-    console.log("50:", percentile(types, 0.5));
+    const cmd: Command = ["git", ["clone", "https://github.com/DefinitelyTyped/DefinitelyTyped.git", "--depth", "1"]];
+    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
+    await execAndThrowErrors(cmd[0], cmd[1], cwd);
   }
 }

@@ -17,12 +17,12 @@ export async function checkParseResults(allPackages: AllPackages): Promise<strin
       const version = assertDefined(new Map(pkg.allPackageJsonDependencies()).get(dep.name));
       if (semver.parse(version)) {
         errors.push(
-          `${pkg.desc}'s dependency on ${dep.desc}@${version} must use "*" or a version range, not a specific version.`
+          `${pkg.desc}'s dependency on ${dep.desc}@${version} must use "*" or a version range, not a specific version.`,
         );
       }
       if (dep.minTypeScriptVersion > pkg.minTypeScriptVersion) {
         errors.push(
-          `${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version (${pkg.minTypeScriptVersion} < ${dep.minTypeScriptVersion}).`
+          `${pkg.desc} depends on ${dep.desc} but has a lower required TypeScript version (${pkg.minTypeScriptVersion} < ${dep.minTypeScriptVersion}).`,
         );
       }
     }

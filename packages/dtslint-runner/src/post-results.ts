@@ -144,7 +144,7 @@ ${mainOnly.map((err) => `Package: ${err.path}\nError:\n\`\`\`\n${err.error}\n\`\
 ${bothChanged
   .map(
     (err) =>
-      `Package: ${err.path}\nMain error:\n\`\`\`\n${err.mainError}\n\`\`\`\nBranch error:\n\`\`\`\n${err.branchError}\n\`\`\``
+      `Package: ${err.path}\nMain error:\n\`\`\`\n${err.mainError}\n\`\`\`\nBranch error:\n\`\`\`\n${err.branchError}\n\`\`\``,
   )
   .join("\n\n")}
 </details>

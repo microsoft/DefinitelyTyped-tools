@@ -1,4 +1,4 @@
-import { rules } from "../rules/index.js";
+import { rules } from "../rules";
 import { Linter } from "eslint";
 
 export const all: Linter.BaseConfig = {
@@ -135,7 +135,14 @@ export const all: Linter.BaseConfig = {
         warnOnUnsupportedTypeScriptVersion: false,
       },
       rules: {
-        ...Object.fromEntries(Object.keys(rules).map((name) => [`@definitelytyped/${name}`, "error"])),
+        ...Object.fromEntries(
+          Object.keys(rules)
+            // npm-naming is only enabled within dtslint.
+            // Leave it out of the preset so editors / he tests don't hit the network.
+            .filter((name) => name !== "npm-naming")
+            .map((name) => [`@definitelytyped/${name}`, "error"]),
+        ),
+        "unicode-bom": ["error", "never"],
         "@typescript-eslint/ban-ts-comment": [
           "error",
           {
@@ -145,7 +152,37 @@ export const all: Linter.BaseConfig = {
             "ts-check": false,
           },
         ],
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            types: { "{}": false },
+            extendDefaults: true,
+          },
+        ],
         "@typescript-eslint/prefer-namespace-keyword": "error",
+        "@typescript-eslint/triple-slash-reference": ["error", { types: "prefer-import", path: "always" }],
+        "@typescript-eslint/no-empty-interface": "error",
+        "no-duplicate-imports": "error",
+        "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "interface",
+            format: [],
+            custom: {
+              regex: "^I[A-Z]",
+              match: false,
+            },
+          },
+        ],
+        "@typescript-eslint/explicit-member-accessibility": ["error", { accessibility: "no-public" }],
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/no-invalid-void-type": [
+          "error",
+          { allowAsThisParameter: true, allowInGenericTypeArguments: true },
+        ],
       },
     },
   ],

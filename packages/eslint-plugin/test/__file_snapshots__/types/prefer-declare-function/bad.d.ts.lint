@@ -1,0 +1,33 @@
+types/prefer-declare-function/bad.d.ts
+  1:14  error  Use a function declaration instead of a variable of function type                                                                                                                                                                           @definitelytyped/prefer-declare-function
+  3:11  error  All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting        @definitelytyped/strict-export-declare-modifiers
+  4:5   error  'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting  @definitelytyped/strict-export-declare-modifiers
+  4:18  error  Use a function declaration instead of a variable of function type                                                                                                                                                                           @definitelytyped/prefer-declare-function
+  7:11  error  All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting        @definitelytyped/strict-export-declare-modifiers
+  8:11  error  Use a function declaration instead of a variable of function type                                                                                                                                                                           @definitelytyped/prefer-declare-function
+
+✖ 6 problems (6 errors, 0 warnings)
+
+==== types/prefer-declare-function/bad.d.ts ====
+
+    export const example: () => void;
+                 ~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.
+    
+    namespace N {
+              ~
+!!! @definitelytyped/strict-export-declare-modifiers: All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.
+        export const example: () => void;
+        ~~~~~~
+!!! @definitelytyped/strict-export-declare-modifiers: 'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting.
+                     ~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.
+    }
+    
+    namespace N2 {
+              ~~
+!!! @definitelytyped/strict-export-declare-modifiers: All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.
+        const example: () => void;
+              ~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.
+    }

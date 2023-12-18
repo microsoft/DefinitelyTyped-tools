@@ -2,30 +2,23 @@
   "$schema": "https://unpkg.com/knip@2/schema.json",
   "workspaces": {
     ".": {
-      "ignoreBinaries": ["only-allow"],
-      "ignoreDependencies": [
-        "tslint",
-        "tslint-microsoft-contrib"
-      ]
+      "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {
       "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/dts-critic": {
-      "entry": [
-        "develop.ts",
-        "dt.ts",
-        "index.ts"
-      ],
+      "entry": ["develop.ts", "dt.ts", "index.ts"],
       "project": "**/*.ts"
     },
+    "packages/dts-gen": {
+      "entry": ["src/index.ts", "src/run.ts"],
+      "project": "**/*.ts",
+      "ignoreDependencies": ["ecurve", "jquery", "lodash"]
+    },
     "packages/dtslint": {
-      "entry": [
-        "src/index.ts",
-        "src/updateConfig.ts",
-        "src/rules/*.ts"
-      ],
+      "entry": ["src/index.ts", "src/updateConfig.ts", "src/rules/*.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": [
         "@typescript-eslint/eslint-plugin",
@@ -41,7 +34,8 @@
     },
     "packages/eslint-plugin": {
       "entry": "src/index.ts",
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": ["@definitelytyped/eslint-plugin"]
     },
     "packages/header-parser": {
       "entry": "src/index.ts",
@@ -68,16 +62,19 @@
       "entry": "src/index.ts",
       "project": "**/*.ts"
     },
+    "packages/typescript-packages": {
+      "entry": "src/index.ts",
+      "project": "**/*.ts",
+      "ignoreDependencies": ["^typescript-.*"]
+    },
     "packages/typescript-versions": {
       "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/utils": {
-      "entry": [
-        "src/index.ts",
-        "src/types/*.ts"
-      ],
-      "project": "**/*.ts"
+      "entry": ["src/index.ts", "src/types/*.ts"],
+      "project": "**/*.ts",
+      "ignoreDependencies": ["@qiwi/npm-types"]
     }
   },
   "ignore": ["**/fixtures", "**/testsource", "**/dtslint/test/*/**", "**/*.d.ts"],

@@ -1,13 +1,13 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
 import { createRule } from "../util";
+import { isDeclarationPath } from "@definitelytyped/utils";
 
 const rule = createRule({
   defaultOptions: [],
   meta: {
     docs: {
       description: "Forbids `const x: () => void`.",
-      recommended: "error",
     },
     messages: {
       variableFunction: "Use a function declaration instead of a variable of function type.",
@@ -22,7 +22,7 @@ const rule = createRule({
       "VariableDeclaration > VariableDeclarator"(node: TSESTree.VariableDeclarator) {
         if (
           node.id.typeAnnotation?.typeAnnotation.type === AST_NODE_TYPES.TSFunctionType &&
-          context.getFilename().endsWith(".d.ts")
+          isDeclarationPath(context.filename)
         ) {
           context.report({
             messageId: "variableFunction",

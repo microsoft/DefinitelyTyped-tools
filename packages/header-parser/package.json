@@ -1,9 +1,9 @@
 {
   "name": "@definitelytyped/header-parser",
-  "version": "0.0.184",
+  "version": "0.1.1",
   "description": "",
   "author": "Nathan Shively-Sanders <nathansa@microsoft.com>",
-  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/master/packages/header-parser#readme",
+  "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/header-parser#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,12 +22,15 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "semver": "^7.3.7"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@types/semver": "^7.5.2"
+    "@types/semver": "^7.5.5"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=16.17.0"
   }
 }

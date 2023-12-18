@@ -1,0 +1,10 @@
+types/no-relative-import-in-test/no-relative-import-in-test-tests.ts
+  1:17  error  Test file should not use a relative import. Use a global import as if this were a user of the package  @definitelytyped/no-relative-import-in-test
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/no-relative-import-in-test/no-relative-import-in-test-tests.ts ====
+
+    import abc from "./no-relative-import-in-test/abc.d.ts";
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/no-relative-import-in-test: Test file should not use a relative import. Use a global import as if this were a user of the package.

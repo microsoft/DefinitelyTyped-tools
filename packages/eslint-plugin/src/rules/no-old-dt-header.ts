@@ -1,3 +1,4 @@
+import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule } from "../util";
 
 const rule = createRule({
@@ -7,7 +8,6 @@ const rule = createRule({
     type: "problem",
     docs: {
       description: `Forbids <reference path="./vNN"/> in all files, <reference path="../etc"/> in declaration files, and all <reference path> in test files.`,
-      recommended: "error",
     },
     messages: {
       noOldDTHeader:
@@ -16,9 +16,9 @@ const rule = createRule({
     schema: [],
   },
   create(context) {
-    const text = context.getSourceCode().text;
+    const text = context.sourceCode.text;
     if (
-      context.getFilename().endsWith(".d.ts") &&
+      isDeclarationPath(context.filename) &&
       text.indexOf("// Type definitions for ") === 0 &&
       text.indexOf("// Definitions by: ") > 0
     ) {
