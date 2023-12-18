@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.0.198
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+
 ## 0.0.197
 
 ### Patch Changes
