@@ -131,6 +131,7 @@ export const all: Linter.BaseConfig = {
       files: ["*.cts", "*.mts", "*.ts", "*.tsx"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
+        allowAutomaticSingleRunInference: true,
         project: true,
         warnOnUnsupportedTypeScriptVersion: false,
       },
