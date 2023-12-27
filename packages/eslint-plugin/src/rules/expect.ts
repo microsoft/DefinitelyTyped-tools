@@ -74,7 +74,8 @@ Then re-run.`,
   },
   defaultOptions: [{}],
   create(context) {
-    if (isDeclarationPath(context.filename) || !context.sourceCode.text.includes("$ExpectType")) {
+    const inEditor = !context.options[0]?.versionsToTest?.length
+    if (inEditor && (isDeclarationPath(context.filename) || !context.sourceCode.text.includes("$ExpectType"))) {
       return {};
     }
 
