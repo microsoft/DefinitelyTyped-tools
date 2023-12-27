@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.205
+
+### Patch Changes
+
+- 20d5c884: Run Expect on all files in CI
+
 ## 0.0.204
 
 ### Patch Changes
