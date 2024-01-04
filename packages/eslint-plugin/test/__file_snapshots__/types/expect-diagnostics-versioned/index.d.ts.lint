@@ -1,0 +1,15 @@
+types/expect-diagnostics-versioned/index.d.ts
+  4:22  error  TypeScript@x.y compile error: 
+Generic type 'Array<T>' requires 1 type argument(s)  @definitelytyped/expect
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/expect-diagnostics-versioned/index.d.ts ====
+
+    export const foo = 1234;
+    
+    // This should cause a diagnostic.
+    export const badSet: Array<string, number, number, number>;
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@x.y compile error: 
+!!!                        : Generic type 'Array<T>' requires 1 type argument(s).
