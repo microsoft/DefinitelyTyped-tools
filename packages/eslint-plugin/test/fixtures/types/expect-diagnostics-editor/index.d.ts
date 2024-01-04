@@ -1,4 +1,4 @@
 export const foo = 1234;
 
-// This should cause a diagnostic.
+// No diagnostic; we did not set versionsToTest and so are in an editor.
 export const badSet: Array<string, number, number, number>;
