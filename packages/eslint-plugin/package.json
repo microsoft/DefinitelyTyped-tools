@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/eslint-plugin",
-  "version": "0.0.205",
+  "version": "0.0.206",
   "description": "ESLint rules for DefinitelyTyped",
   "main": "./dist/index.js",
   "publishConfig": {

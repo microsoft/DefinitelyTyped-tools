@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.206
+
+### Patch Changes
+
+- 55f05a86: Clean up expect type code for diagnostics
+
 ## 0.0.205
 
 ### Patch Changes
