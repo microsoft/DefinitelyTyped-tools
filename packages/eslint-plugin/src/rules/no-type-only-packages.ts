@@ -67,8 +67,12 @@ const rule = createRule({
         return symbol;
       }
 
-      function symbolIsValue(node: ts.Node): boolean {
-        return !!getSymbol(node)?.valueDeclaration;
+      function symbolIsValue(node: ts.Node): boolean | undefined {
+        const symbol = getSymbol(node);
+        if (symbol) {
+          return !!symbol.valueDeclaration;
+        }
+        return undefined;
       }
 
       function symbolDefinedOutsidePackage(node: ts.Node): boolean {
@@ -89,11 +93,11 @@ const rule = createRule({
         }
 
         if (ts.isExportAssignment(node)) {
-          return symbolIsValue(node.expression);
+          return symbolIsValue(node.expression) ?? ts.isLiteralTypeLiteral(node.expression);
         }
 
         if (ts.isNamespaceExportDeclaration(node)) {
-          return symbolIsValue(node.name);
+          return symbolIsValue(node.name) ?? false;
         }
 
         if (ts.isNamedExports(node)) {
@@ -101,7 +105,7 @@ const rule = createRule({
         }
 
         if (ts.isExportDeclaration(node) && !node.isTypeOnly && !node.exportClause && node.moduleSpecifier) {
-          return symbolIsValue(node.moduleSpecifier);
+          return symbolIsValue(node.moduleSpecifier) ?? false;
         }
 
         if (ts.isInterfaceDeclaration(node)) {
