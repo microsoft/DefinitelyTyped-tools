@@ -4,6 +4,7 @@
   "references": [
     { "path": "packages/definitions-parser" },
     { "path": "packages/dts-critic" },
+    { "path": "packages/dts-gen" },
     { "path": "packages/dtslint" },
     { "path": "packages/dtslint-runner" },
     { "path": "packages/eslint-plugin" },
@@ -15,6 +16,7 @@
     { "path": "packages/retag" },
 
     { "path": "packages/definitions-parser/test" },
+    { "path": "packages/dts-gen/test" },
     { "path": "packages/dtslint/test" },
     { "path": "packages/eslint-plugin/test" },
     { "path": "packages/header-parser/test" },

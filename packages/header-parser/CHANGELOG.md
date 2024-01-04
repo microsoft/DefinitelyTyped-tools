@@ -1,5 +1,34 @@
 # @definitelytyped/header-parser
 
+## 0.1.1
+
+### Patch Changes
+
+- 987c9d5d: Remove tsutils exemption from header-parser
+
+## 0.1.0
+
+### Minor Changes
+
+- 02c11c32: Remove TSLint remnants
+
+## 0.0.193
+
+### Patch Changes
+
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/utils@0.0.191
+
+## 0.0.192
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-versions@0.0.183
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.191
 
 ### Patch Changes

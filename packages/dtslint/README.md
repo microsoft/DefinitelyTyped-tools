@@ -1,5 +1,5 @@
 `dtslint` tests a TypeScript declaration file for style and correctness.
-It will install `typescript` and `tslint` for you, so this is the only tool you need to test a type definition.
+It will install `typescript` and `eslint` for you, so this is the only tool you need to test a type definition.
 
 Lint rules new to dtslint are documented in the [docs](docs) directory.
 
@@ -101,24 +101,23 @@ For types that do not have a matching NPM package, add two properties:
 1. `"nonNpm": true`
 2. `"nonNpmDescription"`, a human-readable name for the project that is being typed.
 
-#### `types/tslint.json` or `types/.eslintrc.json`
+#### `types/.eslintrc.json`
 
-Definitely Typed is in the process of migrating from tslint to eslint.
-If you are using the default rules, .eslintrc.json is optional; tslint.json should be
+An `.eslintrc.json` file is optional.
+You can skip it if you don't need to modify any lint rule settings.
+We recommend not adding an `.eslintrc.json` file.
 
 ```json5
 { "extends": "@definitelytyped/dtslint/dt.json" }
 ```
 
-If present, this will override `dtslint`'s [default](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint/dtslint.json) settings.
-You can specify new lint [rules](https://palantir.github.io/tslint/rules/), or disable some. An example:
+If present, this will override `dtslint`'s default "[`all`](https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/eslint-plugin/src/configs/all.ts)" config.
+You can specify new [lint rules](https://eslint.org/docs/latest/rules/), or disable some. An example:
 
 ```json5
 {
-    "extends": "@definitelytyped/dtslint/dtslint.json", // Or "@definitelytyped/dtslint/dt.json" if on DefinitelyTyped
     "rules": {
-        "semicolon": false,
-        "indent": [true, "tabs"]
+        "@definitelytyped/no-unnecessary-generics": "off"
     }
 }
 ```
@@ -198,8 +197,6 @@ npm run watch
 ## Test
 
 Use `pnpm test` to run all tests.
-
-To run a single test: `node node_modules/tslint/bin/tslint --rules-dir dist/rules --test test/expect`.
 
 ## Code of Conduct
 

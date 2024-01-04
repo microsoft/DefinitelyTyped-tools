@@ -613,6 +613,7 @@ bson
 buffer
 bull
 bullmq
+bun-types
 cac
 canvas
 cash-dom

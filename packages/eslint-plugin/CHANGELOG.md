@@ -1,5 +1,53 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.206
+
+### Patch Changes
+
+- 55f05a86: Clean up expect type code for diagnostics
+
+## 0.0.205
+
+### Patch Changes
+
+- 20d5c884: Run Expect on all files in CI
+
+## 0.0.204
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- Updated dependencies [1a5fdc83]
+  - @definitelytyped/dts-critic@0.0.198
+
+## 0.0.203
+
+### Patch Changes
+
+- @definitelytyped/dts-critic@0.0.197
+
+## 0.0.202
+
+### Patch Changes
+
+- @definitelytyped/dts-critic@0.0.196
+
+## 0.0.201
+
+### Patch Changes
+
+- @definitelytyped/utils@0.0.191
+- @definitelytyped/dts-critic@0.0.195
+
+## 0.0.200
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/dts-critic@0.0.194
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.199
 
 ### Patch Changes
