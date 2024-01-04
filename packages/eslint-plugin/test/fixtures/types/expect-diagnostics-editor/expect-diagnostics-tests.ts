@@ -1,0 +1,5 @@
+// eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+import * as expect from ".";
+
+// No diagnostic; we did not set versionsToTest and so are in an editor.
+const blah: string = expect.foo;
