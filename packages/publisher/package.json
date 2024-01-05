@@ -10,7 +10,7 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "libnpmpublish": "^6.0.4",
+    "libnpmpublish": "^9.0.3",
     "longjohn": "^0.2.12",
     "pacote": "^17.0.4",
     "semver": "^7.5.4",
