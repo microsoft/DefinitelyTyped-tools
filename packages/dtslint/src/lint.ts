@@ -1,13 +1,11 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import fs from "fs";
 import { join as joinPaths, normalize } from "path";
-import { Linter } from "tslint";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
-import { readJson } from "./util";
+import { createProgram } from "./createProgram";
 
 export async function lint(
   dirPath: string,
@@ -22,12 +20,8 @@ export async function lint(
     require.resolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
   ) as typeof import("@typescript-eslint/typescript-estree");
   process.env.TSESTREE_SINGLE_RUN = "true";
-  // TODO: To remove tslint, replace this with a ts.createProgram (probably)
-  const lintProgram = Linter.createProgram(tsconfigPath);
-
-  // TODO: To port expect-rule, eslint's config will also need to include [minVersion, maxVersion]
-  //   Also: expect-rule should be renamed to expect-type or check-type or something
-  const esfiles = [];
+  const lintProgram = createProgram(tsconfigPath);
+  const files = [];
 
   for (const file of lintProgram.getSourceFiles()) {
     if (lintProgram.isSourceFileDefaultLibrary(file)) {
@@ -36,7 +30,7 @@ export async function lint(
 
     const { fileName, text } = file;
     if (!fileName.includes("node_modules")) {
-      const err = testNoLintDisables("tslint:disable", text) || testNoLintDisables("eslint-disable", text);
+      const err = testNoLintDisables(text);
       if (err) {
         const { pos, message } = err;
         const place = file.getLineAndCharacterOfPosition(pos);
@@ -47,60 +41,71 @@ export async function lint(
     // External dependencies should have been handled by `testDependencies`;
     // typesVersions should be handled in a separate lint
     if (!isExternalDependency(file, dirPath, lintProgram) && (!isLatest || !isTypesVersionPath(fileName, dirPath))) {
-      esfiles.push(fileName);
+      files.push(fileName);
     }
   }
-  let output = "";
 
+  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
+  const eslint = new ESLint(options);
+  const formatter = await eslint.loadFormatter("stylish");
+  const results = await eslint.lintFiles(files);
+  const output = formatter.format(results);
+  estree.clearCaches();
+  return output;
+}
+
+function getEslintOptions(
+  expectOnly: boolean,
+  minVersion: TsVersion,
+  maxVersion: TsVersion,
+  tsLocal: string | undefined,
+): ESLint.Options {
   const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
     versionName,
     path: typeScriptPath(versionName, tsLocal),
   }));
 
-  const options: ESLint.Options = {
-    cwd: dirPath,
+  const allFiles = ["*.ts", "*.cts", "*.mts", "*.tsx"];
+
+  const overrideConfig: ESLint.Options["overrideConfig"] = {
+    overrides: [
+      {
+        files: allFiles,
+        rules: {
+          "@definitelytyped/expect": ["error", { versionsToTest }],
+        },
+      },
+    ],
+  };
+
+  if (expectOnly) {
+    return {
+      useEslintrc: false,
+      overrideConfig: {
+        plugins: ["@definitelytyped", "@typescript-eslint", "jsdoc"],
+        parser: "@typescript-eslint/parser",
+        parserOptions: {
+          project: true,
+          warnOnUnsupportedTypeScriptVersion: false,
+        },
+        ...overrideConfig,
+      },
+    };
+  }
+
+  return {
+    overrideConfig,
     baseConfig: {
       overrides: [
         {
-          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
+          files: allFiles,
           rules: {
             "@definitelytyped/npm-naming": "error",
           },
         },
       ],
     },
-    overrideConfig: {
-      overrides: [
-        {
-          files: ["*.ts", "*.cts", "*.mts", "*.tsx"],
-          rules: {
-            "@definitelytyped/expect": ["error", { versionsToTest }],
-          },
-        },
-      ],
-    },
   };
-
-  if (expectOnly) {
-    // Disable the regular config, instead load only the plugins and use just the rule above.
-    // TODO(jakebailey): share this with eslint-plugin
-    options.useEslintrc = false;
-    options.overrideConfig!.plugins = ["@definitelytyped", "@typescript-eslint", "jsdoc"];
-    const override = options.overrideConfig!.overrides![0];
-    override.parser = "@typescript-eslint/parser";
-    override.parserOptions = {
-      project: true,
-      warnOnUnsupportedTypeScriptVersion: false,
-    };
-  }
-
-  const eslint = new ESLint(options);
-  const formatter = await eslint.loadFormatter("stylish");
-  const eresults = await eslint.lintFiles(esfiles);
-  output += formatter.format(eresults);
-  estree.clearCaches();
-
-  return output;
 }
 
 export function isExternalDependency(file: TsType.SourceFile, dirPath: string, program: TsType.Program): boolean {
@@ -131,7 +136,8 @@ interface Err {
   pos: number;
   message: string;
 }
-function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text: string): Err | undefined {
+function testNoLintDisables(text: string): Err | undefined {
+  const disabler = "eslint-disable";
   let lastIndex = 0;
   while (true) {
     const pos = text.indexOf(disabler, lastIndex);
@@ -141,34 +147,15 @@ function testNoLintDisables(disabler: "tslint:disable" | "eslint-disable", text:
     const end = pos + disabler.length;
     const nextChar = text.charAt(end);
     const nextChar2 = text.charAt(end + 1);
-    if (
-      nextChar !== "-" &&
-      !(disabler === "tslint:disable" && nextChar === ":") &&
-      !(disabler === "eslint-disable" && nextChar === " " && nextChar2 !== "*")
-    ) {
+    if (nextChar !== "-" && !(nextChar === " " && nextChar2 !== "*")) {
       const message =
         `'${disabler}' is forbidden. ` +
         "Per-line and per-rule disabling is allowed, for example: " +
-        "'tslint:disable:rulename', tslint:disable-line' and 'tslint:disable-next-line' are allowed.";
+        "'eslint-disable:rulename', eslint-disable-line' and 'eslint-disable-next-line' are allowed.";
       return { pos, message };
     }
     lastIndex = end;
   }
-}
-
-export function checkTslintJson(dirPath: string): void {
-  const configPath = getConfigPath(dirPath);
-  const shouldExtend = "@definitelytyped/dtslint/dt.json";
-  if (!fs.existsSync(configPath)) {
-    throw new Error(`Missing \`tslint.json\` that contains \`{ "extends": "${shouldExtend}" }\`.`);
-  }
-  if (readJson(configPath).extends !== shouldExtend) {
-    throw new Error(`'tslint.json' must extend "${shouldExtend}"`);
-  }
-}
-
-function getConfigPath(dirPath: string): string {
-  return joinPaths(dirPath, "tslint.json");
 }
 
 function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {

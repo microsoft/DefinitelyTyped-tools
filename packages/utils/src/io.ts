@@ -65,7 +65,7 @@ export function writeJson(path: string, content: unknown, formatted = true): Pro
 export function streamOfString(text: string): NodeJS.ReadableStream {
   const s = new ReadableStream();
   s.push(text);
-  s.push(null); // tslint:disable-line no-null-keyword
+  s.push(null);
   return s;
 }
 

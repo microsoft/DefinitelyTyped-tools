@@ -1,5 +1,51 @@
 # @definitelytyped/dtslint
 
+## 0.1.2
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- 6ff1c7bf: Require index.d.ts
+
+## 0.1.1
+
+### Patch Changes
+
+- 10ad5d01: Clean up eslint options contruction
+- Updated dependencies [987c9d5d]
+  - @definitelytyped/header-parser@0.1.1
+
+## 0.1.0
+
+### Minor Changes
+
+- 02c11c32: Remove TSLint remnants
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.204
+
+### Patch Changes
+
+- efd262c9: Prevent npm-naming from being enabled in expectOnly
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/header-parser@0.0.193
+  - @definitelytyped/utils@0.0.191
+
+## 0.0.203
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-versions@0.0.183
+  - @definitelytyped/header-parser@0.0.192
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.202
 
 ### Patch Changes

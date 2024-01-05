@@ -1,4 +1,3 @@
-import { isDeclarationPath } from "@definitelytyped/utils";
 import { createRule, findTypesPackage, findUp } from "../util";
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import type * as ts from "typescript";
@@ -74,10 +73,6 @@ Then re-run.`,
   },
   defaultOptions: [{}],
   create(context) {
-    if (isDeclarationPath(context.filename) || !context.sourceCode.text.includes("$ExpectType")) {
-      return {};
-    }
-
     const tsconfigPath = findUp(context.filename, (dir) => {
       const tsconfig = path.join(dir, "tsconfig.json");
       return fs.existsSync(tsconfig) ? tsconfig : undefined;
@@ -114,9 +109,11 @@ Then re-run.`,
         };
 
         let versionsToTest = context.options[0]?.versionsToTest;
+        let reportDiagnostics = true;
         if (!versionsToTest?.length) {
           // In the editor, just use the built-in install of TypeScript.
           versionsToTest = [{ versionName: "", path: require.resolve("typescript") }];
+          reportDiagnostics = false;
         }
 
         for (const version of versionsToTest) {
@@ -131,6 +128,7 @@ Then re-run.`,
             version.versionName,
             /*nextHigherVersion*/ undefined,
             dirPath,
+            reportDiagnostics,
           );
         }
 
@@ -148,7 +146,7 @@ Then re-run.`,
 });
 
 const programCache = new WeakMap<ts.Program, Map<string, ts.Program>>();
-/** Maps a tslint Program to one created with the version specified in `options`. */
+/** Maps a ts.Program to one created with the version specified in `options`. */
 function getProgram(configFile: string, ts: TSModule, versionName: string, lintProgram: ts.Program): ts.Program {
   let versionToProgram = programCache.get(lintProgram);
   if (versionToProgram === undefined) {
@@ -211,6 +209,7 @@ function walk(
   versionName: string,
   nextHigherVersion: string | undefined,
   dirPath: string,
+  reportDiagnostics: boolean,
 ): void {
   const sourceFile = program.getSourceFile(fileName)!;
   if (!sourceFile) {
@@ -225,9 +224,7 @@ function walk(
 
   const checker = program.getTypeChecker();
 
-  if (versionName) {
-    // If we're using the built-in version of TS, then we're in the editor and tsserver will report diagnostics.
-
+  if (reportDiagnostics) {
     // Don't care about emit errors.
     const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
     for (const diagnostic of diagnostics) {

@@ -1,5 +1,48 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.213
+
+### Patch Changes
+
+- Updated dependencies [1a5fdc83]
+- Updated dependencies [6ff1c7bf]
+  - @definitelytyped/dtslint@0.1.2
+
+## 0.0.212
+
+### Patch Changes
+
+- Updated dependencies [10ad5d01]
+  - @definitelytyped/dtslint@0.1.1
+  - @definitelytyped/definitions-parser@0.0.200
+
+## 0.0.211
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/dtslint@0.1.0
+  - @definitelytyped/definitions-parser@0.0.199
+
+## 0.0.210
+
+### Patch Changes
+
+- Updated dependencies [efd262c9]
+  - @definitelytyped/dtslint@0.0.204
+  - @definitelytyped/definitions-parser@0.0.198
+  - @definitelytyped/utils@0.0.191
+
+## 0.0.209
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/definitions-parser@0.0.197
+  - @definitelytyped/dtslint@0.0.203
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.208
 
 ### Patch Changes

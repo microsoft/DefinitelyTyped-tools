@@ -1,5 +1,39 @@
 # @definitelytyped/dts-critic
 
+## 0.0.198
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+
+## 0.0.197
+
+### Patch Changes
+
+- Updated dependencies [987c9d5d]
+  - @definitelytyped/header-parser@0.1.1
+
+## 0.0.196
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.195
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.0.193
+
+## 0.0.194
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/header-parser@0.0.192
+
 ## 0.0.193
 
 ### Patch Changes

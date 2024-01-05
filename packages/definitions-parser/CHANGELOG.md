@@ -1,5 +1,38 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.200
+
+### Patch Changes
+
+- Updated dependencies [987c9d5d]
+  - @definitelytyped/header-parser@0.1.1
+
+## 0.0.199
+
+### Patch Changes
+
+- Updated dependencies [02c11c32]
+  - @definitelytyped/header-parser@0.1.0
+
+## 0.0.198
+
+### Patch Changes
+
+- Updated dependencies [4522dfba]
+  - @definitelytyped/typescript-versions@0.0.184
+  - @definitelytyped/header-parser@0.0.193
+  - @definitelytyped/utils@0.0.191
+
+## 0.0.197
+
+### Patch Changes
+
+- b980f717: Rename branch to main
+- Updated dependencies [b980f717]
+  - @definitelytyped/typescript-versions@0.0.183
+  - @definitelytyped/header-parser@0.0.192
+  - @definitelytyped/utils@0.0.190
+
 ## 0.0.196
 
 ### Patch Changes
