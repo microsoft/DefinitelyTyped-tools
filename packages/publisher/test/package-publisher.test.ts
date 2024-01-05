@@ -10,11 +10,11 @@ const client = { async tag() {} };
 const dt = createMockDT();
 
 const latestVersion = {
-  pkg: new TypingsData(dt.fs, { typingsPackageName: "some-package" } as never, /*isLatest*/ true),
+  pkg: new TypingsData(dt.fs, { header: { name: "@types/some-package" } } as never, /*isLatest*/ true),
   version: "1.2.3",
 };
 const oldVersion = {
-  pkg: new TypingsData(dt.fs, { typingsPackageName: "some-package" } as never, /*isLatest*/ false),
+  pkg: new TypingsData(dt.fs, { header: { name: "@types/some-package" } } as never, /*isLatest*/ false),
   version: "1.2.3",
 };
 const notNeeded = new NotNeededPackage("not-needed", "not-needed", "1.2.3");
