@@ -13,6 +13,7 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
@@ -44,8 +45,7 @@ export async function lint(
       files.push(fileName);
     }
   }
-
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
+  const options = getEslintOptions(expectOnly, skipNpmNaming, minVersion, maxVersion, tsLocal);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
   const results = await eslint.lintFiles(files);
@@ -56,6 +56,7 @@ export async function lint(
 
 function getEslintOptions(
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined,
@@ -99,9 +100,11 @@ function getEslintOptions(
       overrides: [
         {
           files: allFiles,
-          rules: {
-            "@definitelytyped/npm-naming": "error",
-          },
+          rules: skipNpmNaming
+            ? {}
+            : {
+                "@definitelytyped/npm-naming": "error",
+              },
         },
       ],
     },
