@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.1.3
+
+### Patch Changes
+
+- bbc3c792: Skip only npm-naming in dependents
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.214
+
+### Patch Changes
+
+- bbc3c792: Skip only npm-naming in dependents
+- Updated dependencies [bbc3c792]
+  - @definitelytyped/dtslint@0.1.3
+
 ## 0.0.213
 
 ### Patch Changes
