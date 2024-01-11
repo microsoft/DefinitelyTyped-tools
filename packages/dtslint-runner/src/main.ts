@@ -62,7 +62,7 @@ export async function runDTSLint({
   await runWithListeningChildProcesses({
     inputs: testedPackages.map((path) => ({
       path,
-      onlyTestTsNext: onlyTestTsNext || !packageNames.has(path),
+      onlyTestTsNext,
       expectOnly,
       skipNpmNaming: skipNpmNaming || !packageNames.has(path),
     })),
