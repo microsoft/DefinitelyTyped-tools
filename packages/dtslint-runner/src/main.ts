@@ -17,6 +17,7 @@ export async function runDTSLint({
   onlyRunAffectedPackages = false,
   noInstall,
   onlyTestTsNext,
+  skipNpmNaming,
   expectOnly,
   localTypeScriptPath,
   nProcesses,
@@ -61,8 +62,9 @@ export async function runDTSLint({
   await runWithListeningChildProcesses({
     inputs: testedPackages.map((path) => ({
       path,
-      onlyTestTsNext: onlyTestTsNext || !packageNames.has(path),
-      expectOnly: expectOnly || !packageNames.has(path),
+      onlyTestTsNext,
+      expectOnly,
+      skipNpmNaming: skipNpmNaming || !packageNames.has(path),
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),
