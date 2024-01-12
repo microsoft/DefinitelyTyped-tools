@@ -33,7 +33,7 @@
     "@types/node": "^16.18.70",
     "@types/parse-git-config": "^1.1.0",
     "@types/yargs": "^17.0.32",
-    "ecurve": "1.0.5",
+    "ecurve": "1.0.6",
     "jquery": "3.7.1",
     "lodash": "4.17.21"
   },

@@ -154,8 +154,8 @@ importers:
         specifier: ^17.0.32
         version: 17.0.32
       ecurve:
-        specifier: 1.0.5
-        version: 1.0.5
+        specifier: 1.0.6
+        version: 1.0.6
       jquery:
         specifier: 3.7.1
         version: 3.7.1
@@ -3287,10 +3287,11 @@ packages:
       safer-buffer: 2.1.2
     dev: false
 
-  /ecurve@1.0.5:
-    resolution: {integrity: sha512-1Z3Zu5Nh5LSVGnwEnie1LDoHZByZxG2tk3wftkqeVHrfujmR8O+dOh96HVPxRPh4BjRWX0Z9mpwCYv/O/njgDw==}
+  /ecurve@1.0.6:
+    resolution: {integrity: sha512-/BzEjNfiSuB7jIWKcS/z8FK9jNjmEWvUV2YZ4RLSmcDtP7Lq0m6FvDuSnJpBlDpGRpfRQeTLGLBI8H+kEv0r+w==}
     dependencies:
       bigi: 1.4.2
+      safe-buffer: 5.2.1
     dev: true
 
   /electron-to-chromium@1.4.630:
