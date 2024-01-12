@@ -1,4 +1,5 @@
 types/scoped__no-relative-references/index.d.ts
+   1:1   error  Packages should contain value components, not just types                                                                              @definitelytyped/no-type-only-packages
    1:22  error  The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                 @definitelytyped/no-bad-reference
    2:22  error  The reference "./v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages                   @definitelytyped/no-bad-reference
    3:22  error  The reference "../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages              @definitelytyped/no-bad-reference
@@ -11,11 +12,13 @@ types/scoped__no-relative-references/index.d.ts
   11:3   error  Declaration file should not use a global import of itself. Use a relative import                                                      @definitelytyped/no-self-import
   11:22  error  The import "@scoped/no-relative-references/v1" resolves outside of the package. Use a bare import to reference other packages         @definitelytyped/no-bad-reference
 
-✖ 11 problems (11 errors, 0 warnings)
+✖ 12 problems (12 errors, 0 warnings)
 
 ==== types/scoped__no-relative-references/index.d.ts ====
 
     /// <reference path="../foo/index.d.ts" />
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
                          ~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The reference "../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
     /// <reference path="./v1/index.d.ts" />

@@ -1,6 +1,11 @@
-No errors
+types/no-declare-current-package-other/index.d.ts
+  1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
+
+✖ 1 problem (1 error, 0 warnings)
 
 ==== types/no-declare-current-package-other/index.d.ts ====
 
     declare module "no-declare-current-package" { }
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
     declare module "@scoped/no-declare-current-package" { }

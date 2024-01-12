@@ -18,6 +18,7 @@ import noOldDTHeader = require("./no-old-dt-header");
 import noImportOfDevDependencies = require("./no-import-of-dev-dependencies");
 import npmNaming = require("./npm-naming");
 import expect = require("./expect");
+import noTypeOnlyPackages = require("./no-type-only-packages");
 
 export const rules = {
   "export-just-namespace": exportJustNamespace,
@@ -40,4 +41,5 @@ export const rules = {
   "no-import-of-dev-dependencies": noImportOfDevDependencies,
   "npm-naming": npmNaming,
   expect,
+  "no-type-only-packages": noTypeOnlyPackages,
 };

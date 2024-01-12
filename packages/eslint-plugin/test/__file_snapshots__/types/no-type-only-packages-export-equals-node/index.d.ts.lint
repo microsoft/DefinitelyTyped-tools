@@ -1,0 +1,8 @@
+No errors
+
+==== types/no-type-only-packages-export-equals-node/index.d.ts ====
+
+    /// <reference types="node" />
+    
+    import { inherits } from "util";
+    export = inherits;

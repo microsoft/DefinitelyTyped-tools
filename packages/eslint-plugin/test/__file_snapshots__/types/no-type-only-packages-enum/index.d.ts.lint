@@ -1,0 +1,9 @@
+No errors
+
+==== types/no-type-only-packages-enum/index.d.ts ====
+
+    export enum Foo {
+        A,
+        B,
+        C,
+    }
