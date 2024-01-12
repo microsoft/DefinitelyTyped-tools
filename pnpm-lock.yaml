@@ -223,16 +223,10 @@ importers:
       '@octokit/rest':
         specifier: ^19.0.13
         version: 19.0.13
-      semver:
-        specifier: ^7.5.4
-        version: 7.5.4
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
     devDependencies:
-      '@types/semver':
-        specifier: ^7.5.5
-        version: 7.5.5
       glob:
         specifier: ^10.3.10
         version: 10.3.10
@@ -4969,7 +4963,7 @@ packages:
       pretty-ms: 8.0.0
       strip-json-comments: 5.0.1
       summary: 2.1.0
-      typescript: 5.3.3
+      typescript: 5.2.2
       zod: 3.22.4
       zod-validation-error: 2.1.0(zod@3.22.4)
     transitivePeerDependencies:
@@ -6975,6 +6969,7 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: false
 
   /typescript@5.4.0-dev.20231212:
     resolution: {integrity: sha512-h3fO+IfEsmtTuje/ZBrinHekd9rob7fO0QJFxedSXrd8vy/aJeyqjv4PNZpW2peM/jxNaexpp1wC6eTjfrtEwg==}
