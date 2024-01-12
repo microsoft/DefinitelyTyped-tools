@@ -27,7 +27,7 @@
     "dts-dom": "^3.7.0",
     "parse-git-config": "^3.0.0",
     "typescript": "^5.3.3",
-    "yargs": "^4.8.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^16.18.70",
