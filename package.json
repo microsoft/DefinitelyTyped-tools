@@ -27,7 +27,7 @@
     "knip": "^3.13.2",
     "prettier": "^3.1.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "pnpm": {
     "overrides": {
