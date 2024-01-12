@@ -25,13 +25,13 @@
   },
   "dependencies": {
     "dts-dom": "^3.7.0",
-    "parse-git-config": "^1.1.1",
+    "parse-git-config": "^3.0.0",
     "typescript": "^5.3.3",
     "yargs": "^4.8.1"
   },
   "devDependencies": {
     "@types/node": "^16.18.70",
-    "@types/parse-git-config": "^1.1.0",
+    "@types/parse-git-config": "^3.0.4",
     "@types/yargs": "^17.0.32",
     "ecurve": "1.0.6",
     "jquery": "3.7.1",
