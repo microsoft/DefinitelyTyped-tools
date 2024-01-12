@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.1.4
+
+### Patch Changes
+
+- 0a7fc7aa: Fix OOM when developing locally
+
 ## 0.1.3
 
 ### Patch Changes

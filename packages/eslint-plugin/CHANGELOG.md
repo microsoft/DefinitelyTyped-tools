@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.207
+
+### Patch Changes
+
+- 57628b68: Add new no-type-only-packages lint rule
+
 ## 0.0.206
 
 ### Patch Changes
