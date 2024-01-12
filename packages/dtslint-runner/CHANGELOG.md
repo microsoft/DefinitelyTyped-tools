@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.0.215
+
+### Patch Changes
+
+- 50cc5dce: loosen checkParseResults
+- Updated dependencies [0a7fc7aa]
+- Updated dependencies [50cc5dce]
+  - @definitelytyped/dtslint@0.1.4
+  - @definitelytyped/definitions-parser@0.0.201
+
 ## 0.0.214
 
 ### Patch Changes
