@@ -223,16 +223,10 @@ importers:
       '@octokit/rest':
         specifier: ^19.0.13
         version: 19.0.13
-      semver:
-        specifier: ^7.5.4
-        version: 7.5.4
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
     devDependencies:
-      '@types/semver':
-        specifier: ^7.5.5
-        version: 7.5.5
       glob:
         specifier: ^10.3.10
         version: 10.3.10
