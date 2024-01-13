@@ -13,7 +13,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "composite": true,
-    "skipLibCheck": true,
     "types": ["node"],
     "lib": ["es2022"]
   }
