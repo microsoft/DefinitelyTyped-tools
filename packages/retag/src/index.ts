@@ -48,19 +48,17 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
   const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 
-  const publishClient = await NpmPublishClient.create(token, {});
+  const publishClient = new NpmPublishClient(token);
   if (name) {
     const pkg = await AllPackages.readSingle(dt, name);
     const version = await getLatestTypingVersion(pkg);
     await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-    await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
   } else {
     const allPackages = AllPackages.fromFS(dt);
     await nAtATime(5, await allPackages.allLatestTypings(), async (pkg) => {
       // Only update tags for the latest version of the package.
       const version = await getLatestTypingVersion(pkg);
       await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-      await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
     });
   }
   // Don't tag notNeeded packages
@@ -82,21 +80,6 @@ export async function updateTypeScriptVersionTags(
     for (const tagName of tags) {
       await client.tag(name, version, tagName, dry, log);
     }
-  }
-}
-
-export async function updateLatestTag(
-  fullName: string,
-  version: string,
-  client: NpmPublishClient,
-  log: Logger,
-  dry: boolean,
-): Promise<void> {
-  log(`   but tag ${fullName}@${version} as "latest"`);
-  if (dry) {
-    log('   (dry) Skip move "latest" back to newest version');
-  } else {
-    await client.tag(fullName, version, "latest", dry, log);
   }
 }
 

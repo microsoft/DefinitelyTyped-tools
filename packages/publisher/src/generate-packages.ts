@@ -23,7 +23,6 @@ import {
   nAtATime,
   writeFile,
   writeLog,
-  writeTgz,
 } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import { defaultLocalOptions } from "./lib/common";
@@ -62,7 +61,7 @@ export default async function generatePackages(dt: FS, changedPackages: ChangedP
   await nAtATime(10, changedPackages.changedTypings, async ({ pkg, version }) => {
     await generateTypingPackage(pkg, version, dt);
     if (tgz) {
-      await writeTgz(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
+      await pacote.tarball.file(outputDirectory(pkg), `${outputDirectory(pkg)}.tgz`);
     }
     log(` * ${pkg.desc}`);
   });

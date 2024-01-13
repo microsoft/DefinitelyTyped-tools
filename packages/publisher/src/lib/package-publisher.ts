@@ -1,42 +1,46 @@
-import assert = require("assert");
-import { Logger, joinPaths, readFileAndWarn, NpmPublishClient } from "@definitelytyped/utils";
+import { Logger, NpmPublishClient } from "@definitelytyped/utils";
 import { NotNeededPackage, AnyPackage } from "@definitelytyped/definitions-parser";
-import { updateTypeScriptVersionTags, updateLatestTag } from "@definitelytyped/retag";
+import { updateTypeScriptVersionTags } from "@definitelytyped/retag";
+import * as libpub from "libnpmpublish";
+import * as pacote from "pacote";
 import { ChangedTyping } from "./versions";
 import { outputDirectory } from "../util/util";
 
 export async function publishTypingsPackage(
   client: NpmPublishClient,
   changedTyping: ChangedTyping,
+  token: string,
   dry: boolean,
   log: Logger,
 ): Promise<void> {
-  const { pkg, version, latestVersion } = changedTyping;
-  await common(client, pkg, log, dry);
+  const { pkg, version } = changedTyping;
+  await common(pkg, token, dry);
   if (pkg.isLatest) {
     await updateTypeScriptVersionTags(pkg, version, client, log, dry);
-  }
-  assert((latestVersion === undefined) === pkg.isLatest);
-  if (latestVersion !== undefined) {
-    // If this is an older version of the package, we still update tags for the *latest*.
-    // NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
-    // so we must undo that by re-tagging latest.
-    await updateLatestTag(pkg.name, latestVersion, client, log, dry);
   }
 }
 
 export async function publishNotNeededPackage(
-  client: NpmPublishClient,
   pkg: NotNeededPackage,
+  token: string,
   dry: boolean,
   log: Logger,
 ): Promise<void> {
   log(`Deprecating ${pkg.name}`);
-  await common(client, pkg, log, dry);
+  await common(pkg, token, dry);
 }
 
-async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean): Promise<void> {
+async function common(pkg: AnyPackage, token: string, dry: boolean): Promise<void> {
   const packageDir = outputDirectory(pkg);
-  const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
-  await client.publish(packageDir, packageJson, dry, log);
+  const manifest = await pacote.manifest(packageDir).catch((reason) => {
+    throw reason.code === "ENOENT" ? new Error("Run generate first!", { cause: reason }) : reason;
+  });
+  const tarData = await pacote.tarball(packageDir);
+  // Make sure we never assign the latest tag to an old version.
+  if (!dry)
+    await libpub.publish(manifest ? { ...manifest, bundledDependencies: undefined } : manifest, tarData, {
+      defaultTag: pkg.isLatest ? "latest" : "",
+      access: "public",
+      token,
+    });
 }

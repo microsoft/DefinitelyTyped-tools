@@ -10,6 +10,7 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
+    "libnpmpublish": "^9.0.3",
     "longjohn": "^0.2.12",
     "pacote": "^17.0.4",
     "semver": "^7.5.4",
@@ -17,6 +18,8 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@npm/types": "^1.0.2",
+    "@types/libnpmpublish": "^4.0.3",
     "@types/pacote": "^11.1.8",
     "@types/semver": "^7.5.5",
     "@types/yargs": "^17.0.31"

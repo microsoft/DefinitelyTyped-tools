@@ -310,6 +310,9 @@ importers:
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
+      libnpmpublish:
+        specifier: ^9.0.3
+        version: 9.0.3
       longjohn:
         specifier: ^0.2.12
         version: 0.2.12
@@ -326,6 +329,12 @@ importers:
         specifier: ^17.7.2
         version: 17.7.2
     devDependencies:
+      '@npm/types':
+        specifier: ^1.0.2
+        version: 1.0.2
+      '@types/libnpmpublish':
+        specifier: ^4.0.3
+        version: 4.0.6
       '@types/pacote':
         specifier: ^11.1.8
         version: 11.1.8
@@ -425,9 +434,6 @@ importers:
       minimatch:
         specifier: ^9.0.3
         version: 9.0.3
-      tar:
-        specifier: ^6.2.0
-        version: 6.2.0
       tar-stream:
         specifier: ^3.1.6
         version: 3.1.6
@@ -441,9 +447,6 @@ importers:
       '@types/charm':
         specifier: ^1.0.6
         version: 1.0.6
-      '@types/tar':
-        specifier: ^6.1.9
-        version: 6.1.9
       '@types/tar-stream':
         specifier: ^3.1.3
         version: 3.1.3
@@ -1398,6 +1401,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@npm/types@1.0.2:
+    resolution: {integrity: sha512-KXZccTDEnWqNrrx6JjpJKU/wJvNeg9BDgjS0XhmlZab7br921HtyVbsYzJr4L+xIvjdJ20Wh9dgxgCI2a5CEQw==}
+    dev: true
+
   /@npmcli/agent@2.2.0:
     resolution: {integrity: sha512-2yThA1Es98orMkpSLVqlDZAMPK3jHJhifP2gnNUdk1754uZ8yI5c+ulCoVG+WlntQA6MzhrURMXjSd9Z7dJ2/Q==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -1938,6 +1945,14 @@ packages:
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  /@types/libnpmpublish@4.0.6:
+    resolution: {integrity: sha512-xI99EEgpr1R0hpLAKb52QbBYv8ZZa9FDiZS7LEVE6RevjkQHF3BflPR7Mo2F8yxMnqP6eoPkWE0bnWvDC/sA9A==}
+    dependencies:
+      '@npm/types': 1.0.2
+      '@types/node-fetch': 2.6.9
+      '@types/npm-registry-fetch': 8.0.7
+    dev: true
+
   /@types/minimist@1.2.5:
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
     dev: true
@@ -2017,13 +2032,6 @@ packages:
     resolution: {integrity: sha512-Zbnx4wpkWBMBSu5CytMbrT5ZpMiF55qgM+EpHzR4yIDu7mv52cej8hTkOc6K+LzpkOAbxwn/m7j3iO+/l42YkQ==}
     dependencies:
       '@types/node': 16.18.61
-    dev: true
-
-  /@types/tar@6.1.9:
-    resolution: {integrity: sha512-T3+O+OQd9cdGmOXuKQY9+B0ceZHRlGVPQ7M5QZqkaPyP/vWnxPXM2aCegq8GP/n1n9dBfq2EBUqCSKKjQAVOPA==}
-    dependencies:
-      '@types/node': 16.18.61
-      minipass: 4.2.8
     dev: true
 
   /@types/tmp@0.2.6:
@@ -2717,6 +2725,11 @@ packages:
     resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /ci-info@4.0.0:
+    resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
+    engines: {node: '>=8'}
+    dev: false
 
   /cjs-module-lexer@1.2.3:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
@@ -4985,6 +4998,22 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
+  /libnpmpublish@9.0.3:
+    resolution: {integrity: sha512-XoF0QgT1Ph9RMBfTwiwZeRN4Rs5t4w1POaRxaoVoWCMUqysswwlAPu3ZZJDNbh7asXBWXcXTJziDWkInhpbiBg==}
+    engines: {node: ^16.14.0 || >=18.0.0}
+    dependencies:
+      ci-info: 4.0.0
+      normalize-package-data: 6.0.0
+      npm-package-arg: 11.0.1
+      npm-registry-fetch: 16.1.0
+      proc-log: 3.0.0
+      semver: 7.5.4
+      sigstore: 2.1.0
+      ssri: 10.0.5
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
@@ -5300,11 +5329,6 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: false
-
-  /minipass@4.2.8:
-    resolution: {integrity: sha512-fNzuVyifolSLFL4NzpF+wEF4qrgqaaKX0haXPQEdQ7NKAN+WecoKMHV09YcuL/DHxrUsYQOK3MiuDf7Ip2OXfQ==}
-    engines: {node: '>=8'}
-    dev: true
 
   /minipass@5.0.0:
     resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}

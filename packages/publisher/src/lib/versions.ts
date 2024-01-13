@@ -13,8 +13,6 @@ export interface ChangedTyping {
   readonly pkg: TypingsData;
   /** This is the version to be published, meaning it's the version that doesn't exist yet. */
   readonly version: string;
-  /** For a non-latest version, this is the latest version; publishing an old version updates the 'latest' tag and we want to change it back. */
-  readonly latestVersion: string | undefined;
 }
 
 export interface ChangedPackagesJson {
@@ -26,7 +24,6 @@ export interface ChangedPackagesJson {
 export interface ChangedTypingJson {
   readonly id: PackageId;
   readonly version: string;
-  readonly latestVersion?: string;
 }
 
 export interface ChangedPackages {
@@ -38,10 +35,9 @@ export async function readChangedPackages(allPackages: AllPackages): Promise<Cha
   const json = (await readDataFile("calculate-versions", versionsFilename)) as ChangedPackagesJson;
   return {
     changedTypings: await Promise.all(
-      json.changedTypings.map(async ({ id, version, latestVersion }) => ({
+      json.changedTypings.map(async ({ id, version }) => ({
         pkg: await allPackages.getTypingsData(id),
         version,
-        latestVersion,
       })),
     ),
     changedNotNeededPackages: json.changedNotNeededPackages.map((id) =>

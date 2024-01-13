@@ -1,57 +1,15 @@
 import * as os from "os";
 import process from "process";
-import fs from "fs";
 import RegClient from "@qiwi/npm-registry-client";
-import { resolve as resolveUrl } from "url";
 import { joinPaths } from "./fs";
 import { Logger } from "./logging";
-import { createTgz } from "./io";
-
-export const npmRegistryHostName = "registry.npmjs.org";
-export const npmRegistry = `https://${npmRegistryHostName}/`;
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
-type NeedToFixNpmRegistryClientTypings = any;
-
 export class NpmPublishClient {
-  static async create(token: string, config?: NeedToFixNpmRegistryClientTypings): Promise<NpmPublishClient> {
-    return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
-  }
+  private readonly client = new RegClient();
 
-  private constructor(
-    private readonly client: RegClient,
-    private readonly auth: NeedToFixNpmRegistryClientTypings,
-    private readonly registry: string,
-  ) {}
-
-  async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
-    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"));
-
-    return new Promise<void>((resolve, reject) => {
-      const body = createTgz(publishedDirectory, reject);
-      const metadata = { readme, ...packageJson };
-      if (dry) {
-        log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
-      }
-      resolve(
-        dry
-          ? undefined
-          : promisifyVoid((cb) => {
-              this.client.publish(
-                this.registry,
-                {
-                  access: "public",
-                  auth: this.auth,
-                  metadata: metadata as NeedToFixNpmRegistryClientTypings,
-                  body: body as NeedToFixNpmRegistryClientTypings,
-                },
-                cb,
-              );
-            }),
-      );
-    });
-  }
+  constructor(private readonly token: string) {}
 
   tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
     if (dry) {
@@ -59,19 +17,22 @@ export class NpmPublishClient {
       return Promise.resolve();
     }
     return promisifyVoid((cb) => {
-      this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
+      this.client.distTags.add(
+        "https://registry.npmjs.org",
+        { package: packageName, version, distTag, auth: { token: this.token } },
+        cb,
+      );
     });
   }
 
   deprecate(packageName: string, version: string, message: string): Promise<void> {
-    const url = resolveUrl(npmRegistry, packageName);
     const params = {
       message,
       version,
-      auth: this.auth,
+      auth: { token: this.token },
     };
     return promisifyVoid((cb) => {
-      this.client.deprecate(url, params, cb);
+      this.client.deprecate(`https://registry.npmjs.org/${packageName}`, params, cb);
     });
   }
 }
