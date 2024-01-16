@@ -6,10 +6,16 @@ import * as semver from "semver";
 import { inspect } from "util";
 import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
 
-export interface GitDiff {
-  status: "A" | "D" | "M";
-  file: string;
-}
+export type GitDiff =
+  | {
+      status: "A" | "D" | "M";
+      file: string;
+    }
+  | {
+      status: "R";
+      file: string;
+      source: string;
+    };
 
 /*
 We have to be careful about how we get the diff because Actions uses a shallow clone.
@@ -38,7 +44,10 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     diff = (await run("git", ["diff", `${sourceBranch}~1`, "--name-status"])).trim();
   }
   return diff.split("\n").map((line) => {
-    const [status, file] = line.split(/\s+/, 2);
+    const [status, file, destination] = line.split(/\s+/, 3);
+    if (status[0] === "R") {
+      return { status: "R", file: destination.trim(), source: file.trim() };
+    }
     return { status: status.trim(), file: file.trim() } as GitDiff;
   });
 
@@ -50,6 +59,10 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
   }
 }
 
+/**
+ * @returns packages with added or removed files, but not packages with only changed files; 
+ * {@link getAffectedPackages | those are found by calling pnpm }.
+ */
 export function gitChanges(
   diffs: GitDiff[],
 ): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
@@ -61,12 +74,24 @@ export function gitChanges(
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
-      addedPackages.set(key, [dep, diff.status]);
+      if (diff.status === "R") {
+        addedPackages.set(key, [dep, "A"]);
+        const srcDep = getDependencyFromFile(diff.source);
+        if (srcDep) {
+          const srcKey = `${srcDep.typesDirectoryName}/v${
+            srcDep.version === "*" ? "*" : formatTypingVersion(srcDep.version)
+          }`;
+          addedPackages.set(srcKey, [srcDep, "D"]);
+        }
+      } else {
+        addedPackages.set(key, [dep, diff.status]);
+      }
     } else {
+      const status = diff.status === "A" || diff.status === "R" ? "add" : "delete";
       errors.push(
-        `Unexpected file ${diff.status === "A" ? "added" : "deleted"}: ${diff.file}
+        `Unexpected file ${status === "add" ? "added" : "deleted"}: ${diff.file}
 You should ` +
-          (diff.status === "A"
+          (status === "add"
             ? `only add files that are part of packages.`
             : "only delete files that are a part of removed packages."),
       );
@@ -86,18 +111,19 @@ export async function getAffectedPackagesFromDiff(
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+  const git = gitChanges(diffs);
+  if ("errors" in git) {
+    return git.errors;
+  }
   if (diffs.find((d) => d.file === "notNeededPackages.json")) {
-    const deleteds = await getNotNeededPackages(allPackages, diffs);
+    const deleteds = await getNotNeededPackages(allPackages, git.deletions);
     if ("errors" in deleteds) errors.push(...deleteds.errors);
     else
       for (const deleted of deleteds) {
         errors.push(...(await checkNotNeededPackage(deleted)));
       }
   }
-  const affected = await getAffectedPackages(allPackages, diffs, definitelyTypedPath);
-  if ("errors" in affected) {
-    errors.push(...affected.errors);
-  }
+  const affected = await getAffectedPackages(allPackages, git, definitelyTypedPath);
   if (errors.length) {
     return errors;
   }
@@ -148,11 +174,8 @@ it is supposed to replace, ${typings.version} of ${unneeded.name}.`);
  */
 export async function getNotNeededPackages(
   allPackages: AllPackages,
-  diffs: GitDiff[],
+  deletions: PackageId[],
 ): Promise<{ errors: string[] } | NotNeededPackage[]> {
-  const changes = gitChanges(diffs);
-  if ("errors" in changes) return changes;
-  const { deletions } = changes;
   const deletedPackages = new Set(deletions.map((p) => assertDefined(p.typesDirectoryName)));
   const notNeededs = [];
   const errors = [];

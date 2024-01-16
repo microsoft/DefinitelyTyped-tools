@@ -1,9 +1,8 @@
 import { assertDefined, execAndThrowErrors, mapDefined, normalizeSlashes, withoutStart } from "@definitelytyped/utils";
 import { sourceBranch, sourceRemote } from "./lib/settings";
-import { AllPackages, formatTypingVersion, getDependencyFromFile } from "./packages";
+import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 import { satisfies } from "semver";
-import { GitDiff, gitChanges } from "./git";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
@@ -12,24 +11,16 @@ export interface PreparePackagesResult {
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export async function getAffectedPackages(
   allPackages: AllPackages,
-  diffs: GitDiff[],
+  git: { deletions: PackageId[]; additions: PackageId[] },
   definitelyTypedPath: string,
-): Promise<{ errors: string[] } | PreparePackagesResult> {
-  const errors = [];
+): Promise<PreparePackagesResult> {
   // No ... prefix; we only want packages that were actually edited.
   const changedPackageDirectories = await execAndThrowErrors(
     "pnpm",
     ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${sourceRemote}/${sourceBranch}]`],
     definitelyTypedPath,
   );
-
-  const git = gitChanges(diffs);
-  if ("errors" in git) {
-    errors.push(...git.errors);
-    return { errors };
-  }
-  const { additions, deletions } = git;
-  const addedPackageDirectories = mapDefined(additions, (pkg) => {
+  const addedPackageDirectories = mapDefined(git.additions, (pkg) => {
     if (!pkg.typesDirectoryName) return undefined;
     if (!pkg.version || pkg.version === "*") return pkg.typesDirectoryName;
     return `${pkg.typesDirectoryName}/v${formatTypingVersion(pkg.version)}`;
@@ -39,7 +30,7 @@ export async function getAffectedPackages(
   const filters = ["--filter", `...@types/**[${sourceRemote}/${sourceBranch}]`];
   // For packages that have been deleted, they won't appear in the graph anymore; look for packages
   // that still depend on the package (but via npm) and manually add them.
-  for (const d of deletions) {
+  for (const d of git.deletions) {
     for (const dep of await allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
         if (
