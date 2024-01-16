@@ -1,16 +1,16 @@
 ---
-"@definitelytyped/typescript-packages": patch
-"@definitelytyped/typescript-versions": patch
-"@definitelytyped/definitions-parser": patch
-"@definitelytyped/dtslint-runner": patch
-"@definitelytyped/eslint-plugin": patch
-"@definitelytyped/header-parser": patch
-"@definitelytyped/dts-critic": patch
-"@definitelytyped/publisher": patch
-"dts-gen": patch
-"@definitelytyped/dtslint": patch
-"@definitelytyped/retag": patch
-"@definitelytyped/utils": patch
+"@definitelytyped/typescript-packages": minor
+"@definitelytyped/typescript-versions": minor
+"@definitelytyped/definitions-parser": minor
+"@definitelytyped/dtslint-runner": minor
+"@definitelytyped/eslint-plugin": minor
+"@definitelytyped/header-parser": minor
+"@definitelytyped/dts-critic": minor
+"@definitelytyped/publisher": minor
+"dts-gen": minor
+"@definitelytyped/dtslint": minor
+"@definitelytyped/retag": minor
+"@definitelytyped/utils": minor
 ---
 
 Require Node 18.6+
