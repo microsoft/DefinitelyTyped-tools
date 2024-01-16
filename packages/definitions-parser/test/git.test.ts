@@ -72,19 +72,18 @@ testo({
   },
   async gitMovesConvertedToAddsAndDeletes() {
     expect(gitChanges(moveRdfJSDiffs)).toEqual({
-      // serializer-jsonld-ext has changes, why isn't in the list? I guess we only track dirs with additions and deletions?
       additions: [
         { typesDirectoryName: "rdf-ext", version: "*" },
         { typesDirectoryName: "rdfjs__formats", version: "*" },
         { typesDirectoryName: "rdfjs__serializer-turtle", version: "*" },
       ],
       deletions: [
-        { typesDirectoryName: "rdfjs__environment", version: "*" }, // this still has stuff in it, why is it put in deletions?
+        { typesDirectoryName: "rdf-ext", version: "*" },
+        { typesDirectoryName: "rdfjs__environment", version: "*" },
         { typesDirectoryName: "rdfjs__formats-common", version: "*" },
       ],
     });
-  }, // I think both of these questions are because we are only interested in checking that added and removed *files* are correct.
-  // But this means I might have done the wrong thing with respect to moves. (=even though they're technically an add+remove)
+  },
   async forgotToDeleteFiles() {
     expect(
       await getNotNeededPackages(

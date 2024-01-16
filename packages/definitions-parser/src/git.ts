@@ -66,7 +66,8 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
 export function gitChanges(
   diffs: GitDiff[],
 ): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
-  const addedPackages = new Map<string, [PackageId, "A" | "D"]>();
+  const deletions: Map<string, PackageId> = new Map();
+  const additions: Map<string, PackageId> = new Map();
   const errors = [];
   for (const diff of diffs) {
     if (!/types[\\/]/.test(diff.file)) continue;
@@ -74,17 +75,16 @@ export function gitChanges(
     const dep = getDependencyFromFile(diff.file);
     if (dep) {
       const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
+      (diff.status === "D" ? deletions : additions).set(key, dep);
       if (diff.status === "R") {
-        addedPackages.set(key, [dep, "A"]);
+        // add the source of moves to deletions (the destination was just added to additions)
         const srcDep = getDependencyFromFile(diff.source);
         if (srcDep) {
           const srcKey = `${srcDep.typesDirectoryName}/v${
             srcDep.version === "*" ? "*" : formatTypingVersion(srcDep.version)
           }`;
-          addedPackages.set(srcKey, [srcDep, "D"]);
+          deletions.set(srcKey, srcDep);
         }
-      } else {
-        addedPackages.set(key, [dep, diff.status]);
       }
     } else {
       const status = diff.status === "A" || diff.status === "R" ? "add" : "delete";
@@ -98,12 +98,7 @@ You should ` +
     }
   }
   if (errors.length) return { errors };
-  const deletions: PackageId[] = [];
-  const additions: PackageId[] = [];
-  for (const [dep, status] of Array.from(addedPackages.values())) {
-    (status === "D" ? deletions : additions).push(dep);
-  }
-  return { deletions, additions };
+  return { deletions: Array.from(deletions.values()), additions: Array.from(additions.values()) };
 }
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
