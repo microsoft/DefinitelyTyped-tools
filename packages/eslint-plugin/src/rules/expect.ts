@@ -175,7 +175,8 @@ function createProgram(configFile: string, ts: TSModule): ts.Program {
     noEmit: true,
   });
 
-  if (config.compilerOptions?.module === "node16" && parsed.options.module === undefined) {
+  const tsconfigModule = typeof config.compilerOptions?.module;
+  if (tsconfigModule === "string" && tsconfigModule.toLowerCase() === "node16" && parsed.options.module === undefined) {
     // TypeScript version is too old to handle the "node16" module option,
     // but we can run tests falling back to commonjs/node.
     parsed.options.module = ts.ModuleKind.CommonJS;
