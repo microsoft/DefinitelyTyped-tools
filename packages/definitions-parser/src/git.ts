@@ -60,7 +60,7 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
 }
 
 /**
- * @returns packages with added or removed files, but not packages with only changed files; 
+ * @returns packages with added or removed files, but not packages with only changed files;
  * {@link getAffectedPackages | those are found by calling pnpm }.
  */
 export function gitChanges(
