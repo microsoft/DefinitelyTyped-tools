@@ -24,8 +24,8 @@
   "dependencies": {
     "@definitelytyped/dts-critic": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/types": "^6.11.0",
-    "@typescript-eslint/utils": "^6.11.0"
+    "@typescript-eslint/types": "^6.19.0",
+    "@typescript-eslint/utils": "^6.19.0"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.11.0",
@@ -35,13 +35,13 @@
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
-    "@definitelytyped/eslint-plugin": "link:./",
-    "@typescript-eslint/rule-tester": "^6.11.0",
-    "@types/eslint": "^8.44.7",
+    "@definitelytyped/eslint-plugin": "link:",
+    "@types/eslint": "^8.56.2",
+    "@typescript-eslint/rule-tester": "^6.19.0",
     "glob": "^10.3.10",
     "jest-file-snapshot": "^0.5.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=16.17.0"

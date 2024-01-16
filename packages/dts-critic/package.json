@@ -11,7 +11,7 @@
     "command-exists": "^1.2.9",
     "semver": "^7.5.4",
     "tmp": "^0.2.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "yargs": "^17.7.2"
   },
   "peerDependencies": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/command-exists": "^1.2.3",
-    "@types/semver": "^7.5.5",
+    "@types/semver": "^7.5.6",
     "@types/strip-json-comments": "^3.0.0",
     "@types/tmp": "^0.2.6",
     "strip-json-comments": "^3.1.1"

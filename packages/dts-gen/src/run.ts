@@ -12,7 +12,7 @@ const templatesDirectory = path.join(__dirname, "..", "templates");
 interface Options {
   module?: string;
   expression?: string;
-  "expression-file": string;
+  "expression-file"?: string;
   identifier?: string;
   template?: string;
 
@@ -36,7 +36,8 @@ const args = yargs
   .alias("s", "stdout")
   .alias("o", "overwrite")
   .alias("t", "template")
-  .alias("v", "version").argv as any as Options;
+  .alias("v", "version")
+  .parseSync() as Options;
 
 class ArgsError extends Error {
   constructor(public argsError: string) {

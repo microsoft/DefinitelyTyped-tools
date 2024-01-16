@@ -22,14 +22,14 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@types/node": "^16.18.61",
-    "@types/semver": "^7.5.5",
-    "pacote": "^17.0.4",
+    "@types/node": "^16.18.71",
+    "@types/semver": "^7.5.6",
+    "pacote": "^17.0.5",
     "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "typescript": "*"
