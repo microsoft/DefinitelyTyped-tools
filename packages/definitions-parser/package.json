@@ -38,6 +38,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=18.6.0"
+    "node": ">=18.18.0"
   }
 }
