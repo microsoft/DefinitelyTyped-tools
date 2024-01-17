@@ -13,4 +13,4 @@
 "@definitelytyped/utils": minor
 ---
 
-Require Node 18.6+
+Require Node 18+
