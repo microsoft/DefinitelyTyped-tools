@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.0.192
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+
 ## 0.0.191
 
 ### Patch Changes
