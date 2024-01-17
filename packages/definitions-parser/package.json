@@ -22,7 +22,7 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@types/node": "^16.18.71",
+    "@types/node": "^18.19.7",
     "@types/semver": "^7.5.6",
     "pacote": "^17.0.5",
     "semver": "^7.5.4"
@@ -38,6 +38,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.18.0"
   }
 }

@@ -21,7 +21,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.18.0"
   },
   "dependencies": {
     "dts-dom": "^3.7.0",
@@ -30,7 +30,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^16.18.71",
+    "@types/node": "^18.19.7",
     "@types/parse-git-config": "^3.0.4",
     "@types/yargs": "^17.0.32",
     "ecurve": "1.0.6",

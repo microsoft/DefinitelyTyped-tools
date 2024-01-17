@@ -18,6 +18,6 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.18.0"
   }
 }

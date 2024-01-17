@@ -77,6 +77,6 @@
       "ignoreDependencies": ["@qiwi/npm-types"]
     }
   },
-  "ignore": ["**/fixtures", "**/testsource", "**/dtslint/test/*/**", "**/*.d.ts"],
+  "ignore": ["**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],
   "ignoreExportsUsedInFile": true
 }
