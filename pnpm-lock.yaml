@@ -419,6 +419,9 @@ importers:
       '@types/node':
         specifier: ^18.19.7
         version: 18.19.7
+      cachedir:
+        specifier: ^2.0.0
+        version: 2.4.0
       charm:
         specifier: ^1.0.2
         version: 1.0.2
@@ -2654,6 +2657,11 @@ packages:
       ssri: 10.0.5
       tar: 6.2.0
       unique-filename: 3.0.0
+    dev: false
+
+  /cachedir@2.4.0:
+    resolution: {integrity: sha512-9EtFOZR8g22CL7BWjJ9BUx1+A/djkofnyW3aOXZORNW2kxoUpx2h+uN2cOqwPmFhnpVmxg+KW2OjOSgChTEvsQ==}
+    engines: {node: '>=6'}
     dev: false
 
   /call-bind@1.0.5:

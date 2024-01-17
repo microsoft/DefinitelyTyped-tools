@@ -1,8 +1,6 @@
 import fs = require("fs");
-import os = require("os");
 import path = require("path");
-
-const suggestionsDir = path.join(os.homedir(), ".dts", "suggestions");
+import { suggestionsDir } from '@definitelytyped/utils';
 
 interface Suggestion {
   fileName: string;
