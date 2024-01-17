@@ -1,5 +1,15 @@
 # @definitelytyped/eslint-plugin
 
+## 0.0.208
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- e7ce84f: Fix case sensitivity of node16 backwards compat
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/dts-critic@0.0.199
+  - @definitelytyped/utils@0.0.192
+
 ## 0.0.207
 
 ### Patch Changes
