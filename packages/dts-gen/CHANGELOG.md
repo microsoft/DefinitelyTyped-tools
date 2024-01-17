@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.8.2
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+
 ## 0.8.1
 
 ### Patch Changes

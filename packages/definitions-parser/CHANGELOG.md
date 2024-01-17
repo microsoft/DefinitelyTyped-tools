@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.0.202
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- 795e0e3: Handle git moves in gitChanges
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/header-parser@0.1.2
+  - @definitelytyped/utils@0.0.192
+
 ## 0.0.201
 
 ### Patch Changes

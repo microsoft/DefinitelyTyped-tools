@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.0.199
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/header-parser@0.1.2
+
 ## 0.0.198
 
 ### Patch Changes
