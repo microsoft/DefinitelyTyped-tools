@@ -1,3 +1,4 @@
+@adobe/ccweb-add-on-sdk-types
 @apollo/client
 @aws-sdk/client-s3
 @azure/functions
