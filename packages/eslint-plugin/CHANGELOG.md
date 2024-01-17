@@ -1,5 +1,17 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/dts-critic@0.1.0
+  - @definitelytyped/utils@0.1.0
+
 ## 0.0.208
 
 ### Patch Changes
