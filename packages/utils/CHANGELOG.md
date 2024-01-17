@@ -1,5 +1,17 @@
 # @definitelytyped/utils
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/typescript-packages@0.1.0
+  - @definitelytyped/typescript-versions@0.1.0
+
 ## 0.0.192
 
 ### Patch Changes

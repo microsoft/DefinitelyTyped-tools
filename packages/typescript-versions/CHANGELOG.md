@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
 ## 0.0.184
 
 ### Patch Changes

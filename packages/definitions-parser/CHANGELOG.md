@@ -1,5 +1,18 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/typescript-versions@0.1.0
+  - @definitelytyped/header-parser@0.2.0
+  - @definitelytyped/utils@0.1.0
+
 ## 0.0.202
 
 ### Patch Changes
