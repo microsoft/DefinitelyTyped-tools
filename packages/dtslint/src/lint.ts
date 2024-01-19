@@ -13,9 +13,7 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
-  skipNpmNaming: boolean,
   tsLocal: string | undefined,
-  implementationPackageDirectory: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   // If this package has been linked for local development,
@@ -51,7 +49,7 @@ export async function lint(
     }
   }
 
-  const options = getEslintOptions(expectOnly, skipNpmNaming, minVersion, maxVersion, tsLocal, implementationPackageDirectory);
+  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
   const results = await eslint.lintFiles(files);
@@ -74,11 +72,9 @@ function tryResolve(path: string, options?: { paths?: string[] | undefined }): s
 
 function getEslintOptions(
   expectOnly: boolean,
-  skipNpmNaming: boolean,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined,
-  implementationPackageDirectory: string | undefined,
 ): ESLint.Options {
   const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
     versionName,
@@ -119,18 +115,8 @@ function getEslintOptions(
       overrides: [
         {
           files: allFiles,
-          rules: skipNpmNaming
-            ? {}
-            : {
-                "@definitelytyped/npm-naming": [
-                  "error",
-                  {
-                    implementationPackageDirectory,
-                  }
-                ],
-              },
-        },
-      ],
+        }
+      ], 
     },
   };
 }
