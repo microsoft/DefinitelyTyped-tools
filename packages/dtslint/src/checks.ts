@@ -3,7 +3,7 @@ import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
 import fs from "fs";
 import { join as joinPaths, dirname } from "path";
 import { CompilerOptions } from "typescript";
-import { deepEquals, unmangleScopedPackage } from "@definitelytyped/utils";
+import { deepEquals } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
 import { execFileSync, execSync } from "child_process";
@@ -137,10 +137,9 @@ export interface AttwResult {
   output: string;
 }
 
-export function runAreTheTypesWrong(dirPath: string, configPath: string): AttwResult {
+export function runAreTheTypesWrong(dirPath: string, implementationTarballPath: string, configPath: string): AttwResult {
   const packageJsonContent = readJson(joinPaths(dirPath, "package.json"));
   const mangledName = packageJsonContent.name.replace(/^@types\//, "");
-  const unmangledName = unmangleScopedPackage(mangledName) || mangledName;
   const tarballName = `types-${mangledName}-${packageJsonContent.version}.tgz`;
   const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
   const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
@@ -148,7 +147,7 @@ export function runAreTheTypesWrong(dirPath: string, configPath: string): AttwRe
   try {
     const output = execFileSync(
       attwBinPath,
-      ["-p", unmangledName, "--definitely-typed", tarballName, "--config-path", configPath],
+      [implementationTarballPath, "--definitely-typed", tarballName, "--config-path", configPath],
       {
         cwd: dirPath,
         stdio: "pipe",

@@ -28,7 +28,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b .",
-    "dt": "node dist/dt.js",
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dts-critic"
   },
   "repository": {

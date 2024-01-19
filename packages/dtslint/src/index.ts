@@ -3,6 +3,8 @@
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import assert = require("assert");
 import fs from "fs";
+import os from "os";
+import tar from "tar";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 
 import { assertNever, deepEquals, readJson } from "@definitelytyped/utils";
@@ -10,6 +12,10 @@ import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
 import { lint, TsVersion } from "./lint";
 import { getCompilerOptions, packageNameFromPath } from "./util";
 import { getTypesVersions } from "@definitelytyped/header-parser";
+import { pipeline } from "stream/promises";
+import { createGunzip } from "zlib";
+import { satisfies } from "semver";
+const tmpDir = os.tmpdir();
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -97,7 +103,7 @@ function usage(): void {
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
-  console.error("  --noAttw         Don't run @arethetypeswrong/cli.")
+  console.error("  --noAttw         Don't run @arethetypeswrong/cli.");
   console.error("");
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
@@ -115,7 +121,7 @@ function listen(dirPath: string, tsLocal: string | undefined): void {
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal, !!noAttw)
       .then(
         () => process.send!({ path, status: "OK" }),
-        e => process.send!({ path, status: e.stack })
+        (e) => process.send!({ path, status: e.stack }),
       )
       .catch((e) => console.error(e.stack));
   });
@@ -147,10 +153,75 @@ async function runTests(
   await assertNpmIgnoreExpected(dirPath);
   assertNoOtherFiles(dirPath);
 
+  const attw = await import("@arethetypeswrong/core");
+  const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
+  let implementationPackage;
+  let npmError: Error | undefined;
+
+  const pkg = await tryPromise(
+    attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`),
+  );
+  if (pkg) {
+    const { packageName, packageVersion, tarballUrl } = pkg;
+    if (packageJson.nonNpm === true) {
+      npmError = new Error(
+        `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
+          `If these types are being added to DefinitelyTyped for the first time, please choose ` +
+          `a different name that does not conflict with an existing npm package.`,
+      );
+    } else if (!packageJson.nonNpm) {
+      if (!satisfies(packageVersion, typesPackageVersion)) {
+        // TODO: need an exemption for this
+        npmError = new Error(
+          `Cannot find a version of ${packageName} on npm that matches the types version ${typesPackageVersion}. ` +
+            `The closest match found was ${packageName}@${packageVersion}. ` +
+            `If these types are for the existing npm package ${packageName}, change the types package.json major ` +
+            `and minor version to match an existing version of the npm package. If these types are unrelated to ` +
+            `the npm package ${packageName}, add \`"nonNpm": true\` to the package.json and choose a different name ` +
+            `that does not conflict with an existing npm package.`,
+        );
+      } else {
+        const tarballPath = joinPaths(tmpDir, `${packageName.replace(/\//g, "-")}-${packageVersion}.tgz`);
+        const unpackedPath = joinPaths(tmpDir, `${packageName}-${packageVersion}`);
+        await pipeline((await fetch(tarballUrl)).body!, fs.createWriteStream(tarballPath));
+        await fs.promises.mkdir(unpackedPath, { recursive: true });
+        await pipeline(fs.createReadStream(tarballPath), createGunzip(), tar.extract({ cwd: unpackedPath }));
+        const containerDir = (await fs.promises.readdir(unpackedPath))[0];
+        implementationPackage = {
+          packageName,
+          packageVersion,
+          tarballPath,
+          unpackedPath: joinPaths(unpackedPath, containerDir)
+        };
+      }
+    }
+  } else {
+    if (packageJson.nonNpm === "conflict") {
+      npmError = new Error(
+        `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
+          `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
+      );
+    } else if (packageJson.nonNpm === false) {
+      npmError = new Error(
+        `Package ${packageJson.name} is not marked as non-npm, but no implementation package was found on npm. ` +
+          `If these types are not for an npm package, please add \`"nonNpm": true\` to the package.json. ` +
+          `Otherwise, ensure the name of this package matches the name of the npm package.`,
+      );
+    }
+  }
+
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
+    await testTypesVersion(
+      dirPath,
+      tsVersion,
+      tsVersion,
+      expectOnly,
+      tsLocal,
+      implementationPackage?.unpackedPath,
+      /*isLatest*/ true,
+    );
   } else {
     // For example, typesVersions of [3.2, 3.5, 3.6] will have
     // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -171,17 +242,25 @@ async function runTests(
       if (lows.length > 1) {
         console.log("testing from", low, "to", hi, "in", versionPath);
       }
-      await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
+      await testTypesVersion(
+        versionPath,
+        low,
+        hi,
+        expectOnly,
+        undefined,
+        implementationPackage?.unpackedPath,
+        isLatest,
+      );
     }
   }
 
-  if (!packageJson.nonNpm && !expectOnly && !noAttw) {
+  if (implementationPackage && !expectOnly && !noAttw) {
     const attwJson = joinPaths(dtRoot, "attw.json");
     const failingPackages = (readJson(attwJson) as any).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
-    const expectError = failingPackages?.includes(dirName)
-    const { output, status } = runAreTheTypesWrong(dirPath, attwJson);
-    
+    const expectError = failingPackages?.includes(dirName);
+    const { output, status } = runAreTheTypesWrong(dirPath, implementationPackage.tarballPath, attwJson);
+
     switch (expectError) {
       case true:
         switch (status) {
@@ -190,7 +269,7 @@ async function runTests(
             return undefined;
           case "fail":
             // Show output without failing the build.
-            return `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`;;
+            return `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`;
           case "pass":
             throw new Error(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
           default:
@@ -207,8 +286,13 @@ async function runTests(
             // Don't show anything for passing attw - most lint rules have no output on success.
             return undefined;
         }
-      }
+    }
   }
+
+  if (npmError) {
+    throw npmError;
+  }
+
   return undefined;
 }
 
@@ -230,13 +314,14 @@ async function testTypesVersion(
   hiVersion: TsVersion,
   expectOnly: boolean,
   tsLocal: string | undefined,
+  implementationPackageDirectory: string | undefined,
   isLatest: boolean,
 ): Promise<void> {
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
-  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
+  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal, implementationPackageDirectory);
   if (err) {
     throw new Error(err);
   }
@@ -333,4 +418,8 @@ function assertNoOtherFiles(dirPath: string) {
       `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
     );
   }
+}
+
+function tryPromise<T>(promise: Promise<T>): Promise<T | undefined> {
+  return promise.catch(() => undefined);
 }

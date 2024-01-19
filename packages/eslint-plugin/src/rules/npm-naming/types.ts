@@ -1,14 +1,9 @@
-import { ExportErrorKind, Mode } from "@definitelytyped/dts-critic";
+import { ExportErrorKind } from "@definitelytyped/dts-critic";
 
 export type CodeRawOptionError = [ExportErrorKind, boolean];
 
-export interface CodeRawOptions {
-  mode: Mode.Code;
+export interface NpmNamingOptions {
+  implementationPackageDirectory: string;
   errors: CodeRawOptionError[];
 }
 
-export interface NameOnlyRawOptions {
-  mode: Mode.NameOnly;
-}
-
-export type NpmNamingOptions = CodeRawOptions | NameOnlyRawOptions;

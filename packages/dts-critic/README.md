@@ -68,15 +68,6 @@ If your declaration is for a non-npm package (in other words, if your declaratio
 
 Note that for real use on Definitely Typed, a lot of these checks need to be pretty loose.
 
-# Also
-
-```sh
-$ node dist/dt.js
-```
-
-Will run dts-critic on every directory inside `../DefinitelyTyped` and
-print errors.
-
 # Contributing
 
 ## Testing

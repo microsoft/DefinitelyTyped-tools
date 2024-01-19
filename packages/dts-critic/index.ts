@@ -3,18 +3,9 @@ import headerParser = require("@definitelytyped/header-parser");
 import fs = require("fs");
 import cp = require("child_process");
 import path = require("path");
-import semver = require("semver");
-import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
-import * as tmp from "tmp";
 
 export enum ErrorKind {
-  /** Declaration is marked as npm in header and has no matching npm package. */
-  NoMatchingNpmPackage = "NoMatchingNpmPackage",
-  /** Declaration has no npm package matching specified version. */
-  NoMatchingNpmVersion = "NoMatchingNpmVersion",
-  /** Declaration is not for an npm package, but has a name that conflicts with an existing npm package. */
-  NonNpmHasMatchingPackage = "NonNpmHasMatchingPackage",
   /** Declaration needs to use `export =` to match the JavaScript module's behavior. */
   NeedsExportEquals = "NeedsExportEquals",
   /** Declaration has a default export, but JavaScript module does not have a default export. */
@@ -29,70 +20,31 @@ export enum ErrorKind {
   DtsSignatureNotInJs = "DtsSignatureNotInJs",
 }
 
-export enum Mode {
-  /** Checks based only on the package name and on the declaration's DefinitelyTyped header. */
-  NameOnly = "name-only",
-  /** Checks based on the source JavaScript code, in addition to the checks performed in name-only mode. */
-  Code = "code",
-}
-
-export function parseMode(mode: string): Mode | undefined {
-  switch (mode) {
-    case Mode.NameOnly:
-      return Mode.NameOnly;
-    case Mode.Code:
-      return Mode.Code;
-  }
-  return undefined;
-}
-
-export type CheckOptions = NameOnlyOptions | CodeOptions;
-export interface NameOnlyOptions {
-  mode: Mode.NameOnly;
-}
-export interface CodeOptions {
-  mode: Mode.Code;
+export interface CheckOptions {
   errors: Map<ExportErrorKind, boolean>;
 }
 
 export type ExportErrorKind = ExportError["kind"];
 
-const defaultOpts: CheckOptions = { mode: Mode.NameOnly };
-
 export function dtsCritic(
   dtsPath: string,
-  sourcePath?: string,
-  options: CheckOptions = defaultOpts,
+  sourcePath: string,
+  options: CheckOptions = { errors: new Map() },
   debug = false,
 ): CriticError[] {
-  if (!commandExistsSync("tar")) {
-    throw new Error(
-      "You need to have tar installed to run dts-critic, you can get it from https://www.gnu.org/software/tar",
-    );
+  if (!sourcePath && require.main !== module) {
+    // dtslint will issue an error.
+    return [];
   }
-  if (!commandExistsSync("npm")) {
-    throw new Error(
-      "You need to have npm installed to run dts-critic, you can get it from https://www.npmjs.com/get-npm",
-    );
-  }
-
   const name = findDtsName(dtsPath);
   const packageJsonPath = path.join(path.dirname(path.resolve(dtsPath)), "package.json");
-  const npmInfo = getNpmInfo(name);
   const header = parsePackageJson(name, JSON.parse(fs.readFileSync(packageJsonPath, "utf-8")), path.dirname(dtsPath));
   if (header === undefined) {
     return [];
   } else if (header.nonNpm) {
     const errors: CriticError[] = [];
-    const nonNpmError = checkNonNpm(name, npmInfo);
-    if (nonNpmError) {
-      errors.push(nonNpmError);
-    }
-
     if (sourcePath) {
-      if (options.mode === Mode.Code) {
-        errors.push(...checkSource(name, dtsPath, sourcePath, options.errors, debug));
-      }
+      errors.push(...checkSource(name, dtsPath, sourcePath, options.errors, debug));
     } else if (require.main === module) {
       console.log(`Warning: declaration provided is for a non-npm package.
 If you want to check the declaration against the JavaScript source code, you must provide a path to the source file.`);
@@ -100,30 +52,13 @@ If you want to check the declaration against the JavaScript source code, you mus
 
     return errors;
   } else {
-    const npmVersion = checkNpm(name, npmInfo, header);
-    if (typeof npmVersion !== "string") {
-      return [npmVersion];
+    let sourceEntry;
+    if (!fs.statSync(sourcePath).isDirectory()) {
+      sourceEntry = sourcePath;
+    } else {
+      sourceEntry = require.resolve(path.resolve(sourcePath));
     }
-
-    if (options.mode === Mode.Code) {
-      let sourceEntry;
-      let packagePath;
-      if (sourcePath) {
-        sourceEntry = sourcePath;
-      } else {
-        const tempDirName = tmp.dirSync({ unsafeCleanup: true }).name;
-        packagePath = downloadNpmPackage(name, npmVersion, tempDirName);
-        sourceEntry = require.resolve(path.resolve(packagePath));
-      }
-      const errors = checkSource(name, dtsPath, sourceEntry, options.errors, debug);
-      if (packagePath) {
-        // Delete the source afterward to avoid running out of space
-        fs.rmSync(packagePath, { recursive: true, force: true });
-      }
-      return errors;
-    }
-
-    return [];
+    return checkSource(name, dtsPath, sourceEntry, options.errors, debug);
   }
 }
 
@@ -142,7 +77,7 @@ export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, Er
 function main() {
   const argv = yargs
     .usage(
-      "$0 --dts path-to-d.ts [--js path-to-source] [--mode mode] [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm.",
+      "$0 --dts path-to-d.ts --js path-to-source [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm.",
     )
     .option("dts", {
       describe: "Path of declaration file to be critiqued.",
@@ -153,12 +88,7 @@ function main() {
       describe: "Path of JavaScript file to be used as source.",
       type: "string",
     })
-    .option("mode", {
-      describe: "Mode defines what checks will be performed.",
-      type: "string",
-      default: Mode.NameOnly,
-      choices: [Mode.NameOnly, Mode.Code],
-    })
+    .demandOption("js", "Please provide a path to a JavaScript file for me to compare the d.ts against.")
     .option("debug", {
       describe: "Turn debug logging on.",
       type: "boolean",
@@ -167,14 +97,7 @@ function main() {
     .help()
     .parseSync();
 
-  let opts;
-  switch (argv.mode) {
-    case Mode.NameOnly:
-      opts = { mode: argv.mode };
-      break;
-    case Mode.Code:
-      opts = { mode: argv.mode, errors: new Map() };
-  }
+  const opts = { mode: argv.mode, errors: new Map() };
   const errors = dtsCritic(argv.dts, argv.js, opts, argv.debug);
   if (errors.length === 0) {
     console.log("No errors!");
@@ -212,78 +135,6 @@ export function getNpmInfo(name: string): NpmInfo {
 }
 
 /**
- * Checks DefinitelyTyped non-npm package.
- */
-function checkNonNpm(name: string, npmInfo: NpmInfo): NonNpmError | undefined {
-  if (npmInfo.isNpm && !isExistingSquatter(name)) {
-    return {
-      kind: ErrorKind.NonNpmHasMatchingPackage,
-      message: `The non-npm package '${name}' conflicts with the existing npm package '${dtToNpmName(name)}'.
-Try adding -browser to the end of the name to get
-
-    ${name}-browser
-`,
-    };
-  }
-  return undefined;
-}
-
-/**
- * Checks DefinitelyTyped npm package.
- * If all checks are successful, returns the npm version that matches the header.
- */
-function checkNpm(name: string, npmInfo: NpmInfo, header: headerParser.Header): NpmError | string {
-  if (!npmInfo.isNpm) {
-    return {
-      kind: ErrorKind.NoMatchingNpmPackage,
-      message: `Declaration file must have a matching npm package.
-To resolve this error, either:
-1. Change the name to match an npm package.
-2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
-   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
-    };
-  }
-  const target =
-    header.libraryMajorVersion === 0 && header.libraryMinorVersion === 0
-      ? undefined
-      : `${header.libraryMajorVersion}.${header.libraryMinorVersion}`;
-  const npmVersion = getMatchingVersion(target, npmInfo);
-  if (!npmVersion) {
-    const versions = npmInfo.versions;
-    const verstring = versions.join(", ");
-    const lateststring = versions[versions.length - 1];
-    return {
-      kind: ErrorKind.NoMatchingNpmVersion,
-      message: `The types for '${name}' must match a version that exists on npm.
-You should copy the major and minor version from the package on npm.
-
-To resolve this error, change the version in the package.json, ${target},
-to match one on npm: ${verstring}.
-
-For example, if you're trying to match the latest version, use ${lateststring}.`,
-    };
-  }
-  return npmVersion;
-}
-
-/**
- * Finds an npm version that matches the target version specified, if it exists.
- * If the target version is undefined, returns the latest version.
- * The npm version returned might be a prerelease version.
- */
-function getMatchingVersion(target: string | undefined, npmInfo: Npm): string | undefined {
-  const versions = npmInfo.versions;
-  if (target) {
-    const matchingVersion = semver.maxSatisfying(versions, target, { includePrerelease: true });
-    return matchingVersion || undefined;
-  }
-  if (npmInfo.tags.latest) {
-    return npmInfo.tags.latest;
-  }
-  return versions[versions.length - 1];
-}
-
-/**
  * If dtsName is 'index' (as with DT) then look to the parent directory for the name.
  */
 export function findDtsName(dtsPath: string) {
@@ -293,47 +144,6 @@ export function findDtsName(dtsPath: string) {
     return baseName;
   }
   return path.basename(path.dirname(resolved));
-}
-
-/** Returns path of downloaded npm package. */
-function downloadNpmPackage(name: string, version: string, outDir: string): string {
-  const npmName = dtToNpmName(name);
-  const fullName = `${npmName}@${version}`;
-  const cpOpts = {
-    encoding: "utf8",
-    maxBuffer: 100 * 1024 * 1024,
-    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
-  } as const;
-  const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
-  // https://github.com/npm/cli/issues/3405
-  const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
-    .replace(/^@/, "")
-    .replace(/\//, "-");
-  const outPath = path.join(outDir, name);
-  initDir(outPath);
-  const isBsdTar = cp.execFileSync("tar", ["--version"], cpOpts).includes("bsdtar");
-  const args = isBsdTar
-    ? ["-xz", "-f", tarballName, "-C", outPath]
-    : ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"];
-  cp.execFileSync("tar", args, cpOpts);
-  fs.unlinkSync(tarballName);
-  return path.join(outPath, getPackageDir(outPath));
-}
-
-function getPackageDir(outPath: string): string {
-  const dirs = fs.readdirSync(outPath, { encoding: "utf8", withFileTypes: true });
-  for (const dirent of dirs) {
-    if (dirent.isDirectory()) {
-      return dirent.name;
-    }
-  }
-  return "package";
-}
-
-function initDir(dirPath: string): void {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
 }
 
 export function checkSource(
@@ -838,18 +648,6 @@ function matches(srcFile: ts.SourceFile, predicate: (n: ts.Node) => boolean): bo
   return matchesNode(srcFile);
 }
 
-function isExistingSquatter(name: string) {
-  return (
-    name === "atom" ||
-    name === "ember__string" ||
-    name === "fancybox" ||
-    name === "jsqrcode" ||
-    name === "node" ||
-    name === "geojson" ||
-    name === "titanium"
-  );
-}
-
 function isRealExportDefault(name: string) {
   return name.indexOf("react-native") > -1 || name === "ember-feature-flags" || name === "material-ui-datatables";
 }
@@ -891,14 +689,6 @@ export interface CriticError {
   kind: ErrorKind;
   message: string;
   position?: Position;
-}
-
-interface NpmError extends CriticError {
-  kind: ErrorKind.NoMatchingNpmPackage | ErrorKind.NoMatchingNpmVersion;
-}
-
-interface NonNpmError extends CriticError {
-  kind: ErrorKind.NonNpmHasMatchingPackage;
 }
 
 interface ExportEqualsError extends CriticError {

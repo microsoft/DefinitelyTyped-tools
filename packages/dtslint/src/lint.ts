@@ -14,6 +14,7 @@ export async function lint(
   isLatest: boolean,
   expectOnly: boolean,
   tsLocal: string | undefined,
+  implementationPackageDirectory: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   const estree = require(
@@ -45,7 +46,7 @@ export async function lint(
     }
   }
 
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
+  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal, implementationPackageDirectory);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
   const results = await eslint.lintFiles(files);
@@ -59,6 +60,7 @@ function getEslintOptions(
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined,
+  implementationPackageDirectory: string | undefined,
 ): ESLint.Options {
   const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
     versionName,
@@ -100,7 +102,12 @@ function getEslintOptions(
         {
           files: allFiles,
           rules: {
-            "@definitelytyped/npm-naming": "error",
+            "@definitelytyped/npm-naming": [
+              "error",
+              {
+                implementationPackageDirectory,
+              }
+            ],
           },
         },
       ],

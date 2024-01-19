@@ -3,7 +3,6 @@ import {
   dtsCritic as critic,
   ErrorKind,
   ExportErrorKind,
-  Mode,
   parseExportErrorKind,
   CriticError,
 } from "@definitelytyped/dts-critic";
@@ -24,22 +23,13 @@ function parseEnabledErrors(errors: CodeRawOptionError[]): [ExportErrorKind, boo
 }
 
 function parseRawOptions(rawOptions: NpmNamingOptions): CriticOptions {
-  switch (rawOptions.mode) {
-    case Mode.Code:
-      return { ...rawOptions, errors: new Map(parseEnabledErrors(rawOptions.errors)) };
-    case Mode.NameOnly:
-      return rawOptions;
-  }
+  return { errors: new Map(parseEnabledErrors(rawOptions.errors)) };
 }
 
 const enabledSuggestions: ExportErrorKind[] = [ErrorKind.JsPropertyNotInDts, ErrorKind.JsSignatureNotInDts];
 
 function toOptionsWithSuggestions(options: CriticOptions): CriticOptions {
-  if (options.mode === Mode.NameOnly) {
-    return options;
-  }
-
-  const optionsWithSuggestions = { mode: options.mode, errors: new Map(options.errors) };
+  const optionsWithSuggestions = { errors: new Map(options.errors) };
 
   for (const err of enabledSuggestions) {
     optionsWithSuggestions.errors.set(err, true);
@@ -50,17 +40,13 @@ function toOptionsWithSuggestions(options: CriticOptions): CriticOptions {
 
 function eslintDisableOption(error: ErrorKind): string {
   switch (error) {
-    case ErrorKind.NoMatchingNpmPackage:
-    case ErrorKind.NoMatchingNpmVersion:
-    case ErrorKind.NonNpmHasMatchingPackage:
-      return `"off"`;
     case ErrorKind.NoDefaultExport:
     case ErrorKind.NeedsExportEquals:
     case ErrorKind.JsSignatureNotInDts:
     case ErrorKind.JsPropertyNotInDts:
     case ErrorKind.DtsSignatureNotInJs:
     case ErrorKind.DtsPropertyNotInJs:
-      return JSON.stringify(["error", { mode: Mode.Code, errors: [[error, false]] }]);
+      return JSON.stringify(["error", { errors: [[error, false]] }]);
   }
 }
 
@@ -68,7 +54,8 @@ const rule = createRule<[NpmNamingOptions], "error">({
   name: "npm-naming",
   defaultOptions: [
     {
-      mode: Mode.NameOnly,
+      implementationPackageDirectory: "",
+      errors: [[ErrorKind.NeedsExportEquals, true], [ErrorKind.NoDefaultExport, true]],
     },
   ],
   meta: {
@@ -88,22 +75,8 @@ you can disable this check by adding the following options to your project's .es
         oneOf: [
           {
             additionalProperties: false,
-            properties: {
-              mode: {
-                type: "string",
-                enum: [Mode.NameOnly],
-              },
-            },
-            type: "object",
-          },
-          {
-            additionalProperties: false,
             type: "object",
             properties: {
-              mode: {
-                type: "string",
-                enum: [Mode.Code],
-              },
               errors: {
                 type: "array",
                 items: {
@@ -123,6 +96,10 @@ you can disable this check by adding the following options to your project's .es
                   maxItems: 2,
                 },
               },
+              implementationPackageDirectory: {
+                type: "string",
+                required: true,
+              } 
             },
           },
         ],
@@ -136,14 +113,11 @@ you can disable this check by adding the following options to your project's .es
 
     const options = parseRawOptions(rawOptions);
     const optionsWithSuggestions = toOptionsWithSuggestions(options);
-    const diagnostics = critic(context.filename, /* sourcePath */ undefined, optionsWithSuggestions);
+    const diagnostics = critic(context.filename, rawOptions.implementationPackageDirectory, optionsWithSuggestions);
     const errors = filterErrors(diagnostics);
 
     for (const error of errors) {
       switch (error.kind) {
-        case ErrorKind.NoMatchingNpmPackage:
-        case ErrorKind.NoMatchingNpmVersion:
-        case ErrorKind.NonNpmHasMatchingPackage:
         case ErrorKind.DtsPropertyNotInJs:
         case ErrorKind.DtsSignatureNotInJs:
         case ErrorKind.JsPropertyNotInDts:
@@ -200,7 +174,6 @@ you can disable this check by adding the following options to your project's .es
 
     function isSuggestion(diagnostic: CriticError): boolean {
       return (
-        options.mode === Mode.Code &&
         enabledSuggestions.includes(diagnostic.kind as ExportErrorKind) &&
         !(options.errors as Map<ErrorKind, boolean>).get(diagnostic.kind)
       );
