@@ -183,7 +183,8 @@ export class AllPackages {
       const typesDirectoryName = mustTrimAtTypesPrefix(name);
       const versions = await this.tryGetTypingsVersions(typesDirectoryName);
       if (versions) {
-        yield versions.get(new semver.Range(version), pkg.name + ":" + JSON.stringify((versions as any).versions));
+        const versionData = versions.tryGet(new semver.Range(version));
+        if (versionData) yield versionData;
       }
     }
   }

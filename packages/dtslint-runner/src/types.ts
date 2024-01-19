@@ -14,6 +14,7 @@ export interface RunDTSLintOptions {
   noInstall: boolean;
   onlyTestTsNext: boolean;
   expectOnly: boolean;
+  skipNpmNaming: boolean;
   noAttw: boolean;
   localTypeScriptPath?: string;
   nProcesses: number;

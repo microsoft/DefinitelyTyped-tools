@@ -1,5 +1,53 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/dts-critic@0.1.0
+  - @definitelytyped/utils@0.1.0
+
+## 0.0.208
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- e7ce84f: Fix case sensitivity of node16 backwards compat
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/dts-critic@0.0.199
+  - @definitelytyped/utils@0.0.192
+
+## 0.0.207
+
+### Patch Changes
+
+- 57628b68: Add new no-type-only-packages lint rule
+
+## 0.0.206
+
+### Patch Changes
+
+- 55f05a86: Clean up expect type code for diagnostics
+
+## 0.0.205
+
+### Patch Changes
+
+- 20d5c884: Run Expect on all files in CI
+
+## 0.0.204
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- Updated dependencies [1a5fdc83]
+  - @definitelytyped/dts-critic@0.0.198
+
 ## 0.0.203
 
 ### Patch Changes

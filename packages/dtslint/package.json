@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Runs tests on TypeScript definition files",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -28,13 +28,13 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
-    "@typescript-eslint/types": "^6.11.0",
-    "@typescript-eslint/typescript-estree": "^6.11.0",
-    "@typescript-eslint/utils": "^6.11.0",
-    "eslint": "^8.53.0",
-    "eslint-plugin-import": "^2.29.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@typescript-eslint/types": "^6.19.0",
+    "@typescript-eslint/typescript-estree": "^6.19.0",
+    "@typescript-eslint/utils": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
     "semver": "^7.5.4",
     "strip-json-comments": "^3.1.1",
     "tar": "^6.2.0"
@@ -43,14 +43,14 @@
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
-    "@types/eslint": "^8.44.7",
+    "@types/eslint": "^8.56.2",
     "@types/semver": "^7.5.5",
     "@types/strip-json-comments": "^3.0.0",
     "@types/tar": "^6.1.9",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.18.0"
   },
   "license": "MIT"
 }

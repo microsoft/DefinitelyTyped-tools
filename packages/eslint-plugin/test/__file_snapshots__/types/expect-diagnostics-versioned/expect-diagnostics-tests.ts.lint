@@ -1,0 +1,16 @@
+types/expect-diagnostics-versioned/expect-diagnostics-tests.ts
+  5:7  error  TypeScript@x.y compile error: 
+Type 'number' is not assignable to type 'string'  @definitelytyped/expect
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/expect-diagnostics-versioned/expect-diagnostics-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from ".";
+    
+    // This should cause a diagnostic.
+    const blah: string = expect.foo;
+          ~~~~
+!!! @definitelytyped/expect: TypeScript@x.y compile error: 
+!!!                        : Type 'number' is not assignable to type 'string'.

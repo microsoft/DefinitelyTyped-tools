@@ -1,5 +1,46 @@
 # @definitelytyped/dtslint
 
+## 0.2.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/typescript-versions@0.1.0
+  - @definitelytyped/header-parser@0.2.0
+  - @definitelytyped/utils@0.1.0
+
+## 0.1.5
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/header-parser@0.1.2
+  - @definitelytyped/utils@0.0.192
+
+## 0.1.4
+
+### Patch Changes
+
+- 0a7fc7aa: Fix OOM when developing locally
+
+## 0.1.3
+
+### Patch Changes
+
+- bbc3c792: Skip only npm-naming in dependents
+
+## 0.1.2
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+- 6ff1c7bf: Require index.d.ts
+
 ## 0.1.1
 
 ### Patch Changes

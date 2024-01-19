@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dtslint-runner",
-  "version": "0.0.212",
+  "version": "0.1.0",
   "description": "Run dtslint on DefinitelyTyped packages",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/dtslint-runner#readme",
   "license": "MIT",
@@ -26,15 +26,13 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/dtslint": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@octokit/rest": "^19.0.13",
-    "semver": "^7.5.4",
+    "@octokit/rest": "^20.0.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/semver": "^7.5.5",
     "glob": "^10.3.10"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.18.0"
   }
 }

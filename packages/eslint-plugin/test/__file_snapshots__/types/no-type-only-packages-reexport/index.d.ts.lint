@@ -1,0 +1,7 @@
+No errors
+
+==== types/no-type-only-packages-reexport/index.d.ts ====
+
+    import { SyntaxKind } from "typescript";
+    
+    export { SyntaxKind };

@@ -17,6 +17,8 @@
 @emotion/serialize
 @emotion/styled
 @glimmer/component
+@glimmer/manager
+@glimmer/runtime
 @hapi/boom
 @hapi/hapi
 @hapi/hoek

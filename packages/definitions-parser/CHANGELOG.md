@@ -1,5 +1,34 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/typescript-versions@0.1.0
+  - @definitelytyped/header-parser@0.2.0
+  - @definitelytyped/utils@0.1.0
+
+## 0.0.202
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- 795e0e3: Handle git moves in gitChanges
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/header-parser@0.1.2
+  - @definitelytyped/utils@0.0.192
+
+## 0.0.201
+
+### Patch Changes
+
+- 50cc5dce: loosen checkParseResults
+
 ## 0.0.200
 
 ### Patch Changes

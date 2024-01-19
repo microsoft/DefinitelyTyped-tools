@@ -62,7 +62,13 @@ if (require.main === module) {
       },
       expectOnly: {
         group: "dtslint options",
-        description: "Run only the ExpectType lint rule.",
+        description: "Run only the expect lint rule.",
+        type: "boolean",
+        default: false,
+      },
+      skipNpmNaming: {
+        group: "dtslint options",
+        description: "Skip the npm-naming lint rule.",
         type: "boolean",
         default: false,
       },
@@ -108,6 +114,7 @@ if (require.main === module) {
     localTypeScriptPath: !args.onlyTestTsNext ? args.localTypeScriptPath : undefined,
     onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
+    skipNpmNaming: args.skipNpmNaming,
     noAttw: args.noAttw,
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,

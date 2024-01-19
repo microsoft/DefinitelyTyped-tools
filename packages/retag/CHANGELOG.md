@@ -1,5 +1,35 @@
 # @definitelytyped/retag
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/typescript-versions@0.1.0
+  - @definitelytyped/definitions-parser@0.1.0
+  - @definitelytyped/utils@0.1.0
+
+## 0.0.202
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- Updated dependencies [2c3e5de]
+- Updated dependencies [795e0e3]
+  - @definitelytyped/definitions-parser@0.0.202
+  - @definitelytyped/utils@0.0.192
+
+## 0.0.201
+
+### Patch Changes
+
+- Updated dependencies [50cc5dce]
+  - @definitelytyped/definitions-parser@0.0.201
+
 ## 0.0.200
 
 ### Patch Changes

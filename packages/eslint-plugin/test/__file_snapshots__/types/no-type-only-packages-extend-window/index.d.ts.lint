@@ -1,0 +1,11 @@
+No errors
+
+==== types/no-type-only-packages-extend-window/index.d.ts ====
+
+    declare global {
+        interface Window {
+            someNewProp: string;
+        }
+    }
+    
+    export {};

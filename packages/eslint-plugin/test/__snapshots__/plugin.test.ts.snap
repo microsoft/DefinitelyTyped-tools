@@ -32,6 +32,7 @@ exports[`plugin should have the expected exports 1`] = `
             "@definitelytyped/no-self-import": "error",
             "@definitelytyped/no-single-declare-module": "error",
             "@definitelytyped/no-single-element-tuple-type": "error",
+            "@definitelytyped/no-type-only-packages": "error",
             "@definitelytyped/no-unnecessary-generics": "error",
             "@definitelytyped/no-useless-files": "error",
             "@definitelytyped/prefer-declare-function": "error",
@@ -257,6 +258,7 @@ exports[`plugin should have the expected exports 1`] = `
     "no-import-of-dev-dependencies",
     "npm-naming",
     "expect",
+    "no-type-only-packages",
   ],
 }
 `;

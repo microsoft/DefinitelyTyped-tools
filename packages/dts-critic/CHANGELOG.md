@@ -1,5 +1,30 @@
 # @definitelytyped/dts-critic
 
+## 0.1.0
+
+### Minor Changes
+
+- 2d7a5d3: Require Node 18+
+
+### Patch Changes
+
+- Updated dependencies [2d7a5d3]
+  - @definitelytyped/header-parser@0.2.0
+
+## 0.0.199
+
+### Patch Changes
+
+- 2c3e5de: Update dependencies
+- Updated dependencies [2c3e5de]
+  - @definitelytyped/header-parser@0.1.2
+
+## 0.0.198
+
+### Patch Changes
+
+- 1a5fdc83: Remove test files from packages
+
 ## 0.0.197
 
 ### Patch Changes

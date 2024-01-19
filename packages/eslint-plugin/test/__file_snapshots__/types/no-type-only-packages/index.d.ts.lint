@@ -1,0 +1,23 @@
+types/no-type-only-packages/index.d.ts
+  1:1  error  Packages should contain value components, not just types                                                                                                                                                                                    @definitelytyped/no-type-only-packages
+  6:5  error  'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting  @definitelytyped/strict-export-declare-modifiers
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/no-type-only-packages/index.d.ts ====
+
+    export interface Blah {
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
+        foo: string;
+    }
+    
+    export namespace Something {
+        export interface Blah2 {
+        ~~~~~~
+!!! @definitelytyped/strict-export-declare-modifiers: 'export' keyword is redundant here because all declarations in this module are exported automatically. If you have a good reason to export some declarations and not others, add 'export {}' to the module to shut off automatic exporting.
+            foo: string;
+        }
+    }
+    
+    export type NotAValue = Something.Blah2;

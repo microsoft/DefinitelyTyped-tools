@@ -1,4 +1,5 @@
 types/no-bad-reference/v0.1/index.d.ts
+   1:1   error  Packages should contain value components, not just types                                                                       @definitelytyped/no-type-only-packages
    1:22  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages       @definitelytyped/no-bad-reference
    2:22  error  The reference "../v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages           @definitelytyped/no-bad-reference
    3:22  error  The reference "../../foo/v0.1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages  @definitelytyped/no-bad-reference
@@ -9,11 +10,13 @@ types/no-bad-reference/v0.1/index.d.ts
    9:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                           @definitelytyped/no-bad-reference
   14:22  error  The import "../index" resolves outside of the package. Use a bare import to reference other packages                           @definitelytyped/no-bad-reference
 
-✖ 9 problems (9 errors, 0 warnings)
+✖ 10 problems (10 errors, 0 warnings)
 
 ==== types/no-bad-reference/v0.1/index.d.ts ====
 
     /// <reference path="../../foo/index.d.ts" />
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
                          ~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
     /// <reference path="../v1/index.d.ts" />

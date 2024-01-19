@@ -22,6 +22,7 @@ async function main(): Promise<void> {
   let dirPath = process.cwd();
   let onlyTestTsNext = false;
   let expectOnly = false;
+  let skipNpmNaming = false;
   let shouldListen = false;
   let lookingForTsLocal = false;
   let noAttw = false;
@@ -53,6 +54,9 @@ async function main(): Promise<void> {
         return;
       case "--expectOnly":
         expectOnly = true;
+        break;
+      case "--skipNpmNaming":
+        skipNpmNaming = true;
         break;
       case "--onlyTestTsNext":
         onlyTestTsNext = true;
@@ -89,10 +93,7 @@ async function main(): Promise<void> {
   if (shouldListen) {
     listen(dirPath, tsLocal);
   } else {
-    const output = await runTests(dirPath, onlyTestTsNext, expectOnly, tsLocal, noAttw);
-    if (output) {
-      console.log(output);
-    }
+    await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmNaming, tsLocal, noAttw);
   }
 }
 
@@ -111,14 +112,15 @@ function usage(): void {
 function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
   process.on("message", async (message: unknown) => {
-    const { path, onlyTestTsNext, expectOnly, noAttw } = message as {
+    const { path, onlyTestTsNext, expectOnly, skipNpmNaming, noAttw } = message as {
       path: string;
       onlyTestTsNext: boolean;
       expectOnly?: boolean;
+      skipNpmNaming?: boolean;
       noAttw?: boolean;
     };
 
-    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, tsLocal, !!noAttw)
+    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, !!skipNpmNaming, tsLocal, !!noAttw)
       .then(
         () => process.send!({ path, status: "OK" }),
         (e) => process.send!({ path, status: e.stack }),
@@ -131,6 +133,7 @@ async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   tsLocal: string | undefined,
   noAttw: boolean,
 ): Promise<string | undefined> {
@@ -218,6 +221,7 @@ async function runTests(
       tsVersion,
       tsVersion,
       expectOnly,
+      skipNpmNaming,
       tsLocal,
       implementationPackage?.unpackedPath,
       /*isLatest*/ true,
@@ -247,6 +251,7 @@ async function runTests(
         low,
         hi,
         expectOnly,
+        skipNpmNaming,
         undefined,
         implementationPackage?.unpackedPath,
         isLatest,
@@ -313,15 +318,17 @@ async function testTypesVersion(
   lowVersion: TsVersion,
   hiVersion: TsVersion,
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   tsLocal: string | undefined,
   implementationPackageDirectory: string | undefined,
   isLatest: boolean,
 ): Promise<void> {
+  assertIndexdts(dirPath);
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
-  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal, implementationPackageDirectory);
+  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, skipNpmNaming, tsLocal, implementationPackageDirectory);
   if (err) {
     throw new Error(err);
   }
@@ -415,11 +422,17 @@ async function assertNpmIgnoreExpected(dirPath: string) {
 function assertNoOtherFiles(dirPath: string) {
   if (fs.existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
     throw new Error(
-      `${dirPath}: Should not contain 'OTHER_FILES.txt"'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
+      `${dirPath}: Should not contain 'OTHER_FILES.txt'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
     );
   }
 }
 
 function tryPromise<T>(promise: Promise<T>): Promise<T | undefined> {
   return promise.catch(() => undefined);
+}
+
+function assertIndexdts(dirPath: string) {
+  if (!fs.existsSync(joinPaths(dirPath, "index.d.ts"))) {
+    throw new Error(`${dirPath}: Must contain 'index.d.ts'.`);
+  }
 }

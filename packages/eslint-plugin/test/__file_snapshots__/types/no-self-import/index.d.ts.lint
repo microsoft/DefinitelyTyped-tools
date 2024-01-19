@@ -1,8 +1,13 @@
-No errors
+types/no-self-import/index.d.ts
+  1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
+
+✖ 1 problem (1 error, 0 warnings)
 
 ==== types/no-self-import/index.d.ts ====
 
     import other from "other-package";
+    ~
+!!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
     
     import other from "other-package/this-package";
     

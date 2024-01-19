@@ -1,0 +1,5 @@
+No errors
+
+==== types/no-type-only-packages-reexport-all/index.d.ts ====
+
+    export * from "eslint";

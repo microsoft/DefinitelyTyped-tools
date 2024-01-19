@@ -13,13 +13,18 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   tsLocal: string | undefined,
   implementationPackageDirectory: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
-  const estree = require(
-    require.resolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
-  ) as typeof import("@typescript-eslint/typescript-estree");
+  // If this package has been linked for local development,
+  // we may end up with duplicate copies of typescript-estree.
+  // Clear both so we are sure that we've cleared all caches.
+  const estrees = [
+    tryResolve("@typescript-eslint/typescript-estree"),
+    tryResolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
+  ];
   process.env.TSESTREE_SINGLE_RUN = "true";
   const lintProgram = createProgram(tsconfigPath);
   const files = [];
@@ -46,17 +51,30 @@ export async function lint(
     }
   }
 
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal, implementationPackageDirectory);
+  const options = getEslintOptions(expectOnly, skipNpmNaming, minVersion, maxVersion, tsLocal, implementationPackageDirectory);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
   const results = await eslint.lintFiles(files);
   const output = formatter.format(results);
-  estree.clearCaches();
+  for (const estreePath of estrees) {
+    if (!estreePath) continue;
+    const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
+    estree.clearCaches();
+  }
   return output;
+}
+
+function tryResolve(path: string, options?: { paths?: string[] | undefined }): string | undefined {
+  try {
+    return require.resolve(path, options);
+  } catch {
+    return undefined;
+  }
 }
 
 function getEslintOptions(
   expectOnly: boolean,
+  skipNpmNaming: boolean,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined,
@@ -101,14 +119,16 @@ function getEslintOptions(
       overrides: [
         {
           files: allFiles,
-          rules: {
-            "@definitelytyped/npm-naming": [
-              "error",
-              {
-                implementationPackageDirectory,
-              }
-            ],
-          },
+          rules: skipNpmNaming
+            ? {}
+            : {
+                "@definitelytyped/npm-naming": [
+                  "error",
+                  {
+                    implementationPackageDirectory,
+                  }
+                ],
+              },
         },
       ],
     },
