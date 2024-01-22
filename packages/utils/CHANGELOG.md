@@ -1,5 +1,12 @@
 # @definitelytyped/utils
 
+## 0.1.1
+
+### Patch Changes
+
+- aa08460: Change suggestionsDir to use the user’s cache dir instead of .dts the user’s home dir
+- aa08460: Expose suggestionsDir
+
 ## 0.1.0
 
 ### Minor Changes
