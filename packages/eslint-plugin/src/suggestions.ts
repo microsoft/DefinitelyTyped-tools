@@ -1,6 +1,6 @@
 import fs = require("fs");
 import path = require("path");
-import { suggestionsDir } from '@definitelytyped/utils';
+import { suggestionsDir } from "@definitelytyped/utils";
 
 interface Suggestion {
   fileName: string;
