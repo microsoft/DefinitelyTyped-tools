@@ -23,6 +23,7 @@
     "@definitelytyped/typescript-versions": "workspace:*",
     "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^18.19.7",
+    "cachedir": "^2.0.0",
     "charm": "^1.0.2",
     "minimatch": "^9.0.3",
     "tar": "^6.2.0",
