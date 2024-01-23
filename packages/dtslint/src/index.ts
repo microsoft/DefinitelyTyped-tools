@@ -253,9 +253,9 @@ async function runTests(
 
   if (implementationPackage) {
     const attwJson = joinPaths(dtRoot, "attw.json");
-    const failingPackages = (readJson(attwJson) as any).failingPackages;
+    const failingPackages = (await readJson(attwJson) as any).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
-    const expectError = failingPackages?.includes(dirName);
+    const expectError = !!failingPackages?.includes(dirName);
     const { output, status } = runAreTheTypesWrong(dirPath, implementationPackage.tarballPath, attwJson);
 
     switch (expectError) {
