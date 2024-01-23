@@ -484,6 +484,9 @@
 @sentry/browser
 @serverless/typescript
 @sinonjs/fake-timers
+@slack/rtm-api
+@slack/types
+@slack/web-api
 @storybook/addons
 @storybook/csf
 @storybook/react
@@ -525,6 +528,7 @@
 @types/next-redux-wrapper
 @types/node
 @types/node-fetch
+@types/parse5
 @types/pino
 @types/prettier
 @types/puppeteer
@@ -568,7 +572,6 @@
 @types/workbox-streams
 @types/workbox-webpack-plugin
 @types/workbox-window
-@types/parse5
 @uirouter/angularjs
 @vue/reactivity
 @vue/test-utils
@@ -635,6 +638,7 @@ cropperjs
 cssnano
 csstype
 cypress
+d3
 date-fns
 dayjs
 decimal.js
@@ -645,7 +649,6 @@ dnd-core
 domhandler
 dotenv
 downshift
-d3
 egg
 elastic-apm-node
 electron
@@ -667,8 +670,8 @@ express-rate-limit
 fast-glob
 fastify
 fflate
-final-form
 filestack-js
+final-form
 firebase-admin
 flatbush
 flatpickr
@@ -680,9 +683,9 @@ gl-matrix
 glaze
 glob
 globby
-googleapis
 google-auth-library
 google-gax
+googleapis
 got
 graphql
 graphql-tools
@@ -716,8 +719,8 @@ jimp
 joi
 jointjs
 jose
-jsonata
 js-logger
+jsonata
 juice
 kleur
 knex
@@ -733,9 +736,9 @@ logrocket
 long
 lottie-web
 magic-string
+mali
 markdownlint
 marked
-mali
 meshoptimizer
 metascraper
 meteor-typings
@@ -832,8 +835,8 @@ rimraf
 rollup
 rrule
 rxjs
-sass
 safe-buffer
+sass
 scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
@@ -863,9 +866,9 @@ ts-toolbelt
 tslint
 tweetnacl
 typeorm
+types-ramda
 typescript
 typescript-tuple
-types-ramda
 undici-types
 unified
 url-pattern
@@ -878,11 +881,11 @@ vscode-languageserver-types
 vue
 vue-router
 vuex
+web-tree-sitter
 web3
 web3-core
 webpack
 webpack-chain
-web-tree-sitter
 winston
 winston-transport
 workbox-build
