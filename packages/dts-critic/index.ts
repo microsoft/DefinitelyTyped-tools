@@ -7,6 +7,7 @@ import semver = require("semver");
 import { sync as commandExistsSync } from "command-exists";
 import ts from "typescript";
 import * as tmp from "tmp";
+import which from "which";
 
 export enum ErrorKind {
   /** Declaration is marked as npm in header and has no matching npm package. */
@@ -189,7 +190,7 @@ const npmNotFound = "E404";
 
 export function getNpmInfo(name: string): NpmInfo {
   const npmName = dtToNpmName(name);
-  const infoResult = cp.spawnSync("npm", ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
+  const infoResult = cp.spawnSync(which.sync("npm"), ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
     encoding: "utf8",
     env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
   });
@@ -304,18 +305,18 @@ function downloadNpmPackage(name: string, version: string, outDir: string): stri
     maxBuffer: 100 * 1024 * 1024,
     env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
   } as const;
-  const npmPack = cp.execFileSync("npm", ["pack", fullName, "--json", "--silent"], cpOpts).trim();
+  const npmPack = cp.execFileSync(which.sync("npm"), ["pack", fullName, "--json", "--silent"], cpOpts).trim();
   // https://github.com/npm/cli/issues/3405
   const tarballName = (npmPack.endsWith(".tgz") ? npmPack : (JSON.parse(npmPack)[0].filename as string))
     .replace(/^@/, "")
     .replace(/\//, "-");
   const outPath = path.join(outDir, name);
   initDir(outPath);
-  const isBsdTar = cp.execFileSync("tar", ["--version"], cpOpts).includes("bsdtar");
+  const isBsdTar = cp.execFileSync(which.sync("tar"), ["--version"], cpOpts).includes("bsdtar");
   const args = isBsdTar
     ? ["-xz", "-f", tarballName, "-C", outPath]
     : ["-xz", "-f", tarballName, "-C", outPath, "--warning=none"];
-  cp.execFileSync("tar", args, cpOpts);
+  cp.execFileSync(which.sync("tar"), args, cpOpts);
   fs.unlinkSync(tarballName);
   return path.join(outPath, getPackageDir(outPath));
 }

@@ -3,6 +3,7 @@ import yargs = require("yargs");
 import headerParser = require("@definitelytyped/header-parser");
 import path = require("path");
 import cp = require("child_process");
+import which from "which";
 import {
   dtsCritic,
   dtToNpmName,
@@ -24,7 +25,7 @@ const isNpmPath = path.join(sourcesDir, "dts-critic-internal/npm.json");
 function getPackageDownloads(dtName: string): number {
   const npmName = dtToNpmName(dtName);
   const url = `https://api.npmjs.org/downloads/point/last-month/${npmName}`;
-  const result = JSON.parse(cp.execFileSync("curl", ["--silent", "-L", url], { encoding: "utf8" })) as {
+  const result = JSON.parse(cp.execFileSync(which.sync("curl"), ["--silent", "-L", url], { encoding: "utf8" })) as {
     downloads?: number;
   };
   return result.downloads || 0;
