@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.1.2
+
+### Patch Changes
+
+- 0f0a785: Call "which" before exec-ing
+
 ## 0.1.1
 
 ### Patch Changes
