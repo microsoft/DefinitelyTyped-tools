@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import { join as joinPaths, normalize } from "path";
+import { join as joinPaths, normalize, resolve } from "path";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
@@ -22,6 +22,7 @@ export async function lint(
   const estrees = [
     tryResolve("@typescript-eslint/typescript-estree"),
     tryResolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
+    tryResolve("@typescript-eslint/typescript-estree", { paths: [resolve(__dirname, "../../eslint-plugin")] }),
   ];
   process.env.TSESTREE_SINGLE_RUN = "true";
   const lintProgram = createProgram(tsconfigPath);
