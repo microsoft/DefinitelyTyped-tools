@@ -1,5 +1,12 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [0f0a785]
+  - @definitelytyped/dts-critic@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
