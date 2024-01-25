@@ -11,8 +11,8 @@ import { pipeline } from "stream/promises";
 import tar from "tar";
 import { createGunzip } from "zlib";
 import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
-import { TsVersion, lint } from "./lint";
-import { getCompilerOptions, packageNameFromPath } from "./util";
+import { TsVersion } from "./lint";
+import { getCompilerOptions, packageNameFromPath, packageDirectoryNameWithVersionFromPath } from "./util";
 import assert = require("assert");
 
 const tmpDir = os.tmpdir();
@@ -140,6 +140,7 @@ async function runTests(
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
   const packageName = packageNameFromPath(dirPath);
+  const packageDirectoryNameWithVersion = packageDirectoryNameWithVersionFromPath(dirPath);
   assertPathIsInDefinitelyTyped(dirPath, dtRoot);
   assertPathIsNotBanned(packageName);
   assertPackageIsNotDeprecated(
@@ -176,17 +177,17 @@ async function runTests(
         );
       } else if (!packageJson.nonNpm) {
         if (!satisfies(packageVersion, typesPackageVersion)) {
-          const isError = !npmVersionExemptions.has(packageName);
+          const isError = !npmVersionExemptions.has(packageDirectoryNameWithVersion);
           const container = isError ? (errors ??= []) : (warnings ??= []);
           container.push(
             (isError
               ? ""
-              : `Ignoring npm version error because ${dirPath} was failing when the check was added. ` +
+              : `Ignoring npm version error because ${packageDirectoryNameWithVersion} was failing when the check was added. ` +
                 `If you are making changes to this package, please fix this error:\n> `) +
               `Cannot find a version of ${packageName} on npm that matches the types version ${typesPackageVersion}. ` +
               `The closest match found was ${packageName}@${packageVersion}. ` +
-              `If these types are for the existing npm package ${packageName}, change the types package.json major ` +
-              `and minor version to match an existing version of the npm package. If these types are unrelated to ` +
+              `If these types are for the existing npm package ${packageName}, change the ${packageDirectoryNameWithVersion}/package.json ` +
+              `major and minor version to match an existing version of the npm package. If these types are unrelated to ` +
               `the npm package ${packageName}, add \`"nonNpm": true\` to the package.json and choose a different name ` +
               `that does not conflict with an existing npm package.`,
           );

@@ -7,6 +7,12 @@ export function packageNameFromPath(path: string): string {
   const base = basename(path);
   return /^v\d+(\.\d+)?$/.exec(base) || /^ts\d\.\d/.exec(base) ? basename(dirname(path)) : base;
 }
+export function packageDirectoryNameWithVersionFromPath(path: string): string {
+  const base = basename(path);
+  const version = /^v\d+(\.\d+)?$/.test(base) ? base : undefined;
+  const packageName = packageNameFromPath(path);
+  return version ? `${packageName}/${version}` : packageName;
+}
 export function readJson(path: string) {
   const text = fs.readFileSync(path, "utf-8");
   return JSON.parse(stripJsonComments(text));
