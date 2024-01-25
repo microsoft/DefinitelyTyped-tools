@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 
+import { getTypesVersions } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import assert = require("assert");
+import { assertNever, deepEquals, readJson } from "@definitelytyped/utils";
 import fs from "fs";
 import os from "os";
-import tar from "tar";
 import { basename, dirname, join as joinPaths, resolve } from "path";
-
-import { assertNever, deepEquals, readJson } from "@definitelytyped/utils";
-import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
-import { lint, TsVersion } from "./lint";
-import { getCompilerOptions, packageNameFromPath } from "./util";
-import { getTypesVersions } from "@definitelytyped/header-parser";
-import { pipeline } from "stream/promises";
-import { createGunzip } from "zlib";
 import { satisfies } from "semver";
+import { pipeline } from "stream/promises";
+import tar from "tar";
+import { createGunzip } from "zlib";
+import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
+import { TsVersion, lint } from "./lint";
+import { getCompilerOptions, packageNameFromPath } from "./util";
+import assert = require("assert");
+
 const tmpDir = os.tmpdir();
+const npmVersionExemptions = new Set(
+  fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
+);
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -124,6 +127,9 @@ function listen(dirPath: string, tsLocal: string | undefined): void {
   });
 }
 
+/**
+ * @returns Warning text - should be displayed during the run, but does not indicate failure.
+ */
 async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
@@ -151,7 +157,8 @@ async function runTests(
   assertNoOtherFiles(dirPath);
 
   let implementationPackage;
-  let npmError: Error | undefined;
+  let warnings: string[] | undefined;
+  let errors: string[] | undefined;
 
   if (!skipNpmChecks && !expectOnly) {
     const attw = await import("@arethetypeswrong/core");
@@ -162,16 +169,21 @@ async function runTests(
     if (pkg) {
       const { packageName, packageVersion, tarballUrl } = pkg;
       if (packageJson.nonNpm === true) {
-        npmError = new Error(
+        (errors ??= []).push(
           `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
             `If these types are being added to DefinitelyTyped for the first time, please choose ` +
             `a different name that does not conflict with an existing npm package.`,
         );
       } else if (!packageJson.nonNpm) {
         if (!satisfies(packageVersion, typesPackageVersion)) {
-          // TODO: need an exemption for this
-          npmError = new Error(
-            `Cannot find a version of ${packageName} on npm that matches the types version ${typesPackageVersion}. ` +
+          const isError = !npmVersionExemptions.has(packageName);
+          const container = isError ? (errors ??= []) : (warnings ??= []);
+          container.push(
+            (isError
+              ? ""
+              : `Ignoring npm version error because ${dirPath} was failing when the check was added. ` +
+                `If you are making changes to this package, please fix this error:\n> `) +
+              `Cannot find a version of ${packageName} on npm that matches the types version ${typesPackageVersion}. ` +
               `The closest match found was ${packageName}@${packageVersion}. ` +
               `If these types are for the existing npm package ${packageName}, change the types package.json major ` +
               `and minor version to match an existing version of the npm package. If these types are unrelated to ` +
@@ -189,18 +201,18 @@ async function runTests(
             packageName,
             packageVersion,
             tarballPath,
-            unpackedPath: joinPaths(unpackedPath, containerDir)
+            unpackedPath: joinPaths(unpackedPath, containerDir),
           };
         }
       }
     } else {
       if (packageJson.nonNpm === "conflict") {
-        npmError = new Error(
+        (errors ??= []).push(
           `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
             `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
         );
       } else if (packageJson.nonNpm === false) {
-        npmError = new Error(
+        (errors ??= []).push(
           `Package ${packageJson.name} is not marked as non-npm, but no implementation package was found on npm. ` +
             `If these types are not for an npm package, please add \`"nonNpm": true\` to the package.json. ` +
             `Otherwise, ensure the name of this package matches the name of the npm package.`,
@@ -212,14 +224,7 @@ async function runTests(
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(
-      dirPath,
-      tsVersion,
-      tsVersion,
-      expectOnly,
-      tsLocal,
-      /*isLatest*/ true,
-    );
+    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
   } else {
     // For example, typesVersions of [3.2, 3.5, 3.6] will have
     // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -240,57 +245,63 @@ async function runTests(
       if (lows.length > 1) {
         console.log("testing from", low, "to", hi, "in", versionPath);
       }
-      await testTypesVersion(
-        versionPath,
-        low,
-        hi,
-        expectOnly,
-        undefined,
-        isLatest,
-      );
+      await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
     }
   }
 
   if (implementationPackage) {
     const attwJson = joinPaths(dtRoot, "attw.json");
-    const failingPackages = (await readJson(attwJson) as any).failingPackages;
+    const failingPackages = ((await readJson(attwJson)) as any).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
     const expectError = !!failingPackages?.includes(dirName);
     const { output, status } = runAreTheTypesWrong(dirPath, implementationPackage.tarballPath, attwJson);
 
-    switch (expectError) {
-      case true:
-        switch (status) {
-          case "error":
-            // No need to bother anyone with a version mismatch error or non-failure error.
-            return undefined;
-          case "fail":
-            // Show output without failing the build.
-            return `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`;
-          case "pass":
-            throw new Error(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
-          default:
-            assertNever(status);
-        }
-        // @ts-ignore eslint is bugged
-        break;
-      case false:
-        switch (status) {
-          case "error":
-          case "fail":
-            throw new Error(`!@arethetypeswrong/cli\n${output}`);
-          case "pass":
-            // Don't show anything for passing attw - most lint rules have no output on success.
-            return undefined;
-        }
+    if (expectError) {
+      switch (status) {
+        case "error":
+          // No need to bother anyone with a version mismatch error or non-failure error.
+          break;
+        case "fail":
+          // Show output without failing the build.
+          (warnings ??= []).push(
+            `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`,
+          );
+          break;
+        case "pass":
+          (errors ??= []).push(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
+          break;
+        default:
+          assertNever(status);
+      }
+    } else {
+      switch (status) {
+        case "error":
+        case "fail":
+          (errors ??= []).push(`!@arethetypeswrong/cli\n${output}`);
+          break;
+        case "pass":
+          // Don't show anything for passing attw - most lint rules have no output on success.
+          break;
+      }
     }
   }
 
-  if (npmError) {
-    throw npmError;
+  const result = combineErrorsAndWarnings(errors, warnings);
+  if (result instanceof Error) {
+    throw result;
   }
+  return result;
+}
 
-  return undefined;
+function combineErrorsAndWarnings(
+  errors: string[] | undefined,
+  warnings: string[] | undefined,
+): Error | string | undefined {
+  if (!errors && !warnings) {
+    return undefined;
+  }
+  const message = (errors ?? []).concat(warnings ?? []).join("\n\n");
+  return errors?.length ? new Error(message) : message;
 }
 
 function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
