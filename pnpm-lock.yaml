@@ -97,37 +97,12 @@ importers:
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
-      command-exists:
-        specifier: ^1.2.9
-        version: 1.2.9
-      semver:
-        specifier: ^7.5.4
-        version: 7.5.4
-      tmp:
-        specifier: ^0.2.1
-        version: 0.2.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
-    devDependencies:
-      '@types/command-exists':
-        specifier: ^1.2.3
-        version: 1.2.3
-      '@types/semver':
-        specifier: ^7.5.6
-        version: 7.5.6
-      '@types/strip-json-comments':
-        specifier: ^3.0.0
-        version: 3.0.0
-      '@types/tmp':
-        specifier: ^0.2.6
-        version: 0.2.6
-      strip-json-comments:
-        specifier: ^3.1.1
-        version: 3.1.1
 
   packages/dts-gen:
     dependencies:
@@ -171,9 +146,6 @@ importers:
       '@arethetypeswrong/core':
         specifier: ^0.13.6
         version: 0.13.6
-      '@definitelytyped/dts-critic':
-        specifier: workspace:*
-        version: link:../dts-critic
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
@@ -260,9 +232,6 @@ importers:
 
   packages/eslint-plugin:
     dependencies:
-      '@definitelytyped/dts-critic':
-        specifier: workspace:*
-        version: link:../dts-critic
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
@@ -291,9 +260,6 @@ importers:
       '@types/eslint':
         specifier: ^8.56.2
         version: 8.56.2
-      '@typescript-eslint/rule-tester':
-        specifier: ^6.19.0
-        version: 6.19.0(@eslint/eslintrc@2.1.4)(eslint@8.53.0)(typescript@5.3.3)
       glob:
         specifier: ^10.3.10
         version: 10.3.10
@@ -1102,6 +1068,7 @@ packages:
     dependencies:
       eslint: 8.53.0
       eslint-visitor-keys: 3.4.3
+    dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.56.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -1131,6 +1098,7 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@eslint/eslintrc@2.1.4:
     resolution: {integrity: sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ==}
@@ -1151,6 +1119,7 @@ packages:
   /@eslint/js@8.53.0:
     resolution: {integrity: sha512-Kn7K8dx/5U6+cT1yEhpX1w4PCSg0M+XyRILPgvwcEBjerFWCwQj5sbr3/VmxqV0JGHCBCzyd6LxypEuehypY1w==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
 
   /@eslint/js@8.56.0:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
@@ -1992,10 +1961,6 @@ packages:
       '@types/node': 18.19.8
     dev: true
 
-  /@types/command-exists@1.2.3:
-    resolution: {integrity: sha512-PpbaE2XWLaWYboXD6k70TcXO/OdOyyRFq5TVpmlUELNxdkkmXU9fkImNosmXU1DtsNrqdUgWd/nJQYXgwmtdXQ==}
-    dev: true
-
   /@types/eslint@8.56.2:
     resolution: {integrity: sha512-uQDwm1wFHmbBbCZCqAlq6Do9LYwByNZHWzXppSnay9SuwJ+VRbjkbLABer54kcPnMSlG6Fdiy2yaFXm/z9Z5gw==}
     dependencies:
@@ -2147,10 +2112,6 @@ packages:
       minipass: 4.2.8
     dev: true
 
-  /@types/tmp@0.2.6:
-    resolution: {integrity: sha512-chhaNf2oKHlRkDGt+tiKE2Z5aJ6qalm7Z9rlLdBwmOiAAf09YQvvoLXjWK4HWPF1xU/fqvMgfNfpVoBscA/tKA==}
-    dev: true
-
   /@types/which@3.0.3:
     resolution: {integrity: sha512-2C1+XoY0huExTbs8MQv1DuS5FS86+SEjdM9F/+GS61gg5Hqbtj8ZiDSx8MfWcyei907fIPbfPGCOrNUTnVHY1g==}
     dev: true
@@ -2268,25 +2229,6 @@ packages:
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
-
-  /@typescript-eslint/rule-tester@6.19.0(@eslint/eslintrc@2.1.4)(eslint@8.53.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-4/nUf0k1LYIxdEoNZBIvk3k4iXecV03mzKbHZQcB2TeyFuPUOnJGDQI8rrfbP7jbE2a6K7h5zU0ai0uG1ytO6g==}
-    engines: {node: ^16.0.0 || >=18.0.0}
-    peerDependencies:
-      '@eslint/eslintrc': '>=2'
-      eslint: '>=8'
-    dependencies:
-      '@eslint/eslintrc': 2.1.4
-      '@typescript-eslint/typescript-estree': 6.19.0(typescript@5.3.3)
-      '@typescript-eslint/utils': 6.19.0(eslint@8.53.0)(typescript@5.3.3)
-      ajv: 6.12.6
-      eslint: 8.53.0
-      lodash.merge: 4.6.2
-      semver: 7.5.4
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-    dev: true
 
   /@typescript-eslint/scope-manager@6.11.0:
     resolution: {integrity: sha512-0A8KoVvIURG4uhxAdjSaxy8RdRE//HztaZdG8KiHLP8WOXSk0vlF7Pvogv+vlJA5Rnjj/wDcFENvDaHb+gKd1A==}
@@ -2429,6 +2371,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
+    dev: false
 
   /@typescript-eslint/utils@6.19.0(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-QR41YXySiuN++/dC9UArYOg4X86OAYP83OWTewpVx5ct1IZhjjgTLocj7QNxGhWoTqknsgpl7L+hGygCO+sdYw==}
@@ -3087,10 +3030,6 @@ packages:
     dependencies:
       delayed-stream: 1.0.0
 
-  /command-exists@1.2.9:
-    resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
-    dev: false
-
   /commander@10.0.1:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
@@ -3688,6 +3627,7 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /eslint@8.56.0:
     resolution: {integrity: sha512-Go19xM6T9puCOWntie1/P997aXxFsOi37JIHRWI514Hc6ZnaHGKY9xFhrU65RT6CcBEzZoGG1e6Nq+DT04ZtZQ==}
@@ -6924,13 +6864,6 @@ packages:
     dependencies:
       os-tmpdir: 1.0.2
     dev: true
-
-  /tmp@0.2.1:
-    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
-    engines: {node: '>=8.17.0'}
-    dependencies:
-      rimraf: 3.0.2
-    dev: false
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}

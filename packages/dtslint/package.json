@@ -24,7 +24,6 @@
   "dependencies": {
     "@arethetypeswrong/cli": "^0.13.6",
     "@arethetypeswrong/core": "^0.13.6",
-    "@definitelytyped/dts-critic": "workspace:*",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
