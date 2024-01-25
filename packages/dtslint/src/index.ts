@@ -295,7 +295,7 @@ async function runTests(
     !hasNpmVersionMismatch &&
     npmVersionExemptions.has(packageDirectoryNameWithVersion)
   ) {
-    (warnings ??= []).push(`${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt.`);
+    (warnings ??= []).push(`${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt in https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint.`);
   }
 
   const result = combineErrorsAndWarnings(errors, warnings);
