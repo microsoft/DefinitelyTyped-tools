@@ -5,7 +5,7 @@ import fs from "fs";
 import { dirname, join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 
-import { execFileSync, execSync } from "child_process";
+import { execFileSync } from "child_process";
 import which from "which";
 import { packageNameFromPath, readJson } from "./util";
 export function checkPackageJson(
@@ -145,7 +145,7 @@ export function runAreTheTypesWrong(dirPath: string, implementationTarballPath: 
   const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
   const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
   const npmPath = which.sync("pnpm", { nothrow: true }) || which.sync("npm");
-  execSync(`${npmPath} pack`, { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
+  execFileSync(`${npmPath} pack`, { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
   try {
     const output = execFileSync(
       attwBinPath,
