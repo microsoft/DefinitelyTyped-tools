@@ -214,7 +214,7 @@ async function runTests(
           `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
             `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
         );
-      } else if (packageJson.nonNpm === false) {
+      } else if (!packageJson.nonNpm) {
         (errors ??= []).push(
           `Package ${packageJson.name} is not marked as non-npm, but no implementation package was found on npm. ` +
             `If these types are not for an npm package, please add \`"nonNpm": true\` to the package.json. ` +
