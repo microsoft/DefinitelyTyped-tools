@@ -1,7 +1,7 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { deepEquals } from "@definitelytyped/utils";
-import fs from "fs";
+import { assertDefined, deepEquals } from "@definitelytyped/utils";
+import fs, { readdirSync } from "fs";
 import { dirname, join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
 
@@ -139,13 +139,11 @@ export interface AttwResult {
 }
 
 export function runAreTheTypesWrong(dirPath: string, implementationTarballPath: string, configPath: string): AttwResult {
-  const packageJsonContent = readJson(joinPaths(dirPath, "package.json"));
-  const mangledName = packageJsonContent.name.replace(/^@types\//, "");
-  const tarballName = `types-${mangledName}-${packageJsonContent.version}.tgz`;
   const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
   const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
   const npmPath = which.sync("pnpm", { nothrow: true }) || which.sync("npm");
   execFileSync(npmPath, ["pack"], { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
+  const tarballName = assertDefined(readdirSync(dirPath).find((name) => name.endsWith(".tgz")));
   try {
     const output = execFileSync(
       attwBinPath,
