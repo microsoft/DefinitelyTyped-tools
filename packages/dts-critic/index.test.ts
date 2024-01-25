@@ -1,7 +1,6 @@
 /// <reference types="jest" />
 import {
   findDtsName,
-  getNpmInfo,
   dtToNpmName,
   parseExportErrorKind,
   checkSource,
@@ -32,18 +31,6 @@ suite("findDtsName", {
   },
   emptyDirectory() {
     expect(findDtsName("")).toBe("DefinitelyTyped-tools");
-  },
-});
-suite("getNpmInfo", {
-  nonNpm() {
-    expect(getNpmInfo("wenceslas")).toEqual({ isNpm: false });
-  },
-  npm() {
-    expect(getNpmInfo("typescript")).toEqual({
-      isNpm: true,
-      versions: expect.arrayContaining(["3.7.5"]),
-      tags: expect.objectContaining({ latest: expect.stringContaining("") }),
-    });
   },
 });
 suite("dtToNpmName", {

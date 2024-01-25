@@ -1,7 +1,6 @@
 import yargs = require("yargs");
 import headerParser = require("@definitelytyped/header-parser");
 import fs = require("fs");
-import cp = require("child_process");
 import path = require("path");
 import ts from "typescript";
 
@@ -106,32 +105,6 @@ function main() {
       console.log("Error: " + error.message);
     }
   }
-}
-
-const npmNotFound = "E404";
-
-export function getNpmInfo(name: string): NpmInfo {
-  const npmName = dtToNpmName(name);
-  const infoResult = cp.spawnSync(which.sync("npm"), ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
-    encoding: "utf8",
-    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
-  });
-  const info = JSON.parse(infoResult.stdout || infoResult.stderr);
-  if (info.error !== undefined) {
-    const error = info.error as { code?: string; summary?: string };
-    if (error.code === npmNotFound) {
-      return { isNpm: false };
-    } else {
-      throw new Error(`Command 'npm info' for package ${npmName} returned an error. Reason: ${error.summary}.`);
-    }
-  } else if (infoResult.status !== 0) {
-    throw new Error(`Command 'npm info' failed for package ${npmName} with status ${infoResult.status}.`);
-  }
-  return {
-    isNpm: true,
-    versions: Array.isArray(info.versions) ? info.versions : [info.versions],
-    tags: info["dist-tags"] as { [tag: string]: string | undefined },
-  };
 }
 
 /**
@@ -754,18 +727,6 @@ interface DtsExportDiagnostics {
   exportKind: InferenceResult<DtsExportKind>;
   exportType: InferenceResult<ts.Type>;
   defaultExport?: Position;
-}
-
-type NpmInfo = NonNpm | Npm;
-
-interface NonNpm {
-  isNpm: false;
-}
-
-interface Npm {
-  isNpm: true;
-  versions: string[];
-  tags: { [tag: string]: string | undefined };
 }
 
 type InferenceResult<T> = InferenceError | InferenceSuccess<T>;
