@@ -11,8 +11,8 @@ import { pipeline } from "stream/promises";
 import tar from "tar";
 import { createGunzip } from "zlib";
 import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
-import { TsVersion } from "./lint";
-import { getCompilerOptions, packageNameFromPath, packageDirectoryNameWithVersionFromPath } from "./util";
+import { TsVersion, lint } from "./lint";
+import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
 import assert = require("assert");
 
 const tmpDir = os.tmpdir();
@@ -160,6 +160,7 @@ async function runTests(
   let implementationPackage;
   let warnings: string[] | undefined;
   let errors: string[] | undefined;
+  let hasNpmVersionMismatch = false;
 
   if (!skipNpmChecks && !expectOnly) {
     const attw = await import("@arethetypeswrong/core");
@@ -177,6 +178,7 @@ async function runTests(
         );
       } else if (!packageJson.nonNpm) {
         if (!satisfies(packageVersion, typesPackageVersion)) {
+          hasNpmVersionMismatch = true;
           const isError = !npmVersionExemptions.has(packageDirectoryNameWithVersion);
           const container = isError ? (errors ??= []) : (warnings ??= []);
           container.push(
@@ -285,6 +287,15 @@ async function runTests(
           break;
       }
     }
+  }
+
+  if (
+    !skipNpmChecks &&
+    !expectOnly &&
+    !hasNpmVersionMismatch &&
+    npmVersionExemptions.has(packageDirectoryNameWithVersion)
+  ) {
+    (warnings ??= []).push(`${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt.`);
   }
 
   const result = combineErrorsAndWarnings(errors, warnings);
