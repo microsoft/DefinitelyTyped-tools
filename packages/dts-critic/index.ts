@@ -112,7 +112,7 @@ const npmNotFound = "E404";
 
 export function getNpmInfo(name: string): NpmInfo {
   const npmName = dtToNpmName(name);
-  const infoResult = cp.spawnSync("npm", ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
+  const infoResult = cp.spawnSync(which.sync("npm"), ["info", npmName, "--json", "--silent", "versions", "dist-tags"], {
     encoding: "utf8",
     env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
   });

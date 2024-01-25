@@ -1,16 +1,14 @@
-import os from "os";
 import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
+  suggestionsDir,
   CrashRecoveryState,
 } from "@definitelytyped/utils";
 import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
-
-const suggestionsDir = joinPaths(os.homedir(), ".dts", "suggestions");
 
 export async function runDTSLint({
   definitelyTypedAcquisition,
