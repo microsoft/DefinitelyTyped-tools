@@ -112,13 +112,6 @@ function getEslintOptions(
 
   return {
     overrideConfig,
-    baseConfig: {
-      overrides: [
-        {
-          files: allFiles,
-        }
-      ], 
-    },
   };
 }
 
