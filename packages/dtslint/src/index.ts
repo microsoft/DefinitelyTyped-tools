@@ -15,7 +15,7 @@ import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNam
 import assert = require("assert");
 import tmp = require("tmp");
 
-const tmpDir = tmp.dirSync();
+const tmpDir = tmp.dirSync().name;
 const npmVersionExemptions = new Set(
   fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
 );
