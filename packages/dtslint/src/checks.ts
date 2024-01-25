@@ -13,6 +13,7 @@ import { packageNameFromPath, readJson } from "./util";
 import tmp = require("tmp");
 import tar = require("tar");
 
+tmp.setGracefulCleanup();
 const tmpDir = tmp.dirSync().name;
 const npmVersionExemptions = new Set(
   fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
