@@ -1,12 +1,13 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import fs from "fs";
-import { join as joinPaths, dirname } from "path";
-import { CompilerOptions } from "typescript";
 import { deepEquals } from "@definitelytyped/utils";
+import fs from "fs";
+import { dirname, join as joinPaths } from "path";
+import { CompilerOptions } from "typescript";
 
-import { readJson, packageNameFromPath } from "./util";
 import { execFileSync, execSync } from "child_process";
+import which from "which";
+import { packageNameFromPath, readJson } from "./util";
 export function checkPackageJson(
   dirPath: string,
   typesVersions: readonly AllTypeScriptVersion[],
@@ -143,7 +144,8 @@ export function runAreTheTypesWrong(dirPath: string, implementationTarballPath: 
   const tarballName = `types-${mangledName}-${packageJsonContent.version}.tgz`;
   const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
   const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
-  execSync("npm pack", { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
+  const npmPath = which.sync("pnpm", { nothrow: true }) || which.sync("npm");
+  execSync(`${npmPath} pack`, { cwd: dirPath, stdio: "ignore", env: { ...process.env, COREPACK_ENABLE_STRICT: "0" } });
   try {
     const output = execFileSync(
       attwBinPath,
