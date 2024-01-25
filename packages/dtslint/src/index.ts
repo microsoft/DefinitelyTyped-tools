@@ -4,7 +4,6 @@ import { getTypesVersions } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { assertNever, deepEquals, readJson } from "@definitelytyped/utils";
 import fs from "fs";
-import os from "os";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 import { satisfies } from "semver";
 import { pipeline } from "stream/promises";
@@ -14,8 +13,9 @@ import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
 import { TsVersion, lint } from "./lint";
 import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
 import assert = require("assert");
+import tmp = require("tmp");
 
-const tmpDir = os.tmpdir();
+const tmpDir = tmp.dirSync();
 const npmVersionExemptions = new Set(
   fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
 );

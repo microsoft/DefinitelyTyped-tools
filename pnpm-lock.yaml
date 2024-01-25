@@ -185,6 +185,9 @@ importers:
       tar:
         specifier: ^6.2.0
         version: 6.2.0
+      tmp:
+        specifier: ^0.2.1
+        version: 0.2.1
       which:
         specifier: ^4.0.0
         version: 4.0.0
@@ -201,6 +204,9 @@ importers:
       '@types/tar':
         specifier: ^6.1.9
         version: 6.1.9
+      '@types/tmp':
+        specifier: ^0.2.6
+        version: 0.2.6
       '@types/which':
         specifier: ^3.0.3
         version: 3.0.3
@@ -2110,6 +2116,10 @@ packages:
     dependencies:
       '@types/node': 18.19.8
       minipass: 4.2.8
+    dev: true
+
+  /@types/tmp@0.2.6:
+    resolution: {integrity: sha512-chhaNf2oKHlRkDGt+tiKE2Z5aJ6qalm7Z9rlLdBwmOiAAf09YQvvoLXjWK4HWPF1xU/fqvMgfNfpVoBscA/tKA==}
     dev: true
 
   /@types/which@3.0.3:
@@ -6864,6 +6874,13 @@ packages:
     dependencies:
       os-tmpdir: 1.0.2
     dev: true
+
+  /tmp@0.2.1:
+    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
+    engines: {node: '>=8.17.0'}
+    dependencies:
+      rimraf: 3.0.2
+    dev: false
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
