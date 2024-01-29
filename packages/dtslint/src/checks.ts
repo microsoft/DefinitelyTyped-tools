@@ -49,7 +49,7 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
     if (!config.files.includes("index.d.ts")) {
       errors.push('"files" list must include "index.d.ts".');
     }
-    if (!config.files.some((f) => /\.[cm]?ts|\.tsx$/.test(f) && !isDeclarationPath(f))) {
+    if (!config.files.some((f) => /(?:\.[cm]?ts|\.tsx)$/.test(f) && !isDeclarationPath(f))) {
       errors.push('"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.');
     }
   }
