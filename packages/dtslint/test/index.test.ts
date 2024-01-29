@@ -129,8 +129,11 @@ describe("dtslint", () => {
       });
       it("Requires files to contain .[mc]ts file", () => {
         expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts"] })).toEqual([
-          `"files" list must include at least one ".ts", ".mts" or ".cts" file for testing.`,
+          `"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.`,
         ]);
+      });
+      it("Allows files to contain index.d.ts plus a .tsx", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts", "tests.tsx"] })).toEqual([]);
       });
       it("Allows files to contain index.d.ts plus a .mts", () => {
         expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts", "tests.mts"] })).toEqual([]);
@@ -141,7 +144,7 @@ describe("dtslint", () => {
       it("Issues both errors on empty files list", () => {
         expect(checkTsconfig("include", { compilerOptions: base, files: [] })).toEqual([
           `"files" list must include "index.d.ts".`,
-          `"files" list must include at least one ".ts", ".mts" or ".cts" file for testing.`,
+          `"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.`,
         ]);
       });
     });
