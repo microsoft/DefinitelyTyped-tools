@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.3
+
+### Patch Changes
+
+- 811aa2f: Allow .tsx tests in tsconfig
+
 ## 0.2.2
 
 ### Patch Changes
