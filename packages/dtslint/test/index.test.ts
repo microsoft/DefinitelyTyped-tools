@@ -109,6 +109,41 @@ describe("dtslint", () => {
           checkTsconfig("rrrr", based({ paths: { "react-native": ["../react-native/v0.70/other.d.ts"] } })),
         ).toEqual([`rrrr/tsconfig.json: "paths" must map 'react-native' to react-native's index.d.ts.`]);
       });
+      it("Forbids exclude", () => {
+        expect(checkTsconfig("exclude", { compilerOptions: base, exclude: ["**/node_modules"] })).toEqual([
+          `Use "files" instead of "exclude".`,
+        ]);
+      });
+      it("Forbids include", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, include: ["**/node_modules"] })).toEqual([
+          `Use "files" instead of "include".`,
+        ]);
+      });
+      it("Requires files", () => {
+        expect(checkTsconfig("include", { compilerOptions: base })).toEqual([`Must specify "files".`]);
+      });
+      it("Requires files to contain index.d.ts", () => {
+        expect(
+          checkTsconfig("include", { compilerOptions: base, files: ["package-name.d.ts", "package-name.test.ts"] }),
+        ).toEqual([`"files" list must include "index.d.ts".`]);
+      });
+      it("Requires files to contain .[mc]ts file", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts"] })).toEqual([
+          `"files" list must include at least one ".ts", ".mts" or ".cts" file for testing.`,
+        ]);
+      });
+      it("Allows files to contain index.d.ts plus a .mts", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts", "tests.mts"] })).toEqual([]);
+      });
+      it("Allows files to contain index.d.ts plus a .cts", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts", "tests.cts"] })).toEqual([]);
+      });
+      it("Issues both errors on empty files list", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: [] })).toEqual([
+          `"files" list must include "index.d.ts".`,
+          `"files" list must include at least one ".ts", ".mts" or ".cts" file for testing.`,
+        ]);
+      });
     });
     describe("assertPackageIsNotDeprecated", () => {
       it("disallows packages that are in notNeededPackages.json", () => {

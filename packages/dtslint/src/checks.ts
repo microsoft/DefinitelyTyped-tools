@@ -3,7 +3,7 @@ import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
 import fs from "fs";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
-import { deepEquals } from "@definitelytyped/utils";
+import { deepEquals, isDeclarationPath } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
 export function checkPackageJson(
@@ -41,16 +41,17 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
   const options = config.compilerOptions;
   if ("include" in config) {
     errors.push('Use "files" instead of "include".');
-  }
-  if ("exclude" in config) {
+  } else if ("exclude" in config) {
     errors.push('Use "files" instead of "exclude".');
-  }
-  if (!config.files) {
+  } else if (!config.files) {
     errors.push('Must specify "files".');
-  } else if (!config.files.some((f) => f.endsWith(".d.ts"))) {
-    errors.push('"files" list must include at least one ".d.ts" file.');
-  } else if (!config.files.some((f) => f.endsWith(".ts") && !f.endsWith(".d.ts"))) {
-    errors.push('"files" list must include at least one ".ts" file for testing.');
+  } else {
+    if (!config.files.includes("index.d.ts")) {
+      errors.push('"files" list must include "index.d.ts".');
+    }
+    if (!config.files.some((f) => /\.[cm]?ts$/.test(f) && !isDeclarationPath(f))) {
+      errors.push('"files" list must include at least one ".ts", ".mts" or ".cts" file for testing.');
+    }
   }
 
   for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
