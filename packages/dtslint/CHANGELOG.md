@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.2
+
+### Patch Changes
+
+- fc26705: Require 1 .d.ts, 1 .ts in tsconfigs
+
 ## 0.2.1
 
 ### Patch Changes

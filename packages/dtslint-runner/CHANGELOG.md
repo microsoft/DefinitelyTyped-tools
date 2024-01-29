@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [fc26705]
+  - @definitelytyped/dtslint@0.2.2
+
 ## 0.1.1
 
 ### Patch Changes
