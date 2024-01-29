@@ -12,10 +12,20 @@ export function readJson(path: string) {
   return JSON.parse(stripJsonComments(text));
 }
 
-export function getCompilerOptions(dirPath: string): ts.CompilerOptions {
+export function getCompilerOptions(dirPath: string): {
+  compilerOptions: ts.CompilerOptions;
+  files?: string[];
+  includes?: string[];
+  excludes?: string[];
+} {
   const tsconfigPath = join(dirPath, "tsconfig.json");
   if (!fs.existsSync(tsconfigPath)) {
     throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
   }
-  return readJson(tsconfigPath).compilerOptions as ts.CompilerOptions;
+  return readJson(tsconfigPath) as {
+    compilerOptions: ts.CompilerOptions;
+    files?: string[];
+    includes?: string[];
+    excludes?: string[];
+  };
 }
