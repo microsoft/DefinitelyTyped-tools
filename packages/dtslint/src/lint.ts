@@ -1,7 +1,7 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
-import { join as joinPaths, normalize } from "path";
+import { join as joinPaths, normalize, resolve } from "path";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
@@ -13,7 +13,6 @@ export async function lint(
   maxVersion: TsVersion,
   isLatest: boolean,
   expectOnly: boolean,
-  skipNpmNaming: boolean,
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
   const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
@@ -23,6 +22,7 @@ export async function lint(
   const estrees = [
     tryResolve("@typescript-eslint/typescript-estree"),
     tryResolve("@typescript-eslint/typescript-estree", { paths: [dirPath] }),
+    tryResolve("@typescript-eslint/typescript-estree", { paths: [resolve(__dirname, "../../eslint-plugin")] }),
   ];
   process.env.TSESTREE_SINGLE_RUN = "true";
   const lintProgram = createProgram(tsconfigPath);
@@ -49,7 +49,8 @@ export async function lint(
       files.push(fileName);
     }
   }
-  const options = getEslintOptions(expectOnly, skipNpmNaming, minVersion, maxVersion, tsLocal);
+
+  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
   const eslint = new ESLint(options);
   const formatter = await eslint.loadFormatter("stylish");
   const results = await eslint.lintFiles(files);
@@ -72,7 +73,6 @@ function tryResolve(path: string, options?: { paths?: string[] | undefined }): s
 
 function getEslintOptions(
   expectOnly: boolean,
-  skipNpmNaming: boolean,
   minVersion: TsVersion,
   maxVersion: TsVersion,
   tsLocal: string | undefined,
@@ -112,18 +112,6 @@ function getEslintOptions(
 
   return {
     overrideConfig,
-    baseConfig: {
-      overrides: [
-        {
-          files: allFiles,
-          rules: skipNpmNaming
-            ? {}
-            : {
-                "@definitelytyped/npm-naming": "error",
-              },
-        },
-      ],
-    },
   };
 }
 

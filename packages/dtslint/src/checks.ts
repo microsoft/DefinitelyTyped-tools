@@ -1,11 +1,24 @@
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import fs from "fs";
-import { join as joinPaths } from "path";
+import { assertDefined, assertNever, deepEquals } from "@definitelytyped/utils";
+import { execFileSync } from "child_process";
+import fs, { readdirSync } from "fs";
+import { dirname, join as joinPaths } from "path";
+import { satisfies } from "semver";
+import { pipeline } from "stream/promises";
 import { CompilerOptions } from "typescript";
-import { deepEquals } from "@definitelytyped/utils";
+import which from "which";
+import { createGunzip } from "zlib";
+import { packageNameFromPath, readJson } from "./util";
+import tmp = require("tmp");
+import tar = require("tar");
 
-import { readJson, packageNameFromPath } from "./util";
+tmp.setGracefulCleanup();
+const tmpDir = tmp.dirSync().name;
+const npmVersionExemptions = new Set(
+  fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
+);
+
 export function checkPackageJson(
   dirPath: string,
   typesVersions: readonly AllTypeScriptVersion[],
@@ -150,4 +163,178 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
     }
   }
   return errors;
+}
+
+export function runAreTheTypesWrong(
+  dirName: string,
+  dirPath: string,
+  implementationTarballPath: string,
+  configPath: string,
+  expectError: boolean,
+): {
+  warnings?: string[];
+  errors?: string[];
+} {
+  let warnings: string[] | undefined;
+  let errors: string[] | undefined;
+  let result: {
+    status: "pass" | "fail" | "error";
+    output: string;
+  };
+  const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
+  const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
+  const npmPath = which.sync("pnpm", { nothrow: true }) || which.sync("npm");
+  execFileSync(npmPath, ["pack"], {
+    cwd: dirPath,
+    stdio: "ignore",
+    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
+  });
+  const tarballName = assertDefined(readdirSync(dirPath).find((name) => name.endsWith(".tgz")));
+  try {
+    const output = execFileSync(
+      attwBinPath,
+      [implementationTarballPath, "--definitely-typed", tarballName, "--config-path", configPath],
+      {
+        cwd: dirPath,
+        stdio: "pipe",
+        encoding: "utf8",
+      },
+    );
+    result = { status: "pass", output };
+  } catch (err) {
+    const status = err && typeof err === "object" && "status" in err && err.status === 1 ? "fail" : "error";
+    const stdout =
+      err && typeof err === "object" && "stdout" in err && typeof err.stdout === "string" ? err.stdout : undefined;
+    const stderr =
+      err && typeof err === "object" && "stderr" in err && typeof err.stderr === "string" ? err.stderr : undefined;
+    result = { status, output: [stdout, stderr].filter(Boolean).join("\n") };
+  } finally {
+    fs.unlinkSync(joinPaths(dirPath, tarballName));
+  }
+
+  const { status, output } = result;
+  if (expectError) {
+    switch (status) {
+      case "error":
+        // No need to bother anyone with a version mismatch error or non-failure error.
+        break;
+      case "fail":
+        // Show output without failing the build.
+        (warnings ??= []).push(
+          `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`,
+        );
+        break;
+      case "pass":
+        (errors ??= []).push(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
+        break;
+      default:
+        assertNever(status);
+    }
+  } else {
+    switch (status) {
+      case "error":
+      case "fail":
+        (errors ??= []).push(`!@arethetypeswrong/cli\n${output}`);
+        break;
+      case "pass":
+        // Don't show anything for passing attw - most lint rules have no output on success.
+        break;
+    }
+  }
+
+  return { warnings, errors };
+}
+
+export interface ImplementationPackageInfo {
+  packageName: string;
+  packageVersion: string;
+  tarballPath: string;
+  unpackedPath: string;
+}
+
+export async function checkNpmVersionAndGetMatchingImplementationPackage(
+  packageJson: header.Header,
+  packageDirectoryNameWithVersion: string,
+): Promise<{
+  warnings?: string[];
+  errors?: string[];
+  implementationPackage?: ImplementationPackageInfo;
+}> {
+  let warnings: string[] | undefined;
+  let errors: string[] | undefined;
+  let hasNpmVersionMismatch = false;
+  let implementationPackage;
+  const attw = await import("@arethetypeswrong/core");
+  const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
+  const pkg = await tryPromise(
+    attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`),
+  );
+  if (pkg) {
+    const { packageName, packageVersion, tarballUrl } = pkg;
+    if (packageJson.nonNpm === true) {
+      (errors ??= []).push(
+        `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
+          `If these types are being added to DefinitelyTyped for the first time, please choose ` +
+          `a different name that does not conflict with an existing npm package.`,
+      );
+    } else if (!packageJson.nonNpm) {
+      if (!satisfies(packageVersion, typesPackageVersion)) {
+        hasNpmVersionMismatch = true;
+        const isError = !npmVersionExemptions.has(packageDirectoryNameWithVersion);
+        const container = isError ? (errors ??= []) : (warnings ??= []);
+        container.push(
+          (isError
+            ? ""
+            : `Ignoring npm version error because ${packageDirectoryNameWithVersion} was failing when the check was added. ` +
+              `If you are making changes to this package, please fix this error:\n> `) +
+            `Cannot find a version of ${packageName} on npm that matches the types version ${typesPackageVersion}. ` +
+            `The closest match found was ${packageName}@${packageVersion}. ` +
+            `If these types are for the existing npm package ${packageName}, change the ${packageDirectoryNameWithVersion}/package.json ` +
+            `major and minor version to match an existing version of the npm package. If these types are unrelated to ` +
+            `the npm package ${packageName}, add \`"nonNpm": true\` to the package.json and choose a different name ` +
+            `that does not conflict with an existing npm package.`,
+        );
+      } else {
+        const tarballPath = joinPaths(tmpDir, `${packageName.replace(/\//g, "-")}-${packageVersion}.tgz`);
+        const unpackedPath = joinPaths(tmpDir, `${packageName}-${packageVersion}`);
+        await pipeline((await fetch(tarballUrl)).body!, fs.createWriteStream(tarballPath));
+        await fs.promises.mkdir(unpackedPath, { recursive: true });
+        await pipeline(fs.createReadStream(tarballPath), createGunzip(), tar.extract({ cwd: unpackedPath }));
+        const containerDir = (await fs.promises.readdir(unpackedPath))[0];
+        implementationPackage = {
+          packageName,
+          packageVersion,
+          tarballPath,
+          unpackedPath: joinPaths(unpackedPath, containerDir),
+        };
+      }
+    }
+  } else if (packageJson.nonNpm === "conflict") {
+    (errors ??= []).push(
+      `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
+        `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
+    );
+  } else if (!packageJson.nonNpm) {
+    (errors ??= []).push(
+      `Package ${packageJson.name} is not marked as non-npm, but no implementation package was found on npm. ` +
+        `If these types are not for an npm package, please add \`"nonNpm": true\` to the package.json. ` +
+        `Otherwise, ensure the name of this package matches the name of the npm package.`,
+    );
+  }
+
+  if (!hasNpmVersionMismatch && npmVersionExemptions.has(packageDirectoryNameWithVersion)) {
+    (warnings ??= []).push(
+      `${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt in https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint.`,
+    );
+  }
+
+  return {
+    warnings,
+    errors,
+    implementationPackage,
+  };
+}
+
+function tryPromise<T>(promise: Promise<T>): Promise<T | undefined> {
+  return promise.catch(() => undefined);
 }

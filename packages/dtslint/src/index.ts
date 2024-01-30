@@ -1,22 +1,26 @@
 #!/usr/bin/env node
 
+import { getTypesVersions } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import assert = require("assert");
+import { deepEquals, readJson } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
-
-import { deepEquals } from "@definitelytyped/utils";
-import { checkPackageJson, checkTsconfig } from "./checks";
-import { lint, TsVersion } from "./lint";
-import { getCompilerOptions, packageNameFromPath } from "./util";
-import { getTypesVersions } from "@definitelytyped/header-parser";
+import {
+  checkNpmVersionAndGetMatchingImplementationPackage,
+  checkPackageJson,
+  checkTsconfig,
+  runAreTheTypesWrong,
+} from "./checks";
+import { TsVersion, lint } from "./lint";
+import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
+import assert = require("assert");
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   let dirPath = process.cwd();
   let onlyTestTsNext = false;
   let expectOnly = false;
-  let skipNpmNaming = false;
+  let skipNpmChecks = false;
   let shouldListen = false;
   let lookingForTsLocal = false;
   let tsLocal: string | undefined;
@@ -48,8 +52,8 @@ async function main(): Promise<void> {
       case "--expectOnly":
         expectOnly = true;
         break;
-      case "--skipNpmNaming":
-        skipNpmNaming = true;
+      case "--skipNpmChecks":
+        skipNpmChecks = true;
         break;
       case "--onlyTestTsNext":
         onlyTestTsNext = true;
@@ -83,17 +87,18 @@ async function main(): Promise<void> {
   if (shouldListen) {
     listen(dirPath, tsLocal);
   } else {
-    await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmNaming, tsLocal);
+    await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmChecks, tsLocal);
   }
 }
 
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path]");
+  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
+  console.error("  --skipNpmChecks  Don't query npm - skips name/version checks and @arethetypeswrong/cli.");
   console.error("");
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
@@ -101,31 +106,36 @@ function usage(): void {
 function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
   process.on("message", async (message: unknown) => {
-    const { path, onlyTestTsNext, expectOnly, skipNpmNaming } = message as {
+    const { path, onlyTestTsNext, expectOnly, skipNpmChecks } = message as {
       path: string;
       onlyTestTsNext: boolean;
       expectOnly?: boolean;
-      skipNpmNaming?: boolean;
+      skipNpmChecks?: boolean;
     };
-    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, !!skipNpmNaming, tsLocal)
-      .catch((e) => e.stack)
-      .then((maybeError) => {
-        process.send!({ path, status: maybeError === undefined ? "OK" : maybeError });
-      })
+
+    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, !!skipNpmChecks, tsLocal)
+      .then(
+        () => process.send!({ path, status: "OK" }),
+        (e) => process.send!({ path, status: e.stack }),
+      )
       .catch((e) => console.error(e.stack));
   });
 }
 
+/**
+ * @returns Warning text - should be displayed during the run, but does not indicate failure.
+ */
 async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
   expectOnly: boolean,
-  skipNpmNaming: boolean,
+  skipNpmChecks: boolean,
   tsLocal: string | undefined,
-): Promise<void> {
+): Promise<string | undefined> {
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
   const packageName = packageNameFromPath(dirPath);
+  const packageDirectoryNameWithVersion = packageDirectoryNameWithVersionFromPath(dirPath);
   assertPathIsInDefinitelyTyped(dirPath, dtRoot);
   assertPathIsNotBanned(packageName);
   assertPackageIsNotDeprecated(
@@ -142,10 +152,21 @@ async function runTests(
   await assertNpmIgnoreExpected(dirPath);
   assertNoOtherFiles(dirPath);
 
+  let implementationPackage;
+  let warnings: string[] | undefined;
+  let errors: string[] | undefined;
+
+  if (!skipNpmChecks && !expectOnly) {
+    ({ implementationPackage, warnings, errors } = await checkNpmVersionAndGetMatchingImplementationPackage(
+      packageJson,
+      packageDirectoryNameWithVersion,
+    ));
+  }
+
   const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
   if (onlyTestTsNext || tsLocal) {
     const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, skipNpmNaming, tsLocal, /*isLatest*/ true);
+    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
   } else {
     // For example, typesVersions of [3.2, 3.5, 3.6] will have
     // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -166,9 +187,36 @@ async function runTests(
       if (lows.length > 1) {
         console.log("testing from", low, "to", hi, "in", versionPath);
       }
-      await testTypesVersion(versionPath, low, hi, expectOnly, skipNpmNaming, undefined, isLatest);
+      await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
     }
   }
+
+  if (implementationPackage) {
+    const attwJson = joinPaths(dtRoot, "attw.json");
+    const failingPackages = ((await readJson(attwJson)) as any).failingPackages;
+    const dirName = dirPath.slice(dtRoot.length + "/types/".length);
+    const expectError = !!failingPackages?.includes(dirName);
+    const attwResult = runAreTheTypesWrong(dirName, dirPath, implementationPackage.tarballPath, attwJson, expectError);
+    (warnings ??= []).push(...(attwResult.warnings ?? []));
+    (errors ??= []).push(...(attwResult.errors ?? []));
+  }
+
+  const result = combineErrorsAndWarnings(errors, warnings);
+  if (result instanceof Error) {
+    throw result;
+  }
+  return result;
+}
+
+function combineErrorsAndWarnings(
+  errors: string[] | undefined,
+  warnings: string[] | undefined,
+): Error | string | undefined {
+  if (!errors && !warnings) {
+    return undefined;
+  }
+  const message = (errors ?? []).concat(warnings ?? []).join("\n\n");
+  return errors?.length ? new Error(message) : message;
 }
 
 function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
@@ -188,7 +236,6 @@ async function testTypesVersion(
   lowVersion: TsVersion,
   hiVersion: TsVersion,
   expectOnly: boolean,
-  skipNpmNaming: boolean,
   tsLocal: string | undefined,
   isLatest: boolean,
 ): Promise<void> {
@@ -197,7 +244,7 @@ async function testTypesVersion(
   if (tsconfigErrors.length > 0) {
     throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
-  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, skipNpmNaming, tsLocal);
+  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     throw new Error(err);
   }

@@ -22,6 +22,8 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
+    "@arethetypeswrong/cli": "^0.13.6",
+    "@arethetypeswrong/core": "^0.13.6",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
@@ -32,14 +34,22 @@
     "@typescript-eslint/utils": "^6.19.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
-    "strip-json-comments": "^3.1.1"
+    "semver": "^7.5.4",
+    "strip-json-comments": "^3.1.1",
+    "tar": "^6.2.0",
+    "tmp": "^0.2.1",
+    "which": "^4.0.0"
   },
   "peerDependencies": {
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.2",
+    "@types/semver": "^7.5.5",
     "@types/strip-json-comments": "^3.0.0",
+    "@types/tar": "^6.1.9",
+    "@types/tmp": "^0.2.6",
+    "@types/which": "^3.0.3",
     "typescript": "^5.3.3"
   },
   "engines": {

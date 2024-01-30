@@ -1,10 +1,8 @@
 /// <reference types="jest" />
 import {
   findDtsName,
-  getNpmInfo,
   dtToNpmName,
   parseExportErrorKind,
-  dtsCritic,
   checkSource,
   ErrorKind,
   ExportErrorKind,
@@ -33,18 +31,6 @@ suite("findDtsName", {
   },
   emptyDirectory() {
     expect(findDtsName("")).toBe("DefinitelyTyped-tools");
-  },
-});
-suite("getNpmInfo", {
-  nonNpm() {
-    expect(getNpmInfo("wenceslas")).toEqual({ isNpm: false });
-  },
-  npm() {
-    expect(getNpmInfo("typescript")).toEqual({
-      isNpm: true,
-      versions: expect.arrayContaining(["3.7.5"]),
-      tags: expect.objectContaining({ latest: expect.stringContaining("") }),
-    });
   },
 });
 suite("dtToNpmName", {
@@ -245,43 +231,5 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
         },
       ]),
     );
-  },
-});
-suite("dtsCritic", {
-  noErrors() {
-    expect(dtsCritic(testsource("dts-critic.d.ts"), testsource("dts-critic.js"))).toEqual([]);
-  },
-  noMatchingNpmPackage() {
-    expect(dtsCritic(testsource("no-matching-package/wenceslas.d.ts"))).toEqual([
-      {
-        kind: ErrorKind.NoMatchingNpmPackage,
-        message: `Declaration file must have a matching npm package.
-To resolve this error, either:
-1. Change the name to match an npm package.
-2. Add \`"nonNpm": true\` to the package.json to indicate that this is not an npm package.
-   Ensure the package name is descriptive enough to avoid conflicts with future npm packages.`,
-      },
-    ]);
-  },
-  noMatchingNpmVersion() {
-    expect(dtsCritic(testsource("typescript/index.d.ts"))).toEqual([
-      {
-        kind: ErrorKind.NoMatchingNpmVersion,
-        message: expect.stringContaining(`The types for 'typescript' must match a version that exists on npm.
-You should copy the major and minor version from the package on npm.`),
-      },
-    ]);
-  },
-  nonNpmHasMatchingPackage() {
-    expect(dtsCritic(testsource("example/index.d.ts"))).toEqual([
-      {
-        kind: ErrorKind.NonNpmHasMatchingPackage,
-        message: `The non-npm package 'example' conflicts with the existing npm package 'example'.
-Try adding -browser to the end of the name to get
-
-    example-browser
-`,
-      },
-    ]);
   },
 });

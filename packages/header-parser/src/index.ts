@@ -6,7 +6,7 @@ import { withoutStart, mapDefined, deepEquals, joinPaths } from "@definitelytype
 
 // used in dts-critic
 export interface Header {
-  readonly nonNpm: boolean;
+  readonly nonNpm: boolean | "conflict";
   readonly nonNpmDescription?: string;
   readonly name: string;
   readonly libraryMajorVersion: number;
@@ -119,7 +119,7 @@ export function validatePackageJson(
   let name = "ERROR";
   let libraryMajorVersion = 0;
   let libraryMinorVersion = 0;
-  let nonNpm = false;
+  let nonNpm: boolean | "conflict" = false;
   let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
   let owners: Owner[] = [];
@@ -210,11 +210,11 @@ export function validatePackageJson(
     }
     return { errors };
   }
-  function validateNonNpm(): boolean | { errors: string[] } {
+  function validateNonNpm(): boolean | "conflict" | { errors: string[] } {
     const errors = [];
     if (packageJson.nonNpm !== undefined) {
-      if (packageJson.nonNpm !== true) {
-        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpm": must be true if present.`);
+      if (packageJson.nonNpm !== true && packageJson.nonNpm !== "conflict") {
+        errors.push(`${typesDirectoryName}'s package.json has bad "nonNpm": must be true or "conflict" if present.`);
       } else if (!packageJson.nonNpmDescription) {
         errors.push(
           `${typesDirectoryName}'s package.json has missing "nonNpmDescription", which is required with "nonNpm": true.`,
@@ -222,7 +222,7 @@ export function validatePackageJson(
       } else if (typeof packageJson.nonNpmDescription !== "string") {
         errors.push(`${typesDirectoryName}'s package.json has bad "nonNpmDescription": must be a string if present.`);
       } else {
-        return true;
+        return packageJson.nonNpm;
       }
       return { errors };
     } else if (packageJson.nonNpmDescription !== undefined) {

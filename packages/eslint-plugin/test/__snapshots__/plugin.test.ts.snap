@@ -256,7 +256,6 @@ exports[`plugin should have the expected exports 1`] = `
     "no-single-declare-module",
     "no-old-dt-header",
     "no-import-of-dev-dependencies",
-    "npm-naming",
     "expect",
     "no-type-only-packages",
   ],
