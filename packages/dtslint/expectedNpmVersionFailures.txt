@@ -167,6 +167,7 @@ formidable/v1
 foundation
 friendly-errors-webpack-plugin
 ftdomdelegate
+gamedig
 generic-functions
 gensync
 gently
