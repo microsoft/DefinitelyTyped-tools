@@ -87,7 +87,11 @@ async function main(): Promise<void> {
   if (shouldListen) {
     listen(dirPath, tsLocal);
   } else {
-    await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmChecks, tsLocal);
+    const warnings = await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmChecks, tsLocal);
+    if (warnings) {
+      console.log("\nWarnings:\n");
+      console.log(warnings);
+    }
   }
 }
 
@@ -115,7 +119,7 @@ function listen(dirPath: string, tsLocal: string | undefined): void {
 
     runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, !!skipNpmChecks, tsLocal)
       .then(
-        () => process.send!({ path, status: "OK" }),
+        (warnings) => process.send!({ path, status: "OK", warnings }),
         (e) => process.send!({ path, status: e.stack }),
       )
       .catch((e) => console.error(e.stack));
