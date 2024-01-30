@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.2.5
+
+### Patch Changes
+
+- 4216821: Add @arethetypeswrong/cli run
+- Updated dependencies [4216821]
+  - @definitelytyped/header-parser@0.2.2
+
 ## 0.2.4
 
 ### Patch Changes

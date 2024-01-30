@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.5
+
+### Patch Changes
+
+- 4216821: Add @arethetypeswrong/cli run
+- Updated dependencies [4216821]
+  - @definitelytyped/dtslint@0.2.5
+  - @definitelytyped/definitions-parser@0.1.2
+
 ## 0.1.4
 
 ### Patch Changes
