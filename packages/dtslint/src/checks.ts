@@ -37,14 +37,35 @@ export type CompilerOptionsRaw = {
     ? string | number | undefined
     : CompilerOptions[K];
 };
+interface Tsconfig {
+  compilerOptions: CompilerOptionsRaw;
+  files?: string[];
+  include?: string[];
+  exclude?: string[];
+}
 
-export function checkTsconfig(dirPath: string, options: CompilerOptionsRaw): string[] {
+export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
   const errors = [];
   const mustHave = {
     noEmit: true,
     forceConsistentCasingInFileNames: true,
     types: [],
   };
+  const options = config.compilerOptions;
+  if ("include" in config) {
+    errors.push('Use "files" instead of "include".');
+  } else if ("exclude" in config) {
+    errors.push('Use "files" instead of "exclude".');
+  } else if (!config.files) {
+    errors.push('Must specify "files".');
+  } else {
+    if (!(config.files.includes("index.d.ts") || config.files.includes("./index.d.ts"))) {
+      errors.push('"files" list must include "index.d.ts".');
+    }
+    // if (!config.files.some((f) => /(?:\.[cm]?ts|\.tsx)$/.test(f) && !isDeclarationPath(f))) {
+    //   errors.push('"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.');
+    // }
+  }
 
   for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
     const expected = mustHave[key];

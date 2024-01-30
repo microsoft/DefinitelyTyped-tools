@@ -1,5 +1,24 @@
 # @definitelytyped/dtslint
 
+## 0.2.4
+
+### Patch Changes
+
+- d7c81c7: Re-allow packages without tests
+- d7c81c7: Allow ./index.d.ts (with ./ prefix)
+
+## 0.2.3
+
+### Patch Changes
+
+- 811aa2f: Allow .tsx tests in tsconfig
+
+## 0.2.2
+
+### Patch Changes
+
+- fc26705: Require 1 .d.ts, 1 .ts in tsconfigs
+
 ## 0.2.1
 
 ### Patch Changes
