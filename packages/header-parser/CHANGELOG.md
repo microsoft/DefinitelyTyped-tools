@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.2.2
+
+### Patch Changes
+
+- 4216821: Add @arethetypeswrong/cli run
+
 ## 0.2.1
 
 ### Patch Changes
