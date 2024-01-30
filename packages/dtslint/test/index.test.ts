@@ -141,6 +141,9 @@ describe("dtslint", () => {
       it("Allows files to contain index.d.ts plus a .cts", () => {
         expect(checkTsconfig("include", { compilerOptions: base, files: ["index.d.ts", "tests.cts"] })).toEqual([]);
       });
+      it("Allows files to contain ./index.d.ts plus a ./.tsx", () => {
+        expect(checkTsconfig("include", { compilerOptions: base, files: ["./index.d.ts", "./tests.tsx"] })).toEqual([]);
+      });
       it("Issues both errors on empty files list", () => {
         expect(checkTsconfig("include", { compilerOptions: base, files: [] })).toEqual([
           `"files" list must include "index.d.ts".`,
