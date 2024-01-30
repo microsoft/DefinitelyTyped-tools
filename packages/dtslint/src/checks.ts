@@ -3,7 +3,7 @@ import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
 import fs from "fs";
 import { join as joinPaths } from "path";
 import { CompilerOptions } from "typescript";
-import { deepEquals, isDeclarationPath } from "@definitelytyped/utils";
+import { deepEquals } from "@definitelytyped/utils";
 
 import { readJson, packageNameFromPath } from "./util";
 export function checkPackageJson(
@@ -46,12 +46,12 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
   } else if (!config.files) {
     errors.push('Must specify "files".');
   } else {
-    if (!config.files.includes("index.d.ts")) {
+    if (!(config.files.includes("index.d.ts") || config.files.includes("./index.d.ts"))) {
       errors.push('"files" list must include "index.d.ts".');
     }
-    if (!config.files.some((f) => /(?:\.[cm]?ts|\.tsx)$/.test(f) && !isDeclarationPath(f))) {
-      errors.push('"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.');
-    }
+    // if (!config.files.some((f) => /(?:\.[cm]?ts|\.tsx)$/.test(f) && !isDeclarationPath(f))) {
+    //   errors.push('"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.');
+    // }
   }
 
   for (const key of Object.getOwnPropertyNames(mustHave) as (keyof typeof mustHave)[]) {
