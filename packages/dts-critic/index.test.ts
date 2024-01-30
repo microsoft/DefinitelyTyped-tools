@@ -1,12 +1,5 @@
 /// <reference types="jest" />
-import {
-  findDtsName,
-  dtToNpmName,
-  parseExportErrorKind,
-  checkSource,
-  ErrorKind,
-  ExportErrorKind,
-} from "./index";
+import { findDtsName, dtToNpmName, parseExportErrorKind, checkSource, ErrorKind, ExportErrorKind } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void }) {
   describe(description, () => {
