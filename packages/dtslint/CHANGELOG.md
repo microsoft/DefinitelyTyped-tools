@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.2.4
+
+### Patch Changes
+
+- d7c81c7: Re-allow packages without tests
+- d7c81c7: Allow ./index.d.ts (with ./ prefix)
+
 ## 0.2.3
 
 ### Patch Changes
