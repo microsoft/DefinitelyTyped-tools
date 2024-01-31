@@ -83,7 +83,7 @@ export async function getAffectedPackagesWorker(
 
   async function tryGetTypingsData(d: string) {
     const dep = getDependencyFromFile(normalizeSlashes(d + "/index.d.ts"));
-    if (!dep) return undefined;
+    if (typeof dep !== "object") return undefined;
     const data = await allPackages.tryGetTypingsData(dep);
     if (!data) return undefined;
     return data.subDirectoryPath;

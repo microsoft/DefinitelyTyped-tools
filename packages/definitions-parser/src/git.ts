@@ -73,20 +73,20 @@ export function gitChanges(
     if (!/types[\\/]/.test(diff.file)) continue;
     if (diff.status === "M") continue;
     const dep = getDependencyFromFile(diff.file);
-    if (dep) {
+    if (typeof dep === "object") {
       const key = `${dep.typesDirectoryName}/v${dep.version === "*" ? "*" : formatTypingVersion(dep.version)}`;
       (diff.status === "D" ? deletions : additions).set(key, dep);
       if (diff.status === "R") {
         // add the source of moves to deletions (the destination was just added to additions)
         const srcDep = getDependencyFromFile(diff.source);
-        if (srcDep) {
+        if (typeof srcDep === "object") {
           const srcKey = `${srcDep.typesDirectoryName}/v${
             srcDep.version === "*" ? "*" : formatTypingVersion(srcDep.version)
           }`;
           deletions.set(srcKey, srcDep);
         }
       }
-    } else {
+    } else if (dep === undefined) {
       const status = diff.status === "A" || diff.status === "R" ? "add" : "delete";
       errors.push(
         `Unexpected file ${status === "add" ? "added" : "deleted"}: ${diff.file}
