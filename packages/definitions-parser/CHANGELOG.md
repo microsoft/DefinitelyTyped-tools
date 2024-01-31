@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.4
+
+### Patch Changes
+
+- b419d1c: Don't look for dependents of packages with deleted files if those packages were not fully deleted
+
 ## 0.1.3
 
 ### Patch Changes
