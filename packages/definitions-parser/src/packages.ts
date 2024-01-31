@@ -595,11 +595,12 @@ export function readNotNeededPackages(dt: FS): readonly NotNeededPackage[] {
 /**
  * For "types/a/b/c", returns { name: "a", version: "*" }.
  * For "types/a/v3/c", returns { name: "a", version: 3 }.
+ * for "types/a/scripts/...", returns "scripts".
  * For "x", returns undefined.
  */
 export function getDependencyFromFile(
   file: string,
-): { typesDirectoryName: string; version: DirectoryParsedTypingVersion | "*" } | undefined {
+): { typesDirectoryName: string; version: DirectoryParsedTypingVersion | "*" } | "scripts" | undefined {
   const parts = file.split("/");
   if (parts.length <= 2) {
     // It's not in a typings directory at all.
@@ -625,7 +626,7 @@ export function getDependencyFromFile(
     // is root package's scripts folder with overridden packageVersion and tsVersion
     (version !== "*" && /^ts\d+\.\d$/.test(tsVersion) && scripts === "scripts")
   ) {
-    return undefined;
+    return "scripts";
   }
 
   return { typesDirectoryName: name, version };
