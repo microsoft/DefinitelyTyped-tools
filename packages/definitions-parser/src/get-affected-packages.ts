@@ -31,6 +31,11 @@ export async function getAffectedPackages(
   // For packages that have been deleted, they won't appear in the graph anymore; look for packages
   // that still depend on the package (but via npm) and manually add them.
   for (const d of git.deletions) {
+    if (await allPackages.tryGetTypingsData(d)) {
+      // The package wasn't actually deleted.
+      continue;
+    }
+
     for (const dep of await allPackages.allTypings()) {
       for (const [name, version] of dep.allPackageJsonDependencies()) {
         if (
