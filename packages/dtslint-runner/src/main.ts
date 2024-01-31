@@ -46,6 +46,7 @@ export async function runDTSLint({
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
 
   const allFailures: [string, string][] = [];
+  const allWarnings: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
   const allPackages = [...packageNames, ...dependents];
@@ -77,7 +78,7 @@ export async function runDTSLint({
     },
     handleOutput(output, processIndex) {
       const prefix = processIndex === undefined ? "" : `${processIndex}> `;
-      const { path, status } = output as { path: string; status: string };
+      const { path, status, warnings } = output as { path: string; status: string; warnings: string | undefined };
       if (expectedFailures?.has(path)) {
         if (status === "OK") {
           console.error(`${prefix}${path} passed, but was expected to fail.`);
@@ -94,7 +95,7 @@ export async function runDTSLint({
           );
         }
       } else if (status === "OK") {
-        console.log(`${prefix}${path} OK`);
+        console.log(`${prefix}${path} OK${warnings ? ` (with warnings)` : ""}`);
       } else {
         console.error(`${prefix}${path} failing:`);
         console.error(
@@ -106,6 +107,9 @@ export async function runDTSLint({
             : status,
         );
         allFailures.push([path, status]);
+      }
+      if (warnings) {
+        allWarnings.push([path, warnings]);
       }
     },
     handleCrash(input, state, processIndex) {
@@ -146,14 +150,20 @@ export async function runDTSLint({
     fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");
   }
 
-  if (allFailures.length === 0) {
-    return 0;
+  if (allWarnings.length) {
+    console.log("\n\n=== WARNINGS ===\n");
+    for (const [path, warnings] of allWarnings) {
+      console.log(`\n\nWarnings in ${path}`);
+      console.log(warnings);
+    }
   }
 
-  console.error("\n\n=== ERRORS ===\n");
-  for (const [path, error] of allFailures) {
-    console.error(`\n\nError in ${path}`);
-    console.error(error);
+  if (allFailures.length) {
+    console.error("\n\n=== ERRORS ===\n");
+    for (const [path, error] of allFailures) {
+      console.error(`\n\nError in ${path}`);
+      console.error(error);
+    }
   }
 
   return allFailures.length;
