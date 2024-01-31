@@ -285,18 +285,18 @@ describe(getDependencyFromFile, () => {
   });
 
   it("returns undefined on package's scripts directory", () => {
-    expect(getDependencyFromFile("types/a/scripts")).toBe(undefined);
+    expect(getDependencyFromFile("types/a/scripts")).toBe("scripts");
   });
 
   it("returns undefined on package's scripts directory with overridden tsVersion", () => {
-    expect(getDependencyFromFile("types/a/ts4.8/scripts")).toBe(undefined);
+    expect(getDependencyFromFile("types/a/ts4.8/scripts")).toBe("scripts");
   });
 
   it("returns undefined on package's scripts directory with overridden packageVersion", () => {
-    expect(getDependencyFromFile("types/a/v18/scripts")).toBe(undefined);
+    expect(getDependencyFromFile("types/a/v18/scripts")).toBe("scripts");
   });
 
   it("returns undefined on package's scripts directory with overridden packageVersion and tsVersion", () => {
-    expect(getDependencyFromFile("types/a/v18/ts4.8/scripts")).toBe(undefined);
+    expect(getDependencyFromFile("types/a/v18/ts4.8/scripts")).toBe("scripts");
   });
 });

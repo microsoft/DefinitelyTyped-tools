@@ -616,7 +616,11 @@ export function getDependencyFromFile(
   const version = parseVersionFromDirectoryName(packageVersion) ?? "*";
   if (
     // package is not in types directory
-    typesDirName !== typesDirectoryName ||
+    typesDirName !== typesDirectoryName
+  ) {
+    return undefined;
+  }
+  if (
     // is root package's scripts folder
     packageVersion === "scripts" ||
     // is root package's scripts folder with overridden tsVersion
