@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.3
+
+### Patch Changes
+
+- e6880b0: Don't error when scripts are modified
+
 ## 0.1.2
 
 ### Patch Changes

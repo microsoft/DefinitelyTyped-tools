@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.6
+
+### Patch Changes
+
+- 2f106cb: Add missing warning logging
+
 ## 0.2.5
 
 ### Patch Changes

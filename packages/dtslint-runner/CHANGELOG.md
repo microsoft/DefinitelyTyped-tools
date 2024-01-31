@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.6
+
+### Patch Changes
+
+- 2f106cb: Add missing warning logging
+- Updated dependencies [e6880b0]
+- Updated dependencies [2f106cb]
+  - @definitelytyped/definitions-parser@0.1.3
+  - @definitelytyped/dtslint@0.2.6
+
 ## 0.1.5
 
 ### Patch Changes
