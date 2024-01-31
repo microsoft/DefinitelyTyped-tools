@@ -32,7 +32,7 @@ export async function getAffectedPackages(
   // that still depend on the package (but via npm) and manually add them.
   for (const d of git.deletions) {
     if (await allPackages.tryGetTypingsData(d)) {
-      // The package actually wasn't deleted.
+      // The package wasn't actually deleted.
       continue;
     }
 
