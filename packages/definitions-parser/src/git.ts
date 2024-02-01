@@ -34,13 +34,7 @@ export async function gitDiff(
 ): Promise<GitDiff[]> {
   await run("git", ["rev-parse", "--verify", diffBase]);
 
-  let diff = (await run("git", ["diff", diffBase, "--name-status"])).trim();
-  if (diff === "") {
-    // We are probably already on master, so compare to the last commit.
-    log("No diff found, comparing to last commit");
-    diff = (await run("git", ["diff", `HEAD^1`, "--name-status"])).trim();
-    throw new Error("No diff found");
-  }
+  const diff = (await run("git", ["diff", diffBase, "--name-status"])).trim();
   if (diff === "") {
     // Must have been an empty commit; just return no diffs.
     return [];
