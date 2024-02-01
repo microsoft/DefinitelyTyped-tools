@@ -3,4 +3,4 @@
 "@definitelytyped/dtslint-runner": patch
 ---
 
-Add --diffBase to configure diffing
+Do not fetch automatically fetch master on run

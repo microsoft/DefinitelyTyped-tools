@@ -7,7 +7,7 @@ import {
 import { loggerWithErrors } from "@definitelytyped/utils";
 import { checkParseResults } from "./check-parse-results";
 
-export async function prepareAffectedPackages(definitelyTypedPath: string, noFetch: boolean, diffBase: string): Promise<PreparePackagesResult> {
+export async function prepareAffectedPackages(definitelyTypedPath: string, diffBase: string): Promise<PreparePackagesResult> {
   const log = loggerWithErrors()[0];
   const options = {
     definitelyTypedPath,
@@ -19,7 +19,7 @@ export async function prepareAffectedPackages(definitelyTypedPath: string, noFet
   if (checkErrors.length) {
     throw new Error(checkErrors.join("\n"));
   }
-  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, noFetch, diffBase);
+  const result = await getAffectedPackagesFromDiff(allPackages, definitelyTypedPath, diffBase);
   if (Array.isArray(result)) {
     throw new Error(result.join("\n"));
   }

@@ -30,21 +30,9 @@ If editing this code, be sure to test on both full and shallow clones.
 export async function gitDiff(
   log: Logger,
   definitelyTypedPath: string,
-  noFetch: boolean,
   diffBase: string,
 ): Promise<GitDiff[]> {
-  if (!noFetch) {
-    const remotes = (await run("git", ["remote"])).trim().split(/\r?\n/);
-    if (remotes.some((r) => diffBase.startsWith(r + "/"))) {
-      await run("git", ["fetch", ...diffBase.split("/", 2)]);
-    }
-  } else {
-    try {
-      await run("git", ["rev-parse", "--verify", diffBase]);
-    } catch {
-      throw new Error(`The base commit ${diffBase} does not exist in this repository.`);
-    }
-  }
+  await run("git", ["rev-parse", "--verify", diffBase]);
 
   let diff = (await run("git", ["diff", diffBase, "--name-status"])).trim();
   if (diff === "") {
@@ -117,11 +105,10 @@ You should ` +
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string,
-  noFetch: boolean,
   diffBase: string,
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
-  const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath, noFetch, diffBase);
+  const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath, diffBase);
   const git = gitChanges(diffs);
   if ("errors" in git) {
     return git.errors;

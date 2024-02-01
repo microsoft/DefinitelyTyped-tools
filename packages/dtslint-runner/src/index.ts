@@ -89,12 +89,6 @@ if (require.main === module) {
         description: "Path to which all failures will be written.",
         default: "",
       },
-      noFetch: {
-        group: "git options",
-        description: "Don't fetch from a git remote before running.",
-        type: "boolean",
-        default: false,
-      },
       diffBase: {
         group: "git options",
         description: "The base commit to diff against.",
@@ -125,7 +119,6 @@ if (require.main === module) {
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
     writeFailures: args.writeFailures,
-    noFetch: args.noFetch,
     diffBase: args.diffBase,
   };
 
