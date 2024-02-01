@@ -1,5 +1,13 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.5
+
+### Patch Changes
+
+- c4d8b9c: Prevent crash on an empty commit
+- 3e799c3: Add --diffBase to configure diffing
+- 3e799c3: Do not fetch automatically fetch master on run
+
 ## 0.1.4
 
 ### Patch Changes

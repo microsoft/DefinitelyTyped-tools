@@ -1,5 +1,17 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.8
+
+### Patch Changes
+
+- 3e799c3: Switch to blobless clone in cloneDefinitelyTyped
+- 3e799c3: Add --diffBase to configure diffing
+- 3e799c3: Do not fetch automatically fetch master on run
+- Updated dependencies [c4d8b9c]
+- Updated dependencies [3e799c3]
+- Updated dependencies [3e799c3]
+  - @definitelytyped/definitions-parser@0.1.5
+
 ## 0.1.7
 
 ### Patch Changes
