@@ -53,6 +53,10 @@ export async function gitDiff(
     diff = (await run("git", ["diff", `HEAD^1`, "--name-status"])).trim();
     throw new Error("No diff found");
   }
+  if (diff === "") {
+    // Must have been an empty commit; just return no diffs.
+    return [];
+  }
   return diff.split("\n").map((line) => {
     const [status, file, destination] = line.split(/\s+/, 3);
     if (status[0] === "R") {

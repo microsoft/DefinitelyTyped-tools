@@ -491,6 +491,7 @@
 @storybook/csf
 @storybook/react
 @streamparser/json
+@stripe/stripe-js
 @testing-library/dom
 @tweenjs/tween.js
 @types/anymatch
