@@ -43,6 +43,10 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
     // We are probably already on master, so compare to the last commit.
     diff = (await run("git", ["diff", `${sourceBranch}~1`, "--name-status"])).trim();
   }
+  if (diff === "") {
+    // Must have been an empty commit; just return no diffs.
+    return [];
+  }
   return diff.split("\n").map((line) => {
     const [status, file, destination] = line.split(/\s+/, 3);
     if (status[0] === "R") {
