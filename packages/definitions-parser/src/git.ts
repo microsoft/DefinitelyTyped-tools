@@ -8,14 +8,14 @@ import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packa
 
 export type GitDiff =
   | {
-      status: "A" | "D" | "M";
-      file: string;
-    }
+    status: "A" | "D" | "M";
+    file: string;
+  }
   | {
-      status: "R";
-      file: string;
-      source: string;
-    };
+    status: "R";
+    file: string;
+    source: string;
+  };
 
 /*
 We have to be careful about how we get the diff because Actions uses a shallow clone.
@@ -42,6 +42,10 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise
   if (diff === "") {
     // We are probably already on master, so compare to the last commit.
     diff = (await run("git", ["diff", `${sourceBranch}~1`, "--name-status"])).trim();
+  }
+  if (diff === "") {
+    // Must have been an empty commit; just return no diffs.
+    return [];
   }
   return diff.split("\n").map((line) => {
     const [status, file, destination] = line.split(/\s+/, 3);
@@ -80,9 +84,8 @@ export function gitChanges(
         // add the source of moves to deletions (the destination was just added to additions)
         const srcDep = getDependencyFromFile(diff.source);
         if (typeof srcDep === "object") {
-          const srcKey = `${srcDep.typesDirectoryName}/v${
-            srcDep.version === "*" ? "*" : formatTypingVersion(srcDep.version)
-          }`;
+          const srcKey = `${srcDep.typesDirectoryName}/v${srcDep.version === "*" ? "*" : formatTypingVersion(srcDep.version)
+            }`;
           deletions.set(srcKey, srcDep);
         }
       }
@@ -91,9 +94,9 @@ export function gitChanges(
       errors.push(
         `Unexpected file ${status === "add" ? "added" : "deleted"}: ${diff.file}
 You should ` +
-          (status === "add"
-            ? `only add files that are part of packages.`
-            : "only delete files that are a part of removed packages."),
+        (status === "add"
+          ? `only add files that are part of packages.`
+          : "only delete files that are a part of removed packages."),
       );
     }
   }
