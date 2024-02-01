@@ -5,7 +5,7 @@ import yargs from "yargs";
 import { RunDTSLintOptions } from "./types";
 import { runDTSLint } from "./main";
 import { assertDefined, logUncaughtErrors } from "@definitelytyped/utils";
-import { defaultSourceRef } from "@definitelytyped/definitions-parser";
+import { sourceBranch } from "@definitelytyped/definitions-parser";
 
 export { runDTSLint, RunDTSLintOptions };
 
@@ -91,9 +91,9 @@ if (require.main === module) {
       },
       diffBase: {
         group: "git options",
-        description: "The base commit to diff against.",
+        description: "The base revision to diff against.",
         type: "string",
-        default: defaultSourceRef,
+        default: sourceBranch,
       },
     })
     .wrap(Math.min(yargs.terminalWidth(), 120))
