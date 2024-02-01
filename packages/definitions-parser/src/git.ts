@@ -27,11 +27,7 @@ Actions runs:
 
 If editing this code, be sure to test on both full and shallow clones.
 */
-export async function gitDiff(
-  log: Logger,
-  definitelyTypedPath: string,
-  diffBase: string,
-): Promise<GitDiff[]> {
+export async function gitDiff(log: Logger, definitelyTypedPath: string, diffBase: string): Promise<GitDiff[]> {
   await run("git", ["rev-parse", "--verify", diffBase]);
 
   const diff = (await run("git", ["diff", diffBase, "--name-status"])).trim();
