@@ -4,12 +4,13 @@ import { getUrlContentsAsString, withCache } from "./utils";
 const root = joinPaths(__dirname, "..", "..");
 const storageDirPath = process.env.STORAGE_DIR || root;
 export const dataDirPath = joinPaths(storageDirPath, "data");
-export const sourceBranch = "master";
-export const sourceRemote = "origin";
+export const defaultSourceBranch = "master";
+export const defaultSourceRemote = "origin";
+export const defaultSourceRef = `${defaultSourceRemote}/${defaultSourceBranch}`;
 export const typesDirectoryName = "types";
 
 /** URL to download the repository from. */
-export const definitelyTypedZipUrl = "https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/tar.gz/master";
+export const definitelyTypedZipUrl = `https://codeload.github.com/DefinitelyTyped/DefinitelyTyped/tar.gz/${defaultSourceBranch}`;
 
 const allowedPackageJsonDependenciesUrl =
   "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/main/packages/definitions-parser/allowedPackageJsonDependencies.txt";

@@ -22,6 +22,8 @@ export async function runDTSLint({
   shard,
   childRestartTaskInterval,
   writeFailures,
+  noFetch,
+  diffBase,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
   console.log("Node version: ", process.version);
@@ -42,7 +44,7 @@ export async function runDTSLint({
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
   const { packageNames, dependents } = onlyRunAffectedPackages
-    ? await prepareAffectedPackages(definitelyTypedPath)
+    ? await prepareAffectedPackages(definitelyTypedPath, noFetch, diffBase)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
 
   const allFailures: [string, string][] = [];
