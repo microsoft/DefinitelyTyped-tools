@@ -20,4 +20,5 @@ export interface RunDTSLintOptions {
   shard?: { id: number; count: number };
   childRestartTaskInterval?: number;
   writeFailures?: string;
+  diffBase: string;
 }

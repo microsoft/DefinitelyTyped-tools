@@ -5,6 +5,7 @@ import yargs from "yargs";
 import { RunDTSLintOptions } from "./types";
 import { runDTSLint } from "./main";
 import { assertDefined, logUncaughtErrors } from "@definitelytyped/utils";
+import { sourceBranch } from "@definitelytyped/definitions-parser";
 
 export { runDTSLint, RunDTSLintOptions };
 
@@ -88,6 +89,12 @@ if (require.main === module) {
         description: "Path to which all failures will be written.",
         default: "",
       },
+      diffBase: {
+        group: "git options",
+        description: "The base revision to diff against.",
+        type: "string",
+        default: sourceBranch,
+      },
     })
     .wrap(Math.min(yargs.terminalWidth(), 120))
     .parseSync();
@@ -112,6 +119,7 @@ if (require.main === module) {
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
     writeFailures: args.writeFailures,
+    diffBase: args.diffBase,
   };
 
   logUncaughtErrors(async () => {

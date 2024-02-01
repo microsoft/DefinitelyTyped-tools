@@ -1,4 +1,3 @@
-import { sourceBranch, sourceRemote } from "./lib/settings";
 import { PackageId, AllPackages, NotNeededPackage, getDependencyFromFile, formatTypingVersion } from "./packages";
 import { Logger, execAndThrowErrors, consoleLogger, assertDefined, cacheDir } from "@definitelytyped/utils";
 import * as pacote from "pacote";
@@ -28,21 +27,10 @@ Actions runs:
 
 If editing this code, be sure to test on both full and shallow clones.
 */
-export async function gitDiff(log: Logger, definitelyTypedPath: string): Promise<GitDiff[]> {
-  try {
-    await run("git", ["rev-parse", "--verify", sourceBranch]);
-    // If this succeeds, we got the full clone.
-  } catch (_) {
-    // This is a shallow clone.
-    await run("git", ["fetch", sourceRemote, sourceBranch]);
-    await run("git", ["branch", sourceBranch, "FETCH_HEAD"]);
-  }
+export async function gitDiff(log: Logger, definitelyTypedPath: string, diffBase: string): Promise<GitDiff[]> {
+  await run("git", ["rev-parse", "--verify", diffBase]);
 
-  let diff = (await run("git", ["diff", sourceBranch, "--name-status"])).trim();
-  if (diff === "") {
-    // We are probably already on master, so compare to the last commit.
-    diff = (await run("git", ["diff", `${sourceBranch}~1`, "--name-status"])).trim();
-  }
+  const diff = (await run("git", ["diff", diffBase, "--name-status"])).trim();
   if (diff === "") {
     // Must have been an empty commit; just return no diffs.
     return [];
@@ -107,9 +95,10 @@ You should ` +
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
   definitelyTypedPath: string,
+  diffBase: string,
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
-  const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath);
+  const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath, diffBase);
   const git = gitChanges(diffs);
   if ("errors" in git) {
     return git.errors;
@@ -122,7 +111,7 @@ export async function getAffectedPackagesFromDiff(
         errors.push(...(await checkNotNeededPackage(deleted)));
       }
   }
-  const affected = await getAffectedPackages(allPackages, git, definitelyTypedPath);
+  const affected = await getAffectedPackages(allPackages, git, definitelyTypedPath, diffBase);
   if (errors.length) {
     return errors;
   }

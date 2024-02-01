@@ -22,6 +22,7 @@ export async function runDTSLint({
   shard,
   childRestartTaskInterval,
   writeFailures,
+  diffBase,
 }: RunDTSLintOptions) {
   let definitelyTypedPath;
   console.log("Node version: ", process.version);
@@ -42,7 +43,7 @@ export async function runDTSLint({
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
   const { packageNames, dependents } = onlyRunAffectedPackages
-    ? await prepareAffectedPackages(definitelyTypedPath)
+    ? await prepareAffectedPackages(definitelyTypedPath, diffBase)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
 
   const allFailures: [string, string][] = [];
@@ -180,23 +181,23 @@ function getExpectedFailures(onlyRunAffectedPackages: boolean, dependents: Set<s
 
 async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promise<void> {
   type Command = [string, string[]];
+
+  const cloneCmd: Command = [
+    "git",
+    ["clone", "--filter", "blob:none", "https://github.com/DefinitelyTyped/DefinitelyTyped.git"],
+  ];
+  console.log(`${cloneCmd[0]} ${cloneCmd[1].join(" ")}`);
+  await execAndThrowErrors(cloneCmd[0], cloneCmd[1], cwd);
+
   if (sha) {
-    const cmd: Command = ["git", ["init", "DefinitelyTyped"]];
-    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
-    await execAndThrowErrors(cmd[0], cmd[1], cwd);
     cwd = `${cwd}/DefinitelyTyped`;
-    const commands: Command[] = [
-      ["git", ["remote", "add", "origin", "https://github.com/DefinitelyTyped/DefinitelyTyped.git"]],
-      ["git", ["fetch", "origin", "master", "--depth", "50"]], // We can't clone the commit directly, so assume the commit is from
-      ["git", ["checkout", sha]], // recent history, pull down some recent commits, then check it out
-    ];
-    for (const cmd of commands) {
-      console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
-      await execAndThrowErrors(cmd[0], cmd[1], cwd);
-    }
-  } else {
-    const cmd: Command = ["git", ["clone", "https://github.com/DefinitelyTyped/DefinitelyTyped.git", "--depth", "1"]];
-    console.log(`${cmd[0]} ${cmd[1].join(" ")}`);
-    await execAndThrowErrors(cmd[0], cmd[1], cwd);
+
+    const fetchCmd: Command = ["git", ["fetch", "origin", sha]];
+    console.log(`${fetchCmd[0]} ${fetchCmd[1].join(" ")}`);
+    await execAndThrowErrors(fetchCmd[0], fetchCmd[1], cwd);
+
+    const switchCmd: Command = ["git", ["switch", "--detach", "FETCH_HEAD"]];
+    console.log(`${switchCmd[0]} ${switchCmd[1].join(" ")}`);
+    await execAndThrowErrors(switchCmd[0], switchCmd[1], cwd);
   }
 }

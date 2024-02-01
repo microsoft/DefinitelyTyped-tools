@@ -5,4 +5,4 @@ export * from "./get-definitely-typed";
 export * from "./git";
 export * from "./mocks";
 export * from "./packages";
-export { getAllowedPackageJsonDependencies } from "./lib/settings";
+export { getAllowedPackageJsonDependencies, sourceBranch } from "./lib/settings";

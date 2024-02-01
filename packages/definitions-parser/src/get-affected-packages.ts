@@ -1,5 +1,4 @@
 import { assertDefined, execAndThrowErrors, mapDefined, normalizeSlashes, withoutStart } from "@definitelytyped/utils";
-import { sourceBranch, sourceRemote } from "./lib/settings";
 import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
 import { resolve } from "path";
 import { satisfies } from "semver";
@@ -13,11 +12,12 @@ export async function getAffectedPackages(
   allPackages: AllPackages,
   git: { deletions: PackageId[]; additions: PackageId[] },
   definitelyTypedPath: string,
+  diffBase: string,
 ): Promise<PreparePackagesResult> {
   // No ... prefix; we only want packages that were actually edited.
   const changedPackageDirectories = await execAndThrowErrors(
     "pnpm",
-    ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${sourceRemote}/${sourceBranch}]`],
+    ["ls", "-r", "--depth", "-1", "--parseable", "--filter", `@types/**[${diffBase}]`],
     definitelyTypedPath,
   );
   const addedPackageDirectories = mapDefined(git.additions, (pkg) => {
@@ -27,7 +27,7 @@ export async function getAffectedPackages(
   });
   const allDependentDirectories = [];
   // Start the filter off with all packages that were touched along with those that depend on them.
-  const filters = ["--filter", `...@types/**[${sourceRemote}/${sourceBranch}]`];
+  const filters = ["--filter", `...@types/**[${diffBase}]`];
   // For packages that have been deleted, they won't appear in the graph anymore; look for packages
   // that still depend on the package (but via npm) and manually add them.
   for (const d of git.deletions) {
