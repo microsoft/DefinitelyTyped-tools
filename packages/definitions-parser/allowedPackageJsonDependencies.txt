@@ -16,6 +16,7 @@
 @emotion/react
 @emotion/serialize
 @emotion/styled
+@floating-ui/react
 @glimmer/component
 @glimmer/manager
 @glimmer/runtime
