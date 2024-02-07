@@ -160,10 +160,10 @@ export async function runDTSLint({
   }
 
   if (allFailures.length) {
-    console.error("\n\n=== ERRORS ===\n");
+    console.log("\n\n=== ERRORS ===\n");
     for (const [path, error] of allFailures) {
-      console.error(`\n\nError in ${path}`);
-      console.error(error);
+      console.log(`\n\nError in ${path}`);
+      console.log(error);
     }
   }
 
