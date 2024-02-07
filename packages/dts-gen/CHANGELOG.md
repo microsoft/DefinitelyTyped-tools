@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.0
+
+### Minor Changes
+
+- 4e6e5f0: Generate module=node16 instead of commonjs
+
 ## 0.9.0
 
 ### Minor Changes
