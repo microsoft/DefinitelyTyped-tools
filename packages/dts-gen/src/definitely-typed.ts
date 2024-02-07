@@ -50,7 +50,7 @@ async function run(indexDtsContent: string, packageName: string, dtName: string,
 function getTSConfig(dtName: string): {} {
   return {
     compilerOptions: {
-      module: "commonjs",
+      module: "node16",
       lib: ["es6"],
       noImplicitAny: true,
       noImplicitThis: true,
