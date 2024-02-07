@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.9
+
+### Patch Changes
+
+- 278535d: Don’t mix console.log and console.error
+
 ## 0.1.8
 
 ### Patch Changes
