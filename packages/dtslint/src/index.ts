@@ -216,7 +216,7 @@ async function runTests(
     const failingPackages = ((await readJson(attwJson)) as any).failingPackages;
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
     const expectError = !!failingPackages?.includes(dirName);
-    const attwResult = runAreTheTypesWrong(dirName, dirPath, implementationPackage.tarballPath, attwJson, expectError);
+    const attwResult = await runAreTheTypesWrong(dirName, dirPath, implementationPackage, attwJson, expectError);
     (warnings ??= []).push(...(attwResult.warnings ?? []));
     (errors ??= []).push(...(attwResult.errors ?? []));
   }

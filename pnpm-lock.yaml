@@ -141,10 +141,10 @@ importers:
   packages/dtslint:
     dependencies:
       '@arethetypeswrong/cli':
-        specifier: ^0.13.6
-        version: 0.13.6
+        specifier: 0.13.8
+        version: 0.13.8
       '@arethetypeswrong/core':
-        specifier: ^0.13.6
+        specifier: 0.13.6
         version: 0.13.6
       '@definitelytyped/header-parser':
         specifier: workspace:*
@@ -182,15 +182,6 @@ importers:
       strip-json-comments:
         specifier: ^3.1.1
         version: 3.1.1
-      tar:
-        specifier: ^6.2.0
-        version: 6.2.0
-      tmp:
-        specifier: ^0.2.1
-        version: 0.2.1
-      which:
-        specifier: ^4.0.0
-        version: 4.0.0
     devDependencies:
       '@types/eslint':
         specifier: ^8.56.2
@@ -201,15 +192,6 @@ importers:
       '@types/strip-json-comments':
         specifier: ^3.0.0
         version: 3.0.0
-      '@types/tar':
-        specifier: ^6.1.9
-        version: 6.1.9
-      '@types/tmp':
-        specifier: ^0.2.6
-        version: 0.2.6
-      '@types/which':
-        specifier: ^3.0.3
-        version: 3.0.3
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -471,8 +453,8 @@ packages:
     resolution: {integrity: sha512-Jh15/qVmrLGhkKJBdXlK1+9tY4lZruYjsgkDFj08ZmDiWVBLJcqkok7Z0/R0In+i1rScBpJlSvrTS2Lm41Pbnw==}
     dev: false
 
-  /@arethetypeswrong/cli@0.13.6:
-    resolution: {integrity: sha512-rNiAcz/kLdqqfA3NvUjtLCPV933MEo+K5dMJDA7afdOPmH5iS13pCiZyeZ21MDBQrxMpx6t5G/7OyRf+OcsoPA==}
+  /@arethetypeswrong/cli@0.13.8:
+    resolution: {integrity: sha512-tQCXVBLuSfFlXdQLl17ZlBuHB1zo03H7uTLDFumoOl/dibXw1osYJ+Fd9Oju34buFDzI1DuFS2vba/Bsk95E5Q==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
@@ -2109,17 +2091,6 @@ packages:
     dependencies:
       '@types/node': 18.19.8
       minipass: 4.2.8
-    dev: true
-
-  /@types/tar@6.1.9:
-    resolution: {integrity: sha512-T3+O+OQd9cdGmOXuKQY9+B0ceZHRlGVPQ7M5QZqkaPyP/vWnxPXM2aCegq8GP/n1n9dBfq2EBUqCSKKjQAVOPA==}
-    dependencies:
-      '@types/node': 18.19.8
-      minipass: 4.2.8
-    dev: true
-
-  /@types/tmp@0.2.6:
-    resolution: {integrity: sha512-chhaNf2oKHlRkDGt+tiKE2Z5aJ6qalm7Z9rlLdBwmOiAAf09YQvvoLXjWK4HWPF1xU/fqvMgfNfpVoBscA/tKA==}
     dev: true
 
   /@types/which@3.0.3:
@@ -6874,13 +6845,6 @@ packages:
     dependencies:
       os-tmpdir: 1.0.2
     dev: true
-
-  /tmp@0.2.1:
-    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
-    engines: {node: '>=8.17.0'}
-    dependencies:
-      rimraf: 3.0.2
-    dev: false
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
