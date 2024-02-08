@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.2.7
+
+### Patch Changes
+
+- 31de5d3: Run arethetypeswrong from in-memory tarball data
+- 9da3fc7: Detect package names added/removed from attw.json as changed
+- Updated dependencies [31de5d3]
+- Updated dependencies [9da3fc7]
+  - @definitelytyped/utils@0.1.2
+  - @definitelytyped/header-parser@0.2.3
+
 ## 0.2.6
 
 ### Patch Changes

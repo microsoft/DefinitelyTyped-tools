@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.6
+
+### Patch Changes
+
+- 9da3fc7: Detect package names added/removed from attw.json as changed
+- Updated dependencies [31de5d3]
+- Updated dependencies [9da3fc7]
+  - @definitelytyped/utils@0.1.2
+  - @definitelytyped/header-parser@0.2.3
+
 ## 0.1.5
 
 ### Patch Changes
