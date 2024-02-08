@@ -1,6 +1,6 @@
 ---
 "@definitelytyped/definitions-parser": patch
-"@definitelytypes/dtslint": patch
+"@definitelytyped/dtslint": patch
 "@definitelytyped/dtslint-runner": patch
 "@definitelytyped/utils": patch
 ---
