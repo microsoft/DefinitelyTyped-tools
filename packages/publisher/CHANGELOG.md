@@ -1,5 +1,16 @@
 # @definitelytyped/publisher
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [31de5d3]
+- Updated dependencies [9da3fc7]
+  - @definitelytyped/utils@0.1.2
+  - @definitelytyped/definitions-parser@0.1.6
+  - @definitelytyped/header-parser@0.2.3
+  - @definitelytyped/retag@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes

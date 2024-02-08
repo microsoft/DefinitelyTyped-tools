@@ -1,5 +1,12 @@
 # @definitelytyped/utils
 
+## 0.1.2
+
+### Patch Changes
+
+- 31de5d3: Run arethetypeswrong from in-memory tarball data
+- 9da3fc7: Detect package names added/removed from attw.json as changed
+
 ## 0.1.1
 
 ### Patch Changes
