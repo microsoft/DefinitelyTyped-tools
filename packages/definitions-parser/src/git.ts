@@ -144,6 +144,7 @@ export async function getAffectedPackagesFromDiff(
   }
   console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
   console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
+  console.log(`Testing ${affected.attwChanges.size} packages from attw.json changes: ${inspect(affected.attwChanges)}`);
   return affected;
 }
 

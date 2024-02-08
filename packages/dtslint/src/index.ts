@@ -21,6 +21,7 @@ async function main(): Promise<void> {
   let onlyTestTsNext = false;
   let expectOnly = false;
   let skipNpmChecks = false;
+  let onlyNpmChecks = false;
   let shouldListen = false;
   let lookingForTsLocal = false;
   let tsLocal: string | undefined;
@@ -55,6 +56,9 @@ async function main(): Promise<void> {
       case "--skipNpmChecks":
         skipNpmChecks = true;
         break;
+      case "--onlyNpmChecks":
+        onlyNpmChecks = true;
+        break;
       case "--onlyTestTsNext":
         onlyTestTsNext = true;
         break;
@@ -80,14 +84,23 @@ async function main(): Promise<void> {
       }
     }
   }
+
+  if (onlyNpmChecks && expectOnly) {
+    throw new Error("Cannot use --onlyNpmChecks and --expectOnly together.");
+  }
+  if (onlyNpmChecks && skipNpmChecks) {
+    throw new Error("Cannot use --onlyNpmChecks and --skipNpmChecks together.");
+  }
   if (lookingForTsLocal) {
     throw new Error("Path for --localTs was not provided.");
   }
+  
+  const npmChecks = onlyNpmChecks ? "only" : expectOnly ? false : !skipNpmChecks;
 
   if (shouldListen) {
     listen(dirPath, tsLocal);
   } else {
-    const warnings = await runTests(dirPath, onlyTestTsNext, expectOnly, skipNpmChecks, tsLocal);
+    const warnings = await runTests(dirPath, onlyTestTsNext, expectOnly, npmChecks, tsLocal);
     if (warnings) {
       console.log("\nWarnings:\n");
       console.log(warnings);
@@ -96,13 +109,14 @@ async function main(): Promise<void> {
 }
 
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks]");
+  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks] [--onlyNpmChecks]");
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
   console.error("  --skipNpmChecks  Don't query npm - skips name/version checks and @arethetypeswrong/cli.");
+  console.error("  --onlyNpmChecks  Only run the npm checks (name/version checks and @arethetypeswrong/cli).")
   console.error("");
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
@@ -110,14 +124,14 @@ function usage(): void {
 function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
   process.on("message", async (message: unknown) => {
-    const { path, onlyTestTsNext, expectOnly, skipNpmChecks } = message as {
+    const { path, onlyTestTsNext, expectOnly, npmChecks = true } = message as {
       path: string;
       onlyTestTsNext: boolean;
       expectOnly?: boolean;
-      skipNpmChecks?: boolean;
+      npmChecks?: boolean | "only";
     };
 
-    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, !!skipNpmChecks, tsLocal)
+    runTests(joinPaths(dirPath, path), onlyTestTsNext, !!expectOnly, npmChecks, tsLocal)
       .then(
         (warnings) => process.send!({ path, status: "OK", warnings }),
         (e) => process.send!({ path, status: e.stack }),
@@ -133,7 +147,7 @@ async function runTests(
   dirPath: string,
   onlyTestTsNext: boolean,
   expectOnly: boolean,
-  skipNpmChecks: boolean,
+  npmChecks: boolean | "only",
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
   // Assert that we're really on DefinitelyTyped.
@@ -160,38 +174,40 @@ async function runTests(
   let warnings: string[] | undefined;
   let errors: string[] | undefined;
 
-  if (!skipNpmChecks && !expectOnly) {
+  if (npmChecks) {
     ({ implementationPackage, warnings, errors } = await checkNpmVersionAndGetMatchingImplementationPackage(
       packageJson,
       packageDirectoryNameWithVersion,
     ));
   }
 
-  const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
-  if (onlyTestTsNext || tsLocal) {
-    const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-    await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
-  } else {
-    // For example, typesVersions of [3.2, 3.5, 3.6] will have
-    // associated ts3.2, ts3.5, ts3.6 directories, for
-    // <=3.2, <=3.5, <=3.6 respectively; the root level is for 3.7 and above.
-    // so this code needs to generate ranges [lowest-3.2, 3.3-3.5, 3.6-3.6, 3.7-latest]
-    const lows = [TypeScriptVersion.lowest, ...typesVersions.map(next)];
-    const his = [...typesVersions, TypeScriptVersion.latest];
-    assert.strictEqual(lows.length, his.length);
-    for (let i = 0; i < lows.length; i++) {
-      const low = maxVersion(minVersion, lows[i]);
-      const hi = his[i];
-      assert(
-        parseFloat(hi) >= parseFloat(low),
-        `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`,
-      );
-      const isLatest = hi === TypeScriptVersion.latest;
-      const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
-      if (lows.length > 1) {
-        console.log("testing from", low, "to", hi, "in", versionPath);
+  if (npmChecks !== "only") {
+    const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
+    if (onlyTestTsNext || tsLocal) {
+      const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
+      await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
+    } else {
+      // For example, typesVersions of [3.2, 3.5, 3.6] will have
+      // associated ts3.2, ts3.5, ts3.6 directories, for
+      // <=3.2, <=3.5, <=3.6 respectively; the root level is for 3.7 and above.
+      // so this code needs to generate ranges [lowest-3.2, 3.3-3.5, 3.6-3.6, 3.7-latest]
+      const lows = [TypeScriptVersion.lowest, ...typesVersions.map(next)];
+      const his = [...typesVersions, TypeScriptVersion.latest];
+      assert.strictEqual(lows.length, his.length);
+      for (let i = 0; i < lows.length; i++) {
+        const low = maxVersion(minVersion, lows[i]);
+        const hi = his[i];
+        assert(
+          parseFloat(hi) >= parseFloat(low),
+          `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`,
+        );
+        const isLatest = hi === TypeScriptVersion.latest;
+        const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
+        if (lows.length > 1) {
+          console.log("testing from", low, "to", hi, "in", versionPath);
+        }
+        await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
       }
-      await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
     }
   }
 

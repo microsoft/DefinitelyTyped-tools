@@ -20,6 +20,7 @@ export async function prepareAllPackages(definitelyTypedPath: string, clone: boo
   return {
     packageNames: new Set((await allPackages.allTypings()).map(({ subDirectoryPath }) => subDirectoryPath)),
     dependents: new Set(),
+    attwChanges: new Set(),
   };
 }
 const npmRetryCount = 5;

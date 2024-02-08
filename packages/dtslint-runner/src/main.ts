@@ -42,7 +42,7 @@ export async function runDTSLint({
 
   const typesPath = joinPaths(definitelyTypedPath, "types");
 
-  const { packageNames, dependents } = onlyRunAffectedPackages
+  const { packageNames, dependents, attwChanges } = onlyRunAffectedPackages
     ? await prepareAffectedPackages(definitelyTypedPath, diffBase)
     : await prepareAllPackages(definitelyTypedPath, definitelyTypedAcquisition.kind === "clone");
 
@@ -50,7 +50,7 @@ export async function runDTSLint({
   const allWarnings: [string, string][] = [];
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
-  const allPackages = [...packageNames, ...dependents];
+  const allPackages = [...packageNames, ...attwChanges, ...dependents];
   const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
 
   const dtslintArgs = [
@@ -64,7 +64,7 @@ export async function runDTSLint({
       path,
       onlyTestTsNext,
       expectOnly,
-      skipNpmChecks: skipNpmChecks || !packageNames.has(path),
+      npmChecks: attwChanges.has(path) ? "only" : expectOnly || skipNpmChecks ? false : true,
     })),
     commandLineArgs: dtslintArgs,
     workerFile: require.resolve("@definitelytyped/dtslint"),
