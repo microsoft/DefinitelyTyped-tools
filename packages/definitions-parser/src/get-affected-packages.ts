@@ -10,7 +10,7 @@ export interface PreparePackagesResult {
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export async function getAffectedPackages(
   allPackages: AllPackages,
-  git: { deletions: PackageId[]; additions: PackageId[] },
+  git: { deletions: PackageId[]; additions: PackageId[]; attwChanges: PackageId[] },
   definitelyTypedPath: string,
   diffBase: string,
 ): Promise<PreparePackagesResult> {
@@ -62,6 +62,7 @@ export async function getAffectedPackages(
     allPackages,
     changedPackageDirectories,
     addedPackageDirectories,
+    git.attwChanges,
     allDependentDirectories,
     definitelyTypedPath,
   );
@@ -71,6 +72,7 @@ export async function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
   additions: string[],
+  attwChanges: PackageId[],
   dependentOutputs: string[],
   definitelyTypedPath: string,
 ): Promise<PreparePackagesResult> {
@@ -79,6 +81,7 @@ export async function getAffectedPackagesWorker(
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set([
     ...additions,
+    ...(await Promise.all(attwChanges.map(async (id) => (await allPackages.getTypingsData(id)).subDirectoryPath))),
     ...(await Promise.all(changedDirs.map(tryGetTypingsData))).filter((d): d is string => !!d),
   ]);
   const dependents = new Set(

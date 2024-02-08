@@ -182,3 +182,15 @@ export function max<T>(array: readonly T[], compare?: (a: T, b: T) => number) {
 export function compact<T>(array: readonly (T | undefined)[]): T[] {
   return array.filter((x): x is T => x !== undefined);
 }
+
+export function symmetricDifference<T>(a: Set<T>, b: Set<T>): Set<T> {
+  const result = new Set(a);
+  for (const elem of b) {
+    if (result.has(elem)) {
+      result.delete(elem);
+    } else {
+      result.add(elem);
+    }
+  }
+  return result;
+}
