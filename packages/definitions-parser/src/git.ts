@@ -1,9 +1,11 @@
-import { PackageId, AllPackages, NotNeededPackage, getDependencyFromFile, formatTypingVersion } from "./packages";
-import { Logger, execAndThrowErrors, consoleLogger, assertDefined, cacheDir } from "@definitelytyped/utils";
+import { Logger, assertDefined, cacheDir, consoleLogger, execAndThrowErrors, joinPaths, symmetricDifference } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
 import { inspect } from "util";
 import { PreparePackagesResult, getAffectedPackages } from "./get-affected-packages";
+import { parseVersionFromDirectoryName } from "./lib/definition-parser";
+import { AllPackages, NotNeededPackage, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
+import { readFile } from "fs/promises";
 
 export type GitDiff =
   | {
@@ -51,17 +53,39 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string, diffBase
   }
 }
 
+async function getAttwJson(definitelyTypedPath: string, diffBase: string) {
+  return {
+    base: JSON.parse(await execAndThrowErrors("git", ["show", `${diffBase}:attw.json`], definitelyTypedPath)) as { failingPackages: string[] },
+    head: JSON.parse(await readFile(joinPaths(definitelyTypedPath, "attw.json"), "utf8")) as { failingPackages: string[] },
+  };
+}
+
 /**
  * @returns packages with added or removed files, but not packages with only changed files;
  * {@link getAffectedPackages | those are found by calling pnpm }.
  */
-export function gitChanges(
+export async function gitChanges(
   diffs: GitDiff[],
-): { errors: string[] } | { deletions: PackageId[]; additions: PackageId[] } {
+  getAttwJson: () => Promise<{ base: { failingPackages: string[] }; head: { failingPackages: string[] } }>,
+): Promise<{ errors: string[]; } | { deletions: PackageId[]; additions: PackageId[]; attwChanges: PackageId[]; }> {
   const deletions: Map<string, PackageId> = new Map();
   const additions: Map<string, PackageId> = new Map();
+  let attwChanges: PackageId[] = [];
   const errors = [];
   for (const diff of diffs) {
+    if (diff.file === "attw.json") {
+      try {
+        const { base, head } = await getAttwJson();
+        attwChanges = Array.from(symmetricDifference(new Set(base.failingPackages), new Set(head.failingPackages))).map(p => {
+          const [typesDirectoryName, versionDirectory] = p.split("/", 2);
+          const version = parseVersionFromDirectoryName(versionDirectory) ?? "*";
+          return { typesDirectoryName, version };
+        })
+      } catch {
+        errors.push(`Error reading attw.json`);
+      }
+      continue;
+    }
     if (!/types[\\/]/.test(diff.file)) continue;
     if (diff.status === "M") continue;
     const dep = getDependencyFromFile(diff.file);
@@ -90,7 +114,7 @@ You should ` +
     }
   }
   if (errors.length) return { errors };
-  return { deletions: Array.from(deletions.values()), additions: Array.from(additions.values()) };
+  return { deletions: Array.from(deletions.values()), additions: Array.from(additions.values()), attwChanges };
 }
 export async function getAffectedPackagesFromDiff(
   allPackages: AllPackages,
@@ -99,7 +123,7 @@ export async function getAffectedPackagesFromDiff(
 ): Promise<string[] | PreparePackagesResult> {
   const errors = [];
   const diffs = await gitDiff(consoleLogger.info, definitelyTypedPath, diffBase);
-  const git = gitChanges(diffs);
+  const git = await gitChanges(diffs, () => getAttwJson(definitelyTypedPath, diffBase));
   if ("errors" in git) {
     return git.errors;
   }
@@ -120,6 +144,7 @@ export async function getAffectedPackagesFromDiff(
   }
   console.log(`Testing ${affected.packageNames.size} changed packages: ${inspect(affected.packageNames)}`);
   console.log(`Testing ${affected.dependents.size} dependent packages: ${inspect(affected.dependents)}`);
+  console.log(`Testing ${affected.attwChanges.size} packages from attw.json changes: ${inspect(affected.attwChanges)}`);
   return affected;
 }
 

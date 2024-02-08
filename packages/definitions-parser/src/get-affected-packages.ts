@@ -5,12 +5,13 @@ import { satisfies } from "semver";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
+  readonly attwChanges: Set<string>;
 }
 
 /** Gets all packages that have changed on this branch, plus all packages affected by the change. */
 export async function getAffectedPackages(
   allPackages: AllPackages,
-  git: { deletions: PackageId[]; additions: PackageId[] },
+  git: { deletions: PackageId[]; additions: PackageId[]; attwChanges: PackageId[] },
   definitelyTypedPath: string,
   diffBase: string,
 ): Promise<PreparePackagesResult> {
@@ -62,6 +63,7 @@ export async function getAffectedPackages(
     allPackages,
     changedPackageDirectories,
     addedPackageDirectories,
+    git.attwChanges,
     allDependentDirectories,
     definitelyTypedPath,
   );
@@ -71,6 +73,7 @@ export async function getAffectedPackagesWorker(
   allPackages: AllPackages,
   changedOutput: string,
   additions: string[],
+  attwChangedPackages: PackageId[],
   dependentOutputs: string[],
   definitelyTypedPath: string,
 ): Promise<PreparePackagesResult> {
@@ -84,7 +87,16 @@ export async function getAffectedPackagesWorker(
   const dependents = new Set(
     (await Promise.all(dependentDirs.map(tryGetTypingsData))).filter((d): d is string => !!d && !packageNames.has(d)),
   );
-  return { packageNames, dependents };
+  const attwChanges = new Set(
+    (
+      await Promise.all(attwChangedPackages.map(async (id) => (await allPackages.tryGetTypingsData(id))?.subDirectoryPath))
+    ).filter((d): d is string => !!d && !packageNames.has(d) && !dependents.has(d)),
+  );
+  return {
+    packageNames,
+    dependents,
+    attwChanges,
+  };
 
   async function tryGetTypingsData(d: string) {
     const dep = getDependencyFromFile(normalizeSlashes(d + "/index.d.ts"));

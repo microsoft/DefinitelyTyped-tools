@@ -59,8 +59,13 @@ const moveRdfJSDiffs: GitDiff[] = [
     file: "types/rdfjs__serializer-turtle/tsconfig.json",
   },
 ];
-function getDeletions(diffs: GitDiff[]): PackageId[] {
-  const changes = gitChanges(diffs);
+
+function createGetAttwJson(base: string[] = [], head: string[] = []) {
+  return async () => ({ base: { failingPackages: base }, head: { failingPackages: head } });
+}
+
+async function getDeletions(diffs: GitDiff[]): Promise<PackageId[]> {
+  const changes = await gitChanges(diffs, createGetAttwJson());
   expect(changes).not.toHaveProperty("error");
   const { deletions } = changes as { deletions: PackageId[]; additions: PackageId[] };
   return deletions;
@@ -68,10 +73,11 @@ function getDeletions(diffs: GitDiff[]): PackageId[] {
 
 testo({
   async ok() {
-    expect(await getNotNeededPackages(allPackages, getDeletions(deleteJestDiffs))).toEqual(jestNotNeeded);
+    expect(await getNotNeededPackages(allPackages, await getDeletions(deleteJestDiffs))).toEqual(jestNotNeeded);
   },
   async gitMovesConvertedToAddsAndDeletes() {
-    expect(gitChanges(moveRdfJSDiffs)).toEqual({
+    expect(await gitChanges(moveRdfJSDiffs, createGetAttwJson())).toEqual({
+      attwChanges: [],
       additions: [
         { typesDirectoryName: "rdf-ext", version: "*" },
         { typesDirectoryName: "rdfjs__formats", version: "*" },
@@ -88,20 +94,20 @@ testo({
     expect(
       await getNotNeededPackages(
         AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
-        getDeletions(deleteJestDiffs),
+        await getDeletions(deleteJestDiffs),
       ),
     ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
   },
   async tooManyDeletes() {
     expect(
-      await getNotNeededPackages(allPackages, getDeletions([{ status: "D", file: "types/oops/oops.txt" }])),
+      await getNotNeededPackages(allPackages, await getDeletions([{ status: "D", file: "types/oops/oops.txt" }])),
     ).toEqual([]);
   },
   async deleteInOtherPackage() {
     expect(
       await getNotNeededPackages(
         allPackages,
-        getDeletions([...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }]),
+        await getDeletions([...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }]),
       ),
     ).toEqual(jestNotNeeded);
   },
@@ -109,7 +115,7 @@ testo({
     expect(
       await getNotNeededPackages(
         allPackages,
-        getDeletions([...deleteJestDiffs, { status: "A", file: "types/oops/oooooooooooops.txt" }]),
+        await getDeletions([...deleteJestDiffs, { status: "A", file: "types/oops/oooooooooooops.txt" }]),
       ),
     ).toEqual(jestNotNeeded);
   },
@@ -117,10 +123,27 @@ testo({
     expect(
       await getNotNeededPackages(
         AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
-        getDeletions([{ status: "D", file: "types/ember__object/index.d.ts" }]),
+        await getDeletions([{ status: "D", file: "types/ember__object/index.d.ts" }]),
       ),
     ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
   },
+  async attwChanges() {
+    expect(await gitChanges([
+      { status: "M", file: "attw.json" },
+    ], createGetAttwJson(
+      ["lodash", "jquery/v1", "react"],
+      ["jquery/v2", "react", "new-package"]
+    ))).toEqual({
+      additions: [],
+      deletions: [],
+      attwChanges: [
+        { typesDirectoryName: "lodash", version: "*" },
+        { typesDirectoryName: "jquery", version: { major: 1, minor: undefined } },
+        { typesDirectoryName: "jquery", version: { major: 2, minor: undefined } },
+        { typesDirectoryName: "new-package", version: "*" },
+      ]
+    });
+  }
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
 });
