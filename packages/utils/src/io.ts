@@ -11,6 +11,7 @@ import { parseJson, withoutStart, sleep, tryParseJson, isObject } from "./miscel
 import { FS, Dir, InMemoryFS } from "./fs";
 import { assertDefined } from "./assertions";
 import { LoggerWithErrors } from "./logging";
+import { pipeline } from "stream/promises";
 
 export async function readFile(path: string): Promise<string> {
   const res = await fs.promises.readFile(path, { encoding: "utf8" });
@@ -233,6 +234,16 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
       })
       .on("error", rejectAndClearTimeout);
   });
+}
+
+export async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
+  const chunks: Buffer[] = [];
+  await pipeline(stream, async (source) => {
+    for await (const chunk of source) {
+      chunks.push(Buffer.from(chunk));
+    }
+  });
+  return Buffer.concat(chunks);
 }
 
 export function gzip(input: NodeJS.ReadableStream): NodeJS.ReadableStream {

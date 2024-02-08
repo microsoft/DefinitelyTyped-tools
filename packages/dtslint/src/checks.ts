@@ -1,20 +1,13 @@
+import type * as attw from "@arethetypeswrong/core" with { "resolution-mode": "import" };
 import * as header from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { assertDefined, assertNever, deepEquals } from "@definitelytyped/utils";
-import { execFileSync } from "child_process";
-import fs, { readdirSync } from "fs";
-import { dirname, join as joinPaths } from "path";
+import { assertNever, createTgz, deepEquals, streamToBuffer } from "@definitelytyped/utils";
+import fs from "fs";
+import { join as joinPaths } from "path";
 import { satisfies } from "semver";
-import { pipeline } from "stream/promises";
 import { CompilerOptions } from "typescript";
-import which from "which";
-import { createGunzip } from "zlib";
 import { packageNameFromPath, readJson } from "./util";
-import tmp = require("tmp");
-import tar = require("tar");
 
-tmp.setGracefulCleanup();
-const tmpDir = tmp.dirSync().name;
 const npmVersionExemptions = new Set(
   fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
 );
@@ -165,51 +158,45 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
   return errors;
 }
 
-export function runAreTheTypesWrong(
+export async function runAreTheTypesWrong(
   dirName: string,
   dirPath: string,
-  implementationTarballPath: string,
+  implementationPackage: attw.Package,
   configPath: string,
   expectError: boolean,
-): {
+): Promise<{
   warnings?: string[];
   errors?: string[];
-} {
+}> {
   let warnings: string[] | undefined;
   let errors: string[] | undefined;
   let result: {
     status: "pass" | "fail" | "error";
     output: string;
   };
-  const attwPackageJsonPath = require.resolve("@arethetypeswrong/cli/package.json");
-  const attwBinPath = joinPaths(dirname(attwPackageJsonPath), readJson(attwPackageJsonPath).bin.attw);
-  const npmPath = which.sync("pnpm", { nothrow: true }) || which.sync("npm");
-  execFileSync(npmPath, ["pack"], {
-    cwd: dirPath,
-    stdio: "ignore",
-    env: { ...process.env, COREPACK_ENABLE_STRICT: "0" },
+
+  const tgz = createTgz(dirPath, (err) => {
+    throw new Error(`Error creating tarball for ${dirName}: ${err.stack ?? err.message}`);
   });
-  const tarballName = assertDefined(readdirSync(dirPath).find((name) => name.endsWith(".tgz")));
+
+  const [attw, render, { getExitCode }] = await Promise.all([
+    import("@arethetypeswrong/core"),
+    import("@arethetypeswrong/cli/internal/render"),
+    import("@arethetypeswrong/cli/internal/getExitCode"),
+  ]);
+  const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+  const pkg = implementationPackage.mergedWithTypes(attw.createPackageFromTarballData(await streamToBuffer(tgz)));
+
   try {
-    const output = execFileSync(
-      attwBinPath,
-      [implementationTarballPath, "--definitely-typed", tarballName, "--config-path", configPath],
-      {
-        cwd: dirPath,
-        stdio: "pipe",
-        encoding: "utf8",
-      },
-    );
-    result = { status: "pass", output };
-  } catch (err) {
-    const status = err && typeof err === "object" && "status" in err && err.status === 1 ? "fail" : "error";
-    const stdout =
-      err && typeof err === "object" && "stdout" in err && typeof err.stdout === "string" ? err.stdout : undefined;
-    const stderr =
-      err && typeof err === "object" && "stderr" in err && typeof err.stderr === "string" ? err.stderr : undefined;
-    result = { status, output: [stdout, stderr].filter(Boolean).join("\n") };
-  } finally {
-    fs.unlinkSync(joinPaths(dirPath, tarballName));
+    const checkResult = await attw.checkPackage(pkg);
+    if (!checkResult.types) {
+      throw new Error("No types found in synthesized attw package");
+    }
+    const output = await render.typed(checkResult, { format: "auto", ignoreRules: config.ignoreRules });
+    const status = getExitCode(checkResult, { ignoreRules: config.ignoreRules }) === 0 ? "pass" : "fail";
+    result = { status, output };
+  } catch (err: any) {
+    result = { status: "error", output: err.stack ?? err.message };
   }
 
   const { status, output } = result;
@@ -245,20 +232,13 @@ export function runAreTheTypesWrong(
   return { warnings, errors };
 }
 
-export interface ImplementationPackageInfo {
-  packageName: string;
-  packageVersion: string;
-  tarballPath: string;
-  unpackedPath: string;
-}
-
 export async function checkNpmVersionAndGetMatchingImplementationPackage(
   packageJson: header.Header,
   packageDirectoryNameWithVersion: string,
 ): Promise<{
   warnings?: string[];
   errors?: string[];
-  implementationPackage?: ImplementationPackageInfo;
+  implementationPackage?: attw.Package;
 }> {
   let warnings: string[] | undefined;
   let errors: string[] | undefined;
@@ -266,11 +246,11 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   let implementationPackage;
   const attw = await import("@arethetypeswrong/core");
   const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
-  const pkg = await tryPromise(
+  const packageId = await tryPromise(
     attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`),
   );
-  if (pkg) {
-    const { packageName, packageVersion, tarballUrl } = pkg;
+  if (packageId) {
+    const { packageName, packageVersion, tarballUrl } = packageId;
     if (packageJson.nonNpm === true) {
       (errors ??= []).push(
         `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
@@ -295,18 +275,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
             `that does not conflict with an existing npm package.`,
         );
       } else {
-        const tarballPath = joinPaths(tmpDir, `${packageName.replace(/\//g, "-")}-${packageVersion}.tgz`);
-        const unpackedPath = joinPaths(tmpDir, `${packageName}-${packageVersion}`);
-        await pipeline((await fetch(tarballUrl)).body!, fs.createWriteStream(tarballPath));
-        await fs.promises.mkdir(unpackedPath, { recursive: true });
-        await pipeline(fs.createReadStream(tarballPath), createGunzip(), tar.extract({ cwd: unpackedPath }));
-        const containerDir = (await fs.promises.readdir(unpackedPath))[0];
-        implementationPackage = {
-          packageName,
-          packageVersion,
-          tarballPath,
-          unpackedPath: joinPaths(unpackedPath, containerDir),
-        };
+        implementationPackage = await attw.createPackageFromTarballUrl(tarballUrl);
       }
     }
   } else if (packageJson.nonNpm === "conflict") {
