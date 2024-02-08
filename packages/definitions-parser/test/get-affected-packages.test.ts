@@ -59,7 +59,14 @@ testo({
       `/dt/types/has-older-test-dependency
 /dt/types/known`,
     ];
-    const { packageNames } = await getAffectedPackagesWorker(allPackages, packageOutput, [], [], dependentOutput, "/dt");
+    const { packageNames } = await getAffectedPackagesWorker(
+      allPackages,
+      packageOutput,
+      [],
+      [],
+      dependentOutput,
+      "/dt",
+    );
     expect(packageNames).toEqual(new Set(["jquery"]));
   },
   async newPackage() {

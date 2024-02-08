@@ -128,12 +128,12 @@ testo({
     ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
   },
   async attwChanges() {
-    expect(await gitChanges([
-      { status: "M", file: "attw.json" },
-    ], createGetAttwJson(
-      ["lodash", "jquery/v1", "react"],
-      ["jquery/v2", "react", "new-package"]
-    ))).toEqual({
+    expect(
+      await gitChanges(
+        [{ status: "M", file: "attw.json" }],
+        createGetAttwJson(["lodash", "jquery/v1", "react"], ["jquery/v2", "react", "new-package"]),
+      ),
+    ).toEqual({
       additions: [],
       deletions: [],
       attwChanges: [
@@ -141,9 +141,9 @@ testo({
         { typesDirectoryName: "jquery", version: { major: 1, minor: undefined } },
         { typesDirectoryName: "jquery", version: { major: 2, minor: undefined } },
         { typesDirectoryName: "new-package", version: "*" },
-      ]
+      ],
     });
-  }
+  },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
 });

@@ -94,7 +94,7 @@ async function main(): Promise<void> {
   if (lookingForTsLocal) {
     throw new Error("Path for --localTs was not provided.");
   }
-  
+
   const npmChecks = onlyNpmChecks ? "only" : expectOnly ? false : !skipNpmChecks;
 
   if (shouldListen) {
@@ -109,14 +109,16 @@ async function main(): Promise<void> {
 }
 
 function usage(): void {
-  console.error("Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks] [--onlyNpmChecks]");
+  console.error(
+    "Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks] [--onlyNpmChecks]",
+  );
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
   console.error("  --skipNpmChecks  Don't query npm - skips name/version checks and @arethetypeswrong/cli.");
-  console.error("  --onlyNpmChecks  Only run the npm checks (name/version checks and @arethetypeswrong/cli).")
+  console.error("  --onlyNpmChecks  Only run the npm checks (name/version checks and @arethetypeswrong/cli).");
   console.error("");
   console.error("onlyTestTsNext and localTs are (1) mutually exclusive and (2) test a single version of TS");
 }
@@ -124,7 +126,12 @@ function usage(): void {
 function listen(dirPath: string, tsLocal: string | undefined): void {
   // Don't await this here to ensure that messages sent during installation aren't dropped.
   process.on("message", async (message: unknown) => {
-    const { path, onlyTestTsNext, expectOnly, npmChecks = true } = message as {
+    const {
+      path,
+      onlyTestTsNext,
+      expectOnly,
+      npmChecks = true,
+    } = message as {
       path: string;
       onlyTestTsNext: boolean;
       expectOnly?: boolean;

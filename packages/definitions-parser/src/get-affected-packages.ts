@@ -89,7 +89,9 @@ export async function getAffectedPackagesWorker(
   );
   const attwChanges = new Set(
     (
-      await Promise.all(attwChangedPackages.map(async (id) => (await allPackages.tryGetTypingsData(id))?.subDirectoryPath))
+      await Promise.all(
+        attwChangedPackages.map(async (id) => (await allPackages.tryGetTypingsData(id))?.subDirectoryPath),
+      )
     ).filter((d): d is string => !!d && !packageNames.has(d) && !dependents.has(d)),
   );
   return {

@@ -1,4 +1,12 @@
-import { Logger, assertDefined, cacheDir, consoleLogger, execAndThrowErrors, joinPaths, symmetricDifference } from "@definitelytyped/utils";
+import {
+  Logger,
+  assertDefined,
+  cacheDir,
+  consoleLogger,
+  execAndThrowErrors,
+  joinPaths,
+  symmetricDifference,
+} from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
 import { inspect } from "util";
@@ -55,8 +63,12 @@ export async function gitDiff(log: Logger, definitelyTypedPath: string, diffBase
 
 async function getAttwJson(definitelyTypedPath: string, diffBase: string) {
   return {
-    base: JSON.parse(await execAndThrowErrors("git", ["show", `${diffBase}:attw.json`], definitelyTypedPath)) as { failingPackages: string[] },
-    head: JSON.parse(await readFile(joinPaths(definitelyTypedPath, "attw.json"), "utf8")) as { failingPackages: string[] },
+    base: JSON.parse(await execAndThrowErrors("git", ["show", `${diffBase}:attw.json`], definitelyTypedPath)) as {
+      failingPackages: string[];
+    },
+    head: JSON.parse(await readFile(joinPaths(definitelyTypedPath, "attw.json"), "utf8")) as {
+      failingPackages: string[];
+    },
   };
 }
 
@@ -67,7 +79,7 @@ async function getAttwJson(definitelyTypedPath: string, diffBase: string) {
 export async function gitChanges(
   diffs: GitDiff[],
   getAttwJson: () => Promise<{ base: { failingPackages: string[] }; head: { failingPackages: string[] } }>,
-): Promise<{ errors: string[]; } | { deletions: PackageId[]; additions: PackageId[]; attwChanges: PackageId[]; }> {
+): Promise<{ errors: string[] } | { deletions: PackageId[]; additions: PackageId[]; attwChanges: PackageId[] }> {
   const deletions: Map<string, PackageId> = new Map();
   const additions: Map<string, PackageId> = new Map();
   let attwChanges: PackageId[] = [];
@@ -76,11 +88,13 @@ export async function gitChanges(
     if (diff.file === "attw.json") {
       try {
         const { base, head } = await getAttwJson();
-        attwChanges = Array.from(symmetricDifference(new Set(base.failingPackages), new Set(head.failingPackages))).map(p => {
-          const [typesDirectoryName, versionDirectory] = p.split("/", 2);
-          const version = parseVersionFromDirectoryName(versionDirectory) ?? "*";
-          return { typesDirectoryName, version };
-        })
+        attwChanges = Array.from(symmetricDifference(new Set(base.failingPackages), new Set(head.failingPackages))).map(
+          (p) => {
+            const [typesDirectoryName, versionDirectory] = p.split("/", 2);
+            const version = parseVersionFromDirectoryName(versionDirectory) ?? "*";
+            return { typesDirectoryName, version };
+          },
+        );
       } catch {
         errors.push(`Error reading attw.json`);
       }
