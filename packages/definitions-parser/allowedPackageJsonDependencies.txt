@@ -833,6 +833,7 @@ redux-persist
 redux-saga
 redux-thunk
 remark
+reselect
 rimraf
 rollup
 rrule
