@@ -5,7 +5,7 @@ Lint rules new to dtslint are documented in the [docs](docs) directory.
 
 # Just looking for type testing tool?
 
-If you are just looking for a TypeScript type testing tool use:
+If you are just looking for a TypeScript type testing tool, use:
 
 - [`tsd`](https://github.com/tsdjs/tsd),
 - [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type),
