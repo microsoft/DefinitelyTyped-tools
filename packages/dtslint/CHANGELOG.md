@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.8
+
+### Patch Changes
+
+- aa26880: Don’t crash when implementation package fails to extract
+
 ## 0.2.7
 
 ### Patch Changes
