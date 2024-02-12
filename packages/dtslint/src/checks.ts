@@ -275,7 +275,14 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
             `that does not conflict with an existing npm package.`,
         );
       } else {
-        implementationPackage = await attw.createPackageFromTarballUrl(tarballUrl);
+        try {
+          implementationPackage = await attw.createPackageFromTarballUrl(tarballUrl);
+        } catch (err: any) {
+          (warnings ??= []).push(
+            `Failed to extract implementation package from ${tarballUrl}. This is likely a problem with @arethetypeswrong/core ` +
+            `or the tarball data itself. @arethetypeswrong/cli will not run. Error:\n${err.stack ?? err.message}`
+          );
+        }
       }
     }
   } else if (packageJson.nonNpm === "conflict") {
