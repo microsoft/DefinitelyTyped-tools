@@ -165,11 +165,11 @@ export async function runAreTheTypesWrong(
   configPath: string,
   expectError: boolean,
 ): Promise<{
-  warnings?: string[];
-  errors?: string[];
+  warnings: string[];
+  errors: string[];
 }> {
-  let warnings: string[] | undefined;
-  let errors: string[] | undefined;
+  const warnings = [];
+  const errors = [];
   let result: {
     status: "pass" | "fail" | "error";
     output: string;
@@ -207,12 +207,12 @@ export async function runAreTheTypesWrong(
         break;
       case "fail":
         // Show output without failing the build.
-        (warnings ??= []).push(
+        warnings.push(
           `Ignoring attw failure because "${dirName}" is listed in 'failingPackages'.\n\n@arethetypeswrong/cli\n${output}`,
         );
         break;
       case "pass":
-        (errors ??= []).push(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
+        errors.push(`attw passed: remove "${dirName}" from 'failingPackages' in attw.json\n\n${output}`);
         break;
       default:
         assertNever(status);
@@ -221,7 +221,7 @@ export async function runAreTheTypesWrong(
     switch (status) {
       case "error":
       case "fail":
-        (errors ??= []).push(`!@arethetypeswrong/cli\n${output}`);
+        errors.push(`!@arethetypeswrong/cli\n${output}`);
         break;
       case "pass":
         // Don't show anything for passing attw - most lint rules have no output on success.
@@ -236,12 +236,12 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   packageJson: header.Header,
   packageDirectoryNameWithVersion: string,
 ): Promise<{
-  warnings?: string[];
-  errors?: string[];
+  warnings: string[];
+  errors: string[];
   implementationPackage?: attw.Package;
 }> {
-  let warnings: string[] | undefined;
-  let errors: string[] | undefined;
+  const warnings: string[] = [];
+  const errors: string[] = [];
   let hasNpmVersionMismatch = false;
   let implementationPackage;
   const attw = await import("@arethetypeswrong/core");
@@ -252,7 +252,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   if (packageId) {
     const { packageName, packageVersion, tarballUrl } = packageId;
     if (packageJson.nonNpm === true) {
-      (errors ??= []).push(
+      errors.push(
         `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
           `If these types are being added to DefinitelyTyped for the first time, please choose ` +
           `a different name that does not conflict with an existing npm package.`,
@@ -261,7 +261,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
       if (!satisfies(packageVersion, typesPackageVersion)) {
         hasNpmVersionMismatch = true;
         const isError = !npmVersionExemptions.has(packageDirectoryNameWithVersion);
-        const container = isError ? (errors ??= []) : (warnings ??= []);
+        const container = isError ? errors : warnings;
         container.push(
           (isError
             ? ""
@@ -278,7 +278,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
         try {
           implementationPackage = await attw.createPackageFromTarballUrl(tarballUrl);
         } catch (err: any) {
-          (warnings ??= []).push(
+          warnings.push(
             `Failed to extract implementation package from ${tarballUrl}. This is likely a problem with @arethetypeswrong/core ` +
               `or the tarball data itself. @arethetypeswrong/cli will not run. Error:\n${err.stack ?? err.message}`,
           );
@@ -286,12 +286,12 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
       }
     }
   } else if (packageJson.nonNpm === "conflict") {
-    (errors ??= []).push(
+    errors.push(
       `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
         `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
     );
   } else if (!packageJson.nonNpm) {
-    (errors ??= []).push(
+    errors.push(
       `Package ${packageJson.name} is not marked as non-npm, but no implementation package was found on npm. ` +
         `If these types are not for an npm package, please add \`"nonNpm": true\` to the package.json. ` +
         `Otherwise, ensure the name of this package matches the name of the npm package.`,
@@ -299,7 +299,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   }
 
   if (!hasNpmVersionMismatch && npmVersionExemptions.has(packageDirectoryNameWithVersion)) {
-    (warnings ??= []).push(
+    warnings.push(
       `${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt in https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint.`,
     );
   }

@@ -156,7 +156,7 @@ async function runTests(
   expectOnly: boolean,
   npmChecks: boolean | "only",
   tsLocal: string | undefined,
-): Promise<string | undefined> {
+): Promise<string> {
   // Assert that we're really on DefinitelyTyped.
   const dtRoot = findDTRoot(dirPath);
   const packageName = packageNameFromPath(dirPath);
@@ -174,25 +174,34 @@ async function runTests(
     throw new Error("\n\t* " + packageJson.join("\n\t* "));
   }
 
-  await assertNpmIgnoreExpected(dirPath);
-  assertNoOtherFiles(dirPath);
+  const warnings: string[] = [];
+  const errors: string[] = [];
 
   let implementationPackage;
-  let warnings: string[] | undefined;
-  let errors: string[] | undefined;
-
   if (npmChecks) {
-    ({ implementationPackage, warnings, errors } = await checkNpmVersionAndGetMatchingImplementationPackage(
+    const result = await checkNpmVersionAndGetMatchingImplementationPackage(
       packageJson,
       packageDirectoryNameWithVersion,
-    ));
+    );
+
+    implementationPackage = result.implementationPackage;
+    warnings.push(...result.warnings);
+    errors.push(...result.errors);
   }
 
   if (npmChecks !== "only") {
     const minVersion = maxVersion(packageJson.minimumTypeScriptVersion, TypeScriptVersion.lowest);
     if (onlyTestTsNext || tsLocal) {
       const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
-      await testTypesVersion(dirPath, tsVersion, tsVersion, expectOnly, tsLocal, /*isLatest*/ true);
+      const testTypesResult = await testTypesVersion(
+        dirPath,
+        tsVersion,
+        tsVersion,
+        expectOnly,
+        tsLocal,
+        /*isLatest*/ true,
+      );
+      errors.push(...testTypesResult.errors);
     } else {
       // For example, typesVersions of [3.2, 3.5, 3.6] will have
       // associated ts3.2, ts3.5, ts3.6 directories, for
@@ -213,7 +222,8 @@ async function runTests(
         if (lows.length > 1) {
           console.log("testing from", low, "to", hi, "in", versionPath);
         }
-        await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
+        const testTypesResult = await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
+        errors.push(...testTypesResult.errors);
       }
     }
   }
@@ -224,8 +234,8 @@ async function runTests(
     const dirName = dirPath.slice(dtRoot.length + "/types/".length);
     const expectError = !!failingPackages?.includes(dirName);
     const attwResult = await runAreTheTypesWrong(dirName, dirPath, implementationPackage, attwJson, expectError);
-    (warnings ??= []).push(...(attwResult.warnings ?? []));
-    (errors ??= []).push(...(attwResult.errors ?? []));
+    warnings.push(...attwResult.warnings);
+    errors.push(...attwResult.errors);
   }
 
   const result = combineErrorsAndWarnings(errors, warnings);
@@ -235,15 +245,9 @@ async function runTests(
   return result;
 }
 
-function combineErrorsAndWarnings(
-  errors: string[] | undefined,
-  warnings: string[] | undefined,
-): Error | string | undefined {
-  if (!errors && !warnings) {
-    return undefined;
-  }
-  const message = (errors ?? []).concat(warnings ?? []).join("\n\n");
-  return errors?.length ? new Error(message) : message;
+function combineErrorsAndWarnings(errors: string[], warnings: string[]): Error | string {
+  const message = errors.concat(warnings).join("\n\n");
+  return errors.length ? new Error(message) : message;
 }
 
 function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
@@ -265,16 +269,19 @@ async function testTypesVersion(
   expectOnly: boolean,
   tsLocal: string | undefined,
   isLatest: boolean,
-): Promise<void> {
-  assertIndexdts(dirPath);
+): Promise<{ errors: string[] }> {
+  const errors = [];
+  const checkExpectedFilesResult = checkExpectedFiles(dirPath, isLatest);
+  errors.push(...checkExpectedFilesResult.errors);
   const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
   if (tsconfigErrors.length > 0) {
-    throw new Error("\n\t* " + tsconfigErrors.join("\n\t* "));
+    errors.push("\n\t* " + tsconfigErrors.join("\n\t* "));
   }
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
-    throw new Error(err);
+    errors.push(err);
   }
+  return { errors };
 }
 
 function findDTRoot(dirPath: string) {
@@ -336,42 +343,47 @@ if (require.main === module) {
   });
 }
 
-async function assertNpmIgnoreExpected(dirPath: string) {
-  const expected = ["*", "!**/*.d.ts", "!**/*.d.cts", "!**/*.d.mts", "!**/*.d.*.ts"];
+function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: string[] } {
+  const errors = [];
 
-  if (basename(dirname(dirPath)) === "types") {
-    for (const subdir of fs.readdirSync(dirPath, { withFileTypes: true })) {
-      if (subdir.isDirectory() && /^v(\d+)(\.(\d+))?$/.test(subdir.name)) {
-        expected.push(`/${subdir.name}/`);
+  if (isLatest) {
+    const expectedNpmIgnore = ["*", "!**/*.d.ts", "!**/*.d.cts", "!**/*.d.mts", "!**/*.d.*.ts"];
+
+    if (basename(dirname(dirPath)) === "types") {
+      for (const subdir of fs.readdirSync(dirPath, { withFileTypes: true })) {
+        if (subdir.isDirectory() && /^v(\d+)(\.(\d+))?$/.test(subdir.name)) {
+          expectedNpmIgnore.push(`/${subdir.name}/`);
+        }
       }
+    }
+
+    const expectedNpmIgnoreAsString = expectedNpmIgnore.join("\n");
+    const npmIgnorePath = joinPaths(dirPath, ".npmignore");
+    if (!fs.existsSync(npmIgnorePath)) {
+      errors.push(`${dirPath}: Missing '.npmignore'; should contain:\n${expectedNpmIgnoreAsString}`);
+    }
+
+    const actualNpmIgnore = fs.readFileSync(npmIgnorePath, "utf-8").trim().split(/\r?\n/);
+    if (!deepEquals(actualNpmIgnore, expectedNpmIgnore)) {
+      errors.push(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedNpmIgnoreAsString}`);
+    }
+
+    if (fs.existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
+      errors.push(
+        `${dirPath}: Should not contain 'OTHER_FILES.txt'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
+      );
     }
   }
 
-  const expectedString = expected.join("\n");
-
-  const npmIgnorePath = joinPaths(dirPath, ".npmignore");
-  if (!fs.existsSync(npmIgnorePath)) {
-    throw new Error(`${dirPath}: Missing '.npmignore'; should contain:\n${expectedString}`);
+  if (!fs.existsSync(joinPaths(dirPath, "index.d.ts"))) {
+    errors.push(`${dirPath}: Must contain 'index.d.ts'.`);
   }
 
-  const actualRaw = await fs.promises.readFile(npmIgnorePath, "utf-8");
-  const actual = actualRaw.trim().split(/\r?\n/);
-
-  if (!deepEquals(actual, expected)) {
-    throw new Error(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedString}`);
-  }
-}
-
-function assertNoOtherFiles(dirPath: string) {
-  if (fs.existsSync(joinPaths(dirPath, "OTHER_FILES.txt"))) {
-    throw new Error(
-      `${dirPath}: Should not contain 'OTHER_FILES.txt'. All files matching "**/*.d.{ts,cts,mts,*.ts}" are automatically included.`,
+  if (fs.existsSync(joinPaths(dirPath, "tslint.json"))) {
+    errors.push(
+      `${dirPath}: Should not contain 'tslint.json'. This file is no longer required; place all lint-related options into .eslintrc.json.`,
     );
   }
-}
 
-function assertIndexdts(dirPath: string) {
-  if (!fs.existsSync(joinPaths(dirPath, "index.d.ts"))) {
-    throw new Error(`${dirPath}: Must contain 'index.d.ts'.`);
-  }
+  return { errors };
 }
