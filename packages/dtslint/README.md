@@ -3,7 +3,7 @@ It will install `typescript` and `eslint` for you, so this is the only tool you 
 
 Lint rules new to dtslint are documented in the [docs](docs) directory.
 
-# Just looking for type testing tool?
+# Just looking for a type testing tool?
 
 If you are just looking for a TypeScript type testing tool, use:
 
