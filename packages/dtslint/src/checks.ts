@@ -280,7 +280,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
         } catch (err: any) {
           (warnings ??= []).push(
             `Failed to extract implementation package from ${tarballUrl}. This is likely a problem with @arethetypeswrong/core ` +
-            `or the tarball data itself. @arethetypeswrong/cli will not run. Error:\n${err.stack ?? err.message}`
+              `or the tarball data itself. @arethetypeswrong/cli will not run. Error:\n${err.stack ?? err.message}`,
           );
         }
       }
