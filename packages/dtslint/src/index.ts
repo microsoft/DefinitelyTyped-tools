@@ -379,5 +379,11 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
     errors.push(`${dirPath}: Must contain 'index.d.ts'.`);
   }
 
+  if (fs.existsSync(joinPaths(dirPath, "tslint.json"))) {
+    errors.push(
+      `${dirPath}: Should not contain 'tslint.json'. This file is no longer required; place all lint-related options into .eslintrc.json.`,
+    );
+  }
+
   return { errors };
 }
