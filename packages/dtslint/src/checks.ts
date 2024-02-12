@@ -240,7 +240,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   errors: string[];
   implementationPackage?: attw.Package;
 }> {
-  const warnings: string[] = []
+  const warnings: string[] = [];
   const errors: string[] = [];
   let hasNpmVersionMismatch = false;
   let implementationPackage;
@@ -278,7 +278,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
         try {
           implementationPackage = await attw.createPackageFromTarballUrl(tarballUrl);
         } catch (err: any) {
-          (warnings ??= []).push(
+          warnings.push(
             `Failed to extract implementation package from ${tarballUrl}. This is likely a problem with @arethetypeswrong/core ` +
               `or the tarball data itself. @arethetypeswrong/cli will not run. Error:\n${err.stack ?? err.message}`,
           );
