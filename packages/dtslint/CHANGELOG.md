@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.2.9
+
+### Patch Changes
+
+- 57bb3ea: Rework error collection
+- 57bb3ea: Error if tslint.json is present
+- a79806d: Update arethetypeswrong version
+
 ## 0.2.8
 
 ### Patch Changes
