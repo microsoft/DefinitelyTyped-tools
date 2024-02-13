@@ -7,9 +7,9 @@ Lint rules new to dtslint are documented in the [docs](docs) directory.
 
 If you are just looking for a TypeScript type testing tool, use:
 
-- [`tsd`](https://github.com/tsdjs/tsd),
-- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type),
-- or [`tstyche`](https://github.com/tstyche/tstyche).
+- [`tsd`](https://github.com/tsdjs/tsd)
+- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
+- [`tstyche`](https://github.com/tstyche/tstyche)
 
 
 # Setup
