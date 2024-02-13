@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies [7668808]
+  - @definitelytyped/dtslint@0.2.10
+
 ## 0.1.12
 
 ### Patch Changes
