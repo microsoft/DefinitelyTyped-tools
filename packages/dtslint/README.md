@@ -3,9 +3,14 @@ It will install `typescript` and `eslint` for you, so this is the only tool you 
 
 Lint rules new to dtslint are documented in the [docs](docs) directory.
 
-# Just looking for ExpectType and ExpectError?
+# Just looking for a type testing tool?
 
-[Use tsd](https://github.com/SamVerschueren/tsd) or [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type#readme) instead.
+If you are just looking for a TypeScript type testing tool, use:
+
+- [`tsd`](https://github.com/tsdjs/tsd)
+- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
+- [`tstyche`](https://github.com/tstyche/tstyche)
+
 
 # Setup
 
