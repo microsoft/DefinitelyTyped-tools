@@ -8,6 +8,7 @@
 @babel/template
 @babel/traverse
 @babel/types
+@bitcoin-computer/nakamotojs
 @commander-js/extra-typings
 @elastic/elasticsearch
 @electron/get
