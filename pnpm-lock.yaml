@@ -145,7 +145,7 @@ importers:
         version: 0.13.10
       '@arethetypeswrong/core':
         specifier: 0.13.9
-        version: 0.13.9
+        version: link:../../../../arethetypeswrong.github.io/packages/core
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
