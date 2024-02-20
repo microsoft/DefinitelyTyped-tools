@@ -37,7 +37,6 @@ async-retry
 atlaskit__layer
 atmosphere.js
 atpl
-aws-lambda
 azdata
 azure-sb
 babel-types
