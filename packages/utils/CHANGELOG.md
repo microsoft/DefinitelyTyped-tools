@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.3
+
+### Patch Changes
+
+- e2aef2f: Pull expectedNpmVersionFailures from GitHub, like allowedPackageJsonDependencies
+
 ## 0.1.2
 
 ### Patch Changes

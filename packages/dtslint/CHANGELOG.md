@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint
 
+## 0.2.12
+
+### Patch Changes
+
+- e2aef2f: Pull expectedNpmVersionFailures from GitHub, like allowedPackageJsonDependencies
+- Updated dependencies [e2aef2f]
+  - @definitelytyped/utils@0.1.3
+  - @definitelytyped/header-parser@0.2.4
+
 ## 0.2.11
 
 ### Patch Changes
