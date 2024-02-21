@@ -1,5 +1,4 @@
-import { joinPaths, readFileSync } from "@definitelytyped/utils";
-import { getUrlContentsAsString, withCache } from "./utils";
+import { joinPaths, readFileSync, getUrlContentsAsString, withCache } from "@definitelytyped/utils";
 
 const root = joinPaths(__dirname, "..", "..");
 const storageDirPath = process.env.STORAGE_DIR || root;

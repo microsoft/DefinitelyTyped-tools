@@ -1,3 +1,4 @@
+import { getUrlContentsAsString, joinPaths, readFileSync, withCache } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
@@ -35,3 +36,25 @@ export function getCompilerOptions(dirPath: string): {
     excludes?: string[];
   };
 }
+
+const root = joinPaths(__dirname, "..");
+
+const expectedNpmVersionFailuresUrl =
+  "https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/main/packages/dtslint/expectedNpmVersionFailures.txt";
+
+export const getExpectedNpmVersionFailures = withCache(60 * 60 * 1000, () => {
+  return new Promise<ReadonlySet<string>>(async (resolve) => {
+    let raw = readFileSync(joinPaths(root, "expectedNpmVersionFailures.txt"));
+    if (process.env.NODE_ENV !== "test") {
+      try {
+        raw = await getUrlContentsAsString(expectedNpmVersionFailuresUrl);
+      } catch (err) {
+        console.error(
+          "Getting the latest expectedNpmVersionFailures.txt from GitHub failed. Falling back to local copy.\n" +
+            (err as Error).message,
+        );
+      }
+    }
+    resolve(new Set(raw.split(/\r?\n/)));
+  });
+});

@@ -101,3 +101,15 @@ export function isDeclarationPath(path: string): boolean {
   }
   return declarationMatcher.match(path);
 }
+
+export function withCache<T>(expiresInMs: number, getValue: () => Promise<T>): () => Promise<T> {
+  let value: T | undefined;
+  let resolvedAt: number | undefined;
+  return async () => {
+    if (resolvedAt === undefined || Date.now() - resolvedAt > expiresInMs) {
+      value = await getValue();
+      resolvedAt = Date.now();
+    }
+    return value!;
+  };
+}
