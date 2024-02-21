@@ -6,6 +6,7 @@ import { fixtureRoot } from "./util";
 import { toMatchFile } from "jest-file-snapshot";
 import * as plugin from "../src/index";
 import fs from "fs";
+import { normalizeSlashes } from "@definitelytyped/utils";
 
 expect.extend({ toMatchFile });
 const snapshotDir = path.join(__dirname, "__file_snapshots__");
@@ -74,7 +75,7 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
   const indent = "    ";
 
   for (const result of results) {
-    output.push(`==== ${result.filePath} ====`);
+    output.push(`==== ${normalizeSlashes(result.filePath)} ====`);
     output.push("");
 
     const sourceText = fs.readFileSync(path.join(fixtureRoot, result.filePath), "utf-8");
