@@ -18,7 +18,6 @@ jobs:
     name: build and test
     strategy:
       matrix:
-        version: [10, 12, 14]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
