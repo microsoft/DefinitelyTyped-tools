@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.2.11
+
+### Patch Changes
+
+- b9ca741: remove `aws-lambda` from expected npm version failures
+- b2f229a: Update arethetypeswrong
+
 ## 0.2.10
 
 ### Patch Changes
