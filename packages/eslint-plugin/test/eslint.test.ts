@@ -51,9 +51,21 @@ for (const fixture of allFixtures) {
       const resultText = stripAnsi(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
-      expect(resultText + "\n\n" + newOutput).toMatchFile(getLintSnapshotPath(fixture));
+      expect(normalizeSnapshot(resultText + "\n\n" + newOutput)).toMatchFile(getLintSnapshotPath(fixture));
     });
   });
+}
+
+function normalizeSnapshot(snapshot: string): string {
+  return snapshot
+    .split(/\r?\n/g)
+    .map((line) => {
+      if (line.startsWith("types\\")) {
+        return normalizeSlashes(line);
+      }
+      return line;
+    })
+    .join("\n");
 }
 
 function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
@@ -108,12 +120,7 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
     output.push("");
   }
 
-  return (
-    output
-      .map((o) => o.replace(/\r?\n/g, "\n"))
-      .join("\n")
-      .trim() + "\n"
-  );
+  return output.join("\n").trim() + "\n";
 }
 
 // Similar to https://github.com/storybookjs/storybook/blob/df357020e010f49e7c325942f0c891e6702527d6/code/addons/storyshots-core/src/api/integrityTestTemplate.ts
