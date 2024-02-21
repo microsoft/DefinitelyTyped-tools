@@ -2,6 +2,7 @@ import type * as attw from "@arethetypeswrong/core";
 import * as header from "@definitelytyped/header-parser";
 import { satisfies } from "semver";
 import { tryPromise } from "./checks";
+import { getExpectedNpmVersionFailures } from "./util";
 
 export async function checkNpmVersionAndGetMatchingImplementationPackage(
   packageJson: header.Header,
@@ -22,6 +23,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
       allowDeprecated: true,
     }),
   );
+  const npmVersionExemptions = await getExpectedNpmVersionFailures();
   if (packageId) {
     const { packageName, packageVersion, tarballUrl } = packageId;
     if (packageJson.nonNpm === true) {
@@ -71,7 +73,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
     );
   }
 
-  if (!hasNpmVersionMismatch && getExpectedNpmVersionFailures().has(packageDirectoryNameWithVersion)) {
+  if (!hasNpmVersionMismatch && npmVersionExemptions.has(packageDirectoryNameWithVersion)) {
     warnings.push(
       `${packageDirectoryNameWithVersion} can be removed from expectedNpmVersionFailures.txt in https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/dtslint.`,
     );
