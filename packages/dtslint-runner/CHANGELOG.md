@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.14
+
+### Patch Changes
+
+- b2f229a: Update arethetypeswrong
+- Updated dependencies [b9ca741]
+- Updated dependencies [b2f229a]
+  - @definitelytyped/dtslint@0.2.11
+
 ## 0.1.13
 
 ### Patch Changes
