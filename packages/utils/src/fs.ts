@@ -1,12 +1,12 @@
 import assert from "assert";
-import { join, relative, resolve, isAbsolute } from "path";
+import systemPath, { posix as posixPath } from "path";
 import getCacheDir = require("cachedir");
 import { assertDefined } from "./assertions";
 import fs from "fs";
 import { readFileSync, readJsonSync } from "./io";
 
 /** The directory to read/write suggestsions from */
-export const suggestionsDir = join(getCacheDir("dts"), "suggestions");
+export const suggestionsDir = systemPath.join(getCacheDir("dts"), "suggestions");
 
 /** Convert a path to use "/" instead of "\\" for consistency. (This affects content hash.) */
 export function normalizeSlashes(path: string): string {
@@ -91,7 +91,7 @@ export class InMemoryFS implements FS {
 
   private tryGetEntry(path: string): ReadonlyDir | string | undefined {
     if (path[0] === "/") {
-      path = relative(this.rootPrefix, path);
+      path = posixPath.relative(this.rootPrefix, path);
     }
     if (path === "") {
       return this.curDir;
@@ -162,7 +162,7 @@ export class InMemoryFS implements FS {
 
   subDir(path: string): FS {
     assert(path[0] !== "/", "Cannot use absolute paths with InMemoryFS.subDir");
-    return new InMemoryFS(this.getDir(path), resolve(this.rootPrefix, path));
+    return new InMemoryFS(this.getDir(path), posixPath.join(this.rootPrefix, path));
   }
 
   debugPath(): string {
@@ -179,12 +179,12 @@ export class InMemoryFS implements FS {
 
 export class DiskFS implements FS {
   constructor(private readonly rootPrefix: string) {
-    assert(isAbsolute(rootPrefix), "DiskFS must use absolute paths");
+    assert(systemPath.isAbsolute(rootPrefix), "DiskFS must use absolute paths");
     this.rootPrefix = ensureTrailingSlash(rootPrefix);
   }
 
   private getPath(path: string | undefined): string {
-    return resolve(this.rootPrefix, path ?? "");
+    return systemPath.resolve(this.rootPrefix, path ?? "");
   }
 
   readdir(dirPath?: string): readonly string[] {
