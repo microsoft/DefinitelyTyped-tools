@@ -108,7 +108,12 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
     output.push("");
   }
 
-  return output.join("\n").trim() + "\n";
+  return (
+    output
+      .map((o) => o.replace(/\r?\n/g, "\n"))
+      .join("\n")
+      .trim() + "\n"
+  );
 }
 
 // Similar to https://github.com/storybookjs/storybook/blob/df357020e010f49e7c325942f0c891e6702527d6/code/addons/storyshots-core/src/api/integrityTestTemplate.ts
