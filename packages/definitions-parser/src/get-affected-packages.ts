@@ -1,6 +1,6 @@
 import { assertDefined, execAndThrowErrors, mapDefined, normalizeSlashes, withoutStart } from "@definitelytyped/utils";
 import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
-import { isAbsolute, resolve } from "path";
+import { isAbsolute } from "path";
 import { satisfies } from "semver";
 import assert from "assert";
 export interface PreparePackagesResult {
