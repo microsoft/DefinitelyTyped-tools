@@ -5,12 +5,8 @@ import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typesc
 import { deepEquals, readJson } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
-import {
-  checkNpmVersionAndGetMatchingImplementationPackage,
-  checkPackageJson,
-  checkTsconfig,
-  runAreTheTypesWrong,
-} from "./checks";
+import { checkPackageJson, checkTsconfig, runAreTheTypesWrong } from "./checks";
+import { checkNpmVersionAndGetMatchingImplementationPackage } from "./checkNpmVersionAndGetMatchingImplementationPackage";
 import { TsVersion, lint } from "./lint";
 import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
 import assert = require("assert");

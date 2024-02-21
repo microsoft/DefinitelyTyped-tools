@@ -6,11 +6,7 @@ import fs from "fs";
 import { join as joinPaths } from "path";
 import { satisfies } from "semver";
 import { CompilerOptions } from "typescript";
-import { packageNameFromPath, readJson } from "./util";
-
-const npmVersionExemptions = new Set(
-  fs.readFileSync(joinPaths(__dirname, "../expectedNpmVersionFailures.txt"), "utf-8").split(/\r?\n/),
-);
+import { getExpectedNpmVersionFailures, packageNameFromPath, readJson } from "./util";
 
 export function checkPackageJson(
   dirPath: string,
@@ -251,6 +247,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
       allowDeprecated: true,
     }),
   );
+  const npmVersionExemptions = await getExpectedNpmVersionFailures();
   if (packageId) {
     const { packageName, packageVersion, tarballUrl } = packageId;
     if (packageJson.nonNpm === true) {
