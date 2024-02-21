@@ -247,7 +247,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   const attw = await import("@arethetypeswrong/core");
   const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
   const packageId = await tryPromise(
-    attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`),
+    attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`, { allowDeprecated: true }),
   );
   if (packageId) {
     const { packageName, packageVersion, tarballUrl } = packageId;

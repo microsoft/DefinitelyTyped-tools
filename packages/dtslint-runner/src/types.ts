@@ -15,6 +15,7 @@ export interface RunDTSLintOptions {
   onlyTestTsNext: boolean;
   expectOnly: boolean;
   skipNpmChecks: boolean;
+  onlyNpmChecks: boolean;
   localTypeScriptPath?: string;
   nProcesses: number;
   shard?: { id: number; count: number };

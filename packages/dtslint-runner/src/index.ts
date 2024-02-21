@@ -73,6 +73,12 @@ if (require.main === module) {
         type: "boolean",
         default: false,
       },
+      onlyNpmChecks: {
+        group: "dtslint options",
+        description: "Only run the npm checks (name/version checks and @arethetypeswrong/cli).",
+        type: "boolean",
+        default: false,
+      },
       // Only useful for repeated local runs, so I’m hiding it
       noInstall: {
         hidden: true,
@@ -116,6 +122,7 @@ if (require.main === module) {
     onlyTestTsNext: !!args.onlyTestTsNext,
     expectOnly: args.expectOnly,
     skipNpmChecks: args.skipNpmChecks,
+    onlyNpmChecks: args.onlyNpmChecks,
     noInstall: args.noInstall,
     childRestartTaskInterval: args.childRestartTaskInterval,
     writeFailures: args.writeFailures,
