@@ -1,3 +1,4 @@
+import { createGitHubStringSetGetter, joinPaths } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join } from "path";
 import stripJsonComments = require("strip-json-comments");
@@ -35,3 +36,10 @@ export function getCompilerOptions(dirPath: string): {
     excludes?: string[];
   };
 }
+
+const root = joinPaths(__dirname, "..");
+
+export const getExpectedNpmVersionFailures = createGitHubStringSetGetter(
+  "packages/dtslint/expectedNpmVersionFailures.txt",
+  joinPaths(root, "expectedNpmVersionFailures.txt"),
+);

@@ -300,3 +300,50 @@ function addExecutePermissionsFromReadPermissions(mode: number): number {
   // Add these additional execute permissions to the mode.
   return mode | readPermissionsAsExecutePermissions;
 }
+
+function getUrlContentsAsString(url: string): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        let data = "";
+        res.on("data", (d) => (data += d));
+        res.on("end", () => {
+          resolve(data);
+        });
+      })
+      .on("error", reject);
+  });
+}
+
+function withCache<T>(expiresInMs: number, getValue: () => Promise<T>): () => Promise<T> {
+  let value: T | undefined;
+  let resolvedAt: number | undefined;
+  return async () => {
+    if (resolvedAt === undefined || Date.now() - resolvedAt > expiresInMs) {
+      value = await getValue();
+      resolvedAt = Date.now();
+    }
+    return value!;
+  };
+}
+
+export function createGitHubStringSetGetter(
+  repoPath: string,
+  fallbackPath: string,
+): () => Promise<ReadonlySet<string>> {
+  const url = `https://raw.githubusercontent.com/microsoft/DefinitelyTyped-tools/main/${repoPath}`;
+
+  return withCache(60 * 60 * 1000, async () => {
+    let raw = readFileSync(fallbackPath);
+    if (process.env.NODE_ENV !== "test") {
+      try {
+        raw = await getUrlContentsAsString(url);
+      } catch (err) {
+        console.error(
+          `Getting the latest ${repoPath} from GitHub failed. Falling back to local copy.\n` + (err as Error).message,
+        );
+      }
+    }
+    return new Set(raw.split(/\r?\n/));
+  });
+}
