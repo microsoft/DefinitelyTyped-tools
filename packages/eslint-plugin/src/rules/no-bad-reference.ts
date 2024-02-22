@@ -79,6 +79,7 @@ const rule = createRule({
           messageId: "backslashes",
           loc: tsRangeToESLintLocation(ref.range),
         });
+        continue;
       }
 
       const p = ref.text.startsWith(realNamePlusSlash)
@@ -88,8 +89,7 @@ const rule = createRule({
           )
         : ref.text;
 
-      const resolved = path.resolve(containingDirectory, p);
-      const otherPackage = findTypesPackage(resolved);
+      const otherPackage = findTypesPackage(path.resolve(containingDirectory, p));
 
       if (otherPackage && otherPackage.dir === typesPackage.dir) {
         // Perf trick; if a path doesn't have ".." anywhere, then it can't have resolved
@@ -105,9 +105,9 @@ const rule = createRule({
               continue;
             }
             if (part === "..") {
-              cwd = path.posix.dirname(cwd);
+              cwd = path.dirname(cwd);
             } else {
-              cwd = path.posix.join(cwd, part);
+              cwd = path.join(cwd, part);
             }
             const otherPackage = findTypesPackage(cwd);
             if (otherPackage && otherPackage.dir === typesPackage.dir) {

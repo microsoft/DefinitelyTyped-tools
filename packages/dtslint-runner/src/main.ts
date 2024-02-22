@@ -9,6 +9,7 @@ import fs from "fs";
 import { RunDTSLintOptions } from "./types";
 import { prepareAllPackages } from "./prepareAllPackages";
 import { prepareAffectedPackages } from "./prepareAffectedPackages";
+import { resolve } from "path";
 
 export async function runDTSLint({
   definitelyTypedAcquisition,
@@ -36,6 +37,7 @@ export async function runDTSLint({
   } else {
     definitelyTypedPath = definitelyTypedAcquisition.path;
   }
+  definitelyTypedPath = resolve(definitelyTypedPath);
 
   if (!fs.existsSync(definitelyTypedPath)) {
     throw new Error(`Path '${definitelyTypedPath}' does not exist.`);

@@ -7,9 +7,17 @@
   },
   "files": [],
   "references": [
-    { "path": "packages/header-parser/test" },
     { "path": "packages/definitions-parser/test" },
+    { "path": "packages/dts-critic" },
+    { "path": "packages/dts-gen" },
+    { "path": "packages/dtslint/test" },
+    { "path": "packages/dtslint-runner" },
+    { "path": "packages/eslint-plugin/test" },
+    { "path": "packages/header-parser/test" },
     { "path": "packages/publisher/test" },
-    { "path": "packages/utils/test" }
+    { "path": "packages/retag" },
+    { "path": "packages/typescript-packages/test" },
+    { "path": "packages/typescript-versions/test" },
+    { "path": "packages/utils/test" },
   ]
 }

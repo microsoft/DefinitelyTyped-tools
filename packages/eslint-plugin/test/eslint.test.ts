@@ -6,6 +6,7 @@ import { fixtureRoot } from "./util";
 import { toMatchFile } from "jest-file-snapshot";
 import * as plugin from "../src/index";
 import fs from "fs";
+import { normalizeSlashes } from "@definitelytyped/utils";
 
 expect.extend({ toMatchFile });
 const snapshotDir = path.join(__dirname, "__file_snapshots__");
@@ -50,9 +51,21 @@ for (const fixture of allFixtures) {
       const resultText = stripAnsi(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
-      expect(resultText + "\n\n" + newOutput).toMatchFile(getLintSnapshotPath(fixture));
+      expect(normalizeSnapshot(resultText + "\n\n" + newOutput)).toMatchFile(getLintSnapshotPath(fixture));
     });
   });
+}
+
+function normalizeSnapshot(snapshot: string): string {
+  return snapshot
+    .split(/\r?\n/g)
+    .map((line) => {
+      if (line.startsWith("types\\")) {
+        return normalizeSlashes(line);
+      }
+      return line;
+    })
+    .join("\n");
 }
 
 function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
@@ -74,7 +87,7 @@ function formatResultsWithInlineErrors(results: ESLint.LintResult[]): string {
   const indent = "    ";
 
   for (const result of results) {
-    output.push(`==== ${result.filePath} ====`);
+    output.push(`==== ${normalizeSlashes(result.filePath)} ====`);
     output.push("");
 
     const sourceText = fs.readFileSync(path.join(fixtureRoot, result.filePath), "utf-8");

@@ -16,7 +16,14 @@ defaults:
 jobs:
   build_and_test:
     name: build and test
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          # - macos-latest # OOMs
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2

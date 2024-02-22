@@ -1,7 +1,8 @@
 import { assertDefined, execAndThrowErrors, mapDefined, normalizeSlashes, withoutStart } from "@definitelytyped/utils";
 import { AllPackages, PackageId, formatTypingVersion, getDependencyFromFile } from "./packages";
-import { resolve } from "path";
+import { isAbsolute } from "path";
 import { satisfies } from "semver";
+import assert from "assert";
 export interface PreparePackagesResult {
   readonly packageNames: Set<string>;
   readonly dependents: Set<string>;
@@ -77,7 +78,8 @@ export async function getAffectedPackagesWorker(
   dependentOutputs: string[],
   definitelyTypedPath: string,
 ): Promise<PreparePackagesResult> {
-  const dt = resolve(definitelyTypedPath);
+  assert(isAbsolute(definitelyTypedPath), "definitelyTypedPath should be absolute");
+  const dt = definitelyTypedPath;
   const changedDirs = mapDefined(changedOutput.split("\n"), getDirectoryName(dt));
   const dependentDirs = mapDefined(dependentOutputs.join("\n").split("\n"), getDirectoryName(dt));
   const packageNames = new Set([
