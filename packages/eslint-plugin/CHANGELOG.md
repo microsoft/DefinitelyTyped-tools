@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.6
+
+### Patch Changes
+
+- 5e7da60: Fix compatibility with Windows
+- Updated dependencies [5e7da60]
+  - @definitelytyped/utils@0.1.4
+
 ## 0.1.5
 
 ### Patch Changes
