@@ -4,9 +4,9 @@ import glob = require("glob");
 
 type Errors = { path: string; error: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [?main errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [distinct id] [?main errors file] [?branch errors file]
 async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, status, mainErrorsPath, branchErrorsPath] =
+  const [auth, buildId, statusCommentId, userToTag, issue, status, distinctId, mainErrorsPath, branchErrorsPath] =
     process.argv.slice(2);
   if (!auth) throw new Error("First argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Second argument must be a build id.");
@@ -14,6 +14,7 @@ async function main() {
   if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
   if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
   if (!status) throw new Error("Sixth argument must be a status ('ok' or 'fail').");
+  if (!distinctId) throw new Error("Seventh argument must be a distinct ID.");
 
   const gh = new Octokit({ auth });
   const checkLogsMessage = `\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
@@ -55,29 +56,51 @@ async function main() {
       newComment += checkLogsMessage;
     }
 
-    const response = await gh.issues.createComment({
+    const resultsComment = await gh.issues.createComment({
       issue_number: +issue,
       owner: "Microsoft",
       repo: "TypeScript",
       body: newComment,
     });
 
-    const newCommentUrl = response.data.html_url;
-    const statusComment = await gh.issues.getComment({
-      owner: "Microsoft",
-      repo: "TypeScript",
-      comment_id: +statusCommentId,
-    });
+    const emoji = status !== "fail" ? "✅" : "👀";
 
-    const newBody = `${statusComment.data.body}\n\nUpdate: [The results are in!](${newCommentUrl})`;
-    await gh.issues.updateComment({
-      owner: "Microsoft",
-      repo: "TypeScript",
-      comment_id: +statusCommentId,
-      body: newBody,
-    });
+    const toReplace = `<!--result-${distinctId}-->`;
+    let posted = false;
+    for (let i = 0; i < 5; i++) {
+      // Get status comment contents
+      const statusComment = await gh.rest.issues.getComment({
+        comment_id: +statusCommentId,
+        owner: "Microsoft",
+        repo: "TypeScript",
+      });
+
+      const oldComment = statusComment.data.body;
+      if (!oldComment?.includes(toReplace)) {
+        posted = true;
+        break;
+      }
+
+      const newComment = oldComment.replace(toReplace, `[${emoji} Results](${resultsComment.data.html_url})`);
+
+      // Update status comment
+      await gh.rest.issues.updateComment({
+        comment_id: +statusCommentId,
+        owner: "Microsoft",
+        repo: "TypeScript",
+        body: newComment,
+      });
+
+      // Repeat; someone may have edited the comment at the same time.
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    if (!posted) {
+      throw new Error("Failed to update status comment");
+    }
   } catch (e) {
     console.error(e);
+    // TODO(jakebailey): is this a good idea? all that can really fail here is the GH API.
     await gh.issues.createComment({
       issue_number: +issue,
       owner: "Microsoft",
