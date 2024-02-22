@@ -79,6 +79,7 @@ const rule = createRule({
           messageId: "backslashes",
           loc: tsRangeToESLintLocation(ref.range),
         });
+        continue;
       }
 
       const p = ref.text.startsWith(realNamePlusSlash)
