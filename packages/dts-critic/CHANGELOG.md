@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.1.6
+
+### Patch Changes
+
+- @definitelytyped/header-parser@0.2.5
+
 ## 0.1.5
 
 ### Patch Changes

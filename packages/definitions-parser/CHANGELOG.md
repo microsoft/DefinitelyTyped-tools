@@ -1,5 +1,14 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.8
+
+### Patch Changes
+
+- 5e7da60: Fix compatibility with Windows
+- Updated dependencies [5e7da60]
+  - @definitelytyped/utils@0.1.4
+  - @definitelytyped/header-parser@0.2.5
+
 ## 0.1.7
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.16
+
+### Patch Changes
+
+- 5e7da60: Fix compatibility with Windows
+- Updated dependencies [5e7da60]
+  - @definitelytyped/definitions-parser@0.1.8
+  - @definitelytyped/utils@0.1.4
+  - @definitelytyped/dtslint@0.2.13
+
 ## 0.1.15
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.4
+
+### Patch Changes
+
+- 5e7da60: Fix compatibility with Windows
+
 ## 0.1.3
 
 ### Patch Changes
