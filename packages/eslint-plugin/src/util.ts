@@ -53,6 +53,7 @@ export function findUp<T extends {}>(p: string, fn: (p: string) => T | undefined
 }
 
 export interface TypesPackageInfo {
+  /** directory containing package json; this is a OS-specific path */
   dir: string;
   /** package.json with name="@types/foo__bar-baz" */
   packageJson: PackageJSON;
