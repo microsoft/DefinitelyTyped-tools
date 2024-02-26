@@ -19,8 +19,6 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "dependencies": {
-    "@definitelytyped/typescript-packages": "workspace:*",
-    "@definitelytyped/typescript-versions": "workspace:*",
     "@qiwi/npm-registry-client": "^8.9.1",
     "@types/node": "^18.19.7",
     "cachedir": "^2.0.0",

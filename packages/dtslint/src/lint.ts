@@ -1,11 +1,12 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { typeScriptPath, withoutStart } from "@definitelytyped/utils";
+import { withoutStart } from "@definitelytyped/utils";
 import assert = require("assert");
 import { join as joinPaths, normalize, resolve } from "path";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
+import { typeScriptPath } from "./typescript-installer";
 
 export async function lint(
   dirPath: string,
