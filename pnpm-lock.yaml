@@ -149,6 +149,9 @@ importers:
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
+      '@definitelytyped/typescript-packages':
+        specifier: workspace:*
+        version: link:../typescript-packages
       '@definitelytyped/typescript-versions':
         specifier: workspace:*
         version: link:../typescript-versions
@@ -388,12 +391,6 @@ importers:
 
   packages/utils:
     dependencies:
-      '@definitelytyped/typescript-packages':
-        specifier: workspace:*
-        version: link:../typescript-packages
-      '@definitelytyped/typescript-versions':
-        specifier: workspace:*
-        version: link:../typescript-versions
       '@qiwi/npm-registry-client':
         specifier: ^8.9.1
         version: 8.9.1
