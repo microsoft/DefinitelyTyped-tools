@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint
 
+## 0.2.14
+
+### Patch Changes
+
+- b287cf9: Move TypeScript installer code to dtslint
+- Updated dependencies [b287cf9]
+  - @definitelytyped/utils@0.1.5
+  - @definitelytyped/header-parser@0.2.6
+
 ## 0.2.13
 
 ### Patch Changes

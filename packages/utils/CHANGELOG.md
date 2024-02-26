@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.5
+
+### Patch Changes
+
+- b287cf9: Move TypeScript installer code to dtslint
+
 ## 0.1.4
 
 ### Patch Changes
