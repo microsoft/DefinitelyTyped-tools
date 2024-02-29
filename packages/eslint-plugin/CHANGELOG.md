@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.8
+
+### Patch Changes
+
+- e9b73e3: Don't complain about 'export import =' in strict-export-declare-modifiers
+
 ## 0.1.7
 
 ### Patch Changes
