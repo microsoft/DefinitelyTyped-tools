@@ -129,7 +129,12 @@ const rule = createRule({
     function checkBlock(block: ts.ModuleBlock, autoExportEnabled: boolean): void {
       for (const statement of block.statements) {
         // Compiler will error for 'declare' here anyway, so just check for 'export'.
-        if (isExport(statement) && autoExportEnabled && !isDefault(statement)) {
+        if (
+          !ts.isImportEqualsDeclaration(statement) &&
+          isExport(statement) &&
+          autoExportEnabled &&
+          !isDefault(statement)
+        ) {
           context.report({
             loc: getModifierLoc(statement as ts.HasModifiers, ts.SyntaxKind.ExportKeyword),
             messageId: "redundantExport",
