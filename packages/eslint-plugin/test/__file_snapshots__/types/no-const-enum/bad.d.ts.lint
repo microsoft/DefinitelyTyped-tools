@@ -1,10 +1,13 @@
 types/no-const-enum/bad.d.ts
-  1:1  error  Use of `const enum` is forbidden  @definitelytyped/no-const-enum
+  1:1   error  Use of `const enum` is forbidden  @definitelytyped/no-const-enum
+  1:12  error  'E' is defined but never used     @typescript-eslint/no-unused-vars
 
-✖ 1 problem (1 error, 0 warnings)
+✖ 2 problems (2 errors, 0 warnings)
 
 ==== types/no-const-enum/bad.d.ts ====
 
     const enum E { }
     ~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-const-enum: Use of `const enum` is forbidden.
+               ~
+!!! @typescript-eslint/no-unused-vars: 'E' is defined but never used.

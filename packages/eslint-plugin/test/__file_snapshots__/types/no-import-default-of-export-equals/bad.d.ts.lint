@@ -1,12 +1,16 @@
 types/no-import-default-of-export-equals/bad.d.ts
+  2:15  error  'I' is defined but never used                                       @typescript-eslint/no-unused-vars
   7:12  error  The module a uses `export = `. Import with `import a = require(a)`  @definitelytyped/no-import-default-of-export-equals
+  7:12  error  'a' is defined but never used                                       @typescript-eslint/no-unused-vars
 
-✖ 1 problem (1 error, 0 warnings)
+✖ 3 problems (3 errors, 0 warnings)
 
 ==== types/no-import-default-of-export-equals/bad.d.ts ====
 
     declare module "a" {
         interface I { i: any }
+                  ~
+!!! @typescript-eslint/no-unused-vars: 'I' is defined but never used.
         export = I;
     }
     
@@ -14,4 +18,6 @@ types/no-import-default-of-export-equals/bad.d.ts
         import a from "a";
                ~
 !!! @definitelytyped/no-import-default-of-export-equals: The module a uses `export = `. Import with `import a = require(a)`.
+               ~
+!!! @typescript-eslint/no-unused-vars: 'a' is defined but never used.
     }

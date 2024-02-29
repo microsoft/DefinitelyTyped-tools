@@ -1,14 +1,17 @@
 types/prefer-declare-function/index.d.ts
   1:10  error  All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting  @definitelytyped/strict-export-declare-modifiers
+  1:10  error  'example' is defined but never used                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
   2:14  error  Use a function declaration instead of a variable of function type                                                                                                                                                                     @definitelytyped/prefer-declare-function
 
-✖ 2 problems (2 errors, 0 warnings)
+✖ 3 problems (3 errors, 0 warnings)
 
 ==== types/prefer-declare-function/index.d.ts ====
 
     function example(): void
              ~~~~~~~
 !!! @definitelytyped/strict-export-declare-modifiers: All declarations in this module are exported automatically. Prefer to explicitly write 'export' for clarity. If you have a good reason not to export this declaration, add 'export {}' to the module to shut off automatic exporting.
+             ~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'example' is defined but never used.
     export const example2: () => void;
                  ~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/prefer-declare-function: Use a function declaration instead of a variable of function type.

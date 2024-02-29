@@ -185,5 +185,11 @@ export const all: Linter.BaseConfig = {
         ],
       },
     },
+    {
+      files: ["*.d.cts", "*.d.mts", "*.d.ts", "*.d.*.ts"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["error"],
+      },
+    },
   ],
 };

@@ -6,11 +6,15 @@ types/no-import-of-dev-dependencies/bad.d.ts
   2:1   error  Do not use a triple slash reference for otherdevdep, use `import` style instead  @typescript-eslint/triple-slash-reference
   2:21  error  .d.ts files may not triple-slash reference packages in devDependencies           @definitelytyped/no-import-of-dev-dependencies
   4:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  4:8   error  'devdep' is defined but never used                                               @typescript-eslint/no-unused-vars
   5:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  5:13  error  'otherdevdep' is defined but never used                                          @typescript-eslint/no-unused-vars
   7:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  7:8   error  'devdep2' is defined but never used                                              @typescript-eslint/no-unused-vars
   8:1   error  .d.ts files may not import packages in devDependencies                           @definitelytyped/no-import-of-dev-dependencies
+  8:8   error  'otherdevdep2' is defined but never used                                         @typescript-eslint/no-unused-vars
 
-✖ 10 problems (10 errors, 0 warnings)
+✖ 14 problems (14 errors, 0 warnings)
 
 ==== types/no-import-of-dev-dependencies/bad.d.ts ====
 
@@ -32,13 +36,21 @@ types/no-import-of-dev-dependencies/bad.d.ts
     import devdep from "devdep";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+           ~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'devdep' is defined but never used.
     import * as otherdevdep from "otherdevdep";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+                ~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'otherdevdep' is defined but never used.
     
     import devdep2 = require("devdep");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+           ~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'devdep2' is defined but never used.
     import otherdevdep2 = require("otherdevdep");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-import-of-dev-dependencies: .d.ts files may not import packages in devDependencies.
+           ~~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'otherdevdep2' is defined but never used.

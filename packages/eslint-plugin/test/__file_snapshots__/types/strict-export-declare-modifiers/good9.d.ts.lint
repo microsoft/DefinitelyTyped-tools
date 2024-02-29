@@ -1,7 +1,12 @@
-No errors
+types/strict-export-declare-modifiers/good9.d.ts
+  1:13  error  'bar' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (1 error, 0 warnings)
 
 ==== types/strict-export-declare-modifiers/good9.d.ts ====
 
     import * as bar from "bar";
+                ~~~
+!!! @typescript-eslint/no-unused-vars: 'bar' is defined but never used.
     import bar = require("bar");
     export as namespace Bar;

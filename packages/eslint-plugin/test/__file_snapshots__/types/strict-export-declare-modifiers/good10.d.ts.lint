@@ -1,4 +1,7 @@
-No errors
+types/strict-export-declare-modifiers/good10.d.ts
+  6:11  error  'foo' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (1 error, 0 warnings)
 
 ==== types/strict-export-declare-modifiers/good10.d.ts ====
 
@@ -8,4 +11,6 @@ No errors
         export import C = good1.C;
     
         const foo: number;
+              ~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'foo' is defined but never used.
     }

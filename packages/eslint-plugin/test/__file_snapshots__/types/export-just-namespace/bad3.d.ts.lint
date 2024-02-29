@@ -1,12 +1,15 @@
 types/export-just-namespace/bad3.d.ts
+  2:7  error  'other' is assigned a value but never used                                               @typescript-eslint/no-unused-vars
   3:1  error  Instead of `export =`-ing a namespace, use the body of the namespace as the module body  @definitelytyped/export-just-namespace
 
-✖ 1 problem (1 error, 0 warnings)
+✖ 2 problems (2 errors, 0 warnings)
 
 ==== types/export-just-namespace/bad3.d.ts ====
 
     namespace Stuff {}
     const other = "code";
+          ~~~~~
+!!! @typescript-eslint/no-unused-vars: 'other' is assigned a value but never used.
     export = Stuff;
     ~~~~~~~~~~~~~~~
 !!! @definitelytyped/export-just-namespace: Instead of `export =`-ing a namespace, use the body of the namespace as the module body.

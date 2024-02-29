@@ -105,6 +105,19 @@ exports[`plugin should have the expected exports 1`] = `
             ],
           },
         },
+        {
+          "files": [
+            "*.d.cts",
+            "*.d.mts",
+            "*.d.ts",
+            "*.d.*.ts",
+          ],
+          "rules": {
+            "@typescript-eslint/no-unused-vars": [
+              "error",
+            ],
+          },
+        },
       ],
       "plugins": [
         "@definitelytyped",
