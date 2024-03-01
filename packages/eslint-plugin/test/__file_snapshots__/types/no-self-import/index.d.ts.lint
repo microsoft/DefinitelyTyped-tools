@@ -1,9 +1,9 @@
 types/no-self-import/index.d.ts
-   1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
-   1:8  error  'other' is defined but never used                         @typescript-eslint/no-unused-vars
-   5:8  error  'old' is defined but never used                           @typescript-eslint/no-unused-vars
-   9:8  error  'otherRequired' is defined but never used                 @typescript-eslint/no-unused-vars
-  13:8  error  'oldRequired' is defined but never used                   @typescript-eslint/no-unused-vars
+   1:1  error  Packages should contain value components, not just types                                   @definitelytyped/no-type-only-packages
+   1:8  error  'other' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u          @typescript-eslint/no-unused-vars
+   5:8  error  'old' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+   9:8  error  'otherRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  13:8  error  'oldRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
 
 ✖ 5 problems (5 errors, 0 warnings)
 
@@ -13,24 +13,24 @@ types/no-self-import/index.d.ts
     ~
 !!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
            ~~~~~
-!!! @typescript-eslint/no-unused-vars: 'other' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'other' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import other from "other-package/this-package";
     
     import old from "./v1gardenpath"
            ~~~
-!!! @typescript-eslint/no-unused-vars: 'old' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import old from "./v1verb/other"
     
     import otherRequired = require("other-package");
            ~~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'otherRequired' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'otherRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import otherRequired = require("other-package/this-package");
     
     import oldRequired = require("./v1gardenpath");
            ~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'oldRequired' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'oldRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import oldRequired = require("./v1verb/other");

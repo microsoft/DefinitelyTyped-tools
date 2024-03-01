@@ -1,5 +1,5 @@
 types/no-const-enum/index.d.ts
-  1:6  error  'F' is defined but never used  @typescript-eslint/no-unused-vars
+  1:6  error  'F' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
 
 ✖ 1 problem (1 error, 0 warnings)
 
@@ -7,4 +7,4 @@ types/no-const-enum/index.d.ts
 
     enum F {}
          ~
-!!! @typescript-eslint/no-unused-vars: 'F' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'F' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.

@@ -1,5 +1,5 @@
 types/export-just-namespace/good4.d.ts
-  1:7  error  'value' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:7  error  'value' is assigned a value but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
 
 ✖ 1 problem (1 error, 0 warnings)
 
@@ -7,4 +7,4 @@ types/export-just-namespace/good4.d.ts
 
     const value = 123;
           ~~~~~
-!!! @typescript-eslint/no-unused-vars: 'value' is assigned a value but never used.
+!!! @typescript-eslint/no-unused-vars: 'value' is assigned a value but never used. Allowed unused vars must match /^(_+$|_[^_])/u.

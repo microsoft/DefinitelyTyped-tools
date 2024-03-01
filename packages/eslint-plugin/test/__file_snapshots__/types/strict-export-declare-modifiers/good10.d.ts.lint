@@ -1,5 +1,5 @@
 types/strict-export-declare-modifiers/good10.d.ts
-  6:11  error  'foo' is defined but never used  @typescript-eslint/no-unused-vars
+  6:11  error  'foo' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
 
 ✖ 1 problem (1 error, 0 warnings)
 
@@ -12,5 +12,5 @@ types/strict-export-declare-modifiers/good10.d.ts
     
         const foo: number;
               ~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'foo' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'foo' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     }

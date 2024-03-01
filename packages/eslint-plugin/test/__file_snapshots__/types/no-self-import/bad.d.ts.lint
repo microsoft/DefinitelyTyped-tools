@@ -1,32 +1,32 @@
 types/no-self-import/bad.d.ts
-   1:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-   1:8  error  'myself' is defined but never used                                                @typescript-eslint/no-unused-vars
-   2:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-   2:8  error  'abc' is defined but never used                                                   @typescript-eslint/no-unused-vars
-   4:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-   4:8  error  'old1' is defined but never used                                                  @typescript-eslint/no-unused-vars
-   5:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-   5:8  error  'old2' is defined but never used                                                  @typescript-eslint/no-unused-vars
-   6:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-   6:8  error  'old3' is defined but never used                                                  @typescript-eslint/no-unused-vars
-   7:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-   7:8  error  'old4' is defined but never used                                                  @typescript-eslint/no-unused-vars
-   8:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-   8:8  error  'old5' is defined but never used                                                  @typescript-eslint/no-unused-vars
-  10:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-  10:8  error  'myselfRequired' is defined but never used                                        @typescript-eslint/no-unused-vars
-  11:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-  11:8  error  'abcRequired' is defined but never used                                           @typescript-eslint/no-unused-vars
-  13:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  13:8  error  'old1Required' is defined but never used                                          @typescript-eslint/no-unused-vars
-  14:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  14:8  error  'old2Required' is defined but never used                                          @typescript-eslint/no-unused-vars
-  15:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  15:8  error  'old3Required' is defined but never used                                          @typescript-eslint/no-unused-vars
-  16:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  16:8  error  'old4Required' is defined but never used                                          @typescript-eslint/no-unused-vars
-  17:1  error  Don't import an old version of the current package                                @definitelytyped/no-self-import
-  17:8  error  'old5Required' is defined but never used                                          @typescript-eslint/no-unused-vars
+   1:1  error  Declaration file should not use a global import of itself. Use a relative import            @definitelytyped/no-self-import
+   1:8  error  'myself' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u          @typescript-eslint/no-unused-vars
+   2:1  error  Declaration file should not use a global import of itself. Use a relative import            @definitelytyped/no-self-import
+   2:8  error  'abc' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u             @typescript-eslint/no-unused-vars
+   4:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+   4:8  error  'old1' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+   5:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+   5:8  error  'old2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+   6:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+   6:8  error  'old3' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+   7:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+   7:8  error  'old4' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+   8:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+   8:8  error  'old5' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u            @typescript-eslint/no-unused-vars
+  10:1  error  Declaration file should not use a global import of itself. Use a relative import            @definitelytyped/no-self-import
+  10:8  error  'myselfRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  11:1  error  Declaration file should not use a global import of itself. Use a relative import            @definitelytyped/no-self-import
+  11:8  error  'abcRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u     @typescript-eslint/no-unused-vars
+  13:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+  13:8  error  'old1Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
+  14:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+  14:8  error  'old2Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
+  15:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+  15:8  error  'old3Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
+  16:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+  16:8  error  'old4Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
+  17:1  error  Don't import an old version of the current package                                          @definitelytyped/no-self-import
+  17:8  error  'old5Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
 
 ✖ 28 problems (28 errors, 0 warnings)
 
@@ -36,72 +36,72 @@ types/no-self-import/bad.d.ts
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
            ~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'myself' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'myself' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import abc from "no-self-import/abc.d.ts"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
            ~~~
-!!! @typescript-eslint/no-unused-vars: 'abc' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'abc' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import old1 from "./v11";
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~
-!!! @typescript-eslint/no-unused-vars: 'old1' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old1' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old2 from "./v11/index";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~
-!!! @typescript-eslint/no-unused-vars: 'old2' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old3 from "./v11/subdir/file";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~
-!!! @typescript-eslint/no-unused-vars: 'old3' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old3' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old4 from "./v0.1"
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~
-!!! @typescript-eslint/no-unused-vars: 'old4' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old4' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old5 from "./v0.1/index"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~
-!!! @typescript-eslint/no-unused-vars: 'old5' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old5' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import myselfRequired = require("no-self-import");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
            ~~~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'myselfRequired' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'myselfRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import abcRequired = require("no-self-import/abc.d.ts");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
            ~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'abcRequired' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'abcRequired' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import old1Required = require("./v11");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'old1Required' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old1Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old2Required = require("./v11/index");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'old2Required' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old2Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old3Required = require("./v11/subdir/file");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'old3Required' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old3Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old4Required = require("./v0.1");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'old4Required' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old4Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import old5Required = require("./v0.1/index");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Don't import an old version of the current package.
            ~~~~~~~~~~~~
-!!! @typescript-eslint/no-unused-vars: 'old5Required' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'old5Required' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.

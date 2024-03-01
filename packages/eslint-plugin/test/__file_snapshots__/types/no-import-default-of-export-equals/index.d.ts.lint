@@ -1,6 +1,6 @@
 types/no-import-default-of-export-equals/index.d.ts
-  1:1   error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
-  7:12  error  'a' is defined but never used                             @typescript-eslint/no-unused-vars
+  1:1   error  Packages should contain value components, not just types                       @definitelytyped/no-type-only-packages
+  7:12  error  'a' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
 
 ✖ 2 problems (2 errors, 0 warnings)
 
@@ -16,5 +16,5 @@ types/no-import-default-of-export-equals/index.d.ts
     declare module "bgood" {
         import a from "agood";
                ~
-!!! @typescript-eslint/no-unused-vars: 'a' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'a' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     }

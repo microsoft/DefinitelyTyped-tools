@@ -1,6 +1,6 @@
 types/no-single-declare-module/index.d.ts
-  1:1  error  Packages should contain value components, not just types  @definitelytyped/no-type-only-packages
-  1:8  error  'x' is defined but never used                             @typescript-eslint/no-unused-vars
+  1:1  error  Packages should contain value components, not just types                       @definitelytyped/no-type-only-packages
+  1:8  error  'x' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
 
 ✖ 2 problems (2 errors, 0 warnings)
 
@@ -10,5 +10,5 @@ types/no-single-declare-module/index.d.ts
     ~
 !!! @definitelytyped/no-type-only-packages: Packages should contain value components, not just types.
            ~
-!!! @typescript-eslint/no-unused-vars: 'x' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'x' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     declare module "foo" {}

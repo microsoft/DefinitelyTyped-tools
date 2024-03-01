@@ -1,8 +1,8 @@
 types/no-old-dt-header/index.d.ts
    1:1   error  Specify package metadata in package.json. Do not use a header like `// Type definitions for foo 1.2`  @definitelytyped/no-old-dt-header
    1:1   error  Packages should contain value components, not just types                                              @definitelytyped/no-type-only-packages
-  13:13  error  'anime' is defined but never used                                                                     @typescript-eslint/no-unused-vars
-  14:13  error  'three' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  13:13  error  'anime' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u                     @typescript-eslint/no-unused-vars
+  14:13  error  'three' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u                     @typescript-eslint/no-unused-vars
 
 ✖ 4 problems (4 errors, 0 warnings)
 
@@ -26,7 +26,7 @@ types/no-old-dt-header/index.d.ts
     
     import * as anime from "animejs";
                 ~~~~~
-!!! @typescript-eslint/no-unused-vars: 'anime' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'anime' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import * as three from "three";
                 ~~~~~
-!!! @typescript-eslint/no-unused-vars: 'three' is defined but never used.
+!!! @typescript-eslint/no-unused-vars: 'three' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
