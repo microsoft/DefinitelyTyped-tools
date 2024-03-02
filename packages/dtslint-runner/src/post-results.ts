@@ -4,7 +4,7 @@ import glob = require("glob");
 
 type Errors = { path: string; error: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [distinct id] [?main errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [distinct id] [job status] [?main errors file] [?branch errors file]
 async function main() {
   const [auth, buildId, statusCommentId, userToTag, issue, distinctId, status, mainErrorsPath, branchErrorsPath] =
     process.argv.slice(2);
