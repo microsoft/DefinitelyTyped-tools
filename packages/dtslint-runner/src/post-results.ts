@@ -4,17 +4,17 @@ import glob = require("glob");
 
 type Errors = { path: string; error: string }[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [job status] [distinct id] [?main errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [distinct id] [job status] [?main errors file] [?branch errors file]
 async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, status, distinctId, mainErrorsPath, branchErrorsPath] =
+  const [auth, buildId, statusCommentId, userToTag, issue, distinctId, status, mainErrorsPath, branchErrorsPath] =
     process.argv.slice(2);
   if (!auth) throw new Error("First argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Second argument must be a build id.");
   if (!statusCommentId) throw new Error("Third argument must be a GitHub comment id.");
   if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
   if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
-  if (!status) throw new Error("Sixth argument must be a status ('ok' or 'fail').");
-  if (!distinctId) throw new Error("Seventh argument must be a distinct ID.");
+  if (!distinctId) throw new Error("Sixth argument must be a distinct ID.");
+  if (!status) throw new Error("Seventh argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
   const checkLogsMessage = `\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
