@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint
 
+## 0.2.15
+
+### Patch Changes
+
+- 465dbce: Error on versioned directories when parent npmignores are missing subdir
+- 5dae397: Switch expect to using settings for versionsToTest
+
 ## 0.2.14
 
 ### Patch Changes
