@@ -138,8 +138,6 @@ interface Settings {
 }
 
 function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
-  // TODO: do a zod/valita like thing?
-
   const dt = context.settings.dt;
   if (!dt || typeof dt !== "object") {
     return {};
