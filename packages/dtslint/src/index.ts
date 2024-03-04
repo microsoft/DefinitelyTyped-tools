@@ -355,6 +355,17 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
           expectedNpmIgnore.push(`/${subdir.name}/`);
         }
       }
+    } else {
+      const thisDir = `/${basename(dirPath)}/`;
+      const parentNpmIgnorePath = joinPaths(dirname(dirPath), ".npmignore");
+      if (!fs.existsSync(parentNpmIgnorePath)) {
+        errors.push(`${dirPath}: Missing parent '.npmignore'`);
+      } else {
+        const parentNpmIgnore = fs.readFileSync(parentNpmIgnorePath, "utf-8").trim().split(/\r?\n/);
+        if (!parentNpmIgnore.includes(thisDir)) {
+          errors.push(`${dirPath}: Parent package '.npmignore' should contain ${thisDir}`);
+        }
+      }
     }
 
     const expectedNpmIgnoreAsString = expectedNpmIgnore.join("\n");
