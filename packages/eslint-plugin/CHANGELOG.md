@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.9
+
+### Patch Changes
+
+- 5dae397: Switch expect to using settings for versionsToTest
+
 ## 0.1.8
 
 ### Patch Changes
