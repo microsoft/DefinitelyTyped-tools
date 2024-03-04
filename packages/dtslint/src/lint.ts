@@ -86,11 +86,17 @@ function getEslintOptions(
   const allFiles = ["*.ts", "*.cts", "*.mts", "*.tsx"];
 
   const overrideConfig: ESLint.Options["overrideConfig"] = {
+    settings: {
+      dt: {
+        versionsToTest,
+      },
+    },
     overrides: [
       {
         files: allFiles,
         rules: {
-          "@definitelytyped/expect": ["error", { versionsToTest }],
+          // This prevents anyone from disabling this rule.
+          "@definitelytyped/expect": ["error"],
         },
       },
     ],

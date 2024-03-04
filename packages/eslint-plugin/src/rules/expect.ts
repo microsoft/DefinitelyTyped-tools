@@ -8,24 +8,7 @@ import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint"
 type TSModule = typeof ts;
 const builtinTypeScript = require("typescript") as TSModule;
 
-type Options = [
-  {
-    versionsToTest?: {
-      readonly versionName: string;
-      readonly path: string;
-    }[];
-  },
-];
-type MessageIds =
-  | "noTsconfig"
-  | "twoAssertions"
-  | "failure"
-  | "diagnostic"
-  | "programContents"
-  | "noMatch"
-  | "needInstall";
-
-const rule = createRule<Options, MessageIds>({
+const rule = createRule({
   name: "expect",
   meta: {
     type: "problem",
@@ -108,9 +91,9 @@ Then re-run.`,
           existing.versions.add(versionName);
         };
 
-        let versionsToTest = context.options[0]?.versionsToTest;
         let reportDiagnostics = true;
-        if (!versionsToTest?.length) {
+        let { versionsToTest } = getSettings(context);
+        if (!versionsToTest) {
           // In the editor, just use the built-in install of TypeScript.
           versionsToTest = [{ versionName: "", path: require.resolve("typescript") }];
           reportDiagnostics = false;
@@ -144,6 +127,36 @@ Then re-run.`,
     };
   },
 });
+
+interface VersionToTest {
+  readonly versionName: string;
+  readonly path: string;
+}
+
+interface Settings {
+  readonly versionsToTest?: readonly VersionToTest[];
+}
+
+function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
+  const dt = context.settings.dt;
+  if (!dt || typeof dt !== "object") {
+    return {};
+  }
+
+  let versionsToTest = (dt as Record<string, unknown>).versionsToTest;
+  versionsToTest ??= undefined;
+  if (!Array.isArray(versionsToTest)) {
+    throw new Error("Invalid versionsToTest");
+  }
+
+  for (const version of versionsToTest) {
+    if (typeof version !== "object" || typeof version.versionName !== "string" || typeof version.path !== "string") {
+      throw new Error("Invalid version to test");
+    }
+  }
+
+  return { versionsToTest };
+}
 
 const programCache = new WeakMap<ts.Program, Map<string, ts.Program>>();
 /** Maps a ts.Program to one created with the version specified in `options`. */
@@ -185,6 +198,8 @@ function createProgram(configFile: string, ts: TSModule): ts.Program {
   const host = ts.createCompilerHost(parsed.options, true);
   return ts.createProgram(parsed.fileNames, parsed.options, host);
 }
+
+type MessageIds = keyof (typeof rule)["meta"]["messages"];
 
 interface ReporterInfo {
   versionName: string;
