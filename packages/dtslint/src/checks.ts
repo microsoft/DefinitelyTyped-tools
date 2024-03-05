@@ -33,7 +33,7 @@ interface Tsconfig {
   exclude?: string[];
 }
 
-export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
+export function checkTsconfig(config: Tsconfig): string[] {
   const errors = [];
   const mustHave = {
     noEmit: true,
@@ -140,13 +140,13 @@ export function checkTsconfig(dirPath: string, config: Tsconfig): string[] {
   if (options.paths) {
     for (const key in options.paths) {
       if (options.paths[key].length !== 1) {
-        errors.push(`${dirPath}/tsconfig.json: "paths" must map each module specifier to only one file.`);
+        errors.push(`"paths" must map each module specifier to only one file.`);
       }
       const [target] = options.paths[key];
       if (target !== "./index.d.ts") {
         const m = target.match(/^(?:..\/)+([^\/]+)\/(?:v\d+\.?\d*\/)?index.d.ts$/);
         if (!m || m[1] !== key) {
-          errors.push(`${dirPath}/tsconfig.json: "paths" must map '${key}' to ${key}'s index.d.ts.`);
+          errors.push(`"paths" must map '${key}' to ${key}'s index.d.ts.`);
         }
       }
     }

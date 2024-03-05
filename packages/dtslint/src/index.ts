@@ -223,7 +223,15 @@ async function runTests(
         if (lows.length > 1) {
           console.log("testing from", low, "to", hi, "in", versionPath);
         }
-        const testTypesResult = await testTypesVersion(versionPath, packageJson.tsconfigs, low, hi, expectOnly, undefined, isLatest);
+        const testTypesResult = await testTypesVersion(
+          versionPath,
+          packageJson.tsconfigs,
+          low,
+          hi,
+          expectOnly,
+          undefined,
+          isLatest,
+        );
         errors.push(...testTypesResult.errors);
       }
     }
@@ -278,9 +286,9 @@ async function testTypesVersion(
 
   for (const tsconfig of tsconfigs) {
     const tsconfigPath = joinPaths(dirPath, tsconfig);
-    const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(tsconfigPath));
+    const tsconfigErrors = checkTsconfig(getCompilerOptions(tsconfigPath));
     if (tsconfigErrors.length > 0) {
-      errors.push("\n\t* " + tsconfigErrors.join("\n\t* "));
+      errors.push("\n\t* " + tsconfigPath + ":\n\t* " + tsconfigErrors.join("\n\t* "));
     }
   }
 
