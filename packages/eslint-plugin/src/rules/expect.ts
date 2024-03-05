@@ -138,18 +138,17 @@ interface Settings {
 }
 
 function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
-  const dt = context.settings.dt;
-  if (!dt || typeof dt !== "object") {
-    return {};
+  const dt = context.settings.dt ?? {};
+  if (typeof dt !== "object") {
+    throw new Error("Invalid dt settings");
   }
 
-  let versionsToTest = (dt as Record<string, unknown>).versionsToTest;
-  versionsToTest ??= undefined;
-  if (!Array.isArray(versionsToTest)) {
+  const versionsToTest = (dt as Record<string, unknown>).versionsToTest ?? undefined;
+  if (versionsToTest !== undefined && !Array.isArray(versionsToTest)) {
     throw new Error("Invalid versionsToTest");
   }
 
-  for (const version of versionsToTest) {
+  for (const version of versionsToTest ?? []) {
     if (typeof version !== "object" || typeof version.versionName !== "string" || typeof version.path !== "string") {
       throw new Error("Invalid version to test");
     }
