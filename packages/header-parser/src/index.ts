@@ -305,6 +305,21 @@ export function validatePackageJson(
         `${typesDirectoryName}'s package.json has bad "tsconfigs": must be an array of strings that point to the tsconfig file(s).`,
       );
     } else {
+      for (const tsconfig of tsconfigs) {
+        if (typeof tsconfig !== "string") {
+          errors.push(
+            `${typesDirectoryName}'s package.json has bad "tsconfigs": must be an array of strings that point to the tsconfig file(s).`,
+          );
+          continue;
+        }
+        if (tsconfig === "tsconfig.json") continue;
+
+        if (!tsconfig.startsWith("tsconfig.") || !tsconfig.endsWith(".json")) {
+          errors.push(
+            `${typesDirectoryName}'s package.json has bad "tsconfigs": ${tsconfig} is not a valid tsconfig file name; should match "tsconfig.*.json"`,
+          );
+        }
+      }
       return packageJson.tsconfigs;
     }
     return { errors };
