@@ -6,7 +6,6 @@ import fs from "fs";
 import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
 
 type TSModule = typeof ts;
-const builtinTypeScript = require("typescript") as TSModule;
 
 const rule = createRule({
   name: "expect",
@@ -20,9 +19,7 @@ const rule = createRule({
       twoAssertions: "This line has 2 $ExpectType assertions.",
       failure: `TypeScript{{versionNameString}} expected type to be:\n  {{expectedType}}\ngot:\n  {{actualType}}`,
       diagnostic: `TypeScript{{versionNameString}} {{message}}`,
-      programContents:
-        `Program source files differ between TypeScript versions. This may be a dtslint bug.\n` +
-        `Expected to find a file '{{fileName}}' present in ${builtinTypeScript.versionMajorMinor}, but did not find it in ts@{{versionName}}.`,
+      noTsconfigMatch: `TypeScript{{versionNameString}} could not find a tsconfig that includes this file.`,
       noMatch:
         "Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above.",
       needInstall: `A module look-up failed, this often occurs when you need to run \`pnpm install\` on a dependent module before you can lint.
@@ -33,26 +30,7 @@ Before you debug, first try running:
 
 Then re-run.`,
     },
-    schema: [
-      {
-        type: "object",
-        properties: {
-          versionsToTest: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                versionName: { type: "string" },
-                path: { type: "string" },
-              },
-              required: ["versionName", "path"],
-              additionalProperties: false,
-            },
-          },
-        },
-        additionalProperties: false,
-      },
-    ],
+    schema: [],
   },
   defaultOptions: [{}],
   create(context) {
@@ -81,42 +59,75 @@ Then re-run.`,
         const fileName = parserServices.esTreeNodeToTSNodeMap.get(node).fileName;
         const getLocFromIndex = (index: number) => context.sourceCode.getLocFromIndex(index);
 
-        const toReport = new Map<string, Omit<ReporterInfo, "versionName"> & { versions: Set<string> }>();
-        const reporter: Reporter = ({ versionName, messageId, data, loc }) => {
-          const key = JSON.stringify({ messageId, data, loc });
-          let existing = toReport.get(key);
-          if (existing === undefined) {
-            toReport.set(key, (existing = { messageId, data, loc, versions: new Set() }));
-          }
-          existing.versions.add(versionName);
-        };
+        const settings = getSettings(context);
+        let { versionsToTest } = settings;
 
         let reportDiagnostics = true;
-        let { versionsToTest } = getSettings(context);
         if (!versionsToTest) {
           // In the editor, just use the built-in install of TypeScript.
           versionsToTest = [{ versionName: "", path: require.resolve("typescript") }];
           reportDiagnostics = false;
         }
 
-        for (const version of versionsToTest) {
-          const ts = require(version.path) as TSModule;
-          const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
-          walk(
-            getLocFromIndex,
-            reporter,
-            fileName,
-            program,
-            ts,
-            version.versionName,
-            /*nextHigherVersion*/ undefined,
-            dirPath,
-            reportDiagnostics,
-          );
+        const tsconfigs = ["tsconfig.json"];
+        let reportTsconfigName = false;
+        if (settings.extraTsconfigs) {
+          tsconfigs.push(...settings.extraTsconfigs);
+          reportTsconfigName = true;
         }
 
-        for (const { messageId, data, loc, versions } of toReport.values()) {
-          const versionNames = [...versions].sort().join(", ");
+        const toReport = new Map<string, Omit<ReporterInfo, "versionName"> & { runs: Set<VersionAndTsconfig> }>();
+
+        for (const version of versionsToTest) {
+          let found = false;
+          for (const tsconfigPath of tsconfigs) {
+            const ts = require(version.path) as TSModule;
+            const program = getProgram(dirPath, tsconfigPath, ts, version.versionName, parserServices.program);
+
+            const sourceFile = program.getSourceFile(fileName)!;
+            if (!sourceFile) {
+              continue;
+            }
+
+            found = true;
+
+            const report: Reporter = ({ messageId, data, loc }) => {
+              const key = JSON.stringify({ messageId, data, loc });
+              let existing = toReport.get(key);
+              if (existing === undefined) {
+                toReport.set(key, (existing = { messageId, data, loc, runs: new Set() }));
+              }
+              existing.runs.add(`${version.versionName}:${tsconfigPath}`);
+            };
+
+            walk(
+              getLocFromIndex,
+              report,
+              fileName,
+              sourceFile,
+              program,
+              ts,
+              version.versionName,
+              /*nextHigherVersion*/ undefined,
+              dirPath,
+              reportDiagnostics,
+            );
+          }
+
+          if (!found) {
+            context.report({
+              messageId: "noTsconfigMatch",
+              data: { tsconfig: reportTsconfigName ? tsconfigPath : "tsconfig.json" },
+              loc: zeroSourceLocation,
+            });
+          }
+        }
+
+        for (const { messageId, data, loc, runs } of toReport.values()) {
+          const versionNames = [...runs]
+            .sort()
+            .map((s) => (reportTsconfigName ? s : s.split(":")[0]))
+            .join(", ");
           context.report({
             messageId,
             data: { ...data, versionNameString: versionNames ? `@${versionNames}` : "" },
@@ -128,6 +139,8 @@ Then re-run.`,
   },
 });
 
+type VersionAndTsconfig = `${string}:${string}`;
+
 interface VersionToTest {
   readonly versionName: string;
   readonly path: string;
@@ -135,6 +148,7 @@ interface VersionToTest {
 
 interface Settings {
   readonly versionsToTest?: readonly VersionToTest[];
+  readonly extraTsconfigs?: readonly string[];
 }
 
 function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
@@ -154,22 +168,40 @@ function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings 
     }
   }
 
-  return { versionsToTest };
+  const extraTsconfigs = (dt as Record<string, unknown>).extraTsconfigs ?? undefined;
+  if (extraTsconfigs !== undefined && !Array.isArray(extraTsconfigs)) {
+    throw new Error("Invalid extraTsconfigs");
+  }
+
+  for (const tsconfig of extraTsconfigs ?? []) {
+    if (typeof tsconfig !== "string") {
+      throw new Error("Invalid extra tsconfig");
+    }
+  }
+
+  return { versionsToTest, extraTsconfigs };
 }
 
-const programCache = new WeakMap<ts.Program, Map<string, ts.Program>>();
+const programCache = new WeakMap<ts.Program, Map<VersionAndTsconfig, ts.Program>>();
 /** Maps a ts.Program to one created with the version specified in `options`. */
-function getProgram(configFile: string, ts: TSModule, versionName: string, lintProgram: ts.Program): ts.Program {
+function getProgram(
+  dirPath: string,
+  configFile: string,
+  ts: TSModule,
+  versionName: string,
+  lintProgram: ts.Program,
+): ts.Program {
   let versionToProgram = programCache.get(lintProgram);
   if (versionToProgram === undefined) {
-    versionToProgram = new Map<string, ts.Program>();
+    versionToProgram = new Map();
     programCache.set(lintProgram, versionToProgram);
   }
 
-  let newProgram = versionToProgram.get(versionName);
+  const cacheKey: VersionAndTsconfig = `${configFile}:${versionName}`;
+  let newProgram = versionToProgram.get(cacheKey);
   if (newProgram === undefined) {
-    newProgram = createProgram(configFile, ts);
-    versionToProgram.set(versionName, newProgram);
+    newProgram = createProgram(path.resolve(dirPath, configFile), ts);
+    versionToProgram.set(cacheKey, newProgram);
   }
   return newProgram;
 }
@@ -201,7 +233,6 @@ function createProgram(configFile: string, ts: TSModule): ts.Program {
 type MessageIds = keyof (typeof rule)["meta"]["messages"];
 
 interface ReporterInfo {
-  versionName: string;
   messageId: MessageIds;
   data?: ReportDescriptorMessageData;
   loc: Readonly<TSESTree.SourceLocation>;
@@ -218,6 +249,7 @@ function walk(
   getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
   report: Reporter,
   fileName: string,
+  sourceFile: ts.SourceFile,
   program: ts.Program,
   ts: TSModule,
   versionName: string,
@@ -225,17 +257,6 @@ function walk(
   dirPath: string,
   reportDiagnostics: boolean,
 ): void {
-  const sourceFile = program.getSourceFile(fileName)!;
-  if (!sourceFile) {
-    report({
-      versionName,
-      messageId: "programContents",
-      data: { fileName, versionName },
-      loc: zeroSourceLocation,
-    });
-    return;
-  }
-
   const checker = program.getTypeChecker();
 
   if (reportDiagnostics) {
@@ -262,7 +283,6 @@ function walk(
       if (dtRoot) {
         const dirPath = path.relative(dtRoot, path.dirname(packageInfo.dir));
         report({
-          versionName,
           messageId: "needInstall",
           data: { dirPath },
           loc: zeroSourceLocation,
@@ -279,13 +299,12 @@ function walk(
   const { typeAssertions, duplicates } = parseAssertions(sourceFile);
 
   for (const line of duplicates) {
-    addFailureAtLine(report, { versionName, messageId: "twoAssertions" }, line);
+    addFailureAtLine(report, { messageId: "twoAssertions" }, line);
   }
 
   const { unmetExpectations, unusedAssertions } = getExpectTypeFailures(sourceFile, typeAssertions, checker, ts);
   for (const { node, expected, actual } of unmetExpectations) {
     report({
-      versionName,
       messageId: "failure",
       data: {
         expectedType: expected,
@@ -301,7 +320,6 @@ function walk(
     addFailureAtLine(
       report,
       {
-        versionName,
         messageId: "noMatch",
       },
       line - 1,
@@ -313,7 +331,6 @@ function walk(
     if (diagnostic.file === sourceFile) {
       const msg = `${intro}\n${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`;
       report({
-        versionName,
         messageId: "diagnostic",
         data: { message: msg },
         loc: {
@@ -323,7 +340,6 @@ function walk(
       });
     } else {
       report({
-        versionName,
         messageId: "diagnostic",
         data: { message: `${intro}\n${fileName}${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}` },
         loc: zeroSourceLocation,
