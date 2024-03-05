@@ -69,10 +69,10 @@ Then re-run.`,
           reportDiagnostics = false;
         }
 
-        const tsconfigs = ["tsconfig.json"];
+        let tsconfigs: readonly string[] = ["tsconfig.json"];
         let reportTsconfigName = false;
-        if (settings.extraTsconfigs) {
-          tsconfigs.push(...settings.extraTsconfigs);
+        if (settings.tsconfigs) {
+          tsconfigs = settings.tsconfigs;
           reportTsconfigName = true;
         }
 
@@ -148,7 +148,7 @@ interface VersionToTest {
 
 interface Settings {
   readonly versionsToTest?: readonly VersionToTest[];
-  readonly extraTsconfigs?: readonly string[];
+  readonly tsconfigs?: readonly string[];
 }
 
 function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
@@ -168,18 +168,18 @@ function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings 
     }
   }
 
-  const extraTsconfigs = (dt as Record<string, unknown>).extraTsconfigs ?? undefined;
-  if (extraTsconfigs !== undefined && !Array.isArray(extraTsconfigs)) {
-    throw new Error("Invalid extraTsconfigs");
+  const tsconfigs = (dt as Record<string, unknown>).tsconfigs ?? undefined;
+  if (tsconfigs !== undefined && !Array.isArray(tsconfigs)) {
+    throw new Error("Invalid tsconfigs");
   }
 
-  for (const tsconfig of extraTsconfigs ?? []) {
+  for (const tsconfig of tsconfigs ?? []) {
     if (typeof tsconfig !== "string") {
       throw new Error("Invalid extra tsconfig");
     }
   }
 
-  return { versionsToTest, extraTsconfigs };
+  return { versionsToTest, tsconfigs };
 }
 
 const programCache = new WeakMap<ts.Program, Map<VersionAndTsconfig, ts.Program>>();

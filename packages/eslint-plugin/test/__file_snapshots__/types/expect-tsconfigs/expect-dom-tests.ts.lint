@@ -1,0 +1,8 @@
+No errors
+
+==== types/expect-tsconfigs/expect-dom-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from "./";
+    
+    const element: HTMLElement = expect.element;
