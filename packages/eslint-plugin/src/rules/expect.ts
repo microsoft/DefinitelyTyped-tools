@@ -79,6 +79,8 @@ Then re-run.`,
         if (pkg.packageJson.tsconfigs) {
           tsconfigs = pkg.packageJson.tsconfigs;
           reportTsconfigName = true;
+          // If we're using alternative tsconfigs, the editor may not error on them.
+          reportDiagnostics = true;
         }
 
         const toReport = new Map<string, Omit<ReporterInfo, "versionName"> & { runs: Set<VersionAndTsconfig> }>();
@@ -102,7 +104,7 @@ Then re-run.`,
               if (existing === undefined) {
                 toReport.set(key, (existing = { messageId, data, loc, runs: new Set() }));
               }
-              existing.runs.add(`${version.versionName}:${tsconfigPath}`);
+              existing.runs.add(`${version.versionName} ${tsconfigPath}`);
             };
 
             walk(
@@ -131,7 +133,7 @@ Then re-run.`,
         for (const { messageId, data, loc, runs } of toReport.values()) {
           const versionNames = [...runs]
             .sort()
-            .map((s) => (reportTsconfigName ? s : s.split(":")[0]))
+            .map((s) => (reportTsconfigName ? s : s.split(" ")[0]).trim())
             .join(", ");
           context.report({
             messageId,
@@ -144,7 +146,7 @@ Then re-run.`,
   },
 });
 
-type VersionAndTsconfig = `${string}:${string}`;
+type VersionAndTsconfig = `${string} ${string}`;
 
 interface VersionToTest {
   readonly versionName: string;
@@ -190,7 +192,7 @@ function getProgram(
     programCache.set(lintProgram, versionToProgram);
   }
 
-  const cacheKey: VersionAndTsconfig = `${configFile}:${versionName}`;
+  const cacheKey: VersionAndTsconfig = `${configFile} ${versionName}`;
   let newProgram = versionToProgram.get(cacheKey);
   if (newProgram === undefined) {
     newProgram = createProgram(path.resolve(dirPath, configFile), ts);
