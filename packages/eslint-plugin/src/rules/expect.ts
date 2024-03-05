@@ -34,6 +34,11 @@ Then re-run.`,
   },
   defaultOptions: [{}],
   create(context) {
+    const pkg = findTypesPackage(context.filename);
+    if (!pkg) {
+      return {}
+    }
+
     const tsconfigPath = findUp(context.filename, (dir) => {
       const tsconfig = path.join(dir, "tsconfig.json");
       return fs.existsSync(tsconfig) ? tsconfig : undefined;
@@ -71,8 +76,8 @@ Then re-run.`,
 
         let tsconfigs: readonly string[] = ["tsconfig.json"];
         let reportTsconfigName = false;
-        if (settings.tsconfigs) {
-          tsconfigs = settings.tsconfigs;
+        if (pkg.packageJson.tsconfigs) {
+          tsconfigs = pkg.packageJson.tsconfigs;
           reportTsconfigName = true;
         }
 
@@ -148,7 +153,6 @@ interface VersionToTest {
 
 interface Settings {
   readonly versionsToTest?: readonly VersionToTest[];
-  readonly tsconfigs?: readonly string[];
 }
 
 function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings {
@@ -168,18 +172,7 @@ function getSettings(context: Parameters<(typeof rule)["create"]>[0]): Settings 
     }
   }
 
-  const tsconfigs = (dt as Record<string, unknown>).tsconfigs ?? undefined;
-  if (tsconfigs !== undefined && !Array.isArray(tsconfigs)) {
-    throw new Error("Invalid tsconfigs");
-  }
-
-  for (const tsconfig of tsconfigs ?? []) {
-    if (typeof tsconfig !== "string") {
-      throw new Error("Invalid extra tsconfig");
-    }
-  }
-
-  return { versionsToTest, tsconfigs };
+  return { versionsToTest };
 }
 
 const programCache = new WeakMap<ts.Program, Map<VersionAndTsconfig, ts.Program>>();

@@ -1,8 +1,7 @@
 {
     "settings": {
         "dt": {
-            "versionsToTest": [{ "versionName": "x.y", "path": "typescript" }],
-            "tsconfigs": ["tsconfig.dom.json", "tsconfig.no-dom.json"]
+            "versionsToTest": [{ "versionName": "x.y", "path": "typescript" }]
         }
     }
 }
