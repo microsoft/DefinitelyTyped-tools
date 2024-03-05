@@ -13,3 +13,5 @@ Cannot find name 'HTMLElement'  @definitelytyped/expect
                    ~~~~~~~~~~~
 !!! @definitelytyped/expect: TypeScript@tsconfig.no-dom.json compile error: 
 !!!                        : Cannot find name 'HTMLElement'.
+    
+    const weakSet: WeakSet<{}> = expect.weakSet;
