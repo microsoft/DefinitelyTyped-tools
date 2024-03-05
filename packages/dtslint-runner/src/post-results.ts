@@ -46,7 +46,12 @@ async function main() {
       if (diffComment) {
         newComment += `There were interesting changes:\n`;
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
-          newComment += `Changes are too big to display here, please check the log.`;
+          // hardlink directly into the output of this script
+          const detailedLogUrl = `https://typescript.visualstudio.com/TypeScript/_build/results?buildId=${buildId}&view=logs&j=275f1d19-1bd8-5591-b06b-07d489ea915a&t=40b1ee41-44d6-5bba-aa04-4b76a5c732e5`;
+          newComment += `Changes are too big to display here, please check [the log](${detailedLogUrl}).`;
+          console.log("There were interesting changes:\n");
+          console.log(diffComment);
+          console.log("\n");
         } else {
           newComment += diffComment;
         }
