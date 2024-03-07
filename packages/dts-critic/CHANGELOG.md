@@ -1,5 +1,12 @@
 # @definitelytyped/dts-critic
 
+## 0.1.8
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+  - @definitelytyped/header-parser@0.2.7
+
 ## 0.1.7
 
 ### Patch Changes

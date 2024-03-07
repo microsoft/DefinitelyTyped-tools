@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.1
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+
 ## 0.10.0
 
 ### Minor Changes

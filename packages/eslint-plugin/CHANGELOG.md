@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.10
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+
 ## 0.1.9
 
 ### Patch Changes
