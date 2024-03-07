@@ -6,7 +6,7 @@ import assert from "assert";
 
   For the RC:
 
-  1. Add a new version to the end of `TypeScriptVersion` and `supported`.
+  1. Add a new version to the end of `supported`.
     `supported` now contains the shipped versions, the RC, and the nightly.
   2. Add the new version to `packages/typescript-packages/package.json`.
   3. Update failing tests.
@@ -20,10 +20,9 @@ import assert from "assert";
 
   # How to deprecate an old version on Definitely Typed #
 
-  1. Move the old version from `TypeScriptVersion` to `UnsupportedTypeScriptVersion`.
-  2. Move the old version from `shipped` to `unsupported`.
-  3. Remove the old version from `packages/typescript-packages/package.json`.
-  4. Update failing tests.
+  1. Move the old version from `shipped` to `unsupported`.
+  2. Remove the old version from `packages/typescript-packages/package.json`.
+  3. Update failing tests.
 
   Currently, it's possible to release a new version and deprecate an old version
   at the same time because of the way release schedule overlaps.
@@ -42,9 +41,9 @@ export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVers
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
-  export const shipped = ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3"] as const;
+  export const shipped = ["4.7", "4.8", "4.9", "5.0", "5.1", "5.2", "5.3", "5.4"] as const;
   /** Add to this list when a version is available as typescript@next */
-  export const supported = [...shipped, "5.4"] as const;
+  export const supported = [...shipped, "5.5"] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported = [
     "2.0",
@@ -73,6 +72,7 @@ export namespace TypeScriptVersion {
     "4.3",
     "4.4",
     "4.5",
+    "4.6",
   ] as const;
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
