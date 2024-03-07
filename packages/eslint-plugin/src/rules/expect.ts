@@ -102,7 +102,6 @@ Then re-run.`,
         for (const version of versionsToTest) {
           const ts = require(version.path) as TSModule;
           const program = getProgram(tsconfigPath, ts, version.versionName, parserServices.program);
-          console.log(version);
           walk(
             getLocFromIndex,
             reporter,
