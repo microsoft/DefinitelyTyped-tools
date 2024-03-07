@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.1
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+- Updated dependencies [946d3d4]
+  - @definitelytyped/typescript-versions@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

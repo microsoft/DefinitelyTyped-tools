@@ -1,5 +1,15 @@
 # @definitelytyped/publisher
 
+## 0.1.10
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+- Updated dependencies [946d3d4]
+  - @definitelytyped/definitions-parser@0.1.10
+  - @definitelytyped/header-parser@0.2.7
+  - @definitelytyped/retag@0.1.10
+
 ## 0.1.9
 
 ### Patch Changes

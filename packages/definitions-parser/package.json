@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/definitions-parser",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Reads the DefinitelyTyped repository and provides an API for querying its metadata",
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/definitions-parser#readme",
   "license": "MIT",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "peerDependencies": {
     "typescript": "*"

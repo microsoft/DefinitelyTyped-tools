@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint
 
+## 0.2.16
+
+### Patch Changes
+
+- 946d3d4: Update for TS 5.4
+- Updated dependencies [946d3d4]
+  - @definitelytyped/typescript-packages@0.1.1
+  - @definitelytyped/typescript-versions@0.1.1
+  - @definitelytyped/header-parser@0.2.7
+
 ## 0.2.15
 
 ### Patch Changes
