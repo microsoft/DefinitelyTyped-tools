@@ -244,8 +244,8 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
   let packageId;
   try {
-    packageId = await retryNon404Errors(
-      () => attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`, {
+    packageId = await retryNon404Errors(() =>
+      attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`, {
         allowDeprecated: true,
       }),
     );
@@ -331,8 +331,10 @@ async function retryNon404Errors<T>(action: () => Promise<T>): Promise<T | undef
       }
     }
   }
-  throw new Error(`Skipping attw due to unexpected error fetching implementation package in multiple attempts. Last error: ${lastError?.stack ?? lastError?.message}`);
-  
+  throw new Error(
+    `Skipping attw due to unexpected error fetching implementation package in multiple attempts. Last error: ${lastError?.stack ?? lastError?.message}`,
+  );
+
   function delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
