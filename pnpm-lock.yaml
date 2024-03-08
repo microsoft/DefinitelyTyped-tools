@@ -141,11 +141,11 @@ importers:
   packages/dtslint:
     dependencies:
       '@arethetypeswrong/cli':
-        specifier: 0.14.1
-        version: 0.14.1
+        specifier: 0.15.1
+        version: 0.15.1
       '@arethetypeswrong/core':
-        specifier: 0.14.1
-        version: 0.14.1
+        specifier: 0.15.1
+        version: 0.15.1
       '@definitelytyped/header-parser':
         specifier: workspace:*
         version: link:../header-parser
@@ -450,12 +450,12 @@ packages:
     resolution: {integrity: sha512-Jh15/qVmrLGhkKJBdXlK1+9tY4lZruYjsgkDFj08ZmDiWVBLJcqkok7Z0/R0In+i1rScBpJlSvrTS2Lm41Pbnw==}
     dev: false
 
-  /@arethetypeswrong/cli@0.14.1:
-    resolution: {integrity: sha512-JB9jHVrrlF45NPJjjVYvmxz8011Nvwl74tVKr3muD/vVIcb9cn2ibdSbYjThjG5h1BHTHMwzCBoxjIue+NDQ1g==}
+  /@arethetypeswrong/cli@0.15.1:
+    resolution: {integrity: sha512-c4+MVbhktzLDnUFpvWvVkGRAb7zwd9b9ZW4eG62PkBsRRsTM6TKUNR23mLhz6tyYTalyqe8E6v09q4k0KuN3eQ==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      '@arethetypeswrong/core': 0.14.1
+      '@arethetypeswrong/core': 0.15.1
       chalk: 4.1.2
       cli-table3: 0.6.3
       commander: 10.0.1
@@ -464,8 +464,8 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@arethetypeswrong/core@0.14.1:
-    resolution: {integrity: sha512-B5cjaC9BQLhdSNQmG9dbcam8UFcXprgvY1YMxAfw/utCpUgPlKXK3wR3WphNr9CFlgcBaZL7NTuH/I7T17Kstw==}
+  /@arethetypeswrong/core@0.15.1:
+    resolution: {integrity: sha512-FYp6GBAgsNz81BkfItRz8RLZO03w5+BaeiPma1uCfmxTnxbtuMrI/dbzGiOk8VghO108uFI0oJo0OkewdSHw7g==}
     engines: {node: '>=18'}
     dependencies:
       '@andrewbranch/untar.js': 1.0.3
@@ -4511,7 +4511,7 @@ packages:
       '@babel/parser': 7.23.3
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.5.4
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5620,7 +5620,7 @@ packages:
     dependencies:
       hosted-git-info: 2.8.9
       resolve: 1.22.8
-      semver: 7.5.4
+      semver: 5.7.2
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -5954,7 +5954,7 @@ packages:
     resolution: {integrity: sha512-InpdgIdNe5xWMEUcrVQUniQKwnggBtJ7+SCwh7zQAZwbbIYZV9XdgJyhtmDSSvykFyQXoe4BINnzKTfCwWLs5g==}
     engines: {node: '>=8.15'}
     dependencies:
-      semver: 7.5.4
+      semver: 6.3.1
     dev: true
 
   /path-exists@4.0.0:
@@ -6374,6 +6374,11 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
+    hasBin: true
+    dev: true
 
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
