@@ -36,7 +36,7 @@ Then re-run.`,
   create(context) {
     const pkg = findTypesPackage(context.filename);
     if (!pkg) {
-      return {}
+      return {};
     }
 
     const tsconfigPath = findUp(context.filename, (dir) => {
