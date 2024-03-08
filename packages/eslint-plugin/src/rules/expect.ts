@@ -124,7 +124,6 @@ Then re-run.`,
           if (!found) {
             context.report({
               messageId: "noTsconfigMatch",
-              data: { tsconfig: reportTsconfigName ? tsconfigPath : "tsconfig.json" },
               loc: zeroSourceLocation,
             });
           }
