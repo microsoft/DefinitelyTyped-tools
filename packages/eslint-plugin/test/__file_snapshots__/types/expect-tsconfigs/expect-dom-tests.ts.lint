@@ -1,0 +1,17 @@
+types/expect-tsconfigs/expect-dom-tests.ts
+  6:16  error  TypeScript@tsconfig.dom.json compile error: 
+Cannot find name 'WeakSet'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later  @definitelytyped/expect
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/expect-tsconfigs/expect-dom-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from "./";
+    
+    const element: HTMLElement = expect.element;
+    
+    const weakSet: WeakSet<{}> = expect.weakSet;
+                   ~~~~~~~
+!!! @definitelytyped/expect: TypeScript@tsconfig.dom.json compile error: 
+!!!                        : Cannot find name 'WeakSet'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.

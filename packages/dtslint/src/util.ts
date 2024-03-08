@@ -1,6 +1,6 @@
 import { createGitHubStringSetGetter, joinPaths } from "@definitelytyped/utils";
 import fs from "fs";
-import { basename, dirname, join } from "path";
+import { basename, dirname } from "path";
 import stripJsonComments = require("strip-json-comments");
 import * as ts from "typescript";
 
@@ -19,15 +19,14 @@ export function readJson(path: string) {
   return JSON.parse(stripJsonComments(text));
 }
 
-export function getCompilerOptions(dirPath: string): {
+export function getCompilerOptions(tsconfigPath: string): {
   compilerOptions: ts.CompilerOptions;
   files?: string[];
   includes?: string[];
   excludes?: string[];
 } {
-  const tsconfigPath = join(dirPath, "tsconfig.json");
   if (!fs.existsSync(tsconfigPath)) {
-    throw new Error(`Need a 'tsconfig.json' file in ${dirPath}`);
+    throw new Error(`${tsconfigPath} does not exist`);
   }
   return readJson(tsconfigPath) as {
     compilerOptions: ts.CompilerOptions;

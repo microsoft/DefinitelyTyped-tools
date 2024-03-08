@@ -1,0 +1,19 @@
+types/expect-tsconfigs/index.d.ts
+  1:23  error  TypeScript@tsconfig.no-dom.json compile error: 
+Cannot find name 'HTMLElement'                                                                                                   @definitelytyped/expect
+  3:23  error  TypeScript@tsconfig.dom.json compile error: 
+Cannot find name 'WeakSet'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later  @definitelytyped/expect
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/expect-tsconfigs/index.d.ts ====
+
+    export const element: HTMLElement;
+                          ~~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@tsconfig.no-dom.json compile error: 
+!!!                        : Cannot find name 'HTMLElement'.
+    
+    export const weakSet: WeakSet<{}>;
+                          ~~~~~~~
+!!! @definitelytyped/expect: TypeScript@tsconfig.dom.json compile error: 
+!!!                        : Cannot find name 'WeakSet'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.

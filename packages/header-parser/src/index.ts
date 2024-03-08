@@ -14,6 +14,7 @@ export interface Header {
   readonly minimumTypeScriptVersion: AllTypeScriptVersion;
   readonly projects: readonly string[];
   readonly owners: readonly Owner[];
+  readonly tsconfigs: readonly string[];
 }
 // used in definitions-parser
 /** Standard package.json `contributor` */
@@ -68,6 +69,7 @@ export function validatePackageJson(
       case "nonNpm":
       case "nonNpmDescription":
       case "pnpm":
+      case "tsconfigs":
         break;
       case "typesVersions":
       case "types":
@@ -123,6 +125,7 @@ export function validatePackageJson(
   let minimumTypeScriptVersion: AllTypeScriptVersion = TypeScriptVersion.lowest;
   let projects: string[] = [];
   let owners: Owner[] = [];
+  let tsconfigs: string[] = [];
   // let files: string[] = [];
   const nameResult = validateName();
   const versionResult = validateVersion();
@@ -131,6 +134,7 @@ export function validatePackageJson(
   const projectsResult = validateProjects();
   const ownersResult = validateOwners();
   const licenseResult = getLicenseFromPackageJson(packageJson.license);
+  const tsconfigsResult = validateTsconfigs();
   if (typeof nameResult === "object") {
     errors.push(...nameResult.errors);
   } else {
@@ -165,6 +169,11 @@ export function validatePackageJson(
   if (Array.isArray(licenseResult)) {
     errors.push(...licenseResult);
   }
+  if ("errors" in tsconfigsResult) {
+    errors.push(...tsconfigsResult.errors);
+  } else {
+    tsconfigs = tsconfigsResult;
+  }
   if (errors.length) {
     return errors;
   } else {
@@ -176,6 +185,7 @@ export function validatePackageJson(
       minimumTypeScriptVersion,
       projects,
       owners,
+      tsconfigs,
     };
   }
 
@@ -282,6 +292,35 @@ export function validatePackageJson(
       } else {
         return packageJson.owners as Owner[];
       }
+    }
+    return { errors };
+  }
+  function validateTsconfigs(): string[] | { errors: string[] } {
+    const errors: string[] = [];
+    if (packageJson.tsconfigs === undefined) {
+      return ["tsconfig.json"];
+    }
+    if (!Array.isArray(packageJson.tsconfigs)) {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "tsconfigs": must be an array of strings that point to the tsconfig file(s).`,
+      );
+    } else {
+      for (const tsconfig of tsconfigs) {
+        if (typeof tsconfig !== "string") {
+          errors.push(
+            `${typesDirectoryName}'s package.json has bad "tsconfigs": must be an array of strings that point to the tsconfig file(s).`,
+          );
+          continue;
+        }
+        if (tsconfig === "tsconfig.json") continue;
+
+        if (!tsconfig.startsWith("tsconfig.") || !tsconfig.endsWith(".json")) {
+          errors.push(
+            `${typesDirectoryName}'s package.json has bad "tsconfigs": ${tsconfig} is not a valid tsconfig file name; should match "tsconfig.*.json"`,
+          );
+        }
+      }
+      return packageJson.tsconfigs;
     }
     return { errors };
   }

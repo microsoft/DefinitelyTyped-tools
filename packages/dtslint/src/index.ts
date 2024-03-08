@@ -195,6 +195,7 @@ async function runTests(
       const tsVersion = tsLocal ? "local" : TypeScriptVersion.latest;
       const testTypesResult = await testTypesVersion(
         dirPath,
+        packageJson.tsconfigs,
         tsVersion,
         tsVersion,
         expectOnly,
@@ -222,7 +223,15 @@ async function runTests(
         if (lows.length > 1) {
           console.log("testing from", low, "to", hi, "in", versionPath);
         }
-        const testTypesResult = await testTypesVersion(versionPath, low, hi, expectOnly, undefined, isLatest);
+        const testTypesResult = await testTypesVersion(
+          versionPath,
+          packageJson.tsconfigs,
+          low,
+          hi,
+          expectOnly,
+          undefined,
+          isLatest,
+        );
         errors.push(...testTypesResult.errors);
       }
     }
@@ -264,6 +273,7 @@ function next(v: TypeScriptVersion): TypeScriptVersion {
 
 async function testTypesVersion(
   dirPath: string,
+  tsconfigs: readonly string[],
   lowVersion: TsVersion,
   hiVersion: TsVersion,
   expectOnly: boolean,
@@ -273,10 +283,15 @@ async function testTypesVersion(
   const errors = [];
   const checkExpectedFilesResult = checkExpectedFiles(dirPath, isLatest);
   errors.push(...checkExpectedFilesResult.errors);
-  const tsconfigErrors = checkTsconfig(dirPath, getCompilerOptions(dirPath));
-  if (tsconfigErrors.length > 0) {
-    errors.push("\n\t* " + tsconfigErrors.join("\n\t* "));
+
+  for (const tsconfig of tsconfigs) {
+    const tsconfigPath = joinPaths(dirPath, tsconfig);
+    const tsconfigErrors = checkTsconfig(getCompilerOptions(tsconfigPath));
+    if (tsconfigErrors.length > 0) {
+      errors.push("\n\t* " + tsconfigPath + ":\n\t* " + tsconfigErrors.join("\n\t* "));
+    }
   }
+
   const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     errors.push(err);

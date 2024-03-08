@@ -23,6 +23,7 @@ export function createTypingsVersionRaw(
         minimumTypeScriptVersion: "2.3",
         nonNpm: false,
         projects: ["zombo.com"],
+        tsconfigs: ["tsconfig.json"],
       },
       typesVersions: [],
       license: License.MIT,

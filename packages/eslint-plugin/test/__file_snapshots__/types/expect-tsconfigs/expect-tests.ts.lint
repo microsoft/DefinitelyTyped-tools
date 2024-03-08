@@ -1,0 +1,17 @@
+types/expect-tsconfigs/expect-tests.ts
+  4:16  error  TypeScript@tsconfig.no-dom.json compile error: 
+Cannot find name 'HTMLElement'  @definitelytyped/expect
+
+✖ 1 problem (1 error, 0 warnings)
+
+==== types/expect-tsconfigs/expect-tests.ts ====
+
+    // eslint-disable-next-line @definitelytyped/no-relative-import-in-test
+    import * as expect from "./";
+    
+    const element: HTMLElement = expect.element;
+                   ~~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@tsconfig.no-dom.json compile error: 
+!!!                        : Cannot find name 'HTMLElement'.
+    
+    const weakSet: WeakSet<{}> = expect.weakSet;

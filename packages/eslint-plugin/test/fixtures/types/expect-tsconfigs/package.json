@@ -1,0 +1,6 @@
+{
+    "name": "@types/expect",
+    "version": "2.0.9999",
+    "owners": [],
+    "tsconfigs": ["tsconfig.dom.json", "tsconfig.no-dom.json"]
+}
