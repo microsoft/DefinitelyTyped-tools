@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.18
+
+### Patch Changes
+
+- e32483b: Retry and ignore npm errors
+
 ## 0.2.17
 
 ### Patch Changes
