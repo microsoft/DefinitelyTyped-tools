@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.2.17
+
+### Patch Changes
+
+- adfd769: Allow packages to test multiple tsconfigs by specifying list of tsconfigs in package.json
+- Updated dependencies [adfd769]
+  - @definitelytyped/header-parser@0.2.8
+
 ## 0.2.16
 
 ### Patch Changes

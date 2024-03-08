@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.2.8
+
+### Patch Changes
+
+- adfd769: Allow packages to test multiple tsconfigs by specifying list of tsconfigs in package.json
+
 ## 0.2.7
 
 ### Patch Changes
