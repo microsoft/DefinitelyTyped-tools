@@ -242,11 +242,18 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   let implementationPackage;
   const attw = await import("@arethetypeswrong/core");
   const typesPackageVersion = `${packageJson.libraryMajorVersion}.${packageJson.libraryMinorVersion}`;
-  const packageId = await tryPromise(
-    attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`, {
-      allowDeprecated: true,
-    }),
-  );
+  let packageId;
+  try {
+    packageId = await retryNon404Errors(
+      () => attw.resolveImplementationPackageForTypesPackage(packageJson.name, `${typesPackageVersion}.9999`, {
+        allowDeprecated: true,
+      }),
+    );
+  } catch (err: any) {
+    warnings.push(err?.message);
+    return { warnings, errors };
+  }
+
   const npmVersionExemptions = await getExpectedNpmVersionFailures();
   if (packageId) {
     const { packageName, packageVersion, tarballUrl } = packageId;
@@ -310,6 +317,23 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   };
 }
 
-function tryPromise<T>(promise: Promise<T>): Promise<T | undefined> {
-  return promise.catch(() => undefined);
+async function retryNon404Errors<T>(action: () => Promise<T>): Promise<T | undefined> {
+  let lastError: Error | undefined;
+  for (let i = 0; i < 3; i++) {
+    try {
+      return await action();
+    } catch (err: any) {
+      if ((err as attw.Npm404Error).kind !== "Npm404Error") {
+        lastError = err;
+        if (i < 2) await delay(1000);
+      } else {
+        return undefined;
+      }
+    }
+  }
+  throw new Error(`Skipping attw due to unexpected error fetching implementation package in multiple attempts. Last error: ${lastError?.stack ?? lastError?.message}`);
+  
+  function delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }

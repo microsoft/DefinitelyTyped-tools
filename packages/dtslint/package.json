@@ -22,8 +22,8 @@
     "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@arethetypeswrong/cli": "0.14.1",
-    "@arethetypeswrong/core": "0.14.1",
+    "@arethetypeswrong/cli": "0.15.1",
+    "@arethetypeswrong/core": "0.15.1",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-packages": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
