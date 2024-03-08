@@ -337,14 +337,3 @@ async function retryNon404Errors<T>(action: () => Promise<T>): Promise<T | undef
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
-
-checkNpmVersionAndGetMatchingImplementationPackage({
-  name: "@types/this-is-definitely-a-404",
-  libraryMajorVersion: 1,
-  libraryMinorVersion: 0,
-  minimumTypeScriptVersion: "4.0",
-  nonNpm: false,
-  owners: [],
-  projects: [],
-  tsconfigs: [],
-}, "blah");
