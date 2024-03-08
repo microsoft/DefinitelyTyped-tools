@@ -1,5 +1,12 @@
 # @definitelytyped/retag
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [adfd769]
+  - @definitelytyped/definitions-parser@0.1.11
+
 ## 0.1.10
 
 ### Patch Changes

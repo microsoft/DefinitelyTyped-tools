@@ -1,5 +1,15 @@
 # @definitelytyped/publisher
 
+## 0.1.11
+
+### Patch Changes
+
+- adfd769: Allow packages to test multiple tsconfigs by specifying list of tsconfigs in package.json
+- Updated dependencies [adfd769]
+  - @definitelytyped/definitions-parser@0.1.11
+  - @definitelytyped/header-parser@0.2.8
+  - @definitelytyped/retag@0.1.11
+
 ## 0.1.10
 
 ### Patch Changes

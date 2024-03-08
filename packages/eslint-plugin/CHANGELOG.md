@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.11
+
+### Patch Changes
+
+- adfd769: Allow packages to test multiple tsconfigs by specifying list of tsconfigs in package.json
+
 ## 0.1.10
 
 ### Patch Changes
