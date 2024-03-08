@@ -21,10 +21,12 @@ async function main() {
 
   try {
     let newComment;
+    let emoji = "✅";
     if (status === "fail") {
       newComment =
         `Hey @${userToTag}, it looks like the DT test run failed. Please check the log for more details.` +
         checkLogsMessage;
+      emoji = "❌";
     } else {
       const mainErrors: Errors = [];
       if (mainErrorsPath) {
@@ -44,6 +46,7 @@ async function main() {
       newComment = `Hey @${userToTag}, the results of running the DT tests are ready.\n`;
       const diffComment = getDiffComment(mainErrors, branchErrors);
       if (diffComment) {
+        emoji = "👀";
         newComment += `There were interesting changes:\n`;
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
           // hardlink directly into the output of this script
@@ -67,8 +70,6 @@ async function main() {
       repo: "TypeScript",
       body: newComment,
     });
-
-    const emoji = status !== "fail" ? "✅" : "👀";
 
     const toReplace = `<!--result-${distinctId}-->`;
     let posted = false;
