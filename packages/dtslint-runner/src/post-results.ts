@@ -17,7 +17,7 @@ async function main() {
   if (!status) throw new Error("Seventh argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
-  const checkLogsMessage = `\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
+  const checkLogsMessage = `\n\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
 
   try {
     let newComment;
@@ -43,23 +43,23 @@ async function main() {
         }
       }
 
-      newComment = `Hey @${userToTag}, the results of running the DT tests are ready.\n`;
+      newComment = `Hey @${userToTag}, the results of running the DT tests are ready.`;
       const diffComment = getDiffComment(mainErrors, branchErrors);
       if (diffComment) {
         emoji = "👀";
-        newComment += `There were interesting changes:\n`;
+        newComment += `\n\nThere were interesting changes:`;
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
           // hardlink directly into the output of this script
           const detailedLogUrl = `https://typescript.visualstudio.com/TypeScript/_build/results?buildId=${buildId}&view=logs&j=275f1d19-1bd8-5591-b06b-07d489ea915a&t=40b1ee41-44d6-5bba-aa04-4b76a5c732e5`;
-          newComment += `Changes are too big to display here, please check [the log](${detailedLogUrl}).`;
+          newComment += `\n\nChanges are too big to display here, please check [the log](${detailedLogUrl}).`;
           console.log("There were interesting changes:\n");
           console.log(diffComment);
           console.log("\n");
         } else {
-          newComment += diffComment;
+          newComment += "\n\n" + diffComment;
         }
       } else {
-        newComment += "Everything looks the same!";
+        newComment += "\n\nEverything looks the same!";
       }
       newComment += checkLogsMessage;
     }
