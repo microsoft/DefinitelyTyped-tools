@@ -82,6 +82,7 @@ export function checkTsconfig(config: Tsconfig): string[] {
       case "target":
       case "jsx":
       case "jsxFactory":
+      case "jsxImportSource":
       case "experimentalDecorators":
       case "noUnusedLocals":
       case "noUnusedParameters":
