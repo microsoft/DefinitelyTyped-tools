@@ -665,6 +665,7 @@ ember-qunit
 ember-resolver
 ember-source
 eris
+eslint-visitor-keys
 ethers
 eventemitter2
 eventemitter3
