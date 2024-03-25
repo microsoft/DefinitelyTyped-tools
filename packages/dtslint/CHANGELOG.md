@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.19
+
+### Patch Changes
+
+- 98f77bf: Allow the `jsxImportSource` compiler option.
+
 ## 0.2.18
 
 ### Patch Changes
