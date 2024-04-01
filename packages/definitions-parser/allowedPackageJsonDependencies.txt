@@ -749,6 +749,7 @@ meshoptimizer
 metascraper
 meteor-typings
 middy
+mime
 minipass
 moment
 moment-range
