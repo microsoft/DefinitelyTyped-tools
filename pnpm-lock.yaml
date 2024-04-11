@@ -407,8 +407,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       tar:
-        specifier: ^6.2.0
-        version: 6.2.0
+        specifier: ^6.2.1
+        version: 6.2.1
       tar-stream:
         specifier: ^3.1.6
         version: 3.1.6
@@ -2828,7 +2828,7 @@ packages:
       minipass-pipeline: 1.2.4
       p-map: 4.0.0
       ssri: 10.0.5
-      tar: 6.2.0
+      tar: 6.2.1
       unique-filename: 3.0.0
     dev: false
 
@@ -5593,7 +5593,7 @@ packages:
       nopt: 7.2.0
       proc-log: 3.0.0
       semver: 7.5.4
-      tar: 6.2.0
+      tar: 6.2.1
       which: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -5915,7 +5915,7 @@ packages:
       read-package-json-fast: 3.0.2
       sigstore: 2.2.0
       ssri: 10.0.5
-      tar: 6.2.0
+      tar: 6.2.1
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -6801,8 +6801,8 @@ packages:
       streamx: 2.15.5
     dev: false
 
-  /tar@6.2.0:
-    resolution: {integrity: sha512-/Wo7DcT0u5HUV486xg675HtjNd3BXZ6xDbzsCUZPt5iw8bTQ63bP0Raut3mvro9u+CUyq7YQd8Cx55fsZXxqLQ==}
+  /tar@6.2.1:
+    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
     dependencies:
       chownr: 2.0.0
