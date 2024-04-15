@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.2
+
+### Patch Changes
+
+- 7fcbdac: Fix invalid generated version
+
 ## 0.10.1
 
 ### Patch Changes
