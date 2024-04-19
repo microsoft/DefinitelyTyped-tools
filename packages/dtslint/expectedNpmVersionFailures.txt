@@ -335,7 +335,6 @@ promise-sftp
 pump
 purl
 q-retry
-quill
 qunit/v1
 radius
 random-string
