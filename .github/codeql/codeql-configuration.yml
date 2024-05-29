@@ -1,4 +1,8 @@
-name : CodeQL Configuration
+name: CodeQL Configuration
 
-paths:
-  - './packages/*/src' 
+paths-ignore:
+  - '*.d.ts'
+  - 'packages/publisher/output'
+  - '**/testsource/**'
+  - '**/fixtures/**'
+  - 'packages/eslint-plugin/test/fixtures'
