@@ -14,7 +14,7 @@
     "ci:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.2",
+    "@changesets/cli": "^2.27.5",
     "@types/jest": "^29.5.11",
     "@types/node": "^18.19.7",
     "@types/yargs": "^17.0.32",
