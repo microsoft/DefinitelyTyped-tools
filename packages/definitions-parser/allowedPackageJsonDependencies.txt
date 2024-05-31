@@ -812,6 +812,7 @@ react-dnd
 react-dnd-touch-backend
 react-draggable
 react-final-form
+react-hooks-compose
 react-intl
 react-map-gl
 react-native
