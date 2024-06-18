@@ -58,6 +58,7 @@ describe("tagsToUpdate", () => {
       "ts5.3",
       "ts5.4",
       "ts5.5",
+      "ts5.6",
       "latest",
     ]);
   });
