@@ -9,6 +9,8 @@ expect.foo;
 // $ExpectType 1234
 expect.foo;
 
+//    $ExpectType     1234   
+expect.foo;
 
 // $ExpectType NotRightAtAll
 expect.foo;
