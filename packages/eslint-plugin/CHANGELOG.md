@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.13
+
+### Patch Changes
+
+- c3d86f3: Fix ExpectType with extra whitespace
+
 ## 0.1.12
 
 ### Patch Changes

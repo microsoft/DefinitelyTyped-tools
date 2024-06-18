@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.2
+
+### Patch Changes
+
+- b2c15e6: Add TypeScript 5.6
+- Updated dependencies [b2c15e6]
+  - @definitelytyped/typescript-versions@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
