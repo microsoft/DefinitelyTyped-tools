@@ -3,12 +3,12 @@ types/expect/expect-tests.ts
   number
 got:
   1234                                                                    @definitelytyped/expect
-  14:1  error  TypeScript expected type to be:
+  16:1  error  TypeScript expected type to be:
   NotRightAtAll
 got:
   1234                                                             @definitelytyped/expect
-  45:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
-  49:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  47:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  51:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
 
 ✖ 4 problems (4 errors, 0 warnings)
 
@@ -30,6 +30,8 @@ got:
     // $ExpectType 1234
     expect.foo;
     
+    //    $ExpectType     1234   
+    expect.foo;
     
     // $ExpectType NotRightAtAll
     expect.foo;
