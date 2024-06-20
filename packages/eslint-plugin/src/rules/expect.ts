@@ -401,7 +401,7 @@ function parseAssertions(sourceFile: ts.SourceFile): Assertions {
   const duplicates: number[] = [];
 
   const { text } = sourceFile;
-  const commentRegexp = /\/\/\s*\$ExpectType\s+(.*)/g;
+  const commentRegexp = /\/\/(.*)/g;
   const lineStarts = sourceFile.getLineStarts();
   let curLine = 0;
 
@@ -410,8 +410,13 @@ function parseAssertions(sourceFile: ts.SourceFile): Assertions {
     if (commentMatch === null) {
       break;
     }
+    // Match on the contents of that comment so we do nothing in a commented-out assertion,
+    // i.e. `// foo; // $ExpectType number`
+    if (!commentMatch[1].startsWith(" $ExpectType ")) {
+      continue;
+    }
     const line = getLine(commentMatch.index);
-    const expectedType = commentMatch[1].trim();
+    const expectedType = commentMatch[1].slice(" $ExpectType ".length);
     // Don't bother with the assertion if there are 2 assertions on 1 line. Just fail for the duplicate.
     if (typeAssertions.delete(line)) {
       duplicates.push(line);
