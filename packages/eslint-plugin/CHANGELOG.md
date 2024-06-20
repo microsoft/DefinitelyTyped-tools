@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.14
+
+### Patch Changes
+
+- 5476570: Revert ExpectType bugfix
+
 ## 0.1.13
 
 ### Patch Changes
