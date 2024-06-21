@@ -12,8 +12,28 @@ expect.foo;
 //    $ExpectType     1234   
 expect.foo;
 
+//$ExpectType     1234   
+expect.foo;
+
+expect.foo; // $ExpectType 1234
+
+const foo = expect.foo;
+foo; // $ExpectType 1234
+
 // $ExpectType NotRightAtAll
 expect.foo;
+
+expect.foo; // $ExpectType NotRightAtAll
+
+foo; // $ExpectType NotRightAtAll
+
+// These should not be matched.
+// // $ExpectType NotRightAtAll
+expect.foo;
+
+expect.foo; // // $ExpectType NotRightAtAll
+
+expect.foo; /// $ExpectType NotRightAtAll
 
 
 // $ExpectType string | number | undefined
