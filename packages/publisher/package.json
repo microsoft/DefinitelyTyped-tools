@@ -13,7 +13,7 @@
     "longjohn": "^0.2.12",
     "pacote": "^17.0.5",
     "semver": "^7.5.4",
-    "typescript": "^5.4.2",
+    "typescript": "^5.5.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
