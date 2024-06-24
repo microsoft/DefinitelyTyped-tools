@@ -28,12 +28,12 @@
     "@definitelytyped/typescript-packages": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "@typescript-eslint/types": "^6.19.0",
-    "@typescript-eslint/typescript-estree": "^6.19.0",
-    "@typescript-eslint/utils": "^6.19.0",
-    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
+    "@typescript-eslint/types": "^7.14.1",
+    "@typescript-eslint/typescript-estree": "^7.14.1",
+    "@typescript-eslint/utils": "^7.14.1",
+    "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "semver": "^7.5.4",
     "strip-json-comments": "^3.1.1"
@@ -45,7 +45,7 @@
     "@types/eslint": "^8.56.2",
     "@types/semver": "^7.5.5",
     "@types/strip-json-comments": "^3.0.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": ">=18.18.0"

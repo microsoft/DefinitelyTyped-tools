@@ -23,12 +23,12 @@
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/types": "^6.19.0",
-    "@typescript-eslint/utils": "^6.19.0"
+    "@typescript-eslint/types": "^7.14.1",
+    "@typescript-eslint/utils": "^7.14.1"
   },
   "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
     "eslint": "^8.40.0",
     "eslint-plugin-jsdoc": "^44.0.0",
     "typescript": ">= 3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev || >= 3.8.0-dev || >= 3.9.0-dev || >= 4.0.0-dev || >=5.0.0-dev"
@@ -39,7 +39,7 @@
     "glob": "^10.3.10",
     "jest-file-snapshot": "^0.5.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.4.2"
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": ">=18.18.0"
