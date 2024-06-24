@@ -3,14 +3,22 @@ types/expect/expect-tests.ts
   number
 got:
   1234                                                                    @definitelytyped/expect
-  14:1  error  TypeScript expected type to be:
+  24:1  error  TypeScript expected type to be:
   NotRightAtAll
 got:
   1234                                                             @definitelytyped/expect
-  45:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
-  49:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  26:1  error  TypeScript expected type to be:
+  NotRightAtAll
+got:
+  1234                                                             @definitelytyped/expect
+  28:1  error  TypeScript expected type to be:
+  NotRightAtAll
+got:
+  1234                                                             @definitelytyped/expect
+  67:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
+  71:1  error  Cannot match a node to this assertion. If this is a multiline function call, ensure the assertion is on the line above  @definitelytyped/expect
 
-✖ 4 problems (4 errors, 0 warnings)
+✖ 6 problems (6 errors, 0 warnings)
 
 ==== types/expect/expect-tests.ts ====
 
@@ -30,6 +38,16 @@ got:
     // $ExpectType 1234
     expect.foo;
     
+    //    $ExpectType     1234   
+    expect.foo;
+    
+    //$ExpectType     1234   
+    expect.foo;
+    
+    expect.foo; // $ExpectType 1234
+    
+    const foo = expect.foo;
+    foo; // $ExpectType 1234
     
     // $ExpectType NotRightAtAll
     expect.foo;
@@ -38,6 +56,28 @@ got:
 !!!                        :   NotRightAtAll
 !!!                        : got:
 !!!                        :   1234
+    
+    expect.foo; // $ExpectType NotRightAtAll
+    ~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript expected type to be:
+!!!                        :   NotRightAtAll
+!!!                        : got:
+!!!                        :   1234
+    
+    foo; // $ExpectType NotRightAtAll
+    ~~~
+!!! @definitelytyped/expect: TypeScript expected type to be:
+!!!                        :   NotRightAtAll
+!!!                        : got:
+!!!                        :   1234
+    
+    // These should not be matched.
+    // // $ExpectType NotRightAtAll
+    expect.foo;
+    
+    expect.foo; // // $ExpectType NotRightAtAll
+    
+    expect.foo; /// $ExpectType NotRightAtAll
     
     
     // $ExpectType string | number | undefined

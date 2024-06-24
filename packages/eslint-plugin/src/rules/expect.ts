@@ -239,6 +239,8 @@ const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
   end: { line: 0, column: 0 },
 };
 
+const expectTypeToken = "$ExpectType"
+
 function walk(
   getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
   report: Reporter,
@@ -285,7 +287,7 @@ function walk(
     }
   }
 
-  if (sourceFile.isDeclarationFile || !sourceFile.text.includes("$ExpectType")) {
+  if (sourceFile.isDeclarationFile || !sourceFile.text.includes(expectTypeToken)) {
     // Normal file.
     return;
   }
@@ -401,7 +403,7 @@ function parseAssertions(sourceFile: ts.SourceFile): Assertions {
   const duplicates: number[] = [];
 
   const { text } = sourceFile;
-  const commentRegexp = /\/\/(.*)/g;
+  const commentRegexp = /^(.*?)\/\/(.*)$/gm;
   const lineStarts = sourceFile.getLineStarts();
   let curLine = 0;
 
@@ -410,13 +412,12 @@ function parseAssertions(sourceFile: ts.SourceFile): Assertions {
     if (commentMatch === null) {
       break;
     }
-    // Match on the contents of that comment so we do nothing in a commented-out assertion,
-    // i.e. `// foo; // $ExpectType number`
-    if (!commentMatch[1].startsWith(" $ExpectType ")) {
+    const comment = commentMatch[2].trim();
+    if (!comment.startsWith(expectTypeToken)) {
       continue;
     }
-    const line = getLine(commentMatch.index);
-    const expectedType = commentMatch[1].slice(" $ExpectType ".length);
+    const line = getLine(commentMatch.index + commentMatch[1].length);
+    const expectedType = comment.slice(expectTypeToken.length).trim();
     // Don't bother with the assertion if there are 2 assertions on 1 line. Just fail for the duplicate.
     if (typeAssertions.delete(line)) {
       duplicates.push(line);
