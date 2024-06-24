@@ -239,7 +239,7 @@ const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
   end: { line: 0, column: 0 },
 };
 
-const expectTypeToken = "$ExpectType"
+const expectTypeToken = "$ExpectType";
 
 function walk(
   getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
