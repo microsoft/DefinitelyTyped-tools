@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.7
+
+### Patch Changes
+
+- 2a6318d: Bump TypeScript to 5.5
+
 ## 0.1.6
 
 ### Patch Changes

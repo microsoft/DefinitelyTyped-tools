@@ -1,5 +1,12 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.3
+
+### Patch Changes
+
+- 2c5e174: Drop support for TypeScript 4.7, support TypeScript 5.5
+- 2a6318d: Bump TypeScript to 5.5
+
 ## 0.1.2
 
 ### Patch Changes
