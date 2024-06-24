@@ -112,10 +112,10 @@ describe("makeTypesVersionsForPackageJson", () => {
     });
   });
   it("orders versions old to new  with old-to-new input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.7", "5.0", "5.2"]), undefined, 4)).toEqual(`{
-    "<=4.7": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["4.8", "5.0", "5.2"]), undefined, 4)).toEqual(`{
+    "<=4.8": {
         "*": [
-            "ts4.7/*"
+            "ts4.8/*"
         ]
     },
     "<=5.0": {
@@ -131,10 +131,10 @@ describe("makeTypesVersionsForPackageJson", () => {
 }`);
   });
   it("orders versions old to new  with new-to-old input", () => {
-    expect(JSON.stringify(makeTypesVersionsForPackageJson(["5.2", "5.0", "4.7"]), undefined, 4)).toEqual(`{
-    "<=4.7": {
+    expect(JSON.stringify(makeTypesVersionsForPackageJson(["5.2", "5.0", "4.8"]), undefined, 4)).toEqual(`{
+    "<=4.8": {
         "*": [
-            "ts4.7/*"
+            "ts4.8/*"
         ]
     },
     "<=5.0": {
