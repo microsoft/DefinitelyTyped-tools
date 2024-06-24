@@ -1,5 +1,17 @@
 # @definitelytyped/dtslint
 
+## 0.2.22
+
+### Patch Changes
+
+- 2a6318d: Bump TypeScript to 5.5
+- Updated dependencies [2c5e174]
+- Updated dependencies [2a6318d]
+  - @definitelytyped/typescript-packages@0.1.3
+  - @definitelytyped/typescript-versions@0.1.3
+  - @definitelytyped/header-parser@0.2.11
+  - @definitelytyped/utils@0.1.7
+
 ## 0.2.21
 
 ### Patch Changes

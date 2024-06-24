@@ -1,5 +1,15 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.15
+
+### Patch Changes
+
+- 6dd1778: Re-fix ExpectType
+- 2a6318d: Bump typescript-eslint to v7
+- 2a6318d: Bump TypeScript to 5.5
+- Updated dependencies [2a6318d]
+  - @definitelytyped/utils@0.1.7
+
 ## 0.1.14
 
 ### Patch Changes

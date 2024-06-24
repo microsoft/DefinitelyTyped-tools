@@ -1,5 +1,14 @@
 # @definitelytyped/dts-critic
 
+## 0.1.12
+
+### Patch Changes
+
+- 2a6318d: Bump TypeScript to 5.5
+- Updated dependencies [2c5e174]
+- Updated dependencies [2a6318d]
+  - @definitelytyped/header-parser@0.2.11
+
 ## 0.1.11
 
 ### Patch Changes
