@@ -18,7 +18,7 @@ Unused '@ts-expect-error' directive                                             
 ==== types/expect-error-range/expect-error-range-tests.ts ====
 
     // In TypeScript <5.5, elem will have type "string",
-    // but 5.5 it will be "string | number".
+    // but 5.5 it will be "string | undefined".
     const elem = ["value", undefined].filter(x => x != null)[0];
     
     
