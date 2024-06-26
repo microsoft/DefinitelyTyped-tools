@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.16
+
+### Patch Changes
+
+- 8100279: Support ts-expect-error for specific version ranges
+
 ## 0.1.15
 
 ### Patch Changes
