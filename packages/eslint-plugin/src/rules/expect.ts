@@ -242,7 +242,7 @@ const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
 
 const expectTypeToken = "$ExpectType";
 
-// Based on scanner.ts
+// Based on TypeScript's scanner.ts
 const expectErrorSingleLine = /^\/\/\/?\s*@ts-expect-error\s+(.*)/
 const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*)/;
 
