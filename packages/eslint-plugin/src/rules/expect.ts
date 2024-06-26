@@ -4,6 +4,7 @@ import type * as ts from "typescript";
 import path from "path";
 import fs from "fs";
 import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
+import * as semver from "semver";
 
 type TSModule = typeof ts;
 
@@ -241,6 +242,10 @@ const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
 
 const expectTypeToken = "$ExpectType";
 
+// Based on scanner.ts
+const expectErrorSingleLine = /^\/\/\/?\s*@ts-expect-error\s+(.*)/
+const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*)/;
+
 function walk(
   getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
   report: Reporter,
@@ -259,6 +264,19 @@ function walk(
     // Don't care about emit errors.
     const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
     for (const diagnostic of diagnostics) {
+      if (diagnostic.code === 2578) {
+        // This is a ts-expect-error; parse "// @ts-expect-error <range>" and ignore when the current version is outside that range.
+        const text = sourceFile.text.slice(diagnostic.start!, diagnostic.start! + diagnostic.length!);
+        const match = text.match(expectErrorSingleLine) || text.match(expectErrorMultiLine);
+        if (match) {
+          try {
+            if (!semver.satisfies(versionName, match[1].trim(), { loose: true })) {
+              continue;
+            }
+          } catch {}
+        }
+      }
+
       addDiagnosticFailure(diagnostic);
     }
 
