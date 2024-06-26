@@ -1,0 +1,39 @@
+types/expect-error-range/expect-error-range-tests.ts
+  7:7  error  TypeScript@5.4 compile error: 
+Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'  @definitelytyped/expect
+  9:7  error  TypeScript@5.4, 5.5 compile error: 
+Property 'trim' does not exist on type 'never'                                                                  @definitelytyped/expect
+
+✖ 2 problems (2 errors, 0 warnings)
+
+==== types/expect-error-range/expect-error-range-tests.ts ====
+
+    const elem = ["value", undefined].filter(x => x != null)[0];
+    declare const test: typeof elem & undefined
+    
+    
+    // These should give expect errors:
+    
+    const isStringNoIgnore: string = elem;
+          ~~~~~~~~~~~~~~~~
+!!! @definitelytyped/expect: TypeScript@5.4 compile error: 
+!!!                        : Type 'string | undefined' is not assignable to type 'string'.
+!!!                        :   Type 'undefined' is not assignable to type 'string'.
+    
+    test?.trim();
+          ~~~~
+!!! @definitelytyped/expect: TypeScript@5.4, 5.5 compile error: 
+!!!                        : Property 'trim' does not exist on type 'never'.
+    
+    
+    
+    // These should give expect these should not:
+    
+    
+    // @ts-expect-error <5.5
+    const isStringIgnore: string = elem;
+    
+    
+    // @ts-expect-error >=5.5
+    test?.trim();

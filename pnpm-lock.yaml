@@ -269,6 +269,12 @@ importers:
       typescript:
         specifier: ^5.5.2
         version: 5.5.2
+      typescript-5.4:
+        specifier: npm:typescript@~5.4.0-0
+        version: /typescript@5.4.2
+      typescript-5.5:
+        specifier: npm:typescript@~5.5.0-0
+        version: /typescript@5.5.2
 
   packages/header-parser:
     dependencies:
@@ -6906,7 +6912,6 @@ packages:
     resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: false
 
   /typescript@5.5.2:
     resolution: {integrity: sha512-NcRtPEOsPFFWjobJEtfihkLCZCXZt/os3zf8nTxjVH3RvTSxjrCamJpbExGvYOF+tFHc3pA65qpdwPbzjohhew==}
