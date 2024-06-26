@@ -269,12 +269,17 @@ function walk(
         const text = sourceFile.text.slice(diagnostic.start!, diagnostic.start! + diagnostic.length!);
         const match = text.match(expectErrorSingleLine) || text.match(expectErrorMultiLine);
         if (match) {
+          let range: semver.Range | undefined;
           try {
-            if (!semver.satisfies(versionName, match[1].trim(), { loose: true })) {
-              continue;
-            }
+            range = new semver.Range(match[1].trim())
           } catch {
             // Ignore any parsing errors.
+          }
+
+          if (range) {
+            if (!semver.satisfies(versionName, range, { loose: true })) {
+              continue;
+            }
           }
         }
       }
