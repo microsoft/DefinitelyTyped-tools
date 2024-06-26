@@ -273,7 +273,9 @@ function walk(
             if (!semver.satisfies(versionName, match[1].trim(), { loose: true })) {
               continue;
             }
-          } catch {}
+          } catch {
+            // Ignore any parsing errors.
+          }
         }
       }
 
