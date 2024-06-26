@@ -1,0 +1,5 @@
+No errors
+
+==== types/expect-error-range/index.d.ts ====
+
+    export const value: number;

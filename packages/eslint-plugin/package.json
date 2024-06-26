@@ -24,7 +24,8 @@
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
     "@typescript-eslint/types": "^7.14.1",
-    "@typescript-eslint/utils": "^7.14.1"
+    "@typescript-eslint/utils": "^7.14.1",
+    "semver": "^7.5.4"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.14.1",
@@ -36,10 +37,13 @@
   "devDependencies": {
     "@definitelytyped/eslint-plugin": "link:",
     "@types/eslint": "^8.56.2",
+    "@types/semver": "^7.5.6",
     "glob": "^10.3.10",
     "jest-file-snapshot": "^0.5.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "typescript-5.4": "npm:typescript@~5.4.0-0",
+    "typescript-5.5": "npm:typescript@~5.5.0-0"
   },
   "engines": {
     "node": ">=18.18.0"
