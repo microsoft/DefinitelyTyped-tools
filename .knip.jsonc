@@ -76,6 +76,10 @@
       "entry": ["src/index.ts", "src/types/*.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": ["@qiwi/npm-types"]
+    },
+    "packages/mergebot": {
+      "entry": ["src/index.ts"],
+      "project": "**/*.ts"
     }
   },
   "ignore": ["**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],

@@ -16,9 +16,10 @@ To ensure we can handle timeouts on older PRs, there is a [GitHub Action](https:
 ### Tasks for Moving to DT-tools
 
 1. Update local tsconfig to use ../tsconfig-base
+1. Update .knip settings with the actual entrypoint(s).
 2. Check out the publish-on-push action Jake talked about.
 3. Make sure name change from dt-mergebot to mergebot happens everywhere.
-4. Azure sucks.
+4. Log into Azure and make sure it's expecting uploads from the new repo.
 5. Set up base *test* tsconfig.
 
 # Setup
