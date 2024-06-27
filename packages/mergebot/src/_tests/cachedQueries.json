@@ -1,5 +1,5 @@
 {
-  "comment": "Generate & update with `npm run update-test-data`",
+  "comment": "Generate & update with `pnpm run update-test-data`",
   "getProjectBoardColumns": [
     {
       "__typename": "ProjectColumn",

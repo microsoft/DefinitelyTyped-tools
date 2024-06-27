@@ -59,15 +59,15 @@
     }
   },
   "scripts": {
-    "prestart": "npm run build",
-    "prepublishOnly": "npm run build",
+    "prestart": "pnpm run build",
+    "prepublishOnly": "pnpm run build",
     "build": "tsc",
     "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
     "watch": "tsc --watch",
     "graphql-schema": "apollo client:codegen schema --target typescript --globalTypesFile=src/queries/schema/graphql-global-types.ts",
-    "create-fixture": "npm run build && node dist/commands/create-fixture.js",
-    "update-test-data": "npm run build && node dist/commands/update-test-data.js",
-    "update-all-fixtures": "npm run build && node dist/commands/update-all-fixtures.js",
+    "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
+    "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
+    "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
     "start": "func start",
     "lint": "eslint --report-unused-disable-directives .",
     "test": "jest"
@@ -79,5 +79,5 @@
       "/dist/"
     ]
   },
-  "packageManager": "npm@10.7.0+sha256.f443ed4364ea11ac5cf7cae7fb4731278c64dd6839093f8a46eabde0430e0fcd"
+  "packageManager": "pnpm@8.15.8+sha256.691fe176eea9a8a80df20e4976f3dfb44a04841ceb885638fe2a26174f81e65e"
 }

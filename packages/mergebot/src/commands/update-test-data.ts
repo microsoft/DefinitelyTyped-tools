@@ -18,7 +18,7 @@ async function main() {
 
     await fs.promises.writeFile(
         dataPath,
-        JSON.stringify({ comment: "Generate & update with `npm run update-test-data`", ...data },
+        JSON.stringify({ comment: "Generate & update with `pnpm run update-test-data`", ...data },
                        undefined, 2)
         + "\n",
         "utf8");
