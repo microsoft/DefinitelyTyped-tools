@@ -1,0 +1,287 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDQ3MDM5ODI4",
+        "title": "[arcgis-js-api] Update for version 3.33",
+        "lastEditedAt": null,
+        "author": {
+          "login": "dasa",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-07-09T19:02:55Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 45982,
+        "state": "OPEN",
+        "headRefOid": "95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T19:02:59Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T19:03:00Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T19:06:21Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T19:11:16Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T00:21:29Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T04:08:12Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T04:17:25Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T18:54:47Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "bsvensson",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386",
+                "abbreviatedOid": "95c1b7b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-09T20:20:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45982#pullrequestreview-445940155",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386/checks?check_suite_id=897334088",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386/checks?check_suite_id=897334088",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386/checks?check_suite_id=897335079",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386/checks?check_suite_id=897335079",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-09T18:48:57Z",
+                "committedDate": "2020-07-09T18:48:57Z",
+                "pushedDate": "2020-07-09T18:54:34Z",
+                "abbreviatedOid": "95c1b7b",
+                "oid": "95c1b7b945a751cb9a8d17ebc4a83b2d12fd4386",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NjI5ODI5Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@dasa Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n This PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Have you considered [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing) to cover the change you're making? Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [arcgis-js-api on npm](https://www.npmjs.com/package/arcgis-js-api)\n- [arcgis-js-api on unpkg](https://unpkg.com/browse/arcgis-js-api@latest//)\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-09T19:02:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NjI5ODMwNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @Esri @bsvensson - please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45982/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-07-09T19:03:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NjMwMTg0OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-07-09T19:11:16.036Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                | #45982                                                                                                                                     | diff  |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                       |                                                                                                                                            |       |\n| Memory usage (MiB)                                                                        | 123.9                                                                                                                                 | 123.8                                                                                                                                      | -0.1% |\n| Type count                                                                                | 19595                                                                                                                                 | 19595                                                                                                                                      | 0%    |\n| Assignability cache size                                                                  | 5917                                                                                                                                  | 5917                                                                                                                                       | 0%    |\n|                                                                                           |                                                                                                                                       |                                                                                                                                            |       |\n| **Language service**                                                                      |                                                                                                                                       |                                                                                                                                            |       |\n| Samples taken                                                                             | 25                                                                                                                                    | 25                                                                                                                                         | 0%    |\n| Identifiers in tests                                                                      | 25                                                                                                                                    | 25                                                                                                                                         | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                       |                                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 979.8                                                                                                                                 | 970.9                                                                                                                                      | -0.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 6.5%                                                                                                                                  | 5.7%                                                                                                                                       |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1131.6                                                                                                                                | 1075.5                                                                                                                                     | -5.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [zoom](/DefinitelyTyped/DefinitelyTyped/blob/ef5026e98ddd9625371722672a27a6299eff63be/types/arcgis-js-api/arcgis-js-api-tests.ts#L25) | [zoom](/DefinitelyTyped/DefinitelyTyped/blob/35ab48d2365350ab3bfb67ac0a1ac06449589939/types/arcgis-js-api/arcgis-js-api-tests.ts#L25)      |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                       |                                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 982.6                                                                                                                                 | 978.7                                                                                                                                      | -0.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 6.0%                                                                                                                                  | 6.1%                                                                                                                                       | +2.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1078.9                                                                                                                                | 1052.5                                                                                                                                     | -2.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [map](/DefinitelyTyped/DefinitelyTyped/blob/ef5026e98ddd9625371722672a27a6299eff63be/types/arcgis-js-api/arcgis-js-api-tests.ts#L24)  | [container](/DefinitelyTyped/DefinitelyTyped/blob/35ab48d2365350ab3bfb67ac0a1ac06449589939/types/arcgis-js-api/arcgis-js-api-tests.ts#L23) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-07-09T19:11:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NzExMTU5OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @dasa — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45982/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2020-07-11T18:54:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/arcgis-js-api/v3/index.d.ts",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 1
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDE1OTMyNzc=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

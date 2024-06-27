@@ -1,0 +1,32 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDcwNzA5MDA1OQ==",
+        "body": "@martin-badin Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `jquery` — [on npm](https://www.npmjs.com/package/jquery), [on unpkg](https://unpkg.com/browse/jquery@latest/) (author is owner)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=48708&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by a DT maintainer\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 28 days — it is considered nearly abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwxNjA4NjM0NDg0",
+          "MDU6TGFiZWw2NDQxMTYxNzA="
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NTAxNTQ0NDEz"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDcyNjMyMDI0OQ==",
+        "body": "@martin-badin I haven't seen any activity on this PR in more than three weeks, and it still has problems that prevent it from being merged. The PR will be closed on Nov 14th (in a week) if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2020-10-15-->"
+      }
+    }
+  }
+]

@@ -1,0 +1,347 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5lb7_c",
+        "title": "[@types/express-serve-static-core] Fix `Request.accepts()` example",
+        "createdAt": "2024-01-30T11:15:06Z",
+        "author": {
+          "login": "krzysdz",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "The CI failed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 68381,
+        "state": "OPEN",
+        "headRefOid": "61d76e05e8dfcd20fef3ba19b9b571e2420c8485",
+        "changedFiles": 1,
+        "additions": 1,
+        "deletions": 1,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "61d76e05e8dfcd20fef3ba19b9b571e2420c8485",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "f58f90046075bcc38a262e1462fb06b8a22ab886",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-30T11:36:02Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "createdAt": "2024-01-31T08:53:20Z",
+              "__typename": "ReopenedEvent"
+            },
+            {
+              "createdAt": "2024-01-31T09:19:27Z",
+              "__typename": "ReopenedEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 20258158562,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20258158562",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20258158562",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-30T11:15:11Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20258162835,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20258162835",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20258162835",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20240131.21 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-30T11:15:18Z",
+                      "workflowRun": null,
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20293722453,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20293722453",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20293722453",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-31T08:53:25Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20294561212,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20294561212",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20294561212",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-31T09:19:32Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-01-30T11:04:59Z",
+                "committedDate": "2024-01-30T11:04:59Z",
+                "pushedDate": null,
+                "oid": "61d76e05e8dfcd20fef3ba19b9b571e2420c8485",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM5yPU4k",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1916620324,
+              "body": "@krzysdz Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `express-serve-static-core` — [on npm](https://www.npmjs.com/package/express-serve-static-core), [on unpkg](https://unpkg.com/browse/express-serve-static-core@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68381&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-01-30T11:15:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yPU5a",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1916620378,
+              "body": "Hey @krzysdz,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2024-01-30T11:15:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yPU5n",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1916620391,
+              "body": "🔔 @borisyankov @micksatana @samijaber @JoseLion @dwrss @andoshin11 — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68381/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-01-30T11:15:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yPc8T",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1916653331,
+              "body": "@krzysdz The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/61d76e05e8dfcd20fef3ba19b9b571e2420c8485/checks?check_suite_id=20258158562).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds which are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-61d76e0-->",
+              "createdAt": "2024-01-30T11:36:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yPgDJ",
+              "author": {
+                "login": "krzysdz",
+                "__typename": "User"
+              },
+              "databaseId": 1916666057,
+              "body": "It looks like the tests fail due to issues with `cassandra-store` (no tests) and `connect-mongodb-session` (`\"exclude\"` in tsconfig).",
+              "createdAt": "2024-01-30T11:44:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "types/express-serve-static-core/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgV3bGY",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

@@ -14,6 +14,7 @@
     { "path": "packages/typescript-packages" },
     { "path": "packages/utils" },
     { "path": "packages/retag" },
+    { "path": "packages/mergebot" },
 
     { "path": "packages/definitions-parser/test" },
     { "path": "packages/dts-gen/test" },
@@ -23,6 +24,7 @@
     { "path": "packages/publisher/test" },
     { "path": "packages/typescript-versions/test" },
     { "path": "packages/typescript-packages/test" },
-    { "path": "packages/utils/test" }
+    { "path": "packages/utils/test" },
+    { "path": "packages/mergebot/test" }
   ]
 }

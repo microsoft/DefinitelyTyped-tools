@@ -1,0 +1,770 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0",
+        "title": "Update typings for AngularJS 1.8.1 (packages: `angular`, `angular-sanitize`)",
+        "createdAt": "2020-10-09T16:07:46Z",
+        "author": {
+          "login": "mgol",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 48652,
+        "state": "OPEN",
+        "headRefOid": "06d8d678f1fc73f43ee6e8efe11230c4db92cc83",
+        "changedFiles": 3,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-09T16:08:22Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-09T16:08:23Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-09T16:14:18Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-09T16:14:57Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-09T18:18:39Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-11T11:39:04Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-11T15:57:16Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T08:56:07Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T08:56:09Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-13T08:30:40Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-13T08:30:42Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-13T08:32:25Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-13T08:35:37Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-13T08:37:11Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-16T18:15:49Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-16T18:15:57Z",
+              "projectColumnName": "Waiting for Code Reviews"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-16T18:16:32Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-26T04:21:14Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-29T23:55:24Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-02T14:15:36Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-02T20:15:49Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-03T02:25:16Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-03T02:25:17Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-04T00:32:28Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "753cdb3bd4c27ade5335dcc067a0aadd76a05283",
+                "abbreviatedOid": "753cdb3",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-09T20:26:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-505969002",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "falsyvalues",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "753cdb3bd4c27ade5335dcc067a0aadd76a05283",
+                "abbreviatedOid": "753cdb3",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-12T07:07:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-506344303",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "thorn0",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "753cdb3bd4c27ade5335dcc067a0aadd76a05283",
+                "abbreviatedOid": "753cdb3",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:52:16Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:52:43Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:52:56Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:53:13Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:53:25Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "thorn0",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-10-12T08:53:57Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-10-12T08:55:30Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-506420182",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "thorn0",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "fa21531bf01c1039bcd9c5d04bb2e985ba3de267",
+                "abbreviatedOid": "fa21531",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-13T08:31:51Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-507193643",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "fa21531bf01c1039bcd9c5d04bb2e985ba3de267",
+                "abbreviatedOid": "fa21531",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-29T23:54:49Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-520167312",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "06d8d678f1fc73f43ee6e8efe11230c4db92cc83",
+                "abbreviatedOid": "06d8d67",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-11-02T19:14:54Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-521922634",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "06d8d678f1fc73f43ee6e8efe11230c4db92cc83",
+                "abbreviatedOid": "06d8d67",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2020-11-04T00:31:53Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652#pullrequestreview-522968677",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-10-09T15:56:45Z",
+                "committedDate": "2020-11-02T15:55:57Z",
+                "pushedDate": null,
+                "abbreviatedOid": "943e9f6",
+                "oid": "943e9f6a268e954d584c00bc6280fb3e6b8464b0",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-10-13T08:23:51Z",
+                "committedDate": "2020-11-02T15:55:57Z",
+                "pushedDate": null,
+                "abbreviatedOid": "372002c",
+                "oid": "372002c351a709a2771aa57d74ef14ca9e70ef84",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-10-13T08:22:47Z",
+                "committedDate": "2020-11-02T15:55:57Z",
+                "pushedDate": null,
+                "abbreviatedOid": "4eb3afb",
+                "oid": "4eb3afbc5c36d84f2e9b8810ffdffec91668ab82",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/06d8d678f1fc73f43ee6e8efe11230c4db92cc83/checks?check_suite_id=1438246535",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/06d8d678f1fc73f43ee6e8efe11230c4db92cc83/checks?check_suite_id=1438246535",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/06d8d678f1fc73f43ee6e8efe11230c4db92cc83/checks?check_suite_id=1438247886",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/06d8d678f1fc73f43ee6e8efe11230c4db92cc83/checks?check_suite_id=1438247886",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-02T14:11:00Z",
+                "committedDate": "2020-11-02T15:55:58Z",
+                "pushedDate": "2020-11-02T15:56:23Z",
+                "abbreviatedOid": "06d8d67",
+                "oid": "06d8d678f1fc73f43ee6e8efe11230c4db92cc83",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 15,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjI2OTA0NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@mgol Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 2 packages in this PR\n\n- `angular-sanitize` [on npm](https://www.npmjs.com/package/angular-sanitize), [on unpkg](https://unpkg.com/browse/angular-sanitize@latest/)\n- `angular` [on npm](https://www.npmjs.com/package/angular), [on unpkg](https://unpkg.com/browse/angular@latest/)\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes which affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-10-09T16:08:22Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjI2OTA1MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @diegovilar @falsyvalues @thorn0 @calebstdenis @leonard-thieu @scipper @peterblazejewicz — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48652/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-10-09T16:08:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjI3MjAxNw==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## angular-sanitize ([<kbd>unpkg</kbd>](https://unpkg.com/browse/angular-sanitize@latest/))\nwas missing the following properties:\n1. padStart\n1. padEnd\n1. trimLeft\n1. trimRight\n1. trimStart\n\n<details>\n<summary>as well as these 1 other properties...</summary>\n<p>trimEnd</p>\n</details>\n\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 06d8d678f1fc73f43ee6e8efe11230c4db92cc83\n</p>\n",
+              "createdAt": "2020-10-09T16:14:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjMzMjk1OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-10-09T16:17:01.356Z\"},{\"createdAt\":\"2020-10-09T18:18:38.264Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n### angular-sanitize/v*\n\n\n<details>\n<summary><strong>Comparison details for angular-sanitize/*</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                                  | #48652                                                                                                                                                          | diff   |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                                         |                                                                                                                                                                 |        |\n| Memory usage (MiB)                                                                        | 84.7                                                                                                                                                    | 74.6                                                                                                                                                            | -11.9% |\n| Type count                                                                                | 10418                                                                                                                                                   | 10417                                                                                                                                                           | 0%     |\n| Assignability cache size                                                                  | 3043                                                                                                                                                    | 3043                                                                                                                                                            | 0%     |\n|                                                                                           |                                                                                                                                                         |                                                                                                                                                                 |        |\n| **Language service**                                                                      |                                                                                                                                                         |                                                                                                                                                                 |        |\n| Samples taken                                                                             | 59                                                                                                                                                      | 59                                                                                                                                                              | 0%     |\n| Identifiers in tests                                                                      | 59                                                                                                                                                      | 59                                                                                                                                                              | 0%     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                         |                                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 447.5                                                                                                                                                   | 438.7                                                                                                                                                           | -2.0%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 13.0%                                                                                                                                                   | 11.2%                                                                                                                                                           |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 556.1                                                                                                                                                   | 513.0                                                                                                                                                           | -7.8%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [$sanitizeProvider](/DefinitelyTyped/DefinitelyTyped/blob/2e4a5dfdb17c4730d81fec3265ee7167418dfc51/types/angular-sanitize/angular-sanitize-tests.ts#L9) | [$sanitizeProvider](/DefinitelyTyped/DefinitelyTyped/blob/eade257786cd22b7bd25778cf86ea77be9ce8621/types/angular-sanitize/angular-sanitize-tests.ts#L9)         |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                         |                                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 439.8                                                                                                                                                   | 435.9                                                                                                                                                           | -0.9%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.7%                                                                                                                                                   | 10.8%                                                                                                                                                           | +1.4%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 533.1                                                                                                                                                   | 562.4                                                                                                                                                           | +5.5%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [addValidElements](/DefinitelyTyped/DefinitelyTyped/blob/2e4a5dfdb17c4730d81fec3265ee7167418dfc51/types/angular-sanitize/angular-sanitize-tests.ts#L9)  | [shouldBeSanitizeProvider](/DefinitelyTyped/DefinitelyTyped/blob/eade257786cd22b7bd25778cf86ea77be9ce8621/types/angular-sanitize/angular-sanitize-tests.ts#L12) |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.\n\n### angular/v*\n\n\n<details>\n<summary><strong>Comparison details for angular/*</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                            | #48652                                                                                                                            | diff  |\n| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                   |                                                                                                                                   |       |\n| Memory usage (MiB)                                                                        | 127.9                                                                                                                             | 118.5                                                                                                                             | -7.3% |\n| Type count                                                                                | 30634                                                                                                                             | 30633                                                                                                                             | 0%    |\n| Assignability cache size                                                                  | 5338                                                                                                                              | 5338                                                                                                                              | 0%    |\n|                                                                                           |                                                                                                                                   |                                                                                                                                   |       |\n| **Language service**                                                                      |                                                                                                                                   |                                                                                                                                   |       |\n| Samples taken                                                                             | 2708                                                                                                                              | 2708                                                                                                                              | 0%    |\n| Identifiers in tests                                                                      | 2984                                                                                                                              | 2984                                                                                                                              | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                   |                                                                                                                                   |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 655.4                                                                                                                             | 649.9                                                                                                                             | -0.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 4.5%                                                                                                                              | 4.6%                                                                                                                              |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1313.6                                                                                                                            | 1219.7                                                                                                                            | -7.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [transclude](/DefinitelyTyped/DefinitelyTyped/blob/2e4a5dfdb17c4730d81fec3265ee7167418dfc51/types/angular/angular-tests.ts#L1183) | [transclude](/DefinitelyTyped/DefinitelyTyped/blob/eade257786cd22b7bd25778cf86ea77be9ce8621/types/angular/angular-tests.ts#L1183) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                   |                                                                                                                                   |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 653.8                                                                                                                             | 649.5                                                                                                                             | -0.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 4.8%                                                                                                                              | 4.8%                                                                                                                              | -0.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1181.1                                                                                                                            | 1108.1                                                                                                                            | -6.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [append](/DefinitelyTyped/DefinitelyTyped/blob/2e4a5dfdb17c4730d81fec3265ee7167418dfc51/types/angular/angular-tests.ts#L1182)     | [append](/DefinitelyTyped/DefinitelyTyped/blob/eade257786cd22b7bd25778cf86ea77be9ce8621/types/angular/angular-tests.ts#L1183)     |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-10-09T18:18:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjY5MTY2MQ==",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "body": "@peterblazejewicz what's the procedure now? Do I just wait for a DefinitelyTyped maintainer to notice this PR and do a review? Should I split the `angular-sanitize` changes out to a separate PR?",
+              "createdAt": "2020-10-11T11:39:04Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjcyNTgwOQ==",
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "body": "@mgol \r\nSo, because you've not included tests for your changes, there is no quick path here (the other pair of eyes from the community need to review the PR, the tests are added/amended, the CIs pass, etc).\r\nSo either wait for DT maintainer to arrive and review that one (it's already labelled with 'owner approved', so it would be quick), or amend your PR to incorporate tests for both packages. Thx!",
+              "createdAt": "2020-10-11T15:57:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNjk4MjEzOA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@mgol One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-753cdb3-->",
+              "createdAt": "2020-10-12T08:56:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzU4Mjg5Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@peterblazejewicz Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-ef7ed8-753cdb3-->",
+              "createdAt": "2020-10-13T08:30:42Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzU4NTc3NA==",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "body": "Comments addressed, apart from tests. It turns out AngularJS changelog is incorrect & some of the APIs have different names than the changelog specifies: https://github.com/angular/angular.js/issues/17088. I changed them.\r\n\r\nI'll look into adding some tests later.",
+              "createdAt": "2020-10-13T08:35:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxMDM2MDI5Mg==",
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "body": "Classing as acceptable from the DT maintainers perspective, which means it can be self-merged in the future after the tests are added 👍🏻 ",
+              "createdAt": "2020-10-16T18:15:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMDQ5Nzc0OQ==",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "body": "I rebased & added a new commit with tests for the `angular` changes. I'd appreciate if someone looked at those tests before this gets merged.",
+              "createdAt": "2020-11-02T14:15:36Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "peterblazejewicz",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMDcwMDE5OQ==",
+              "author": {
+                "login": "mgol",
+                "__typename": "User"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2020-11-02T20:15:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMDg3MTI2OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@thorn0, @falsyvalues Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-726cfd-753cdb3-->",
+              "createdAt": "2020-11-03T02:25:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/angular-sanitize/index.d.ts",
+              "additions": 8,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/angular/angular-tests.ts",
+              "additions": 28,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/angular/index.d.ts",
+              "additions": 21,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 3
+        },
+        "projectCards": {
+          "nodes": [],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

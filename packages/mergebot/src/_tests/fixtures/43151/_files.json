@@ -1,0 +1,3 @@
+{
+  "bb6d3150b485cd203d265e06ca910262256e523e:types/gaze/index.d.ts": "// Type definitions for gaze 1.1\n// Project: https://github.com/shama/gaze\n// Definitions by:  Adam Zerella <https://github.com/adamzerella>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n// Minimum TypeScript Version: 3.1\n\ntype Mode = 'auto' | 'watch' | 'poll';\n\ninterface Options {\n    /**\n     * Interval to pass to fs.watchFile.\n     */\n    interval?: number;"
+}

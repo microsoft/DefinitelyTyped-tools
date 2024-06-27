@@ -1,0 +1,302 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDQ0MjU3Njg2",
+        "title": "@types/cytoscape fix spelling issue to match docs",
+        "lastEditedAt": null,
+        "author": {
+          "login": "sgratzl",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-07-04T08:37:07Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 45884,
+        "state": "OPEN",
+        "headRefOid": "1dcf44a05908783324ca99231837267af495cdb7",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T08:37:19Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T08:37:20Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T08:40:23Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T08:40:30Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T10:01:02Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T06:50:47Z",
+              "projectColumnName": "Waiting for Code Reviews"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T06:51:09Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T06:51:10Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Veckodag",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "1dcf44a05908783324ca99231837267af495cdb7",
+                "abbreviatedOid": "1dcf44a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-04T11:08:20Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45884#pullrequestreview-442603601",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/1dcf44a05908783324ca99231837267af495cdb7/checks?check_suite_id=875331974",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/1dcf44a05908783324ca99231837267af495cdb7/checks?check_suite_id=875331974",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/1dcf44a05908783324ca99231837267af495cdb7/checks?check_suite_id=875332235",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/1dcf44a05908783324ca99231837267af495cdb7/checks?check_suite_id=875332235",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-04T08:32:35Z",
+                "committedDate": "2020-07-04T08:32:35Z",
+                "pushedDate": "2020-07-04T08:33:11Z",
+                "abbreviatedOid": "1dcf44a",
+                "oid": "1dcf44a05908783324ca99231837267af495cdb7",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzczOTM2NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@sgratzl Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n This PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Have you considered [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing) to cover the change you're making? Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-04T08:37:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzczOTM2Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @phreed @wy193777 @ypconstante @janniclas @cerberuser @gsbelarus @peterjferrarotto @spaxe @appleparan @Veckodag — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45884/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-07-04T08:37:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzczOTY0NQ==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## cytoscape ([<kbd>unpkg</kbd>](https://unpkg.com/browse/cytoscape@latest/))\nwas missing the following properties:\n1. version\n1. stylesheet\n1. Stylesheet\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 1dcf44a05908783324ca99231837267af495cdb7\n</p>\n",
+              "createdAt": "2020-07-04T08:40:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1Mzc0NjY2Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-07-04T10:01:02.264Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                           | #45884                                                                                                                                 | diff   |\n| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                  |                                                                                                                                        |        |\n| Memory usage (MiB)                                                                        | 77.2                                                                                                                             | 78.2                                                                                                                                   | +1.4%  |\n| Type count                                                                                | 14517                                                                                                                            | 14517                                                                                                                                  | 0%     |\n| Assignability cache size                                                                  | 4338                                                                                                                             | 4338                                                                                                                                   | 0%     |\n|                                                                                           |                                                                                                                                  |                                                                                                                                        |        |\n| **Language service**                                                                      |                                                                                                                                  |                                                                                                                                        |        |\n| Samples taken                                                                             | 1187                                                                                                                             | 1187                                                                                                                                   | 0%     |\n| Identifiers in tests                                                                      | 1187                                                                                                                             | 1187                                                                                                                                   | 0%     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                  |                                                                                                                                        |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 404.6                                                                                                                            | 403.2                                                                                                                                  | -0.3%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.5%                                                                                                                            | 10.2%                                                                                                                                  |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 627.8                                                                                                                            | 694.9                                                                                                                                  | +10.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [oneOf](/DefinitelyTyped/DefinitelyTyped/blob/ea4f80ee1f4ed746993322e3cf7aad23ccd9b70e/types/cytoscape/cytoscape-tests.ts#L364)  | [intersection](/DefinitelyTyped/DefinitelyTyped/blob/316d1e0296ba8f7ad59f67f2cf05449d97406f5e/types/cytoscape/cytoscape-tests.ts#L573) |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                  |                                                                                                                                        |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 400.3                                                                                                                            | 398.3                                                                                                                                  | -0.5%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.7%                                                                                                                            | 10.4%                                                                                                                                  | -2.9%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 678.1                                                                                                                            | 620.5                                                                                                                                  | -8.5%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [center](/DefinitelyTyped/DefinitelyTyped/blob/ea4f80ee1f4ed746993322e3cf7aad23ccd9b70e/types/cytoscape/cytoscape-tests.ts#L168) | [gh](/DefinitelyTyped/DefinitelyTyped/blob/316d1e0296ba8f7ad59f67f2cf05449d97406f5e/types/cytoscape/cytoscape-tests.ts#L168)           |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-07-04T10:01:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NDA0ODc4NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@sgratzl Everything looks good here. Great job! I am ready to merge this PR (at 1dcf44a) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-07-06T06:51:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/cytoscape/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 1
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDEyNTM4NTk=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

@@ -1,0 +1,94 @@
+{
+  "type": "info",
+  "now": "2020-11-04T01:23:45.000Z",
+  "pr_number": 48652,
+  "author": "mgol",
+  "headCommitOid": "06d8d678f1fc73f43ee6e8efe11230c4db92cc83",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-11-02T15:56:23.000Z",
+  "lastActivityDate": "2020-11-04T00:31:53.000Z",
+  "mergeOfferDate": "2020-11-04T00:23:45.000Z",
+  "mergeRequestDate": "2020-11-02T20:15:49.000Z",
+  "mergeRequestUser": "mgol",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "angular-sanitize",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/angular-sanitize/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "diegovilar",
+        "falsyvalues"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "angular",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/angular/angular-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/angular/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "diegovilar",
+        "thorn0",
+        "calebstdenis",
+        "leonard-thieu",
+        "scipper",
+        "peterblazejewicz"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "andrewbranch",
+      "date": "2020-11-04T00:31:53.000Z"
+    },
+    {
+      "type": "approved",
+      "reviewer": "peterblazejewicz",
+      "date": "2020-11-02T19:14:54.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "stale",
+      "reviewer": "RyanCavanaugh",
+      "date": "2020-10-29T23:54:49.000Z",
+      "abbrOid": "fa21531"
+    },
+    {
+      "type": "stale",
+      "reviewer": "thorn0",
+      "date": "2020-10-13T08:31:51.000Z",
+      "abbrOid": "fa21531"
+    },
+    {
+      "type": "stale",
+      "reviewer": "falsyvalues",
+      "date": "2020-10-12T07:07:50.000Z",
+      "abbrOid": "753cdb3"
+    }
+  ],
+  "ciResult": "pass"
+}

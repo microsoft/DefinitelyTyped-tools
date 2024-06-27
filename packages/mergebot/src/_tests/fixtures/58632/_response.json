@@ -1,0 +1,325 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM4yI35U",
+        "title": "Remove contributors with deleted accounts",
+        "createdAt": "2022-02-07T00:04:01Z",
+        "author": {
+          "login": "github-actions",
+          "__typename": "Bot"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Where is GH Actions?",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 58632,
+        "state": "MERGED",
+        "headRefOid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+        "changedFiles": 6,
+        "additions": 8,
+        "deletions": 12,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "e33d3fe8b10acee209c6353529cf180b3cac25ac",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "alitaheri",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2022-02-08T14:24:13Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58632#pullrequestreview-876105577",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "candyapplecorn",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2022-02-09T22:06:31Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58632#pullrequestreview-878109819",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "al-fyodorov",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2022-02-15T11:39:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58632#pullrequestreview-882856991",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 5197815169,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d7304db2a17425c0b41451f5c2e056d063725ecf/checks?check_suite_id=5197815169",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d7304db2a17425c0b41451f5c2e056d063725ecf/checks?check_suite_id=5197815169",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20220207.1 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 5197815175,
+                      "app": {
+                        "name": "Dependabot",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d7304db2a17425c0b41451f5c2e056d063725ecf/checks?check_suite_id=5197815175",
+                      "status": "QUEUED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d7304db2a17425c0b41451f5c2e056d063725ecf/checks?check_suite_id=5197815175",
+                      "checkRuns": {
+                        "nodes": [],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2022-02-07T00:03:58Z",
+                "committedDate": "2022-02-07T00:03:58Z",
+                "pushedDate": "2022-02-07T00:04:05Z",
+                "oid": "d7304db2a17425c0b41451f5c2e056d063725ecf",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM49cv4g",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1030946336,
+              "body": "@github-actions Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 6 packages in this PR\n\n* `mithril-global` — [on npm](https://www.npmjs.com/package/mithril-global), [on unpkg](https://unpkg.com/browse/mithril-global@latest/)\n  - 1 removed owner: @isiahmeadows\n* `mithril` — [on npm](https://www.npmjs.com/package/mithril), [on unpkg](https://unpkg.com/browse/mithril@latest/)\n  - 1 removed owner: @isiahmeadows\n* `ospec` — [on npm](https://www.npmjs.com/package/ospec), [on unpkg](https://unpkg.com/browse/ospec@latest/)\n  - 1 removed owner: @isiahmeadows\n* `react-grid-layout` — [on npm](https://www.npmjs.com/package/react-grid-layout), [on unpkg](https://unpkg.com/browse/react-grid-layout@latest/)\n  - owner-approval: @al-fyodorov, @alitaheri\n  - 1 removed owner: @catusmagnus\n* `react-native-fbsdk` — [on npm](https://www.npmjs.com/package/react-native-fbsdk), [on unpkg](https://unpkg.com/browse/react-native-fbsdk@latest/)\n  - 1 removed owner: @UHKim\n* `ssh2-sftp-client` — [on npm](https://www.npmjs.com/package/ssh2-sftp-client), [on unpkg](https://unpkg.com/browse/ssh2-sftp-client@latest/)\n  - owner-approval: @candyapplecorn\n  - 1 removed owner: @sgalizia\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=58632&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❓ Continuous integration tests have gone missing\n * 🕐 A DT maintainer needs to approve changes which affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 10 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2022-02-07T00:04:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM49cv4q",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1030946346,
+              "body": "🔔 @spacejack @isiahmeadows @maranomynet @abirkholz @alitaheri @ZheyangSong @andrewhathaway @manav-m @al-fyodorov @catusmagnus @ifiokjr @titozzz @stuartforrest-infinity @UHKim @igrayson @ascariandrea @kartik2406 @viamuli @gbhmt @builtbylane @loru88 @sgalizia @hengkx @candyapplecorn @tsop14 — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58632/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2022-02-07T00:04:43Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM49pTyu",
+              "author": {
+                "login": "candyapplecorn",
+                "__typename": "User"
+              },
+              "databaseId": 1034239150,
+              "body": "This doesn't seem morally right. I don't know how to remove my approval, but if I could I would.\r\nJust because their accounts were deleted, doesn't invalidate their past work.\r\nEdit - Unless the purpose of putting ones' name is to let other contributors have people to contact for info/help? But in my experience, it's always been just as much about getting one's name on a contributor list, as it is about recording a breadcrumb trail of past contributors for new contributors to access as a resource.",
+              "createdAt": "2022-02-09T22:08:45Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM4-MZQM",
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "databaseId": 1043436556,
+              "body": "@candyapplecorn the purpose of the header comment is not attribution; it’s ongoing maintenance. These accounts get automatically pinged for reviews on future PRs (like you were pinged here), and when they approve, the PRs get fast-tracked to merge. The reason we have to delete inactive ones is that GitHub releases the usernames of deleted accounts after a while, so new users could be signing up and be getting pinged for reviews of something they’ve never heard of. I’m sympathetic to the unintended consequence of erasing something that someone wanted attribution for, but the reality is that people intentionally remove themselves from these headers all the time when they want to stop getting pinged for reviews, and we have no way of continuing to list them as contributors either, other than in the historical record (both in the git history and in the published package.jsons)—that’s just not what the header was made for.",
+              "createdAt": "2022-02-17T21:00:53Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "path": "types/mithril-global/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/mithril/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ospec/index.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/react-grid-layout/index.d.ts",
+              "additions": 6,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/react-native-fbsdk/index.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ssh2-sftp-client/index.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Ng",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

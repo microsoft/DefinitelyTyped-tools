@@ -1,0 +1,4 @@
+{
+  "master:types/react-scroll/index.d.ts": "// Type definitions for react-scroll 1.5\n// Project: https://github.com/fisshy/react-scroll\n// Definitions by: Ioannis Kokkinidis <https://github.com/sudoplz>\n//                 Giedrius Grabauskas <https://github.com/GiedriusGrabauskas>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n// TypeScript Version: 2.8\n\n",
+  "2586d74ca0dc553be5f3afc0135468b17b240d70:types/react-scroll/index.d.ts": "// Type definitions for react-scroll 1.8\n// Project: https://github.com/fisshy/react-scroll\n// Definitions by: Ioannis Kokkinidis <https://github.com/sudoplz>\n//                 Giedrius Grabauskas <https://github.com/GiedriusGrabauskas>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n// TypeScript Version: 2.8\n\n"
+}

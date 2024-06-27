@@ -1,0 +1,2414 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5oxruv",
+        "title": "[node] Remove ts4.8 in favor of new multi-tsconfig testing",
+        "createdAt": "2024-03-05T23:23:43Z",
+        "author": {
+          "login": "jakebailey",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Huge Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 68908,
+        "state": "OPEN",
+        "headRefOid": "b3eeaef096e86260fb5300d4e289257112644f86",
+        "changedFiles": 352,
+        "additions": 211,
+        "deletions": 167601,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "79169ff2095a8daed0279eec38e426f61b2f97c7",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "aae31da572363bed190729b826be689a2423aac5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "3e0ae11e8f4cb7ac8a2c18e58093b999c0f4a7a6",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "79169ff2095a8daed0279eec38e426f61b2f97c7",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "b3eeaef096e86260fb5300d4e289257112644f86",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "3e0ae11e8f4cb7ac8a2c18e58093b999c0f4a7a6",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "createdAt": "2024-03-08T18:34:50Z",
+              "__typename": "ReadyForReviewEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-03-08T18:35:37Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 21533634431,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b3eeaef096e86260fb5300d4e289257112644f86/checks?check_suite_id=21533634431",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b3eeaef096e86260fb5300d4e289257112644f86/checks?check_suite_id=21533634431",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-03-08T18:17:42Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/lint-md.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 21533634443,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b3eeaef096e86260fb5300d4e289257112644f86/checks?check_suite_id=21533634443",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b3eeaef096e86260fb5300d4e289257112644f86/checks?check_suite_id=21533634443",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-03-08T18:17:42Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-03-06T02:51:10Z",
+                "committedDate": "2024-03-08T18:17:34Z",
+                "pushedDate": null,
+                "oid": "b3eeaef096e86260fb5300d4e289257112644f86",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM52BJog",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 1980013088,
+              "body": "Well, the minimum TS version bump breaks basically everything, so I'll just sit on this until 4.6 is gone.",
+              "createdAt": "2024-03-06T03:31:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM52TQQ5",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 1984758841,
+              "body": "Yay, it works (with the PR). Still want to think a little more about this since think other packages are wanting to have multiple tsconfigs for other uses (e.g. testing JSX with more than just react).",
+              "createdAt": "2024-03-07T23:11:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM52Yyvs",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1986210796,
+              "body": "@jakebailey Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `node` — [on npm](https://www.npmjs.com/package/node), [on unpkg](https://unpkg.com/browse/node@latest/)\n  - Config files to check:\n    - [`node/ts4.8/scripts/generate-docs/.gitignore`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-91526815b4e9495a4a3c4fc39e0d0ec54cfde836d5fba3a1ed2357f249d7cba7): edited\n    - [`node/ts4.8/scripts/generate-inspector/inspector.d.ts.template`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-451f80f4367421783eca707351dd71c71207e031bc5dff3a4d0b95058e84c7f7): edited\n    - [`node/tsconfig.dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-d86d434c42274d32be0840a33d9da863f2f5ec89f1b3776cb3d4f60fb312f2cb): edited\n    - [`node/tsconfig.non-dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-2a39081f1dc1fafb5465db52779cb19416dae0e79129a3f589dd15eedeb54331): edited\n    - [`node/v16/tsconfig.dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-bf27ee419bcfbee0f6a6d4766ad550eefb067a121450e8bebf33e2e9d64f116b): edited\n    - [`node/v16/tsconfig.non-dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-145b3c6cb77408a271d24ee964b03701e20e8fb1fe2b3ae7e4a33055d2174d9b): edited\n    - [`node/v18/tsconfig.dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-69e3bedcab15965308f94e9c546dc1a02b32c3673636290fa29b4466c569424d): edited\n    - [`node/v18/tsconfig.non-dom.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files/b3eeaef096e86260fb5300d4e289257112644f86#diff-3f16313b033115fe3a2799d1569c1a910f7bed679c392296eb5aeaa041383cce): edited\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68908&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 A DT maintainer needs to approve changes which affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-03-08T18:35:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM52Yywm",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1986210854,
+              "body": "🔔 @Microsoft @jkomyno @alvis @r3nya @btoueg @smac89 @touffy @DeividasBakanas @eyqs @Hannes-Magnusson-CK @hoo29 @kjin @ajafff @islishude @mwiktorczyk @mohsen1 @galkin @parambirs @eps1lon @ThomasdenH @WilcoBakker @wwwy3y3 @samuela @kuehlein @bhongy @chyzwar @trivikr @yoursunny @qwelias @ExE-Boss @peterblazejewicz @addaleax @victorperin @ZYSzys @NodeJS @LinusU @wafuwafu13 @mcollina @Semigradsky — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68908/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-03-08T18:35:38Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 352,
+          "nodes": [
+            {
+              "path": "types/node/node-tests-dom.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/node-tests-non-dom.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/node-tests.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/package.json",
+              "additions": 1,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events-dom.ts",
+              "additions": 0,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events-non-dom.ts",
+              "additions": 0,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/globals-dom.ts",
+              "additions": 50,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/globals-non-dom.ts",
+              "additions": 0,
+              "deletions": 54,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/globals.ts",
+              "additions": 0,
+              "deletions": 51,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/perf_hooks-dom.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/perf_hooks-non-dom.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/perf_hooks.ts",
+              "additions": 0,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/assert.d.ts",
+              "additions": 0,
+              "deletions": 996,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/assert/strict.d.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/async_hooks.d.ts",
+              "additions": 0,
+              "deletions": 539,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/buffer.d.ts",
+              "additions": 0,
+              "deletions": 2363,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/child_process.d.ts",
+              "additions": 0,
+              "deletions": 1540,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/cluster.d.ts",
+              "additions": 0,
+              "deletions": 432,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/console.d.ts",
+              "additions": 0,
+              "deletions": 415,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/constants.d.ts",
+              "additions": 0,
+              "deletions": 19,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/crypto.d.ts",
+              "additions": 0,
+              "deletions": 4487,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/dgram.d.ts",
+              "additions": 0,
+              "deletions": 596,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/diagnostics_channel.d.ts",
+              "additions": 0,
+              "deletions": 545,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/dns.d.ts",
+              "additions": 0,
+              "deletions": 809,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/dns/promises.d.ts",
+              "additions": 0,
+              "deletions": 425,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/dom-events.d.ts",
+              "additions": 0,
+              "deletions": 122,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/domain.d.ts",
+              "additions": 0,
+              "deletions": 170,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/events.d.ts",
+              "additions": 0,
+              "deletions": 896,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/fs.d.ts",
+              "additions": 0,
+              "deletions": 4311,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/fs/promises.d.ts",
+              "additions": 0,
+              "deletions": 1239,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/globals.d.ts",
+              "additions": 0,
+              "deletions": 411,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/globals.global.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/http.d.ts",
+              "additions": 0,
+              "deletions": 1889,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/http2.d.ts",
+              "additions": 0,
+              "deletions": 2382,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/https.d.ts",
+              "additions": 0,
+              "deletions": 550,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/index.d.ts",
+              "additions": 0,
+              "deletions": 88,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/inspector.d.ts",
+              "additions": 0,
+              "deletions": 2747,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/module.d.ts",
+              "additions": 0,
+              "deletions": 315,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/net.d.ts",
+              "additions": 0,
+              "deletions": 954,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/node-tests.ts",
+              "additions": 0,
+              "deletions": 275,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/os.d.ts",
+              "additions": 0,
+              "deletions": 478,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/path.d.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/perf_hooks.d.ts",
+              "additions": 0,
+              "deletions": 645,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/process.d.ts",
+              "additions": 0,
+              "deletions": 1561,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/punycode.d.ts",
+              "additions": 0,
+              "deletions": 117,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/querystring.d.ts",
+              "additions": 0,
+              "deletions": 141,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/readline.d.ts",
+              "additions": 0,
+              "deletions": 539,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/readline/promises.d.ts",
+              "additions": 0,
+              "deletions": 150,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/repl.d.ts",
+              "additions": 0,
+              "deletions": 430,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/.gitignore",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/README.md",
+              "additions": 0,
+              "deletions": 50,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/ast-processing.ts",
+              "additions": 0,
+              "deletions": 564,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/ast-utils.ts",
+              "additions": 0,
+              "deletions": 113,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/docs.ts",
+              "additions": 0,
+              "deletions": 147,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/html-doc-processing.ts",
+              "additions": 0,
+              "deletions": 137,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/node-doc-processing.ts",
+              "additions": 0,
+              "deletions": 372,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/package.json",
+              "additions": 0,
+              "deletions": 16,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/tsconfig.json",
+              "additions": 0,
+              "deletions": 31,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-docs/utils.ts",
+              "additions": 0,
+              "deletions": 45,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/README.md",
+              "additions": 0,
+              "deletions": 14,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/devtools-protocol-schema.ts",
+              "additions": 0,
+              "deletions": 78,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/event-emitter.ts",
+              "additions": 0,
+              "deletions": 80,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/generate-substitute-args.ts",
+              "additions": 0,
+              "deletions": 200,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/index.ts",
+              "additions": 0,
+              "deletions": 94,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/inspector.d.ts.template",
+              "additions": 0,
+              "deletions": 94,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/package.json",
+              "additions": 0,
+              "deletions": 14,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/tsconfig.json",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/generate-inspector/utils.ts",
+              "additions": 0,
+              "deletions": 105,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/html-doc-processing.ts",
+              "additions": 0,
+              "deletions": 137,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/new-version/new-version.ts",
+              "additions": 0,
+              "deletions": 74,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/new-version/package.json",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/scripts/new-version/tsconfig.json",
+              "additions": 0,
+              "deletions": 17,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/stream.d.ts",
+              "additions": 0,
+              "deletions": 1701,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/stream/consumers.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/stream/promises.d.ts",
+              "additions": 0,
+              "deletions": 83,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/stream/web.d.ts",
+              "additions": 0,
+              "deletions": 366,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/string_decoder.d.ts",
+              "additions": 0,
+              "deletions": 67,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test.d.ts",
+              "additions": 0,
+              "deletions": 1465,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/assert.ts",
+              "additions": 0,
+              "deletions": 182,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/async_hooks.ts",
+              "additions": 0,
+              "deletions": 100,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/buffer.ts",
+              "additions": 0,
+              "deletions": 516,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/child_process.ts",
+              "additions": 0,
+              "deletions": 567,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/cluster.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/console.ts",
+              "additions": 0,
+              "deletions": 84,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/constants.ts",
+              "additions": 0,
+              "deletions": 121,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/crypto.ts",
+              "additions": 0,
+              "deletions": 1530,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/dgram.ts",
+              "additions": 0,
+              "deletions": 204,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/diagnostics_channel.ts",
+              "additions": 0,
+              "deletions": 140,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/dns.ts",
+              "additions": 0,
+              "deletions": 147,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/events.ts",
+              "additions": 0,
+              "deletions": 182,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/events_generic.ts",
+              "additions": 0,
+              "deletions": 233,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/fs.ts",
+              "additions": 0,
+              "deletions": 895,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/http.ts",
+              "additions": 0,
+              "deletions": 688,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/http2.ts",
+              "additions": 0,
+              "deletions": 668,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/https.ts",
+              "additions": 0,
+              "deletions": 612,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/inspector.ts",
+              "additions": 0,
+              "deletions": 39,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/module.ts",
+              "additions": 0,
+              "deletions": 146,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/net.ts",
+              "additions": 0,
+              "deletions": 407,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/os.ts",
+              "additions": 0,
+              "deletions": 252,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/path.ts",
+              "additions": 0,
+              "deletions": 176,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/perf_hooks.ts",
+              "additions": 0,
+              "deletions": 127,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/process.ts",
+              "additions": 0,
+              "deletions": 189,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/querystring.ts",
+              "additions": 0,
+              "deletions": 69,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/readline.ts",
+              "additions": 0,
+              "deletions": 355,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/repl.ts",
+              "additions": 0,
+              "deletions": 77,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/stream.ts",
+              "additions": 0,
+              "deletions": 749,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/string_decoder.ts",
+              "additions": 0,
+              "deletions": 35,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/test.ts",
+              "additions": 0,
+              "deletions": 758,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/timers.ts",
+              "additions": 0,
+              "deletions": 108,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/timers_promises.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/tls.ts",
+              "additions": 0,
+              "deletions": 328,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/trace_events.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/tty.ts",
+              "additions": 0,
+              "deletions": 33,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/url.ts",
+              "additions": 0,
+              "deletions": 208,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/util.ts",
+              "additions": 0,
+              "deletions": 352,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/util_types.ts",
+              "additions": 0,
+              "deletions": 178,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/v8.ts",
+              "additions": 0,
+              "deletions": 74,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/vm.ts",
+              "additions": 0,
+              "deletions": 154,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/wasi.ts",
+              "additions": 0,
+              "deletions": 23,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/worker_threads.ts",
+              "additions": 0,
+              "deletions": 149,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/test/zlib.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/timers.d.ts",
+              "additions": 0,
+              "deletions": 240,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/timers/promises.d.ts",
+              "additions": 0,
+              "deletions": 93,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/tls.d.ts",
+              "additions": 0,
+              "deletions": 1210,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/trace_events.d.ts",
+              "additions": 0,
+              "deletions": 182,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/tty.d.ts",
+              "additions": 0,
+              "deletions": 208,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/url.d.ts",
+              "additions": 0,
+              "deletions": 944,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/util.d.ts",
+              "additions": 0,
+              "deletions": 2183,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/v8.d.ts",
+              "additions": 0,
+              "deletions": 764,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/vm.d.ts",
+              "additions": 0,
+              "deletions": 903,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/wasi.d.ts",
+              "additions": 0,
+              "deletions": 179,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/worker_threads.d.ts",
+              "additions": 0,
+              "deletions": 691,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/ts4.8/zlib.d.ts",
+              "additions": 0,
+              "deletions": 517,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/tsconfig.dom.json",
+              "additions": 22,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/tsconfig.json",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/tsconfig.non-dom.json",
+              "additions": 2,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/package.json",
+              "additions": 1,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/test/wasi.ts",
+              "additions": 6,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/assert.d.ts",
+              "additions": 0,
+              "deletions": 986,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/assert/strict.d.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/async_hooks.d.ts",
+              "additions": 0,
+              "deletions": 501,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/buffer.d.ts",
+              "additions": 0,
+              "deletions": 2266,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/child_process.d.ts",
+              "additions": 0,
+              "deletions": 1536,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/cluster.d.ts",
+              "additions": 0,
+              "deletions": 436,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/console.d.ts",
+              "additions": 0,
+              "deletions": 412,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/constants.d.ts",
+              "additions": 0,
+              "deletions": 19,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/crypto.d.ts",
+              "additions": 0,
+              "deletions": 4346,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/dgram.d.ts",
+              "additions": 0,
+              "deletions": 591,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/diagnostics_channel.d.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/dns.d.ts",
+              "additions": 0,
+              "deletions": 796,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/dns/promises.d.ts",
+              "additions": 0,
+              "deletions": 372,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/dom-events.d.ts",
+              "additions": 0,
+              "deletions": 122,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/domain.d.ts",
+              "additions": 0,
+              "deletions": 170,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/events.d.ts",
+              "additions": 0,
+              "deletions": 714,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/fs.d.ts",
+              "additions": 0,
+              "deletions": 4030,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/fs/promises.d.ts",
+              "additions": 0,
+              "deletions": 1124,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/globals.d.ts",
+              "additions": 0,
+              "deletions": 291,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/globals.global.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/http.d.ts",
+              "additions": 0,
+              "deletions": 1586,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/http2.d.ts",
+              "additions": 0,
+              "deletions": 2353,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/https.d.ts",
+              "additions": 0,
+              "deletions": 534,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/index.d.ts",
+              "additions": 0,
+              "deletions": 86,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/inspector.d.ts",
+              "additions": 0,
+              "deletions": 2743,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/module.d.ts",
+              "additions": 0,
+              "deletions": 221,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/net.d.ts",
+              "additions": 0,
+              "deletions": 858,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/node-tests.ts",
+              "additions": 0,
+              "deletions": 274,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/os.d.ts",
+              "additions": 0,
+              "deletions": 455,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/path.d.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/perf_hooks.d.ts",
+              "additions": 0,
+              "deletions": 603,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/process.d.ts",
+              "additions": 0,
+              "deletions": 1525,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/punycode.d.ts",
+              "additions": 0,
+              "deletions": 117,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/querystring.d.ts",
+              "additions": 0,
+              "deletions": 141,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/readline.d.ts",
+              "additions": 0,
+              "deletions": 553,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/repl.d.ts",
+              "additions": 0,
+              "deletions": 430,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/stream.d.ts",
+              "additions": 0,
+              "deletions": 1494,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/stream/consumers.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/stream/promises.d.ts",
+              "additions": 0,
+              "deletions": 83,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/stream/web.d.ts",
+              "additions": 0,
+              "deletions": 392,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/string_decoder.d.ts",
+              "additions": 0,
+              "deletions": 67,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test.d.ts",
+              "additions": 0,
+              "deletions": 190,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/assert.ts",
+              "additions": 0,
+              "deletions": 182,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/async_hooks.ts",
+              "additions": 0,
+              "deletions": 87,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/buffer.ts",
+              "additions": 0,
+              "deletions": 436,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/child_process.ts",
+              "additions": 0,
+              "deletions": 566,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/cluster.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/console.ts",
+              "additions": 0,
+              "deletions": 84,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/constants.ts",
+              "additions": 0,
+              "deletions": 138,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/crypto.ts",
+              "additions": 0,
+              "deletions": 1496,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/dgram.ts",
+              "additions": 0,
+              "deletions": 203,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/diagnostics_channel.ts",
+              "additions": 0,
+              "deletions": 24,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/dns.ts",
+              "additions": 0,
+              "deletions": 147,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/events.ts",
+              "additions": 0,
+              "deletions": 160,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/events_generic.ts",
+              "additions": 0,
+              "deletions": 233,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/fs.ts",
+              "additions": 0,
+              "deletions": 794,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/globals.ts",
+              "additions": 0,
+              "deletions": 41,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/http.ts",
+              "additions": 0,
+              "deletions": 636,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/http2.ts",
+              "additions": 0,
+              "deletions": 652,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/https.ts",
+              "additions": 0,
+              "deletions": 605,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/inspector.ts",
+              "additions": 0,
+              "deletions": 39,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/module.ts",
+              "additions": 0,
+              "deletions": 110,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/net.ts",
+              "additions": 0,
+              "deletions": 372,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/os.ts",
+              "additions": 0,
+              "deletions": 245,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/path.ts",
+              "additions": 0,
+              "deletions": 176,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/perf_hooks.ts",
+              "additions": 0,
+              "deletions": 119,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/process.ts",
+              "additions": 0,
+              "deletions": 126,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/querystring.ts",
+              "additions": 0,
+              "deletions": 69,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/readline.ts",
+              "additions": 0,
+              "deletions": 246,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/repl.ts",
+              "additions": 0,
+              "deletions": 77,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/stream.ts",
+              "additions": 0,
+              "deletions": 637,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/string_decoder.ts",
+              "additions": 0,
+              "deletions": 29,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/test.ts",
+              "additions": 0,
+              "deletions": 123,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/timers.ts",
+              "additions": 0,
+              "deletions": 96,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/timers_promises.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/tls.ts",
+              "additions": 0,
+              "deletions": 315,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/trace_events.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/tty.ts",
+              "additions": 0,
+              "deletions": 33,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/url.ts",
+              "additions": 0,
+              "deletions": 208,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/util.ts",
+              "additions": 0,
+              "deletions": 237,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/util_types.ts",
+              "additions": 0,
+              "deletions": 179,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/v8.ts",
+              "additions": 0,
+              "deletions": 66,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/vm.ts",
+              "additions": 0,
+              "deletions": 112,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/wasi.ts",
+              "additions": 0,
+              "deletions": 23,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/worker_threads.ts",
+              "additions": 0,
+              "deletions": 139,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/test/zlib.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/timers.d.ts",
+              "additions": 0,
+              "deletions": 109,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/timers/promises.d.ts",
+              "additions": 0,
+              "deletions": 93,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/tls.d.ts",
+              "additions": 0,
+              "deletions": 1099,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/trace_events.d.ts",
+              "additions": 0,
+              "deletions": 161,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/tty.d.ts",
+              "additions": 0,
+              "deletions": 204,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/url.d.ts",
+              "additions": 0,
+              "deletions": 885,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/util.d.ts",
+              "additions": 0,
+              "deletions": 1689,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/v8.d.ts",
+              "additions": 0,
+              "deletions": 626,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/vm.d.ts",
+              "additions": 0,
+              "deletions": 507,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/wasi.d.ts",
+              "additions": 0,
+              "deletions": 158,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/worker_threads.d.ts",
+              "additions": 0,
+              "deletions": 649,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/ts4.8/zlib.d.ts",
+              "additions": 0,
+              "deletions": 517,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/tsconfig.dom.json",
+              "additions": 2,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/tsconfig.json",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/tsconfig.non-dom.json",
+              "additions": 0,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/node-tests-dom.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/node-tests-non-dom.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/package.json",
+              "additions": 1,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events-dom.ts",
+              "additions": 0,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events-non-dom.ts",
+              "additions": 0,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/globals-dom.ts",
+              "additions": 33,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/globals-non-dom.ts",
+              "additions": 23,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/globals.ts",
+              "additions": 0,
+              "deletions": 34,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/perf_hooks-dom.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/perf_hooks-non-dom.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/perf_hooks.ts",
+              "additions": 0,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/assert.d.ts",
+              "additions": 0,
+              "deletions": 985,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/assert/strict.d.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/async_hooks.d.ts",
+              "additions": 0,
+              "deletions": 522,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/buffer.d.ts",
+              "additions": 0,
+              "deletions": 2353,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/child_process.d.ts",
+              "additions": 0,
+              "deletions": 1544,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/cluster.d.ts",
+              "additions": 0,
+              "deletions": 432,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/console.d.ts",
+              "additions": 0,
+              "deletions": 412,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/constants.d.ts",
+              "additions": 0,
+              "deletions": 19,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/crypto.d.ts",
+              "additions": 0,
+              "deletions": 4457,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/dgram.d.ts",
+              "additions": 0,
+              "deletions": 596,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/diagnostics_channel.d.ts",
+              "additions": 0,
+              "deletions": 546,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/dns.d.ts",
+              "additions": 0,
+              "deletions": 809,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/dns/promises.d.ts",
+              "additions": 0,
+              "deletions": 381,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/dom-events.d.ts",
+              "additions": 0,
+              "deletions": 122,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/domain.d.ts",
+              "additions": 0,
+              "deletions": 170,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/events.d.ts",
+              "additions": 0,
+              "deletions": 819,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/fs.d.ts",
+              "additions": 0,
+              "deletions": 4231,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/fs/promises.d.ts",
+              "additions": 0,
+              "deletions": 1205,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/globals.d.ts",
+              "additions": 0,
+              "deletions": 377,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/globals.global.d.ts",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/http.d.ts",
+              "additions": 0,
+              "deletions": 1803,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/http2.d.ts",
+              "additions": 0,
+              "deletions": 2386,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/https.d.ts",
+              "additions": 0,
+              "deletions": 544,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/index.d.ts",
+              "additions": 0,
+              "deletions": 88,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/inspector.d.ts",
+              "additions": 0,
+              "deletions": 2739,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/module.d.ts",
+              "additions": 0,
+              "deletions": 298,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/net.d.ts",
+              "additions": 0,
+              "deletions": 918,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/node-tests.ts",
+              "additions": 0,
+              "deletions": 275,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/os.d.ts",
+              "additions": 0,
+              "deletions": 473,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/path.d.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/perf_hooks.d.ts",
+              "additions": 0,
+              "deletions": 626,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/process.d.ts",
+              "additions": 0,
+              "deletions": 1548,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/punycode.d.ts",
+              "additions": 0,
+              "deletions": 117,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/querystring.d.ts",
+              "additions": 0,
+              "deletions": 141,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/readline.d.ts",
+              "additions": 0,
+              "deletions": 666,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/readline/promises.d.ts",
+              "additions": 0,
+              "deletions": 143,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/repl.d.ts",
+              "additions": 0,
+              "deletions": 430,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/stream.d.ts",
+              "additions": 0,
+              "deletions": 1731,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/stream/consumers.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/stream/promises.d.ts",
+              "additions": 0,
+              "deletions": 83,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/stream/web.d.ts",
+              "additions": 0,
+              "deletions": 352,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/string_decoder.d.ts",
+              "additions": 0,
+              "deletions": 67,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test.d.ts",
+              "additions": 0,
+              "deletions": 1113,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/assert.ts",
+              "additions": 0,
+              "deletions": 182,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/async_hooks.ts",
+              "additions": 0,
+              "deletions": 100,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/buffer.ts",
+              "additions": 0,
+              "deletions": 491,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/child_process.ts",
+              "additions": 0,
+              "deletions": 567,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/cluster.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/console.ts",
+              "additions": 0,
+              "deletions": 84,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/constants.ts",
+              "additions": 0,
+              "deletions": 138,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/crypto.ts",
+              "additions": 0,
+              "deletions": 1542,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/dgram.ts",
+              "additions": 0,
+              "deletions": 204,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/diagnostics_channel.ts",
+              "additions": 0,
+              "deletions": 140,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/dns.ts",
+              "additions": 0,
+              "deletions": 147,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/events.ts",
+              "additions": 0,
+              "deletions": 179,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/events_generic.ts",
+              "additions": 0,
+              "deletions": 233,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/fs.ts",
+              "additions": 0,
+              "deletions": 874,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/globals.ts",
+              "additions": 0,
+              "deletions": 77,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/http.ts",
+              "additions": 0,
+              "deletions": 683,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/http2.ts",
+              "additions": 0,
+              "deletions": 668,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/https.ts",
+              "additions": 0,
+              "deletions": 607,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/inspector.ts",
+              "additions": 0,
+              "deletions": 38,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/module.ts",
+              "additions": 0,
+              "deletions": 141,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/net.ts",
+              "additions": 0,
+              "deletions": 407,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/os.ts",
+              "additions": 0,
+              "deletions": 252,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/path.ts",
+              "additions": 0,
+              "deletions": 176,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/perf_hooks.ts",
+              "additions": 0,
+              "deletions": 127,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/process.ts",
+              "additions": 0,
+              "deletions": 179,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/querystring.ts",
+              "additions": 0,
+              "deletions": 69,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/readline.ts",
+              "additions": 0,
+              "deletions": 355,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/repl.ts",
+              "additions": 0,
+              "deletions": 77,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/stream.ts",
+              "additions": 0,
+              "deletions": 689,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/string_decoder.ts",
+              "additions": 0,
+              "deletions": 35,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/test.ts",
+              "additions": 0,
+              "deletions": 624,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/timers.ts",
+              "additions": 0,
+              "deletions": 108,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/timers_promises.ts",
+              "additions": 0,
+              "deletions": 27,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/tls.ts",
+              "additions": 0,
+              "deletions": 329,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/trace_events.ts",
+              "additions": 0,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/tty.ts",
+              "additions": 0,
+              "deletions": 33,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/url.ts",
+              "additions": 0,
+              "deletions": 208,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/util.ts",
+              "additions": 0,
+              "deletions": 352,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/util_types.ts",
+              "additions": 0,
+              "deletions": 178,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/v8.ts",
+              "additions": 0,
+              "deletions": 74,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/vm.ts",
+              "additions": 0,
+              "deletions": 154,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/wasi.ts",
+              "additions": 0,
+              "deletions": 23,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/worker_threads.ts",
+              "additions": 0,
+              "deletions": 149,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/test/zlib.ts",
+              "additions": 0,
+              "deletions": 191,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/timers.d.ts",
+              "additions": 0,
+              "deletions": 126,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/timers/promises.d.ts",
+              "additions": 0,
+              "deletions": 93,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/tls.d.ts",
+              "additions": 0,
+              "deletions": 1203,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/trace_events.d.ts",
+              "additions": 0,
+              "deletions": 171,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/tty.d.ts",
+              "additions": 0,
+              "deletions": 206,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/url.d.ts",
+              "additions": 0,
+              "deletions": 954,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/util.d.ts",
+              "additions": 0,
+              "deletions": 2075,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/v8.d.ts",
+              "additions": 0,
+              "deletions": 753,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/vm.d.ts",
+              "additions": 0,
+              "deletions": 667,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/wasi.d.ts",
+              "additions": 0,
+              "deletions": 158,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/worker_threads.d.ts",
+              "additions": 0,
+              "deletions": 692,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/ts4.8/zlib.d.ts",
+              "additions": 0,
+              "deletions": 517,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/tsconfig.dom.json",
+              "additions": 22,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/tsconfig.json",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/tsconfig.non-dom.json",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": true,
+            "endCursor": "MTAw",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgV7t64",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

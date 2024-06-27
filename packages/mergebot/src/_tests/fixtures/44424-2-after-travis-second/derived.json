@@ -1,0 +1,438 @@
+{
+  "type": "info",
+  "now": "2020-05-01T19:26:47.547Z",
+  "pr_number": 44424,
+  "author": "tomer-openfin",
+  "headCommitOid": "af636941dac21c0752befa1617297dfdac3e0a52",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-01T19:20:22.000Z",
+  "lastActivityDate": "2020-05-01T19:23:41.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": true,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "openfin",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/openfin/OTHER_FILES.txt",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/openfin/_v2/api/application/application.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/application/applicationOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/events/platform.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/events/view.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/events/window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/fin.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/interappbus/channel/channel.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/interappbus/channel/client.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/interappbus/channel/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/interappbus/channel/provider.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/commands.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/golden-layout.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/layout.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/openfin-layout.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/platform-provider.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/platform.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/resizable-view.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/platform/utils.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/system/system.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/view/view.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/webcontents/webcontents.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/window/window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/api/window/windowOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/environment/environment.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/environment/node-env.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/environment/openfin-env.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/context.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/contextChannels.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/directory.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/errors.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/intents.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/fdc3/main.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/shapes.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/transport/transport.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/_v2/util/entity-type.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/openfin-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/openfin/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/openfin/v49/OTHER_FILES.txt",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/application/application.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/application/applicationOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/base.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/clipboard/clipboard.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/clipboard/write-request.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/application.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/base.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/channel.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/emitterMap.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/eventAggregator.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/externalApplication.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/externalWindow.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/frame.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/globalHotkey.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/notifications.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/system.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/view.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/webcontents.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/events/window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/external-application/external-application.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/external-window/external-window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/fin.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/frame/frame.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/global-hotkey/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/interappbus/channel/channel.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/interappbus/channel/client.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/interappbus/channel/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/interappbus/channel/provider.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/interappbus/interappbus.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/notification/notification.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/platform/platform.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/application.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/clearCacheOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/cookie.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/crashReporterOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/download-asset.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/download-preload.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/entity.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/external-process.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/host-specs.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/log.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/monitor.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/point.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/process.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/proxy.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/registry-info.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/runtime-info.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/rvm.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/system.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/system/window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/view/view.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/webcontents/webcontents.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/window/bounds-changed.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/window/window.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/api/window/windowOption.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/environment/environment.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/environment/node-env.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/environment/openfin-env.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/environment/openfin-renderer-api.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/openfin/v49/_v2/identity.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "chrisbarker",
+        "rdepena",
+        "whyn07m3",
+        "licui3936",
+        "tomer-openfin"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "unknown"
+}

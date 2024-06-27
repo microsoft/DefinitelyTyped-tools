@@ -1,0 +1,245 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NjM3MDk5NjE4",
+        "title": "update some Chinese translation",
+        "createdAt": "2021-05-10T07:59:10Z",
+        "author": {
+          "login": "Runtu4378",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Edits Infrastructure",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 52848,
+        "state": "OPEN",
+        "headRefOid": "14499debca98ea23cfc47a80a288d5bd32798cff",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2021-05-10T15:42:52Z",
+              "projectColumnName": "Waiting for Author to Merge",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-05-10T15:43:44Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 2696551272,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551272",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551272",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "build",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 2696551642,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551642",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551642",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 2696551646,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551646",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696551646",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 2696552691,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696552691",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/14499debca98ea23cfc47a80a288d5bd32798cff/checks?check_suite_id=2696552691",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #97749 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2021-05-10T07:57:06Z",
+                "committedDate": "2021-05-10T07:57:06Z",
+                "pushedDate": "2021-05-10T07:57:17Z",
+                "oid": "14499debca98ea23cfc47a80a288d5bd32798cff",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDgzNjMyODk5Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@Runtu4378 Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 0 packages in this PR (and infra files)\n\n* Infra files\n  - [`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52848/files/14499debca98ea23cfc47a80a288d5bd32798cff#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes which affect DT infrastructure ([`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52848/files/14499debca98ea23cfc47a80a288d5bd32798cff#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-05-10T07:59:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDgzNjMyOTAwMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @Runtu4378 — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52848/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2021-05-10T07:59:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "README.cn.md",
+              "additions": 81,
+              "deletions": 56,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNjA3NjQ2MTM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

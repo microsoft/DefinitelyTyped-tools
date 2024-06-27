@@ -1,0 +1,324 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2",
+        "title": "[webpack] fix for MultiCompiler doesn't define Multistats for callback/handler of run method",
+        "lastEditedAt": null,
+        "author": {
+          "login": "spamshaker",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-06-21T09:39:04Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 45627,
+        "state": "OPEN",
+        "headRefOid": "15facc177c957646a1ace95abe5e71326007c721",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T09:39:08Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T09:39:09Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T09:44:35Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T09:44:37Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T09:44:40Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-21T11:12:32Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T07:23:32Z",
+              "projectColumnName": "Waiting for Code Reviews"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "spamshaker",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T08:36:06Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T08:36:10Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "ofhouse",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "15facc177c957646a1ace95abe5e71326007c721",
+                "abbreviatedOid": "15facc1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-03T17:33:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45627#pullrequestreview-442518527",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/15facc177c957646a1ace95abe5e71326007c721/checks?check_suite_id=822445510",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/15facc177c957646a1ace95abe5e71326007c721/checks?check_suite_id=822445510",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/15facc177c957646a1ace95abe5e71326007c721/checks?check_suite_id=822445783",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/15facc177c957646a1ace95abe5e71326007c721/checks?check_suite_id=822445783",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-06-21T09:31:00Z",
+                "committedDate": "2020-06-21T09:31:00Z",
+                "pushedDate": "2020-06-21T09:33:06Z",
+                "abbreviatedOid": "15facc1",
+                "oid": "15facc177c957646a1ace95abe5e71326007c721",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY0NzEwNDY2NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@spamshaker Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n This PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Have you considered [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing) to cover the change you're making? Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-06-21T09:39:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY0NzEwNDY2OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @tkqubo @bumbleblym @bcherny @tommytroylin @mohsen1 @jcreamer898 @alan-agius4 @dennispg @christophehurpeau @ZSkycat @johnnyreilly @rwaskiewicz @kuehlein @grgur @rubenspgcavalcante @andersk @ofhouse @danielthank @sasurau4 @dionshihk @peterblazejewicz — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45627/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-06-21T09:39:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY0NzEwNTIwMA==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## webpack ([<kbd>unpkg</kbd>](https://unpkg.com/browse/webpack@latest/))\nwas missing the following properties:\n1. WebpackOptionsDefaulter\n1. WebpackOptionsApply\n1. NodeEnvironmentPlugin\n1. validate\n1. validateSchema\n\n<details>\n<summary>as well as these 6 other properties...</summary>\n<p>WebpackOptionsValidationError, dependencies, web, webworker, node, util</p>\n</details>\n\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 15facc177c957646a1ace95abe5e71326007c721\n</p>\n",
+              "createdAt": "2020-06-21T09:44:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY0NzExMzc4Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-06-21T11:12:31.980Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                  | #45627                                                                                                                               | diff  |\n| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |\n| **Batch compilation**                                                                     |                                                                                                                         |                                                                                                                                      |       |\n| Memory usage (MiB)                                                                        | 77.5                                                                                                                    | 76.1                                                                                                                                 | -1.8% |\n| Type count                                                                                | 12200                                                                                                                   | 12202                                                                                                                                | 0%    |\n| Assignability cache size                                                                  | 2669                                                                                                                    | 2670                                                                                                                                 | 0%    |\n|                                                                                           |                                                                                                                         |                                                                                                                                      |       |\n| **Language service**                                                                      |                                                                                                                         |                                                                                                                                      |       |\n| Samples taken                                                                             | 1557                                                                                                                    | 1557                                                                                                                                 | 0%    |\n| Identifiers in tests                                                                      | 1557                                                                                                                    | 1557                                                                                                                                 | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                         |                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 334.0                                                                                                                   | 348.5                                                                                                                                | +4.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.5%                                                                                                                   | 11.4%                                                                                                                                |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 455.1                                                                                                                   | 452.9                                                                                                                                | -0.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [max](/DefinitelyTyped/DefinitelyTyped/blob/bdba62e896baf7094d1ccabb709cb9d46dcd3d3a/types/webpack/test/index.ts#L1128) | [sortOrderRegular](/DefinitelyTyped/DefinitelyTyped/blob/1853baa6c2d967f0c359220a7f199a5fcc5e4e43/types/webpack/test/index.ts#L1229) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                         |                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 334.2                                                                                                                   | 348.0                                                                                                                                | +4.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.5%                                                                                                                   | 11.3%                                                                                                                                | -1.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 446.0                                                                                                                   | 464.3                                                                                                                                | +4.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [max](/DefinitelyTyped/DefinitelyTyped/blob/bdba62e896baf7094d1ccabb709cb9d46dcd3d3a/types/webpack/test/index.ts#L1128) | [DllEntryPlugin](/DefinitelyTyped/DefinitelyTyped/blob/1853baa6c2d967f0c359220a7f199a5fcc5e4e43/types/webpack/test/index.ts#L935)    |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-06-21T11:12:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMTU1OTExNA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@spamshaker Everything looks good here. Great job! I am ready to merge this PR (at 15facc1) on your behalf.\nIf you'd like that to happen, please post a comment with the exact text\n\n> Ready to merge\n\nand I'll merge it the next time I look at this PR.\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-04-30T01:31:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NDA5NjY2MA==",
+              "author": {
+                "login": "spamshaker",
+                "__typename": "User"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2020-07-06T08:36:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/webpack/index.d.ts",
+              "additions": 6,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 1
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDA0NTk5NzM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

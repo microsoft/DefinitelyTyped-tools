@@ -1,0 +1,48 @@
+{
+  "type": "info",
+  "now": "2020-07-20T22:18:56.331Z",
+  "pr_number": 46196,
+  "author": "bytetyde",
+  "headCommitOid": "2f300d234e09e9e34c88e884f6466f2d6d0db399",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-20T12:12:39.000Z",
+  "lastActivityDate": "2020-07-20T12:12:39.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "date-arithmetic",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/date-arithmetic/date-arithmetic-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/date-arithmetic/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/date-arithmetic/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/date-arithmetic/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [
+        "HeeL"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

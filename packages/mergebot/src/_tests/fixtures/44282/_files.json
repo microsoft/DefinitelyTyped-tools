@@ -1,0 +1,4 @@
+{
+  "master:types/benchmark/index.d.ts": "// Type definitions for Benchmark v1.0.0\n// Project: http://benchmarkjs.com\n// Definitions by: Asana <https://asana.com>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n\n\ndeclare class Benchmark {\n",
+  "25794304acf8c1fd70712bd068beb07b0e09755e:types/benchmark/index.d.ts": "// Type definitions for Benchmark v1.0.0\n// Project: https://benchmarkjs.com\n// Definitions by: Asana <https://asana.com>\n//                 Charlie Fish <https://github.com/fishcharlie>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n\n\ndeclare class Benchmark {\n"
+}

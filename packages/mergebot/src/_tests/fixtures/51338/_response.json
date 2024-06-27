@@ -1,0 +1,308 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTc2NTk4OTQ2",
+        "title": "[koa] Fix http-assert import issue",
+        "createdAt": "2021-02-19T17:14:27Z",
+        "author": {
+          "login": "pkuczynski",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 51338,
+        "state": "OPEN",
+        "headRefOid": "4a7712f61d17eb33e89171f317deeb31b3d555ae",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-02-19T18:52:03Z",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "tellnes",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "4a7712f61d17eb33e89171f317deeb31b3d555ae",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2021-02-20T14:48:26Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/51338#pullrequestreview-594758328",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2079549099",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2079549099",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2079551193",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2079551193",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #87669 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2084628457",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4a7712f61d17eb33e89171f317deeb31b3d555ae/checks?check_suite_id=2084628457",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "build",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2021-02-19T17:22:04Z",
+                "committedDate": "2021-02-19T17:22:04Z",
+                "pushedDate": "2021-02-19T17:22:27Z",
+                "oid": "4a7712f61d17eb33e89171f317deeb31b3d555ae",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIxMzI3OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "Hey @pkuczynski,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2021-02-19T17:15:04Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIxMzI4Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@pkuczynski Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `koa` [on npm](https://www.npmjs.com/package/koa), [on unpkg](https://unpkg.com/browse/koa@latest/) (author is owner)\n  - owner-approval: @tellnes\n  - Config files to check:\n    - [`koa/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/51338/files/4a7712f61d17eb33e89171f317deeb31b3d555ae#diff-1730c5405d0220a98f28feeec2de3f5a511ebc6a04ceadf12415b81de841672e): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) and not moving towards it\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ A DT maintainer needs to approve changes which affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 11 days — please try to get reviewers!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-02-19T17:15:05Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIxMzMwMA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @DavidCai1993 @jkeylu @brikou @harryparkdotio @chatoo2412 @tellnes — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/51338/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2021-02-19T17:15:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIxNzk2MA==",
+              "author": {
+                "login": "pkuczynski",
+                "__typename": "User"
+              },
+              "body": "I added `\"esModuleInterop\": true` to `tsconfig` as this is the case when `import * as httpAssert from 'http-assert';` fails.",
+              "createdAt": "2021-02-19T17:23:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIxODU2Mg==",
+              "author": {
+                "login": "pkuczynski",
+                "__typename": "User"
+              },
+              "body": "@tellnes can you please have a look at this as an urgent matter, as our last merge #50249 broke the types ",
+              "createdAt": "2021-02-19T17:24:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc4MjIzMDI5OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2021-02-19T17:44:31.050Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                               | #51338                                                                                                                     | diff  |\n| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                      |                                                                                                                            |       |\n| Memory usage (MiB)                                                                        | 80.2                                                                                                                 | 81.9                                                                                                                       | +2.1% |\n| Type count                                                                                | 12179                                                                                                                | 12239                                                                                                                      | 0%    |\n| Assignability cache size                                                                  | 2743                                                                                                                 | 2743                                                                                                                       | 0%    |\n|                                                                                           |                                                                                                                      |                                                                                                                            |       |\n| **Language service**                                                                      |                                                                                                                      |                                                                                                                            |       |\n| Samples taken                                                                             | 270                                                                                                                  | 270                                                                                                                        | 0%    |\n| Identifiers in tests                                                                      | 270                                                                                                                  | 270                                                                                                                        | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                      |                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 367.8                                                                                                                | 370.4                                                                                                                      | +0.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.6%                                                                                                                 | 10.2%                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 474.6                                                                                                                | 478.1                                                                                                                      | +0.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [assert](/DefinitelyTyped/DefinitelyTyped/blob/21c58cfbf416717f8b69973bddce00dbe82bddfd/types/koa/test/index.ts#L46) | [attachment](/DefinitelyTyped/DefinitelyTyped/blob/bbb8d7db2b15488a6824ac7047fba7f08229bffd/types/koa/test/default.ts#L56) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                      |                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 371.7                                                                                                                | 376.7                                                                                                                      | +1.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.5%                                                                                                                 | 9.4%                                                                                                                       |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 468.4                                                                                                                | 484.4                                                                                                                      | +3.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [use](/DefinitelyTyped/DefinitelyTyped/blob/21c58cfbf416717f8b69973bddce00dbe82bddfd/types/koa/test/default.ts#L36)  | [assert](/DefinitelyTyped/DefinitelyTyped/blob/bbb8d7db2b15488a6824ac7047fba7f08229bffd/types/koa/test/index.ts#L46)       |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2021-02-19T17:44:31Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/koa/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/koa/tsconfig.json",
+              "additions": 2,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNTUyOTAyODI=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

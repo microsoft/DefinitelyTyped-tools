@@ -1,0 +1,40 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDY1MzgxMDQ1NA==",
+        "body": "@dimkirt Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `greek-utils` (*new!*) — [on npm](https://www.npmjs.com/package/greek-utils), [on unpkg](https://unpkg.com/browse/greek-utils@latest/)\n  - 1 added owner: ✎@dimkirt\n  - Config files to check:\n    - [`greek-utils/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890/files/146c312eac4c4ac8931b4ec6b2762457f8f4b6e6#diff-1beeab429f4237a976a64069a8a9b4eee96b609637784407d8975647ca13c8a5): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45890&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyMTU0ODE2NTQ5"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDQ0MzI2NjIy"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "MDExOlByb2plY3RDYXJkNDEyNzAzNzE=",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "MDExOlB1bGxSZXF1ZXN0NDQ0MzI2NjIy",
+        "body": "🔔 @dimkirt — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->"
+      }
+    }
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Owner Approved",
+    "Maintainer Approved",
+    "Edits multiple packages",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@mgol Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 2 packages in this PR\n\n* `angular-sanitize` — [on npm](https://www.npmjs.com/package/angular-sanitize), [on unpkg](https://unpkg.com/browse/angular-sanitize@latest/)\n* `angular` — [on npm](https://www.npmjs.com/package/angular), [on unpkg](https://unpkg.com/browse/angular@latest/)\n  - owner-approval: @peterblazejewicz\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=48652&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes that affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@mgol: Everything looks good here. I am ready to merge this PR (at 06d8d67) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n"
+    },
+    {
+      "tag": "stale-ping-024242-753cdb3",
+      "status": "@RyanCavanaugh, @thorn0, @falsyvalues Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
+    },
+    {
+      "tag": "wait-for-merge-offer-06d8d67",
+      "status": ":passport_control: Hi @mgol,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

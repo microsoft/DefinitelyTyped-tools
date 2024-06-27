@@ -1,0 +1,791 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDEyMjY1MDE2",
+        "title": "openfin - adding layouts and fdc3 namespaces",
+        "lastEditedAt": "2020-05-01T19:25:21Z",
+        "author": {
+          "login": "tomer-openfin",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-05-01T19:23:41Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 44424,
+        "state": "OPEN",
+        "headRefOid": "af636941dac21c0752befa1617297dfdac3e0a52",
+        "changedFiles": 121,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-01T19:23:45Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-01T19:23:46Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/af636941dac21c0752befa1617297dfdac3e0a52/checks?check_suite_id=646317117",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/af636941dac21c0752befa1617297dfdac3e0a52/checks?check_suite_id=646317117",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "PENDING",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "PENDING",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "PENDING",
+                  "contexts": [
+                    {
+                      "state": "PENDING",
+                      "description": "The Travis CI build is in progress",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/682082632?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-05-01T19:19:54Z",
+                "committedDate": "2020-05-01T19:19:54Z",
+                "pushedDate": "2020-05-01T19:20:22Z",
+                "abbreviatedOid": "af63694",
+                "oid": "af636941dac21c0752befa1617297dfdac3e0a52",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMjUyNzAxNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@tomer-openfin Thank you for submitting this PR! \n\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-05-01T19:23:45Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMjUyNzAyMw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @chrisbarker @rdepena @whyn07m3 @licui3936 — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44424/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-05-01T19:23:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/openfin/OTHER_FILES.txt",
+              "additions": 14,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/application/application.d.ts",
+              "additions": 4,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/application/applicationOption.d.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/events/platform.d.ts",
+              "additions": 18,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/events/view.d.ts",
+              "additions": 22,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/events/window.d.ts",
+              "additions": 14,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/fin.d.ts",
+              "additions": 3,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/interappbus/channel/channel.d.ts",
+              "additions": 2,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/interappbus/channel/client.d.ts",
+              "additions": 8,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/interappbus/channel/index.d.ts",
+              "additions": 8,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/interappbus/channel/provider.d.ts",
+              "additions": 4,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/commands.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/golden-layout.d.ts",
+              "additions": 887,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/layout.d.ts",
+              "additions": 123,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/openfin-layout.d.ts",
+              "additions": 69,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/platform-provider.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/platform.d.ts",
+              "additions": 48,
+              "deletions": 29,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/resizable-view.d.ts",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/platform/utils.d.ts",
+              "additions": 54,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/system/system.d.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/view/view.d.ts",
+              "additions": 241,
+              "deletions": 15,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/webcontents/webcontents.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/window/window.d.ts",
+              "additions": 28,
+              "deletions": 18,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/api/window/windowOption.d.ts",
+              "additions": 8,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/environment/environment.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/environment/node-env.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/environment/openfin-env.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/context.d.ts",
+              "additions": 123,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/contextChannels.d.ts",
+              "additions": 369,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/directory.d.ts",
+              "additions": 161,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/errors.d.ts",
+              "additions": 100,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/intents.d.ts",
+              "additions": 20,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/fdc3/main.d.ts",
+              "additions": 288,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/shapes.d.ts",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/transport/transport.d.ts",
+              "additions": 1,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/_v2/util/entity-type.d.ts",
+              "additions": 2,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/index.d.ts",
+              "additions": 297,
+              "deletions": 61,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/openfin-tests.ts",
+              "additions": 59,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/tslint.json",
+              "additions": 2,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/OTHER_FILES.txt",
+              "additions": 77,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/application/application.d.ts",
+              "additions": 442,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/application/applicationOption.d.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/base.d.ts",
+              "additions": 45,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/clipboard/clipboard.d.ts",
+              "additions": 70,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/clipboard/write-request.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/application.d.ts",
+              "additions": 66,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/base.d.ts",
+              "additions": 18,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/channel.d.ts",
+              "additions": 10,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/emitterMap.d.ts",
+              "additions": 16,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/eventAggregator.d.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/externalApplication.d.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/externalWindow.d.ts",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/frame.d.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/globalHotkey.d.ts",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/notifications.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/system.d.ts",
+              "additions": 27,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/view.d.ts",
+              "additions": 32,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/webcontents.d.ts",
+              "additions": 38,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/events/window.d.ts",
+              "additions": 192,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/external-application/external-application.d.ts",
+              "additions": 131,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/external-window/external-window.d.ts",
+              "additions": 257,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/fin.d.ts",
+              "additions": 32,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/frame/frame.d.ts",
+              "additions": 164,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/global-hotkey/index.d.ts",
+              "additions": 42,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/interappbus/channel/channel.d.ts",
+              "additions": 37,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/interappbus/channel/client.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/interappbus/channel/index.d.ts",
+              "additions": 33,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/interappbus/channel/provider.d.ts",
+              "additions": 18,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/interappbus/interappbus.d.ts",
+              "additions": 80,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/notification/notification.d.ts",
+              "additions": 81,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/platform/platform.d.ts",
+              "additions": 192,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/application.d.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/clearCacheOption.d.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/cookie.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/crashReporterOption.d.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/download-asset.d.ts",
+              "additions": 18,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/download-preload.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/entity.d.ts",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/external-process.d.ts",
+              "additions": 41,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/host-specs.d.ts",
+              "additions": 24,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/log.d.ts",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/monitor.d.ts",
+              "additions": 39,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/point.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/process.d.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/proxy.d.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/registry-info.d.ts",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/runtime-info.d.ts",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/rvm.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/system.d.ts",
+              "additions": 841,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/system/window.d.ts",
+              "additions": 16,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/view/view.d.ts",
+              "additions": 195,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/webcontents/webcontents.d.ts",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/window/bounds-changed.d.ts",
+              "additions": 14,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/window/window.d.ts",
+              "additions": 963,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/api/window/windowOption.d.ts",
+              "additions": 88,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/environment/environment.d.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/environment/node-env.d.ts",
+              "additions": 16,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/environment/openfin-env.d.ts",
+              "additions": 16,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/environment/openfin-renderer-api.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/openfin/v49/_v2/identity.d.ts",
+              "additions": 18,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 121
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzczOTYzMTI=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

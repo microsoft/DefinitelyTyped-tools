@@ -1,0 +1,5 @@
+{
+  "5337ea17b2407707bead503cd20c9ca29438f5df:types/vertx__eventbus-bridge-client.js/tsconfig.json": "{\n    \"compilerOptions\": {\n        \"module\": \"commonjs\",\n        \"lib\": [\n            \"es6\"\n        ],\n        \"noImplicitAny\": true,\n        \"noImplicitThis\": true,\n        \"strictFunctionTypes\": true,\n        \"strictNullChecks\": true,\n        \"baseUrl\": \"../\",\n        \"typeRoots\": [\n            \"../\"\n        ],\n        \"types\": [],\n        \"noEmit\": true,\n        \"forceConsistentCasingInFileNames\": true\n    },\n    \"files\": [\n        \"index.d.ts\",\n        \"vertx__eventbus-bridge-client.js-tests.ts\"\n    ]\n}\n",
+  "5337ea17b2407707bead503cd20c9ca29438f5df:types/vertx__eventbus-bridge-client.js/tslint.json": "{ \"extends\": \"@definitelytyped/dtslint/dt.json\" }\n",
+  "5337ea17b2407707bead503cd20c9ca29438f5df:package.json": "{}"
+}

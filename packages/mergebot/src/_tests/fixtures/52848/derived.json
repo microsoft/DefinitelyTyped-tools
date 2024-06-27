@@ -1,0 +1,35 @@
+{
+  "type": "info",
+  "now": "2021-05-10T15:46:37.788Z",
+  "pr_number": 52848,
+  "author": "Runtu4378",
+  "headCommitOid": "14499debca98ea23cfc47a80a288d5bd32798cff",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-05-10T07:57:17.000Z",
+  "lastActivityDate": "2021-05-10T15:42:52.000Z",
+  "maintainerBlessed": "Waiting for Author to Merge",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "README.cn.md",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    }
+  ],
+  "reviews": [],
+  "ciResult": "unknown"
+}

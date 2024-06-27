@@ -1,0 +1,239 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NzIzNDc0ODMy",
+        "title": "fix(react-datepicker): fix registerLocale localData type",
+        "createdAt": "2021-08-31T15:14:41Z",
+        "author": {
+          "login": "philibea",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 55512,
+        "state": "OPEN",
+        "headRefOid": "e90d61bddfd00fa6db114993d0689cdb367be7e5",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-08-31T15:19:36Z",
+              "projectColumnName": "Needs Maintainer Review",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Ky6uk",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "e90d61bddfd00fa6db114993d0689cdb367be7e5",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2021-08-31T18:33:55Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55512#pullrequestreview-743070006",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 3643302080,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/e90d61bddfd00fa6db114993d0689cdb367be7e5/checks?check_suite_id=3643302080",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/e90d61bddfd00fa6db114993d0689cdb367be7e5/checks?check_suite_id=3643302080",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 3643303283,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/e90d61bddfd00fa6db114993d0689cdb367be7e5/checks?check_suite_id=3643303283",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/e90d61bddfd00fa6db114993d0689cdb367be7e5/checks?check_suite_id=3643303283",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20210831.26 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2021-08-31T15:13:13Z",
+                "committedDate": "2021-08-31T15:13:13Z",
+                "pushedDate": "2021-08-31T15:13:30Z",
+                "oid": "e90d61bddfd00fa6db114993d0689cdb367be7e5",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM42M0xH",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 909331527,
+              "body": "@philibea Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `react-datepicker` — [on npm](https://www.npmjs.com/package/react-datepicker), [on unpkg](https://unpkg.com/browse/react-datepicker@latest/)\n  - owner-approval: @Ky6uk\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=55512&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-08-31T15:15:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM42M0xo",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 909331560,
+              "body": "Hey @philibea,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2021-08-31T15:15:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM42M0xz",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 909331571,
+              "body": "🔔 @radziksh @andrewBalekha @smrq @royxue @KoalaHuman @justingrant @jakeboone02 @Ky6uk @aviklai @seckie @tu4mo @kerry-g @ShiftrTechSAS — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55512/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2021-08-31T15:15:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "types/react-datepicker/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgQLi2w",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

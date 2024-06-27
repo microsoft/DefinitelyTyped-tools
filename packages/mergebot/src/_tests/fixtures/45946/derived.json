@@ -1,0 +1,63 @@
+{
+  "type": "info",
+  "now": "2020-07-11T01:46:16.667Z",
+  "pr_number": 45946,
+  "author": "rubensworks",
+  "headCommitOid": "a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-08T06:31:29.000Z",
+  "lastActivityDate": "2020-07-10T14:00:47.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "notNeededPackages.json",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    },
+    {
+      "name": "asynciterator",
+      "kind": "delete",
+      "files": [
+        {
+          "path": "types/asynciterator/asynciterator-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/asynciterator/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/asynciterator/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/asynciterator/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [
+        "rubensworks"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

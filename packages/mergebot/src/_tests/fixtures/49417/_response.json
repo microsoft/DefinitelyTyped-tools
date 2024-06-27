@@ -1,0 +1,742 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTE3MTkwNTIz",
+        "title": "[d3-array] Update types to v2.8",
+        "createdAt": "2020-11-07T20:48:53Z",
+        "author": {
+          "login": "Methuselah96",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 49417,
+        "state": "OPEN",
+        "headRefOid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-07T20:49:32Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-07T20:49:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-07T20:53:06Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-07T22:54:09Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-08T07:57:39Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-14T14:45:10Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-15T15:22:23Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-15T15:22:24Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-15T20:49:03Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-16T16:47:52Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-16T16:47:53Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "tuuling",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "525f75c2fecceb410d9fa026bb218476fbe1c66a",
+                "abbreviatedOid": "525f75c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "tuuling",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-07T21:37:04Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-07T21:37:04Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-525684716",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "525f75c2fecceb410d9fa026bb218476fbe1c66a",
+                "abbreviatedOid": "525f75c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Methuselah96",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-08T07:52:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-08T07:52:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-525783277",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Ledragon",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Ledragon",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T15:20:32Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-11-15T15:21:49Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530808186",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "tuuling",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "tuuling",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T17:45:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T17:45:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530819795",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Methuselah96",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T17:57:10Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T17:57:10Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530820589",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Ledragon",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Ledragon",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T19:51:47Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T19:51:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530829279",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Methuselah96",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T20:19:22Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T20:19:23Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530831464",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Ledragon",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Ledragon",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T20:48:18Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T20:48:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530833769",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Ledragon",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-11-15T20:48:29Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530833785",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Methuselah96",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T21:04:31Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T21:04:31Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530835040",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Ledragon",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Ledragon",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T21:30:59Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-15T21:30:59Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530837273",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "tuuling",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "abbreviatedOid": "2b9d098",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "tuuling",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-16T07:38:51Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-16T07:38:51Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417#pullrequestreview-530983247",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-07T20:00:23Z",
+                "committedDate": "2020-11-07T20:00:23Z",
+                "pushedDate": null,
+                "abbreviatedOid": "2b223b6",
+                "oid": "2b223b6f17bea88533e1e5efc15fbf7221eae1db",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-07T20:33:15Z",
+                "committedDate": "2020-11-07T20:33:15Z",
+                "pushedDate": null,
+                "abbreviatedOid": "5778b5f",
+                "oid": "5778b5f4eb2ed06de91400d868a1fd3d530405ee",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/525f75c2fecceb410d9fa026bb218476fbe1c66a/checks?check_suite_id=1466843544",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/525f75c2fecceb410d9fa026bb218476fbe1c66a/checks?check_suite_id=1466843544",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/525f75c2fecceb410d9fa026bb218476fbe1c66a/checks?check_suite_id=1466843681",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/525f75c2fecceb410d9fa026bb218476fbe1c66a/checks?check_suite_id=1466843681",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-07T20:47:01Z",
+                "committedDate": "2020-11-07T20:47:01Z",
+                "pushedDate": "2020-11-07T20:48:03Z",
+                "abbreviatedOid": "525f75c",
+                "oid": "525f75c2fecceb410d9fa026bb218476fbe1c66a",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/2b9d0980329843dc436a18460f85bb2e2d2f688c/checks?check_suite_id=1467907548",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/2b9d0980329843dc436a18460f85bb2e2d2f688c/checks?check_suite_id=1467907548",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/2b9d0980329843dc436a18460f85bb2e2d2f688c/checks?check_suite_id=1467907815",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/2b9d0980329843dc436a18460f85bb2e2d2f688c/checks?check_suite_id=1467907815",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-08T07:51:54Z",
+                "committedDate": "2020-11-08T07:51:54Z",
+                "pushedDate": "2020-11-08T07:52:53Z",
+                "abbreviatedOid": "2b9d098",
+                "oid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 10,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMzQ5MzkyNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@Methuselah96 Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `d3-array` [on npm](https://www.npmjs.com/package/d3-array), [on unpkg](https://unpkg.com/browse/d3-array@latest/)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-11-07T20:49:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMzQ5MzkyOQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @gustavderdrache @borisyankov @tomwanzek @denisname @ledragon — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49417/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-11-07T20:49:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMzQ5NDI0OA==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## d3-array ([<kbd>unpkg</kbd>](https://unpkg.com/browse/d3-array@latest/))\nwas missing the following properties:\n1. scan\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 2b9d0980329843dc436a18460f85bb2e2d2f688c\n</p>\n",
+              "createdAt": "2020-11-07T20:53:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMzUwNTE0Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-11-07T22:54:09.000Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a version of d3-array that doesn’t yet exist on master, so I’ve compared them with v2.7.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | 2.7@master                                                                                                                                                  | 2.8 in #49417                                                                                                                   | diff   |\n| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                                             |                                                                                                                                 |        |\n| Memory usage (MiB)                                                                        | 83.4                                                                                                                                                        | 90.8                                                                                                                            | +8.9%  |\n| Type count                                                                                | 14225                                                                                                                                                       | 14486                                                                                                                           | +2%    |\n| Assignability cache size                                                                  | 4084                                                                                                                                                        | 4124                                                                                                                            | +1%    |\n|                                                                                           |                                                                                                                                                             |                                                                                                                                 |        |\n| **Language service**                                                                      |                                                                                                                                                             |                                                                                                                                 |        |\n| Samples taken                                                                             | 3160                                                                                                                                                        | 3225                                                                                                                            | +2%    |\n| Identifiers in tests                                                                      | 3160                                                                                                                                                        | 3225                                                                                                                            | +2%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                             |                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 460.4                                                                                                                                                       | 447.8                                                                                                                           | -2.7%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 7.9%                                                                                                                                                        | 6.4%                                                                                                                            |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 696.5                                                                                                                                                       | 816.4                                                                                                                           | +17.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [readonlyMixedObjectOrUndefinedArray](/DefinitelyTyped/DefinitelyTyped/blob/fdf2a38b605502827b4fa86f26fa4081df062d55/types/d3-array/d3-array-tests.ts#L165) | [age](/DefinitelyTyped/DefinitelyTyped/blob/2cbb4ec7ae9743d6efec26b869eb8805b0baf234/types/d3-array/d3-array-tests.ts#L217)     |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                             |                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 456.2                                                                                                                                                       | 442.6                                                                                                                           | -3.0%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 7.9%                                                                                                                                                        | 6.2%                                                                                                                            | -21.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 786.0                                                                                                                                                       | 673.4                                                                                                                           | -14.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [b](/DefinitelyTyped/DefinitelyTyped/blob/fdf2a38b605502827b4fa86f26fa4081df062d55/types/d3-array/d3-array-tests.ts#L459)                                   | [shuffle](/DefinitelyTyped/DefinitelyTyped/blob/2cbb4ec7ae9743d6efec26b869eb8805b0baf234/types/d3-array/d3-array-tests.ts#L874) |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-11-07T22:54:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMzU0MzI2MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@tuuling Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-98aca3-525f75c-->",
+              "createdAt": "2020-11-08T07:57:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNzIxNzM0OQ==",
+              "author": {
+                "login": "Methuselah96",
+                "__typename": "User"
+              },
+              "body": "@tuuling @Ledragon Can I get a review?",
+              "createdAt": "2020-11-14T14:45:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/d3-array/d3-array-tests.ts",
+              "additions": 67,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/d3-array/index.d.ts",
+              "additions": 124,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDg5MDg2NDg=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

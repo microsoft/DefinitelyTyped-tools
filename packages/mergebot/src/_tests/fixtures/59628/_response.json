@@ -1,0 +1,357 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM41bNTc",
+        "title": ":tada: 'twemoji' no longer required",
+        "createdAt": "2022-03-31T19:26:36Z",
+        "author": {
+          "login": "peterblazejewicz",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits Infrastructure",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 59628,
+        "state": "OPEN",
+        "headRefOid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+        "changedFiles": 6,
+        "additions": 4,
+        "deletions": 313,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "e11ae5d76bb7c11e606ed5aa0e47c1f1e81fd88d",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2022-03-31T19:32:10Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2022-03-31T22:12:55Z",
+              "projectColumnName": "Waiting for Author to Merge",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "davwheat",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2022-03-31T19:33:37Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628#pullrequestreview-928083763",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2022-03-31T22:12:17Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628#pullrequestreview-928237599",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 5883803312,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941/checks?check_suite_id=5883803312",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941/checks?check_suite_id=5883803312",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 5883805587,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941/checks?check_suite_id=5883805587",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941/checks?check_suite_id=5883805587",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20220331.39 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2022-03-31T19:23:51Z",
+                "committedDate": "2022-03-31T19:23:51Z",
+                "pushedDate": "2022-03-31T19:26:15Z",
+                "oid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM5ArAD6",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1085014266,
+              "body": "@peterblazejewicz Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `twemoji` (*probably deleted!*) — [on npm](https://www.npmjs.com/package/twemoji), [on unpkg](https://unpkg.com/browse/twemoji@latest/) (author is owner)\n  - owner-approval: @davwheat\n* Infra files\n  - [`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=59628&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes which affect DT infrastructure ([`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621))\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2022-03-31T19:27:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5ArAEU",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1085014292,
+              "body": "🔔 @coderbyheart @davwheat — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2022-03-31T19:27:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5AroSK",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1085179018,
+              "body": "@peterblazejewicz: Everything looks good here. I am ready to merge this PR (at 15c10d8) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@coderbyheart, @davwheat: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2022-03-31T22:12:56Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5ArpCN",
+              "author": {
+                "login": "davwheat",
+                "__typename": "User"
+              },
+              "databaseId": 1085182093,
+              "body": "Ready to merge",
+              "createdAt": "2022-03-31T22:17:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5ArxKw",
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "databaseId": 1085215408,
+              "body": "@typescript-bot 🤨",
+              "createdAt": "2022-03-31T23:05:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "path": "notNeededPackages.json",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twemoji/index.d.ts",
+              "additions": 0,
+              "deletions": 229,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twemoji/test/twemoji-tests.common-js.ts",
+              "additions": 0,
+              "deletions": 30,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twemoji/test/twemoji-tests.global.ts",
+              "additions": 0,
+              "deletions": 28,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twemoji/tsconfig.json",
+              "additions": 0,
+              "deletions": 25,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twemoji/tslint.json",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Ng",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgTEe7s",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

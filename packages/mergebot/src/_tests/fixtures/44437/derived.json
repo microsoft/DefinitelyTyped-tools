@@ -1,0 +1,53 @@
+{
+  "type": "info",
+  "now": "2020-05-02T15:44:09.276Z",
+  "pr_number": 44437,
+  "author": "johnnyreilly",
+  "headCommitOid": "eb92456861d4537c6e96dd7865e715aa4812aae0",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-02T12:17:06.000Z",
+  "lastActivityDate": "2020-05-02T12:17:22.000Z",
+  "mergeOfferDate": "2020-05-02T12:19:18.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "prompts",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/prompts/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/prompts/prompts-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "Berkays",
+        "unindented",
+        "kamontat",
+        "theweirdone",
+        "whoaa512"
+      ],
+      "addedOwners": [
+        "johnnyreilly"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "kamontat",
+      "date": "2020-05-02T12:17:22.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

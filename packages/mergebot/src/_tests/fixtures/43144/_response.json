@@ -1,0 +1,277 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0Mzg4NDkxOTI2",
+        "title": "Mailcheck: Add support for Synchronous mode",
+        "lastEditedAt": "2020-03-15T00:08:41Z",
+        "author": {
+          "login": "jeffreymeng",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-03-15T00:08:32Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Merge:Express",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "MERGEABLE",
+        "number": 43144,
+        "state": "OPEN",
+        "headRefOid": "f1f5c4bb0ae553f56766882f6458d2e22baa87c7",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "016519e482209abe1df81c91023bb582ccb1b1bd",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "fc3968c884f46212f5a6f34f15f92059b59409d1",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "f1f5c4bb0ae553f56766882f6458d2e22baa87c7",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "login": "pocesar",
+                "__typename": "User"
+              },
+              "state": "APPROVED"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "pocesar",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "f1f5c4bb0ae553f56766882f6458d2e22baa87c7",
+                "abbreviatedOid": "f1f5c4b",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-03-15T01:29:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43144#pullrequestreview-374764862",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-03-15T00:01:59Z",
+                "committedDate": "2020-03-15T00:01:59Z",
+                "pushedDate": "2020-03-15T00:03:46Z",
+                "abbreviatedOid": "016519e",
+                "oid": "016519e482209abe1df81c91023bb582ccb1b1bd",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "FAILURE",
+                  "contexts": [
+                    {
+                      "state": "FAILURE",
+                      "description": "The Travis CI build failed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/662562053?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-15T00:06:50Z",
+                "committedDate": "2020-03-15T00:06:50Z",
+                "pushedDate": "2020-03-15T00:07:02Z",
+                "abbreviatedOid": "fc3968c",
+                "oid": "fc3968c884f46212f5a6f34f15f92059b59409d1",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/662562615?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-15T00:11:35Z",
+                "committedDate": "2020-03-15T00:11:35Z",
+                "pushedDate": "2020-03-15T00:11:48Z",
+                "abbreviatedOid": "f1f5c4b",
+                "oid": "f1f5c4bb0ae553f56766882f6458d2e22baa87c7",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTE1MTM2Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@jeffreymeng Thank you for submitting this PR!\n\n🔔 @pocesar — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43144/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\nIf no reviewer appears after a week, a DefinitelyTyped maintainer will review the PR instead.\r\n<!--footer bot @ 3/17/2020, 7:24:14 AM footerend-->",
+              "createdAt": "2020-03-15T00:22:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTE1ODg5MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"merge\"} headerend-->\r\nA definition owner has approved this PR ⭐️. A maintainer will merge this PR shortly. If it shouldn't be merged yet, please leave a comment saying so and we'll wait. Thank you for your contribution to DefinitelyTyped!\r\n<!--footer bot @ 3/14/2020, 7:22:34 PM footerend-->",
+              "createdAt": "2020-03-15T02:22:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/mailcheck/index.d.ts",
+              "additions": 14,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/mailcheck/mailcheck-tests.ts",
+              "additions": 14,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzQ1OTI2MjI=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzUy",
+                "name": "Check and Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

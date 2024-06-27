@@ -1,0 +1,39 @@
+{
+  "type": "info",
+  "now": "2020-04-28T09:34:31.000Z",
+  "pr_number": 44288,
+  "author": "nomatteus",
+  "headCommitOid": "05ee6f2784d694258f61e7a93a95e758ea29ad9d",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-28T04:46:31.000Z",
+  "lastActivityDate": "2020-04-28T04:48:25.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "react-bootstrap-table2-paginator",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-bootstrap-table2-paginator/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "gosticks"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

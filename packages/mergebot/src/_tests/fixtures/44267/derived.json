@@ -1,0 +1,50 @@
+{
+  "type": "info",
+  "now": "2020-04-30T22:04:05.517Z",
+  "pr_number": 44267,
+  "author": "ErikMartensson",
+  "headCommitOid": "ceb74b3471454b2f57cbe671e130028c680ffb88",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-27T14:15:25.000Z",
+  "lastActivityDate": "2020-04-28T06:48:36.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "intercom-client",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/intercom-client/User.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/intercom-client/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "jineshshah36",
+        "peping",
+        "mikhail-monchak",
+        "cdoe",
+        "malithrw"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "malithrw",
+      "date": "2020-04-28T06:48:36.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

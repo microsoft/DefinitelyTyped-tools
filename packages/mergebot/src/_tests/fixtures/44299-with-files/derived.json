@@ -1,0 +1,52 @@
+{
+  "type": "info",
+  "now": "2020-04-29T17:19:10.716Z",
+  "pr_number": 44299,
+  "author": "geopic",
+  "headCommitOid": "683fb3b1298223256be3a49823686f35bd94a730",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-29T10:57:59.000Z",
+  "lastActivityDate": "2020-04-29T10:57:59.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "hcaptcha__vue-hcaptcha",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/hcaptcha__vue-hcaptcha/hcaptcha__vue-hcaptcha-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/hcaptcha__vue-hcaptcha/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/hcaptcha__vue-hcaptcha/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/hcaptcha__vue-hcaptcha/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/hcaptcha__vue-hcaptcha/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "geopic"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

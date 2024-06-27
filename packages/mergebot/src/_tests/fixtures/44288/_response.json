@@ -1,0 +1,204 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDA5ODgwMDEx",
+        "title": "react-bootstrap-table2-paginator: Fix type for PaginationProvider pagination prop, and add test.",
+        "lastEditedAt": "2020-04-28T18:57:51Z",
+        "author": {
+          "login": "nomatteus",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-28T04:48:25Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "The Travis CI build failed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Where is Travis?",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 44288,
+        "state": "OPEN",
+        "headRefOid": "05ee6f2784d694258f61e7a93a95e758ea29ad9d",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "05ee6f2784d694258f61e7a93a95e758ea29ad9d",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/05ee6f2784d694258f61e7a93a95e758ea29ad9d/checks?check_suite_id=634263642",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/05ee6f2784d694258f61e7a93a95e758ea29ad9d/checks?check_suite_id=634263642",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680403157?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-28T04:46:03Z",
+                "committedDate": "2020-04-28T04:46:03Z",
+                "pushedDate": "2020-04-28T04:46:31Z",
+                "abbreviatedOid": "05ee6f2",
+                "oid": "05ee6f2784d694258f61e7a93a95e758ea29ad9d",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDM3ODUyNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@nomatteus Thank you for submitting this PR!  I see this is your first time submitting to DefinitelyTyped 👋 — keep an eye on this comment as I'll be updating it with information as things progress.\n\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n🔔 @gosticks — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44288/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-28T04:48:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDM4MjU0OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-04-28T05:03:23.368Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                                                          | #44288                                                                                                                                                                                 | diff  |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                                                                 |                                                                                                                                                                                        |       |\n| Memory usage (MiB)                                                                        | 127.2                                                                                                                                                                           | 128.7                                                                                                                                                                                  | +1.2% |\n| Type count                                                                                | 23995                                                                                                                                                                           | 24122                                                                                                                                                                                  | +1%   |\n| Assignability cache size                                                                  | 68802                                                                                                                                                                           | 68895                                                                                                                                                                                  | 0%    |\n|                                                                                           |                                                                                                                                                                                 |                                                                                                                                                                                        |       |\n| **Language service**                                                                      |                                                                                                                                                                                 |                                                                                                                                                                                        |       |\n| Samples taken                                                                             | 92                                                                                                                                                                              | 117                                                                                                                                                                                    | +27%  |\n| Identifiers in tests                                                                      | 92                                                                                                                                                                              | 117                                                                                                                                                                                    | +27%  |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                                                 |                                                                                                                                                                                        |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 623.8                                                                                                                                                                           | 623.1                                                                                                                                                                                  | -0.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.5%                                                                                                                                                                            | 9.0%                                                                                                                                                                                   |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 767.4                                                                                                                                                                           | 842.7                                                                                                                                                                                  | +9.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [span](/DefinitelyTyped/DefinitelyTyped/blob/d562e5ee9fb6da1146dcb19fad3aaceec3843b32/types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx#L45)    | [productColumns](/DefinitelyTyped/DefinitelyTyped/blob/a84084d0da016de47c50b94376c11dceabe2703d/types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx#L88) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                                                 |                                                                                                                                                                                        |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 618.7                                                                                                                                                                           | 608.8                                                                                                                                                                                  | -1.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.1%                                                                                                                                                                            | 8.3%                                                                                                                                                                                   | -7.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 703.6                                                                                                                                                                           | 757.1                                                                                                                                                                                  | +7.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [columns](/DefinitelyTyped/DefinitelyTyped/blob/d562e5ee9fb6da1146dcb19fad3aaceec3843b32/types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx#L88) | [columns](/DefinitelyTyped/DefinitelyTyped/blob/a84084d0da016de47c50b94376c11dceabe2703d/types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx#L88)        |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-04-28T05:03:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/react-bootstrap-table2-paginator/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/react-bootstrap-table2-paginator/react-bootstrap-table2-paginator-tests.tsx",
+              "additions": 25,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzcxNDA3Nzc=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

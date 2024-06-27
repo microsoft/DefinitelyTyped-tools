@@ -1,0 +1,2260 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDQ5ODI3NTQ3",
+        "title": "[@types/underscore] Collection and Array Tests - Each, ToArray, and Partition",
+        "createdAt": "2020-07-16T01:10:24Z",
+        "author": {
+          "login": "reubenrybnik",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 46120,
+        "state": "OPEN",
+        "headRefOid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T01:10:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T01:10:34Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T01:14:16Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T03:12:44Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T23:49:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T23:49:52Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-17T05:29:54Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-17T05:47:19Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-17T05:47:20Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-18T20:34:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T06:08:46Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T11:17:41Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T11:35:42Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T16:31:39Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T16:36:44Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T16:37:52Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T20:19:06Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T20:23:11Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T22:12:47Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-19T22:33:41Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T01:19:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-16T01:19:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-449444382",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T01:22:45Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-16T01:22:46Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-449445323",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T01:45:33Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-16T01:45:34Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-449452107",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T23:26:37Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T23:29:36Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-16T23:39:21Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-07-16T23:49:46Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450281043",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T02:56:43Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T02:56:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450342028",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T03:00:03Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T03:00:03Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450342902",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T03:46:46Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T03:46:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450354491",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T04:15:25Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T04:15:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450361512",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "abbreviatedOid": "7fbaab6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:26:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:26:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450380809",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec",
+                "abbreviatedOid": "53d6759",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:27:12Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:27:12Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450381101",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec",
+                "abbreviatedOid": "53d6759",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:36:08Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:36:08Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450383864",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec",
+                "abbreviatedOid": "53d6759",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:39:14Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:39:14Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450384843",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec",
+                "abbreviatedOid": "53d6759",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:43:19Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:43:19Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450386099",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "090cc1244a7e6a4f65d8ecca69a2f95824ab606b",
+                "abbreviatedOid": "090cc12",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T05:58:02Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T05:58:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450391063",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "090cc1244a7e6a4f65d8ecca69a2f95824ab606b",
+                "abbreviatedOid": "090cc12",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T06:02:49Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T06:02:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450392799",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "9a58d18295f73bd1975d827e133c5385e5fa4dd5",
+                "abbreviatedOid": "9a58d18",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T07:01:14Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T07:01:14Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450417696",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T07:31:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T07:31:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450434508",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:12:38Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T09:12:38Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450499977",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:12:49Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T09:12:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450500107",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:15:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T09:15:27Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450501878",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:19:26Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:27:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:27:24Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T09:29:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T09:43:45Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450504549",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:41:05Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:41:05Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450666691",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:45:48Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:45:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450670339",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:48:25Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:48:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450672374",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:49:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:49:45Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450673448",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:51:31Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:51:31Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450674885",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "abbreviatedOid": "d523e62",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T13:55:22Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T13:55:22Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450677951",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T21:41:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T21:41:28Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450971340",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-17T21:43:58Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-17T21:43:58Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-450972270",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-18T05:01:16Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-18T05:01:16Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451031917",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-18T05:10:52Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-18T05:10:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451032394",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-18T05:15:54Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-18T05:15:54Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451032624",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-18T20:27:57Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-18T20:27:57Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451080613",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-18T20:34:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451080938",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T00:29:47Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T00:29:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451090006",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T00:36:56Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T00:36:56Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451090217",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T03:53:26Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T03:53:26Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451096456",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T04:10:29Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T04:10:30Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451097127",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T05:03:57Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T05:03:57Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451099031",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T05:42:23Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T05:42:23Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451100650",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T11:17:29Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T11:17:30Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451122160",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "reubenrybnik",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T16:20:10Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T16:20:11Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451144989",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-19T20:17:06Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-19T20:17:06Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451160079",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "abbreviatedOid": "5ef8fe2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-19T20:19:03Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#pullrequestreview-451160187",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 20,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-15T23:50:33Z",
+                "committedDate": "2020-07-15T23:50:33Z",
+                "pushedDate": null,
+                "abbreviatedOid": "69dab4d",
+                "oid": "69dab4da957de5faabcd107e212d94504ddbcd02",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-16T00:18:29Z",
+                "committedDate": "2020-07-16T00:18:29Z",
+                "pushedDate": "2020-07-16T00:18:46Z",
+                "abbreviatedOid": "f06ef34",
+                "oid": "f06ef34de97585e71bf411e236d0f03cac8d63b2",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-16T00:42:54Z",
+                "committedDate": "2020-07-16T00:42:54Z",
+                "pushedDate": "2020-07-16T00:43:12Z",
+                "abbreviatedOid": "190ade1",
+                "oid": "190ade1aa31bedb29e3de88907d23dc9d5812499",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/7fbaab6a3ef600244d1a74853f00ae2c957eae27/checks?check_suite_id=921156995",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/7fbaab6a3ef600244d1a74853f00ae2c957eae27/checks?check_suite_id=921156995",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/7fbaab6a3ef600244d1a74853f00ae2c957eae27/checks?check_suite_id=921157562",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/7fbaab6a3ef600244d1a74853f00ae2c957eae27/checks?check_suite_id=921157562",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-16T01:07:40Z",
+                "committedDate": "2020-07-16T01:07:40Z",
+                "pushedDate": "2020-07-16T01:07:59Z",
+                "abbreviatedOid": "7fbaab6",
+                "oid": "7fbaab6a3ef600244d1a74853f00ae2c957eae27",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T04:04:11Z",
+                "committedDate": "2020-07-17T04:04:11Z",
+                "pushedDate": null,
+                "abbreviatedOid": "3e8d0e7",
+                "oid": "3e8d0e7584598e887286a28323558f58b02659d2",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T04:09:49Z",
+                "committedDate": "2020-07-17T04:09:49Z",
+                "pushedDate": null,
+                "abbreviatedOid": "2a60294",
+                "oid": "2a60294322731a660a9f10561ffd4225d0f9ac99",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T04:16:09Z",
+                "committedDate": "2020-07-17T04:16:09Z",
+                "pushedDate": null,
+                "abbreviatedOid": "9355160",
+                "oid": "935516098b3b0873af1fc0acc238ac35a762092f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:05:02Z",
+                "committedDate": "2020-07-17T05:05:02Z",
+                "pushedDate": null,
+                "abbreviatedOid": "018f6b2",
+                "oid": "018f6b24792de17d4fef873b5cbdcf6a51604239",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:06:46Z",
+                "committedDate": "2020-07-17T05:06:46Z",
+                "pushedDate": null,
+                "abbreviatedOid": "b94628f",
+                "oid": "b94628f068d1f9002ee5c1b3929f39d149924b17",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:07:29Z",
+                "committedDate": "2020-07-17T05:07:29Z",
+                "pushedDate": null,
+                "abbreviatedOid": "3b624ab",
+                "oid": "3b624abc418835c0e36c71b28619ef756e8efc3a",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:10:14Z",
+                "committedDate": "2020-07-17T05:10:14Z",
+                "pushedDate": null,
+                "abbreviatedOid": "08218f8",
+                "oid": "08218f877d6d6563cd0be093cf15d0ebb461a421",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:21:53Z",
+                "committedDate": "2020-07-17T05:21:53Z",
+                "pushedDate": null,
+                "abbreviatedOid": "c131040",
+                "oid": "c1310405cc148dd9dac46e731ed9b01fe5ab8656",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec/checks?check_suite_id=927112072",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec/checks?check_suite_id=927112072",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec/checks?check_suite_id=927112399",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec/checks?check_suite_id=927112399",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:22:29Z",
+                "committedDate": "2020-07-17T05:22:29Z",
+                "pushedDate": "2020-07-17T05:26:28Z",
+                "abbreviatedOid": "53d6759",
+                "oid": "53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:38:11Z",
+                "committedDate": "2020-07-17T05:38:11Z",
+                "pushedDate": null,
+                "abbreviatedOid": "11a4a6c",
+                "oid": "11a4a6c17885383cd5908a8fc9c61fd6822635d6",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/090cc1244a7e6a4f65d8ecca69a2f95824ab606b/checks?check_suite_id=927154716",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/090cc1244a7e6a4f65d8ecca69a2f95824ab606b/checks?check_suite_id=927154716",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/090cc1244a7e6a4f65d8ecca69a2f95824ab606b/checks?check_suite_id=927155018",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/090cc1244a7e6a4f65d8ecca69a2f95824ab606b/checks?check_suite_id=927155018",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T05:40:35Z",
+                "committedDate": "2020-07-17T05:40:35Z",
+                "pushedDate": "2020-07-17T05:43:46Z",
+                "abbreviatedOid": "090cc12",
+                "oid": "090cc1244a7e6a4f65d8ecca69a2f95824ab606b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9a58d18295f73bd1975d827e133c5385e5fa4dd5/checks?check_suite_id=927239216",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9a58d18295f73bd1975d827e133c5385e5fa4dd5/checks?check_suite_id=927239216",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9a58d18295f73bd1975d827e133c5385e5fa4dd5/checks?check_suite_id=927239841",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9a58d18295f73bd1975d827e133c5385e5fa4dd5/checks?check_suite_id=927239841",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T06:12:55Z",
+                "committedDate": "2020-07-17T06:12:55Z",
+                "pushedDate": "2020-07-17T06:13:26Z",
+                "abbreviatedOid": "9a58d18",
+                "oid": "9a58d18295f73bd1975d827e133c5385e5fa4dd5",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d523e62680f9c28d57ab6e934fde3cceedad9fff/checks?check_suite_id=927443575",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d523e62680f9c28d57ab6e934fde3cceedad9fff/checks?check_suite_id=927443575",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d523e62680f9c28d57ab6e934fde3cceedad9fff/checks?check_suite_id=927444722",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d523e62680f9c28d57ab6e934fde3cceedad9fff/checks?check_suite_id=927444722",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T07:17:29Z",
+                "committedDate": "2020-07-17T07:17:29Z",
+                "pushedDate": "2020-07-17T07:19:16Z",
+                "abbreviatedOid": "d523e62",
+                "oid": "d523e62680f9c28d57ab6e934fde3cceedad9fff",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T13:56:43Z",
+                "committedDate": "2020-07-17T13:56:43Z",
+                "pushedDate": null,
+                "abbreviatedOid": "8bbe474",
+                "oid": "8bbe4749dc42d8edae9f1c7716679a0646fbb05c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/6ec881b1bcc1e86ff7f26538aef4090489816a68/checks?check_suite_id=928997854",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/6ec881b1bcc1e86ff7f26538aef4090489816a68/checks?check_suite_id=928997854",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/6ec881b1bcc1e86ff7f26538aef4090489816a68/checks?check_suite_id=928999371",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/6ec881b1bcc1e86ff7f26538aef4090489816a68/checks?check_suite_id=928999371",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T13:57:54Z",
+                "committedDate": "2020-07-17T13:57:54Z",
+                "pushedDate": "2020-07-17T13:58:09Z",
+                "abbreviatedOid": "6ec881b",
+                "oid": "6ec881b1bcc1e86ff7f26538aef4090489816a68",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5ef8fe2907257beac41e27c3dc2399a087eddb67/checks?check_suite_id=929063819",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5ef8fe2907257beac41e27c3dc2399a087eddb67/checks?check_suite_id=929063819",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5ef8fe2907257beac41e27c3dc2399a087eddb67/checks?check_suite_id=929065697",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5ef8fe2907257beac41e27c3dc2399a087eddb67/checks?check_suite_id=929065697",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-17T14:11:42Z",
+                "committedDate": "2020-07-17T14:11:42Z",
+                "pushedDate": "2020-07-17T14:12:06Z",
+                "abbreviatedOid": "5ef8fe2",
+                "oid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 14,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTA5NTc3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@reubenrybnik Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `underscore` [on npm](https://www.npmjs.com/package/underscore), [on unpkg](https://unpkg.com/browse/underscore@latest)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-16T01:10:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTA5NTc3OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @borisyankov @jbaldwin @ccurrens @confususs @jgonggrijp @ffflorian @regevbr @peterblazejewicz — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-07-16T01:10:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTEzMTQyNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-07-16T03:12:43.696Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                         | #46120                                                                                                                                              | diff  |\n| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                                |                                                                                                                                                     |       |\n| Memory usage (MiB)                                                                        | 64.1                                                                                                                                           | 62.6                                                                                                                                                | -2.4% |\n| Type count                                                                                | 10127                                                                                                                                          | 9725                                                                                                                                                | -4%   |\n| Assignability cache size                                                                  | 1540                                                                                                                                           | 1145                                                                                                                                                | -26%  |\n|                                                                                           |                                                                                                                                                |                                                                                                                                                     |       |\n| **Language service**                                                                      |                                                                                                                                                |                                                                                                                                                     |       |\n| Samples taken                                                                             | 4836                                                                                                                                           | 5205                                                                                                                                                | +8%   |\n| Identifiers in tests                                                                      | 4836                                                                                                                                           | 5205                                                                                                                                                | +8%   |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                |                                                                                                                                                     |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 147.9                                                                                                                                          | 146.6                                                                                                                                               | -0.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.6%                                                                                                                                          | 11.4%                                                                                                                                               |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 273.3                                                                                                                                          | 255.5                                                                                                                                               | -6.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [context](/DefinitelyTyped/DefinitelyTyped/blob/daca975559c611deb7fec9f8ebf7151770432c35/types/underscore/underscore-tests.ts#L692)            | [_](/DefinitelyTyped/DefinitelyTyped/blob/df9a1349721a5ebdd34538bb63ce5e60c81badb2/types/underscore/underscore-tests.ts#L1926)                      |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                |                                                                                                                                                     |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 142.3                                                                                                                                          | 141.0                                                                                                                                               | -1.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 12.0%                                                                                                                                          | 11.5%                                                                                                                                               | -3.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 286.9                                                                                                                                          | 269.7                                                                                                                                               | -6.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [extractChainTypes](/DefinitelyTyped/DefinitelyTyped/blob/daca975559c611deb7fec9f8ebf7151770432c35/types/underscore/underscore-tests.ts#L1569) | [extractUnderscoreTypes](/DefinitelyTyped/DefinitelyTyped/blob/df9a1349721a5ebdd34538bb63ce5e60c81badb2/types/underscore/underscore-tests.ts#L1927) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-07-16T03:12:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTczOTgwNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@reubenrybnik One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-7fbaab6-->",
+              "createdAt": "2020-07-16T23:49:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTg2NDE1Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@reubenrybnik The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/53d67598c4a269d8f9dc4ff2e124031c1f9ba2ec/checks?check_suite_id=927112072).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-53d6759-->",
+              "createdAt": "2020-07-17T05:29:54Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1OTg3MTM1Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jgonggrijp Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-f6fb8c-7fbaab6-->",
+              "createdAt": "2020-07-17T05:47:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDU5Mzk4Ng==",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "body": "Thanks @jgonggrijp! I appreciate your attentiveness to these reviews and the ideas you've provided throughout this process that have helped to make these changes much better than I'd originally planned. From a PR count perspective, this puts us at about the halfway point in my current planned set (which has changed a little from the set I originally mentioned in #45304).\r\n\r\nI'll wait until at least 7PM UTC ~tomorrow~ 7/19 to merge this just in case you'd like to make any further replies to my spew about `Falsy`, and I'll try to do a better job of organizing my thoughts and double-checking my work more thoroughly before replying in the future since I feel like there have been a couple of conversations so far during this process where I've ended up going off the rails a bit.",
+              "createdAt": "2020-07-19T06:08:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDYzMDI5OA==",
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "body": "> Thanks @jgonggrijp! I appreciate your attentiveness to these reviews and the ideas you've provided throughout this process that have helped to make these changes much better than I'd originally planned.\r\n\r\nGlad to hear that! That's the main reason for doing it so I'm glad it works.\r\n\r\n> From a PR count perspective, this puts us at about the halfway point in my current planned set (which has changed a little from the set I originally mentioned in #45304).\r\n\r\nOnly halfway, haha.\r\n\r\n> \r\n> I'll wait until at least 7PM UTC ~tomorrow~ 7/19 to merge this just in case you'd like to make any further replies to my spew about `Falsy`,\r\n\r\nI made a small reply. Unless you want to make further decisions depend on whatever discussion might come after that, the rest of the \"grace period\" is not necessary as far as I'm concerned.\r\n\r\n> and I'll try to do a better job of organizing my thoughts and double-checking my work more thoroughly before replying in the future since I feel like there have been a couple of conversations so far during this process where I've ended up going off the rails a bit.\r\n\r\nIt's always worth striving to better organize your thoughts and to double-check your work, but please don't be so hard on yourself. I'm quite sure I've made a few mistakes as well, especially when it comes to realism about what the TS compiler will do. Humans in general are (intensely) fallible, that's why we tend to get so much better results when we team up.\r\n\r\nBy the way, I've [been](https://twitter.com/juliangonggrijp/status/1279190504786276352) [tweeting](https://twitter.com/juliangonggrijp/status/1278433684492779521) about our reviews and the tweets seem to attract some interest. If you happen to be on Twitter, it may be nice to associate. (I tried finding you but couldn't be sure.)",
+              "createdAt": "2020-07-19T11:35:42Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDY3MjUwNQ==",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "body": "> Only halfway, haha.\r\n\r\nWe are probably more than halfway along with regards to effort though 🎉 \r\n\r\n> I made a small reply. Unless you want to make further decisions depend on whatever discussion might come after that, the rest of the \"grace period\" is not necessary as far as I'm concerned.\r\n\r\nSounds good, I'll hit the go button now then 😄 \r\n\r\n> By the way, I've been tweeting about our reviews and the tweets seem to attract some interest. If you happen to be on Twitter, it may be nice to associate. (I tried finding you but couldn't be sure.)\r\n\r\nSorry to disappoint here, but while I made a Twitter account once upon a time and so can technically be said to exist there I've never actually tweeted with it (and off the top of my head I don't even remember my handle). Happy to hear, though, that others might be finding this work to be valuable or interesting 😁 ",
+              "createdAt": "2020-07-19T16:31:39Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "jgonggrijp",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDY3MzIwMw==",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2020-07-19T16:36:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDY3MzM0OA==",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "body": "Hmm, sorry @jgonggrijp, I didn't add any commits but somehow something one of us did surprisingly seems to have caused your approval to not apply anymore as indicated by [this tag removal](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46120#event-3562435181). If you wouldn't mind clicking approve one more time on this, I'd appreciate it!",
+              "createdAt": "2020-07-19T16:37:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDcwMzA5Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "I just published [`@types/underscore@1.10.10` to npm](https://www.npmjs.com/package/@types/underscore).",
+              "createdAt": "2020-07-19T20:23:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDcxNzQyNA==",
+              "author": {
+                "login": "reubenrybnik",
+                "__typename": "User"
+              },
+              "body": "Hmm, another interesting interaction here, not the biggest fan of how my previous \"Ready to merge\" caused this to be merged at the moment of your re-approval since I feel like a merge should only be triggered when the author is the one taking an action 😕 ",
+              "createdAt": "2020-07-19T22:12:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDcxOTUxNA==",
+              "author": {
+                "login": "jgonggrijp",
+                "__typename": "User"
+              },
+              "body": "That was probably meant to be smart. But I agree it's unexpected.",
+              "createdAt": "2020-07-19T22:33:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/underscore/index.d.ts",
+              "additions": 147,
+              "deletions": 177,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/underscore/underscore-tests.ts",
+              "additions": 276,
+              "deletions": 16,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDE1OTMyNzc=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

@@ -1,0 +1,21 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Edits Infrastructure",
+    "No Other Owners",
+    "Check Config"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@rubensworks Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `asynciterator` (*probably deleted!*) — [on npm](https://www.npmjs.com/package/asynciterator), [on unpkg](https://unpkg.com/browse/asynciterator@latest/) (author is owner)\n  - Config files to check:\n    - [`asynciterator/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45946/files/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e#diff-e3a26c4ba64c5ed587d2b797151728488e274f4be74c1558722a8a32cf7a31c9): edited\n* Infra files\n  - [`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45946/files/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621)\n\n## Code Reviews\n\nThere aren't any other owners of this package, so a DT maintainer will review it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45946&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect DT infrastructure ([`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45946/files/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @rubensworks — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45946/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

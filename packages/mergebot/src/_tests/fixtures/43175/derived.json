@@ -1,0 +1,51 @@
+{
+  "type": "info",
+  "now": "2020-03-19T18:39:37.000Z",
+  "pr_number": 43175,
+  "author": "ankhler",
+  "headCommitOid": "b4b3bc8a617e2e0810d60e389415818d903e6362",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-17T13:51:37.000Z",
+  "lastActivityDate": "2020-03-17T13:51:37.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "chrome",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/chrome/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "matthewkimber",
+        "otiai10",
+        "couven92",
+        "rreverser",
+        "sreimer15",
+        "MatCarlson",
+        "ekinsol",
+        "tregagnon",
+        "echoabstract",
+        "spasma"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "couven92",
+      "date": "2020-03-17T13:29:17.000Z",
+      "abbrOid": "767a750"
+    }
+  ],
+  "ciResult": "pass"
+}

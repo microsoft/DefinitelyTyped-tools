@@ -1,0 +1,21 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Critical package",
+    "Owner Approved",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@alexpyzhianov Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `react` — [on npm](https://www.npmjs.com/package/react), [on unpkg](https://unpkg.com/browse/react@latest/)\n  - owner-approval: @ferdaber, @eps1lon\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45999&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@alexpyzhianov: Everything looks good here. I am ready to merge this PR (at 381a2a9) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@johnnyreilly, @bbenezech, @pzavolinsky, @digiguru, @ericanderson, @DovydasNavickas, @theruther4d, @guilhermehubner, @ferdaber, @jrakotoharisoa, @pascaloliv, @hotell, @franklixuefei, @Jessidhia, @saranshkataria, @lukyth, @eps1lon, @zieka, @dancerphil, @dimitropoulos, @disjukr, @vhfmag, @hellatan: you can do this too.)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5oceKz",
+        "body": "@jakebailey Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `react-blessed` — [on npm](https://www.npmjs.com/package/react-blessed), [on unpkg](https://unpkg.com/browse/react-blessed@latest/)\n* Infra files\n  - [`.dprint.jsonc`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66979/files/f11a1a009614559b5c5db1f68732927f1b8ab5f2#diff-4b0a264a7578f955622f1573a2e9eefec4f81e5e03481b841691b4811855ec8b)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=66979&install-plugin=playground-dt-review).\n\n## Status\n\n * ❌ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 A DT maintainer needs to approve changes that affect DT infrastructure ([`.dprint.jsonc`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66979/files/f11a1a009614559b5c5db1f68732927f1b8ab5f2#diff-4b0a264a7578f955622f1573a2e9eefec4f81e5e03481b841691b4811855ec8b))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 8 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWw2NDY3ODg4ODg="
+        ],
+        "labelableId": "PR_kwDOAFz6BM5cNx3Z"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5ogaVg",
+        "body": "@jakebailey The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f11a1a009614559b5c5db1f68732927f1b8ab5f2/checks?check_suite_id=17038815705).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-f11a1a0-->"
+      }
+    }
+  }
+]

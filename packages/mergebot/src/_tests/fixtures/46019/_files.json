@@ -1,0 +1,4 @@
+{
+  "ceca9f768be945932c692d7dd48fa14b6ff38096:types/is-secret/index.d.ts": "// Type definitions for is-secret 1.2\n// Project: https://github.com/watson/is-secret#readme\n// Definitions by: Walter Rumsby <https://github.com/wrumsby>\n//                 Piotr Błażejewicz <https://github.com/peterblazejewicz>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n",
+  "ceca9f768be945932c692d7dd48fa14b6ff38096:types/is-secret/tslint.json": "{ \"extends\": \"dtslint/dt.json\" }\n"
+}

@@ -1,0 +1,74 @@
+{
+  "type": "info",
+  "now": "2020-05-29T11:17:01.368Z",
+  "pr_number": 45137,
+  "author": "lirbank",
+  "headCommitOid": "22c73c88cc9c09efd4c2998ec360607dd4c36c2e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-29T04:38:59.000Z",
+  "lastActivityDate": "2020-05-29T07:13:24.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "mongodb",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mongodb/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "CaselIT",
+        "alanmarcell",
+        "dante-101",
+        "mcortesi",
+        "EnricoPicci",
+        "AJCStriker",
+        "julien-c",
+        "daprahamian",
+        "denys-bushulyak",
+        "BastienAr",
+        "sindbach",
+        "geraldinelemeur",
+        "various89",
+        "angela-1",
+        "lirbank",
+        "hector7",
+        "floric",
+        "erikc5000",
+        "Manc",
+        "jloveridge",
+        "ranguna",
+        "HosseinAgha",
+        "albertossilva",
+        "peterblazejewicz",
+        "LinusU",
+        "taxilian",
+        "xamgore",
+        "avaly",
+        "HitkoDev",
+        "jtassin"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "lirbank"
+      ],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "LinusU",
+      "date": "2020-05-29T07:13:24.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306"
+}

@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "strict": true,
+        "module": "commonjs",
+        "target": "es2022",
+        "lib": ["es2022"],
+        "esModuleInterop": true,
+        "types": ["node"],
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "skipLibCheck": true
+    }
+}

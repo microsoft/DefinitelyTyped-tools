@@ -1,0 +1,31 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDYyMjk0NDUxOA==",
+        "body": "@johnnyreilly Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `prompts` — [on npm](https://www.npmjs.com/package/prompts), [on unpkg](https://unpkg.com/browse/prompts@latest/)\n  - owner-approval: @kamontat\n  - 1 added owner: ✎@johnnyreilly\n\n@johnnyreilly: I see that you have added yourself as an owner, are you sure you want to [become an owner](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-definition-owners)?\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=44437&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyNDk1OTc2ODI5"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDEyNDQzMjI0"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDYyMjk0NTA1NA==",
+        "body": "@johnnyreilly: Everything looks good here. I am ready to merge this PR (at eb92456) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@Berkays, @unindented, @kamontat, @theweirdone, @whoaa512: you can do this too.)\n<!--typescript_bot_merge-offer-->"
+      }
+    }
+  }
+]

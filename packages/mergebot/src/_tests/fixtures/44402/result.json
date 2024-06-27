@@ -1,0 +1,22 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Other Approved",
+    "Maintainer Approved",
+    "Edits Infrastructure",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@sandersn Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 0 packages in this PR (and infra files)\n\n* Infra files\n  - [`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235)\n  - [`README.es.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-42010a55cd1784b825a37c762cc91d75421f3ed4515f1047cf5506444949a0c2)\n  - [`README.ko.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-86fa6921bcebf260d55d8a3742c1b513bd78f4ea18366db989b5a03c68c563ae)\n  - [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)\n  - [`README.ru.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-fb460bf71153d8224708cfa7298df0409d20c207f5b252b74906895bd8e1ac42)\n\n## Code Reviews\n\nThere aren't any other owners of this package, so a DT maintainer will review it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=44402&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes that affect DT infrastructure ([`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235), [`README.es.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-42010a55cd1784b825a37c762cc91d75421f3ed4515f1047cf5506444949a0c2), [`README.ko.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-86fa6921bcebf260d55d8a3742c1b513bd78f4ea18366db989b5a03c68c563ae), [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5), [`README.ru.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44402/files/5dfb9945fc5c243f011a9436cbcc12d1ad12b012#diff-fb460bf71153d8224708cfa7298df0409d20c207f5b252b74906895bd8e1ac42))\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@sandersn: Everything looks good here. I am ready to merge this PR (at 5dfb994) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

@@ -1,0 +1,304 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDUzMTM0NTI0",
+        "title": "Update types for apollo-upload-client to support apollo/client v3",
+        "lastEditedAt": "2020-07-20T07:16:25Z",
+        "author": {
+          "login": "jordanoverbye",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-07-20T07:08:31Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "The CI failed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 46191,
+        "state": "OPEN",
+        "headRefOid": "3cc81dbde57a1b0eda6f69f539fa49b8d420adff",
+        "changedFiles": 3,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-20T07:08:35Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-20T07:08:36Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-20T07:10:31Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-20T07:10:33Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:40:55Z",
+                "committedDate": "2020-07-20T06:40:55Z",
+                "pushedDate": null,
+                "abbreviatedOid": "0d41346",
+                "oid": "0d413463f2508aaca13f7e2db0672ede7cdfcd2c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:41:10Z",
+                "committedDate": "2020-07-20T06:41:10Z",
+                "pushedDate": "2020-07-20T06:41:31Z",
+                "abbreviatedOid": "35d1c2e",
+                "oid": "35d1c2e5b3b189afe46ee8e22a846d2318225f2c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:42:52Z",
+                "committedDate": "2020-07-20T06:42:52Z",
+                "pushedDate": "2020-07-20T06:43:02Z",
+                "abbreviatedOid": "0543c36",
+                "oid": "0543c3671ea09bf72107608d6423ea8fc9ba15e8",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:51:04Z",
+                "committedDate": "2020-07-20T06:51:04Z",
+                "pushedDate": null,
+                "abbreviatedOid": "df52bdb",
+                "oid": "df52bdb9dcce04e722ab4216d0cd1c774b8c954b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:52:46Z",
+                "committedDate": "2020-07-20T06:52:46Z",
+                "pushedDate": null,
+                "abbreviatedOid": "3a34ec8",
+                "oid": "3a34ec84fb7a6c383c9d9a785f1cdca37aa18a96",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938074936",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938074936",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938075790",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938075790",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-20T06:53:19Z",
+                "committedDate": "2020-07-20T06:53:19Z",
+                "pushedDate": "2020-07-20T06:54:57Z",
+                "abbreviatedOid": "3cc81db",
+                "oid": "3cc81dbde57a1b0eda6f69f539fa49b8d420adff",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDg0NjQ2NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jordanoverbye Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have passed\n * ❌ A DT maintainer needs to approve changes which affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-20T07:08:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDg0NjQ3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @Slessi — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46191/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-07-20T07:08:36Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2MDg0NzI3MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jordanoverbye The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938074936).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-3cc81db-->",
+              "createdAt": "2020-07-20T07:10:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/apollo-upload-client/index.d.ts",
+              "additions": 15,
+              "deletions": 10,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/apollo-upload-client/package.json",
+              "additions": 2,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/apollo-upload-client/tsconfig.json",
+              "additions": 4,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 3
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDIxNjU2MzU=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

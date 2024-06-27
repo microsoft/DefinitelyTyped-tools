@@ -1,0 +1,4 @@
+{
+  "683fb3b1298223256be3a49823686f35bd94a730:types/hcaptcha__vue-hcaptcha/tslint.json": "{\n  \"extends\": \"@definitelytyped/dtslint/dt.json\"\n}\n",
+  "683fb3b1298223256be3a49823686f35bd94a730:types/hcaptcha__vue-hcaptcha/index.d.ts": "// Type definitions for @hcaptcha/vue-hcaptcha 0.2\n// Project: https://github.com/hCaptcha/vue-hcaptcha\n// Definitions by: George Pickering <https://github.com/geopic>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n// TypeScript Version: 3.8\n\nimport { VueConstructor } from 'vue';\nexport const h: HCaptcha;\nexport default h;\n"
+}

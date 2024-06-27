@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2021-05-20T13:55:13.459Z",
+  "pr_number": 53121,
+  "author": "nitroin",
+  "headCommitOid": "c13f5d7c969561db0ac38464086406b6554e711c",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-05-20T09:10:15.000Z",
+  "lastActivityDate": "2021-05-20T09:16:27.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "mathjs",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mathjs/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/mathjs/mathjs-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "siavol",
+        "andnp",
+        "bradbesserman",
+        "pawkrol",
+        "charlee",
+        "mark-wiemer",
+        "OpportunityLiu"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 844899639,
+  "ciResult": "pass"
+}

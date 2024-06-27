@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2020-03-19T19:14:42.000Z",
+  "pr_number": 43136,
+  "author": "larsrh",
+  "headCommitOid": "e6863537248bbfee8f0ef8c636bb00c25cf40b96",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-16T14:26:42.000Z",
+  "lastActivityDate": "2020-03-16T14:31:40.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "estree",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/estree/estree-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/estree/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "RReverser"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "RReverser",
+      "date": "2020-03-14T19:23:36.000Z",
+      "abbrOid": "37d784d"
+    }
+  ],
+  "ciResult": "pass"
+}

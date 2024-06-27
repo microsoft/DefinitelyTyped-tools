@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2020-07-06T07:40:37.670Z",
+  "pr_number": 45888,
+  "author": "gstvds",
+  "headCommitOid": "8a7a2fc1cdbfe1d3a7af7d1f7a346977fdf47b0d",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-04T18:01:47.000Z",
+  "lastActivityDate": "2020-07-06T07:40:21.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "mailgun-js",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mailgun-js/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "sampsonjoliver",
+        "andipaetzold",
+        "JiriBalcar",
+        "CodeLenny"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "brendonhc",
+      "date": "2020-07-06T05:28:20.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

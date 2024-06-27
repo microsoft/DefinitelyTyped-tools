@@ -1,0 +1,90 @@
+{
+  "type": "info",
+  "now": "2021-09-14T20:02:38.482Z",
+  "pr_number": 55210,
+  "author": "Dssssds",
+  "headCommitOid": "fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-08-24T22:03:32.000Z",
+  "lastActivityDate": "2021-08-24T22:03:32.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": true,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "xald-parse-sdk",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/xald-parse-sdk/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/xald-parse-sdk/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/xald-parse-sdk/taobao.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/xald-parse-sdk/ts3.6/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/xald-parse-sdk/ts3.6/taobao.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/xald-parse-sdk/ts3.6/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/xald-parse-sdk/ts3.6/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/xald-parse-sdk/ts3.6/xald-parse-sdk-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/xald-parse-sdk/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/xald-parse-sdk/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/xald-parse-sdk/xald-parse-sdk-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "peterblazejewicz",
+      "date": "2021-08-24T22:02:43.000Z",
+      "abbrOid": "23d91a5"
+    },
+    {
+      "type": "stale",
+      "reviewer": "RaschidJFR",
+      "date": "2021-08-24T21:36:25.000Z",
+      "abbrOid": "23d91a5"
+    }
+  ],
+  "mainBotCommentID": 900773879,
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585693499"
+}

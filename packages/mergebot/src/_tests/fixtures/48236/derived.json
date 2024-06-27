@@ -1,0 +1,55 @@
+{
+  "type": "info",
+  "now": "2020-10-05T00:43:22.594Z",
+  "pr_number": 48236,
+  "author": "jablko",
+  "headCommitOid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-09-27T17:25:18.000Z",
+  "lastActivityDate": "2020-10-02T19:13:08.000Z",
+  "mergeOfferDate": "2020-09-30T00:08:26.000Z",
+  "mergeRequestDate": "2020-10-02T18:45:57.000Z",
+  "mergeRequestUser": "jablko",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "woocommerce__woocommerce-rest-api",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/woocommerce__woocommerce-rest-api/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "climba03003"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "peterblazejewicz",
+      "date": "2020-10-02T19:13:08.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "amcasey",
+      "date": "2020-09-30T00:07:50.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

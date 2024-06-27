@@ -1,0 +1,435 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5dEgcV",
+        "title": "[marked-terminal, cardinal, ansicolors] Update marked-terminal and add/fix everything it touches",
+        "createdAt": "2023-10-17T22:45:17Z",
+        "author": {
+          "login": "andrewbranch",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "The CI failed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 67090,
+        "state": "OPEN",
+        "headRefOid": "bb7d42f514b9f9cfca6b9a84dc99fac76ac35643",
+        "changedFiles": 20,
+        "additions": 294,
+        "deletions": 56,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "36833296d0461e544e7a1f1a82736f07025b219a",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "5512d90cdf92cfca25b73ab4e0b9a5c1591ec57a",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "bb7d42f514b9f9cfca6b9a84dc99fac76ac35643",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "36833296d0461e544e7a1f1a82736f07025b219a",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2023-10-17T22:56:33Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "36833296d0461e544e7a1f1a82736f07025b219a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "andrewbranch",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2023-10-17T22:46:00Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "andrewbranch",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2023-10-17T22:47:43Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "andrewbranch",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2023-10-17T22:48:36Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2023-10-17T22:48:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67090#pullrequestreview-1683590299",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 17339283595,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339283595",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339283595",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 17339286705,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339286705",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339286705",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20231017.45 failed",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2023-10-17T22:46:23Z",
+                "committedDate": "2023-10-17T22:46:23Z",
+                "pushedDate": null,
+                "oid": "bb7d42f514b9f9cfca6b9a84dc99fac76ac35643",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM5pVwbO",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1767311054,
+              "body": "@andrewbranch Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 3 packages in this PR\n\n* `ansicolors` — [on npm](https://www.npmjs.com/package/ansicolors), [on unpkg](https://unpkg.com/browse/ansicolors@latest/)\n* `cardinal` (*new!*) — [on npm](https://www.npmjs.com/package/cardinal), [on unpkg](https://unpkg.com/browse/cardinal@latest/)\n* `marked-terminal` — [on npm](https://www.npmjs.com/package/marked-terminal), [on unpkg](https://unpkg.com/browse/marked-terminal@latest/)\n  - Config files to check:\n    - [`marked-terminal/index.d.cts`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67090/files/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643#diff-5e4cfea677a3d26cff8f1c90abf32caa2f3c310beee12f6f84364821c728aef6): edited\n    - [`marked-terminal/marked-terminal-tests.cts`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67090/files/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643#diff-c57707862a9de137333983d3c0ee294d8a046f4f23a7e2557f7c4f4c77529dd7): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=67090&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2023-10-17T22:46:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5pVwbv",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1767311087,
+              "body": "🔔 @balupton @bkendall — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67090/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2023-10-17T22:46:05Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5pVyrF",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1767320261,
+              "body": "@andrewbranch The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339283595).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds which are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-bb7d42f-->",
+              "createdAt": "2023-10-17T22:56:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5pWX-t",
+              "author": {
+                "login": "balupton",
+                "__typename": "User"
+              },
+              "databaseId": 1767473069,
+              "body": "Why was I assigned this?",
+              "createdAt": "2023-10-18T01:41:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 20,
+          "nodes": [
+            {
+              "path": "types/ansicolors/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/cardinal-tests.ts",
+              "additions": 68,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/index.d.ts",
+              "additions": 38,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/lib/highlight.d.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/lib/highlightFile.d.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/lib/highlightFileSync.d.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/package.json",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/themes/default.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/themes/empty.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/themes/hide-semicolons.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/themes/jq.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/themes/tomorrow-night.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/tsconfig.json",
+              "additions": 23,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/cardinal/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/index.d.cts",
+              "additions": 61,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/index.d.ts",
+              "additions": 9,
+              "deletions": 48,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/marked-terminal-tests.cts",
+              "additions": 26,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/marked-terminal-tests.ts",
+              "additions": 2,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/package.json",
+              "additions": 14,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/marked-terminal/tsconfig.json",
+              "additions": 2,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MjA",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgVqd_4",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

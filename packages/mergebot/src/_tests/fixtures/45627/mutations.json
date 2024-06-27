@@ -1,0 +1,78 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDY0NzEwNDY2NQ==",
+        "body": "@spamshaker Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `webpack` — [on npm](https://www.npmjs.com/package/webpack), [on unpkg](https://unpkg.com/browse/webpack@latest/)\n  - owner-approval: @ofhouse\n  - 1 added owner: ✎@spamshaker\n\n@spamshaker: I see that you have added yourself as an owner, are you sure you want to [become an owner](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-definition-owners)?\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45627&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n## Inactive\n\nThis PR has been inactive for 67 days — closed because it wasn't merged for a long time!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyNDk1OTc2ODI5",
+          "MDU6TGFiZWw2OTcwMTg5NzI=",
+          "MDU6TGFiZWw2NDQwOTU4ODI="
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteProjectCardInput!) {\n  deleteProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "MDExOlByb2plY3RDYXJkNDA0NTk5NzM="
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "commitHeadline": "🤖 Merge PR #45627 [webpack] fix for MultiCompiler doesn't define Multistats for callback/handler of run method by @spamshaker",
+        "expectedHeadOid": "15facc177c957646a1ace95abe5e71326007c721",
+        "mergeMethod": "SQUASH",
+        "pullRequestId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: ClosePullRequestInput!) {\n  closePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "pullRequestId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2",
+        "body": "Hey @spamshaker,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDYyMTU1OTExNA==",
+        "body": "@spamshaker: Everything looks good here. I am ready to merge this PR (at 15facc1) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@tkqubo, @bumbleblym, @bcherny, @tommytroylin, @mohsen1, @jcreamer898, @alan-agius4, @dennispg, @christophehurpeau, @ZSkycat, @johnnyreilly, @rwaskiewicz, @kuehlein, @grgur, @rubenspgcavalcante, @andersk, @ofhouse, @danielthank, @sasurau4, @dionshihk, @peterblazejewicz: you can do this too.)\n<!--typescript_bot_merge-offer-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2",
+        "body": "After a month, no one has requested merging the PR 😞. I'm going to assume that the change is not wanted after all, and will therefore close it.\n<!--typescript_bot_Unmerged:done-->"
+      }
+    }
+  }
+]

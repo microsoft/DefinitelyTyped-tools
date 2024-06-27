@@ -1,0 +1,416 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDAwMTAwMTk2",
+        "title": "Added typings for @accedo/accedo-one package",
+        "lastEditedAt": null,
+        "author": {
+          "login": "alexandercerutti",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-07T07:51:12Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "MERGEABLE",
+        "number": 43695,
+        "state": "OPEN",
+        "headRefOid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "af8957d1fc70a0de9c0f4c7c0118a24389fb5b26",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "f9a43233fe8c5758e6d58662b999d0e14929ee83",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "9e248289b7b7bb8f239f0ff106a95b00f5cd4a87",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "2494da59bfc825d8d68fdfc149f4bb89e7fd5358",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "state": "CHANGES_REQUESTED"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "abbreviatedOid": "a5285cd",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-04-08T16:23:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695#pullrequestreview-390133785",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            },
+            {
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "abbreviatedOid": "a5285cd",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-04-08T17:03:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695#pullrequestreview-390164904",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:21:51Z",
+                "committedDate": "2020-04-07T07:40:36Z",
+                "pushedDate": null,
+                "abbreviatedOid": "af8957d",
+                "oid": "af8957d1fc70a0de9c0f4c7c0118a24389fb5b26",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:36:34Z",
+                "committedDate": "2020-04-07T07:40:42Z",
+                "pushedDate": null,
+                "abbreviatedOid": "f9a4323",
+                "oid": "f9a43233fe8c5758e6d58662b999d0e14929ee83",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:41:15Z",
+                "committedDate": "2020-04-07T07:40:44Z",
+                "pushedDate": null,
+                "abbreviatedOid": "9e24828",
+                "oid": "9e248289b7b7bb8f239f0ff106a95b00f5cd4a87",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:41:40Z",
+                "committedDate": "2020-04-07T07:40:47Z",
+                "pushedDate": null,
+                "abbreviatedOid": "2494da5",
+                "oid": "2494da59bfc825d8d68fdfc149f4bb89e7fd5358",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a5285cda2722912a390770722a334e6d6e43d1ab/checks?check_suite_id=578707768",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a5285cda2722912a390770722a334e6d6e43d1ab/checks?check_suite_id=578707768",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "rbuckton",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/671973003?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-06T16:43:27Z",
+                "committedDate": "2020-04-07T07:40:50Z",
+                "pushedDate": "2020-04-07T07:41:37Z",
+                "abbreviatedOid": "a5285cd",
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNDI3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti Thank you for submitting this PR! \n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [accedo__accedo-one](https://www.npmjs.com/package/accedo__accedo-one)\n\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes without tests\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-07T07:51:15Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNDMyNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_complaint-a5285cd-->",
+              "createdAt": "2020-04-07T07:51:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNjQzOQ==",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "body": "So, actually the CI didn't fail.",
+              "createdAt": "2020-04-07T07:56:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDI0ODg1Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@alexandercerutti Thank you for submitting this PR!\n        \nBecause this is a new definition, a DefinitelyTyped maintainer will be reviewing this PR in the next few days once the Travis CI build passes.\n        \nIn the meantime, if the build fails or a merge conflict occurs, I'll let you know. Have a nice day!\r\n<!--footer bot @ 4/8/2020, 1:26:59 PM footerend-->",
+              "createdAt": "2020-04-07T08:22:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMTA1Njg0MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"complaint\"} headerend-->\r\n@alexandercerutti One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits or comments. Thank you!\r\n<!--footer bot @ 4/8/2020, 9:24:30 AM footerend-->",
+              "createdAt": "2020-04-08T16:24:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/accedo__accedo-one/accedo__accedo-one-tests.ts",
+              "additions": 41,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/index.d.ts",
+              "additions": 409,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/tsconfig.json",
+              "additions": 24,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzU4NjkxNTQ=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            },
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzU4NzA5Njc=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU5",
+                "name": "Needs Author Attention",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

@@ -1,0 +1,221 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0Mzg4Njk0NDU5",
+        "title": "[gaze] Add typing for gaze",
+        "lastEditedAt": "2020-03-15T12:56:20Z",
+        "author": {
+          "login": "adamzerella",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-03-15T12:51:25Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Awaiting reviewer feedback",
+              "__typename": "Label"
+            },
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "MERGEABLE",
+        "number": 43151,
+        "state": "OPEN",
+        "headRefOid": "bb6d3150b485cd203d265e06ca910262256e523e",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "bb6d3150b485cd203d265e06ca910262256e523e",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/662694783?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-15T12:49:20Z",
+                "committedDate": "2020-03-15T12:49:20Z",
+                "pushedDate": "2020-03-15T12:50:20Z",
+                "abbreviatedOid": "bb6d315",
+                "oid": "bb6d3150b485cd203d265e06ca910262256e523e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTIwNjY0MA==",
+              "author": {
+                "login": "adamzerella",
+                "__typename": "User"
+              },
+              "body": "@shama I'm looking to add some DT definitions here if that's ok ?",
+              "createdAt": "2020-03-15T12:54:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTIwOTg2Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@adamzerella Thank you for submitting this PR!\n        \nBecause this is a new definition, a DefinitelyTyped maintainer will be reviewing this PR in the next few days once the Travis CI build passes.\n        \nIn the meantime, if the build fails or a merge conflict occurs, I'll let you know. Have a nice day!\r\n<!--footer bot @ 3/17/2020, 7:23:55 AM footerend-->",
+              "createdAt": "2020-03-15T13:22:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTI0NDkwNA==",
+              "author": {
+                "login": "shama",
+                "__typename": "User"
+              },
+              "body": "@adamzerella 👍 Thanks!",
+              "createdAt": "2020-03-15T18:11:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/gaze/gaze-tests.ts",
+              "additions": 29,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/gaze/index.d.ts",
+              "additions": 75,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/gaze/tsconfig.json",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/gaze/tslint.json",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzQ2MDI3MDA=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU2",
+                "name": "Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5yPU4k",
+        "body": "@krzysdz Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `express-serve-static-core` — [on npm](https://www.npmjs.com/package/express-serve-static-core), [on unpkg](https://unpkg.com/browse/express-serve-static-core@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68381&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyMDk2NzQzNjAw"
+        ],
+        "labelableId": "PR_kwDOAFz6BM5lb7_c"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "PRC_lALOAFz6BM4AORWwzgV3bGY",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy"
+      }
+    }
+  }
+]

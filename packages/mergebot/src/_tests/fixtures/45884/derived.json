@@ -1,0 +1,53 @@
+{
+  "type": "info",
+  "now": "2020-07-06T06:52:24.860Z",
+  "pr_number": 45884,
+  "author": "sgratzl",
+  "headCommitOid": "1dcf44a05908783324ca99231837267af495cdb7",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-04T08:33:11.000Z",
+  "lastActivityDate": "2020-07-06T06:50:47.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "mergeOfferDate": "2020-07-06T06:51:10.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "cytoscape",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/cytoscape/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "phreed",
+        "wy193777",
+        "ypconstante",
+        "janniclas",
+        "cerberuser",
+        "gsbelarus",
+        "peterjferrarotto",
+        "spaxe",
+        "appleparan",
+        "Veckodag"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "Veckodag",
+      "date": "2020-07-04T11:08:20.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

@@ -1,0 +1,448 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDIyMDc5Mjk3",
+        "title": "Feature/43320 take two",
+        "lastEditedAt": null,
+        "author": {
+          "login": "petr-motejlek",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-05-22T18:22:29Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 44989,
+        "state": "OPEN",
+        "headRefOid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T18:22:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T18:22:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T18:27:59Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "Nicholaiii",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T19:57:22Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T20:26:39Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "petr-motejlek",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-23T08:45:20Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-23T10:05:30Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Nicholaiii",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
+                "abbreviatedOid": "9ca6086",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-05-23T10:05:21Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44989#pullrequestreview-417267077",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Nicholaiii",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
+                "abbreviatedOid": "9ca6086",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-05-23T10:05:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44989#pullrequestreview-417267093",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-05-22T12:57:16Z",
+                "committedDate": "2020-05-22T12:57:16Z",
+                "pushedDate": "2020-05-22T12:59:08Z",
+                "abbreviatedOid": "a11ff5a",
+                "oid": "a11ff5a18b2c85b630182b8679820debab5c0e05",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4bf0130965e611b315eb1b25fa6a7a00f4331c6b/checks?check_suite_id=709155248",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4bf0130965e611b315eb1b25fa6a7a00f4331c6b/checks?check_suite_id=709155248",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4bf0130965e611b315eb1b25fa6a7a00f4331c6b/checks?check_suite_id=709155688",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4bf0130965e611b315eb1b25fa6a7a00f4331c6b/checks?check_suite_id=709155688",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/690142028?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-05-22T18:20:33Z",
+                "committedDate": "2020-05-22T18:20:33Z",
+                "pushedDate": "2020-05-22T18:20:50Z",
+                "abbreviatedOid": "4bf0130",
+                "oid": "4bf0130965e611b315eb1b25fa6a7a00f4331c6b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34/checks?check_suite_id=710575251",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34/checks?check_suite_id=710575251",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34/checks?check_suite_id=710575426",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34/checks?check_suite_id=710575426",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/690298881?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-05-23T08:40:01Z",
+                "committedDate": "2020-05-23T08:40:01Z",
+                "pushedDate": "2020-05-23T08:41:39Z",
+                "abbreviatedOid": "9ca6086",
+                "oid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjgzOTQzNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@petr-motejlek Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n## Inactive\n\nThis PR has been inactive for 39 days — it is considered abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-05-22T18:22:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjgzOTQ0MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @TheHandsomeCoder @donnut @mdekrey @sbking @afharo @teves-castro @1M0reBug @hojberg @samsonkeung @angeloocana @raynerd @moshensky @ethanresnick @deftomat @blimusiek @biern @rayhaneh @rgm @drewwyatt @jottenlips @minitesh @krantisinh @pirix-gh @brekk @nemo108 @jituanlin @Philippe-mills @Saul-Mirone @Nicholaiii — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44989/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-05-22T18:22:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjg0MTM5NQ==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## ramda ([<kbd>unpkg</kbd>](https://unpkg.com/browse/ramda@latest/))\nwas missing the following properties:\n1. sequence\n1. xor\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34\n</p>\n",
+              "createdAt": "2020-05-22T18:27:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjg4ODc0MQ==",
+              "author": {
+                "login": "Nicholaiii",
+                "__typename": "User"
+              },
+              "body": "Could you potentially add a test for the behaviour that only returns `[undefined]`?\r\nThis way we've got that covered too, and this enables that previous contributors can also review the change :)\r\nIt all looks good to me.",
+              "createdAt": "2020-05-22T19:57:22Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "petr-motejlek",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjg5NjY0OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-05-22T20:26:38.634Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                       | #44989                                                                                                                     | diff  |\n| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                              |                                                                                                                            |       |\n| Memory usage (MiB)                                                                        | 259.3                                                                                                                        | 256.9                                                                                                                      | -0.9% |\n| Type count                                                                                | 79254                                                                                                                        | 79254                                                                                                                      | 0%    |\n| Assignability cache size                                                                  | 62164                                                                                                                        | 62164                                                                                                                      | 0%    |\n|                                                                                           |                                                                                                                              |                                                                                                                            |       |\n| **Language service**                                                                      |                                                                                                                              |                                                                                                                            |       |\n| Samples taken                                                                             | 1881                                                                                                                         | 1881                                                                                                                       | 0%    |\n| Identifiers in tests                                                                      | 5698                                                                                                                         | 5698                                                                                                                       | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                              |                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 416.0                                                                                                                        | 414.9                                                                                                                      | -0.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.1%                                                                                                                         | 8.9%                                                                                                                       |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 525.5                                                                                                                        | 520.5                                                                                                                      | -1.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [pair](/DefinitelyTyped/DefinitelyTyped/blob/699ee6b26683660fff379466962170998b450cfd/types/ramda/ramda-tests.ts#L276)       | [divide](/DefinitelyTyped/DefinitelyTyped/blob/bd51e5e8ffb33cf1c547d73977e712a413119fd3/types/ramda/ramda-tests.ts#L71)    |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                              |                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 407.8                                                                                                                        | 407.7                                                                                                                      | 0.0%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.3%                                                                                                                         | 9.5%                                                                                                                       | +2.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 502.1                                                                                                                        | 508.3                                                                                                                      | +1.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [rejectEven](/DefinitelyTyped/DefinitelyTyped/blob/699ee6b26683660fff379466962170998b450cfd/types/ramda/ramda-tests.ts#L316) | [combined](/DefinitelyTyped/DefinitelyTyped/blob/bd51e5e8ffb33cf1c547d73977e712a413119fd3/types/ramda/ramda-tests.ts#L391) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-05-22T20:26:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMzAwODYzNA==",
+              "author": {
+                "login": "petr-motejlek",
+                "__typename": "User"
+              },
+              "body": "@Nicholaiii , certainly. It should be in now.",
+              "createdAt": "2020-05-23T08:45:20Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "Nicholaiii",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMzAxODkyMw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@petr-motejlek Everything looks good here. Great job! I am ready to merge this PR (at 9ca6086) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-05-23T10:05:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/ramda/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ramda/test/paths-tests.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzg3NDg0NDE=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

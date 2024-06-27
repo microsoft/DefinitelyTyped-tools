@@ -1,0 +1,20 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5pVwbO",
+        "body": "@andrewbranch Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 3 packages in this PR\n\n* `ansicolors` — [on npm](https://www.npmjs.com/package/ansicolors), [on unpkg](https://unpkg.com/browse/ansicolors@latest/)\n* `cardinal` (*new!*) — [on npm](https://www.npmjs.com/package/cardinal), [on unpkg](https://unpkg.com/browse/cardinal@latest/)\n  - 1 added owner: ✎@andrewbranch\n  - Config files to check:\n    - [`cardinal/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/67090/files/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643#diff-9f471f9ba6ffa73024ae9aeb049dd98078364c565db83ee831e0498cbb678d67): edited\n* `marked-terminal` — [on npm](https://www.npmjs.com/package/marked-terminal), [on unpkg](https://unpkg.com/browse/marked-terminal@latest/)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=67090&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5pVyrF",
+        "body": "@andrewbranch The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339283595).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-bb7d42f-->"
+      }
+    }
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "type": "info",
+  "now": "2020-11-16T07:38:51.000Z",
+  "pr_number": 49417,
+  "author": "Methuselah96",
+  "headCommitOid": "2b9d0980329843dc436a18460f85bb2e2d2f688c",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-11-08T07:52:53.000Z",
+  "lastActivityDate": "2020-11-16T07:38:51.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "d3-array",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/d3-array/d3-array-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/d3-array/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "gustavderdrache",
+        "borisyankov",
+        "tomwanzek",
+        "denisname",
+        "ledragon",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "Ledragon",
+      "date": "2020-11-15T20:48:29.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "stale",
+      "reviewer": "tuuling",
+      "date": "2020-11-07T21:37:04.000Z",
+      "abbrOid": "525f75c"
+    }
+  ],
+  "ciResult": "pass"
+}

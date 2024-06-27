@@ -1,0 +1,582 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5leipL",
+        "title": "Shard testing, do more on GitHub Actions",
+        "createdAt": "2024-01-30T16:57:13Z",
+        "author": {
+          "login": "jakebailey",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Edits Infrastructure",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 68386,
+        "state": "MERGED",
+        "headRefOid": "d4919566e903eadf1e815389f7821d28aa4f187d",
+        "changedFiles": 5,
+        "additions": 129,
+        "deletions": 34,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "be1dba2d980a481ddb2d031d60931dfc09acbfa1",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "dfd0ded2deebd54f343fadbc69c9a665ceb97f51",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "94fe71d80eea487f627b2129f816d942cbff315b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "be1dba2d980a481ddb2d031d60931dfc09acbfa1",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "70ae657427e1fbe2fc04b4f8107e1e0a869906a9",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "94fe71d80eea487f627b2129f816d942cbff315b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "c3efb667ac683d98e1fec482b98e96a877c02d95",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "70ae657427e1fbe2fc04b4f8107e1e0a869906a9",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "26454f3e73781b25e4e664d162a2d82bc667623a",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "c3efb667ac683d98e1fec482b98e96a877c02d95",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "e7946848428fa74bcbf6bcd1f583432f2508783b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "26454f3e73781b25e4e664d162a2d82bc667623a",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "b02dc08cc47ee10837b3549d0419536d3fe64350",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "e7946848428fa74bcbf6bcd1f583432f2508783b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "240cca31fbdc32f349695ed39f348735169423c2",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b02dc08cc47ee10837b3549d0419536d3fe64350",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "e41d4e3046a8fa401cdfbd45af57a0dabb1bfedd",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "240cca31fbdc32f349695ed39f348735169423c2",
+                      "__typename": "Commit"
+                    },
+                    {
+                      "oid": "124c5f37d0e894d6fd10f832ffc4dd426a2c0fa5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "26c65f399f697383aa06d6177882e64a8e04db4f",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "e41d4e3046a8fa401cdfbd45af57a0dabb1bfedd",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "737ec18cdaca099c601a756099d19030eef6d6b5",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "26c65f399f697383aa06d6177882e64a8e04db4f",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "267be5d9f25c562eb94ed95d4aa334a2fa4bc152",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "737ec18cdaca099c601a756099d19030eef6d6b5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "d4919566e903eadf1e815389f7821d28aa4f187d",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "267be5d9f25c562eb94ed95d4aa334a2fa4bc152",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "createdAt": "2024-01-30T23:25:59Z",
+              "__typename": "ReadyForReviewEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-30T23:26:36Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-30T23:27:14Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-30T23:50:18Z",
+              "projectColumnName": "Waiting for Author to Merge",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-31T02:08:12Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-31T02:08:45Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-31T02:10:29Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-01-31T02:13:36Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "737ec18cdaca099c601a756099d19030eef6d6b5",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2024-01-30T23:49:40Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386#pullrequestreview-1852623458",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "737ec18cdaca099c601a756099d19030eef6d6b5",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-01-31T02:07:26Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2024-01-31T02:07:26Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386#pullrequestreview-1852771263",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 13,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 20285722744,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285722744",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285722744",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-31T02:09:59Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20285722762,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285722762",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285722762",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-31T02:09:59Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/lint-md.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20285725182,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285725182",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d4919566e903eadf1e815389f7821d28aa4f187d/checks?check_suite_id=20285725182",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20240131.3 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-01-31T02:10:06Z",
+                      "workflowRun": null,
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-01-31T02:09:52Z",
+                "committedDate": "2024-01-31T02:09:52Z",
+                "pushedDate": null,
+                "oid": "d4919566e903eadf1e815389f7821d28aa4f187d",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM5yU6X-",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1918084606,
+              "body": "@jakebailey Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 0 packages in this PR (and infra files)\n\n* Infra files\n  - [`.github/workflows/CI.yml`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-3ab46ee209a127470fce3c2cf106b1a1dbadbb929a4b5b13656a4bc4ce19c0b8)\n  - [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)\n  - [`azure-pipelines.yml`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-7915b9b726a397ae7ba6af7b9703633d21c031ebf21682f3ee7e6a4ec52837a5)\n  - [`scripts/get-ci-matrix.js`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-829d6508703c9562da407aebc38f95e778eb5f54859a324c9f843e7b09c58245)\n  - [`scripts/get-suggestions-dir.js`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-8e98772fd2932ca1b735b10a275e8277a82b49e8685f927d6cb4a86b342f2e45)\n\n## Code Reviews\n\nThere aren't any other owners of this package, so a DT maintainer will review it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68386&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes which affect DT infrastructure ([`.github/workflows/CI.yml`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-3ab46ee209a127470fce3c2cf106b1a1dbadbb929a4b5b13656a4bc4ce19c0b8), [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5), [`azure-pipelines.yml`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-7915b9b726a397ae7ba6af7b9703633d21c031ebf21682f3ee7e6a4ec52837a5), [`scripts/get-ci-matrix.js`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-829d6508703c9562da407aebc38f95e778eb5f54859a324c9f843e7b09c58245), [`scripts/get-suggestions-dir.js`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files/d4919566e903eadf1e815389f7821d28aa4f187d#diff-8e98772fd2932ca1b735b10a275e8277a82b49e8685f927d6cb4a86b342f2e45))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-01-30T23:26:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yU6Ym",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1918084646,
+              "body": "🔔 @jakebailey — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68386/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2024-01-30T23:26:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5yVgCv",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1918238895,
+              "body": "@andrewbranch Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-b0edd0-737ec18-->",
+              "createdAt": "2024-01-31T02:08:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "path": ".github/workflows/CI.yml",
+              "additions": 99,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.md",
+              "additions": 4,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "azure-pipelines.yml",
+              "additions": 2,
+              "deletions": 29,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "scripts/get-ci-matrix.js",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "scripts/get-suggestions-dir.js",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "NQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

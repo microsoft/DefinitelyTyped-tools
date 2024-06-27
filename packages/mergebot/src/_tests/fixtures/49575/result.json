@@ -1,0 +1,24 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Other Approved",
+    "Edits Infrastructure"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@jablko Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 0 packages in this PR (and infra files)\n\n* Infra files\n  - [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-18813c86948efc57e661623d7ba48ff94325c9b5421ec9177f724922dd553a35)\n  - [`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235)\n  - [`README.es.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-42010a55cd1784b825a37c762cc91d75421f3ed4515f1047cf5506444949a0c2)\n  - [`README.ko.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-86fa6921bcebf260d55d8a3742c1b513bd78f4ea18366db989b5a03c68c563ae)\n  - [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)\n  - [`README.pt.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-822bdbb1cbe31bcc1afd1ddbbd7b3191052e07c9996334e645a22694e3cc2119)\n  - [`README.ru.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-fb460bf71153d8224708cfa7298df0409d20c207f5b252b74906895bd8e1ac42)\n\n## Code Reviews\n\nThere aren't any other owners of this package, so a DT maintainer will review it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=49575&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect DT infrastructure ([`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-18813c86948efc57e661623d7ba48ff94325c9b5421ec9177f724922dd553a35), [`README.cn.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-97a2a8d47e133a2b24ad7bc1a2e25710f534470e28a73efb62da312a3bb19235), [`README.es.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-42010a55cd1784b825a37c762cc91d75421f3ed4515f1047cf5506444949a0c2), [`README.ko.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-86fa6921bcebf260d55d8a3742c1b513bd78f4ea18366db989b5a03c68c563ae), [`README.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5), [`README.pt.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-822bdbb1cbe31bcc1afd1ddbbd7b3191052e07c9996334e645a22694e3cc2119), [`README.ru.md`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files/cdd66f483bb0103f6e6d1eb7b07192ff95718f25#diff-fb460bf71153d8224708cfa7298df0409d20c207f5b252b74906895bd8e1ac42))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 7 days.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @jablko — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    },
+    {
+      "tag": "stale-ping-d2e897-6400f4c",
+      "status": "@elibarzilay, @sandersn Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

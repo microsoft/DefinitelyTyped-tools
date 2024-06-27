@@ -1,0 +1,780 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDAwMTAwMTk2",
+        "title": "Added typings for @accedo/accedo-one package",
+        "lastEditedAt": "2020-04-23T18:17:03Z",
+        "author": {
+          "login": "alexandercerutti",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-07T07:51:12Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 43695,
+        "state": "OPEN",
+        "headRefOid": "90c94f91120c026f5f8bcc586426e8590b7b4048",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-07T07:51:15Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-07T07:51:23Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-07T07:56:06Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-07T08:22:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-08T16:24:30Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-10T11:54:25Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T12:26:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T12:26:33Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T15:57:14Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T16:26:48Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T16:26:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T16:26:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-15T16:28:26Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "createdAt": "2020-04-21T11:55:50Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "abbreviatedOid": "a5285cd",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "RyanCavanaugh",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-04-08T16:23:48Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-04-08T16:23:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695#pullrequestreview-390133785",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "abbreviatedOid": "a5285cd",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "alexandercerutti",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-04-08T17:03:39Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-04-08T17:03:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695#pullrequestreview-390164904",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "90c94f91120c026f5f8bcc586426e8590b7b4048",
+                "abbreviatedOid": "90c94f9",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "andrewbranch",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-04-30T23:07:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-04-30T23:07:49Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695#pullrequestreview-403936744",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 10,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:21:51Z",
+                "committedDate": "2020-04-07T07:40:36Z",
+                "pushedDate": null,
+                "abbreviatedOid": "af8957d",
+                "oid": "af8957d1fc70a0de9c0f4c7c0118a24389fb5b26",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:36:34Z",
+                "committedDate": "2020-04-07T07:40:42Z",
+                "pushedDate": null,
+                "abbreviatedOid": "f9a4323",
+                "oid": "f9a43233fe8c5758e6d58662b999d0e14929ee83",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:41:15Z",
+                "committedDate": "2020-04-07T07:40:44Z",
+                "pushedDate": null,
+                "abbreviatedOid": "9e24828",
+                "oid": "9e248289b7b7bb8f239f0ff106a95b00f5cd4a87",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-06T16:41:40Z",
+                "committedDate": "2020-04-07T07:40:47Z",
+                "pushedDate": null,
+                "abbreviatedOid": "2494da5",
+                "oid": "2494da59bfc825d8d68fdfc149f4bb89e7fd5358",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a5285cda2722912a390770722a334e6d6e43d1ab/checks?check_suite_id=578707768",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a5285cda2722912a390770722a334e6d6e43d1ab/checks?check_suite_id=578707768",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "rbuckton",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/671973003?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-06T16:43:27Z",
+                "committedDate": "2020-04-07T07:40:50Z",
+                "pushedDate": "2020-04-07T07:41:37Z",
+                "abbreviatedOid": "a5285cd",
+                "oid": "a5285cda2722912a390770722a334e6d6e43d1ab",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/f12c498d540d73baacfa1abb4feb43fda41ac8e5/checks?check_suite_id=588273165",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f12c498d540d73baacfa1abb4feb43fda41ac8e5/checks?check_suite_id=588273165",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "FAILURE",
+                  "contexts": [
+                    {
+                      "state": "FAILURE",
+                      "description": "The Travis CI build failed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/673381199?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-10T11:47:19Z",
+                "committedDate": "2020-04-10T11:47:19Z",
+                "pushedDate": "2020-04-10T11:48:31Z",
+                "abbreviatedOid": "f12c498",
+                "oid": "f12c498d540d73baacfa1abb4feb43fda41ac8e5",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-15T15:27:23Z",
+                "committedDate": "2020-04-15T15:27:23Z",
+                "pushedDate": null,
+                "abbreviatedOid": "86e9006",
+                "oid": "86e900621feb6b2d017a9f1aaea224f498e5a22a",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-15T15:32:48Z",
+                "committedDate": "2020-04-15T15:32:48Z",
+                "pushedDate": null,
+                "abbreviatedOid": "3cb23d4",
+                "oid": "3cb23d4793e7eeede37a11580c3abf8d314b9748",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-15T15:52:12Z",
+                "committedDate": "2020-04-15T15:52:12Z",
+                "pushedDate": null,
+                "abbreviatedOid": "07b0b29",
+                "oid": "07b0b292fbf5ad04763bbed94dc3713c05468067",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/90c94f91120c026f5f8bcc586426e8590b7b4048/checks?check_suite_id=600295513",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/90c94f91120c026f5f8bcc586426e8590b7b4048/checks?check_suite_id=600295513",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/681726779?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-15T15:52:24Z",
+                "committedDate": "2020-04-15T15:52:24Z",
+                "pushedDate": "2020-04-15T15:53:29Z",
+                "abbreviatedOid": "90c94f9",
+                "oid": "90c94f91120c026f5f8bcc586426e8590b7b4048",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 21,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNDI3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti Thank you for submitting this PR! \n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [accedo__accedo-one](https://www.npmjs.com/package/accedo__accedo-one)\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-07T07:51:15Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNDMyNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_complaint-a5285cd-->",
+              "createdAt": "2020-04-07T07:51:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDIzNjQzOQ==",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "body": "So, actually the CI didn't fail.",
+              "createdAt": "2020-04-07T07:56:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMDI0ODg1Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@alexandercerutti Thank you for submitting this PR!\n        \nBecause this is a new definition, a DefinitelyTyped maintainer will be reviewing this PR in the next few days once the Travis CI build passes.\n        \nIn the meantime, if the build fails or a merge conflict occurs, I'll let you know. Have a nice day!\r\n<!--footer bot @ 4/27/2020, 2:28:30 PM footerend-->",
+              "createdAt": "2020-04-07T08:22:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMTA1Njg0MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"complaint\"} headerend-->\r\n@alexandercerutti One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits or comments. Thank you!\r\n<!--footer bot @ 4/8/2020, 9:24:30 AM footerend-->",
+              "createdAt": "2020-04-08T16:24:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxMTk5ODMxNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti The Travis CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f12c498d540d73baacfa1abb4feb43fda41ac8e5/checks?check_suite_id=588273165).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_complaint-f12c498-->",
+              "createdAt": "2020-04-10T11:54:25Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDAwNzA3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti I haven't seen anything from you in a while and this PR currently has problems that prevent it from being merged. The PR will be closed tomorrow if there aren't new commits to fix the issues.\n<!--typescript_bot_abandon-warn-->",
+              "createdAt": "2020-04-15T12:26:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDAwNzA3Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@alexandercerutti I haven't seen anything from you in a while and this PR currently has problems that prevent it from being merged. The PR will be closed tomorrow if there aren't new commits to fix the issues.\n<!--typescript_bot_abandon-warn-->",
+              "createdAt": "2020-04-15T12:26:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDEyNTI4OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2020-04-15T15:57:13.478Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to accedo__accedo-one with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                                                     |\n| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |\n| Type count                                                                                | 2239                                                                                                                                                |\n| Assignability cache size                                                                  | 116                                                                                                                                                 |\n|                                                                                           |                                                                                                                                                     |\n| **Language service measurements**                                                         |                                                                                                                                                     |\n| Samples taken                                                                             | 51                                                                                                                                                  |\n| Identifiers in tests                                                                      | 51                                                                                                                                                  |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                     |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 78.7                                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 27.3%                                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 101.4                                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [accedoOne](/DefinitelyTyped/DefinitelyTyped/blob/97b243dc95c812604fa6736faf8dc8f7a0ff41ac/types/accedo__accedo-one/accedo__accedo-one-tests.ts#L9) |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                     |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 74.9                                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 25.8%                                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 91.7                                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [sendLog](/DefinitelyTyped/DefinitelyTyped/blob/97b243dc95c812604fa6736faf8dc8f7a0ff41ac/types/accedo__accedo-one/accedo__accedo-one-tests.ts#L18)  |\n|                                                                                           |                                                                                                                                                     |\n| **System information**                                                                    |                                                                                                                                                     |\n| Node version                                                                              | v12.16.1                                                                                                                                            |\n| CPU count                                                                                 | 2                                                                                                                                                   |\n| CPU speed                                                                                 | 2.095 GHz                                                                                                                                           |\n| CPU model                                                                                 | Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz                                                                                                       |\n| CPU Architecture                                                                          | x64                                                                                                                                                 |\n| Memory                                                                                    | 6.8 GiB                                                                                                                                             |\n| Platform                                                                                  | linux                                                                                                                                               |\n| Release                                                                                   | 4.15.0-1077-azure                                                                                                                                   |\n\n\n</details>\n",
+              "createdAt": "2020-04-15T15:57:14Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDE0MTY5OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"reviewPing-c312a14e6aed7a8616ad4ed600ac681c\"} headerend-->\r\n🔔 @RyanCavanaugh - Thanks for your review of this PR! Can you please look at the new code and update your review status if appropriate?\r\n<!--footer bot @ 4/15/2020, 9:26:48 AM footerend-->",
+              "createdAt": "2020-04-15T16:26:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDE0MTcxNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@RyanCavanaugh Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-fbf110-a5285cd-->",
+              "createdAt": "2020-04-15T16:26:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDE0MTcyMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@RyanCavanaugh Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-fbf110-a5285cd-->",
+              "createdAt": "2020-04-15T16:26:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNDE0MjU3Ng==",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "body": "What's wrong with this bot? lol",
+              "createdAt": "2020-04-15T16:28:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzEzNDI2Ng==",
+              "author": {
+                "login": "alexandercerutti",
+                "__typename": "User"
+              },
+              "body": "Are there any news for this @RyanCavanaugh? Sorry for tagging, but several days passed since first review and since my code updates. So, only to understand how much we'll have to wait.\r\n\r\nThank you.\r\n\r\nP.s. sorry for asking a code review.",
+              "createdAt": "2020-04-21T11:55:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/accedo__accedo-one/accedo__accedo-one-tests.ts",
+              "additions": 41,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/index.d.ts",
+              "additions": 405,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/tsconfig.json",
+              "additions": 28,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/accedo__accedo-one/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzU4NzA5Njc=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW40Njk1ODAw",
+                "name": "Done",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            },
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzczNDY4ODQ=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

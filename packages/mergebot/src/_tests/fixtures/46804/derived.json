@@ -1,0 +1,38 @@
+{
+  "type": "info",
+  "now": "2020-08-25T19:30:48.988Z",
+  "pr_number": 46804,
+  "author": "ETHANTALJAFFE",
+  "headCommitOid": "3e3524f41de19cd97d5c32a531eab3f0e9206f75",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-08-15T20:29:40.000Z",
+  "lastActivityDate": "2020-08-25T19:30:37.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "react-d3-graph",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-d3-graph/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "hrngoode",
+        "adina-todoran",
+        "BreadAndRoses95"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

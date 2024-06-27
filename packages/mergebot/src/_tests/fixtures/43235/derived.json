@@ -1,0 +1,40 @@
+{
+  "type": "info",
+  "now": "2020-03-19T19:25:52.000Z",
+  "pr_number": 43235,
+  "author": "Favna",
+  "headCommitOid": "933d8d81859cea3cb2df640bd099ef80bee3d691",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-19T14:37:52.000Z",
+  "lastActivityDate": "2020-03-19T14:37:52.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "arcgis-js-api",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/arcgis-js-api/arcgis-js-api-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/arcgis-js-api/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "Esri",
+        "bsvensson"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

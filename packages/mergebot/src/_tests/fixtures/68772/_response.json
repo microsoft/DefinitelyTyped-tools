@@ -1,0 +1,250 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5n95b9",
+        "title": "[relationship.js] fix types after upstream restructuring",
+        "createdAt": "2024-02-26T21:09:25Z",
+        "author": {
+          "login": "jakebailey",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 68772,
+        "state": "OPEN",
+        "headRefOid": "3f76a3a2d73f3fe577d32ca07c73c79016707328",
+        "changedFiles": 7,
+        "additions": 86,
+        "deletions": 83,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "3f76a3a2d73f3fe577d32ca07c73c79016707328",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "dd92afb5a03c591944601de73a58bf49bb31e1dc",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 21138681532,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3f76a3a2d73f3fe577d32ca07c73c79016707328/checks?check_suite_id=21138681532",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3f76a3a2d73f3fe577d32ca07c73c79016707328/checks?check_suite_id=21138681532",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-02-26T21:09:28Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-02-26T21:08:20Z",
+                "committedDate": "2024-02-26T21:08:20Z",
+                "pushedDate": null,
+                "oid": "3f76a3a2d73f3fe577d32ca07c73c79016707328",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM51I9v-",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1965284350,
+              "body": "@jakebailey Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `relationship.js` — [on npm](https://www.npmjs.com/package/relationship.js), [on unpkg](https://unpkg.com/browse/relationship.js@latest/)\n  - Config files to check:\n    - [`relationship.js/dist/relationship-mode.min.d.mts`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68772/files/3f76a3a2d73f3fe577d32ca07c73c79016707328#diff-4022014ff2d7b347660d53e41167cee333d9cdff03aed1ac76f4e83acc201cfc): edited\n    - [`relationship.js/dist/relationship.min.d.mts`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68772/files/3f76a3a2d73f3fe577d32ca07c73c79016707328#diff-e67f141e10c4751946c0d9e25b13a45b2a98b2bc168885940ab75b51c2f8978a): edited\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68772&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 A DT maintainer needs to approve changes which affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-02-26T21:10:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM51I9yZ",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1965284505,
+              "body": "Hey @jakebailey,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2024-02-26T21:10:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM51I9y5",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1965284537,
+              "body": "🔔 @whinc — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/68772/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-02-26T21:10:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "path": "types/relationship.js/dist/relationship-mode.min.d.mts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/dist/relationship-mode.min.d.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/dist/relationship.min.d.mts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/dist/relationship.min.d.ts",
+              "additions": 48,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/index.d.ts",
+              "additions": 2,
+              "deletions": 83,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/package.json",
+              "additions": 22,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/relationship.js/tsconfig.json",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Nw",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgV6pnI",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

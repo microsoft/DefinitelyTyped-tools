@@ -1,0 +1,221 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDkzNjExNjMz",
+        "title": "[apptimize__apptimize-web-sdk] Unmangle scoped package names",
+        "createdAt": "2020-09-26T18:27:53Z",
+        "author": {
+          "login": "jablko",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 48216,
+        "state": "OPEN",
+        "headRefOid": "3f689bfb9d310612cdaf7c52c7ead41d1181b52f",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T17:34:13Z"
+            },
+            {
+              "__typename": "ReadyForReviewEvent",
+              "createdAt": "2020-09-27T19:01:23Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:01:58Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:01:59Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:02:00Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3f689bfb9d310612cdaf7c52c7ead41d1181b52f/checks?check_suite_id=1252086451",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3f689bfb9d310612cdaf7c52c7ead41d1181b52f/checks?check_suite_id=1252086451",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3f689bfb9d310612cdaf7c52c7ead41d1181b52f/checks?check_suite_id=1252086960",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3f689bfb9d310612cdaf7c52c7ead41d1181b52f/checks?check_suite_id=1252086960",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-28T18:17:12Z",
+                "committedDate": "2020-09-27T17:21:32Z",
+                "pushedDate": "2020-09-27T17:23:58Z",
+                "abbreviatedOid": "3f689bf",
+                "oid": "3f689bfb9d310612cdaf7c52c7ead41d1181b52f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY2NDI3NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-09-27T17:34:12.722Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                                                      | #48216                                                                                                                                                               | diff  |\n| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                                                             |                                                                                                                                                                      |       |\n| Memory usage (MiB)                                                                        | 35.5                                                                                                                                                                        | 35.5                                                                                                                                                                 | +0.1% |\n| Type count                                                                                | 2248                                                                                                                                                                        | 2248                                                                                                                                                                 | 0%    |\n| Assignability cache size                                                                  | 127                                                                                                                                                                         | 127                                                                                                                                                                  | 0%    |\n|                                                                                           |                                                                                                                                                                             |                                                                                                                                                                      |       |\n| **Language service**                                                                      |                                                                                                                                                                             |                                                                                                                                                                      |       |\n| Samples taken                                                                             | 155                                                                                                                                                                         | 155                                                                                                                                                                  | 0%    |\n| Identifiers in tests                                                                      | 155                                                                                                                                                                         | 155                                                                                                                                                                  | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                                             |                                                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 98.6                                                                                                                                                                        | 102.1                                                                                                                                                                | +3.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 15.6%                                                                                                                                                                       | 17.1%                                                                                                                                                                |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 145.6                                                                                                                                                                       | 148.5                                                                                                                                                                | +2.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [runCodeBlock](/DefinitelyTyped/DefinitelyTyped/blob/962988086377b24102db89d0cb3d97e8a7675c66/types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts#L54) | [setup](/DefinitelyTyped/DefinitelyTyped/blob/51177a3021bb94499193e5371bdd0f09dbf95007/types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts#L74) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                                             |                                                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 97.1                                                                                                                                                                        | 99.7                                                                                                                                                                 | +2.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 16.0%                                                                                                                                                                       | 16.7%                                                                                                                                                                | +4.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 140.6                                                                                                                                                                       | 143.8                                                                                                                                                                | +2.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [setup](/DefinitelyTyped/DefinitelyTyped/blob/962988086377b24102db89d0cb3d97e8a7675c66/types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts#L74)        | [setup](/DefinitelyTyped/DefinitelyTyped/blob/51177a3021bb94499193e5371bdd0f09dbf95007/types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts#L74) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-09-27T17:34:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY3NDQ3NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jablko Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `apptimize__apptimize-web-sdk` [on npm](https://www.npmjs.com/package/@apptimize/apptimize-web-sdk), [on unpkg](https://unpkg.com/browse/@apptimize/apptimize-web-sdk@latest/)\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ A DT maintainer needs to approve changes which affect module config files\n   - `apptimize__apptimize-web-sdk/tsconfig.json`: changes outside of \"files\" list\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-09-27T19:01:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY3NDQ3OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @innovation-team @rlbaxter — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48216/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-09-27T19:02:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/apptimize__apptimize-web-sdk/tsconfig.json",
+              "additions": 6,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDYyMzQ5NjQ=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

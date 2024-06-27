@@ -1,0 +1,23 @@
+{
+  "projectColumn": "Needs Maintainer Review",
+  "labels": [
+    "Critical package"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@larsrh Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `estree` — [on npm](https://www.npmjs.com/package/estree), [on unpkg](https://unpkg.com/browse/estree@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=43136&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by a DT maintainer\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @RReverser — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43136/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
+    },
+    {
+      "tag": "stale-ping-f5a3ad-37d784d",
+      "status": "@RReverser Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

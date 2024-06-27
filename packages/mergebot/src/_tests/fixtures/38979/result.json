@@ -1,0 +1,30 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Critical package",
+    "Other Approved",
+    "Check Config",
+    "Unreviewed"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@ExE-Boss Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `es-abstract` — [on npm](https://www.npmjs.com/package/es-abstract), [on unpkg](https://unpkg.com/browse/es-abstract@latest/)\n  - Config files to check:\n    - [`es-abstract/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979/files/222334139e52fc16369464cfb5dc95c82f71192f#diff-1eda518cd7bfbcd5fa96a7f844b631954cbc9db9ff168fc3731abb874369a4f6): edited\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=38979&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 129 days — it is *still* unreviewed!\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @RReverser — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
+    },
+    {
+      "tag": "stale-ping-764528-0e6e7f4",
+      "status": "@sandersn, @weswigham Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
+    },
+    {
+      "tag": "Unreviewed:done",
+      "status": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @ExE-Boss.\n\n(Ping @RReverser.)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

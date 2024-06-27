@@ -1,0 +1,55 @@
+{
+  "type": "info",
+  "now": "2021-09-06T20:42:33.690Z",
+  "pr_number": 55512,
+  "author": "philibea",
+  "headCommitOid": "e90d61bddfd00fa6db114993d0689cdb367be7e5",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-08-31T15:13:30.000Z",
+  "lastActivityDate": "2021-08-31T18:33:55.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "react-datepicker",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-datepicker/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "radziksh",
+        "andrewBalekha",
+        "smrq",
+        "royxue",
+        "KoalaHuman",
+        "justingrant",
+        "jakeboone02",
+        "Ky6uk",
+        "aviklai",
+        "seckie",
+        "tu4mo",
+        "kerry-g",
+        "ShiftrTechSAS"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "Ky6uk",
+      "date": "2021-08-31T18:33:55.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 909331527,
+  "ciResult": "pass"
+}

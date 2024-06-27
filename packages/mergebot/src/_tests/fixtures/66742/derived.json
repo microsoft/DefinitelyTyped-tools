@@ -1,0 +1,53 @@
+{
+  "type": "info",
+  "now": "2023-10-18T01:59:04.603Z",
+  "pr_number": 66742,
+  "author": "BawdyInkSlinger",
+  "headCommitOid": "7a7f91980d3ac5f8c6b6916ca70a44aa08215698",
+  "mergeBaseOid": "3090530f3f230f7cfb2920b28bf49a938cd8aa59",
+  "lastPushDate": "2023-09-18T23:01:42.000Z",
+  "lastActivityDate": "2023-10-18T01:34:56.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "twine-sugarcube",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/twine-sugarcube/extensions.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/twine-sugarcube/test/extensions.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "ezsh",
+        "tmedwards"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "tmedwards",
+      "date": "2023-10-18T01:34:56.000Z"
+    },
+    {
+      "type": "approved",
+      "reviewer": "ezsh",
+      "date": "2023-09-30T07:13:11.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 1724578260,
+  "ciResult": "pass"
+}

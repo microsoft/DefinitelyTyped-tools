@@ -1,0 +1,26 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "The CI failed",
+    "New Definition",
+    "Check Config",
+    "Huge Change"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@Dssssds Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `xald-parse-sdk` (*new!*) — [on npm](https://www.npmjs.com/package/xald-parse-sdk), [on unpkg](https://unpkg.com/browse/xald-parse-sdk@latest/)\n  - Config files to check:\n    - [`xald-parse-sdk/ts3.6/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe#diff-bfc1b741f010db81cead2207a1b4172e9a907b81e1b2e00aaf5634ec6e5f3e7b): edited\n    - [`xald-parse-sdk/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe#diff-c9e04178a7818e4f645fba6421d9c18e7f9e8be46343ae904ed4ada61296c628): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=55210&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 20 days.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @Dssssds — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    },
+    {
+      "tag": "gh-actions-complaint-fc6b2c1",
+      "status": "@Dssssds The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585693499).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

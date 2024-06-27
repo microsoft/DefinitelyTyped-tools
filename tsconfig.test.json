@@ -19,5 +19,6 @@
     { "path": "packages/typescript-packages/test" },
     { "path": "packages/typescript-versions/test" },
     { "path": "packages/utils/test" },
+    { "path": "packages/mergebot/test" }
   ]
 }

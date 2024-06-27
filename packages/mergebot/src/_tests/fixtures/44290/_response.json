@@ -1,0 +1,353 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDA5OTQ0MzU2",
+        "title": "Add Nova editor extension types",
+        "lastEditedAt": null,
+        "author": {
+          "login": "apexskier",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-28T07:49:29Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "The Travis CI build failed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": true,
+        "mergeable": "MERGEABLE",
+        "number": 44290,
+        "state": "OPEN",
+        "headRefOid": "70a3b39ddd810f2078743ecdbcf9ed95bf1f6a66",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "023103f7c3262b1eea08721cc5d7516851e31ad1",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "2fe056f00a05fb66c5590c26accfacefaeb3b90c",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "77441336707b531807f2d6e0eb9c1756033bbdfc",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "state": "COMMENTED"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "70a3b39ddd810f2078743ecdbcf9ed95bf1f6a66",
+                "__typename": "Commit"
+              }
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "77441336707b531807f2d6e0eb9c1756033bbdfc",
+                "abbreviatedOid": "7744133",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2020-04-28T13:56:31Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44290#pullrequestreview-401861064",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-28T07:37:28Z",
+                "committedDate": "2020-04-28T07:37:28Z",
+                "pushedDate": null,
+                "abbreviatedOid": "023103f",
+                "oid": "023103f7c3262b1eea08721cc5d7516851e31ad1",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-28T07:42:18Z",
+                "committedDate": "2020-04-28T07:42:18Z",
+                "pushedDate": null,
+                "abbreviatedOid": "2fe056f",
+                "oid": "2fe056f00a05fb66c5590c26accfacefaeb3b90c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/77441336707b531807f2d6e0eb9c1756033bbdfc/checks?check_suite_id=634606400",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/77441336707b531807f2d6e0eb9c1756033bbdfc/checks?check_suite_id=634606400",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "FAILURE",
+                  "contexts": [
+                    {
+                      "state": "FAILURE",
+                      "description": "The Travis CI build failed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680442657?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-28T07:48:09Z",
+                "committedDate": "2020-04-28T07:48:09Z",
+                "pushedDate": "2020-04-28T07:48:23Z",
+                "abbreviatedOid": "7744133",
+                "oid": "77441336707b531807f2d6e0eb9c1756033bbdfc",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/70a3b39ddd810f2078743ecdbcf9ed95bf1f6a66/checks?check_suite_id=635608510",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/70a3b39ddd810f2078743ecdbcf9ed95bf1f6a66/checks?check_suite_id=635608510",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "FAILURE",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "FAILURE",
+                  "contexts": [
+                    {
+                      "state": "FAILURE",
+                      "description": "The Travis CI build failed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680581637?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-28T13:56:38Z",
+                "committedDate": "2020-04-28T13:56:38Z",
+                "pushedDate": "2020-04-28T13:56:50Z",
+                "abbreviatedOid": "70a3b39",
+                "oid": "70a3b39ddd810f2078743ecdbcf9ed95bf1f6a66",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDQ0MTE3NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@apexskier Thank you for submitting this PR! \n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [nova-editor](https://www.npmjs.com/package/nova-editor)\n\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-28T07:49:36Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDQ0MjgxMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2020-04-28T07:53:11.333Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to nova-editor with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                                     |\n| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |\n| Type count                                                                                | 2239                                                                                                                                |\n| Assignability cache size                                                                  | 114                                                                                                                                 |\n|                                                                                           |                                                                                                                                     |\n| **Language service measurements**                                                         |                                                                                                                                     |\n| Samples taken                                                                             | 24                                                                                                                                  |\n| Identifiers in tests                                                                      | 24                                                                                                                                  |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                     |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 71.9                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 18.1%                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 97.6                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [stop](/DefinitelyTyped/DefinitelyTyped/blob/750111db2ad104759f66f50e499d83451e115ef1/types/nova-editor/nova-editor-tests.ts#L24)   |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                     |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 69.6                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 13.9%                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 82.4                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [client](/DefinitelyTyped/DefinitelyTyped/blob/750111db2ad104759f66f50e499d83451e115ef1/types/nova-editor/nova-editor-tests.ts#L24) |\n|                                                                                           |                                                                                                                                     |\n| **System information**                                                                    |                                                                                                                                     |\n| Node version                                                                              | v12.16.1                                                                                                                            |\n| CPU count                                                                                 | 2                                                                                                                                   |\n| CPU speed                                                                                 | 2.095 GHz                                                                                                                           |\n| CPU model                                                                                 | Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz                                                                                       |\n| CPU Architecture                                                                          | x64                                                                                                                                 |\n| Memory                                                                                    | 6.8 GiB                                                                                                                             |\n| Platform                                                                                  | linux                                                                                                                               |\n| Release                                                                                   | 4.15.0-1077-azure                                                                                                                   |\n\n\n</details>\n",
+              "createdAt": "2020-04-28T07:53:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDYyNDA5OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@apexskier The Travis CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/77441336707b531807f2d6e0eb9c1756033bbdfc/checks?check_suite_id=634606400).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_complaint-7744133-->",
+              "createdAt": "2020-04-28T13:56:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/nova-editor/index.d.ts",
+              "additions": 223,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/nova-editor/nova-editor-tests.ts",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/nova-editor/tsconfig.json",
+              "additions": 23,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/nova-editor/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzcxNDg1NjU=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

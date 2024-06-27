@@ -1,0 +1,260 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0MzkyMDM2NjA4",
+        "title": "feat(types): add carbon__icon-helpers",
+        "lastEditedAt": null,
+        "author": {
+          "login": "metonym",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-03-22T16:50:35Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Awaiting reviewer feedback",
+              "__typename": "Label"
+            },
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "UNKNOWN",
+        "number": 43314,
+        "state": "OPEN",
+        "headRefOid": "432f23fe1b87b12fe58bb1a8958f77ee3242741e",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "432f23fe1b87b12fe58bb1a8958f77ee3242741e",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/432f23fe1b87b12fe58bb1a8958f77ee3242741e/checks?check_suite_id=538815611",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/432f23fe1b87b12fe58bb1a8958f77ee3242741e/checks?check_suite_id=538815611",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "RyanCavanaugh",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/665548702?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-22T16:48:33Z",
+                "committedDate": "2020-03-22T16:48:33Z",
+                "pushedDate": "2020-03-22T16:48:44Z",
+                "abbreviatedOid": "432f23f",
+                "oid": "432f23fe1b87b12fe58bb1a8958f77ee3242741e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYwMjIzODI3OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@metonym Thank you for submitting this PR! \n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [carbon__icon-helpers](https://www.npmjs.com/package/carbon__icon-helpers)\n\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes without tests\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-03-22T16:50:45Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYwMjIzODI5MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@metonym The Travis CI build failed! Please [review the logs for more information](https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/665548702?utm_source=github_status&utm_medium=notification).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_complaint-432f23f-->",
+              "createdAt": "2020-03-22T16:50:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYwMjIzODI5Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@metonym The Travis CI build failed! Please [review the logs for more information](https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/665548702?utm_source=github_status&utm_medium=notification).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_complaint-432f23f-->",
+              "createdAt": "2020-03-22T16:50:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYwMjI0MjY1NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@metonym Thank you for submitting this PR!\n        \nBecause this is a new definition, a DefinitelyTyped maintainer will be reviewing this PR in the next few days once the Travis CI build passes.\n        \nIn the meantime, if the build fails or a merge conflict occurs, I'll let you know. Have a nice day!\r\n<!--footer bot @ 3/23/2020, 8:23:01 AM footerend-->",
+              "createdAt": "2020-03-22T17:22:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/carbon__icon-helpers/carbon__icon-helpers-tests.ts",
+              "additions": 26,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/carbon__icon-helpers/index.d.ts",
+              "additions": 56,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/carbon__icon-helpers/tsconfig.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/carbon__icon-helpers/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzQ5NjgxMDk=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            },
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzQ5NjkxODM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU2",
+                "name": "Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

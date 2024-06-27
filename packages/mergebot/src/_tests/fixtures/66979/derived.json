@@ -1,0 +1,57 @@
+{
+  "type": "info",
+  "now": "2023-10-18T01:58:05.634Z",
+  "pr_number": 66979,
+  "author": "jakebailey",
+  "headCommitOid": "f11a1a009614559b5c5db1f68732927f1b8ab5f2",
+  "mergeBaseOid": "7ba7b83f2147403af9578673a88aaa765cae3d76",
+  "lastPushDate": "2023-10-09T03:21:23.000Z",
+  "lastActivityDate": "2023-10-09T03:21:23.000Z",
+  "hasMergeConflict": true,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": ".dprint.jsonc",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    },
+    {
+      "name": "react-blessed",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-blessed/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/react-blessed/react-blessed-tests.tsx",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "guoshencheng",
+        "defnotrobbie"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 1752294067,
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f11a1a009614559b5c5db1f68732927f1b8ab5f2/checks?check_suite_id=17038815705"
+}

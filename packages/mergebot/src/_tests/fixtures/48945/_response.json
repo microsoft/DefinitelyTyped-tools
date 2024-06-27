@@ -1,0 +1,366 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTA2NzE0ODc2",
+        "title": "[gapi.client.calendar] automatic update",
+        "createdAt": "2020-10-20T11:30:33Z",
+        "author": {
+          "login": "google-api-typings-generator",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 48945,
+        "state": "OPEN",
+        "headRefOid": "759b4cb2339ff12a22c8101f143a7a68ed535c70",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-20T11:30:38Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-20T11:31:11Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-20T11:35:45Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-20T12:40:24Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-24T00:55:51Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-02T04:17:42Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-03T02:26:21Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-03T02:26:22Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-03T02:30:59Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "759b4cb2339ff12a22c8101f143a7a68ed535c70",
+                "abbreviatedOid": "759b4cb",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-20T11:30:36Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48945#pullrequestreview-512606528",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "759b4cb2339ff12a22c8101f143a7a68ed535c70",
+                "abbreviatedOid": "759b4cb",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-11-02T16:19:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48945#pullrequestreview-521782725",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/759b4cb2339ff12a22c8101f143a7a68ed535c70/checks?check_suite_id=1368807126",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/759b4cb2339ff12a22c8101f143a7a68ed535c70/checks?check_suite_id=1368807126",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/759b4cb2339ff12a22c8101f143a7a68ed535c70/checks?check_suite_id=1368808470",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/759b4cb2339ff12a22c8101f143a7a68ed535c70/checks?check_suite_id=1368808470",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-10-20T11:25:36Z",
+                "committedDate": "2020-10-20T11:25:36Z",
+                "pushedDate": "2020-10-20T11:30:40Z",
+                "abbreviatedOid": "759b4cb",
+                "oid": "759b4cb2339ff12a22c8101f143a7a68ed535c70",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxMjc4NTEzMA==",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2020-10-20T11:30:38Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxMjc4NTQwOA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@google-api-typings-generator Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `gapi.client.calendar` [on npm](https://www.npmjs.com/package/gapi.client.calendar), [on unpkg](https://unpkg.com/browse/gapi.client.calendar@latest/)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n## Inactive\n\nThis PR has been inactive for 4 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-10-20T11:31:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxMjc4NzQ2Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@google-api-typings-generator Everything looks good here. Great job! I am ready to merge this PR (at 759b4cb) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@Maxim-Mazurok, @namoscato, @declanvong: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-10-20T11:35:45Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxMjgyMDAxMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-10-20T12:40:23.552Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                                     | #48945                                                                                                                                                     | diff  |\n| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                                            |                                                                                                                                                            |       |\n| Memory usage (MiB)                                                                        | 74.3                                                                                                                                                       | 75.3                                                                                                                                                       | +1.3% |\n| Type count                                                                                | 10933                                                                                                                                                      | 10933                                                                                                                                                      | 0%    |\n| Assignability cache size                                                                  | 3487                                                                                                                                                       | 3487                                                                                                                                                       | 0%    |\n|                                                                                           |                                                                                                                                                            |                                                                                                                                                            |       |\n| **Language service**                                                                      |                                                                                                                                                            |                                                                                                                                                            |       |\n| Samples taken                                                                             | 1005                                                                                                                                                       | 1005                                                                                                                                                       | 0%    |\n| Identifiers in tests                                                                      | 1005                                                                                                                                                       | 1005                                                                                                                                                       | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                            |                                                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 389.5                                                                                                                                                      | 383.5                                                                                                                                                      | -1.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.9%                                                                                                                                                       | 8.5%                                                                                                                                                       |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 513.2                                                                                                                                                      | 486.5                                                                                                                                                      | -5.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [pin](/DefinitelyTyped/DefinitelyTyped/blob/0459aa7e3bde36938d1b4c3aa1ec7269c62f5a5a/types/gapi.client.calendar/gapi.client.calendar-tests.ts#L940)        | [updated](/DefinitelyTyped/DefinitelyTyped/blob/704af584877e4ae5c3338b05e5c33f6e04ff6aea/types/gapi.client.calendar/gapi.client.calendar-tests.ts#L1031)   |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                            |                                                                                                                                                            |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 393.1                                                                                                                                                      | 387.1                                                                                                                                                      | -1.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.0%                                                                                                                                                       | 8.5%                                                                                                                                                       | -5.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 541.8                                                                                                                                                      | 507.1                                                                                                                                                      | -6.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [regionCode](/DefinitelyTyped/DefinitelyTyped/blob/0459aa7e3bde36938d1b4c3aa1ec7269c62f5a5a/types/gapi.client.calendar/gapi.client.calendar-tests.ts#L941) | [regionCode](/DefinitelyTyped/DefinitelyTyped/blob/704af584877e4ae5c3338b05e5c33f6e04ff6aea/types/gapi.client.calendar/gapi.client.calendar-tests.ts#L941) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-10-20T12:40:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxNTY0NzAwOQ==",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "body": "Do not merge this one yet, please, while I'm waiting for a reply from support (see https://github.com/Maxim-Mazurok/google-api-typings-generator/issues/383)",
+              "createdAt": "2020-10-24T00:55:51Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMDg3MTUzNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@google-api-typings-generator One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-759b4cb-->",
+              "createdAt": "2020-11-03T02:26:22Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyMDg3MjQ5NA==",
+              "author": {
+                "login": "Maxim-Mazurok",
+                "__typename": "User"
+              },
+              "body": "Dear maintainers, please, close this, because #49235\r\nAnd @google-api-typings-generator bot can't do this because it has restricted access",
+              "createdAt": "2020-11-03T02:30:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/gapi.client.calendar/gapi.client.calendar-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/gapi.client.calendar/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDc3MjA2NjE=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

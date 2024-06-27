@@ -1,0 +1,323 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5auiRi",
+        "title": "Improved autocomplete for sortType and filter props",
+        "createdAt": "2023-09-20T00:56:41Z",
+        "author": {
+          "login": "AlonBru",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Abandoned",
+              "__typename": "Label"
+            },
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 66757,
+        "state": "OPEN",
+        "headRefOid": "42fb091d993517a72a32aae4e8e98271ecbf5ec3",
+        "changedFiles": 1,
+        "additions": 2,
+        "deletions": 2,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "42fb091d993517a72a32aae4e8e98271ecbf5ec3",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "53e0cf9afba254ecae4add3ed008bf9972db16f5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2023-09-20T01:02:38Z",
+              "projectColumnName": "Needs Maintainer Review",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2023-09-20T17:25:32Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "42fb091d993517a72a32aae4e8e98271ecbf5ec3",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2023-09-20T17:24:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66757#pullrequestreview-1636166525",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 16349206691,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/42fb091d993517a72a32aae4e8e98271ecbf5ec3/checks?check_suite_id=16349206691",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/42fb091d993517a72a32aae4e8e98271ecbf5ec3/checks?check_suite_id=16349206691",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 16349210494,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/42fb091d993517a72a32aae4e8e98271ecbf5ec3/checks?check_suite_id=16349210494",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/42fb091d993517a72a32aae4e8e98271ecbf5ec3/checks?check_suite_id=16349210494",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20230920.1 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2023-09-20T00:53:23Z",
+                "committedDate": "2023-09-20T00:53:23Z",
+                "pushedDate": null,
+                "oid": "42fb091d993517a72a32aae4e8e98271ecbf5ec3",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM5m69B0",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1726730356,
+              "body": "@AlonBru Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `react-table` (*new!*) — [on npm](https://www.npmjs.com/package/react-table), [on unpkg](https://unpkg.com/browse/react-table@latest/)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=66757&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 27 days — it is considered nearly abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2023-09-20T00:57:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5m69CP",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1726730383,
+              "body": "Hey @AlonBru,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-adding-tests-to-a-new-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2023-09-20T00:57:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5m69CZ",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1726730393,
+              "body": "🔔 @ggascoigne @gargroh @riceboyler — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66757/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2023-09-20T00:57:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5nAYP7",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1728152571,
+              "body": "@AlonBru One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-42fb091-->",
+              "createdAt": "2023-09-20T17:25:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5nBgY0",
+              "author": {
+                "login": "AlonBru",
+                "__typename": "User"
+              },
+              "databaseId": 1728448052,
+              "body": "> DefaultFilterTypes\r\n\r\n@sheetalkamat That's the issue I'm fixing.\r\nSince  `string` is included in the union, the defaults is not shown in autocomplete:\r\n![image](https://github.com/DefinitelyTyped/DefinitelyTyped/assets/66993391/db8a5f02-aa9e-4ca6-b4fb-36051374bcc2)\r\n\r\nwith my fix it will:\r\n![image](https://github.com/DefinitelyTyped/DefinitelyTyped/assets/66993391/2667d4e9-287e-4c71-ae3a-50091a1019fa)\r\n",
+              "createdAt": "2023-09-20T21:25:38Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM5pDPbL",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 1762457291,
+              "body": "@AlonBru I haven't seen any activity on this PR in more than three weeks, and it still has problems that prevent it from being merged. The PR will be closed on Oct 20th (in a week) if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2023-09-20-->",
+              "createdAt": "2023-10-14T01:02:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "types/react-table/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgVmPO4",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

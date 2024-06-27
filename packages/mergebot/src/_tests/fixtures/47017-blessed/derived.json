@@ -1,0 +1,71 @@
+{
+  "type": "info",
+  "now": "2020-08-27T20:15:58.001Z",
+  "pr_number": 47017,
+  "author": "mastermatt",
+  "headCommitOid": "dbe687d30362e4f887e88048a3646c13c0c4d907",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-08-25T05:47:26.000Z",
+  "lastActivityDate": "2020-08-26T20:01:58.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "express-serve-static-core",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/express-serve-static-core/express-serve-static-core-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/express-serve-static-core/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "borisyankov",
+        "19majkel94",
+        "kacepe",
+        "micksatana",
+        "samijaber",
+        "aereal",
+        "JoseLion",
+        "dwrss",
+        "andoshin11"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    },
+    {
+      "name": "express",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/express/express-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/express/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "borisyankov",
+        "CMUH",
+        "puneetar",
+        "dfrankland"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

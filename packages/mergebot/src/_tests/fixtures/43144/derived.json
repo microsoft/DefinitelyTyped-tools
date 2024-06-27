@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2020-03-19T04:59:48.000Z",
+  "pr_number": 43144,
+  "author": "jeffreymeng",
+  "headCommitOid": "f1f5c4bb0ae553f56766882f6458d2e22baa87c7",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-15T00:11:48.000Z",
+  "lastActivityDate": "2020-03-15T01:29:09.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "mailcheck",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mailcheck/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/mailcheck/mailcheck-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "pocesar"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "pocesar",
+      "date": "2020-03-15T01:29:09.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

@@ -1,0 +1,234 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NjIyODUxNTk2",
+        "title": "new definition for @vertx/eventbus-bridge-client.js",
+        "createdAt": "2021-04-25T22:27:45Z",
+        "author": {
+          "login": "Phong6698",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 52579,
+        "state": "OPEN",
+        "headRefOid": "5337ea17b2407707bead503cd20c9ca29438f5df",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-04-25T22:30:06Z",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289453",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289453",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "build",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 123456,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "ACTION_REQUIRED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289527",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289527",
+                      "checkRuns": {
+                        "nodes": [],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289989",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5337ea17b2407707bead503cd20c9ca29438f5df/checks?check_suite_id=2579289989",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #95853 succeeded",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2021-04-25T22:24:54Z",
+                "committedDate": "2021-04-25T22:24:54Z",
+                "pushedDate": "2021-04-25T22:25:04Z",
+                "oid": "5337ea17b2407707bead503cd20c9ca29438f5df",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDgyNjM5OTk2OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@Phong6698 Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `vertx__eventbus-bridge-client.js` (*new!*) [on npm](https://www.npmjs.com/package/@vertx/eventbus-bridge-client.js), [on unpkg](https://unpkg.com/browse/@vertx/eventbus-bridge-client.js@latest/)\n  - 1 added owner: ✎@Phong6698\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-04-25T22:28:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDgyNjM5OTk3MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @Phong6698 — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52579/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2021-04-25T22:28:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDgyNjQwMDU1Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2021-04-25T22:33:17.385Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to vertx__eventbus-bridge-client.js with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                                                                                |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| Type count                                                                                | 2159                                                                                                                                                                           |\n| Assignability cache size                                                                  | 95                                                                                                                                                                             |\n|                                                                                           |                                                                                                                                                                                |\n| **Language service measurements**                                                         |                                                                                                                                                                                |\n| Samples taken                                                                             | 3                                                                                                                                                                              |\n| Identifiers in tests                                                                      | 3                                                                                                                                                                              |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 121.8                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 33.7%                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 135.1                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [EventBus](/DefinitelyTyped/DefinitelyTyped/blob/43964b6b3855ea074d509c41d4d60cd9e2f8db28/types/vertx__eventbus-bridge-client.js/vertx__eventbus-bridge-client.js-tests.ts#L3) |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                                                |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 104.1                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 19.0%                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 109.4                                                                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [EventBus](/DefinitelyTyped/DefinitelyTyped/blob/43964b6b3855ea074d509c41d4d60cd9e2f8db28/types/vertx__eventbus-bridge-client.js/vertx__eventbus-bridge-client.js-tests.ts#L3) |\n|                                                                                           |                                                                                                                                                                                |\n| **System information**                                                                    |                                                                                                                                                                                |\n| Node version                                                                              | v14.16.1                                                                                                                                                                       |\n| CPU count                                                                                 | 2                                                                                                                                                                              |\n| CPU speed                                                                                 | 2.294 GHz                                                                                                                                                                      |\n| CPU model                                                                                 | Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz                                                                                                                                      |\n| CPU Architecture                                                                          | x64                                                                                                                                                                            |\n| Memory                                                                                    | 6.8 GiB                                                                                                                                                                        |\n| Platform                                                                                  | linux                                                                                                                                                                          |\n| Release                                                                                   | 4.15.0-1113-azure                                                                                                                                                              |\n\n\n</details>\n",
+              "createdAt": "2021-04-25T22:33:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "path": "types/vertx__eventbus-bridge-client.js/index.d.ts",
+              "additions": 39,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/vertx__eventbus-bridge-client.js/tsconfig.json",
+              "additions": 23,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/vertx__eventbus-bridge-client.js/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/vertx__eventbus-bridge-client.js/vertx__eventbus-bridge-client.js-tests.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNTk3OTk5NDQ=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

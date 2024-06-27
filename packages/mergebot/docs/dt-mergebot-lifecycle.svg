@@ -1,0 +1,175 @@
+<svg width="1079" height="818" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fff" d="M0 0h1079v818H0z"/>
+    <path fill="#F4F4F4" d="M721 40h358v739H721zM0 40h307v739H0z"/>
+    <path fill="#fff" stroke="#000" d="M532.5 157.5h106v43h-106zm209 224h161v43h-161zm0 158h161v43h-161zm-615-238h151v43h-151zm0 144h151v43h-151zm0 124h151v41h-151z"/>
+    <path fill="#fff" stroke="#100050" stroke-width="2" d="M338 448h358v42H338zm0-194h160v42H338zm-1 101h160v42H337zm1 212h358v42H338z"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="550" y="184.102">PR is created</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="396" y="177.102">bot pings up to </tspan><tspan x="396" y="191.102">50 package owners</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="767" y="407.102">DT Maintainer Queue</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="765" y="565.102">DT Maintainer Queue</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="163.006" y="320.102">Ping at 3 weeks </tspan><tspan x="170.787" y="334.102">of no activity</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="157.281" y="464.102">Ping 1.5 weeks </tspan><tspan x="160.639" y="478.102">after last push</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="166.314" y="587.102">Ping 1 week </tspan><tspan x="153.289" y="601.102">after merge offer</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="451" y="473.102">Waiting for Code Reviews</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="363" y="279.102">Needs Author Action</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="362" y="380.102">Needs Author Action</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="580.543" y="368.102">Edits 1 package </tspan><tspan x="612.957" y="382.102">with tests</tspan>
+    </text>
+    <text fill="#686868" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="171.955" y="295.102">Abandoned</tspan>
+    </text>
+    <text fill="#686868" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="171.057" y="439.102">Unreviewed</tspan>
+    </text>
+    <text fill="#686868" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="174.943" y="563.102">Unmerged</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="350.145" y="426.102">Red review</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="513.879" y="426.102">New commits</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="519" y="253.102">No</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="625" y="253.102">Yes</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="741" y="270.102">Edits un-safe config </tspan><tspan x="741" y="284.102">&gt; 1 packages edited </tspan><tspan x="741" y="298.102">No Test Changes </tspan><tspan x="741" y="312.102">Edits DT infra </tspan><tspan x="741" y="326.102">No other owners </tspan><tspan x="741" y="340.102">Critically used package</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="741" y="469.102">Maintainer accepts that it can go </tspan><tspan x="741" y="483.102"> to peer review &amp; be auto merged</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="741" y="611.102">Maintainer reviews</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="914" y="368.102">Maintainer reviews </tspan><tspan x="914" y="382.102">and merges</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="914" y="528.102">Maintainer reviews </tspan><tspan x="914" y="542.102">and merges</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="17" letter-spacing="0em">
+        <tspan x="785" y="65.811">DT Maintainer Responsibilities</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="17" letter-spacing="0em">
+        <tspan x="217" y="65.811">Stale</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="17" letter-spacing="0em">
+        <tspan x="10" y="24.811">The lifecycle of a Pull Request to DefinitelyTyped/DefinitelyTyped</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="17" letter-spacing="0em">
+        <tspan x="470" y="65.811">Self Service</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="14" letter-spacing="0em">
+        <tspan x="879.705" y="795.785">Accurate as of December 2020</tspan>
+    </text>
+    <path d="M675.939 434.061a1.502 1.502 0 002.122 0l9.546-9.546a1.502 1.502 0 000-2.122 1.502 1.502 0 00-2.122 0L677 430.879l-8.485-8.486a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l9.546 9.546zM675.5 309v124h3V309h-3z" fill="#EBB221"/>
+    <path d="M509.646 269.646a.502.502 0 000 .708l3.182 3.182a.502.502 0 00.708-.708L510.707 270l2.829-2.828a.502.502 0 00-.708-.708l-3.182 3.182zM542 269.5h-32v1h32v-1zm.354 10.146a.502.502 0 010 .708l-3.182 3.182a.502.502 0 01-.708-.708l2.829-2.828-2.829-2.828a.502.502 0 01.708-.708l3.182 3.182zM510 279.5h32v1h-32v-1z" fill="#000"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="513" y="516.102">Reviews from </tspan><tspan x="513" y="530.102">contributors </tspan><tspan x="513" y="544.102">or DT maintainers</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="350" y="516.102">new commits </tspan><tspan x="350" y="530.102">deprecating </tspan><tspan x="350" y="544.102">reviews</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="700.943" y="811.102">Based on</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="monospace" font-size="11" letter-spacing="0em">
+        <tspan x="753.689" y="811.102">DefinitelyTyped/dt-mergebot/src/compute-pr-actions.ts</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="10" y="803.102">Times are approximated</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="513" y="640.102">PR author, or package owner </tspan><tspan x="513" y="654.102">tells bot to merge</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="649" y="516.102">No reviews, </tspan><tspan x="649" y="530.102">make stale</tspan>
+    </text>
+    <path d="M495.939 548.061a1.502 1.502 0 002.122 0l9.546-9.546a1.502 1.502 0 000-2.122 1.502 1.502 0 00-2.122 0L497 544.879l-8.485-8.486a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l9.546 9.546zM495.5 503v44h3v-44h-3zm.439 174.061a1.502 1.502 0 002.122 0l9.546-9.546a1.502 1.502 0 000-2.122 1.502 1.502 0 00-2.122 0L497 673.879l-8.485-8.486a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l9.546 9.546zM495.5 624v52h3v-52h-3z" fill="#EBB221"/>
+    <path d="M82.646 321.646a.501.501 0 000 .708l3.182 3.182a.5.5 0 00.707-.708L83.707 322l2.829-2.828a.501.501 0 00-.708-.708l-3.182 3.182zM118 321.5H83v1h35v-1zM82.646 589.646a.501.501 0 000 .708l3.182 3.182a.5.5 0 00.707-.708L83.707 590l2.829-2.828a.501.501 0 00-.708-.708l-3.182 3.182zM118 589.5H83v1h35v-1zm618.354-48.146a.502.502 0 000-.708l-3.182-3.182a.502.502 0 00-.708.708l2.829 2.828-2.829 2.828a.502.502 0 00.708.708l3.182-3.182zM637 541.5h99v-1h-99v1zm353.354-138.146a.502.502 0 000-.708l-3.182-3.182a.502.502 0 00-.708.708l2.829 2.828-2.829 2.828a.502.502 0 00.708.708l3.182-3.182zM914 403.5h76v-1h-76v1zm76.354 159.854a.502.502 0 000-.708l-3.182-3.182a.502.502 0 00-.708.708l2.829 2.828-2.829 2.828a.502.502 0 00.708.708l3.182-3.182zM914 563.5h76v-1h-76v1z" fill="#000"/>
+    <path d="M647.061 273.061a1.502 1.502 0 000-2.122l-9.546-9.546a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l8.486 8.485-8.486 8.485a1.502 1.502 0 000 2.122 1.502 1.502 0 002.122 0l9.546-9.546zM624 273.5h22v-3h-22v3z" fill="#EBB221"/>
+    <path d="M732.354 272.354a.502.502 0 000-.708l-3.182-3.182a.502.502 0 00-.708.708l2.829 2.828-2.829 2.828a.502.502 0 00.708.708l3.182-3.182zM710 272.5h22v-1h-22v1zm103.646 101.854a.502.502 0 00.708 0l3.182-3.182a.502.502 0 00-.708-.708L814 373.293l-2.828-2.829a.502.502 0 00-.708.708l3.182 3.182zM813.5 352v22h1v-22h-1zm.146 101.354a.502.502 0 00.708 0l3.182-3.182a.502.502 0 00-.708-.708L814 452.293l-2.828-2.829a.502.502 0 00-.708.708l3.182 3.182zM813.5 431v22h1v-22h-1zm-103.854 41.646a.502.502 0 000 .708l3.182 3.182a.502.502 0 00.708-.708L710.707 473l2.829-2.828a.502.502 0 00-.708-.708l-3.182 3.182zM732 472.5h-22v1h22v-1zm-24.354 106.146a.502.502 0 000 .708l3.182 3.182a.502.502 0 00.708-.708L708.707 579l2.829-2.828a.502.502 0 00-.708-.708l-3.182 3.182zM735 578.5h-27v1h27v-1z" fill="#000"/>
+    <text fill="#354B23" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="996" y="432.102">Merged</tspan>
+    </text>
+    <circle cx="1016.5" cy="402.5" r="17.5" fill="#7DBF49"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="24.42" y="627.102">Close after </tspan><tspan x="24.836" y="641.102">one month</tspan>
+    </text>
+    <circle cx="53.5" cy="322.5" r="17.5" fill="#BF4949"/>
+    <circle cx="53.5" cy="590.5" r="17.5" fill="#BF4949"/>
+    <text fill="#354B23" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="996" y="592.102">Merged</tspan>
+    </text>
+    <circle cx="1016.5" cy="562.5" r="17.5" fill="#7DBF49"/>
+    <text fill="#354B23" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="477" y="735.102">Merged</tspan>
+    </text>
+    <circle cx="497.5" cy="705.5" r="17.5" fill="#7DBF49"/>
+    <path d="M284.51 300.902a.5.5 0 00.392.588l4.413.883a.5.5 0 00.196-.981l-3.923-.784.785-3.923a.5.5 0 00-.981-.196l-.882 4.413zm42.213-28.318l-42 28 .554.832 42-28-.554-.832zm-41.798 71.922a.498.498 0 00-.419.569l.67 4.449a.5.5 0 00.989-.149l-.596-3.955 3.955-.596a.5.5 0 00-.149-.989l-4.45.671zm42.372 31.092l-42-31-.594.804 42 31 .594-.804zm-42.651 213.048a.502.502 0 000 .708l3.182 3.182a.502.502 0 00.708-.708L285.707 589l2.829-2.828a.502.502 0 00-.708-.708l-3.182 3.182zM327 588.5h-42v1h42v-1z" fill="#000"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="445" y="592.102">Waiting for Author to Merge</tspan>
+    </text>
+    <path d="M336.354 410.646a.502.502 0 00-.708 0l-3.182 3.182a.502.502 0 00.708.708l2.828-2.829 2.828 2.829a.502.502 0 00.708-.708l-3.182-3.182zM336.5 433v-22h-1v22h1zm160.146.354a.502.502 0 00.708 0l3.182-3.182a.502.502 0 00-.708-.708L497 432.293l-2.828-2.829a.502.502 0 00-.708.708l3.182 3.182zM496.5 411v22h1v-22h-1z" fill="#000"/>
+    <path d="M584.939 235.061a1.502 1.502 0 002.122 0l9.546-9.546a1.502 1.502 0 000-2.122 1.502 1.502 0 00-2.122 0L586 231.879l-8.485-8.486a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l9.546 9.546zM584.5 212v22h3v-22h-3zm.439-60.939a1.502 1.502 0 002.122 0l9.546-9.546a1.502 1.502 0 000-2.122 1.502 1.502 0 00-2.122 0L586 147.879l-8.485-8.486a1.502 1.502 0 00-2.122 0 1.502 1.502 0 000 2.122l9.546 9.546zM584.5 91v59h3V91h-3z" fill="#EBB221"/>
+    <path d="M336.354 502.646a.502.502 0 00-.708 0l-3.182 3.182a.502.502 0 00.708.708l2.828-2.829 2.828 2.829a.502.502 0 00.708-.708l-3.182-3.182zM336.5 547v-44h-1v44h1zm-51.854-78.354a.502.502 0 000 .708l3.182 3.182a.502.502 0 00.708-.708L285.707 469l2.829-2.828a.502.502 0 00-.708-.708l-3.182 3.182zM327 468.5h-42v1h42v-1z" fill="#000"/>
+    <path stroke="#000" d="M500 179.5h23"/>
+    <circle cx="587" cy="272" r="24.5" fill="#fff" stroke="#000"/>
+    <circle cx="677" cy="273" r="23.5" fill="#fff" stroke="#000"/>
+    <path fill="#fff" d="M558 257h56v30h-56z"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="558.797" y="269.102">Mergable, </tspan><tspan x="557.197" y="283.102">and green?</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="661.293" y="270.102">Looks </tspan><tspan x="663.303" y="284.102">at PR</tspan>
+    </text>
+    <path stroke="#000" stroke-dasharray="1 4" d="M721.5 40v739m-415-739v739"/>
+    <path fill="#EEE" d="M0 40h166v159H0z"/>
+    <path fill="#fff" stroke="#000" d="M15.407 166.262h30.802v18.962H15.407z"/>
+    <path fill="#fff" stroke="#100050" stroke-width="2" d="M15.907 127.838h29.802V145.8H15.907z"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="60.623" y="104.002">Golden path</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="60.623" y="142.102">GH Project Board</tspan>
+    </text>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="60.623" y="180.102">Step</tspan>
+    </text>
+    <path d="M14.907 100H46.71" stroke="#EBB221" stroke-width="3"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="17" letter-spacing="0em">
+        <tspan x="8.944" y="64.794">Key</tspan>
+    </text>
+    <path stroke="#000" d="M637.5 503v38"/>
+    <path stroke="#CECECE" d="M0 39.5h1079M0 778.5h1079"/>
+    <text fill="#000" style="white-space:pre" font-family="sans-serif" font-size="12" letter-spacing="0em">
+        <tspan x="24.42" y="357.102">Close after </tspan><tspan x="24.836" y="371.102">one month</tspan>
+    </text>
+    <path stroke="#CECECE" d="M166.5 39v160M0 198.5h167"/>
+    <path stroke="#000" d="M522.5 177v-4m0 13v-4m6.5-2.5h-4m2.182-5.146l-2.828 2.828m3.121 8l-2.829-2.828"/>
+</svg>
