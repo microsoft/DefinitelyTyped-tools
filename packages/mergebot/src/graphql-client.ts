@@ -33,9 +33,9 @@ export function createMutation<T>(name: keyof schema.Mutation, input: T, subquer
 function getAuthToken() {
     if (process.env.JEST_WORKER_ID) return "FAKE_TOKEN";
 
-    const result = process.env["BOT_AUTH_TOKEN"] || process.env["AUTH_TOKEN"] || process.env["DT_BOT_AUTH_TOKEN"];
+    const result = process.env["BOT_AUTH_TOKEN"] || process.env["AUTH_TOKEN"] || process.env["DT_BOT_AUTH_TOKEN"] || process.env["TYPESCRIPT_BOT_TOKEN"];
     if (typeof result !== "string") {
-        throw new Error("Set either BOT_AUTH_TOKEN or AUTH_TOKEN to a valid auth token");
+        throw new Error("Set either BOT_AUTH_TOKEN or TYPESCRIPT_BOT_TOKEN to a valid auth token");
     }
     return result.trim();
 }

@@ -1,0 +1,33 @@
+name: Daily Open PR Sync
+
+on:
+  workflow_dispatch: ~
+  schedule:
+    - cron: '37 */6 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: '20.x'
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+      - run: pnpm install
+      - run: pnpm run build
+
+      # Go through all open PRs and run the bot over them
+      - run: node packages/mergebot/dist/run.js
+        env:
+          TYPESCRIPT_BOT_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
+
+  keepalive-job:
+    name: Keepalive Workflow
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - uses: gautamkrishnar/keepalive-workflow@05456e7809058d586d96392e99217726ccc10076 # v2.0.5

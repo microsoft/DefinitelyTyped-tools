@@ -304,7 +304,7 @@ importers:
         specifier: npm:@definitelytyped/header-parser@0.0.178
         version: '@definitelytyped/header-parser@0.0.178'
       '@definitelytyped/utils':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../utils
       '@octokit/webhooks-methods':
         specifier: ^4.1.0

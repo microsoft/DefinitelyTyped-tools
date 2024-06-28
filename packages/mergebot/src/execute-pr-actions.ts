@@ -158,7 +158,7 @@ function doRestCall(call: RestMutation): Promise<void> {
     const url = `https://api.github.com/repos/DefinitelyTyped/DefinitelyTyped/${call.op}`;
     const headers = {
         "accept": "application/vnd.github.v3+json",
-        "authorization": `token ${process.env.BOT_AUTH_TOKEN}`,
+        "authorization": `token ${process.env.TYPESCRIPT_BOT_TOKEN}`,
         "user-agent": "dt-mergebot"
     };
     return new Promise((resolve, reject) => {

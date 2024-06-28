@@ -1,16 +1,17 @@
 {
-  "name": "dt-mergebot",
-  "version": "3.0.0",
+  "name": "@definitelytyped/mergebot",
+  "private": true,
+  "version": "0.1.12",
   "description": "The bot that manages DefinitelyTyped PRs.",
   "author": "DT Maintainers",
-  "homepage": "https://github.com/DefinitelyTyped/dt-mergebot#readme",
+  "homepage": "https://github.com/microsoft/definitelytyped-tools#readme",
   "main": "dist/functions/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DefinitelyTyped/dt-mergebot.git"
+    "url": "https://github.com/microsoft/definitelytyped-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/DefinitelyTyped/dt-mergebot/issues"
+    "url": "https://github.com/microsoft/definitelytyped-tools/issues"
   },
   "license": "MIT",
   "engines": {
@@ -20,7 +21,7 @@
     "@apollo/client": "^3.10.3",
     "@azure/functions": "^4.4.0",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
-    "@definitelytyped/utils": "workspace:",
+    "@definitelytyped/utils": "workspace:*",
     "@octokit/webhooks-methods": "^4.1.0",
     "dayjs": "^1.11.11",
     "fast-json-patch": "^3.1.1",

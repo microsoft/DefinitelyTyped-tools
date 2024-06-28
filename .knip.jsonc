@@ -78,7 +78,7 @@
       "ignoreDependencies": ["@qiwi/npm-types"]
     },
     "packages/mergebot": {
-      "entry": ["src/index.ts"],
+      "entry": ["src/functions/index.ts"],
       "project": "**/*.ts"
     }
   },
