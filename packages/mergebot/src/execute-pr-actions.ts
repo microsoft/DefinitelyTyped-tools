@@ -159,7 +159,7 @@ function doRestCall(call: RestMutation): Promise<void> {
     const headers = {
         "accept": "application/vnd.github.v3+json",
         "authorization": `token ${process.env.TYPESCRIPT_BOT_TOKEN}`,
-        "user-agent": "dt-mergebot"
+        "user-agent": "mergebot"
     };
     return new Promise((resolve, reject) => {
         const req = request(url, { method: call.method, headers }, reply => {

@@ -3,21 +3,21 @@ This is the bot that controls the workflow of Definitely Typed PRs.
 ## Meta
 
 * __State:__ Production
-* __Dashboard:__ [Azure](https://ms.portal.azure.com/#@72f988bf-86f1-41af-91ab-2d7cd011db47/resource/subscriptions/57bfeeed-c34a-4ffd-a06b-ccff27ac91b8/resourceGroups/dtmergebot/providers/Microsoft.Web/sites/DTMergeBot) — [Logs](https://ms.portal.azure.com/#blade/WebsitesExtension/FunctionsIFrameBlade/id/%2Fsubscriptions%2F57bfeeed-c34a-4ffd-a06b-ccff27ac91b8%2FresourceGroups%2Fdtmergebot%2Fproviders%2FMicrosoft.Web%2Fsites%2FDTMergeBot) — [GH Actions](https://github.com/DefinitelyTyped/dt-mergebot/actions) — [GH Webhook](https://github.com/DefinitelyTyped/DefinitelyTyped/settings/hooks/193097250)
+* __Dashboard:__ [Azure](https://ms.portal.azure.com/#@72f988bf-86f1-41af-91ab-2d7cd011db47/resource/subscriptions/57bfeeed-c34a-4ffd-a06b-ccff27ac91b8/resourceGroups/dtmergebot/providers/Microsoft.Web/sites/DTMergeBot) — [Logs](https://ms.portal.azure.com/#blade/WebsitesExtension/FunctionsIFrameBlade/id/%2Fsubscriptions%2F57bfeeed-c34a-4ffd-a06b-ccff27ac91b8%2FresourceGroups%2Fdtmergebot%2Fproviders%2FMicrosoft.Web%2Fsites%2FDTMergeBot) — [GH Actions](https://github.com/microsoft/DefinitelyTyped-tools/actions) — [GH Webhook](https://github.com/DefinitelyTyped/DefinitelyTyped/settings/hooks/193097250)
 
 TODO: Update these links for dtmergebot2
 
 It is both a series of command line scripts which you can use to test different states, and an Azure Function App which handles incoming webhooks from the DefinitelyTyped repo.
 
 This repo is deployed to Azure on every push to master.
-To ensure we can handle timeouts on older PRs, there is a [GitHub Action](https://github.com/DefinitelyTyped/dt-mergebot/actions) that runs the bot every 6 hours against [all open PRs](./src/run.ts), and has a bunch of useful flags for running manually too.
+To ensure we can handle timeouts on older PRs, there is a [GitHub Action](https://github.com/microsoft/DefinitelyTyped-tools/actions) that runs the bot every 6 hours against [all open PRs](./src/run.ts), and has a bunch of useful flags for running manually too.
 
 # Setup
 
 ```sh
 # Clone it
-git clone https://github.com/DefinitelyTyped/dt-mergebot.git
-cd dt-mergebot
+git clone https://github.com/microsoft/DefinitelyTyped-tools.git
+cd DefinitelyTyped-tools
 
 # Deps
 pnpm install

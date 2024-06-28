@@ -51,5 +51,5 @@ The [`run` script](../src/run.ts) is running every 6 hours, cutting the
 as a safeguard in case the bot missed a PR closing event.
 
 
-[compute-pr-actions]: <https://github.com/DefinitelyTyped/dt-mergebot/blob/master/src/compute-pr-actions.ts>
-[comments]: <https://github.com/DefinitelyTyped/dt-mergebot/blob/master/src/comments.ts>
+[compute-pr-actions]: <https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/mergebot/src/compute-pr-actions.ts>
+[comments]: <https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/mergebot/src/comments.ts>

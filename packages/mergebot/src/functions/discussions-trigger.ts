@@ -52,7 +52,7 @@ const errorsGettingOwners = (str: string) =>  txt`
 
 const couldNotFindOwners = (str: string) =>  txt`
   |Hi, we had an issue getting the owners for [${str}] - first check if you have a typeo, otherwise please raise an issue on 
-  |DefinitelyTyped/dt-mergebot if the module exists on DT but this bot could not find information for it.
+  |microsoft/DefinitelyTyped-tools if the module exists on DT but this bot could not find information for it.
 `;
 
 
