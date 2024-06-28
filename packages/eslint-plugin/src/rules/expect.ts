@@ -200,7 +200,8 @@ function getProgram(
     versionToProgram.set(cacheKey, newProgram);
   }
 
-  const heapUsage = v8.getHeapStatistics().used_heap_size / v8.getHeapStatistics().heap_size_limit;
+  const heapStats = v8.getHeapStatistics();
+  const heapUsage = heapStats.used_heap_size / heapStats.heap_size_limit;
   if (heapUsage > 0.9) {
     versionToProgram.clear();
   }
