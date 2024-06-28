@@ -1,10 +1,11 @@
-import { createRule, findTypesPackage, findUp } from "../util";
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
-import type * as ts from "typescript";
-import path from "path";
-import fs from "fs";
 import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
+import fs from "fs";
+import v8 from "node:v8";
+import path from "path";
 import * as semver from "semver";
+import type * as ts from "typescript";
+import { createRule, findTypesPackage, findUp } from "../util";
 
 type TSModule = typeof ts;
 
@@ -198,6 +199,12 @@ function getProgram(
     newProgram = createProgram(path.resolve(dirPath, configFile), ts);
     versionToProgram.set(cacheKey, newProgram);
   }
+
+  const heapUsage = v8.getHeapStatistics().used_heap_size / v8.getHeapStatistics().heap_size_limit;
+  if (heapUsage > 0.9) {
+    versionToProgram.clear();
+  }
+
   return newProgram;
 }
 
