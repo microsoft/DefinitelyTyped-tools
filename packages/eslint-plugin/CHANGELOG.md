@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.17
+
+### Patch Changes
+
+- 3fec9fe: Clear expect rule program cache when heap is almost exhausted
+
 ## 0.1.16
 
 ### Patch Changes
