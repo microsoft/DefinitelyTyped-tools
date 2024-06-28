@@ -1,8 +1,10 @@
 import * as crypto from "crypto";
 import { readFileSync } from "fs";
 
-export function noNullish<T>(arr: ReadonlyArray<T | null | undefined> | null | undefined): T[] {
+export function noNullish<T>(arr: readonly (T | null | undefined)[] | null | undefined): T[] {
+    // eslint-disable-next-line eqeqeq
     if (arr == null) return [];
+    // eslint-disable-next-line eqeqeq
     return arr.filter(arr => arr != null) as T[];
 }
 
@@ -14,7 +16,7 @@ export function unique<T>(xs: T[]) {
     return [...new Set(xs)];
 }
 
-export function someLast<T, U>(arr: ReadonlyArray<T | null | undefined> | null | undefined, f: (item: T) => U) {
+export function someLast<T, U>(arr: readonly (T | null | undefined)[] | null | undefined, f: (item: T) => U) {
     if (!arr) return undefined;
     for (let i = arr.length - 1; i >= 0; i--) {
         const x = arr[i], r = x && f(x);

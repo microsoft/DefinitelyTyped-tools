@@ -36,6 +36,6 @@ export async function verifyIsFromGitHub(headers: Headers, body: any) {
 
     // For process.env.GITHUB_WEBHOOK_SECRET see
     // https://ms.portal.azure.com/#blade/WebsitesExtension/FunctionsIFrameBlade/id/%2Fsubscriptions%2F57bfeeed-c34a-4ffd-a06b-ccff27ac91b8%2FresourceGroups%2Fdtmergebot%2Fproviders%2FMicrosoft.Web%2Fsites%2FDTMergeBot
-    return await verify(secret!, JSON.stringify(body), headers.get("x-hub-signature-256")!);
+    return verify(secret!, JSON.stringify(body), headers.get("x-hub-signature-256")!);
 }
 

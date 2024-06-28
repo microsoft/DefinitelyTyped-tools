@@ -1,4 +1,4 @@
-import { LabelName, LabelNames } from "./basic";
+import { LabelName, labelNames } from "./basic";
 import { MutationOptions } from "@apollo/client/core";
 import * as schema from "@octokit/graphql-schema/schema";
 import { PR_repository_pullRequest } from "./queries/schema/PR";
@@ -11,7 +11,7 @@ import * as comment from "./util/comment";
 import { request } from "https";
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/projects/5
-const ProjectBoardNumber = 5;
+const projectBoardNumber = 5;
 
 export async function executePrActions(actions: Actions, pr: PR_repository_pullRequest, dry?: boolean) {
     const botComments: ParsedComment[] = getBotComments(pr);
@@ -44,7 +44,7 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
     if (!actions.shouldUpdateLabels) return [];
     const labels = noNullish(pr.labels?.nodes).map(l => l.name);
     const makeMutations = async (pred: (l: LabelName) => boolean, query: keyof schema.Mutation) => {
-        const labels = LabelNames.filter(pred);
+        const labels = labelNames.filter(pred);
         return labels.length === 0 ? null
             : createMutation<schema.AddLabelsToLabelableInput & schema.RemoveLabelsFromLabelableInput>(query, {
                 labelIds: await Promise.all(labels.map(label => getLabelIdByName(label))),
@@ -58,7 +58,7 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
 
 async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository_pullRequest) {
     if (!actions.projectColumn) return [];
-    const card = pr.projectCards.nodes?.find(card => card?.project.number === ProjectBoardNumber);
+    const card = pr.projectCards.nodes?.find(card => card?.project.number === projectBoardNumber);
     if (actions.projectColumn === "*REMOVE*") {
         if (!card || card.column?.name === "Recently Merged") return [];
         return [createMutation<schema.DeleteProjectCardInput>("deleteProjectCard", { cardId: card.id })];
@@ -73,7 +73,7 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
             : createMutation<schema.AddProjectCardInput>("addProjectCard", { contentId: pr.id, projectColumnId: columnId })];
 }
 
-type ParsedComment = { id: string, body: string, tag: string, status: string };
+interface ParsedComment { id: string, body: string, tag: string, status: string };
 
 function getBotComments(pr: PR_repository_pullRequest): ParsedComment[] {
     return noNullish(
@@ -152,7 +152,7 @@ async function getLabelIdByName(name: string): Promise<string> {
 // or better, be removed if there's some repo settings to allow test builds
 // based on paths or something similar.
 
-type RestMutation = { method: string, op: string };
+interface RestMutation { method: string, op: string };
 
 function doRestCall(call: RestMutation): Promise<void> {
     const url = `https://api.github.com/repos/DefinitelyTyped/DefinitelyTyped/${call.op}`;

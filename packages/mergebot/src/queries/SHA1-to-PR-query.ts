@@ -6,7 +6,7 @@ export const runQueryToGetPRMetadataForSHA1 = async (
     owner: string, repo: string, sha1: string
 ): Promise<GetPRForSHA1_search_nodes_PullRequest | undefined> => {
     const info = await client.query({
-        query: GetPRForSHA1Query,
+        query: getPRForSHA1Query,
         variables: { query: `${sha1} type:pr repo:${owner}/${repo}` },
         fetchPolicy: "no-cache",
     });
@@ -14,7 +14,7 @@ export const runQueryToGetPRMetadataForSHA1 = async (
     return pr?.__typename === "PullRequest" ? pr : undefined;
 };
 
-export const GetPRForSHA1Query: TypedDocumentNode<GetPRForSHA1, GetPRForSHA1Variables> = gql`
+export const getPRForSHA1Query: TypedDocumentNode<GetPRForSHA1, GetPRForSHA1Variables> = gql`
 query GetPRForSHA1($query: String!) {
   search(query: $query, first: 1, type: ISSUE) {
     nodes {

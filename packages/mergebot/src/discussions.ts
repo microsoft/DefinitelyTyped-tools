@@ -1,4 +1,4 @@
-export const canHandleRequest = (event: string, action: string) => event == "discussion" && (action === "created" || action === "edited");
+export const canHandleRequest = (event: string, action: string) => event === "discussion" && (action === "created" || action === "edited");
 
 export function extractNPMReference(discussion: { title: string }) {
     const title = discussion.title;

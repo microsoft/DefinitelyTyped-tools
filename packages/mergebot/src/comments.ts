@@ -8,9 +8,9 @@ const deletedWhenNotPresent = <T>(tag: string, f: (tag: string) => T) => {
     return f(tag);
 };
 
-export type Comment = { tag: string, status: string };
+export interface Comment { tag: string, status: string };
 
-export const HadError = (user: string | undefined, error: string) => ({
+export const hadError = (user: string | undefined, error: string) => ({
     tag: "had-error",
     status: txt`
         |${user ? `@${user} — ` : ""}There was an error that prevented me from properly processing
@@ -19,7 +19,7 @@ export const HadError = (user: string | undefined, error: string) => ({
         |    ${error}`
 });
 
-export const CIFailed = (abbrOid: string, user: string, ciUrl: string) => ({
+export const ciFailed = (abbrOid: string, user: string, ciUrl: string) => ({
     tag: `gh-actions-complaint-${abbrOid}`,
     status: txt`
         |@${user} The CI build failed! Please [review the logs for more information](${ciUrl}).
@@ -30,21 +30,21 @@ export const CIFailed = (abbrOid: string, user: string, ciUrl: string) => ({
          maintainers to review.**`
 });
 
-export const MergeConflicted = (abbrOid: string, user: string) => ({
+export const mergeConflicted = (abbrOid: string, user: string) => ({
     tag: `merge-complaint-${abbrOid}`,
     status: txt`
         |@${user} Unfortunately, this pull request currently has a merge conflict 😥.
          Please update your PR branch to be up-to-date with respect to master. Have a nice day!`
 });
 
-export const ChangesRequest = (abbrOid: string, user: string) => ({
+export const changesRequest = (abbrOid: string, user: string) => ({
     tag: `reviewer-complaint-${abbrOid}`,
     status: txt`
         |@${user} One or more reviewers has requested changes. Please address their comments.
          I'll be back once they sign off or you've pushed new commits. Thank you!`
 });
 
-export const SuggestTesting = deletedWhenNotPresent("suggest-testing", tag =>
+export const suggestTesting = deletedWhenNotPresent("suggest-testing", tag =>
     (user: string, testsLink: string) => ({
         tag, status: txt`
             |Hey @${user},
@@ -57,7 +57,7 @@ export const SuggestTesting = deletedWhenNotPresent("suggest-testing", tag =>
             |***This can potentially save days of time for you!***`
     }));
 
-export const PingReviewers = (names: readonly string[], reviewLink: string) => ({
+export const pingReviewers = (names: readonly string[], reviewLink: string) => ({
     tag: "pinging-reviewers",
     status: txt`
         |🔔 ${names.map(n => `@${n}`).join(" ")} — please [review this PR](${reviewLink}) in the
@@ -65,7 +65,7 @@ export const PingReviewers = (names: readonly string[], reviewLink: string) => (
          in the GitHub UI so I know what's going on.`
 });
 
-export const PingReviewersOther = (user: string, authorIsOwner: boolean, reviewLink: string) => ({
+export const pingReviewersOther = (user: string, authorIsOwner: boolean, reviewLink: string) => ({
     tag: "pinging-reviewers-others",
     status: txt`
         |🔔 @${user} — ${authorIsOwner ? "you're the only owner" : "there are no owners"},
@@ -75,7 +75,7 @@ export const PingReviewersOther = (user: string, authorIsOwner: boolean, reviewL
          changes easier...)`
 });
 
-export const PingReviewersTooMany = (names: readonly string[]) => ({
+export const pingReviewersTooMany = (names: readonly string[]) => ({
     tag: "pinging-reviewers-too-many",
     status: txt`
         |⚠️ There are too many reviewers for this PR change (${names.length}).
@@ -87,14 +87,14 @@ export const PingReviewersTooMany = (names: readonly string[]) => ({
         |</details>`
 });
 
-export const PingStaleReviewer = (reviewedAbbrOid: string, reviewers: string[]) => ({
+export const pingStaleReviewer = (reviewedAbbrOid: string, reviewers: string[]) => ({
     tag: `stale-ping-${sha256(reviewers.join("-")).substr(0, 6)}-${reviewedAbbrOid}`,
     status: txt`
         |@${reviewers.join(", @")} Thank you for reviewing this PR! The author has pushed new
          commits since your last review. Could you take another look and submit a fresh review?`
 });
 
-export const OfferSelfMerge = deletedWhenNotPresent("merge-offer", tag =>
+export const offerSelfMerge = deletedWhenNotPresent("merge-offer", tag =>
     (user: string, otherOwners: string[], abbrOid: string) => ({
         // Note: pr-info.ts searches for the `(at ${abbrOid})`
         tag, status: txt`
@@ -109,7 +109,7 @@ export const OfferSelfMerge = deletedWhenNotPresent("merge-offer", tag =>
             |${otherOwners.length === 0 ? "" : `
             |(${otherOwners.map(o => "@" + o).join(", ")}: you can do this too.)`}`}));
 
-export const WaitUntilMergeIsOK = (user: string, abbrOid: string, uri: string, mainCommentID: number | undefined) => ({
+export const waitUntilMergeIsOK = (user: string, abbrOid: string, uri: string, mainCommentID: number | undefined) => ({
     // at most one reminder per update
     tag: `wait-for-merge-offer-${abbrOid}`,
     status: txt`
@@ -122,7 +122,7 @@ export const WaitUntilMergeIsOK = (user: string, abbrOid: string, uri: string, m
         |Thanks, and happy typing!`
 });
 
-export const RemindPeopleTheyCanUnblockPR = (user: string, approvalUsers: string[], ciPassing: boolean, abbrOid: string) => ({
+export const remindPeopleTheyCanUnblockPR = (user: string, approvalUsers: string[], ciPassing: boolean, abbrOid: string) => ({
     // at most one reminder per update
     tag: `wait-for-merge-offer-${abbrOid}`,
     status: txt`
@@ -140,7 +140,7 @@ export const RemindPeopleTheyCanUnblockPR = (user: string, approvalUsers: string
 });
 
 // Explanation for the stalness count in the welcome message
-export const StalenessExplanations: { [k: string]: string } = {
+export const stalenessExplanations: { [k: string]: string } = {
     "Unmerged:nearly": "please merge or say something if there's a problem, otherwise it will be closed!",
     "Unmerged:done": "closed because it wasn't merged for a long time!",
     "Abandoned:nearly": "it is considered nearly abandoned!",
@@ -150,7 +150,7 @@ export const StalenessExplanations: { [k: string]: string } = {
 };
 
 // Comments to post for the staleness timeline (the tag is computed in `makeStaleness`)
-export const StalenessComment = (author: string, ownersToPing: string[], expires: string) => {
+export const stalenessComment = (author: string, ownersToPing: string[], expires: string) => {
     const ownerPing = ownersToPing.map(o => "@"+o).join(", ");
     return {
         // --Unmerged--

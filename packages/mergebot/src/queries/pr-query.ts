@@ -4,7 +4,7 @@ import { PR, PRVariables, PR_repository_pullRequest_files_nodes } from "./schema
 import { PRFiles, PRFilesVariables } from "./schema/PRFiles";
 import { noNullish } from "../util/util";
 
-export const TOO_MANY_FILES = 500;
+export const tooManyFiles = 500;
 
 // Note: If you want to work on this in local a copy of GraphiQL:
 // - Download the electron app: https://github.com/skevy/graphiql-app/releases
@@ -15,7 +15,7 @@ export const TOO_MANY_FILES = 500;
 // - Now you're good to C&P the query below
 
 /** This is a GraphQL AST tree */
-const GetPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
+const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
 query PR($prNumber: Int!) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
@@ -201,7 +201,7 @@ async function getPRInfoFirst(prNumber: number) {
     let retries = 0;
     while (true) {
         const info = await client.query({
-            query: GetPRInfoQueryFirst,
+            query: getPRInfoQueryFirst,
             variables: { prNumber },
             fetchPolicy: "no-cache",
         });
@@ -219,7 +219,7 @@ async function getPRInfoFirst(prNumber: number) {
 }
 
 // Repeat just the file part, since that's all we need here
-const GetPRInfoQueryRest: TypedDocumentNode<PRFiles, PRFilesVariables> = gql`
+const getPRInfoQueryRest: TypedDocumentNode<PRFiles, PRFilesVariables> = gql`
 query PRFiles($prNumber: Int!, $endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       pullRequest(number: $prNumber) {
@@ -241,14 +241,14 @@ async function getPRInfoRest(prNumber: number, endCursor: string | null,
                              files: (PR_repository_pullRequest_files_nodes | null) []) {
     while (true) {
         const result = await client.query({
-            query: GetPRInfoQueryRest,
+            query: getPRInfoQueryRest,
             variables: { prNumber, endCursor },
             fetchPolicy: "no-cache",
         });
         const newFiles = result.data.repository?.pullRequest?.files;
         if (!newFiles) return;
         files.push(...noNullish(newFiles.nodes));
-        if (files.length >= TOO_MANY_FILES || !newFiles.pageInfo.hasNextPage) return;
+        if (files.length >= tooManyFiles || !newFiles.pageInfo.hasNextPage) return;
         endCursor = newFiles.pageInfo.endCursor;
     }
 }

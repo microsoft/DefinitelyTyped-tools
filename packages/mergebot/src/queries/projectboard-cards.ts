@@ -7,7 +7,7 @@ import { GetProjectBoardCards } from "./schema/GetProjectBoardCards";
 // 3. need to paginate card exprs
 // 4. need to gather back into columns by hand probably
 // (and maybe assert that the card is only in one column)
-const GetProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, never> = gql`
+const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, never> = gql`
   query GetProjectBoardCards {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
@@ -42,7 +42,7 @@ interface ColumnInfo {
 
 export async function getProjectBoardCards() {
     const results = await client.query({
-        query: GetProjectBoardCardsQuery,
+        query: getProjectBoardCardsQuery,
         fetchPolicy: "no-cache",
     });
 

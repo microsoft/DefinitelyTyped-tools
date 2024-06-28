@@ -29,7 +29,7 @@ async function testFixture(dir: string) {
     const resultPath = join(dir, "result.json");
     const mutationsPath = join(dir, "mutations.json");
 
-    const JSONString = (value: any) => scrubDiagnosticDetails(JSON.stringify(value, null, "  ") + "\n");
+    const jsonString = (value: any) => scrubDiagnosticDetails(JSON.stringify(value, null, "  ") + "\n");
 
     const response: ApolloQueryResult<PR> = readJsonSync(responsePath);
     const files = readJsonSync(filesPath);
@@ -47,11 +47,11 @@ async function testFixture(dir: string) {
 
     const action = process(derived);
 
-    expect(JSONString(action)).toMatchFile(resultPath);
-    expect(JSONString(derived)).toMatchFile(derivedPath);
+    expect(jsonString(action)).toMatchFile(resultPath);
+    expect(jsonString(derived)).toMatchFile(derivedPath);
 
     const mutations = await executePrActions(action, prInfo, /*dry*/ true);
-    expect(JSONString(mutations)).toMatchFile(mutationsPath);
+    expect(jsonString(mutations)).toMatchFile(mutationsPath);
 }
 
 describe("Test fixtures", () => {

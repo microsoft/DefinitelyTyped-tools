@@ -13,15 +13,15 @@ export type PopularityLevel =
     | "Popular"
     | "Critical";
 
-export type StalenessKind = typeof StalenessKinds[number];
-const StalenessKinds = [ // all are also label names
+export type StalenessKind = typeof stalenessKinds[number];
+const stalenessKinds = [ // all are also label names
     "Unmerged",
     "Abandoned",
     "Unreviewed",
 ] as const;
 
-export type LabelName = typeof LabelNames[number];
-export const LabelNames = [
+export type LabelName = typeof labelNames[number];
+export const labelNames = [
     "Mergebot Error",
     "Has Merge Conflict",
     "The CI failed",
@@ -47,7 +47,7 @@ export const LabelNames = [
     "Too Many Files",
     "Huge Change",
     "Needs Actions Permission",
-    ...StalenessKinds,
+    ...stalenessKinds,
 ] as const;
 
 export type ApproverKind = "maintainer" | "owner" | "other";

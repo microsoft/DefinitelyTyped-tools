@@ -2,8 +2,7 @@ import { ColumnName, LabelName, StalenessKind, ApproverKind, BlessingKind } from
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
-import { PrInfo, BotResult, FileInfo } from "./pr-info";
-import { ReviewInfo } from "./pr-info";
+import { PrInfo, BotResult, FileInfo, ReviewInfo } from "./pr-info";
 import { noNullish, flatten, unique, sameUser, min, sha256, abbrOid, txt } from "./util/util";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -40,7 +39,7 @@ function createEmptyActions(): Actions {
     };
 }
 
-type Staleness = {
+interface Staleness {
     readonly kind: StalenessKind;
     readonly days: number;
     readonly state: "fresh" | "attention" | "nearly" | "done";
@@ -217,7 +216,7 @@ export function process(prInfo: BotResult,
     if (prInfo.type === "error") {
         actions.projectColumn = "Other";
         actions.labels.push("Mergebot Error");
-        post(Comments.HadError(prInfo.author, prInfo.message));
+        post(Comments.hadError(prInfo.author, prInfo.message));
         return actions;
     }
 
@@ -265,12 +264,12 @@ export function process(prInfo: BotResult,
         if (info.noOtherOwners) {
             if (info.popularityLevel !== "Critical") {
                 const authorIsNewOwner = flatten(info.pkgInfo.map(p => p.addedOwners)).includes(info.author);
-                post(Comments.PingReviewersOther(info.author, info.authorIsOwner || authorIsNewOwner, urls.review(info.pr_number)));
+                post(Comments.pingReviewersOther(info.author, info.authorIsOwner || authorIsNewOwner, urls.review(info.pr_number)));
             }
         } else if (info.tooManyOwners) {
-            post(Comments.PingReviewersTooMany(info.otherOwners));
+            post(Comments.pingReviewersTooMany(info.otherOwners));
         } else {
-            post(Comments.PingReviewers(info.otherOwners, urls.review(info.pr_number)));
+            post(Comments.pingReviewers(info.otherOwners, urls.review(info.pr_number)));
         }
     }
 
@@ -287,9 +286,9 @@ export function process(prInfo: BotResult,
     // Needs author attention (bad CI, merge conflicts)
     else if (info.needsAuthorAction) {
         actions.projectColumn = "Needs Author Action";
-        if (info.hasMergeConflict) post(Comments.MergeConflicted(headCommitAbbrOid, info.author));
-        if (info.failedCI) post(Comments.CIFailed(headCommitAbbrOid, info.author, info.ciUrl!));
-        if (info.hasChangereqs) post(Comments.ChangesRequest(headCommitAbbrOid, info.author));
+        if (info.hasMergeConflict) post(Comments.mergeConflicted(headCommitAbbrOid, info.author));
+        if (info.failedCI) post(Comments.ciFailed(headCommitAbbrOid, info.author, info.ciUrl!));
+        if (info.hasChangereqs) post(Comments.changesRequest(headCommitAbbrOid, info.author));
     }
     // CI is running; default column is Waiting for Reviewers
     else if (info.ciResult === "unknown") {
@@ -315,7 +314,7 @@ export function process(prInfo: BotResult,
         } else {
             label("Self Merge");
             // post even when merging, so it won't get deleted
-            post(Comments.OfferSelfMerge(info.author,
+            post(Comments.offerSelfMerge(info.author,
                                          (info.tooManyOwners || info.hasMultiplePackages) ? [] : info.otherOwners,
                                          headCommitAbbrOid));
             if (info.hasValidMergeRequest) {
@@ -329,19 +328,19 @@ export function process(prInfo: BotResult,
         if (info.staleReviews.length > 0) {
             const { abbrOid } = min(info.staleReviews, (l, r) => +l.date - +r.date)!;
             const reviewers = info.staleReviews.map(r => r.reviewer);
-            post(Comments.PingStaleReviewer(abbrOid, reviewers));
+            post(Comments.pingStaleReviewer(abbrOid, reviewers));
         }
     }
 
     if (!actions.shouldMerge && info.mergeRequestUser) {
-        post(Comments.WaitUntilMergeIsOK(info.mergeRequestUser, headCommitAbbrOid, urls.workflow, info.mainBotCommentID));
+        post(Comments.waitUntilMergeIsOK(info.mergeRequestUser, headCommitAbbrOid, urls.workflow, info.mainBotCommentID));
     }
 
     // Has it: got no DT tests but is approved by DT modules and basically blocked by the DT maintainers - and it has been over 3 days?
     // Send a message reminding them that they can un-block themselves by adding tests.
     if (!info.hasTests && !info.hasMultiplePackages && info.approvedBy.includes("owner") && !info.editsInfra
         && info.approverKind === "maintainer" && (info.staleness?.days ?? 0) > 3) {
-        post(Comments.RemindPeopleTheyCanUnblockPR(info.author, info.approvedReviews.map(r => r.reviewer),
+        post(Comments.remindPeopleTheyCanUnblockPR(info.author, info.approvedReviews.map(r => r.reviewer),
                                                    info.ciResult === "pass", headCommitAbbrOid));
     }
 
@@ -358,9 +357,9 @@ function makeStaleness(now: Date, author: string, ownersToPing: string[]) { // c
         const days = dayjs(now).diff(since, "days");
         const state = days <= freshDays ? "fresh" : days <= attnDays ? "attention" : days <= nearDays ? "nearly" : "done";
         const kindAndState = `${kind}:${state}`;
-        const explanation = Comments.StalenessExplanations[kindAndState];
+        const explanation = Comments.stalenessExplanations[kindAndState];
         const expires = dayjs(since).add(nearDays, "days").format("MMM Do");
-        const comment = Comments.StalenessComment(author, ownersToPing, expires)[kindAndState];
+        const comment = Comments.stalenessComment(author, ownersToPing, expires)[kindAndState];
         const doTimelineActions = (actions: Actions) => {
             if (comment !== undefined) {
                 const tag = state === "done" ? kindAndState
@@ -394,19 +393,19 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
 
     const criticalNum = info.pkgInfo.reduce((num,pkg) => pkg.popularityLevel === "Critical" ? num+1 : num, 0);
     if (criticalNum === 0 && info.popularityLevel === "Critical") throw new Error("Internal Error: unexpected criticalNum === 0");
-    const requiredApprover =
+    const requiredApproverLower =
         info.approverKind === "other" ? "type definition owners, DT maintainers or others"
         : info.approverKind === "maintainer" ? "a DT maintainer"
         : criticalNum <= 1 ? "type definition owners or DT maintainers"
         : "all owners or a DT maintainer";
-    const RequiredApprover = requiredApprover[0]!.toUpperCase() + requiredApprover.substring(1);
+    const requiredApproverUpper = requiredApproverLower[0]!.toUpperCase() + requiredApproverLower.substring(1);
 
     if (info.isUntested) {
-        post(Comments.SuggestTesting(info.author, testsLink));
+        post(Comments.suggestTesting(info.author, testsLink));
     } else if (info.possiblyEditsInfra) {
         display(``,
                 `This PR ${info.editsInfra ? "touches" : "might touch"} some part of DefinitelyTyped infrastructure, so ${
-                 requiredApprover} will need to review it. This is rare — did you mean to do this?`);
+                 requiredApproverLower} will need to review it. This is rare — did you mean to do this?`);
     }
 
     const announceList = (what: string, xs: readonly string[]) => `${xs.length} ${what}${xs.length !== 1 ? "s" : ""}`;
@@ -478,9 +477,9 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
         display("This PR can be merged.");
     } else if (info.hasNewPackages) {
         display(txt`This PR adds a new definition, so it needs to be reviewed by
-                    ${requiredApprover} before it can be merged.`);
+                    ${requiredApproverLower} before it can be merged.`);
     } else if (info.popularityLevel === "Critical" && info.blessingKind !== "review") {
-        display(txt`Because this is a widely-used package, ${requiredApprover}
+        display(txt`Because this is a widely-used package, ${requiredApproverLower}
                     will need to review it before it can be merged.`);
     } else if (!info.requireMaintainer) {
         const and = info.hasDefinitions && info.hasTests
@@ -493,18 +492,18 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     } else {
         if (info.noOtherOwners) {
             display(txt`There aren't any other owners of this package,
-                        so ${requiredApprover} will review it.`);
+                        so ${requiredApproverLower} will review it.`);
         } else if (info.hasMultiplePackages) {
             display(txt`Because this PR edits multiple packages, it can be merged
-                        once it's reviewed by ${requiredApprover}.`);
+                        once it's reviewed by ${requiredApproverLower}.`);
         } else if (info.checkConfig) {
             display(txt`Because this PR edits the configuration file, it can be merged
-                        once it's reviewed by ${requiredApprover}.`);
+                        once it's reviewed by ${requiredApproverLower}.`);
         } else if (info.hugeChange) {
             display(txt`Because this is a huge PR, it can be merged
-                        once it's reviewed by ${requiredApprover}.`);
+                        once it's reviewed by ${requiredApproverLower}.`);
         } else {
-            display(`This PR can be merged once it's reviewed by ${requiredApprover}.`);
+            display(`This PR can be merged once it's reviewed by ${requiredApproverLower}.`);
         }
     }
 
@@ -525,27 +524,27 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     const approved = emoji.pending(!(info.approved || info.blessingKind === "merge"));
 
     if (info.hasNewPackages) {
-        display(` * ${approved} Only ${requiredApprover} can approve changes when there are new packages added`);
+        display(` * ${approved} Only ${requiredApproverLower} can approve changes when there are new packages added`);
     } else if (info.editsInfra) {
         const infraFiles = info.pkgInfo.find(p => p.name === null)!.files;
         const links = infraFiles.map(reviewLink);
-        display(` * ${approved} ${RequiredApprover} needs to approve changes that affect DT infrastructure (${links.join(", ")})`);
+        display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect DT infrastructure (${links.join(", ")})`);
     } else if (criticalNum > 1 && info.blessingKind === "review") {
-        display(` * ${approved} ${RequiredApprover} needs to approve changes that affect more than one package`);
+        display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect more than one package`);
         for (const p of info.pkgInfo) {
             if (!(p.name && p.popularityLevel === "Critical")) continue;
             display(`   - ${emoji.pending(info.pendingCriticalPackages.includes(p.name))} ${p.name}`);
         }
     } else if (info.hasMultiplePackages) {
-        display(` * ${approved} ${RequiredApprover} needs to approve changes that affect more than one package`);
+        display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect more than one package`);
     } else if (!info.requireMaintainer || info.blessingKind === "review") {
-        display(` * ${approved} Most recent commit is approved by ${requiredApprover}`);
+        display(` * ${approved} Most recent commit is approved by ${requiredApproverLower}`);
     } else if (info.noOtherOwners) {
-        display(` * ${approved} ${RequiredApprover} can merge changes when there are no other reviewers`);
+        display(` * ${approved} ${requiredApproverUpper} can merge changes when there are no other reviewers`);
     } else if (info.checkConfig) {
-        display(` * ${approved} ${RequiredApprover} needs to approve changes that affect module config files`);
+        display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect module config files`);
     } else {
-        display(` * ${approved} Only ${requiredApprover} can approve changes [without tests](${testsLink})`);
+        display(` * ${approved} Only ${requiredApproverLower} can approve changes [without tests](${testsLink})`);
     }
 
     display(``);

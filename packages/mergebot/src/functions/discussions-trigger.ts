@@ -168,5 +168,5 @@ async function getCommentsForDiscussionNumber(number: number) {
         fetchPolicy: "no-cache",
     });
 
-    return info.data.repository.discussion.comments.nodes as Array<{ author: { login: string}, body: string, id: string }>;
+    return info.data.repository.discussion.comments.nodes as { author: { login: string}, body: string, id: string }[];
 }

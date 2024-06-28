@@ -70,7 +70,7 @@
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
     "start": "func start",
-    "lint": "eslint --report-unused-disable-directives .",
+    "lint": "eslint --report-unused-disable-directives . --ext .ts",
     "test": "jest"
   },
   "jest": {

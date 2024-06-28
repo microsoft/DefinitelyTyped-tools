@@ -8,7 +8,7 @@ import { PR_repository_pullRequest,
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid } from "./util/util";
-import { TOO_MANY_FILES } from "./queries/pr-query";
+import { tooManyFiles } from "./queries/pr-query";
 import * as comment from "./util/comment";
 import * as urls from "./urls";
 import * as OldHeaderParser from "@definitelytyped/old-header-parser";
@@ -16,8 +16,8 @@ import * as jsonDiff from "fast-json-patch";
 import { isDeepStrictEqual } from "util";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
-const CriticalPopularityThreshold = 5_000_000;
-const NormalPopularityThreshold = 200_000;
+const criticalPopularityThreshold = 5_000_000;
+const normalPopularityThreshold = 200_000;
 
 // Some error found, will be passed to `process` to report in a comment
 interface BotError {
@@ -34,7 +34,7 @@ interface BotEnsureRemovedFromProject {
     readonly isDraft: boolean;
 }
 
-export type PackageInfo = {
+export interface PackageInfo {
     name: string | null; // null => not in a package (= infra files)
     kind: "edit" | "add" | "delete";
     files: FileInfo[];
@@ -47,7 +47,7 @@ export type PackageInfo = {
 
 type FileKind = "test" | "definition" | "markdown" | "package-meta" | "package-meta-ok"| "infrastructure";
 
-export type FileInfo = {
+export interface FileInfo {
     path: string,
     kind: FileKind,
     suspect?: string // reason for a file being "package-meta" rather than "package-meta-ok"
@@ -188,12 +188,14 @@ export async function deriveStateForPR(
     getDownloads = getMonthlyDownloadCount,
     now = new Date(),
 ): Promise<BotResult>  {
+    // eslint-disable-next-line eqeqeq
     if (prInfo.author == null) return botError("PR author does not exist");
 
     if (prInfo.isDraft) return botEnsureRemovedFromProject("PR is a draft");
     if (prInfo.state !== "OPEN") return botEnsureRemovedFromProject("PR is not active");
 
     const headCommit = getHeadCommit(prInfo);
+    // eslint-disable-next-line eqeqeq
     if (headCommit == null) return botError("No head commit found");
     const baseId = getBaseId(prInfo) || "master";
 
@@ -214,15 +216,15 @@ export async function deriveStateForPR(
     // that case `files.totalCount` would be 3k so it'd fit the count but `changedFiles` would
     // be correct; so to be safe: check it, and warn if there are many files (or zero)
     const tooManyFiles = !fileCount // should never happen, make it look fishy if it does
-        || fileCount > TOO_MANY_FILES // suspiciously many files
+        || fileCount > tooManyFiles // suspiciously many files
         || fileCount !== prInfo.files?.nodes?.length; // didn't get all files (probably too many)
     const hugeChange = prInfo.additions + prInfo.deletions > 5000;
 
     const paths = noNullish(prInfo.files?.nodes).map(f => f.path).sort();
-    if (paths.length > TOO_MANY_FILES) paths.length = TOO_MANY_FILES; // redundant, but just in case
+    if (paths.length > tooManyFiles) paths.length = tooManyFiles; // redundant, but just in case
     const pkgInfoEtc = await getPackageInfosEtc(
         paths, prInfo.headRefOid, baseId,
-        fetchFile, async name => await getDownloads(name, lastPushDate));
+        fetchFile, async name => getDownloads(name, lastPushDate));
     if (pkgInfoEtc instanceof Error) return botError(pkgInfoEtc.message);
     const { pkgInfo, popularityLevel } = pkgInfoEtc;
 
@@ -550,8 +552,8 @@ function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit
 }
 
 function downloadsToPopularityLevel(monthlyDownloads: number): PopularityLevel {
-    return monthlyDownloads > CriticalPopularityThreshold ? "Critical"
-        : monthlyDownloads > NormalPopularityThreshold ? "Popular"
+    return monthlyDownloads > criticalPopularityThreshold ? "Critical"
+        : monthlyDownloads > normalPopularityThreshold ? "Popular"
         : "Well-liked by everyone";
 }
 

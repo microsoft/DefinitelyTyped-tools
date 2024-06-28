@@ -29,7 +29,7 @@ fixtureNames.forEach(fixture => {
         },
         "conclusion": status,
         "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
-        "status": status,
+        status,
         "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
         "__typename": "CheckSuite",
     });

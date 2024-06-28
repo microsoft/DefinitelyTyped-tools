@@ -1,8 +1,8 @@
 import { fetchText } from "./io";
 
-const DAY = 1000 * 60 * 60 * 24;
+const day = 1000 * 60 * 60 * 24;
 const toDateStr = (d: Date, days: number) =>
-    (new Date(d.getTime() - days * DAY)).toISOString().replace(/T.*$/, "");
+    (new Date(d.getTime() - days * day)).toISOString().replace(/T.*$/, "");
 
 export async function getMonthlyDownloadCount(packageName: string, until?: Date): Promise<number> {
     // use the month up to a week before the given date, in case it takes npm some time to update the numbers

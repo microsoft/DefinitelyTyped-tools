@@ -1,12 +1,12 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { GetLabels, GetLabelsVariables, GetLabels_repository_labels_nodes } from "./schema/GetLabels";
-import { GetProjectColumns } from "./schema/GetProjectColumns";
+import { GetProjectColumns as getProjectColumns } from "./schema/GetProjectColumns";
 import { client } from "../graphql-client";
 import { noNullish } from "../util/util";
 
-export { getLabels, GetProjectColumns };
+export { getLabels, getProjectColumns as GetProjectColumns };
 
-const GetLabelsQuery: TypedDocumentNode<GetLabels, GetLabelsVariables> = gql`
+const getLabelsQuery: TypedDocumentNode<GetLabels, GetLabelsVariables> = gql`
 query GetLabels($endCursor: String) {
   repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
     id
@@ -25,7 +25,7 @@ async function getLabels() {
     let endCursor: string | undefined | null;
     while (true) {
         const result = await client.query({
-            query: GetLabelsQuery,
+            query: getLabelsQuery,
             fetchPolicy: "no-cache",
             variables: { endCursor },
         });
@@ -37,7 +37,7 @@ async function getLabels() {
 }
 // TODO: projects don't have columns anymore; they have states -- and I'm not sure they're enumerable
 // might need to iterate thru cards and check the state of them
-const GetProjectColumns: TypedDocumentNode<GetProjectColumns, unknown> = gql`
+const getProjectColumns: TypedDocumentNode<getProjectColumns, unknown> = gql`
 query GetProjectColumns {
   repository(name:"DefinitelyTyped", owner:"DefinitelyTyped") {
     id

@@ -114,7 +114,7 @@ const handleTrigger = async (context: InvocationContext, event: PrEvent) => {
 
 const prFromEvent = async (event: PrEvent) => {
     switch (event.name) {
-        case "check_suite": return await prFromCheckSuiteEvent(event.payload);
+        case "check_suite": return prFromCheckSuiteEvent(event.payload);
         case "issue_comment": return event.payload.issue;
         // "Parse" project_card.content_url according to repository.pulls_url
         case "project_card": {
