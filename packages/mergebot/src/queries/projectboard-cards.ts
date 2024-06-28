@@ -28,41 +28,42 @@ const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, never> 
         }
       }
     }
-  }`;
+  }
+`;
 
 interface CardInfo {
-    id: string;
-    updatedAt: string;
+  id: string;
+  updatedAt: string;
 }
 interface ColumnInfo {
-    name: string;
-    totalCount: number;
-    cards: CardInfo[];
+  name: string;
+  totalCount: number;
+  cards: CardInfo[];
 }
 
 export async function getProjectBoardCards() {
-    const results = await client.query({
-        query: getProjectBoardCardsQuery,
-        fetchPolicy: "no-cache",
+  const results = await client.query({
+    query: getProjectBoardCardsQuery,
+    fetchPolicy: "no-cache",
+  });
+
+  const project = results.data.repository?.project;
+
+  if (!project) {
+    throw new Error("No project found");
+  }
+
+  const columns: ColumnInfo[] = [];
+  project.columns.nodes?.forEach((col) => {
+    if (!col) return;
+    const cards: CardInfo[] = [];
+    col.cards.nodes?.forEach((card) => card && cards.push({ id: card.id, updatedAt: card.updatedAt }));
+    columns.push({
+      name: col.name,
+      totalCount: col.cards.totalCount,
+      cards,
     });
+  });
 
-    const project = results.data.repository?.project;
-
-    if (!project) {
-        throw new Error("No project found");
-    }
-
-    const columns: ColumnInfo[] = [];
-    project.columns.nodes?.forEach(col => {
-        if (!col) return;
-        const cards: CardInfo[] = [];
-        col.cards.nodes?.forEach(card => card && cards.push({ id: card.id, updatedAt: card.updatedAt }));
-        columns.push({
-            name: col.name,
-            totalCount: col.cards.totalCount,
-            cards,
-        });
-    });
-
-    return columns;
+  return columns;
 }

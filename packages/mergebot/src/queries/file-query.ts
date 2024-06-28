@@ -14,4 +14,5 @@ const getFileContent: TypedDocumentNode<GetFileContent, GetFileContentVariables>
         }
       }
     }
-  }`;
+  }
+`;
