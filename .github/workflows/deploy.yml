@@ -1,9 +1,9 @@
-name: Deploy to Azure
+name: Deploy mergebot to Azure
 
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 env:
@@ -40,7 +40,7 @@ jobs:
         run: pnpm run bundle
 
       - name: Check bundle
-        run: TYPESCRIPT_BOT_TOKEN=secret node packages/mergebot/dist/functions/index.js
+        run: BOT_AUTH_TOKEN=secret node packages/mergebot/dist/functions/index.js
 
       - name: Create zip
         working-directory: packages/mergebot

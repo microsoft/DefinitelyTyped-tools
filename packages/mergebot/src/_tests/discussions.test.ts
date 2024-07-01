@@ -1,6 +1,3 @@
-/*
- * @jest-environment ./src/_tests/testEnvironment
- */
 /// <reference types="jest" />
 import { canHandleRequest, extractNPMReference } from "../discussions";
 
