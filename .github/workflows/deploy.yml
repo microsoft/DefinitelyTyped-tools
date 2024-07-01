@@ -43,7 +43,8 @@ jobs:
         run: TYPESCRIPT_BOT_TOKEN=secret node packages/mergebot/dist/functions/index.js
 
       - name: Create zip
-        run: zip -r ${{ env.FUNCTION_ZIP_NAME }} packagaes/mergebot/dist packages/mergebot/host.json packages/mergebot/package.json
+        working-directory: packages/mergebot
+        run: zip -r ${{ env.GITHUB_WORKSPACE }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
@@ -57,6 +58,7 @@ jobs:
     environment:
       name: 'Production'
     permissions:
+      contents: read
       id-token: write
 
     steps:
