@@ -4,7 +4,7 @@ import { PR, PRVariables, PR_repository_pullRequest_files_nodes } from "./schema
 import { PRFiles, PRFilesVariables } from "./schema/PRFiles";
 import { noNullish } from "../util/util";
 
-export const tooManyFiles = 500;
+export const fileLimit = 500;
 
 // Note: If you want to work on this in local a copy of GraphiQL:
 // - Download the electron app: https://github.com/skevy/graphiql-app/releases
@@ -273,7 +273,7 @@ async function getPRInfoRest(
     const newFiles = result.data.repository?.pullRequest?.files;
     if (!newFiles) return;
     files.push(...noNullish(newFiles.nodes));
-    if (files.length >= tooManyFiles || !newFiles.pageInfo.hasNextPage) return;
+    if (files.length >= fileLimit || !newFiles.pageInfo.hasNextPage) return;
     endCursor = newFiles.pageInfo.endCursor;
   }
 }

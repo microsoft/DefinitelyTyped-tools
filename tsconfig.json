@@ -24,7 +24,6 @@
     { "path": "packages/publisher/test" },
     { "path": "packages/typescript-versions/test" },
     { "path": "packages/typescript-packages/test" },
-    { "path": "packages/utils/test" },
-    { "path": "packages/mergebot/test" }
+    { "path": "packages/utils/test" }
   ]
 }

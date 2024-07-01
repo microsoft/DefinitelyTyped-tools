@@ -9,7 +9,7 @@ import {
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid } from "./util/util";
-import { tooManyFiles } from "./queries/pr-query";
+import { fileLimit } from "./queries/pr-query";
 import * as comment from "./util/comment";
 import * as urls from "./urls";
 import * as OldHeaderParser from "@definitelytyped/old-header-parser";
@@ -211,14 +211,14 @@ export async function deriveStateForPR(
   // be correct; so to be safe: check it, and warn if there are many files (or zero)
   const tooManyFiles =
     !fileCount || // should never happen, make it look fishy if it does
-    fileCount > tooManyFiles || // suspiciously many files
+    fileCount > fileLimit || // suspiciously many files
     fileCount !== prInfo.files?.nodes?.length; // didn't get all files (probably too many)
   const hugeChange = prInfo.additions + prInfo.deletions > 5000;
 
   const paths = noNullish(prInfo.files?.nodes)
     .map((f) => f.path)
     .sort();
-  if (paths.length > tooManyFiles) paths.length = tooManyFiles; // redundant, but just in case
+  if (paths.length > fileLimit) paths.length = fileLimit; // redundant, but just in case
   const pkgInfoEtc = await getPackageInfosEtc(paths, prInfo.headRefOid, baseId, fetchFile, async (name) =>
     getDownloads(name, lastPushDate),
   );
