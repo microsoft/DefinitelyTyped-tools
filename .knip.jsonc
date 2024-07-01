@@ -83,6 +83,6 @@
       "ignore": ["src/queries/schema/graphql-global-types.ts"]
     }
   },
-  "ignore": ["**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],
+  "ignore": ["**/dist/**", "**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],
   "ignoreExportsUsedInFile": true
 }
