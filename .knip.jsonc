@@ -78,8 +78,9 @@
       "ignoreDependencies": ["@qiwi/npm-types"]
     },
     "packages/mergebot": {
-      "entry": ["src/functions/index.ts"],
-      "project": "**/*.ts"
+      "entry": ["src/functions/index.ts", "src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts", "src/scripts/updateJSONFixtures.ts"],
+      "project": "**/*.ts",
+      "ignore": ["src/queries/schema/graphql-global-types.ts"]
     }
   },
   "ignore": ["**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],
