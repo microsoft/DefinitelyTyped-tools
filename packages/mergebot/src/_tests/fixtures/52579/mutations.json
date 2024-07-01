@@ -1,0 +1,35 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDgyNjM5OTk2OA==",
+        "body": "@Phong6698 Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `vertx__eventbus-bridge-client.js` (*new!*) — [on npm](https://www.npmjs.com/package/@vertx/eventbus-bridge-client.js), [on unpkg](https://unpkg.com/browse/@vertx/eventbus-bridge-client.js@latest/)\n  - 1 added owner: ✎@Phong6698\n  - Config files to check:\n    - [`vertx__eventbus-bridge-client.js/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52579/files/5337ea17b2407707bead503cd20c9ca29438f5df#diff-7a7a9c37f9e343e2d23c2035a897f76a6b7eb960c9758448fab35553c655621e): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=52579&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyMTU0ODE2NTQ5"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NjIyODUxNTk2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "MDExOlByb2plY3RDYXJkNTk3OTk5NDQ=",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw"
+      }
+    }
+  },
+  {
+    "method": "POST",
+    "op": "check-suites/123456/rerequest"
+  }
+]

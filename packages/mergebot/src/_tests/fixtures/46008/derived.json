@@ -1,0 +1,44 @@
+{
+  "type": "info",
+  "now": "2020-07-11T02:09:32.239Z",
+  "pr_number": 46008,
+  "author": "risingBirdSong",
+  "headCommitOid": "3e19cb9cae4689fb736fd6682f7f76d8efafcaa2",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-10T00:44:49.000Z",
+  "lastActivityDate": "2020-07-11T02:09:10.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "p5",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/p5/lib/addons/p5.dom.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "p5-types",
+        "Zalastax"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "Zalastax",
+      "date": "2020-07-10T18:53:03.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

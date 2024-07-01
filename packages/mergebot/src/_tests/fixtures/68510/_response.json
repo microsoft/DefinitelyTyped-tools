@@ -1,0 +1,179 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM5mMibM",
+        "title": "[DO NOT MERGE - infrastructure test] attw.json removal",
+        "createdAt": "2024-02-06T22:15:36Z",
+        "author": {
+          "login": "andrewbranch",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 68510,
+        "state": "OPEN",
+        "headRefOid": "073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb",
+        "changedFiles": 1,
+        "additions": 0,
+        "deletions": 1,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "9b8dcf375c4aec95878058c610f8279c22527fa0",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 20510180479,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510180479",
+                      "status": "QUEUED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510180479",
+                      "checkRuns": {
+                        "nodes": [],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-02-06T22:14:50Z",
+                      "workflowRun": null,
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20510180503,
+                      "app": {
+                        "name": "Dependabot",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510180503",
+                      "status": "QUEUED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510180503",
+                      "checkRuns": {
+                        "nodes": [],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-02-06T22:14:50Z",
+                      "workflowRun": null,
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 20510206482,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510206482",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb/checks?check_suite_id=20510206482",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-02-06T22:15:40Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-02-06T22:14:48Z",
+                "committedDate": "2024-02-06T22:14:48Z",
+                "pushedDate": null,
+                "oid": "073ae8d3a0b71b12ba6bb5b7a1d883d8611d98cb",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "attw.json",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

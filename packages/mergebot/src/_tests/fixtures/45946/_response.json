@@ -1,0 +1,226 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDQ2MDIxMjkw",
+        "title": "Remove asynciterator typings",
+        "lastEditedAt": null,
+        "author": {
+          "login": "rubensworks",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-07-08T06:32:44Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits Infrastructure",
+              "__typename": "Label"
+            },
+            {
+              "name": "No Other Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 45946,
+        "state": "OPEN",
+        "headRefOid": "a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e",
+        "changedFiles": 5,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-08T06:32:48Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-08T06:35:53Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-08T06:36:01Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "rubensworks",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-10T14:00:47Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e/checks?check_suite_id=889438421",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e/checks?check_suite_id=889438421",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e/checks?check_suite_id=889439029",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e/checks?check_suite_id=889439029",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-08T06:31:02Z",
+                "committedDate": "2020-07-08T06:31:02Z",
+                "pushedDate": "2020-07-08T06:31:29Z",
+                "abbreviatedOid": "a5eb1f1",
+                "oid": "a5eb1f19e7a31387e7d7c79b3acc483b0e60b32e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NTMxNzQwNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@rubensworks Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n This PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## Code Reviews\n\nThere aren't any other owners of this package, so a DT maintainer will review it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ A DT maintainer can merge changes when there are no other reviewers\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-08T06:32:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NjY5MjIxMA==",
+              "author": {
+                "login": "rubensworks",
+                "__typename": "User"
+              },
+              "body": "@joachimvh Could you review this PR?",
+              "createdAt": "2020-07-10T14:00:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "notNeededPackages.json",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/asynciterator/asynciterator-tests.ts",
+              "additions": 0,
+              "deletions": 147,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/asynciterator/index.d.ts",
+              "additions": 0,
+              "deletions": 184,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/asynciterator/tsconfig.json",
+              "additions": 0,
+              "deletions": 23,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/asynciterator/tslint.json",
+              "additions": 0,
+              "deletions": 18,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 5
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDE0NzQyMjY=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

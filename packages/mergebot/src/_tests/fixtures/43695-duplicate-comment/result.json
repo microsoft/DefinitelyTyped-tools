@@ -1,0 +1,29 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "New Definition",
+    "Check Config",
+    "Unreviewed"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@alexandercerutti Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `accedo__accedo-one` (*new!*) — [on npm](https://www.npmjs.com/package/@accedo/accedo-one), [on unpkg](https://unpkg.com/browse/@accedo/accedo-one@latest/)\n  - 1 added owner: ✎@alexandercerutti\n  - Config files to check:\n    - [`accedo__accedo-one/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695/files/3e836178b736e5512361ffda46e84a5c668d7a90#diff-4413d8770def1e851a87a519d27ff32bc17eee42f2c9a26c9a0d59dc710e09ba): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=43695&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 24 days — it is *still* unreviewed!\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @alexandercerutti — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    },
+    {
+      "tag": "stale-ping-61f252-a5285cd",
+      "status": "@andrewbranch, @RyanCavanaugh Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
+    },
+    {
+      "tag": "Unreviewed:done",
+      "status": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @alexandercerutti.\n\n(Ping @«anyone?».)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

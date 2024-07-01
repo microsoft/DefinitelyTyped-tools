@@ -1,0 +1,5 @@
+{
+  "4849e8876b0ab7adc889ccc35b55fde6f0274837:types/react-native-sha1/tsconfig.json": "{\r\n    \"compilerOptions\": {\r\n        \"module\": \"commonjs\",\r\n        \"lib\": [\r\n            \"es6\"\r\n        ],\r\n        \"noImplicitAny\": true,\r\n        \"noImplicitThis\": true,\r\n        \"strictNullChecks\": true,\r\n        \"strictFunctionTypes\": true,\r\n        \"baseUrl\": \"../\",\r\n        \"typeRoots\": [\r\n            \"../\"\r\n        ],\r\n        \"types\": [],\r\n        \"noEmit\": true,\r\n        \"target\": \"es6\",\r\n        \"forceConsistentCasingInFileNames\": true\r\n    },\r\n    \"files\": [\r\n        \"index.d.ts\",\r\n        \"react-native-sha1-test.ts\"\r\n    ]\r\n}",
+  "4849e8876b0ab7adc889ccc35b55fde6f0274837:types/react-native-sha1/tslint.json": "{ \"extends\": \"@definitelytyped/dtslint/dt.json\" }",
+  "4849e8876b0ab7adc889ccc35b55fde6f0274837:types/react-native-sha1/index.d.ts": "// Definitions by: Amir Hossein Shekari <https://github.com/shekari-ah>\r\n\r\n\r\n\r\nexport function sha1(input: string): Promise<string>;"
+}

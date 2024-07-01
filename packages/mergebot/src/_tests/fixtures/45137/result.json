@@ -1,0 +1,28 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "The CI failed",
+    "Popular package",
+    "Owner Approved",
+    "Edits Owners",
+    "Author is Owner",
+    "Untested Change"
+  ],
+  "responseComments": [
+    {
+      "tag": "suggest-testing",
+      "status": "Hey @lirbank,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***"
+    },
+    {
+      "tag": "welcome",
+      "status": "@lirbank Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `mongodb` — [on npm](https://www.npmjs.com/package/mongodb), [on unpkg](https://unpkg.com/browse/mongodb@latest/) (author is owner)\n  - owner-approval: @LinusU\n  - 1 removed owner: ✎@lirbank\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45137&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "gh-actions-complaint-22c73c8",
+      "status": "@lirbank The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

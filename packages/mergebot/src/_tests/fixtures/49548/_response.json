@@ -1,0 +1,377 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTIwODA1MjIx",
+        "title": "feat(@types/gulp-sourcemaps): updated modules typings",
+        "createdAt": "2020-11-13T19:27:48Z",
+        "author": {
+          "login": "concision",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Edits Owners",
+              "__typename": "Label"
+            },
+            {
+              "name": "No Other Owners",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 49548,
+        "state": "OPEN",
+        "headRefOid": "9301e16b32453cda501e3c8b9886661da391d232",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-13T19:28:28Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-13T19:28:29Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-13T19:31:57Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "concision",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-13T19:42:07Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-13T19:47:27Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-16T20:00:48Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "pspeter3",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-16T20:06:03Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "concision",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-16T20:15:33Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/6f21a9e9278ef783fd905de59daaaf345376ea58/checks?check_suite_id=1499567365",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/6f21a9e9278ef783fd905de59daaaf345376ea58/checks?check_suite_id=1499567365",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/6f21a9e9278ef783fd905de59daaaf345376ea58/checks?check_suite_id=1499567671",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/6f21a9e9278ef783fd905de59daaaf345376ea58/checks?check_suite_id=1499567671",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-13T19:13:07Z",
+                "committedDate": "2020-11-13T19:13:07Z",
+                "pushedDate": "2020-11-13T19:13:49Z",
+                "abbreviatedOid": "6f21a9e",
+                "oid": "6f21a9e9278ef783fd905de59daaaf345376ea58",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9301e16b32453cda501e3c8b9886661da391d232/checks?check_suite_id=1511209594",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9301e16b32453cda501e3c8b9886661da391d232/checks?check_suite_id=1511209594",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9301e16b32453cda501e3c8b9886661da391d232/checks?check_suite_id=1511210323",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9301e16b32453cda501e3c8b9886661da391d232/checks?check_suite_id=1511210323",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-16T20:10:48Z",
+                "committedDate": "2020-11-16T20:10:48Z",
+                "pushedDate": "2020-11-16T20:11:05Z",
+                "abbreviatedOid": "9301e16",
+                "oid": "9301e16b32453cda501e3c8b9886661da391d232",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 8,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjk4OTM0NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@concision Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `gulp-sourcemaps` [on npm](https://www.npmjs.com/package/gulp-sourcemaps), [on unpkg](https://unpkg.com/browse/gulp-sourcemaps@latest/)\n  - 2 added owners: @pspeter3, ✎@concision\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 14 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-11-13T19:28:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjk4OTM1MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @concision — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49548/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2020-11-13T19:28:29Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjk5MDg1Mg==",
+              "author": {
+                "login": "danger-public",
+                "__typename": "User"
+              },
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\nInspecting the JavaScript source for this package found some properties that are not in the .d.ts files.\nThe check for missing properties isn't always right, so take this list as advice, not a requirement.\n## gulp-sourcemaps ([<kbd>unpkg</kbd>](https://unpkg.com/browse/gulp-sourcemaps@latest/))\nwas missing the following properties:\n1. mapSources\n1. identityMap\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 9301e16b32453cda501e3c8b9886661da391d232\n</p>\n",
+              "createdAt": "2020-11-13T19:31:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjk5NTI4MQ==",
+              "author": {
+                "login": "concision",
+                "__typename": "User"
+              },
+              "body": "In response to @danger-public's bot response, `mapSources` and `identityMap` _are_ exported properties that are missing. However, the implementation in `gulp-sourcemaps/gulp-sourcemaps` is as follows:\r\n\r\nhttps://github.com/gulp-sourcemaps/gulp-sourcemaps/blob/d8bed0c282f6975daa48b4ecd2053528a0b7b2e5/index.js#L6-L7\r\n\r\nSince the transitive dependencies `@gulp-sourcemaps/map-sources` and `@gulp-sourcemaps/identity-map` are not existing DefinitelyTyped packages, implementing this change would go beyond the scope of modifying a single module's typings (in this PR: `gulp-sourcemaps`). Several additional PRs would be necessary to add typings for these packages.\r\n",
+              "createdAt": "2020-11-13T19:42:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjk5NzUxMA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-11-13T19:47:21.983Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                     | #49548                                                                                                                                          | diff   |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                            |                                                                                                                                                 |        |\n| Memory usage (MiB)                                                                        | 66.4                                                                                                                                       | 75.4                                                                                                                                            | +13.7% |\n| Type count                                                                                | 8743                                                                                                                                       | 8769                                                                                                                                            | 0%     |\n| Assignability cache size                                                                  | 880                                                                                                                                        | 884                                                                                                                                             | 0%     |\n|                                                                                           |                                                                                                                                            |                                                                                                                                                 |        |\n| **Language service**                                                                      |                                                                                                                                            |                                                                                                                                                 |        |\n| Samples taken                                                                             | 216                                                                                                                                        | 300                                                                                                                                             | +39%   |\n| Identifiers in tests                                                                      | 216                                                                                                                                        | 300                                                                                                                                             | +39%   |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                            |                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 338.8                                                                                                                                      | 338.9                                                                                                                                           | 0.0%   |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.0%                                                                                                                                      | 9.7%                                                                                                                                            |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 424.4                                                                                                                                      | 427.4                                                                                                                                           | +0.7%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [dest](/DefinitelyTyped/DefinitelyTyped/blob/acd551e6200f3c55dee83990e5a3419a2e0b7e56/types/gulp-sourcemaps/gulp-sourcemaps-tests.ts#L118) | [sourcemaps](/DefinitelyTyped/DefinitelyTyped/blob/2091b6c637cb26a3f852997a379344a92dbcf461/types/gulp-sourcemaps/gulp-sourcemaps-tests.ts#L78) |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                            |                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 339.7                                                                                                                                      | 336.0                                                                                                                                           | -1.1%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.1%                                                                                                                                      | 8.9%                                                                                                                                            | -11.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 451.7                                                                                                                                      | 438.4                                                                                                                                           | -2.9%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [pipe](/DefinitelyTyped/DefinitelyTyped/blob/acd551e6200f3c55dee83990e5a3419a2e0b7e56/types/gulp-sourcemaps/gulp-sourcemaps-tests.ts#L31)  | [gulp](/DefinitelyTyped/DefinitelyTyped/blob/2091b6c637cb26a3f852997a379344a92dbcf461/types/gulp-sourcemaps/gulp-sourcemaps-tests.ts#L77)       |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-11-13T19:47:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyODI5MjAwMA==",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "body": "@pspeter3: looking at the blame for this package, you're the one who added `Asana <https://asana.com>` as an owner.  These lines are used to ping people for review, so that line is useless ATM.  Do you mind being put on the list instead, or someone else from the group?",
+              "createdAt": "2020-11-16T20:00:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyODI5NDY4Ng==",
+              "author": {
+                "login": "pspeter3",
+                "__typename": "User"
+              },
+              "body": "I'm happy to be put as the reference. That line predates the review ping tool.",
+              "createdAt": "2020-11-16T20:06:03Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  },
+                  {
+                    "user": {
+                      "login": "concision",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyODI5OTQzNg==",
+              "author": {
+                "login": "concision",
+                "__typename": "User"
+              },
+              "body": "@pspeter3 I have added you as a [\"definition owner\"](https://github.com/DefinitelyTyped/DefinitelyTyped#definition-owners) for this package. However, I am not sure what the ramifications are in terms of the approval process on this specific PR (since it also \"adds\" you as an owner).\r\n\r\nThere is another PR on this same package as well that can likely be fast-tracked if the new definition owners are successfully merged: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49243",
+              "createdAt": "2020-11-16T20:15:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/gulp-sourcemaps/gulp-sourcemaps-tests.ts",
+              "additions": 51,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/gulp-sourcemaps/index.d.ts",
+              "additions": 16,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDkzMjE3NzM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

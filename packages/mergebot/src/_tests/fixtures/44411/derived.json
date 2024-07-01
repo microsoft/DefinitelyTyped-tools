@@ -1,0 +1,59 @@
+{
+  "type": "info",
+  "now": "2020-05-01T16:17:25.774Z",
+  "pr_number": 44411,
+  "author": "peterblazejewicz",
+  "headCommitOid": "d0d51a062525a6a4b83b297cd0e75adb4d5628f6",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-01T10:24:23.000Z",
+  "lastActivityDate": "2020-05-01T10:24:45.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "jest-image-snapshot",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/jest-image-snapshot/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/jest-image-snapshot/jest-image-snapshot-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/jest-image-snapshot/v2/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/jest-image-snapshot/v2/jest-image-snapshot-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/jest-image-snapshot/v2/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/jest-image-snapshot/v2/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [
+        "dawnmist",
+        "erbridge"
+      ],
+      "addedOwners": [
+        "peterblazejewicz"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

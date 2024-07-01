@@ -1,0 +1,56 @@
+{
+  "type": "info",
+  "now": "2021-01-13T16:53:37.338Z",
+  "pr_number": 50443,
+  "author": "shockdevv",
+  "headCommitOid": "130c0882b07fc556c9690dac5f5ac231905c0636",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-01-06T18:43:31.000Z",
+  "lastActivityDate": "2021-01-07T21:14:55.000Z",
+  "mergeOfferDate": "2021-01-07T20:34:53.000Z",
+  "mergeRequestDate": "2021-01-07T21:14:55.000Z",
+  "mergeRequestUser": "shockdevv",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "reefjs",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/reefjs/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/reefjs/reefjs-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/reefjs/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/reefjs/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "andrewbranch",
+      "date": "2021-01-07T20:34:13.000Z",
+      "isMaintainer": true
+    }
+  ],
+  "ciResult": "pass"
+}

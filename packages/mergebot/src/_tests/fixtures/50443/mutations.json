@@ -1,0 +1,31 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDc1NTUwMTE4Nw==",
+        "body": "@shockdevv Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `reefjs` (*new!*) — [on npm](https://www.npmjs.com/package/reefjs), [on unpkg](https://unpkg.com/browse/reefjs@latest/)\n  - Config files to check:\n    - [`reefjs/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50443/files/130c0882b07fc556c9690dac5f5ac231905c0636#diff-863d2743beaae339df8ac84e41ae21f7511dbd86e14aa07cabd21a308efd9bd6): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=50443&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Only a DT maintainer can approve changes when there are new packages added\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n## Inactive\n\nThis PR has been inactive for 5 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "commitHeadline": "🤖 Merge PR #50443 Types for reefjs by @shockdevv",
+        "expectedHeadOid": "130c0882b07fc556c9690dac5f5ac231905c0636",
+        "mergeMethod": "SQUASH",
+        "pullRequestId": "MDExOlB1bGxSZXF1ZXN0NTUwNjA3Mzgw"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDc1NjM2ODA4NA==",
+        "body": "@shockdevv: Everything looks good here. I am ready to merge this PR (at 130c088) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n<!--typescript_bot_merge-offer-->"
+      }
+    }
+  }
+]

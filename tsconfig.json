@@ -14,6 +14,7 @@
     { "path": "packages/typescript-packages" },
     { "path": "packages/utils" },
     { "path": "packages/retag" },
+    { "path": "packages/mergebot" },
 
     { "path": "packages/definitions-parser/test" },
     { "path": "packages/dts-gen/test" },

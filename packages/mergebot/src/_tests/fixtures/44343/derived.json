@@ -1,0 +1,35 @@
+{
+  "type": "info",
+  "now": "2020-04-29T21:07:21.000Z",
+  "pr_number": 44343,
+  "author": "sandersn",
+  "headCommitOid": "abd65c3bbbf3463b41127be203c37fe64f717a7e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-29T16:19:21.000Z",
+  "lastActivityDate": "2020-04-29T16:19:21.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "amplify",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/amplify/amplify-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "joeriks"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "unknown"
+}

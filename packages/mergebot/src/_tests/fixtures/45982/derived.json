@@ -1,0 +1,6 @@
+{
+  "type": "error",
+  "now": "2020-07-11T20:41:49.000Z",
+  "message": "error parsing owners: At 1:1 in master:types/arcgis-js-api/index.d.ts: Expected /\\/\\/ Type definitions for (non-npm package )?/",
+  "author": "dasa"
+}

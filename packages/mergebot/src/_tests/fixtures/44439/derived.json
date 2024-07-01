@@ -1,0 +1,56 @@
+{
+  "type": "info",
+  "now": "2020-05-02T14:37:15.529Z",
+  "pr_number": 44439,
+  "author": "ivandevp",
+  "headCommitOid": "f8b161266a38186c3d7ab715ea63f68d5ef542ed",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-02T13:54:02.000Z",
+  "lastActivityDate": "2020-05-02T14:36:15.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/detect-port-1.1.4.tgz",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    },
+    {
+      "name": "detect-port",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/detect-port/detect-port-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/detect-port/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "lith-light-g"
+      ],
+      "addedOwners": [
+        "ivandevp"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

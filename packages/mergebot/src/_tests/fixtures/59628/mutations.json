@@ -1,0 +1,42 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM5ArAD6",
+        "body": "@peterblazejewicz Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `twemoji` (*probably deleted!*) — [on npm](https://www.npmjs.com/package/twemoji), [on unpkg](https://unpkg.com/browse/twemoji@latest/) (author is owner)\n  - owner-approval: @davwheat\n  - Config files to check:\n    - [`twemoji/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941#diff-c4ce12913ee9780af4c13ff7652c33c38080c0f278ee4e2b8649589932ea4b2c): edited\n* Infra files\n  - [`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621)\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=59628&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes that affect DT infrastructure ([`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/59628/files/15c10d80e670b01133ffe2d37c4ffe3d3c3f3941#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621))\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyMTU0ODE2NTQ5"
+        ],
+        "labelableId": "PR_kwDOAFz6BM41bNTc"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "PRC_lALOAFz6BM4AORWwzgTEe7s",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI1"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "commitHeadline": "🤖 Merge PR #59628 :tada: 'twemoji' no longer required by @peterblazejewicz",
+        "expectedHeadOid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+        "mergeMethod": "SQUASH",
+        "pullRequestId": "PR_kwDOAFz6BM41bNTc"
+      }
+    }
+  }
+]

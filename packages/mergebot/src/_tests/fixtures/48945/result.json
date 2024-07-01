@@ -1,0 +1,20 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "Revision needed",
+    "Author is Owner"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@google-api-typings-generator Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `gapi.client.calendar` — [on npm](https://www.npmjs.com/package/gapi.client.calendar), [on unpkg](https://unpkg.com/browse/gapi.client.calendar@latest/) (author is owner)\n  - owner-approval: @Maxim-Mazurok\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=48945&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 9 days.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "reviewer-complaint-759b4cb",
+      "status": "@google-api-typings-generator One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

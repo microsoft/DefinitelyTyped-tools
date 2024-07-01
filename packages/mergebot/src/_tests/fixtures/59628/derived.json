@@ -1,0 +1,86 @@
+{
+  "type": "info",
+  "now": "2022-03-31T23:12:03.301Z",
+  "pr_number": 59628,
+  "author": "peterblazejewicz",
+  "headCommitOid": "15c10d80e670b01133ffe2d37c4ffe3d3c3f3941",
+  "mergeBaseOid": "e11ae5d76bb7c11e606ed5aa0e47c1f1e81fd88d",
+  "lastPushDate": "2022-03-31T19:26:15.000Z",
+  "lastActivityDate": "2022-03-31T23:05:00.000Z",
+  "mergeOfferDate": "2022-03-31T22:12:56.000Z",
+  "mergeRequestDate": "2022-03-31T22:17:03.000Z",
+  "mergeRequestUser": "davwheat",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "notNeededPackages.json",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    },
+    {
+      "name": "twemoji",
+      "kind": "delete",
+      "files": [
+        {
+          "path": "types/twemoji/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/twemoji/test/twemoji-tests.common-js.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/twemoji/test/twemoji-tests.global.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/twemoji/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/twemoji/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [
+        "coderbyheart",
+        "peterblazejewicz",
+        "davwheat"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "andrewbranch",
+      "date": "2022-03-31T22:12:17.000Z",
+      "isMaintainer": true
+    },
+    {
+      "type": "approved",
+      "reviewer": "davwheat",
+      "date": "2022-03-31T19:33:37.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 1085014266,
+  "ciResult": "pass"
+}

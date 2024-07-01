@@ -1,0 +1,4 @@
+{
+  "master:types/phoenix_live_view/index.d.ts": "// Type definitions for phoenix_live_view 0.13\n// Project: https://github.com/phoenixframework/phoenix_live_view\n// Definitions by: Peter Zingg <https://github.com/pzingg>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n",
+  "80322389c71c13e0fca466b744b35b742a3ee161:types/phoenix_live_view/index.d.ts": "// Type definitions for phoenix_live_view 0.14\n// Project: https://github.com/phoenixframework/phoenix_live_view\n// Definitions by: Peter Zingg <https://github.com/pzingg>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n"
+}

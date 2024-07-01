@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2024-05-13T16:27:07.093Z",
+  "pr_number": 69589,
+  "author": "mcollina",
+  "headCommitOid": "73af686fc614750422389559ef5a752e6eae69a5",
+  "mergeBaseOid": "35ea3e696d3fb324ce0c779d20c2ab83f36d9181",
+  "lastPushDate": "2024-05-13T13:38:31.000Z",
+  "lastActivityDate": "2024-05-13T14:56:16.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "readable-stream",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/readable-stream/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "TeamworkGuy2",
+        "markdreyer"
+      ],
+      "addedOwners": [
+        "mcollina"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "jakebailey",
+      "date": "2024-05-13T14:56:16.000Z",
+      "abbrOid": "5fa9291"
+    }
+  ],
+  "mainBotCommentID": 2107607823,
+  "ciResult": "pass"
+}

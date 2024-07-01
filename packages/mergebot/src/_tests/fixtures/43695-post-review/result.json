@@ -1,0 +1,21 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "Revision needed",
+    "New Definition",
+    "Check Config"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@alexandercerutti Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `accedo__accedo-one` (*new!*) — [on npm](https://www.npmjs.com/package/@accedo/accedo-one), [on unpkg](https://unpkg.com/browse/@accedo/accedo-one@latest/)\n  - 1 added owner: ✎@alexandercerutti\n  - Config files to check:\n    - [`accedo__accedo-one/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43695/files/90c94f91120c026f5f8bcc586426e8590b7b4048#diff-4413d8770def1e851a87a519d27ff32bc17eee42f2c9a26c9a0d59dc710e09ba): edited\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=43695&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "reviewer-complaint-90c94f9",
+      "status": "@alexandercerutti One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

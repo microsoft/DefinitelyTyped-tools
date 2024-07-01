@@ -1,0 +1,48 @@
+{
+  "type": "info",
+  "now": "2020-05-15T15:43:58.396Z",
+  "pr_number": 44631,
+  "author": "mAAdhaTTah",
+  "headCommitOid": "96d6582f60431d273c179dcf6816426b4f1e37ac",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-10T21:26:25.000Z",
+  "lastActivityDate": "2020-05-15T15:41:39.000Z",
+  "mergeOfferDate": "2020-05-15T15:41:43.000Z",
+  "hasMergeConflict": true,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "kefir",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/kefir/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/kefir/kefir-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "AyaMorisawa",
+        "HitoriSensei"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "sandersn",
+      "date": "2020-05-15T15:41:39.000Z",
+      "isMaintainer": true
+    }
+  ],
+  "ciResult": "pass"
+}

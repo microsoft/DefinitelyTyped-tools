@@ -1,0 +1,44 @@
+{
+  "type": "info",
+  "now": "2020-08-18T12:34:56.000Z",
+  "pr_number": 46879,
+  "author": "Chaldron",
+  "headCommitOid": "2586d74ca0dc553be5f3afc0135468b17b240d70",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-08-11T18:21:13.000Z",
+  "lastActivityDate": "2020-08-18T19:35:37.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "react-scroll",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-scroll/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/react-scroll/modules/components/Link.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/react-scroll/test/react-scroll-tests.tsx",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "sudoplz",
+        "GiedriusGrabauskas"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

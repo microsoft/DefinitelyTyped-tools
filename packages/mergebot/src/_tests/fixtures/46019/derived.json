@@ -1,0 +1,57 @@
+{
+  "type": "info",
+  "now": "2020-07-12T04:13:43.404Z",
+  "pr_number": 46019,
+  "author": "peterblazejewicz",
+  "headCommitOid": "ceca9f768be945932c692d7dd48fa14b6ff38096",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-11T20:43:23.000Z",
+  "lastActivityDate": "2020-07-12T02:01:31.000Z",
+  "mergeOfferDate": "2020-07-12T04:07:31.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "is-secret",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/is-secret/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/is-secret/is-secret-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/is-secret/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/is-secret/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "wrumsby",
+        "peterblazejewicz"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "weswigham",
+      "date": "2020-07-12T02:01:31.000Z",
+      "isMaintainer": true
+    }
+  ],
+  "ciResult": "pass"
+}

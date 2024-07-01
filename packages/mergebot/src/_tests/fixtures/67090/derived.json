@@ -1,0 +1,138 @@
+{
+  "type": "info",
+  "now": "2023-10-18T02:31:54.531Z",
+  "pr_number": 67090,
+  "author": "andrewbranch",
+  "headCommitOid": "bb7d42f514b9f9cfca6b9a84dc99fac76ac35643",
+  "mergeBaseOid": "5512d90cdf92cfca25b73ab4e0b9a5c1591ec57a",
+  "lastPushDate": "2023-10-17T22:45:17.000Z",
+  "lastActivityDate": "2023-10-18T01:41:39.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "ansicolors",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ansicolors/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "balupton"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "cardinal",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/cardinal/cardinal-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/cardinal/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/lib/highlight.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/lib/highlightFile.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/lib/highlightFileSync.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/cardinal/themes/default.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/themes/empty.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/themes/hide-semicolons.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/themes/jq.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/themes/tomorrow-night.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/cardinal/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/cardinal/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "andrewbranch"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "marked-terminal",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/marked-terminal/index.d.cts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/marked-terminal/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/marked-terminal/marked-terminal-tests.cts",
+          "kind": "test"
+        },
+        {
+          "path": "types/marked-terminal/marked-terminal-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/marked-terminal/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/marked-terminal/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "bkendall"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 1767311054,
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/bb7d42f514b9f9cfca6b9a84dc99fac76ac35643/checks?check_suite_id=17339283595"
+}

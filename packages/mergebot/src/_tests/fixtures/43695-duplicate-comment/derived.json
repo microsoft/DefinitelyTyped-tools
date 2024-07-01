@@ -1,0 +1,61 @@
+{
+  "type": "info",
+  "now": "2020-05-01T17:11:04.885Z",
+  "pr_number": 43695,
+  "author": "alexandercerutti",
+  "headCommitOid": "3e836178b736e5512361ffda46e84a5c668d7a90",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-07T07:51:12.000Z",
+  "lastActivityDate": "2020-05-01T00:19:19.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "accedo__accedo-one",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/accedo__accedo-one/accedo__accedo-one-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/accedo__accedo-one/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/accedo__accedo-one/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/accedo__accedo-one/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "alexandercerutti"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "andrewbranch",
+      "date": "2020-04-30T23:59:41.000Z",
+      "abbrOid": "68463fd"
+    },
+    {
+      "type": "stale",
+      "reviewer": "RyanCavanaugh",
+      "date": "2020-04-08T16:23:52.000Z",
+      "abbrOid": "a5285cd"
+    }
+  ],
+  "ciResult": "pass"
+}

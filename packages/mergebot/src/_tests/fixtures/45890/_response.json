@@ -1,0 +1,384 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDQ0MzI2NjIy",
+        "title": "Add types for greek-utils npm library",
+        "lastEditedAt": null,
+        "author": {
+          "login": "dimkirt",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-07-04T20:47:30Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 45890,
+        "state": "OPEN",
+        "headRefOid": "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T20:47:40Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T20:50:54Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T20:51:59Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T22:04:04Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T22:05:15Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-04T22:05:17Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5e68faddf0ceb4330f611112d5e0a36428c24168",
+                "abbreviatedOid": "5e68fad",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "peterblazejewicz",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-04T21:51:00Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-04T21:51:00Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890#pullrequestreview-442633134",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "5e68faddf0ceb4330f611112d5e0a36428c24168",
+                "abbreviatedOid": "5e68fad",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-04T21:56:36Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890#pullrequestreview-442633330",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "dimkirt",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6",
+                "abbreviatedOid": "146c312",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "dimkirt",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-07-04T22:04:02Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2020-07-04T22:04:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890#pullrequestreview-442633525",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6",
+                "abbreviatedOid": "146c312",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-07-05T08:20:29Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45890#pullrequestreview-442657013",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5e68faddf0ceb4330f611112d5e0a36428c24168/checks?check_suite_id=876382296",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5e68faddf0ceb4330f611112d5e0a36428c24168/checks?check_suite_id=876382296",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5e68faddf0ceb4330f611112d5e0a36428c24168/checks?check_suite_id=876382489",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5e68faddf0ceb4330f611112d5e0a36428c24168/checks?check_suite_id=876382489",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-01T21:10:02Z",
+                "committedDate": "2020-07-04T20:45:31Z",
+                "pushedDate": "2020-07-04T20:45:45Z",
+                "abbreviatedOid": "5e68fad",
+                "oid": "5e68faddf0ceb4330f611112d5e0a36428c24168",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/146c312eac4c4ac8931b4ec6b2762457f8f4b6e6/checks?check_suite_id=876479180",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/146c312eac4c4ac8931b4ec6b2762457f8f4b6e6/checks?check_suite_id=876479180",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/146c312eac4c4ac8931b4ec6b2762457f8f4b6e6/checks?check_suite_id=876479921",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/146c312eac4c4ac8931b4ec6b2762457f8f4b6e6/checks?check_suite_id=876479921",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-07-04T22:01:59Z",
+                "committedDate": "2020-07-04T22:01:59Z",
+                "pushedDate": "2020-07-04T22:02:07Z",
+                "abbreviatedOid": "146c312",
+                "oid": "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzgxMDQ1NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@dimkirt Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [greek-utils on npm](https://www.npmjs.com/package/greek-utils)\n- [greek-utils on unpkg](https://unpkg.com/browse/greek-utils@latest//)\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-07-04T20:47:40Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzgxMDg5Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2020-07-04T20:51:59.191Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to greek-utils with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                                        |\n| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |\n| Type count                                                                                | 1256                                                                                                                                   |\n| Assignability cache size                                                                  | 84                                                                                                                                     |\n|                                                                                           |                                                                                                                                        |\n| **Language service measurements**                                                         |                                                                                                                                        |\n| Samples taken                                                                             | 11                                                                                                                                     |\n| Identifiers in tests                                                                      | 11                                                                                                                                     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 60.1                                                                                                                                   |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 28.4%                                                                                                                                  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 83.9                                                                                                                                   |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [greekUtils](/DefinitelyTyped/DefinitelyTyped/blob/c45aa7c6b6fca84b2c0150411bc6a1ac9491f6f2/types/greek-utils/greek-utils-tests.ts#L7) |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 56.5                                                                                                                                   |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 22.1%                                                                                                                                  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 67.1                                                                                                                                   |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [greekUtils](/DefinitelyTyped/DefinitelyTyped/blob/c45aa7c6b6fca84b2c0150411bc6a1ac9491f6f2/types/greek-utils/greek-utils-tests.ts#L1) |\n|                                                                                           |                                                                                                                                        |\n| **System information**                                                                    |                                                                                                                                        |\n| Node version                                                                              | v12.18.1                                                                                                                               |\n| CPU count                                                                                 | 2                                                                                                                                      |\n| CPU speed                                                                                 | 2.394 GHz                                                                                                                              |\n| CPU model                                                                                 | Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz                                                                                              |\n| CPU Architecture                                                                          | x64                                                                                                                                    |\n| Memory                                                                                    | 6.8 GiB                                                                                                                                |\n| Platform                                                                                  | linux                                                                                                                                  |\n| Release                                                                                   | 4.15.0-1089-azure                                                                                                                      |\n\n\n</details>\n",
+              "createdAt": "2020-07-04T20:51:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1MzgxNzQ0OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@peterblazejewicz Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-ef7ed8-5e68fad-->",
+              "createdAt": "2020-07-04T22:05:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/greek-utils/greek-utils-tests.ts",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/greek-utils/index.d.ts",
+              "additions": 14,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/greek-utils/tsconfig.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/greek-utils/tslint.json",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDEyNzAzNzE=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+                "name": "Needs Maintainer Review",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

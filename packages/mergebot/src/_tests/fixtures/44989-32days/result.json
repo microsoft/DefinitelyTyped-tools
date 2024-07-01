@@ -1,0 +1,26 @@
+{
+  "projectColumn": "*REMOVE*",
+  "labels": [
+    "Popular package",
+    "Owner Approved",
+    "Unmerged",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@petr-motejlek Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `ramda` — [on npm](https://www.npmjs.com/package/ramda), [on unpkg](https://unpkg.com/browse/ramda@latest/)\n  - owner-approval: @Nicholaiii\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=44989&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n## Inactive\n\nThis PR has been inactive for 32 days — closed because it wasn't merged for a long time!\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@petr-motejlek: Everything looks good here. I am ready to merge this PR (at 9ca6086) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@TheHandsomeCoder, @donnut, @mdekrey, @sbking, @afharo, @teves-castro, @1M0reBug, @hojberg, @samsonkeung, @angeloocana, @raynerd, @moshensky, @ethanresnick, @deftomat, @blimusiek, @biern, @rayhaneh, @rgm, @drewwyatt, @jottenlips, @minitesh, @krantisinh, @pirix-gh, @brekk, @nemo108, @jituanlin, @Philippe-mills, @Saul-Mirone, @Nicholaiii: you can do this too.)"
+    },
+    {
+      "tag": "Unmerged:done",
+      "status": "After a month, no one has requested merging the PR 😞. I'm going to assume that the change is not wanted after all, and will therefore close it."
+    }
+  ],
+  "shouldClose": true,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

@@ -1,0 +1,56 @@
+{
+  "type": "info",
+  "now": "2020-07-20T11:47:54.872Z",
+  "pr_number": 46120,
+  "author": "reubenrybnik",
+  "headCommitOid": "5ef8fe2907257beac41e27c3dc2399a087eddb67",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-17T14:12:06.000Z",
+  "lastActivityDate": "2020-07-19T22:33:41.000Z",
+  "mergeRequestDate": "2020-07-19T16:36:44.000Z",
+  "mergeRequestUser": "reubenrybnik",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "underscore",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/underscore/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/underscore/underscore-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "borisyankov",
+        "jbaldwin",
+        "ccurrens",
+        "confususs",
+        "jgonggrijp",
+        "ffflorian",
+        "regevbr",
+        "peterblazejewicz",
+        "reubenrybnik"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "jgonggrijp",
+      "date": "2020-07-19T20:19:03.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

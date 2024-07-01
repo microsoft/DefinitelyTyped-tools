@@ -1,0 +1,225 @@
+{
+  "type": "info",
+  "now": "2022-02-17T22:11:42.329Z",
+  "pr_number": 58764,
+  "author": "github-actions",
+  "headCommitOid": "9ba7dfc289e4ce1023a9d398b9e04a91ae3a9070",
+  "mergeBaseOid": "2cee47aedc9b4d321e378d7020984adf005fef64",
+  "lastPushDate": "2022-02-14T00:04:13.000Z",
+  "lastActivityDate": "2022-02-14T18:07:29.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "bootstrap.v3.datetimepicker",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/bootstrap.v3.datetimepicker/v3/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "katonap"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "mithril-global",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mithril-global/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "spacejack",
+        "isiahmeadows"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "isiahmeadows"
+      ],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "mithril",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mithril/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "spacejack",
+        "isiahmeadows"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "isiahmeadows"
+      ],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "ospec",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ospec/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "maranomynet",
+        "spacejack",
+        "isiahmeadows"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "isiahmeadows"
+      ],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "react-grid-layout",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-grid-layout/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "abirkholz",
+        "alitaheri",
+        "ZheyangSong",
+        "andrewhathaway",
+        "manav-m",
+        "al-fyodorov",
+        "catusmagnus"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "catusmagnus"
+      ],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "react-native-fbsdk",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-native-fbsdk/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "ifiokjr",
+        "titozzz",
+        "stuartforrest-infinity",
+        "UHKim"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "UHKim"
+      ],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "react-virtualized",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-virtualized/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "kaoDev",
+        "guntherjh",
+        "wasd171",
+        "Stevearzh",
+        "mgoszcz2",
+        "brandonhall",
+        "sbusch",
+        "azmenak"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "mgoszcz2"
+      ],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "ssh2-sftp-client",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ssh2-sftp-client/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "igrayson",
+        "ascariandrea",
+        "kartik2406",
+        "viamuli",
+        "gbhmt",
+        "builtbylane",
+        "loru88",
+        "sgalizia",
+        "hengkx",
+        "candyapplecorn",
+        "tsop14"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "sgalizia"
+      ],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "styled-components",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/styled-components/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "Igorbek",
+        "Igmat",
+        "Jessidhia",
+        "jkillian",
+        "eps1lon",
+        "wagerfield",
+        "Lazyuki",
+        "mgoszcz2",
+        "lifeiscontent"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [
+        "mgoszcz2"
+      ],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "kaoDev",
+      "date": "2022-02-14T18:07:29.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 1038486441,
+  "ciResult": "missing"
+}

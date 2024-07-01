@@ -1,0 +1,392 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDA5ODAxMzk2",
+        "title": "[benchmark] Adding typings for event.target",
+        "lastEditedAt": "2020-04-28T12:58:15Z",
+        "author": {
+          "login": "fishcharlie",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-27T23:33:23Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "No Other Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "MERGEABLE",
+        "number": 44282,
+        "state": "OPEN",
+        "headRefOid": "25794304acf8c1fd70712bd068beb07b0e09755e",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "4e010246ff699217c93de8ffcd9442e8b680011b",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "c8c42c25d9b7dd4cd04d8377d91c2a29d584f357",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "f68d56f259f89dbd35f6d72a82ad518feb2797e4",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "23fb84387b09e6dcc9bd34c45638d7d345486b15",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "c93970cce55dabaa19781421530c8a4da9892cfc",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "25794304acf8c1fd70712bd068beb07b0e09755e",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4e010246ff699217c93de8ffcd9442e8b680011b/checks?check_suite_id=633760336",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4e010246ff699217c93de8ffcd9442e8b680011b/checks?check_suite_id=633760336",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "FAILURE",
+                  "contexts": [
+                    {
+                      "state": "FAILURE",
+                      "description": "The Travis CI build failed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680340548?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-27T23:27:10Z",
+                "committedDate": "2020-04-27T23:27:10Z",
+                "pushedDate": "2020-04-27T23:27:18Z",
+                "abbreviatedOid": "4e01024",
+                "oid": "4e010246ff699217c93de8ffcd9442e8b680011b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-27T23:44:03Z",
+                "committedDate": "2020-04-27T23:44:03Z",
+                "pushedDate": null,
+                "abbreviatedOid": "c8c42c2",
+                "oid": "c8c42c25d9b7dd4cd04d8377d91c2a29d584f357",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-27T23:44:20Z",
+                "committedDate": "2020-04-27T23:44:20Z",
+                "pushedDate": null,
+                "abbreviatedOid": "f68d56f",
+                "oid": "f68d56f259f89dbd35f6d72a82ad518feb2797e4",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-27T23:44:29Z",
+                "committedDate": "2020-04-27T23:44:29Z",
+                "pushedDate": null,
+                "abbreviatedOid": "23fb843",
+                "oid": "23fb84387b09e6dcc9bd34c45638d7d345486b15",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-04-27T23:46:49Z",
+                "committedDate": "2020-04-27T23:46:49Z",
+                "pushedDate": null,
+                "abbreviatedOid": "c93970c",
+                "oid": "c93970cce55dabaa19781421530c8a4da9892cfc",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/25794304acf8c1fd70712bd068beb07b0e09755e/checks?check_suite_id=633799690",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/25794304acf8c1fd70712bd068beb07b0e09755e/checks?check_suite_id=633799690",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680345779?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-27T23:57:13Z",
+                "committedDate": "2020-04-27T23:57:13Z",
+                "pushedDate": "2020-04-27T23:58:24Z",
+                "abbreviatedOid": "2579430",
+                "oid": "25794304acf8c1fd70712bd068beb07b0e09755e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDI4OTg3OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@fishcharlie Thank you for submitting this PR!  I see this is your first time submitting to DefinitelyTyped 👋 - keep an eye on this comment as I'll be updating it with information as things progress.\n\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can merge this once someone else signs off on it.\n\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-27T23:33:31Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDI4OTg5NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@fishcharlie The Travis CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4e010246ff699217c93de8ffcd9442e8b680011b/checks?check_suite_id=633760336).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_complaint-4e01024-->",
+              "createdAt": "2020-04-27T23:33:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDI5Mzc1Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-04-27T23:47:19.518Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                              | #44282                                                                                                                                  | diff  |\n| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                     |                                                                                                                                         |       |\n| Memory usage (MiB)                                                                        | 80.7                                                                                                                                | 80.8                                                                                                                                    | +0.1% |\n| Type count                                                                                | 9273                                                                                                                                | 9276                                                                                                                                    | 0%    |\n| Assignability cache size                                                                  | 33144                                                                                                                               | 33144                                                                                                                                   | 0%    |\n|                                                                                           |                                                                                                                                     |                                                                                                                                         |       |\n| **Language service**                                                                      |                                                                                                                                     |                                                                                                                                         |       |\n| Samples taken                                                                             | 205                                                                                                                                 | 205                                                                                                                                     | 0%    |\n| Identifiers in tests                                                                      | 205                                                                                                                                 | 205                                                                                                                                     | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                     |                                                                                                                                         |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 304.9                                                                                                                               | 305.9                                                                                                                                   | +0.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.4%                                                                                                                               | 11.8%                                                                                                                                   |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 390.5                                                                                                                               | 415.4                                                                                                                                   | +6.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [document](/DefinitelyTyped/DefinitelyTyped/blob/d562e5ee9fb6da1146dcb19fad3aaceec3843b32/types/benchmark/benchmark-tests.ts#L152)  | [run](/DefinitelyTyped/DefinitelyTyped/blob/6d4b0f63d605041e009a22a917a94e50b5d7828a/types/benchmark/benchmark-tests.ts#L257)           |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                     |                                                                                                                                         |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 294.0                                                                                                                               | 292.3                                                                                                                                   | -0.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.6%                                                                                                                               | 10.6%                                                                                                                                   | -8.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 376.0                                                                                                                               | 383.3                                                                                                                                   | +1.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [lastChild](/DefinitelyTyped/DefinitelyTyped/blob/d562e5ee9fb6da1146dcb19fad3aaceec3843b32/types/benchmark/benchmark-tests.ts#L156) | [createElement](/DefinitelyTyped/DefinitelyTyped/blob/6d4b0f63d605041e009a22a917a94e50b5d7828a/types/benchmark/benchmark-tests.ts#L152) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-04-27T23:47:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDMwNTkyMA==",
+              "author": {
+                "login": "fishcharlie",
+                "__typename": "User"
+              },
+              "body": "@RyanCavanaugh\r\n\r\n@typescript-bot - `Please bother @RyanCavanaugh if I appear to be misbehaving.`\r\n\r\nIt looks like @typescript-bot didn't update this comment https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44282#issuecomment-620289878 or the labels on this PR now that all checks are now passing.\r\n\r\nAnyway to have @typescript-bot relook at this PR (since it didn't automatically)?",
+              "createdAt": "2020-04-28T00:28:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDMwNjM2Nw==",
+              "author": {
+                "login": "fishcharlie",
+                "__typename": "User"
+              },
+              "body": "This also doesn't make sense at all... am I allowed to merge this? Not all the items are green, but it says they are.\r\n\r\n<img width=\"660\" alt=\"image\" src=\"https://user-images.githubusercontent.com/860375/80433760-0d311500-88b5-11ea-9ac0-8680f184c9f2.png\">",
+              "createdAt": "2020-04-28T00:29:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/benchmark/benchmark-tests.ts",
+              "additions": 34,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/benchmark/index.d.ts",
+              "additions": 37,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzcxMzAyNTE=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

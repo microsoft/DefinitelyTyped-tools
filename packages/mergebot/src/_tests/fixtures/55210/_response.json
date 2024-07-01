@@ -1,0 +1,454 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NzE0NzAxNDcz",
+        "title": "Extend xald-parse-sdk module types",
+        "createdAt": "2021-08-18T02:55:27Z",
+        "author": {
+          "login": "Dssssds",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "The CI failed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Huge Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 55210,
+        "state": "OPEN",
+        "headRefOid": "fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe",
+        "changedFiles": 11,
+        "commitIds": {},
+        "additions": 7590,
+        "deletions": 0,
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-08-18T03:01:01Z",
+              "projectColumnName": "Needs Maintainer Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-08-24T21:37:02Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-08-24T22:04:00Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2021-08-24T22:05:28Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "23d91a572fd51e64a17babfb662883885f9f5186",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2021-08-23T19:16:42Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210#pullrequestreview-736480341",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "RaschidJFR",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "23d91a572fd51e64a17babfb662883885f9f5186",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2021-08-24T21:36:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210#pullrequestreview-737715006",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "23d91a572fd51e64a17babfb662883885f9f5186",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "peterblazejewicz",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2021-08-24T22:02:42Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2021-08-24T22:02:43Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210#pullrequestreview-737731087",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 3585693499,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585693499",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585693499",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "test",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 3585694165,
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585694165",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585694165",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": "Build #20210824.106 failed",
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2021-08-24T22:03:24Z",
+                "committedDate": "2021-08-24T22:03:24Z",
+                "pushedDate": "2021-08-24T22:03:32Z",
+                "oid": "fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 8,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM41sLf3",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 900773879,
+              "body": "@Dssssds Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `xald-parse-sdk` (*new!*) — [on npm](https://www.npmjs.com/package/xald-parse-sdk), [on unpkg](https://unpkg.com/browse/xald-parse-sdk@latest/)\n  - Config files to check:\n    - [`xald-parse-sdk/ts3.6/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe#diff-bfc1b741f010db81cead2207a1b4172e9a907b81e1b2e00aaf5634ec6e5f3e7b): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-tslintjson) (check: `rules`)\n    - [`xald-parse-sdk/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe#diff-c9e04178a7818e4f645fba6421d9c18e7f9e8be46343ae904ed4ada61296c628): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-tslintjson) (check: `rules`)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=55210&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 20 days.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-08-18T02:56:05Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM41sLgG",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 900773894,
+              "body": "🔔 @Dssssds — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55210/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2021-08-18T02:56:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM41sLi4",
+              "author": {
+                "login": "Dssssds",
+                "__typename": "User"
+              },
+              "databaseId": 900774072,
+              "body": "Created for the first time, Taobao parse expanded",
+              "createdAt": "2021-08-18T02:56:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM414qDd",
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "databaseId": 904044765,
+              "body": "what are those all Github handles? Why are you adding those people? \r\nAre those coming from copied @types/parse header? What's the reason?\r\nis your intent to create types only for 'tabao' extension?",
+              "createdAt": "2021-08-23T19:15:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM416Gp_",
+              "author": {
+                "login": "LinusU",
+                "__typename": "User"
+              },
+              "databaseId": 904424063,
+              "body": "I would not like to be a maintainer of these new typings ☺️ ",
+              "createdAt": "2021-08-24T08:14:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM417HXj",
+              "author": {
+                "login": "rdhelms",
+                "__typename": "User"
+              },
+              "databaseId": 904689123,
+              "body": "I also would like to be removed from the maintainers list here 👍🏻",
+              "createdAt": "2021-08-24T14:23:51Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM418RxI",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 904993864,
+              "body": "@Dssssds One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-23d91a5-->",
+              "createdAt": "2021-08-24T21:37:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM418VN8",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 905007996,
+              "body": "@Dssssds The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/fc6b2c11d8ef528a4a2b554b0fe7071b6959f9fe/checks?check_suite_id=3585693499).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds which are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-fc6b2c1-->",
+              "createdAt": "2021-08-24T22:05:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 11,
+          "nodes": [
+            {
+              "path": "types/xald-parse-sdk/index.d.ts",
+              "additions": 1724,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/package.json",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/taobao.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/ts3.6/index.d.ts",
+              "additions": 1712,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/ts3.6/taobao.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/ts3.6/tsconfig.json",
+              "additions": 24,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/ts3.6/tslint.json",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/ts3.6/xald-parse-sdk-tests.ts",
+              "additions": 2041,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/tsconfig.json",
+              "additions": 24,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/tslint.json",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xald-parse-sdk/xald-parse-sdk-tests.ts",
+              "additions": 2034,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MTE",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "PRC_lALOAFz6BM4AORWwzgP-3Pw",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

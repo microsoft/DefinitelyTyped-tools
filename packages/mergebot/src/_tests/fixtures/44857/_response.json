@@ -1,0 +1,1047 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDE5NzEzNjEz",
+        "title": "feat(node): Use `*EventMap` interfaces for typed `EventEmitter` methods",
+        "createdAt": "2020-05-18T20:03:21Z",
+        "author": {
+          "login": "ExE-Boss",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Abandoned",
+              "__typename": "Label"
+            },
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 44857,
+        "state": "OPEN",
+        "headRefOid": "4aff18f9b99fdfc26209485631ba429f5d3d29ba",
+        "changedFiles": 20,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T20:03:25Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T20:03:27Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T20:03:34Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T20:13:39Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T22:10:15Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-18T22:12:12Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T09:29:21Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T09:57:20Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T10:29:35Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T21:35:32Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T22:19:58Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T23:19:02Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "connor4312",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-19T23:25:37Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-21T11:31:58Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-21T11:32:01Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-21T11:57:32Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-21T15:58:52Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-22T04:05:09Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2020-06-25T19:40:40Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "weswigham",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-06T08:29:46Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T04:08:01Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-09T04:08:02Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-10T04:10:28Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-10T23:50:39Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T00:02:39Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T00:21:25Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T02:58:26Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T04:07:17Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T19:28:59Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-11T21:49:34Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-12T01:02:28Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-12T01:19:25Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-13T02:06:29Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-13T21:50:07Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-14T04:07:24Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-16T04:09:56Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-22T23:50:59Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-23T21:36:49Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-24T04:08:09Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-25T04:10:27Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-27T14:50:43Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T04:08:42Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T15:22:37Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T15:23:41Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T17:13:57Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T17:18:43Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T17:44:41Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-28T18:15:08Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "createdAt": "2020-07-29T16:31:48Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-08T04:10:32Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-27T22:48:35Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-28T04:14:47Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-28T04:19:52Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-30T10:22:56Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b0cfd1831489d8d97e07f8f38ca5ea92a289d7f4",
+                "abbreviatedOid": "b0cfd18",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "SimonSchick",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-05-18T22:09:10Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-05-19T23:20:53Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44857#pullrequestreview-413971854",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ceb988411bf6be54d9ab401b39b1ae01fb4d9ce8",
+                "abbreviatedOid": "ceb9884",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-05-21T11:27:30Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-05-21T11:27:31Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44857#pullrequestreview-416071358",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4aff18f9b99fdfc26209485631ba429f5d3d29ba/checks?check_suite_id=975320918",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4aff18f9b99fdfc26209485631ba429f5d3d29ba/checks?check_suite_id=975320918",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4aff18f9b99fdfc26209485631ba429f5d3d29ba/checks?check_suite_id=975321477",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4aff18f9b99fdfc26209485631ba429f5d3d29ba/checks?check_suite_id=975321477",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-05-18T20:00:00Z",
+                "committedDate": "2020-07-28T16:54:42Z",
+                "pushedDate": "2020-07-28T16:54:29Z",
+                "abbreviatedOid": "4aff18f",
+                "oid": "4aff18f9b99fdfc26209485631ba429f5d3d29ba",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 19,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDQwNjQ0NA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ExE-Boss Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `node` [on npm](https://www.npmjs.com/package/node), [on unpkg](https://unpkg.com/browse/node@latest)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by DT maintainers\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 31 days — it is considered abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-05-18T20:03:25Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDQwNjQ1Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @Microsoft @DefinitelyTyped @jkomyno @a-tarasyuk @alvis @r3nya @btoueg @brunoscheufler @smac89 @touffy @DeividasBakanas @eyqs @Flarna @Hannes-Magnusson-CK @KSXGitHub @hoo29 @kjin @ajafff @islishude @mwiktorczyk @mohsen1 @n-e @galkin @parambirs @eps1lon @SimonSchick @ThomasdenH @WilcoBakker @wwwy3y3 @samuela @kuehlein @j-oliveras @bhongy @chyzwar @trivikr @nguymin4 @yoursunny @qwelias @Ryan-Willpower @peterblazejewicz @addaleax @JasonHK — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44857/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-05-18T20:03:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDQxMDk3OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-05-18T20:13:39.161Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                      | #44857                                                                                                                               | diff  |\n| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |\n| **Batch compilation**                                                                     |                                                                                                                             |                                                                                                                                      |       |\n| Memory usage (MiB)                                                                        | 105.1                                                                                                                       | 99.7                                                                                                                                 | -5.1% |\n| Type count                                                                                | 17146                                                                                                                       | 17479                                                                                                                                | +2%   |\n| Assignability cache size                                                                  | 37592                                                                                                                       | 38624                                                                                                                                | +3%   |\n|                                                                                           |                                                                                                                             |                                                                                                                                      |       |\n| **Language service**                                                                      |                                                                                                                             |                                                                                                                                      |       |\n| Samples taken                                                                             | 46                                                                                                                          | 46                                                                                                                                   | 0%    |\n| Identifiers in tests                                                                      | 46                                                                                                                          | 46                                                                                                                                   | 0%    |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                             |                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 564.8                                                                                                                       | 544.5                                                                                                                                | -3.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 11.9%                                                                                                                       | 11.1%                                                                                                                                |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 695.9                                                                                                                       | 659.1                                                                                                                                | -5.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [assert](/DefinitelyTyped/DefinitelyTyped/blob/ea0b2019e0c66decc0822bc356f71880c7b2e055/types/node/ts3.7/node-tests.ts#L57) | [a](/DefinitelyTyped/DefinitelyTyped/blob/d304e52d3f3b28fa030ccddfb37696dd8a3e4c53/types/node/ts3.7/node-tests.ts#L39)               |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                             |                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 551.8                                                                                                                       | 537.8                                                                                                                                | -2.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.8%                                                                                                                       | 10.8%                                                                                                                                | -0.5% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 667.8                                                                                                                       | 635.9                                                                                                                                | -4.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [a](/DefinitelyTyped/DefinitelyTyped/blob/ea0b2019e0c66decc0822bc356f71880c7b2e055/types/node/ts3.7/node-tests.ts#L57)      | [deepStrictEqual](/DefinitelyTyped/DefinitelyTyped/blob/d304e52d3f3b28fa030ccddfb37696dd8a3e4c53/types/node/ts3.7/node-tests.ts#L57) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-05-18T20:13:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDQ2MDk1Mg==",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "body": "I'd much rather see https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44811 land and make EventEmitter generic as it removes MUCH more boilerplate (on/off/once etc.) and is cleaner overall.",
+              "createdAt": "2020-05-18T22:10:15Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "connor4312",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  },
+                  {
+                    "user": {
+                      "login": "leonardodino",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDQ2MTcwMQ==",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "body": "An additional approach is to create an interface `Events<T>` that defines all the event emitter overrides and use declaration merging for each type that extends EventEmitter, eg.\r\n\r\n```\r\ninterface Socket extends Events<{\r\n   ...\r\n}> {}\r\nclass Socket extends EventEmitter { }\r\n```\r\n",
+              "createdAt": "2020-05-18T22:12:12Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMDcwMzkzMw==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "@SimonSchick That causes several instances of **TS2320**:\r\n```\r\nInterface '...' cannot simultaneously extend types 'EventEmitter' and 'TypedEventEmitter<...>'.\r\n  Named property 'addListener' of types 'EventEmitter' and 'TypedEventEmitter<...>' are not identical.\r\n```",
+              "createdAt": "2020-05-19T09:29:21Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMTExNDIxOQ==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "@orta The @danger-public bot has hit the rate limit for the **GitHub API**:\r\n\r\n<pre>Request failed [403]: https://api.github.com/repos/DefinitelyTyped/DefinitelyTyped/pulls/44857\r\nResponse: {\r\n\t\"message\": \"API rate limit exceeded for user ID 56922856.\",\r\n\t\"documentation_url\": \"<a href=\"https://developer.github.com/v3/#rate-limiting\">https://developer.github.com/v3/#rate-limiting</a>\"\r\n}</pre>\r\n\r\n<https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/688995037#L3235>",
+              "createdAt": "2020-05-19T22:19:58Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMTEzNzQ1MQ==",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "body": "That's odd, can you post the code you created?",
+              "createdAt": "2020-05-19T23:19:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMTEzOTU0Ng==",
+              "author": {
+                "login": "connor4312",
+                "__typename": "User"
+              },
+              "body": "> make EventEmitter generic\r\n\r\nThis would be great. A similar mapped approach on the base EventEmitter with the signature `EventEmitter<EM = { [event: string]: (...args: any[]) => void }>` should be entirely unbreaking and allow opt-in type safety in libraries and for Node.js consumers.\r\n\r\nNot sure if I prefer a method in the map versus a tuple, since the return value of the method is irrelevant, but a tuple loses argument names.",
+              "createdAt": "2020-05-19T23:25:37Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "leonardodino",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjAzNjAxNQ==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "The issue with making `EventEmitter` generic is that it breaks the tests of many of `@types/node`’s dependents, which use `// $ExpectType EventEmitter`.",
+              "createdAt": "2020-05-21T11:31:58Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjA0Njc2Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@SimonSchick Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-37410c-b0cfd18-->",
+              "createdAt": "2020-05-21T11:57:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYzMjE3NTc3Nw==",
+              "author": {
+                "login": "SimonSchick",
+                "__typename": "User"
+              },
+              "body": "@ExE-Boss How many are there?",
+              "createdAt": "2020-05-21T15:58:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY0OTc3ODkyOA==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "@SimonSchick\r\n\r\nEnough to make fixing <https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44811> a massive pain.\r\n\r\nThere’s also a lot of assignability errors in there.",
+              "createdAt": "2020-06-25T19:40:40Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NDA5MzcwNg==",
+              "author": {
+                "login": "weswigham",
+                "__typename": "User"
+              },
+              "body": "@SimonSchick so what do you think we should do here?",
+              "createdAt": "2020-07-06T08:29:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY1NTg4NjAyMA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ExE-Boss Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!\n<!--typescript_bot_merge-complaint-ae6e119-->",
+              "createdAt": "2020-07-09T04:08:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2NTEwNTI3Ng==",
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "body": "bad bot",
+              "createdAt": "2020-07-28T15:22:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2NTE4MDc4NQ==",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "body": "(Saying something so the bot will notice this PR...)",
+              "createdAt": "2020-07-28T17:44:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2NTE5NjM0Ng==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "@elibarzilay Well, I’ve already fixed this PR before you opened <https://github.com/DefinitelyTyped/dt-mergebot/pull/170>, so this PR isn’t likely to break soon unless another merge conflict comes up.",
+              "createdAt": "2020-07-28T18:15:08Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY2NTc2OTIzMg==",
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "body": "@SimonSchick thoughts on the current state of the PR?",
+              "createdAt": "2020-07-29T16:31:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/node/child_process.d.ts",
+              "additions": 33,
+              "deletions": 40,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/cluster.d.ts",
+              "additions": 104,
+              "deletions": 161,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/dgram.d.ts",
+              "additions": 33,
+              "deletions": 40,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/fs.d.ts",
+              "additions": 80,
+              "deletions": 112,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/http.d.ts",
+              "additions": 34,
+              "deletions": 70,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/http2.d.ts",
+              "additions": 207,
+              "deletions": 342,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/inspector.d.ts",
+              "additions": 258,
+              "deletions": 11,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/net.d.ts",
+              "additions": 65,
+              "deletions": 92,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/process.d.ts",
+              "additions": 41,
+              "deletions": 89,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/readline.d.ts",
+              "additions": 36,
+              "deletions": 52,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/repl.d.ts",
+              "additions": 27,
+              "deletions": 61,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/stream.d.ts",
+              "additions": 75,
+              "deletions": 92,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/child_process.ts",
+              "additions": 20,
+              "deletions": 20,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/dgram.ts",
+              "additions": 13,
+              "deletions": 13,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/net.ts",
+              "additions": 28,
+              "deletions": 28,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/tls.ts",
+              "additions": 31,
+              "deletions": 31,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/worker_threads.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/tls.d.ts",
+              "additions": 66,
+              "deletions": 79,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/tty.d.ts",
+              "additions": 26,
+              "deletions": 11,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/worker_threads.d.ts",
+              "additions": 34,
+              "deletions": 48,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 20
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzg0NjYwNjg=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

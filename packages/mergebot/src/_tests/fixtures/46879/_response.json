@@ -1,0 +1,211 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDY5Njk3ODc4",
+        "title": "[react-scroll] Add type definition for saveHashHistory option on Links",
+        "createdAt": "2020-08-18T19:35:37Z",
+        "author": {
+          "login": "Chaldron",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Unmerged",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 46879,
+        "state": "OPEN",
+        "headRefOid": "2586d74ca0dc553be5f3afc0135468b17b240d70",
+        "changedFiles": 3,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-18T19:36:12Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-18T19:36:13Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-18T19:57:33Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-21T04:10:51Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/2586d74ca0dc553be5f3afc0135468b17b240d70/checks?check_suite_id=1067115360",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/2586d74ca0dc553be5f3afc0135468b17b240d70/checks?check_suite_id=1067115360",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/2586d74ca0dc553be5f3afc0135468b17b240d70/checks?check_suite_id=1067116373",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/2586d74ca0dc553be5f3afc0135468b17b240d70/checks?check_suite_id=1067116373",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-11T18:19:45Z",
+                "committedDate": "2020-08-11T18:19:45Z",
+                "pushedDate": "2020-08-11T18:21:13Z",
+                "abbreviatedOid": "2586d74",
+                "oid": "2586d74ca0dc553be5f3afc0135468b17b240d70",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NTY3Mjk3OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@Chaldron Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners or DT maintainers\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 9 days — waiting for a DT maintainer!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-08-18T19:36:12Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NTY3Mjk4Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @sudoplz @GiedriusGrabauskas — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46879/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-08-18T19:36:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NTY4MjM3OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-08-18T19:57:32.471Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                   | #46879                                                                                                                                    | diff  |\n| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                          |                                                                                                                                           |       |\n| Memory usage (MiB)                                                                        | 114.8                                                                                                                                    | 115.4                                                                                                                                     | +0.5% |\n| Type count                                                                                | 25565                                                                                                                                    | 25571                                                                                                                                     | 0%    |\n| Assignability cache size                                                                  | 6349                                                                                                                                     | 6349                                                                                                                                      | 0%    |\n|                                                                                           |                                                                                                                                          |                                                                                                                                           |       |\n| **Language service**                                                                      |                                                                                                                                          |                                                                                                                                           |       |\n| Samples taken                                                                             | 212                                                                                                                                      | 219                                                                                                                                       | +3%   |\n| Identifiers in tests                                                                      | 212                                                                                                                                      | 219                                                                                                                                       | +3%   |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                          |                                                                                                                                           |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 492.3                                                                                                                                    | 490.5                                                                                                                                     | -0.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.4%                                                                                                                                     | 8.3%                                                                                                                                      |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 660.1                                                                                                                                    | 629.4                                                                                                                                     | -4.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [to](/DefinitelyTyped/DefinitelyTyped/blob/992e59fb7b9a4e20a06b39f6ca93436ba3606385/types/react-scroll/test/react-scroll-tests.tsx#L54)  | [div](/DefinitelyTyped/DefinitelyTyped/blob/399ef5069e3bb03c905b94aa0e5651c751eeb99f/types/react-scroll/test/react-scroll-tests.tsx#L151) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                          |                                                                                                                                           |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 488.2                                                                                                                                    | 487.2                                                                                                                                     | -0.2% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.8%                                                                                                                                     | 9.1%                                                                                                                                      | +2.6% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 656.4                                                                                                                                    | 595.4                                                                                                                                     | -9.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [spy](/DefinitelyTyped/DefinitelyTyped/blob/992e59fb7b9a4e20a06b39f6ca93436ba3606385/types/react-scroll/test/react-scroll-tests.tsx#L54) | [spy](/DefinitelyTyped/DefinitelyTyped/blob/399ef5069e3bb03c905b94aa0e5651c751eeb99f/types/react-scroll/test/react-scroll-tests.tsx#L117) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-08-18T19:57:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/react-scroll/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/react-scroll/modules/components/Link.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/react-scroll/test/react-scroll-tests.tsx",
+              "additions": 11,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 3
+        },
+        "projectCards": {
+          "nodes": [],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

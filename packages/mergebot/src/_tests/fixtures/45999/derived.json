@@ -1,0 +1,75 @@
+{
+  "type": "info",
+  "now": "2020-07-11T02:37:12.780Z",
+  "pr_number": 45999,
+  "author": "alexpyzhianov",
+  "headCommitOid": "381a2a9d17d14e111f7d002c866debfcac6724e8",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-10T13:10:49.000Z",
+  "lastActivityDate": "2020-07-11T02:36:41.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "react",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/react/test/elementAttributes.tsx",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "johnnyreilly",
+        "bbenezech",
+        "pzavolinsky",
+        "digiguru",
+        "ericanderson",
+        "DovydasNavickas",
+        "theruther4d",
+        "guilhermehubner",
+        "ferdaber",
+        "jrakotoharisoa",
+        "pascaloliv",
+        "hotell",
+        "franklixuefei",
+        "Jessidhia",
+        "saranshkataria",
+        "lukyth",
+        "eps1lon",
+        "zieka",
+        "dancerphil",
+        "dimitropoulos",
+        "disjukr",
+        "vhfmag",
+        "hellatan"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "ferdaber",
+      "date": "2020-07-10T14:49:32.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "eps1lon",
+      "date": "2020-07-10T13:34:29.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

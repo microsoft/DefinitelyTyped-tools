@@ -1,0 +1,53 @@
+{
+  "type": "info",
+  "now": "2021-03-02T21:43:39.396Z",
+  "pr_number": 51338,
+  "author": "pkuczynski",
+  "headCommitOid": "4a7712f61d17eb33e89171f317deeb31b3d555ae",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-02-19T17:22:27.000Z",
+  "lastActivityDate": "2021-02-20T14:48:26.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "koa",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/koa/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/koa/tsconfig.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) and not moving towards it (check: `compilerOptions.esModuleInterop`)"
+        }
+      ],
+      "owners": [
+        "DavidCai1993",
+        "jkeylu",
+        "brikou",
+        "harryparkdotio",
+        "chatoo2412",
+        "tellnes",
+        "pkuczynski"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "tellnes",
+      "date": "2021-02-20T14:48:26.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

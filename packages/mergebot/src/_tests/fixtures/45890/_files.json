@@ -1,0 +1,3 @@
+{
+  "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6:types/greek-utils/index.d.ts": "// Type definitions for greek-utils 1.2\n// Project: https://github.com/vbarzokas/greek-utils\n// Definitions by: Dimitris Kirtsios <https://github.com/dimkirt>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n\nexport function sanitizeDiacritics(text: string, ignore?: string): string;"
+}

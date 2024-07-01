@@ -1,0 +1,453 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDA3MTg1Njc2",
+        "title": "[mongodb] UpdateQuery is not readonly",
+        "lastEditedAt": null,
+        "author": {
+          "login": "avaly",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-04-22T10:06:29Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Merge:Express",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Where is Travis?",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "UNKNOWN",
+        "number": 44105,
+        "state": "CLOSED",
+        "headRefOid": "77ac4d3554fe492d2ac23bf993d218ad4cd58873",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "77ac4d3554fe492d2ac23bf993d218ad4cd58873",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/77ac4d3554fe492d2ac23bf993d218ad4cd58873/checks?check_suite_id=631344402",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/77ac4d3554fe492d2ac23bf993d218ad4cd58873/checks?check_suite_id=631344402",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/680005519?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-04-22T10:03:51Z",
+                "committedDate": "2020-04-27T09:11:09Z",
+                "pushedDate": "2020-04-27T09:11:38Z",
+                "abbreviatedOid": "77ac4d3",
+                "oid": "77ac4d3554fe492d2ac23bf993d218ad4cd58873",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 14,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzY5MDMwMA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@avaly Thank you for submitting this PR!\n\n🔔 @CaselIT @alanmarcell @dante-101 @mcortesi @EnricoPicci @AJCStriker @julien-c @daprahamian @denys-bushulyak @BastienAr @sindbach @geraldinelemeur @various89 @angela-1 @lirbank @hector7 @floric @erikc5000 @Manc @jloveridge @ranguna @HosseinAgha @albertossilva @peterblazejewicz @LinusU @taxilian @xamgore — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44105/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\nIf no reviewer appears after a week, a DefinitelyTyped maintainer will review the PR instead.\r\n<!--footer bot @ 4/27/2020, 2:26:02 PM footerend-->",
+              "createdAt": "2020-04-22T10:22:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzY5MDMxNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"merge\"} headerend-->\r\nA definition owner has approved this PR ⭐️. A maintainer will merge this PR shortly. If it shouldn't be merged yet, please leave a comment saying so and we'll wait. Thank you for your contribution to DefinitelyTyped!\r\n<!--footer bot @ 4/23/2020, 4:24:18 AM footerend-->",
+              "createdAt": "2020-04-22T10:22:38Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzY5Mzg2Nw==",
+              "author": {
+                "login": "LinusU",
+                "__typename": "User"
+              },
+              "body": "Hmmm, this is an interesting one, the values that are being accepted by the functions are really the readonly variant, since the function accepting the values won't modify them.\r\n\r\nIf we remove readonly from types that are being accepted, it means that you can no longer pass readonly types into those functions (you can pass both normal and readonly things to a readonly accepting function, but you cannot pass readonly things to a normal accepting function).\r\n\r\nI'm not really sure what the best approach here is, since the example that you added in the test is something that someone might want to do...",
+              "createdAt": "2020-04-22T10:30:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzcxNjk3MQ==",
+              "author": {
+                "login": "avaly",
+                "__typename": "User"
+              },
+              "body": "> the values that are being accepted by the functions are really the readonly variant\r\n\r\nMaybe I'm missing this obvious thing, but is this something that's defined somewhere (the fact that the functions are accepting only readonly parameters)?",
+              "createdAt": "2020-04-22T11:22:04Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzcyMTMxNA==",
+              "author": {
+                "login": "CaselIT",
+                "__typename": "User"
+              },
+              "body": "> Maybe I'm missing this obvious thing, but is this something that's defined somewhere (the fact that the functions are accepting only readonly parameters)?\r\n\r\nI think that what he meant was that a function that accept a readonly variant, accepts also the not readonly one:\r\n```ts\r\nfunction foo(arg: readonly number[]) {}\r\nfoo([1,2])\r\nfoo([2,3] as const)\r\n```\r\n\r\nIf you remove the `readonly` in the definition, the second call will error",
+              "createdAt": "2020-04-22T11:32:04Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzczMDE1NA==",
+              "author": {
+                "login": "avaly",
+                "__typename": "User"
+              },
+              "body": "I understood that part @CaselIT, but I am confused because all the functions that use `UpdateQuery` are not marking it as readonly, e.g.:\r\n\r\n```ts\r\n    updateOne(\r\n        filter: FilterQuery<TSchema>,\r\n        update: UpdateQuery<TSchema> | Partial<TSchema>,\r\n        callback: MongoCallback<UpdateWriteOpResult>,\r\n    ): void;\r\n```",
+              "createdAt": "2020-04-22T11:51:36Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxNzc3Mzk2Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-04-22T13:18:47.963Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                    | #44105                                                                                                                                      | diff  |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                           |                                                                                                                                             |       |\n| Memory usage (MiB)                                                                        | 79.7                                                                                                                      | 78.9                                                                                                                                        | -1.0% |\n| Type count                                                                                | 15618                                                                                                                     | 15623                                                                                                                                       | 0%    |\n| Assignability cache size                                                                  | 5505                                                                                                                      | 5515                                                                                                                                        | 0%    |\n|                                                                                           |                                                                                                                           |                                                                                                                                             |       |\n| **Language service**                                                                      |                                                                                                                           |                                                                                                                                             |       |\n| Samples taken                                                                             | 1867                                                                                                                      | 1902                                                                                                                                        | +2%   |\n| Identifiers in tests                                                                      | 1867                                                                                                                      | 1902                                                                                                                                        | +2%   |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                           |                                                                                                                                             |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 345.6                                                                                                                     | 347.0                                                                                                                                       | +0.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.8%                                                                                                                      | 8.7%                                                                                                                                        |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 451.4                                                                                                                     | 474.0                                                                                                                                       | +5.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [options](/DefinitelyTyped/DefinitelyTyped/blob/e9103792668257b6cc86cd21d6c455ecb5fae1ea/types/mongodb/test/index.ts#L67) | [toArray](/DefinitelyTyped/DefinitelyTyped/blob/e0a753cc15c17292217ea768d1dd58eabb8ae697/types/mongodb/test/collection/filterQuery.ts#L255) |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                           |                                                                                                                                             |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 348.2                                                                                                                     | 349.3                                                                                                                                       | +0.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.4%                                                                                                                      | 9.3%                                                                                                                                        | -0.9% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 443.4                                                                                                                     | 475.6                                                                                                                                       | +7.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [connect](/DefinitelyTyped/DefinitelyTyped/blob/e9103792668257b6cc86cd21d6c455ecb5fae1ea/types/mongodb/test/index.ts#L65) | [connectionString](/DefinitelyTyped/DefinitelyTyped/blob/e0a753cc15c17292217ea768d1dd58eabb8ae697/types/mongodb/test/index.ts#L66)          |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-04-22T13:18:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxODMzMDE1MA==",
+              "author": {
+                "login": "LinusU",
+                "__typename": "User"
+              },
+              "body": "One problem would be that the following would no longer work:\r\n\r\n```\r\nasync function addTagsToPost (postId: string, tags: readonly string[]) {\r\n  await posts.update({ _id: postId }, { tags: { $push: tags } })\r\n }\r\n```\r\n\r\non the other hand, it fixes the problem that you stated so there is clearly pros to both approaches ☺️ \r\n\r\nI would say that I'm leaning towards making this change 👍, but it would be nice to see if any other maintainers wants to chime in ☺️ ",
+              "createdAt": "2020-04-23T10:47:42Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "avaly",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxOTI2ODQxMA==",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "body": "Is this ready to merge?",
+              "createdAt": "2020-04-24T22:42:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYxOTU5MDYzNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"complaint\"} headerend-->\r\n@avaly Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!\r\n<!--footer bot @ 4/26/2020, 10:29:14 AM footerend-->",
+              "createdAt": "2020-04-26T17:29:15Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDE0MjM2Nw==",
+              "author": {
+                "login": "andrewbranch",
+                "__typename": "User"
+              },
+              "body": "Is anyone able to determine how likely this is to cause breaks for people using these types today? I’m a little concerned about issues like the scenario @LinusU identified. It seems to me that it isn’t strictly necessary to propagate `readonly` into the library typings just to be able to build up a query object by mutation: [playground](https://www.typescriptlang.org/play/#code/JYWwDg9gTgLgBAbzgVTAEwIYwKYEUCu2UAngDRwDGEAdtdhTOQPIBGAVvTAJJpwC+cAGZQIIOACIQNAOYQ0LcQChFVagGd4FADbBs1eAF44GAO4ZgmmnQYAKceICUAbhU0NceXCPbd+gHTyNgDkOBpBzorA+kSCGBTYcADK+CwAKtgaALJy2FqIinCFcAD6wGgAXHCsHAw8LkVCulpoAIyVGlBR0vVFgk1oAEwA-O0wndTdinyKMMRgCQBiUPgWqXMZXnBBGGBgWthBcAA+W-MYUEEuAPRXcKHwJhYAFpQQWvsMwDR365HRULF4nB0lkcnkEAUih0ugt+qNxpMGtR8CAWERYbkKnBkaiiD1ChAwDAvtQMFoAHIotFQDHNEbYql4yGFTA4WlYgAiWGw+LgEBgTyIXLZcLgwp5zL5dGyUGw4vZlXFvOEKxgqQw0jU8K6AG0ALq8kAYYhopaq9Wa+lm1brNT63lqFJcf6A7AKpIpEEwbJoXIOp0uuLYACCUCgxsqyTSGW9YPtU2Uqnc+HQ3My+Bg3N4RghDQAJFEKJVcw0ijjqe6WpK+KRJXmwPh3sXJQ0VasNVqthggtXa-mG2ons3S71lu3NZUgiwew0a3W1NgYMOR3BoRN3UFBBAIDOinP8-h1IvlyPy+jRS1jGpXuoYNWpi5IoI4DYU6zsOnMzg0H5642tA4+QNL6+w4HAb5phmWa-g27x+G2aodi40zAM+r6pjgn7QX+g6ASWLK5IuCQQZhUHfjB+CDn4Z40ghFpqP0yFPi+JEfmR2A-nmC4wHhkogUR4EYWxX4cb+3F+Gu0jskxqEsUJWHkXmh7cbxwGEWBrEKaJSlHjA1GMjSjEJoooFwLKGBoDQWjEKg74EEQxCVLZ3L2SQAA8Xo+rkAB8myaexaAuEAA). It’s nice to have a convenient contextual type, but if it causes pain for lots of users, it’s probably not worth it.",
+              "createdAt": "2020-04-27T18:02:27Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "peterblazejewicz",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  },
+                  {
+                    "user": {
+                      "login": "avaly",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDQ1MDE0NA==",
+              "author": {
+                "login": "avaly",
+                "__typename": "User"
+              },
+              "body": "@andrewbranch Thanks for the feedback! I guess we can live with that workaround.\r\n\r\nI'll close this PR.",
+              "createdAt": "2020-04-28T08:08:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDQ1MDE2NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@avaly Thank you for submitting this PR! \n\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\n🔔 @CaselIT @alanmarcell @dante-101 @mcortesi @EnricoPicci @AJCStriker @julien-c @daprahamian @denys-bushulyak @BastienAr @sindbach @geraldinelemeur @various89 @angela-1 @lirbank @hector7 @floric @erikc5000 @Manc @jloveridge @ranguna @HosseinAgha @albertossilva @peterblazejewicz @LinusU @taxilian @xamgore — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44105/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-28T08:08:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyMDQ1MDE2OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@avaly Thank you for submitting this PR! \n\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\n🔔 @CaselIT @alanmarcell @dante-101 @mcortesi @EnricoPicci @AJCStriker @julien-c @daprahamian @denys-bushulyak @BastienAr @sindbach @geraldinelemeur @various89 @angela-1 @lirbank @hector7 @floric @erikc5000 @Manc @jloveridge @ranguna @HosseinAgha @albertossilva @peterblazejewicz @LinusU @taxilian @xamgore — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44105/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-04-28T08:08:21Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/mongodb/index.d.ts",
+              "additions": 12,
+              "deletions": 16,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/mongodb/test/collection/updateX.ts",
+              "additions": 31,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzY3OTAzMDI=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW40Njk1ODAw",
+                "name": "Done",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            },
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzcxNDk2MTU=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

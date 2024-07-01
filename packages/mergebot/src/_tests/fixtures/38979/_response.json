@@ -1,0 +1,2495 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0MzI1ODk5Njc0",
+        "title": "feat: Add `es‑abstract` [WIP]",
+        "lastEditedAt": "2019-10-22T21:40:07Z",
+        "author": {
+          "login": "ExE-Boss",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2019-10-08T18:19:50Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 38979,
+        "state": "OPEN",
+        "headRefOid": "222334139e52fc16369464cfb5dc95c82f71192f",
+        "changedFiles": 72,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-08T18:22:32Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-15T01:26:04Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-17T21:31:10Z"
+            },
+            {
+              "__typename": "ReadyForReviewEvent",
+              "createdAt": "2019-10-18T22:52:06Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-18T23:06:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-19T14:41:07Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-19T15:26:36Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-22T21:39:56Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2019-10-22T22:31:54Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2019-11-07T13:40:31Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "createdAt": "2019-11-07T13:53:10Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "createdAt": "2019-12-30T21:53:58Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:41Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:42Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:43Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:43Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:44Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:12:45Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T04:51:03Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "sandersn",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T15:11:44Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-12T15:13:19Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:06:14Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:08:14Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:09:08Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299527429",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:13:23Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:13:23Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299531875",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:14:17Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:14:17Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299532394",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:16:48Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:16:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299533922",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:19:18Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:19:19Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299535415",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:21:37Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:21:37Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299536732",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "efd85c46cbcbd5a8652425ab5fe15d1a2adb2935",
+                "abbreviatedOid": "efd85c4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-09T16:29:00Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-09T16:29:00Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-299541130",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "weswigham",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "0e6e7f4d543b37e7862868499883a4afb3f59e5c",
+                "abbreviatedOid": "0e6e7f4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "weswigham",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T21:42:08Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "DISMISSED",
+              "submittedAt": "2019-10-22T21:43:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305526346",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "0e6e7f4d543b37e7862868499883a4afb3f59e5c",
+                "abbreviatedOid": "0e6e7f4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:13:30Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:13:30Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305539323",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "weswigham",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "0e6e7f4d543b37e7862868499883a4afb3f59e5c",
+                "abbreviatedOid": "0e6e7f4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "weswigham",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:17:22Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:17:22Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305540662",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "weswigham",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "0e6e7f4d543b37e7862868499883a4afb3f59e5c",
+                "abbreviatedOid": "0e6e7f4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "weswigham",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:20:54Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:20:55Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305541896",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "e40b41f143dd741340b23fe88184a42b881775e5",
+                "abbreviatedOid": "e40b41f",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:34:25Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:36:11Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:37:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:38:44Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305546461",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "e40b41f143dd741340b23fe88184a42b881775e5",
+                "abbreviatedOid": "e40b41f",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:40:47Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:40:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305548491",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "e40b41f143dd741340b23fe88184a42b881775e5",
+                "abbreviatedOid": "e40b41f",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:49:50Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:49:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305551320",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "44403f972f64bf11ba9f1c724f8ad6505b4cf0eb",
+                "abbreviatedOid": "44403f9",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:50:52Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:50:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305551653",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "44403f972f64bf11ba9f1c724f8ad6505b4cf0eb",
+                "abbreviatedOid": "44403f9",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:51:49Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:51:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305551943",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "f2c94a555651e7aa8a9f344c26caae3a3020377e",
+                "abbreviatedOid": "f2c94a5",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:54:33Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:54:33Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305552800",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sandersn",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "3aba5ac906488433b92621605ef1eaceff29679b",
+                "abbreviatedOid": "3aba5ac",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "sandersn",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T22:56:08Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T22:56:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305553285",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "3aba5ac906488433b92621605ef1eaceff29679b",
+                "abbreviatedOid": "3aba5ac",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ljharb",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T23:00:36Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T23:00:36Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305554734",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "3aba5ac906488433b92621605ef1eaceff29679b",
+                "abbreviatedOid": "3aba5ac",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2019-10-22T23:00:52Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2019-10-22T23:00:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-305554810",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "222334139e52fc16369464cfb5dc95c82f71192f",
+                "abbreviatedOid": "2223341",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-05-12T04:51:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38979#pullrequestreview-409696628",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 24,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-10-08T18:20:00Z",
+                "committedDate": "2019-10-18T22:50:53Z",
+                "pushedDate": null,
+                "abbreviatedOid": "c44bcfe",
+                "oid": "c44bcfef5ae7fb71d20e57ebc4430d5cf412b1d2",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-10-09T15:20:00Z",
+                "committedDate": "2019-10-18T22:50:53Z",
+                "pushedDate": null,
+                "abbreviatedOid": "5cc1196",
+                "oid": "5cc1196c37e559f3e33c6711c4a1996d24d3f870",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-10-09T15:30:00Z",
+                "committedDate": "2019-10-18T22:50:54Z",
+                "pushedDate": null,
+                "abbreviatedOid": "70d9fdb",
+                "oid": "70d9fdb8edd51c440d402b323c60ddbabf63b59b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-10-09T16:30:00Z",
+                "committedDate": "2019-10-18T22:50:54Z",
+                "pushedDate": null,
+                "abbreviatedOid": "6451603",
+                "oid": "6451603e54acd1841b18b27187d24f5da07a5428",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/813d6fe0021b1437dcf408a39c34c54ac608ce9b/checks?check_suite_id=271785749",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/813d6fe0021b1437dcf408a39c34c54ac608ce9b/checks?check_suite_id=271785749",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/599887222?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-10T01:00:00Z",
+                "committedDate": "2019-10-18T22:50:54Z",
+                "pushedDate": "2019-10-18T22:51:19Z",
+                "abbreviatedOid": "813d6fe",
+                "oid": "813d6fe0021b1437dcf408a39c34c54ac608ce9b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b634ec7b05383b2bc8aa730c5a7a6e336c0af4b4/checks?check_suite_id=272146733",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b634ec7b05383b2bc8aa730c5a7a6e336c0af4b4/checks?check_suite_id=272146733",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/600015754?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-19T11:20:00Z",
+                "committedDate": "2019-10-19T11:19:33Z",
+                "pushedDate": "2019-10-19T11:19:22Z",
+                "abbreviatedOid": "b634ec7",
+                "oid": "b634ec7b05383b2bc8aa730c5a7a6e336c0af4b4",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4e2290d0ac9388f6a0376721818f5bf046d122e5/checks?check_suite_id=272318377",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4e2290d0ac9388f6a0376721818f5bf046d122e5/checks?check_suite_id=272318377",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/600095152?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-19T16:45:00Z",
+                "committedDate": "2019-10-19T16:48:31Z",
+                "pushedDate": "2019-10-19T16:48:50Z",
+                "abbreviatedOid": "4e2290d",
+                "oid": "4e2290d0ac9388f6a0376721818f5bf046d122e5",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/0e6e7f4d543b37e7862868499883a4afb3f59e5c/checks?check_suite_id=272389644",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/0e6e7f4d543b37e7862868499883a4afb3f59e5c/checks?check_suite_id=272389644",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/600130297?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-19T19:00:00Z",
+                "committedDate": "2019-10-19T19:06:12Z",
+                "pushedDate": "2019-10-19T19:06:02Z",
+                "abbreviatedOid": "0e6e7f4",
+                "oid": "0e6e7f4d543b37e7862868499883a4afb3f59e5c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/e40b41f143dd741340b23fe88184a42b881775e5/checks?check_suite_id=276777519",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/e40b41f143dd741340b23fe88184a42b881775e5/checks?check_suite_id=276777519",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/601529680?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-22T22:20:00Z",
+                "committedDate": "2019-10-22T22:21:56Z",
+                "pushedDate": "2019-10-22T22:21:42Z",
+                "abbreviatedOid": "e40b41f",
+                "oid": "e40b41f143dd741340b23fe88184a42b881775e5",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/44403f972f64bf11ba9f1c724f8ad6505b4cf0eb/checks?check_suite_id=276806822",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/44403f972f64bf11ba9f1c724f8ad6505b4cf0eb/checks?check_suite_id=276806822",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/601540406?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-22T22:50:00Z",
+                "committedDate": "2019-10-22T22:50:15Z",
+                "pushedDate": "2019-10-22T22:49:56Z",
+                "abbreviatedOid": "44403f9",
+                "oid": "44403f972f64bf11ba9f1c724f8ad6505b4cf0eb",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/f2c94a555651e7aa8a9f344c26caae3a3020377e/checks?check_suite_id=276809299",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f2c94a555651e7aa8a9f344c26caae3a3020377e/checks?check_suite_id=276809299",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/601541095?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-22T22:52:03Z",
+                "committedDate": "2019-10-22T22:52:03Z",
+                "pushedDate": "2019-10-22T22:52:05Z",
+                "abbreviatedOid": "f2c94a5",
+                "oid": "f2c94a555651e7aa8a9f344c26caae3a3020377e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3aba5ac906488433b92621605ef1eaceff29679b/checks?check_suite_id=276813151",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3aba5ac906488433b92621605ef1eaceff29679b/checks?check_suite_id=276813151",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/601542258?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-10-22T22:55:00Z",
+                "committedDate": "2019-10-22T22:56:14Z",
+                "pushedDate": "2019-10-22T22:55:52Z",
+                "abbreviatedOid": "3aba5ac",
+                "oid": "3aba5ac906488433b92621605ef1eaceff29679b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/5a99874ff448082aeadcba0723cc8416fe7534cb/checks?check_suite_id=297546363",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/5a99874ff448082aeadcba0723cc8416fe7534cb/checks?check_suite_id=297546363",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/607942118?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-06T00:00:00Z",
+                "committedDate": "2019-11-06T00:23:00Z",
+                "pushedDate": "2019-11-06T00:23:08Z",
+                "abbreviatedOid": "5a99874",
+                "oid": "5a99874ff448082aeadcba0723cc8416fe7534cb",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/f5fd25dd9379af21d7c01eec72e657d74a5d8e0c/checks?check_suite_id=297550993",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f5fd25dd9379af21d7c01eec72e657d74a5d8e0c/checks?check_suite_id=297550993",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/607943349?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-06T00:15:00Z",
+                "committedDate": "2019-11-06T00:23:25Z",
+                "pushedDate": "2019-11-06T00:28:06Z",
+                "abbreviatedOid": "f5fd25d",
+                "oid": "f5fd25dd9379af21d7c01eec72e657d74a5d8e0c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/f0cd302ecc80ac2cc4f2cd0db999c4dab6b5304c/checks?check_suite_id=297756777",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/f0cd302ecc80ac2cc4f2cd0db999c4dab6b5304c/checks?check_suite_id=297756777",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/608004514?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-06T04:30:00Z",
+                "committedDate": "2019-11-06T04:32:41Z",
+                "pushedDate": "2019-11-06T04:32:21Z",
+                "abbreviatedOid": "f0cd302",
+                "oid": "f0cd302ecc80ac2cc4f2cd0db999c4dab6b5304c",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/aa67527d028642223f41c7fe8ea12da62c274a8e/checks?check_suite_id=299365122",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/aa67527d028642223f41c7fe8ea12da62c274a8e/checks?check_suite_id=299365122",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/608474743?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-06T23:20:00Z",
+                "committedDate": "2019-11-06T23:22:19Z",
+                "pushedDate": "2019-11-06T23:22:12Z",
+                "abbreviatedOid": "aa67527",
+                "oid": "aa67527d028642223f41c7fe8ea12da62c274a8e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/719b3f5b38290caf6b88a55d8894c228afb2d772/checks?check_suite_id=300279910",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/719b3f5b38290caf6b88a55d8894c228afb2d772/checks?check_suite_id=300279910",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/608736737?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-07T13:40:00Z",
+                "committedDate": "2019-11-07T13:35:47Z",
+                "pushedDate": "2019-11-07T13:40:20Z",
+                "abbreviatedOid": "719b3f5",
+                "oid": "719b3f5b38290caf6b88a55d8894c228afb2d772",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9d7b5b983c5b5e0a8ca344cf2af70bd8ad6ea5ec/checks?check_suite_id=302704861",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9d7b5b983c5b5e0a8ca344cf2af70bd8ad6ea5ec/checks?check_suite_id=302704861",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/609413580?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-08T20:30:00Z",
+                "committedDate": "2019-11-08T20:56:06Z",
+                "pushedDate": "2019-11-08T20:55:48Z",
+                "abbreviatedOid": "9d7b5b9",
+                "oid": "9d7b5b983c5b5e0a8ca344cf2af70bd8ad6ea5ec",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b4716bc3817ee2b38b9c3bc87eee49c033e0d4ed/checks?check_suite_id=302711560",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b4716bc3817ee2b38b9c3bc87eee49c033e0d4ed/checks?check_suite_id=302711560",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/609415396?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-08T21:00:00Z",
+                "committedDate": "2019-11-08T21:01:23Z",
+                "pushedDate": "2019-11-08T21:01:06Z",
+                "abbreviatedOid": "b4716bc",
+                "oid": "b4716bc3817ee2b38b9c3bc87eee49c033e0d4ed",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-11-09T21:30:00Z",
+                "committedDate": "2019-11-15T23:44:04Z",
+                "pushedDate": null,
+                "abbreviatedOid": "818f2a0",
+                "oid": "818f2a0623c2f40afac0952f7a7b8906a1324353",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2019-11-15T23:45:00Z",
+                "committedDate": "2019-11-16T00:47:00Z",
+                "pushedDate": null,
+                "abbreviatedOid": "a663913",
+                "oid": "a663913be284b6f8d23897cb433fc9c8c0be7629",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3f2372fc8ea2626bbbe6c013b7c8f2676c5a8edf/checks?check_suite_id=313826891",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3f2372fc8ea2626bbbe6c013b7c8f2676c5a8edf/checks?check_suite_id=313826891",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/612655404?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-11-16T00:45:00Z",
+                "committedDate": "2019-11-16T00:48:00Z",
+                "pushedDate": "2019-11-16T00:48:39Z",
+                "abbreviatedOid": "3f2372f",
+                "oid": "3f2372fc8ea2626bbbe6c013b7c8f2676c5a8edf",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/0164b400a2ec441554cecbd6718a238d42fd80fc/checks?check_suite_id=379105709",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/0164b400a2ec441554cecbd6718a238d42fd80fc/checks?check_suite_id=379105709",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/631093486?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2019-12-30T21:45:00Z",
+                "committedDate": "2019-12-30T21:47:34Z",
+                "pushedDate": "2019-12-30T21:46:51Z",
+                "abbreviatedOid": "0164b40",
+                "oid": "0164b400a2ec441554cecbd6718a238d42fd80fc",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/222334139e52fc16369464cfb5dc95c82f71192f/checks?check_suite_id=383650012",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/222334139e52fc16369464cfb5dc95c82f71192f/checks?check_suite_id=383650012",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/DefinitelyTyped/DefinitelyTyped/builds/632446617?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-01-03T21:00:00Z",
+                "committedDate": "2020-01-03T21:03:00Z",
+                "pushedDate": "2020-01-03T21:02:41Z",
+                "abbreviatedOid": "2223341",
+                "oid": "222334139e52fc16369464cfb5dc95c82f71192f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 20,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDUzOTY0MDI1OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@ExE-Boss Thank you for submitting this PR!\n        \nBecause this is a new definition, a DefinitelyTyped maintainer will be reviewing this PR in the next few days once the Travis CI build passes.\n        \nIn the meantime, if the build fails or a merge conflict occurs, I'll let you know. Have a nice day!\r\n<!--footer bot @ 11/6/2019, 3:31:11 PM footerend-->",
+              "createdAt": "2019-10-08T18:22:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0MTk5NTIxNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"merge\"} headerend-->\r\nAfter 5 days, no one has reviewed the PR 😞. A maintainer will be reviewing the PR in the next few days and will either merge it or request revisions. Thank you for your patience!\r\n<!--footer bot @ 10/14/2019, 6:26:04 PM footerend-->",
+              "createdAt": "2019-10-15T01:26:04Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0MzM3MDM4OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"complaint\"} headerend-->\r\n@ExE-Boss One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits or comments. Thank you!\r\n<!--footer bot @ 10/22/2019, 3:31:53 PM footerend-->",
+              "createdAt": "2019-10-17T21:31:10Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0Mzk5Njg3NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2019-10-18T23:06:49.551Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to es-abstract with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                                               |\n| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |\n| Type count                                                                                | 4493                                                                                                                                          |\n| Assignability cache size                                                                  | 925                                                                                                                                           |\n|                                                                                           |                                                                                                                                               |\n| **Language service measurements**                                                         |                                                                                                                                               |\n| Samples taken                                                                             | 910                                                                                                                                           |\n| Identifiers in tests                                                                      | 910                                                                                                                                           |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 125.1                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 15.4%                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 202.9                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [CheckObjectCoercible](/DefinitelyTyped/DefinitelyTyped/blob/cdd01901cad98ae8fd150bfc5c51907d51abe6a2/types/es-abstract/test/es5.test.ts#L39) |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 125.8                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 17.5%                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 191.2                                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [Call](/DefinitelyTyped/DefinitelyTyped/blob/cdd01901cad98ae8fd150bfc5c51907d51abe6a2/types/es-abstract/test/es2015.test.ts#L12)              |\n|                                                                                           |                                                                                                                                               |\n| **System information**                                                                    |                                                                                                                                               |\n| Node version                                                                              | v10.16.3                                                                                                                                      |\n| CPU count                                                                                 | 2                                                                                                                                             |\n| CPU speed                                                                                 | 2.294 GHz                                                                                                                                     |\n| CPU model                                                                                 | Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz                                                                                                     |\n| CPU Architecture                                                                          | x64                                                                                                                                           |\n| Memory                                                                                    | 6.8 GiB                                                                                                                                       |\n| Platform                                                                                  | linux                                                                                                                                         |\n| Release                                                                                   | 4.15.0-1059-azure                                                                                                                             |\n\n\n</details>\n",
+              "createdAt": "2019-10-18T23:06:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0NDE1MzI5Mw==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "needinfo?(@ljharb): Should I also add types for utilities in the `helpers` directory?",
+              "createdAt": "2019-10-19T14:41:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0NDE1OTkwOA==",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "body": "everything reachable is part of the public api, so probably yes.",
+              "createdAt": "2019-10-19T15:26:36Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "ExE-Boss",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0NTE2Nzc5Mg==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "review?(@ljharb): I&nbsp;have&nbsp;now added&nbsp;type&nbsp;definitions for&nbsp;all&nbsp;reachable&nbsp;files.",
+              "createdAt": "2019-10-22T21:39:56Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU0NTE4NDEyMw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"reviewPing-48f7b20272f35ebe80002b4f17381fe9\"} headerend-->\r\n🔔 @weswigham - Thanks for your review of this PR! Can you please look at the new code and update your review status if appropriate?\r\n<!--footer bot @ 10/22/2019, 3:31:54 PM footerend-->",
+              "createdAt": "2019-10-22T22:31:54Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU1MTA4MzEzNQ==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "These&nbsp;types are&nbsp;still&nbsp;very&nbsp;much a&nbsp;work&nbsp;in&nbsp;progress.",
+              "createdAt": "2019-11-07T13:40:31Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU1MTA4ODE3NQ==",
+              "author": {
+                "login": "ExE-Boss",
+                "__typename": "User"
+              },
+              "body": "Also, it’s&nbsp;likely&nbsp;that I’ll&nbsp;soon have&nbsp;to&nbsp;update this&nbsp;to&nbsp;v2.0 because&nbsp;of&nbsp;https://github.com/ljharb/es-abstract/issues/62, https://github.com/ljharb/es-abstract/issues/66, https://github.com/ljharb/es-abstract/pull/67, https://github.com/ljharb/es-abstract/pull/68 and&nbsp;https://github.com/ljharb/es-abstract/pull/69.",
+              "createdAt": "2019-11-07T13:53:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU2OTgwNzIzMg==",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "body": "I wouldn't wait for v2; it'd be more useful to get v1.17 out.",
+              "createdAt": "2019-12-30T21:53:58Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAxMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ExE-Boss Thank you for submitting this PR! \n\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n- [es-abstract on npm](https://www.npmjs.com/package/es-abstract)\n - [es-abstract on unpkg](https://unpkg.com/browse/es-abstract@latest//)\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-05-12T04:12:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAxNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@sandersn Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-0f40f4-3aba5ac-->",
+              "createdAt": "2020-05-12T04:12:42Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAyMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ljharb Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-5e6257-44403f9-->",
+              "createdAt": "2020-05-12T04:12:43Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAyNw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ljharb Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-5e6257-e40b41f-->",
+              "createdAt": "2020-05-12T04:12:43Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAzMQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@weswigham Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-9f0d93-0e6e7f4-->",
+              "createdAt": "2020-05-12T04:12:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzA5NzAzMg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ljharb Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-5e6257-efd85c4-->",
+              "createdAt": "2020-05-12T04:12:45Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzEwNjI1Ng==",
+              "author": {
+                "login": "ljharb",
+                "__typename": "User"
+              },
+              "body": "… why do i need 3 pings",
+              "createdAt": "2020-05-12T04:51:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzQwNzIzOA==",
+              "author": {
+                "login": "sandersn",
+                "__typename": "User"
+              },
+              "body": "@ljharb the bot is now running asynchrono\r\n@orta you wanted to know about bad behaviour like this I think.\r\nusly!",
+              "createdAt": "2020-05-12T15:11:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNzQwODIxMg==",
+              "author": {
+                "login": "orta",
+                "__typename": "User"
+              },
+              "body": "Thanks, that is definitely suspicious",
+              "createdAt": "2020-05-12T15:13:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/es-abstract/GetIntrinsic.d.ts",
+              "additions": 138,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es2015.d.ts",
+              "additions": 234,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es2016.d.ts",
+              "additions": 36,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es2017.d.ts",
+              "additions": 42,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es2018.d.ts",
+              "additions": 47,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es2019.d.ts",
+              "additions": 63,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es5.d.ts",
+              "additions": 88,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es6.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/es7.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/assertRecord.d.ts",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/assign.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/callBind.d.ts",
+              "additions": 137,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/callBound.d.ts",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/every.d.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/forEach.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/getInferredName.d.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/getIteratorMethod.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/getProto.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/getSymbolDescription.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isFinite.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isNaN.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isPrefixOf.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isPrimitive.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isPropertyDescriptor.d.ts",
+              "additions": 16,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/isSamePropertyDescriptor.d.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/maxSafeInteger.d.ts",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/mod.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/regexTester.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/setProto.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/helpers/sign.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/index.d.ts",
+              "additions": 56,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/operations/2015.d.ts",
+              "additions": 13,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/operations/2016.d.ts",
+              "additions": 164,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/operations/2017.d.ts",
+              "additions": 58,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/operations/2018.d.ts",
+              "additions": 43,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/operations/2019.d.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/GetIntrinsic.test.ts",
+              "additions": 451,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es2015.test.ts",
+              "additions": 108,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es2016.test.ts",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es2017.test.ts",
+              "additions": 36,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es2018.test.ts",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es2019.test.ts",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/es5.test.ts",
+              "additions": 53,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/assertRecord.test.ts",
+              "additions": 10,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/assign.test.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/callBind.test.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/callBound.test.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/every.test.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/forEach.test.ts",
+              "additions": 22,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/getInferredName.test.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/getIteratorMethod.test.ts",
+              "additions": 15,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/getProto.test.ts",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/getSymbolDescription.test.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isFinite.test.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isNaN.test.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isPrefixOf.test.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isPrimitive.test.ts",
+              "additions": 9,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isPropertyDescriptor.test.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/isSamePropertyDescriptor.test.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/maxSafeInteger.test.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/mod.test.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/regexTester.test.ts",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/setProto.test.ts",
+              "additions": 10,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/helpers/sign.test.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/index.test.ts",
+              "additions": 36,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/operations/2015.test.ts",
+              "additions": 234,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/operations/2016.test.ts",
+              "additions": 477,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/operations/2017.test.ts",
+              "additions": 413,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/operations/2018.test.ts",
+              "additions": 432,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/test/operations/2019.test.ts",
+              "additions": 402,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/tsconfig.json",
+              "additions": 52,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/es-abstract/tslint.json",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 72
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMjc1MTM1NTA=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU5",
+                "name": "Needs Author Attention",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

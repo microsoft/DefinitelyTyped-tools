@@ -1,0 +1,366 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTAxNTQ0NDEz",
+        "title": "[jquery] Update return type for height function",
+        "createdAt": "2020-10-12T12:27:56Z",
+        "author": {
+          "login": "martin-badin",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 48708,
+        "state": "OPEN",
+        "headRefOid": "eb13547e342b1316aeea85df84983a534cfb092f",
+        "changedFiles": 3,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T12:28:32Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T12:28:33Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T12:41:25Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T13:10:18Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T13:10:20Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-12T14:32:58Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "martin-badin",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-14T17:33:54Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "leonard-thieu",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-15T11:45:09Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "martin-badin",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-15T15:53:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-12T20:22:27Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "leonard-thieu",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "eb13547e342b1316aeea85df84983a534cfb092f",
+                "abbreviatedOid": "eb13547",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-10-12T13:09:45Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48708#pullrequestreview-506604643",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/eb13547e342b1316aeea85df84983a534cfb092f/checks?check_suite_id=1325716211",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/eb13547e342b1316aeea85df84983a534cfb092f/checks?check_suite_id=1325716211",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/eb13547e342b1316aeea85df84983a534cfb092f/checks?check_suite_id=1325717570",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/eb13547e342b1316aeea85df84983a534cfb092f/checks?check_suite_id=1325717570",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-10-12T12:24:57Z",
+                "committedDate": "2020-10-12T12:24:57Z",
+                "pushedDate": null,
+                "abbreviatedOid": "eb13547",
+                "oid": "eb13547e342b1316aeea85df84983a534cfb092f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 8,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzA5MDA1OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@martin-badin Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `jquery` [on npm](https://www.npmjs.com/package/jquery), [on unpkg](https://unpkg.com/browse/jquery@latest/)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 28 days — it is considered nearly abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-10-12T12:28:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzA5MDA2Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @leonard-thieu @borisyankov @choffmeister @Steve-Fenton @Diullei @tasoili @jasons-novaleaf @seanski @Guuz @ksummerlin @basarat @nwolverson @derekcicerone @AndrewGaspar @seikichi @benjaminjackman @s093294 @JoshStrobl @johnnyreilly @DickvdBrink @King2500 @terrymun — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48708/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-10-12T12:28:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzExMDU1OA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@martin-badin One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-eb13547-->",
+              "createdAt": "2020-10-12T13:10:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwNzE1NzY4MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-10-12T14:32:57.787Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                             | #48708                                                                                                                     | diff   |\n| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                    |                                                                                                                            |        |\n| Memory usage (MiB)                                                                        | 154.6                                                                                                                              | 153.3                                                                                                                      | -0.8%  |\n| Type count                                                                                | 84815                                                                                                                              | 84815                                                                                                                      | 0%     |\n| Assignability cache size                                                                  | 7585                                                                                                                               | 7585                                                                                                                       | 0%     |\n|                                                                                           |                                                                                                                                    |                                                                                                                            |        |\n| **Language service**                                                                      |                                                                                                                                    |                                                                                                                            |        |\n| Samples taken                                                                             | 4593                                                                                                                               | 4489                                                                                                                       | -2%    |\n| Identifiers in tests                                                                      | 18716                                                                                                                              | 18716                                                                                                                      | 0%     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                    |                                                                                                                            |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 780.1                                                                                                                              | 799.2                                                                                                                      | +2.4%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 0.0%                                                                                                                               | 0.0%                                                                                                                       |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1742.4                                                                                                                             | 1748.6                                                                                                                     | +0.4%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [$](/DefinitelyTyped/DefinitelyTyped/blob/844db8d4c5416914b4c5481fa5ccc49fd6bd7054/types/jquery/jquery-tests.ts#L5485)             | [$](/DefinitelyTyped/DefinitelyTyped/blob/1e1f2a9df459a5188fc5fc10e2632108ccc8164c/types/jquery/jquery-tests.ts#L5605)     |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                    |                                                                                                                            |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 784.2                                                                                                                              | 801.6                                                                                                                      | +2.2%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 0.0%                                                                                                                               | 0.0%                                                                                                                       |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 1622.1                                                                                                                             | 1817.3                                                                                                                     | +12.0% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [createElement](/DefinitelyTyped/DefinitelyTyped/blob/844db8d4c5416914b4c5481fa5ccc49fd6bd7054/types/jquery/jquery-tests.ts#L2414) | [index](/DefinitelyTyped/DefinitelyTyped/blob/1e1f2a9df459a5188fc5fc10e2632108ccc8164c/types/jquery/jquery-tests.ts#L5622) |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-10-12T14:32:58Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwODU1MTg1Ng==",
+              "author": {
+                "login": "martin-badin",
+                "__typename": "User"
+              },
+              "body": "> `.height()` can return `undefined` when called on an empty set.\r\n> \r\n> https://jsfiddle.net/leonard_thieu/avspk27w/3/\r\n\r\nYou are right but I think that the problem is in the missing element, not in the function.",
+              "createdAt": "2020-10-14T17:33:54Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwOTIzMTU2NA==",
+              "author": {
+                "login": "leonard-thieu",
+                "__typename": "User"
+              },
+              "body": "I'm not sure I understand what you mean. With this change, users won't expect `.height()` to potentially return `undefined`. Are you suggesting that users should be using it in a different way?",
+              "createdAt": "2020-10-15T11:45:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwOTQyMDQ0OQ==",
+              "author": {
+                "login": "martin-badin",
+                "__typename": "User"
+              },
+              "body": "The function returns `undefined` if the element doesn't exist, all right? Then the user should inspect if the element exists. \r\n\r\nExample\r\n```\r\nvar empty = $('#none');\r\n\r\nif(empty.length) {\r\n    console.dir(empty.width());\r\n    console.dir(empty.height());\r\n    console.dir(empty.innerWidth());\r\n    console.dir(empty.innerHeight());\r\n}\r\n```",
+              "createdAt": "2020-10-15T15:53:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcyNjMyMDI0OQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@martin-badin I haven't seen any activity on this PR in more than 3 weeks, and this PR currently has problems that prevent it from being merged. The PR will be closed in a week if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2020-10-15-->",
+              "createdAt": "2020-11-12T20:22:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/jquery/JQuery.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/jquery/jquery-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/jquery/test/example-tests.ts",
+              "additions": 4,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 3
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDcxOTc3NDM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+                "name": "Needs Author Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

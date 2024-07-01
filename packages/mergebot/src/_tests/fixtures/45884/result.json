@@ -1,0 +1,25 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Owner Approved",
+    "Untested Change",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "suggest-testing",
+      "status": "Hey @sgratzl,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***"
+    },
+    {
+      "tag": "welcome",
+      "status": "@sgratzl Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `cytoscape` — [on npm](https://www.npmjs.com/package/cytoscape), [on unpkg](https://unpkg.com/browse/cytoscape@latest/)\n  - owner-approval: @Veckodag\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45884&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@sgratzl: Everything looks good here. I am ready to merge this PR (at 1dcf44a) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@phreed, @wy193777, @ypconstante, @janniclas, @cerberuser, @gsbelarus, @peterjferrarotto, @spaxe, @appleparan, @Veckodag: you can do this too.)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

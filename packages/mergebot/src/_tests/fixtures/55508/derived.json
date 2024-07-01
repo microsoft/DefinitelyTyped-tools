@@ -1,0 +1,64 @@
+{
+  "type": "info",
+  "now": "2021-09-06T21:31:20.974Z",
+  "pr_number": 55508,
+  "author": "avi12",
+  "headCommitOid": "7288ad262198cd40a8457837580b67f9d1b68c7b",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-09-01T12:30:10.000Z",
+  "lastActivityDate": "2021-09-01T14:59:00.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "chrome",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/chrome/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "matthewkimber",
+        "otiai10",
+        "couven92",
+        "rreverser",
+        "sreimer15",
+        "MatCarlson",
+        "ekinsol",
+        "tregagnon",
+        "echoabstract",
+        "spasma",
+        "bdbai",
+        "pokutuna",
+        "JasonXian",
+        "usertim",
+        "idan315",
+        "nicolas377"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "userTim",
+      "date": "2021-09-01T14:59:00.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "nicolas377",
+      "date": "2021-09-01T12:38:30.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 909170831,
+  "ciResult": "pass"
+}

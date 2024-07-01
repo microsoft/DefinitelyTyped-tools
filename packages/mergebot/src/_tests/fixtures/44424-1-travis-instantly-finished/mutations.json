@@ -1,0 +1,32 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDYyMjUyNzAxNQ==",
+        "body": "@tomer-openfin Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR might touch some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and possibly others)\n\n\n***Note: this PR touches too many files, check it!***\n* `openfin` — [on npm](https://www.npmjs.com/package/openfin), [on unpkg](https://unpkg.com/browse/openfin@latest/) (author is owner)\n  - Config files to check:\n    - [`openfin/OTHER_FILES.txt`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44424/files/af636941dac21c0752befa1617297dfdac3e0a52#diff-004d79898182f654ce84ac7deed9a38f3c41c438de9af7a5e1edf9c5cfa0fcb4): edited\n    - [`openfin/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44424/files/af636941dac21c0752befa1617297dfdac3e0a52#diff-59b1ab6d62c34c8b064f27d3f16a88e20e60adde2ed7bf0d3529a59fa0c8ed03): edited\n    - [`openfin/v49/OTHER_FILES.txt`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44424/files/af636941dac21c0752befa1617297dfdac3e0a52#diff-90b0a88e7d7d6ab8f4246471243a6fbc2699361d94c22ab900ff93b9e190893c): edited\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyOTUzOTk4NzE4",
+          "LA_kwDOAFz6BM8AAAABEGgY4Q"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDEyMjY1MDE2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "MDExOlByb2plY3RDYXJkMzczOTYzMTI=",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2"
+      }
+    }
+  }
+]

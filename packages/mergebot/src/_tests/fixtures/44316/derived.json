@@ -1,0 +1,43 @@
+{
+  "type": "info",
+  "now": "2020-05-01T15:22:22.898Z",
+  "pr_number": 44316,
+  "author": "mattleff",
+  "headCommitOid": "55357f7d60d059b5c84a23bd92854276a8f9a419",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-29T15:19:08.000Z",
+  "lastActivityDate": "2020-04-29T15:19:08.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "vimeo",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/vimeo/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/vimeo/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/vimeo/vimeo-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "mattleff"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

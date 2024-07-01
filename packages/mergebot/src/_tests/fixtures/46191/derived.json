@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2020-07-20T22:17:53.067Z",
+  "pr_number": 46191,
+  "author": "jordanoverbye",
+  "headCommitOid": "3cc81dbde57a1b0eda6f69f539fa49b8d420adff",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-20T06:54:57.000Z",
+  "lastActivityDate": "2020-07-20T07:08:31.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "apollo-upload-client",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/apollo-upload-client/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/apollo-upload-client/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/apollo-upload-client/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "Slessi"
+      ],
+      "addedOwners": [
+        "jordanoverbye"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3cc81dbde57a1b0eda6f69f539fa49b8d420adff/checks?check_suite_id=938074936"
+}

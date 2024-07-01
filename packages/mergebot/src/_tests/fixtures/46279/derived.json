@@ -1,0 +1,36 @@
+{
+  "type": "info",
+  "now": "2020-07-23T18:40:42.000Z",
+  "pr_number": 46279,
+  "author": "pzingg",
+  "headCommitOid": "80322389c71c13e0fca466b744b35b742a3ee161",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-23T01:03:50.000Z",
+  "lastActivityDate": "2020-07-23T18:40:41.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "phoenix_live_view",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/phoenix_live_view/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "pzingg"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

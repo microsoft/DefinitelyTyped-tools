@@ -1,0 +1,58 @@
+{
+  "type": "info",
+  "now": "2021-09-09T18:47:06.228Z",
+  "pr_number": 55035,
+  "author": "shoopapa",
+  "headCommitOid": "7eca0aa421c535497e59aa231b955ea2b47712e4",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-08-10T17:10:15.000Z",
+  "lastActivityDate": "2021-08-16T10:04:47.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "jsreport-core",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/jsreport-core/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "taoqf",
+        "pofider",
+        "newbish"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "pofider",
+      "date": "2021-08-16T10:04:47.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "newbish",
+      "date": "2021-08-13T18:40:30.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "kkikta-bcg",
+      "date": "2021-08-13T18:37:59.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 895367213,
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/7eca0aa421c535497e59aa231b955ea2b47712e4/checks?check_suite_id=3460073804"
+}

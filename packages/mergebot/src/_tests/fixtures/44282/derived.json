@@ -1,0 +1,39 @@
+{
+  "type": "info",
+  "now": "2020-04-28T04:46:24.000Z",
+  "pr_number": 44282,
+  "author": "fishcharlie",
+  "headCommitOid": "25794304acf8c1fd70712bd068beb07b0e09755e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-04-27T23:58:24.000Z",
+  "lastActivityDate": "2020-04-28T00:29:59.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "benchmark",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/benchmark/benchmark-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/benchmark/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "fishcharlie"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

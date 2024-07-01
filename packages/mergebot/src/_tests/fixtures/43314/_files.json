@@ -1,0 +1,3 @@
+{
+  "432f23fe1b87b12fe58bb1a8958f77ee3242741e:types/carbon__icon-helpers/index.d.ts": "// Type definitions for @carbon/icon-helpers 10.6\n// Project: https://github.com/carbon-design-system/carbon/blob/master/packages/icon-helpers\n// Definitions by: Eric Liu <https://github.com/metonym>\n// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped\n// TypeScript Version: 3.8\n\nexport interface Path {\n    elem: 'path';\n    attrs: { d: string };\n}"
+}

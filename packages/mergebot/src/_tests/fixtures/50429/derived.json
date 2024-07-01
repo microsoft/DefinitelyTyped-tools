@@ -1,0 +1,59 @@
+{
+  "type": "info",
+  "now": "2021-01-06T22:31:53.940Z",
+  "pr_number": 50429,
+  "author": "SaltyAom",
+  "headCommitOid": "8454d0853c273f9a20b08bd68cfd5c6b4f70c018",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-01-06T12:58:19.000Z",
+  "lastActivityDate": "2021-01-06T22:00:43.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "omise-js",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/omise-js/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/omise-js/lib/omise.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/omise-js/lib/omiseCard.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/omise-js/lib/utils.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/omise-js/omise-js-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/omise-js/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/omise-js/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778052567"
+}

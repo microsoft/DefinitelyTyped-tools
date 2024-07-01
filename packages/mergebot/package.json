@@ -1,0 +1,79 @@
+{
+  "name": "@definitelytyped/mergebot",
+  "private": true,
+  "version": "0.1.12",
+  "description": "The bot that manages DefinitelyTyped PRs.",
+  "author": "DT Maintainers",
+  "homepage": "https://github.com/microsoft/definitelytyped-tools#readme",
+  "main": "dist/functions/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/definitelytyped-tools.git",
+    "directory": "packages/mergebot"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/definitelytyped-tools/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.10.3",
+    "@azure/functions": "^4.4.0",
+    "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
+    "@definitelytyped/utils": "workspace:*",
+    "@octokit/webhooks-methods": "^4.1.0",
+    "dayjs": "^1.11.11",
+    "fast-json-patch": "^3.1.1",
+    "graphql": "15.8.0",
+    "prettyjson": "^1.2.5",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@octokit/graphql-schema": "^14.58.0",
+    "@octokit/webhooks-types": "^7.5.1",
+    "@types/node": "^18.19.33",
+    "@types/prettyjson": "^0.0.33",
+    "@types/yargs": "^17.0.32",
+    "apollo": "^2.34.0",
+    "azure-functions-core-tools": "^4.0.5700",
+    "esbuild": "^0.21.5",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "jest-file-snapshot": "^0.5.0",
+    "knip": "^5.15.1",
+    "rimraf": "^5.0.7",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5"
+  },
+  "overrides": {
+    "apollo": {
+      "graphql": "15.8.0"
+    },
+    "apollo-language-server": {
+      "graphql": "15.8.0"
+    }
+  },
+  "scripts": {
+    "prestart": "pnpm run build",
+    "prepublishOnly": "pnpm run build",
+    "build": "tsc",
+    "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
+    "watch": "tsc --watch",
+    "graphql-schema": "apollo client:codegen schema --target typescript --globalTypesFile=src/queries/schema/graphql-global-types.ts",
+    "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
+    "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
+    "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
+    "start": "func start",
+    "lint": "eslint --report-unused-disable-directives . --ext .ts",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
+  }
+}

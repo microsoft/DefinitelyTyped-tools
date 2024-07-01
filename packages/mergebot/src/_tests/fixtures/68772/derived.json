@@ -1,0 +1,60 @@
+{
+  "type": "info",
+  "now": "2024-02-26T21:10:54.627Z",
+  "pr_number": 68772,
+  "author": "jakebailey",
+  "headCommitOid": "3f76a3a2d73f3fe577d32ca07c73c79016707328",
+  "mergeBaseOid": "dd92afb5a03c591944601de73a58bf49bb31e1dc",
+  "lastPushDate": "2024-02-26T21:09:25.000Z",
+  "lastActivityDate": "2024-02-26T21:09:25.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "relationship.js",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/relationship.js/dist/relationship-mode.min.d.mts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/relationship.js/dist/relationship-mode.min.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/relationship.js/dist/relationship.min.d.mts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/relationship.js/dist/relationship.min.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/relationship.js/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/relationship.js/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/relationship.js/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "whinc"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 1965284350,
+  "ciResult": "unknown"
+}

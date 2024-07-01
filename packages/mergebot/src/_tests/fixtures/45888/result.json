@@ -1,0 +1,24 @@
+{
+  "projectColumn": "Waiting for Code Reviews",
+  "labels": [
+    "Other Approved",
+    "Untested Change"
+  ],
+  "responseComments": [
+    {
+      "tag": "suggest-testing",
+      "status": "Hey @gstvds,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***"
+    },
+    {
+      "tag": "welcome",
+      "status": "@gstvds Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `mailgun-js` — [on npm](https://www.npmjs.com/package/mailgun-js), [on unpkg](https://unpkg.com/browse/mailgun-js@latest/)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45888&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by type definition owners or DT maintainers\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @sampsonjoliver @andipaetzold @JiriBalcar @CodeLenny — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45888/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

@@ -1,0 +1,339 @@
+{
+  "type": "info",
+  "now": "2020-05-12T19:14:42.000Z",
+  "pr_number": 38979,
+  "author": "ExE-Boss",
+  "headCommitOid": "222334139e52fc16369464cfb5dc95c82f71192f",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-01-03T21:02:41.000Z",
+  "lastActivityDate": "2020-05-12T15:13:19.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "es-abstract",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/es-abstract/GetIntrinsic.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es2015.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es2016.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es2017.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es2018.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es2019.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es5.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es6.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/es7.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/assertRecord.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/assign.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/callBind.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/callBound.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/every.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/forEach.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/getInferredName.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/getIteratorMethod.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/getProto.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/getSymbolDescription.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isFinite.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isNaN.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isPrefixOf.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isPrimitive.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isPropertyDescriptor.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/isSamePropertyDescriptor.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/maxSafeInteger.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/mod.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/regexTester.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/setProto.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/helpers/sign.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/operations/2015.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/operations/2016.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/operations/2017.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/operations/2018.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/operations/2019.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/es-abstract/test/GetIntrinsic.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es2015.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es2016.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es2017.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es2018.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es2019.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/es5.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/assertRecord.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/assign.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/callBind.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/callBound.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/every.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/forEach.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/getInferredName.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/getIteratorMethod.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/getProto.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/getSymbolDescription.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isFinite.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isNaN.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isPrefixOf.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isPrimitive.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isPropertyDescriptor.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/isSamePropertyDescriptor.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/maxSafeInteger.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/mod.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/regexTester.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/setProto.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/helpers/sign.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/index.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/operations/2015.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/operations/2016.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/operations/2017.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/operations/2018.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/test/operations/2019.test.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/es-abstract/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/es-abstract/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [
+        "RReverser"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "ljharb",
+      "date": "2020-05-12T04:51:52.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "stale",
+      "reviewer": "sandersn",
+      "date": "2019-10-22T22:56:09.000Z",
+      "abbrOid": "3aba5ac"
+    },
+    {
+      "type": "stale",
+      "reviewer": "weswigham",
+      "date": "2019-10-22T22:20:55.000Z",
+      "abbrOid": "0e6e7f4"
+    }
+  ],
+  "ciResult": "pass"
+}

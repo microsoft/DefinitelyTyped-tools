@@ -1,0 +1,75 @@
+{
+  "type": "info",
+  "now": "2020-05-30T16:28:19.013Z",
+  "pr_number": 44989,
+  "author": "petr-motejlek",
+  "headCommitOid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-05-23T08:41:39.000Z",
+  "lastActivityDate": "2020-05-23T10:05:48.000Z",
+  "mergeOfferDate": "2020-05-23T10:05:30.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "ramda",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ramda/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/ramda/test/paths-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "TheHandsomeCoder",
+        "donnut",
+        "mdekrey",
+        "sbking",
+        "afharo",
+        "teves-castro",
+        "1M0reBug",
+        "hojberg",
+        "samsonkeung",
+        "angeloocana",
+        "raynerd",
+        "moshensky",
+        "ethanresnick",
+        "deftomat",
+        "blimusiek",
+        "biern",
+        "rayhaneh",
+        "rgm",
+        "drewwyatt",
+        "jottenlips",
+        "minitesh",
+        "krantisinh",
+        "pirix-gh",
+        "brekk",
+        "nemo108",
+        "jituanlin",
+        "Philippe-mills",
+        "Saul-Mirone",
+        "Nicholaiii"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "Nicholaiii",
+      "date": "2020-05-23T10:05:48.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

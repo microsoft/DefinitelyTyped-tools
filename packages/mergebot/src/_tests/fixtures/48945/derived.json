@@ -1,0 +1,55 @@
+{
+  "type": "info",
+  "now": "2020-11-12T20:09:30.051Z",
+  "pr_number": 48945,
+  "author": "google-api-typings-generator",
+  "headCommitOid": "759b4cb2339ff12a22c8101f143a7a68ed535c70",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-10-20T11:30:40.000Z",
+  "lastActivityDate": "2020-11-03T02:30:59.000Z",
+  "mergeOfferDate": "2020-10-20T11:35:45.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "gapi.client.calendar",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/gapi.client.calendar/gapi.client.calendar-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/gapi.client.calendar/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "Maxim-Mazurok",
+        "google-api-typings-generator",
+        "namoscato",
+        "declanvong"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "RyanCavanaugh",
+      "date": "2020-11-02T16:19:48.000Z"
+    },
+    {
+      "type": "approved",
+      "reviewer": "Maxim-Mazurok",
+      "date": "2020-10-20T11:30:36.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

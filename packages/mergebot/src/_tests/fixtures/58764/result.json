@@ -1,0 +1,22 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Critical package",
+    "Edits Owners",
+    "Edits multiple packages",
+    "Untested Change"
+  ],
+  "responseComments": [
+    {
+      "tag": "suggest-testing",
+      "status": "Hey @github-actions,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***"
+    },
+    {
+      "tag": "welcome",
+      "status": "@github-actions Thank you for submitting this PR!From one bot to another, beep bloop boople bloop.\n\n***This is a live comment that I will keep updated.***\n\n## 9 packages in this PR\n\n* `bootstrap.v3.datetimepicker` — [on npm](https://www.npmjs.com/package/bootstrap.v3.datetimepicker), [on unpkg](https://unpkg.com/browse/bootstrap.v3.datetimepicker@latest/)\n* `mithril-global` — [on npm](https://www.npmjs.com/package/mithril-global), [on unpkg](https://unpkg.com/browse/mithril-global@latest/)\n  - 1 removed owner: @isiahmeadows\n* `mithril` — [on npm](https://www.npmjs.com/package/mithril), [on unpkg](https://unpkg.com/browse/mithril@latest/)\n  - 1 removed owner: @isiahmeadows\n* `ospec` — [on npm](https://www.npmjs.com/package/ospec), [on unpkg](https://unpkg.com/browse/ospec@latest/)\n  - 1 removed owner: @isiahmeadows\n* `react-grid-layout` — [on npm](https://www.npmjs.com/package/react-grid-layout), [on unpkg](https://unpkg.com/browse/react-grid-layout@latest/)\n  - 1 removed owner: @catusmagnus\n* `react-native-fbsdk` — [on npm](https://www.npmjs.com/package/react-native-fbsdk), [on unpkg](https://unpkg.com/browse/react-native-fbsdk@latest/)\n  - 1 removed owner: @UHKim\n* `react-virtualized` — [on npm](https://www.npmjs.com/package/react-virtualized), [on unpkg](https://unpkg.com/browse/react-virtualized@latest/)\n  - owner-approval: @kaoDev\n  - 1 removed owner: @mgoszcz2\n* `ssh2-sftp-client` — [on npm](https://www.npmjs.com/package/ssh2-sftp-client), [on unpkg](https://unpkg.com/browse/ssh2-sftp-client@latest/)\n  - 1 removed owner: @sgalizia\n* `styled-components` — [on npm](https://www.npmjs.com/package/styled-components), [on unpkg](https://unpkg.com/browse/styled-components@latest/)\n  - 1 removed owner: @mgoszcz2\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=58764&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❓ Continuous integration tests have gone missing\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

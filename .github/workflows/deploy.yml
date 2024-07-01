@@ -1,0 +1,83 @@
+name: Deploy mergebot to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  RESOURCE_GROUP_NAME: dtmergebot3
+  FUNCTION_APP_NAME: dtmergebot3
+  STORAGE_ACCOUNT_NAME: dtmergebot3b1b7
+  STORAGE_CONTAINER_NAME: deployment
+  FUNCTION_ZIP_NAME: function.zip
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+
+      - name: Install and test
+        run: |
+          pnpm install
+          pnpm run --if-present build
+          pnpm run --if-present test
+      - name: Bundle
+        working-directory: packages/mergebot
+        run: pnpm run bundle
+
+      - name: Check bundle
+        run: BOT_AUTH_TOKEN=secret node packages/mergebot/dist/functions/index.js
+
+      - name: Create zip
+        working-directory: packages/mergebot
+        run: zip -r ${{ env.GITHUB_WORKSPACE }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: node-app
+          path: ${{ env.FUNCTION_ZIP_NAME }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+        with:
+          name: node-app
+
+      - uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a # v2.1.1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  
+      - name: Upload blob
+        run: az storage blob upload -f ${{ env.FUNCTION_ZIP_NAME }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} -c ${{ env.STORAGE_CONTAINER_NAME }} -n ${{ env.FUNCTION_ZIP_NAME }} --overwrite true --auth-mode login
+
+      # - name: Set package path
+      #   run: az functionapp config appsettings set -g ${{ env.RESOURCE_GROUP_NAME }} -n ${{ env.FUNCTION_APP_NAME }} --settings WEBSITE_RUN_FROM_PACKAGE="https://${{ env.STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/${{ env.STORAGE_CONTAINER_NAME }}/${{ env.FUNCTION_ZIP_NAME }}"
+
+      - name: Restart app
+        run: az functionapp restart -g ${{ env.RESOURCE_GROUP_NAME }} -n ${{ env.FUNCTION_APP_NAME }}

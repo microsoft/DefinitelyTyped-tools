@@ -1,0 +1,277 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0Mzg5NzQ2Mjcx",
+        "title": "Add function getAutoLockDelay to chrome.idle",
+        "lastEditedAt": null,
+        "author": {
+          "login": "ankhler",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-03-17T10:20:28Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Awaiting reviewer feedback",
+              "__typename": "Label"
+            },
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "mergeable": "MERGEABLE",
+        "number": 43175,
+        "state": "OPEN",
+        "headRefOid": "b4b3bc8a617e2e0810d60e389415818d903e6362",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "767a7507319a934b05f285f80b780abaa5273537",
+                "__typename": "Commit"
+              }
+            },
+            {
+              "__typename": "IssueComment"
+            },
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "login": "couven92",
+                "__typename": "User"
+              },
+              "state": "COMMENTED"
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "oid": "b4b3bc8a617e2e0810d60e389415818d903e6362",
+                "__typename": "Commit"
+              }
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "couven92",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "767a7507319a934b05f285f80b780abaa5273537",
+                "abbreviatedOid": "767a750",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-03-17T13:29:17Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43175#pullrequestreview-376024679",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            },
+            {
+              "author": {
+                "login": "ankhler",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b4b3bc8a617e2e0810d60e389415818d903e6362",
+                "abbreviatedOid": "b4b3bc8",
+                "__typename": "Commit"
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2020-03-17T13:54:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43175#pullrequestreview-376054940",
+              "__typename": "PullRequestReview",
+              "comments": {
+                "nodes": []
+              }
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/767a7507319a934b05f285f80b780abaa5273537/checks?check_suite_id=526679606",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/767a7507319a934b05f285f80b780abaa5273537/checks?check_suite_id=526679606",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/663437102?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-17T10:17:24Z",
+                "committedDate": "2020-03-17T10:17:24Z",
+                "pushedDate": "2020-03-17T10:17:28Z",
+                "abbreviatedOid": "767a750",
+                "oid": "767a7507319a934b05f285f80b780abaa5273537",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b4b3bc8a617e2e0810d60e389415818d903e6362/checks?check_suite_id=527143042",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b4b3bc8a617e2e0810d60e389415818d903e6362/checks?check_suite_id=527143042",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "borisyankov",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/663511348?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-03-17T13:51:00Z",
+                "committedDate": "2020-03-17T13:51:00Z",
+                "pushedDate": "2020-03-17T13:51:37Z",
+                "abbreviatedOid": "b4b3bc8",
+                "oid": "b4b3bc8a617e2e0810d60e389415818d903e6362",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDU5OTk5MTc2Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!--header {\"slug\":\"welcome\"} headerend-->\r\n@ankhler Thank you for submitting this PR!\n\n🔔 @matthewkimber @otiai10 @couven92 @rreverser @sreimer15 @MatCarlson @ekinsol @tregagnon @echoabstract @spasma — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/43175/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n\nIf no reviewer appears after a week, a DefinitelyTyped maintainer will review the PR instead.\r\n<!--footer bot @ 3/17/2020, 7:22:36 AM footerend-->",
+              "createdAt": "2020-03-17T10:22:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/chrome/index.d.ts",
+              "additions": 7,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 1
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzQ3MDIzNTk=",
+              "project": {
+                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
+                "number": 4,
+                "name": "Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU3",
+                "name": "Waiting for Reviewers",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

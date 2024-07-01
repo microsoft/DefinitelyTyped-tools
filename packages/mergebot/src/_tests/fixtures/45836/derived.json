@@ -1,0 +1,74 @@
+{
+  "type": "info",
+  "now": "2020-07-08T18:57:14.868Z",
+  "pr_number": 45836,
+  "author": "mmorearty",
+  "headCommitOid": "6c7735e2b8f39640cb73e40ae04cb6642a8ab2cd",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-01T23:06:38.000Z",
+  "lastActivityDate": "2020-07-08T18:13:23.000Z",
+  "mergeOfferDate": "2020-04-30T01:31:41.000Z",
+  "mergeRequestDate": "2020-07-08T17:47:50.000Z",
+  "mergeRequestUser": "mmorearty",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "prosemirror-commands",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/prosemirror-commands/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/prosemirror-commands/prosemirror-commands-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "bradleyayers",
+        "davidka",
+        "timjb",
+        "patsimm"
+      ],
+      "addedOwners": [
+        "mmorearty"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "prosemirror-keymap",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/prosemirror-keymap/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "bradleyayers",
+        "davidka",
+        "timjb",
+        "patsimm",
+        "mmorearty"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "timjb",
+      "date": "2020-07-03T22:31:28.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

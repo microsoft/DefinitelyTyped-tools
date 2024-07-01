@@ -1,0 +1,348 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDY4MzYwMDAy",
+        "title": "react-d3-graph - updated Node's size property to reflect latest version @2.5.0",
+        "createdAt": "2020-08-15T20:09:00Z",
+        "author": {
+          "login": "ETHANTALJAFFE",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Unmerged",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 46804,
+        "state": "OPEN",
+        "headRefOid": "3e3524f41de19cd97d5c32a531eab3f0e9206f75",
+        "changedFiles": 1,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:09:34Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:09:35Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:12:38Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:17:51Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:17:52Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:20:07Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-15T20:33:22Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-25T04:15:43Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-08-25T19:30:37Z",
+              "projectColumnName": "Waiting for Code Reviews"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/8b66295fb6d0709c8ea8ac9e6ee5485cdb78644f/checks?check_suite_id=1055182673",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8b66295fb6d0709c8ea8ac9e6ee5485cdb78644f/checks?check_suite_id=1055182673",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "CANCELLED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/8b66295fb6d0709c8ea8ac9e6ee5485cdb78644f/checks?check_suite_id=1055183310",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8b66295fb6d0709c8ea8ac9e6ee5485cdb78644f/checks?check_suite_id=1055183310",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-15T20:00:06Z",
+                "committedDate": "2020-08-15T20:00:06Z",
+                "pushedDate": "2020-08-15T20:00:13Z",
+                "abbreviatedOid": "8b66295",
+                "oid": "8b66295fb6d0709c8ea8ac9e6ee5485cdb78644f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a93e218e6409152a0965829498c92e163df74a6a/checks?check_suite_id=1055192549",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a93e218e6409152a0965829498c92e163df74a6a/checks?check_suite_id=1055192549",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/a93e218e6409152a0965829498c92e163df74a6a/checks?check_suite_id=1055193003",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a93e218e6409152a0965829498c92e163df74a6a/checks?check_suite_id=1055193003",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-15T20:14:07Z",
+                "committedDate": "2020-08-15T20:14:07Z",
+                "pushedDate": "2020-08-15T20:14:17Z",
+                "abbreviatedOid": "a93e218",
+                "oid": "a93e218e6409152a0965829498c92e163df74a6a",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3e3524f41de19cd97d5c32a531eab3f0e9206f75/checks?check_suite_id=1055217050",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3e3524f41de19cd97d5c32a531eab3f0e9206f75/checks?check_suite_id=1055217050",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/3e3524f41de19cd97d5c32a531eab3f0e9206f75/checks?check_suite_id=1055217408",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/3e3524f41de19cd97d5c32a531eab3f0e9206f75/checks?check_suite_id=1055217408",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-15T20:29:37Z",
+                "committedDate": "2020-08-15T20:29:37Z",
+                "pushedDate": "2020-08-15T20:29:40Z",
+                "abbreviatedOid": "3e3524f",
+                "oid": "3e3524f41de19cd97d5c32a531eab3f0e9206f75",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NDQ0MjM1MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ETHANTALJAFFE Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\nThis PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Have you considered [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing) to cover the change you're making? Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n## 1 package in this PR\n\n- `react-d3-graph` [on npm](https://www.npmjs.com/package/react-d3-graph), [on unpkg](https://unpkg.com/browse/react-d3-graph@latest)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#testing)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 9 days — waiting for a DT maintainer!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-08-15T20:09:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NDQ0MjM1Mg==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @hrngoode @adina-todoran @BreadAndRoses95 — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/46804/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-08-15T20:09:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NDQ0MzE1Ng==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@ETHANTALJAFFE The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/a93e218e6409152a0965829498c92e163df74a6a/checks?check_suite_id=1055192549).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-a93e218-->",
+              "createdAt": "2020-08-15T20:17:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY3NDQ0MzM3Mw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-08-15T20:20:06.286Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                            | #46804                                                                                                                                          | diff   |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                                   |                                                                                                                                                 |        |\n| Memory usage (MiB)                                                                        | 73.5                                                                                                                                              | 80.8                                                                                                                                            | +9.9%  |\n| Type count                                                                                | 17246                                                                                                                                             | 17250                                                                                                                                           | 0%     |\n| Assignability cache size                                                                  | 2948                                                                                                                                              | 2948                                                                                                                                            | 0%     |\n|                                                                                           |                                                                                                                                                   |                                                                                                                                                 |        |\n| **Language service**                                                                      |                                                                                                                                                   |                                                                                                                                                 |        |\n| Samples taken                                                                             | 32                                                                                                                                                | 32                                                                                                                                              | 0%     |\n| Identifiers in tests                                                                      | 32                                                                                                                                                | 32                                                                                                                                              | 0%     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                   |                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 297.1                                                                                                                                             | 296.8                                                                                                                                           | -0.1%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 15.4%                                                                                                                                             | 14.3%                                                                                                                                           |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 347.6                                                                                                                                             | 375.7                                                                                                                                           | +8.1%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [data](/DefinitelyTyped/DefinitelyTyped/blob/867ab9307d482e06745a2b328ad09b11e74579c4/types/react-d3-graph/react-d3-graph-tests.tsx#L11)          | [name](/DefinitelyTyped/DefinitelyTyped/blob/a1ee0f2d527536b08d881514d56a2fdff5eb8569/types/react-d3-graph/react-d3-graph-tests.tsx#L20)        |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                   |                                                                                                                                                 |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 280.7                                                                                                                                             | 284.1                                                                                                                                           | +1.2%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 13.4%                                                                                                                                             | 16.2%                                                                                                                                           | +20.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 360.7                                                                                                                                             | 343.7                                                                                                                                           | -4.7%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [labelProperty](/DefinitelyTyped/DefinitelyTyped/blob/867ab9307d482e06745a2b328ad09b11e74579c4/types/react-d3-graph/react-d3-graph-tests.tsx#L20) | [onClickGraph](/DefinitelyTyped/DefinitelyTyped/blob/a1ee0f2d527536b08d881514d56a2fdff5eb8569/types/react-d3-graph/react-d3-graph-tests.tsx#L9) |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-08-15T20:20:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/react-d3-graph/index.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 1
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDM3MTk3MDM=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+                "name": "Waiting for Code Reviews",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

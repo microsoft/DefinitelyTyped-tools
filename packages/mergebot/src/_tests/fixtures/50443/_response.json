@@ -1,0 +1,869 @@
+{
+  "data": {
+    "repository": {
+      "__typename": "Repository",
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "__typename": "PullRequest",
+        "id": "MDExOlB1bGxSZXF1ZXN0NTUwNjA3Mzgw",
+        "title": "Types for reefjs",
+        "createdAt": "2021-01-06T18:43:31Z",
+        "author": {
+          "__typename": "User",
+          "login": "shockdevv"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "__typename": "Ref",
+          "name": "master"
+        },
+        "labels": {
+          "__typename": "LabelConnection",
+          "nodes": [
+            {
+              "__typename": "Label",
+              "name": "Check Config"
+            },
+            {
+              "__typename": "Label",
+              "name": "Maintainer Approved"
+            },
+            {
+              "__typename": "Label",
+              "name": "New Definition"
+            },
+            {
+              "__typename": "Label",
+              "name": "Self Merge"
+            }
+          ]
+        },
+        "isDraft": false,
+        "mergeable": "UNKNOWN",
+        "number": 50443,
+        "state": "OPEN",
+        "headRefOid": "130c0882b07fc556c9690dac5f5ac231905c0636",
+        "changedFiles": 4,
+        "commitIds": {},
+        "timelineItems": {
+          "__typename": "PullRequestTimelineItemsConnection",
+          "nodes": [
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T18:45:44Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T20:21:15Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T21:31:16Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T21:43:18Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T21:49:04Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-07T20:34:51Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-07T21:15:27Z"
+            }
+          ]
+        },
+        "reviews": {
+          "__typename": "PullRequestReviewConnection",
+          "nodes": [
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "__typename": "User",
+                "login": "danger-public"
+              },
+              "commit": {
+                "__typename": "Commit",
+                "oid": "130c0882b07fc556c9690dac5f5ac231905c0636"
+              },
+              "comments": {
+                "__typename": "PullRequestReviewCommentConnection",
+                "nodes": [
+                  {
+                    "__typename": "PullRequestReviewComment",
+                    "author": {
+                      "__typename": "User",
+                      "login": "danger-public"
+                    },
+                    "createdAt": "2021-01-06T21:48:24Z"
+                  }
+                ]
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2021-01-06T21:48:24Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50443#pullrequestreview-563057860"
+            },
+            {
+              "__typename": "PullRequestReview",
+              "author": {
+                "__typename": "User",
+                "login": "andrewbranch"
+              },
+              "commit": {
+                "__typename": "Commit",
+                "oid": "130c0882b07fc556c9690dac5f5ac231905c0636"
+              },
+              "comments": {
+                "__typename": "PullRequestReviewCommentConnection",
+                "nodes": []
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2021-01-07T20:34:13Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50443#pullrequestreview-563806940"
+            }
+          ]
+        },
+        "commits": {
+          "__typename": "PullRequestCommitConnection",
+          "totalCount": 8,
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780201839",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780201839",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "build"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780202074",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780202074",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780203199",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/89846dab5857b86dbac49686645b3731591012f8/checks?check_suite_id=1780203199",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81681 succeeded"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T18:31:19Z",
+                "committedDate": "2021-01-06T18:31:19Z",
+                "pushedDate": null,
+                "oid": "89846dab5857b86dbac49686645b3731591012f8"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9852541a17c0d889df8a0d40db83fc76a3d021fb/checks?check_suite_id=1780710482",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9852541a17c0d889df8a0d40db83fc76a3d021fb/checks?check_suite_id=1780710482",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9852541a17c0d889df8a0d40db83fc76a3d021fb/checks?check_suite_id=1780711722",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9852541a17c0d889df8a0d40db83fc76a3d021fb/checks?check_suite_id=1780711722",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81698 succeeded"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T20:12:35Z",
+                "committedDate": "2021-01-06T20:13:24Z",
+                "pushedDate": null,
+                "oid": "9852541a17c0d889df8a0d40db83fc76a3d021fb"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b9eaf96a673b37d40fcd4455279d74b5ae94db5b/checks?check_suite_id=1780862531",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b9eaf96a673b37d40fcd4455279d74b5ae94db5b/checks?check_suite_id=1780862531",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b9eaf96a673b37d40fcd4455279d74b5ae94db5b/checks?check_suite_id=1780863201",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b9eaf96a673b37d40fcd4455279d74b5ae94db5b/checks?check_suite_id=1780863201",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81712 succeeded"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T20:45:08Z",
+                "committedDate": "2021-01-06T20:45:08Z",
+                "pushedDate": null,
+                "oid": "b9eaf96a673b37d40fcd4455279d74b5ae94db5b"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/017c45ea763284cabca7adff5f28df9198f8db23/checks?check_suite_id=1781009035",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/017c45ea763284cabca7adff5f28df9198f8db23/checks?check_suite_id=1781009035",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/017c45ea763284cabca7adff5f28df9198f8db23/checks?check_suite_id=1781010012",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/017c45ea763284cabca7adff5f28df9198f8db23/checks?check_suite_id=1781010012",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81715 succeeded"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T21:13:46Z",
+                "committedDate": "2021-01-06T21:13:46Z",
+                "pushedDate": null,
+                "oid": "017c45ea763284cabca7adff5f28df9198f8db23"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781061388",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781061388",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": null
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781062049",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781062049",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81717 succeeded"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781083415",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/16342d605be28ff4d836c1fc5417358900db8e24/checks?check_suite_id=1781083415",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "build"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T21:25:56Z",
+                "committedDate": "2021-01-06T21:25:56Z",
+                "pushedDate": null,
+                "oid": "16342d605be28ff4d836c1fc5417358900db8e24"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": []
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T21:37:01Z",
+                "committedDate": "2021-01-06T21:37:01Z",
+                "pushedDate": null,
+                "oid": "4f58564cff6399f1a9e7585f4265467cc335399f"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/46e731c05339fa78ee3349804cb403096e024de6/checks?check_suite_id=1781122312",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/46e731c05339fa78ee3349804cb403096e024de6/checks?check_suite_id=1781122312",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/46e731c05339fa78ee3349804cb403096e024de6/checks?check_suite_id=1781123060",
+                      "status": "QUEUED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/46e731c05339fa78ee3349804cb403096e024de6/checks?check_suite_id=1781123060",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": null
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T21:37:43Z",
+                "committedDate": "2021-01-06T21:37:43Z",
+                "pushedDate": null,
+                "oid": "46e731c05339fa78ee3349804cb403096e024de6"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781151391",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781151391",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": null
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781152035",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781152035",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81721 succeeded"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781171203",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1781171203",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "build"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1787984852",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/130c0882b07fc556c9690dac5f5ac231905c0636/checks?check_suite_id=1787984852",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "build"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T21:43:41Z",
+                "committedDate": "2021-01-06T21:43:41Z",
+                "pushedDate": null,
+                "oid": "130c0882b07fc556c9690dac5f5ac231905c0636"
+              }
+            }
+          ]
+        },
+        "comments": {
+          "__typename": "IssueCommentConnection",
+          "totalCount": 11,
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTUwMTE4Nw==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `reefjs` (*new!*) [on npm](https://www.npmjs.com/package/reefjs), [on unpkg](https://unpkg.com/browse/reefjs@latest/)\n  - 2 added owners: ✎@shockdevv, @cferdinandi\n  - Config files to check:\n    - [`reefjs/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50443/files/130c0882b07fc556c9690dac5f5ac231905c0636#diff-f2ab97c7d5c9144a70d65c5b96aaeecff962b1a2ab0d774091917da217073e16): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Only a DT maintainer can approve changes when there are new packages added\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-01-06T18:44:08Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTUwMTIxMQ==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "🔔 @shockdevv — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50443/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2021-01-06T18:44:09Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTUxMDU3Mw==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"benchmarks\":[{\"createdAt\":\"2021-01-06T18:51:29.894Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\nThese typings are for a package that doesn’t yet exist on master, so I don’t have anything to compare against yet! In the future, I’ll be able to compare PRs to reefjs with its source on master.\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n| **Batch compilation**                                                                     |                                                                                                                               |\n| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |\n| Type count                                                                                | 10524                                                                                                                         |\n| Assignability cache size                                                                  | 3672                                                                                                                          |\n|                                                                                           |                                                                                                                               |\n| **Language service measurements**                                                         |                                                                                                                               |\n| Samples taken                                                                             | 103                                                                                                                           |\n| Identifiers in tests                                                                      | 103                                                                                                                           |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 376.7                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 10.2%                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 511.3                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [copyOfData](/DefinitelyTyped/DefinitelyTyped/blob/5206c7741f50f4dcb979e0ea8870d0ac559fa56d/types/reefjs/reefjs-tests.ts#L62) |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                               |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 391.3                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.9%                                                                                                                          |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 502.2                                                                                                                         |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [clone](/DefinitelyTyped/DefinitelyTyped/blob/5206c7741f50f4dcb979e0ea8870d0ac559fa56d/types/reefjs/reefjs-tests.ts#L61)      |\n|                                                                                           |                                                                                                                               |\n| **System information**                                                                    |                                                                                                                               |\n| Node version                                                                              | v14.15.1                                                                                                                      |\n| CPU count                                                                                 | 2                                                                                                                             |\n| CPU speed                                                                                 | 2.294 GHz                                                                                                                     |\n| CPU model                                                                                 | Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz                                                                                     |\n| CPU Architecture                                                                          | x64                                                                                                                           |\n| Memory                                                                                    | 6.8 GiB                                                                                                                       |\n| Platform                                                                                  | linux                                                                                                                         |\n| Release                                                                                   | 4.15.0-1100-azure                                                                                                             |\n\n\n</details>\n",
+              "createdAt": "2021-01-06T18:51:30Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTYzNDY2NA==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9852541a17c0d889df8a0d40db83fc76a3d021fb/checks?check_suite_id=1780710482).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-9852541-->",
+              "createdAt": "2021-01-06T20:21:17Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTY3NjE1Nw==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b9eaf96a673b37d40fcd4455279d74b5ae94db5b/checks?check_suite_id=1780862531).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-b9eaf96-->",
+              "createdAt": "2021-01-06T20:51:13Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTcxNTQ3OA==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/017c45ea763284cabca7adff5f28df9198f8db23/checks?check_suite_id=1781009035).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-017c45e-->",
+              "createdAt": "2021-01-06T21:20:08Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTczMjE3Ng==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/46e731c05339fa78ee3349804cb403096e024de6/checks?check_suite_id=1781122312).\r\n\r\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n<!--typescript_bot_gh-actions-complaint-46e731c-->",
+              "createdAt": "2021-01-06T21:43:20Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NjI3NDEyNw==",
+              "author": {
+                "__typename": "User",
+                "login": "shockdevv"
+              },
+              "body": "What's wrong with my config file? It should be fine.",
+              "createdAt": "2021-01-07T17:50:09Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NjM2ODA4NA==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@shockdevv Everything looks good here. Great job! I am ready to merge this PR (at 130c088) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2021-01-07T20:34:53Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NjM4ODU2Nw==",
+              "author": {
+                "__typename": "User",
+                "login": "shockdevv"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2021-01-07T21:14:55Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NjM5MzAwMw==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "I just published [`@types/reefjs@7.6.0` to npm](https://www.npmjs.com/package/@types/reefjs).",
+              "createdAt": "2021-01-07T21:22:18Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            }
+          ]
+        },
+        "files": {
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 4,
+          "nodes": [
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/reefjs/index.d.ts",
+              "additions": 173,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/reefjs/reefjs-tests.ts",
+              "additions": 113,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/reefjs/tsconfig.json",
+              "additions": 24,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/reefjs/tslint.json",
+              "additions": 1,
+              "deletions": 0
+            }
+          ]
+        },
+        "projectCards": {
+          "__typename": "ProjectCardConnection",
+          "nodes": [
+            {
+              "__typename": "ProjectCard",
+              "id": "MDExOlByb2plY3RDYXJkNTIzMTg2ODk=",
+              "project": {
+                "__typename": "Project",
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board"
+              },
+              "column": {
+                "__typename": "ProjectColumn",
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI1",
+                "name": "Recently Merged"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

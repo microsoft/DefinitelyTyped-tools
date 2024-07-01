@@ -1,0 +1,77 @@
+{
+  "type": "info",
+  "now": "2020-12-11T17:35:36.572Z",
+  "pr_number": 49575,
+  "author": "jablko",
+  "headCommitOid": "cdd66f483bb0103f6e6d1eb7b07192ff95718f25",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-12-03T18:35:07.000Z",
+  "lastActivityDate": "2020-12-11T16:34:06.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.cn.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.es.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.ko.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.pt.md",
+          "kind": "infrastructure"
+        },
+        {
+          "path": "README.ru.md",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "amcasey",
+      "date": "2020-12-08T17:01:18.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "stale",
+      "reviewer": "elibarzilay",
+      "date": "2020-12-03T12:09:12.000Z",
+      "abbrOid": "90ff51a"
+    },
+    {
+      "type": "stale",
+      "reviewer": "sandersn",
+      "date": "2020-11-16T16:27:02.000Z",
+      "abbrOid": "6400f4c"
+    }
+  ],
+  "ciResult": "pass"
+}

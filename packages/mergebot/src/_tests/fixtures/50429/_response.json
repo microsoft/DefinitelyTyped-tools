@@ -1,0 +1,276 @@
+{
+  "data": {
+    "repository": {
+      "__typename": "Repository",
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "__typename": "PullRequest",
+        "id": "MDExOlB1bGxSZXF1ZXN0NTUwNDE0ODEz",
+        "title": "omise-js: Initial Types Support",
+        "createdAt": "2021-01-06T12:58:18Z",
+        "author": {
+          "__typename": "User",
+          "login": "SaltyAom"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "__typename": "Ref",
+          "name": "master"
+        },
+        "labels": {
+          "__typename": "LabelConnection",
+          "nodes": [
+            {
+              "__typename": "Label",
+              "name": "Check Config"
+            },
+            {
+              "__typename": "Label",
+              "name": "New Definition"
+            }
+          ]
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 50429,
+        "state": "OPEN",
+        "headRefOid": "8454d0853c273f9a20b08bd68cfd5c6b4f70c018",
+        "changedFiles": 7,
+        "commitIds": {},
+        "timelineItems": {
+          "__typename": "PullRequestTimelineItemsConnection",
+          "nodes": [
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "createdAt": "2021-01-06T13:00:38Z",
+              "projectColumnName": "Waiting for Code Reviews"
+            }
+          ]
+        },
+        "reviews": {
+          "__typename": "PullRequestReviewConnection",
+          "nodes": []
+        },
+        "commits": {
+          "__typename": "PullRequestCommitConnection",
+          "totalCount": 2,
+          "nodes": [
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": []
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T12:40:49Z",
+                "committedDate": "2021-01-06T12:40:49Z",
+                "pushedDate": "2021-01-06T12:41:06Z",
+                "oid": "73ccf075a42e7017c403b6dab552d2aff3c4bc56"
+              }
+            },
+            {
+              "__typename": "PullRequestCommit",
+              "commit": {
+                "__typename": "Commit",
+                "checkSuites": {
+                  "__typename": "CheckSuiteConnection",
+                  "nodes": [
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778052320",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778052320",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "build"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "GitHub Actions"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778052567",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778052567",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "test"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "__typename": "CheckSuite",
+                      "app": {
+                        "__typename": "App",
+                        "name": "Azure Pipelines"
+                      },
+                      "conclusion": "FAILURE",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778053747",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8454d0853c273f9a20b08bd68cfd5c6b4f70c018/checks?check_suite_id=1778053747",
+                      "checkRuns": {
+                        "__typename": "CheckRunConnection",
+                        "nodes": [
+                          {
+                            "__typename": "CheckRun",
+                            "title": "Build #81621 failed"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "status": null,
+                "authoredDate": "2021-01-06T12:57:32Z",
+                "committedDate": "2021-01-06T12:57:32Z",
+                "pushedDate": "2021-01-06T12:58:19Z",
+                "oid": "8454d0853c273f9a20b08bd68cfd5c6b4f70c018"
+              }
+            }
+          ]
+        },
+        "comments": {
+          "__typename": "IssueCommentConnection",
+          "totalCount": 3,
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTI4NDk3Mw==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "@SaltyAom Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n* `omise-js` (*new!*) [on npm](https://www.npmjs.com/package/omise-js), [on unpkg](https://unpkg.com/browse/omise-js@latest/)\n  - Config files to check:\n    - [`omise-js/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50429/files/8454d0853c273f9a20b08bd68cfd5c6b4f70c018#diff-651e0e95c5e0be3d22dccf8cb88166e0cfe629300ebbfc9882793cd008c0d109): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-tslintjson)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ❌ Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2021-01-06T12:58:54Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTI4NDk4Mg==",
+              "author": {
+                "__typename": "User",
+                "login": "typescript-bot"
+              },
+              "body": "🔔 @SaltyAom — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/50429/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2021-01-06T12:58:55Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            },
+            {
+              "__typename": "IssueComment",
+              "id": "MDEyOklzc3VlQ29tbWVudDc1NTczOTU1OQ==",
+              "author": {
+                "__typename": "User",
+                "login": "andrewbranch"
+              },
+              "body": "@typescript-bot try again",
+              "createdAt": "2021-01-06T22:00:43Z",
+              "reactions": {
+                "__typename": "ReactionConnection",
+                "nodes": []
+              }
+            }
+          ]
+        },
+        "files": {
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 7,
+          "nodes": [
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/index.d.ts",
+              "additions": 22,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/lib/omise.d.ts",
+              "additions": 116,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/lib/omiseCard.d.ts",
+              "additions": 74,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/lib/utils.d.ts",
+              "additions": 12,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/omise-js-tests.ts",
+              "additions": 1,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/tsconfig.json",
+              "additions": 22,
+              "deletions": 0
+            },
+            {
+              "__typename": "PullRequestChangedFile",
+              "path": "types/omise-js/tslint.json",
+              "additions": 8,
+              "deletions": 0
+            }
+          ]
+        },
+        "projectCards": {
+          "__typename": "ProjectCardConnection",
+          "nodes": [
+            {
+              "__typename": "ProjectCard",
+              "id": "MDExOlByb2plY3RDYXJkNTIyOTYzODM=",
+              "project": {
+                "__typename": "Project",
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board"
+              },
+              "column": {
+                "__typename": "ProjectColumn",
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

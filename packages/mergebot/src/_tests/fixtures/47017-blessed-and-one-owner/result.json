@@ -1,0 +1,16 @@
+{
+  "projectColumn": "Waiting for Code Reviews",
+  "labels": [
+    "Critical package",
+    "Edits multiple packages"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@mastermatt Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 2 packages in this PR\n\n* `express-serve-static-core` — [on npm](https://www.npmjs.com/package/express-serve-static-core), [on unpkg](https://unpkg.com/browse/express-serve-static-core@latest/)\n  - owner-approval: @dwrss\n* `express` — [on npm](https://www.npmjs.com/package/express), [on unpkg](https://unpkg.com/browse/express@latest/)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=47017&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 All owners or a DT maintainer needs to approve changes that affect more than one package\n   - ✅ express-serve-static-core\n   - 🕐 express\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

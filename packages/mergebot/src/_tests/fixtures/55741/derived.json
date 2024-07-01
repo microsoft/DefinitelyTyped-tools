@@ -1,0 +1,49 @@
+{
+  "type": "info",
+  "now": "2021-09-14T10:47:18.683Z",
+  "pr_number": 55741,
+  "author": "kasumisk",
+  "headCommitOid": "aded751196aea4180928204085f088eb530d7b88",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-09-13T08:39:37.000Z",
+  "lastActivityDate": "2021-09-13T20:35:23.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "ax",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/ax/ax-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/ax/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/ax/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ax/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "AstroxNetwork"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 917965584,
+  "ciResult": "pass"
+}

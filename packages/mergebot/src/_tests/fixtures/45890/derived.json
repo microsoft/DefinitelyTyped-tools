@@ -1,0 +1,55 @@
+{
+  "type": "info",
+  "now": "2020-07-06T08:21:55.751Z",
+  "pr_number": 45890,
+  "author": "dimkirt",
+  "headCommitOid": "146c312eac4c4ac8931b4ec6b2762457f8f4b6e6",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-07-04T22:02:07.000Z",
+  "lastActivityDate": "2020-07-05T08:20:29.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "greek-utils",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/greek-utils/greek-utils-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/greek-utils/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/greek-utils/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/greek-utils/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "dimkirt"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "peterblazejewicz",
+      "date": "2020-07-05T08:20:29.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "pass"
+}

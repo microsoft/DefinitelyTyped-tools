@@ -5,3 +5,4 @@ packages/publisher/output
 **/testsource/**
 **/fixtures/**
 packages/eslint-plugin/test/fixtures
+packages/mergebot/src/queries/schema

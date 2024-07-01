@@ -1,0 +1,41 @@
+{
+  "type": "info",
+  "now": "2024-01-31T18:33:57.058Z",
+  "pr_number": 68381,
+  "author": "krzysdz",
+  "headCommitOid": "61d76e05e8dfcd20fef3ba19b9b571e2420c8485",
+  "mergeBaseOid": "f58f90046075bcc38a262e1462fb06b8a22ab886",
+  "lastPushDate": "2024-01-30T11:15:06.000Z",
+  "lastActivityDate": "2024-01-31T09:19:27.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "express-serve-static-core",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/express-serve-static-core/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "borisyankov",
+        "micksatana",
+        "samijaber",
+        "JoseLion",
+        "dwrss",
+        "andoshin11"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 1916620324,
+  "ciResult": "pass"
+}

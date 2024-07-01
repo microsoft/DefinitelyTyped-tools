@@ -1,0 +1,362 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDkzNjEyMTI3",
+        "title": "[woocommerce__woocommerce-rest-api] Unmangle scoped package names",
+        "createdAt": "2020-09-26T18:31:44Z",
+        "author": {
+          "login": "jablko",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 48236,
+        "state": "OPEN",
+        "headRefOid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T17:49:46Z"
+            },
+            {
+              "__typename": "ReadyForReviewEvent",
+              "createdAt": "2020-09-27T19:03:37Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:04:12Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:04:13Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-27T19:04:14Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-30T00:08:24Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-09-30T00:08:26Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-02T18:45:57Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-02T18:46:31Z"
+            },
+            {
+              "__typename": "MovedColumnsInProjectEvent",
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-10-02T19:13:40Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+                "abbreviatedOid": "b4d71f6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-09-27T22:17:06Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48236#pullrequestreview-497115580",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "amcasey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+                "abbreviatedOid": "b4d71f6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-09-30T00:07:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48236#pullrequestreview-499005740",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "peterblazejewicz",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+                "abbreviatedOid": "b4d71f6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-10-02T19:13:08Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48236#pullrequestreview-501385349",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b4d71f672f0f204a514002348ebc2025d18866ca/checks?check_suite_id=1252088488",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b4d71f672f0f204a514002348ebc2025d18866ca/checks?check_suite_id=1252088488",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b4d71f672f0f204a514002348ebc2025d18866ca/checks?check_suite_id=1252088986",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b4d71f672f0f204a514002348ebc2025d18866ca/checks?check_suite_id=1252088986",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-08-28T18:17:12Z",
+                "committedDate": "2020-09-27T17:23:10Z",
+                "pushedDate": "2020-09-27T17:25:18Z",
+                "abbreviatedOid": "b4d71f6",
+                "oid": "b4d71f672f0f204a514002348ebc2025d18866ca",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY2NTk3MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-09-27T17:49:45.958Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                                                                           | #48236                                                                                                                                                                           | diff   |\n| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |\n| **Batch compilation**                                                                     |                                                                                                                                                                                  |                                                                                                                                                                                  |        |\n| Memory usage (MiB)                                                                        | 36.9                                                                                                                                                                             | 37.3                                                                                                                                                                             | +1.0%  |\n| Type count                                                                                | 2190                                                                                                                                                                             | 2190                                                                                                                                                                             | 0%     |\n| Assignability cache size                                                                  | 100                                                                                                                                                                              | 100                                                                                                                                                                              | 0%     |\n|                                                                                           |                                                                                                                                                                                  |                                                                                                                                                                                  |        |\n| **Language service**                                                                      |                                                                                                                                                                                  |                                                                                                                                                                                  |        |\n| Samples taken                                                                             | 48                                                                                                                                                                               | 48                                                                                                                                                                               | 0%     |\n| Identifiers in tests                                                                      | 48                                                                                                                                                                               | 48                                                                                                                                                                               | 0%     |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                                                                  |                                                                                                                                                                                  |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 107.1                                                                                                                                                                            | 107.3                                                                                                                                                                            | +0.2%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 26.1%                                                                                                                                                                            | 24.3%                                                                                                                                                                            |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 127.2                                                                                                                                                                            | 142.8                                                                                                                                                                            | +12.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [delete](/DefinitelyTyped/DefinitelyTyped/blob/962988086377b24102db89d0cb3d97e8a7675c66/types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts#L21)  | [Promise](/DefinitelyTyped/DefinitelyTyped/blob/ef1c123b683a92060fcba727b0e2015c5c1e3c23/types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts#L23) |        |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                                                                  |                                                                                                                                                                                  |        |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 105.2                                                                                                                                                                            | 106.0                                                                                                                                                                            | +0.8%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 25.5%                                                                                                                                                                            | 23.7%                                                                                                                                                                            | -7.2%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 130.9                                                                                                                                                                            | 133.3                                                                                                                                                                            | +1.8%  |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [Promise](/DefinitelyTyped/DefinitelyTyped/blob/962988086377b24102db89d0cb3d97e8a7675c66/types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts#L21) | [delete](/DefinitelyTyped/DefinitelyTyped/blob/ef1c123b683a92060fcba727b0e2015c5c1e3c23/types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts#L21)  |        |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-09-27T17:49:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY3NDc5MQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jablko Thank you for submitting this PR!\n\n***This is a live comment which I will keep updated.***\n\n## 1 package in this PR\n\n- `woocommerce__woocommerce-rest-api` [on npm](https://www.npmjs.com/package/@woocommerce/woocommerce-rest-api), [on unpkg](https://unpkg.com/browse/@woocommerce/woocommerce-rest-api@latest/)\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes which affect module config files\n   - `woocommerce__woocommerce-rest-api/tsconfig.json`: changes outside of \"files\" list\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-09-27T19:04:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDY5OTY3NDc5NQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @climba03003 — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/48236/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-09-27T19:04:14Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwMTA1ODc1Nw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@jablko Everything looks good here. Great job! I am ready to merge this PR (at b4d71f6) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@climba03003: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-09-30T00:08:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcwMjg5ODQzNg==",
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "body": "Ready to merge",
+              "createdAt": "2020-10-02T18:45:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/woocommerce__woocommerce-rest-api/tsconfig.json",
+              "additions": 6,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/woocommerce__woocommerce-rest-api/woocommerce__woocommerce-rest-api-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDYyMzUxMDY=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

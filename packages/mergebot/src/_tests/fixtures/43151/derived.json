@@ -1,0 +1,48 @@
+{
+  "type": "info",
+  "now": "2020-03-19T17:38:20.000Z",
+  "pr_number": 43151,
+  "author": "adamzerella",
+  "headCommitOid": "bb6d3150b485cd203d265e06ca910262256e523e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-15T12:50:20.000Z",
+  "lastActivityDate": "2020-03-15T18:11:57.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "gaze",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/gaze/gaze-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/gaze/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/gaze/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/gaze/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "adamzerella"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

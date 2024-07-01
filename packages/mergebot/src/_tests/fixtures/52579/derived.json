@@ -1,0 +1,51 @@
+{
+  "type": "info",
+  "now": "2021-04-26T11:48:53.676Z",
+  "pr_number": 52579,
+  "author": "Phong6698",
+  "headCommitOid": "5337ea17b2407707bead503cd20c9ca29438f5df",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2021-04-25T22:25:04.000Z",
+  "lastActivityDate": "2021-04-25T22:27:45.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "vertx__eventbus-bridge-client.js",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/vertx__eventbus-bridge-client.js/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/vertx__eventbus-bridge-client.js/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/vertx__eventbus-bridge-client.js/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        },
+        {
+          "path": "types/vertx__eventbus-bridge-client.js/vertx__eventbus-bridge-client.js-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "Phong6698"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "action_required",
+  "reRunCheckSuiteIDs": [
+    123456
+  ]
+}

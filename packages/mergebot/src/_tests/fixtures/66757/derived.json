@@ -1,0 +1,44 @@
+{
+  "type": "info",
+  "now": "2023-10-18T01:59:43.008Z",
+  "pr_number": 66757,
+  "author": "AlonBru",
+  "headCommitOid": "42fb091d993517a72a32aae4e8e98271ecbf5ec3",
+  "mergeBaseOid": "53e0cf9afba254ecae4add3ed008bf9972db16f5",
+  "lastPushDate": "2023-09-20T00:56:41.000Z",
+  "lastActivityDate": "2023-09-20T21:25:38.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "react-table",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/react-table/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "ggascoigne",
+        "gargroh",
+        "riceboyler"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "sheetalkamat",
+      "date": "2023-09-20T17:24:47.000Z"
+    }
+  ],
+  "mainBotCommentID": 1726730356,
+  "ciResult": "pass"
+}

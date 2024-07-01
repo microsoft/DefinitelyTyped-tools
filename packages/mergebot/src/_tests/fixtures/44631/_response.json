@@ -1,0 +1,272 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDE1NzgzNzMw",
+        "title": "Fix return type of `thru` method in Kefir",
+        "lastEditedAt": null,
+        "author": {
+          "login": "mAAdhaTTah",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "createdAt": "2020-05-10T21:27:59Z",
+        "labels": {
+          "nodes": [
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Perf: Same",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "CONFLICTING",
+        "number": 44631,
+        "state": "OPEN",
+        "headRefOid": "96d6582f60431d273c179dcf6816426b4f1e37ac",
+        "changedFiles": 2,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-10T21:28:10Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-10T21:28:11Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-10T22:41:52Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2020-05-15T15:41:43Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "sandersn",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "96d6582f60431d273c179dcf6816426b4f1e37ac",
+                "abbreviatedOid": "96d6582",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2020-05-15T15:41:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44631#pullrequestreview-412760155",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/96d6582f60431d273c179dcf6816426b4f1e37ac/checks?check_suite_id=669525123",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/96d6582f60431d273c179dcf6816426b4f1e37ac/checks?check_suite_id=669525123",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "status": "SUCCESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "description": "The Travis CI build passed",
+                      "creator": {
+                        "login": "johnnyreilly",
+                        "__typename": "User"
+                      },
+                      "targetUrl": "https://travis-ci.org/github/DefinitelyTyped/DefinitelyTyped/builds/685420299?utm_source=github_status&utm_medium=notification",
+                      "__typename": "StatusContext"
+                    }
+                  ],
+                  "__typename": "Status"
+                },
+                "authoredDate": "2020-05-09T03:36:01Z",
+                "committedDate": "2020-05-10T21:26:12Z",
+                "pushedDate": "2020-05-10T21:26:25Z",
+                "abbreviatedOid": "96d6582",
+                "oid": "96d6582f60431d273c179dcf6816426b4f1e37ac",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNjM5MjQyMw==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@mAAdhaTTah Thank you for submitting this PR! \n\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2020-05-10T21:28:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNjM5MjQyNQ==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "🔔 @AyaMorisawa @HitoriSensei — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44631/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2020-05-10T21:28:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyNjQwMDg4MA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "<!-- @dt-perf {\"version\":2,\"data\":{\"overallChange\":0,\"benchmarks\":[{\"createdAt\":\"2020-05-10T22:41:51.977Z\"}]}} -->\n\n👋 **Hi there!** I’ve run some quick measurements against master and your PR. These metrics should help the humans reviewing this PR gauge whether it might negatively affect compile times or editor responsiveness for users who install these typings.\n\n\nLet’s review the numbers, shall we?\n\n\n\n<details>\n<summary><strong>Comparison details</strong> 📊</summary>\n\n|                                                                                           | master                                                                                                                         | #44631                                                                                                                      | diff  |\n| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ----- |\n| **Batch compilation**                                                                     |                                                                                                                                |                                                                                                                             |       |\n| Memory usage (MiB)                                                                        | 117.4                                                                                                                          | 117.6                                                                                                                       | +0.2% |\n| Type count                                                                                | 28019                                                                                                                          | 27979                                                                                                                       | 0%    |\n| Assignability cache size                                                                  | 40630                                                                                                                          | 40634                                                                                                                       | 0%    |\n|                                                                                           |                                                                                                                                |                                                                                                                             |       |\n| **Language service**                                                                      |                                                                                                                                |                                                                                                                             |       |\n| Samples taken                                                                             | 764                                                                                                                            | 772                                                                                                                         | +1%   |\n| Identifiers in tests                                                                      | 764                                                                                                                            | 772                                                                                                                         | +1%   |\n| **`getCompletionsAtPosition`**                                                            |                                                                                                                                |                                                                                                                             |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 548.2                                                                                                                          | 546.6                                                                                                                       | -0.3% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 9.1%                                                                                                                           | 8.8%                                                                                                                        |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 820.4                                                                                                                          | 834.3                                                                                                                       | +1.7% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [x](/DefinitelyTyped/DefinitelyTyped/blob/4ba5d8dbca725a9730a091abadf12e6509944c45/types/kefir/kefir-tests.ts#L112)            | [x](/DefinitelyTyped/DefinitelyTyped/blob/fa0283dbb7ddd7758becd001d314738d20c8d272/types/kefir/kefir-tests.ts#L203)         |       |\n| **`getQuickInfoAtPosition`**                                                              |                                                                                                                                |                                                                                                                             |       |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean duration (ms)                                                | 546.1                                                                                                                          | 546.9                                                                                                                       | +0.1% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Mean [CV](https://en.wikipedia.org/wiki/Coefficient_of_variation) | 8.9%                                                                                                                           | 8.7%                                                                                                                        | -1.8% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst duration (ms)                                               | 807.5                                                                                                                          | 826.7                                                                                                                       | +2.4% |\n| &nbsp;&nbsp;&nbsp;&nbsp;Worst identifier                                                  | [sequentially](/DefinitelyTyped/DefinitelyTyped/blob/4ba5d8dbca725a9730a091abadf12e6509944c45/types/kefir/kefir-tests.ts#L159) | [beforeEnd](/DefinitelyTyped/DefinitelyTyped/blob/fa0283dbb7ddd7758becd001d314738d20c8d272/types/kefir/kefir-tests.ts#L124) |       |\n\n\n</details>\n\nIt looks like nothing changed too much. I won’t post performance data again unless it gets worse.",
+              "createdAt": "2020-05-10T22:41:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDYyOTMyMjgzOA==",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "body": "@mAAdhaTTah Everything looks good here. Great job! I am ready to merge this PR (at 96d6582) on your behalf.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2020-05-15T15:41:43Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "nodes": [
+            {
+              "path": "types/kefir/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/kefir/kefir-tests.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection",
+          "totalCount": 2
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkMzc5Mzc5NjA=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+                "name": "Waiting for Author to Merge",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

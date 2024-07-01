@@ -1,0 +1,40 @@
+{
+  "type": "info",
+  "now": "2020-12-01T20:08:04.932Z",
+  "pr_number": 49548,
+  "author": "concision",
+  "headCommitOid": "9301e16b32453cda501e3c8b9886661da391d232",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-11-16T20:11:05.000Z",
+  "lastActivityDate": "2020-11-16T20:15:33.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "gulp-sourcemaps",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/gulp-sourcemaps/gulp-sourcemaps-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/gulp-sourcemaps/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "pspeter3",
+        "concision"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

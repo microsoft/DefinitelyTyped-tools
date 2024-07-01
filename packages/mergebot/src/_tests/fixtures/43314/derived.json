@@ -1,0 +1,48 @@
+{
+  "type": "info",
+  "now": "2020-03-22T21:36:44.000Z",
+  "pr_number": 43314,
+  "author": "metonym",
+  "headCommitOid": "432f23fe1b87b12fe58bb1a8958f77ee3242741e",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-22T16:48:44.000Z",
+  "lastActivityDate": "2020-03-22T16:50:35.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "carbon__icon-helpers",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/carbon__icon-helpers/carbon__icon-helpers-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/carbon__icon-helpers/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/carbon__icon-helpers/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/carbon__icon-helpers/tslint.json",
+          "kind": "package-meta",
+          "suspect": "edited"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "metonym"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}

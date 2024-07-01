@@ -1,0 +1,22 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "The CI is blocked",
+    "New Definition",
+    "Edits Infrastructure",
+    "Check Config"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@Phong6698 Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `vertx__eventbus-bridge-client.js` (*new!*) — [on npm](https://www.npmjs.com/package/@vertx/eventbus-bridge-client.js), [on unpkg](https://unpkg.com/browse/@vertx/eventbus-bridge-client.js@latest/)\n  - Config files to check:\n    - [`vertx__eventbus-bridge-client.js/tslint.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52579/files/5337ea17b2407707bead503cd20c9ca29438f5df#diff-7a7a9c37f9e343e2d23c2035a897f76a6b7eb960c9758448fab35553c655621e): edited\n* Infra files\n  - [`package.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52579/files/5337ea17b2407707bead503cd20c9ca29438f5df#diff-7ae45ad102eab3b6d7e7896acd08c427a9b25b346470d7bc6507b6481575d519)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=52579&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🔐 Continuous integration tests waiting for a maintainer to authorize a run\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @Phong6698 — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/52579/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

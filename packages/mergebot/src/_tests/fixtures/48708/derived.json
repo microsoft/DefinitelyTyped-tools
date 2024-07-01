@@ -1,0 +1,71 @@
+{
+  "type": "info",
+  "now": "2020-11-12T21:06:07.910Z",
+  "pr_number": 48708,
+  "author": "martin-badin",
+  "headCommitOid": "eb13547e342b1316aeea85df84983a534cfb092f",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-10-12T12:27:56.000Z",
+  "lastActivityDate": "2020-10-15T15:53:50.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "jquery",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/jquery/JQuery.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/jquery/jquery-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/jquery/test/example-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "leonard-thieu",
+        "borisyankov",
+        "choffmeister",
+        "Steve-Fenton",
+        "Diullei",
+        "tasoili",
+        "jasons-novaleaf",
+        "seanski",
+        "Guuz",
+        "ksummerlin",
+        "basarat",
+        "nwolverson",
+        "derekcicerone",
+        "AndrewGaspar",
+        "seikichi",
+        "benjaminjackman",
+        "s093294",
+        "JoshStrobl",
+        "johnnyreilly",
+        "DickvdBrink",
+        "King2500",
+        "terrymun",
+        "martin-badin"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "leonard-thieu",
+      "date": "2020-10-12T13:09:45.000Z"
+    }
+  ],
+  "ciResult": "pass"
+}

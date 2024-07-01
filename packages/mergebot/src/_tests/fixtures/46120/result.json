@@ -1,0 +1,26 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Popular package",
+    "Owner Approved",
+    "Author is Owner",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@reubenrybnik Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `underscore` — [on npm](https://www.npmjs.com/package/underscore), [on unpkg](https://unpkg.com/browse/underscore@latest/) (author is owner)\n  - owner-approval: @jgonggrijp\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=46120&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners or DT maintainers\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@reubenrybnik: Everything looks good here. I am ready to merge this PR (at 5ef8fe2) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@borisyankov, @jbaldwin, @ccurrens, @confususs, @jgonggrijp, @ffflorian, @regevbr, @peterblazejewicz: you can do this too.)"
+    },
+    {
+      "tag": "wait-for-merge-offer-5ef8fe2",
+      "status": ":passport_control: Hi @reubenrybnik,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

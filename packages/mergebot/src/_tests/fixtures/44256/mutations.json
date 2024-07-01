@@ -1,0 +1,10 @@
+[
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "MDEyOklzc3VlQ29tbWVudDYyMTU1OTExNA=="
+      }
+    }
+  }
+]

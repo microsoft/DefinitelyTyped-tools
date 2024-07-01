@@ -1,0 +1,46 @@
+{
+  "type": "info",
+  "now": "2020-03-19T13:02:50.000Z",
+  "pr_number": 43160,
+  "author": "rikkertkoppes",
+  "headCommitOid": "6d5d2a85b41d287f97c9d331a9ff6a9824e2f1ff",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-03-16T08:14:50.000Z",
+  "lastActivityDate": "2020-03-17T14:33:47.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "dagre",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/dagre/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "qinfchen",
+        "Frankrike",
+        "vilterp",
+        "rustedgrail"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "rustedgrail",
+      "date": "2020-03-17T14:33:47.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22c73c88cc9c09efd4c2998ec360607dd4c36c2e/checks?check_suite_id=731664306"
+}

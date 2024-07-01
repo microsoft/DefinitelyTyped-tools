@@ -1,0 +1,20 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "Has Merge Conflict",
+    "Maintainer Approved"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@mAAdhaTTah Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `kefir` — [on npm](https://www.npmjs.com/package/kefir), [on unpkg](https://unpkg.com/browse/kefir@latest/)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (👏), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=44631&install-plugin=playground-dt-review).\n\n## Status\n\n * ❌ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-complaint-96d6582",
+      "status": "@mAAdhaTTah Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

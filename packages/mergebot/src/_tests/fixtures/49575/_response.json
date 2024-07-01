@@ -1,0 +1,751 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NTIxMTM3NjEy",
+        "title": "Move tslint.json advice from PULL_REQUEST_TEMPLATE.md",
+        "createdAt": "2020-11-15T03:25:30Z",
+        "author": {
+          "login": "jablko",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Edits Infrastructure",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 49575,
+        "state": "OPEN",
+        "headRefOid": "cdd66f483bb0103f6e6d1eb7b07192ff95718f25",
+        "changedFiles": 7,
+        "commitIds": {},
+        "timelineItems": {
+          "nodes": [
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "createdAt": "2020-11-23T20:49:44Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "rbuckton",
+                "__typename": "User"
+              },
+              "createdAt": "2020-12-11T00:00:50Z"
+            },
+            {
+              "__typename": "IssueComment",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "createdAt": "2020-12-11T16:34:06Z"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "6400f4c47e063373c0d9e3d5978b4b24ec14048c",
+                "abbreviatedOid": "6400f4c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T06:56:24Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T06:59:02Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-15T07:00:31Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-11-15T07:00:39Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-530771686",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sandersn",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "6400f4c47e063373c0d9e3d5978b4b24ec14048c",
+                "abbreviatedOid": "6400f4c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-11-16T16:27:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-531487745",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "f55f95bcf01674dc20e2f3cf0f9dbce4710f582d",
+                "abbreviatedOid": "f55f95b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-16T17:12:36Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-16T17:12:36Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-531532162",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "f55f95bcf01674dc20e2f3cf0f9dbce4710f582d",
+                "abbreviatedOid": "f55f95b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-16T17:13:59Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-16T17:13:59Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-531533372",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "f55f95bcf01674dc20e2f3cf0f9dbce4710f582d",
+                "abbreviatedOid": "f55f95b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-16T17:14:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-16T17:14:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-531533505",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "84495e87102cbe52430828596821ec7647742f65",
+                "abbreviatedOid": "84495e8",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T08:56:50Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T09:01:35Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T09:03:29Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T09:06:12Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T09:13:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "elibarzilay",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T09:17:36Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2020-11-17T09:18:17Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-532144684",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "cd5cc0c6e9f922a5686adfdd2b1dfa4fa0c4ce92",
+                "abbreviatedOid": "cd5cc0c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T20:44:58Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-17T20:44:58Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-532797068",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "cd5cc0c6e9f922a5686adfdd2b1dfa4fa0c4ce92",
+                "abbreviatedOid": "cd5cc0c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T20:45:18Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-17T20:45:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-532797285",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "cd5cc0c6e9f922a5686adfdd2b1dfa4fa0c4ce92",
+                "abbreviatedOid": "cd5cc0c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T20:45:35Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-17T20:45:35Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-532797467",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "cd5cc0c6e9f922a5686adfdd2b1dfa4fa0c4ce92",
+                "abbreviatedOid": "cd5cc0c",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-17T20:46:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-17T20:46:27Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-532798093",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "amcasey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "08733870ea4eb468ed857e8946383f2cc14f881d",
+                "abbreviatedOid": "0873387",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "amcasey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-30T18:46:26Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "amcasey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-30T18:47:08Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-30T18:49:05Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-541193432",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jablko",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "90ff51a18d0788afe4a5264435a52da028dd5252",
+                "abbreviatedOid": "90ff51a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jablko",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2020-11-30T22:11:21Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2020-11-30T22:11:22Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-541336430",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "amcasey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "90ff51a18d0788afe4a5264435a52da028dd5252",
+                "abbreviatedOid": "90ff51a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-12-01T00:15:16Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-541395420",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "90ff51a18d0788afe4a5264435a52da028dd5252",
+                "abbreviatedOid": "90ff51a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-12-03T12:09:12Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-543889072",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "amcasey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "cdd66f483bb0103f6e6d1eb7b07192ff95718f25",
+                "abbreviatedOid": "cdd66f4",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2020-12-08T17:01:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575#pullrequestreview-547437938",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-14T22:55:19Z",
+                "committedDate": "2020-12-03T17:48:26Z",
+                "pushedDate": null,
+                "abbreviatedOid": "5c2ccb5",
+                "oid": "5c2ccb517816caf8389bedf4c121eb6397a7f45f",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-16T16:32:00Z",
+                "committedDate": "2020-12-03T17:59:48Z",
+                "pushedDate": null,
+                "abbreviatedOid": "31f180a",
+                "oid": "31f180ab9d1bb3968e51ba3cbe361b4124173eb3",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-17T15:38:29Z",
+                "committedDate": "2020-12-03T18:30:33Z",
+                "pushedDate": null,
+                "abbreviatedOid": "9f77330",
+                "oid": "9f773300c4ec49329a8c4ae9bd8b0487a946de30",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/cdd66f483bb0103f6e6d1eb7b07192ff95718f25/checks?check_suite_id=1604607531",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/cdd66f483bb0103f6e6d1eb7b07192ff95718f25/checks?check_suite_id=1604607531",
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "app": {
+                        "name": "Azure Pipelines",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/cdd66f483bb0103f6e6d1eb7b07192ff95718f25/checks?check_suite_id=1604608237",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/cdd66f483bb0103f6e6d1eb7b07192ff95718f25/checks?check_suite_id=1604608237",
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2020-11-30T22:05:19Z",
+                "committedDate": "2020-12-03T18:30:37Z",
+                "pushedDate": "2020-12-03T18:35:07Z",
+                "abbreviatedOid": "cdd66f4",
+                "oid": "cdd66f483bb0103f6e6d1eb7b07192ff95718f25",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDczMjQxODI2Mw==",
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "body": "@elibarzilay do you want to take a look again before i merge this.",
+              "createdAt": "2020-11-23T20:49:44Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc0Mjg3Njg3Mw==",
+              "author": {
+                "login": "rbuckton",
+                "__typename": "User"
+              },
+              "body": "The bot didn't comment about being able to self merge. Will that still work or do we have to merge this manually?",
+              "createdAt": "2020-12-11T00:00:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDc0MzI5NTk0MA==",
+              "author": {
+                "login": "elibarzilay",
+                "__typename": "User"
+              },
+              "body": "@rbuckton, yeah needs to be merged manually like all PRs in NMA...  (And a just-merged PR from @jablko removes the label in this case, with another one that hopefully I'll get to soon-ish enabling more self-merges.)\r\n",
+              "createdAt": "2020-12-11T16:34:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "additions": 1,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.cn.md",
+              "additions": 29,
+              "deletions": 45,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.es.md",
+              "additions": 26,
+              "deletions": 39,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.ko.md",
+              "additions": 26,
+              "deletions": 39,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.md",
+              "additions": 30,
+              "deletions": 48,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.pt.md",
+              "additions": 30,
+              "deletions": 49,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "README.ru.md",
+              "additions": 26,
+              "deletions": 44,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectCards": {
+          "nodes": [
+            {
+              "id": "MDExOlByb2plY3RDYXJkNDkzNjY1NzY=",
+              "project": {
+                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
+                "number": 5,
+                "name": "New Pull Request Status Board",
+                "__typename": "Project"
+              },
+              "column": {
+                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+                "name": "Needs Maintainer Action",
+                "__typename": "ProjectColumn"
+              },
+              "__typename": "ProjectCard"
+            }
+          ],
+          "__typename": "ProjectCardConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7,
+  "stale": false
+}

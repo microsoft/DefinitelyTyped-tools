@@ -1,0 +1,44 @@
+[
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyMTk3MzU2OTA1"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDQ3MDM5ODI4"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWw2NDY3ODg4ODg=",
+          "MDU6TGFiZWw1ODYxNzcwNjM=",
+          "MDU6TGFiZWwyMTU0NzUwNDcz"
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDQ3MDM5ODI4"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "cardId": "MDExOlByb2plY3RDYXJkNDE1OTMyNzc=",
+        "columnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI2"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "MDExOlB1bGxSZXF1ZXN0NDQ3MDM5ODI4",
+        "body": "@dasa — There was an error that prevented me from properly processing this PR:\n\n    error parsing owners: At 1:1 in master:types/arcgis-js-api/index.d.ts: Expected /\\/\\/ Type definitions for (non-npm package )?/\n<!--typescript_bot_had-error-->"
+      }
+    }
+  }
+]

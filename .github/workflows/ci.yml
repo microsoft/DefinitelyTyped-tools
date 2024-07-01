@@ -39,12 +39,16 @@ jobs:
       run: pnpm build
     - name: test
       run: pnpm test
+    - name: Bundle mergebot
+      working-directory: packages/mergebot
+      run: pnpm run bundle
+    - name: Check mergebot bundle
+      run: BOT_AUTH_TOKEN=secret node packages/mergebot/dist/functions/index.js
     - name: knip
       run: pnpm knip
   check-parse-results:
     needs: build_and_test
     uses: ./.github/workflows/check-parse-results.yml
-  
   changesets:
     name: changesets
     runs-on: ubuntu-latest

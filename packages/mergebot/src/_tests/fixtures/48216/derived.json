@@ -1,0 +1,40 @@
+{
+  "type": "info",
+  "now": "2020-09-27T19:02:30.338Z",
+  "pr_number": 48216,
+  "author": "jablko",
+  "headCommitOid": "3f689bfb9d310612cdaf7c52c7ead41d1181b52f",
+  "mergeBaseOid": "master",
+  "lastPushDate": "2020-09-27T17:23:58.000Z",
+  "lastActivityDate": "2020-09-27T19:01:23.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "apptimize__apptimize-web-sdk",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/apptimize__apptimize-web-sdk/apptimize__apptimize-web-sdk-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/apptimize__apptimize-web-sdk/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "innovation-team",
+        "rlbaxter"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "pass"
+}
