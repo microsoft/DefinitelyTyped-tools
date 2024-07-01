@@ -21,7 +21,7 @@ jobs:
       # Go through all open PRs and run the bot over them
       - run: node packages/mergebot/dist/run.js
         env:
-          TYPESCRIPT_BOT_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
+          BOT_AUTH_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
 
   keepalive-job:
     name: Keepalive Workflow
