@@ -44,7 +44,7 @@ jobs:
 
       - name: Create zip
         working-directory: packages/mergebot
-        run: zip -r ${{ env.GITHUB_WORKSPACE }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
+        run: zip -r ${{ github.workspace }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
