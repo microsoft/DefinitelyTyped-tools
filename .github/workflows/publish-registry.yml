@@ -31,7 +31,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           path: packages/definitions-parser/data/
       - uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
