@@ -20,7 +20,7 @@ export function createMutation<T>(
   name: keyof schema.Mutation,
   input: T,
   subquery?: string,
-): MutationOptions<void, { input: T }> {
+): MutationOptions<schema.Mutation, { input: T }> {
   const mutation = {
     toJSON: () => print(mutation),
     ...(gql`mutation($input: ${name[0]!.toUpperCase() + name.slice(1)}Input!) {
@@ -28,7 +28,7 @@ export function createMutation<T>(
                         __typename
                         ${subquery || ""}
                     }
-                }` as TypedDocumentNode<void, { input: T }>),
+                }` as TypedDocumentNode<schema.Mutation, { input: T }>),
   };
   return { mutation, variables: { input } };
 }

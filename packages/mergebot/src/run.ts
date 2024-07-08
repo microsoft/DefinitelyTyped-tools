@@ -123,38 +123,34 @@ const start = async function () {
   if (args.dry || !args.cleanup) return;
   //
   console.log("Cleaning up cards");
-  const columns = await getProjectBoardCards();
+  const { columns, id: projectId } = await getProjectBoardCards();
   const deleteObject = async (id: string, shoulda?: string) => {
     if (shoulda) {
       // don't automatically delete these, eg, PRs that were created
       // during the scan would end up here.
       return console.log(`  Should delete "${id}" (${shoulda})`);
     }
-    const mutation = createMutation<schema.DeleteProjectCardInput>("deleteProjectCard", { cardId: id });
+    const mutation = createMutation<schema.DeleteProjectV2ItemInput>("deleteProjectV2Item", { projectId, itemId: id });
     await client.mutate(mutation);
   };
   // Reduce "Recently Merged"
   {
-    const recentlyMerged = columns.find((c) => c.name === "Recently Merged");
+    const recentlyMerged = columns.get("Recently Merged");
     if (!recentlyMerged) {
-      throw new Error(`Could not find the 'Recently Merged' column in ${columns.map((n) => n.name)}`);
+      throw new Error(`Could not find the 'Recently Merged' column in ${Array.from(columns.keys())}`);
     }
-    const { cards, totalCount } = recentlyMerged;
-    const afterFirst50 = cards.sort((l, r) => l.updatedAt.localeCompare(r.updatedAt)).slice(50);
+    const afterFirst50 = recentlyMerged.sort((l, r) => l.updatedAt.localeCompare(r.updatedAt)).slice(50);
     if (afterFirst50.length > 0) {
       console.log(`Cutting "Recently Merged" projects to the last 50`);
-      if (cards.length < totalCount) {
-        console.warn(`  *** Note: ${totalCount - cards.length} cards were not seen by this query!`);
-      }
       for (const card of afterFirst50) await deleteObject(card.id);
     }
   }
   // Handle other columns
-  for (const column of columns) {
-    if (column.name === "Recently Merged") continue;
-    const ids = column.cards.map((c) => c.id).filter((c) => !cardIDs.includes(c));
+  for (const [name, cards] of columns) {
+    if (name === "Recently Merged") continue;
+    const ids = cards.map((c) => c.id).filter((c) => !cardIDs.includes(c));
     if (ids.length === 0) continue;
-    console.log(`Cleaning up closed PRs in "${column.name}"`);
+    console.log(`Cleaning up closed PRs in "${name}"`);
     // don't actually do the deletions, until I follow this and make sure that it's working fine
     for (const id of ids) {
       const info = await runQueryToGetPRForCardId(id);

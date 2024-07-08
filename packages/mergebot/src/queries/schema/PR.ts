@@ -515,10 +515,10 @@ export interface PR_repository_pullRequest_files {
   pageInfo: PR_repository_pullRequest_files_pageInfo;
 }
 
-export interface PR_repository_pullRequest_projectCards_nodes_project {
-  __typename: "Project";
+export interface PR_repository_pullRequest_projectItems_nodes_project {
+  __typename: "ProjectV2";
   /**
-   * The Node ID of the Project object
+   * The Node ID of the ProjectV2 object
    */
   id: string;
   /**
@@ -528,46 +528,63 @@ export interface PR_repository_pullRequest_projectCards_nodes_project {
   /**
    * The project's name.
    */
-  name: string;
+  title: string;
 }
 
-export interface PR_repository_pullRequest_projectCards_nodes_column {
-  __typename: "ProjectColumn";
+export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
+  __typename: "ProjectV2ItemFieldDateValue" | "ProjectV2ItemFieldIterationValue" | "ProjectV2ItemFieldLabelValue" | "ProjectV2ItemFieldMilestoneValue" | "ProjectV2ItemFieldNumberValue" | "ProjectV2ItemFieldPullRequestValue" | "ProjectV2ItemFieldRepositoryValue" | "ProjectV2ItemFieldReviewerValue" | "ProjectV2ItemFieldTextValue" | "ProjectV2ItemFieldUserValue";
+}
+
+export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2Field {
+  __typename: "ProjectV2Field" | "ProjectV2IterationField";
+}
+
+export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2SingleSelectField {
+  __typename: "ProjectV2SingleSelectField";
   /**
-   * The Node ID of the ProjectColumn object
+   * The Node ID of the ProjectV2SingleSelectField object
+   */
+  id: string;
+}
+
+export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field = PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2Field | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2SingleSelectField;
+
+export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
+  __typename: "ProjectV2ItemFieldSingleSelectValue";
+  /**
+   * The name of the selected single select option.
+   */
+  name: string | null;
+  /**
+   * The project field that contains this value.
+   */
+  field: PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field;
+}
+
+export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName = PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
+
+export interface PR_repository_pullRequest_projectItems_nodes {
+  __typename: "ProjectV2Item";
+  /**
+   * The Node ID of the ProjectV2Item object
    */
   id: string;
   /**
-   * The project column's name.
+   * The project that contains this item.
    */
-  name: string;
+  project: PR_repository_pullRequest_projectItems_nodes_project;
+  /**
+   * The field value of the first project field which matches the 'name' argument that is set on the item.
+   */
+  fieldValueByName: PR_repository_pullRequest_projectItems_nodes_fieldValueByName | null;
 }
 
-export interface PR_repository_pullRequest_projectCards_nodes {
-  __typename: "ProjectCard";
-  /**
-   * The Node ID of the ProjectCard object
-   */
-  id: string;
-  /**
-   * The project that contains this card.
-   */
-  project: PR_repository_pullRequest_projectCards_nodes_project;
-  /**
-   * The project column this card is associated under. A card may only belong to one
-   * project column at a time. The column field will be null if the card is created
-   * in a pending state and has yet to be associated with a column. Once cards are
-   * associated with a column, they will not become pending in the future.
-   */
-  column: PR_repository_pullRequest_projectCards_nodes_column | null;
-}
-
-export interface PR_repository_pullRequest_projectCards {
-  __typename: "ProjectCardConnection";
+export interface PR_repository_pullRequest_projectItems {
+  __typename: "ProjectV2ItemConnection";
   /**
    * A list of nodes.
    */
-  nodes: (PR_repository_pullRequest_projectCards_nodes | null)[] | null;
+  nodes: (PR_repository_pullRequest_projectItems_nodes | null)[] | null;
 }
 
 export interface PR_repository_pullRequest {
@@ -657,9 +674,9 @@ export interface PR_repository_pullRequest {
    */
   files: PR_repository_pullRequest_files | null;
   /**
-   * List of project cards associated with this pull request.
+   * List of project items associated with this pull request.
    */
-  projectCards: PR_repository_pullRequest_projectCards;
+  projectItems: PR_repository_pullRequest_projectItems;
 }
 
 export interface PR_repository {

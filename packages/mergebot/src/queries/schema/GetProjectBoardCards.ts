@@ -72,6 +72,10 @@ export interface GetProjectBoardCards_repository_projectV2_items {
 export interface GetProjectBoardCards_repository_projectV2 {
   __typename: "ProjectV2";
   /**
+   * The Node ID of the ProjectV2 object
+   */
+  id: string;
+  /**
    * List of items in the project
    */
   items: GetProjectBoardCards_repository_projectV2_items;
