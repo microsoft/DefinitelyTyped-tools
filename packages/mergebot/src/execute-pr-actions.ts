@@ -46,12 +46,28 @@ export async function executePrActions(actions: Actions, pr: PR_repository_pullR
     for (const mutation of mutations) {
       if (typeof mutation === "function") last = (await client.mutate(mutation(last))).data ?? {};
       else
-        last = (await client.mutate(mutation as MutationOptions<schema.Mutation, { input: schema.AddCommentInput }>))
-          .data ?? {};
+        last =
+          (await client.mutate(mutation as MutationOptions<schema.Mutation, { input: schema.AddCommentInput }>)).data ??
+          {};
     }
     for (const restCall of restCalls) await doRestCall(restCall);
+    return [...mutations, ...restCalls];
+  } else {
+    return [
+      ...mutations.map((m) =>
+        typeof m === "function"
+          ? m({
+              addProjectV2ItemById: {
+                item: {
+                  id: "TEST",
+                } as any,
+              },
+            })
+          : m,
+      ),
+      ...restCalls,
+    ];
   }
-  return [...mutations, ...restCalls];
 }
 
 async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullRequest) {

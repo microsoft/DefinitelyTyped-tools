@@ -525,10 +525,6 @@ export interface PR_repository_pullRequest_projectItems_nodes_project {
    * The project's number.
    */
   number: number;
-  /**
-   * The project's name.
-   */
-  title: string;
 }
 
 export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {

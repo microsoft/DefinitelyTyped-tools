@@ -1,5 +1,14 @@
 [
   {
+    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "itemId": "MDExOlByb2plY3RDYXJkMzcwNjQzMTc=",
+        "projectId": "PVT_kwDOADeBNM4AkH1q"
+      }
+    }
+  },
+  {
     "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}\n",
     "variables": {
       "input": {

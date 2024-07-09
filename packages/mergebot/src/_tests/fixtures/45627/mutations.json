@@ -22,10 +22,11 @@
     }
   },
   {
-    "mutation": "mutation ($input: DeleteProjectCardInput!) {\n  deleteProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}\n",
     "variables": {
       "input": {
-        "cardId": "MDExOlByb2plY3RDYXJkNDA0NTk5NzM="
+        "itemId": "MDExOlByb2plY3RDYXJkNDA0NTk5NzM=",
+        "projectId": "PVT_kwDOADeBNM4AkH1q"
       }
     }
   },

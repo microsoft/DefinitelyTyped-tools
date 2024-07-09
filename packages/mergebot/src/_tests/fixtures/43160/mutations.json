@@ -20,11 +20,15 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddProjectCardInput!) {\n  addProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
     "variables": {
       "input": {
-        "contentId": "MDExOlB1bGxSZXF1ZXN0Mzg5MDYwOTQ4",
-        "projectColumnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0"
+        "itemId": "MDExOlByb2plY3RDYXJkMzQ2MzEzMzI=",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "d389394c"
+        }
       }
     }
   },

@@ -183,7 +183,6 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
             project {
               id
               number
-              title
             }
             fieldValueByName(name: "Status") {
               ... on ProjectV2ItemFieldSingleSelectValue {

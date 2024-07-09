@@ -20,6 +20,7 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
     }
     cursor = project?.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor : null;
   } while (cursor);
+  console.log(columns)
   return columns;
 }
 
