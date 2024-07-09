@@ -14,7 +14,7 @@
     "ci:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.5",
+    "@changesets/cli": "^2.27.7",
     "@types/jest": "^29.5.11",
     "@types/node": "catalog:",
     "@types/yargs": "^17.0.32",
@@ -22,7 +22,7 @@
     "@typescript-eslint/parser": "catalog:",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.0.2",
+    "eslint-plugin-jsdoc": "catalog:",
     "jest": "^29.7.0",
     "knip": "^5.25.1",
     "prettier": "^3.2.2",
