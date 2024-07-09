@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@types/eslint':
+      specifier: ^8.56.2
+      version: 8.56.10
     '@types/node':
       specifier: ^18.19.7
       version: 18.19.39
@@ -226,8 +229,8 @@ importers:
         version: 3.1.1
     devDependencies:
       '@types/eslint':
-        specifier: ^8.56.2
-        version: 8.56.2
+        specifier: 'catalog:'
+        version: 8.56.10
       '@types/semver':
         specifier: ^7.5.5
         version: 7.5.5
@@ -291,8 +294,8 @@ importers:
         specifier: 'link:'
         version: 'link:'
       '@types/eslint':
-        specifier: ^8.56.2
-        version: 8.56.2
+        specifier: 'catalog:'
+        version: 8.56.10
       '@types/semver':
         specifier: 'catalog:'
         version: 7.5.6
@@ -1458,9 +1461,6 @@ packages:
 
   '@types/eslint@8.56.10':
     resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
-
-  '@types/eslint@8.56.2':
-    resolution: {integrity: sha512-uQDwm1wFHmbBbCZCqAlq6Do9LYwByNZHWzXppSnay9SuwJ+VRbjkbLABer54kcPnMSlG6Fdiy2yaFXm/z9Z5gw==}
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -6457,11 +6457,6 @@ snapshots:
       '@types/node': 18.19.39
 
   '@types/eslint@8.56.10':
-    dependencies:
-      '@types/estree': 1.0.5
-      '@types/json-schema': 7.0.15
-
-  '@types/eslint@8.56.2':
     dependencies:
       '@types/estree': 1.0.5
       '@types/json-schema': 7.0.15

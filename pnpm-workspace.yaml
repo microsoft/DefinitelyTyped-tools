@@ -6,6 +6,7 @@ catalog:
   "@typescript-eslint/parser": "^7.14.1"
   "@typescript-eslint/types": "^7.14.1"
   "@typescript-eslint/utils": "^7.14.1"
+  "@types/eslint": "^8.56.2"
   "@types/node": "^18.19.7"
   "@types/pacote": "^11.1.8"
   "@types/semver": "^7.5.6"

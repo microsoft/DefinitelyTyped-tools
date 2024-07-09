@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@definitelytyped/eslint-plugin": "link:",
-    "@types/eslint": "^8.56.2",
+    "@types/eslint": "catalog:",
     "@types/semver": "catalog:",
     "glob": "^10.3.10",
     "jest-file-snapshot": "^0.5.0",
