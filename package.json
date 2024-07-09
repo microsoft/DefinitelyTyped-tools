@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
-    "@types/jest": "^29.5.11",
+    "@types/jest": "^29.5.12",
     "@types/node": "catalog:",
     "@types/yargs": "catalog:",
     "@typescript-eslint/eslint-plugin": "catalog:",
@@ -25,8 +25,8 @@
     "jest": "^29.7.0",
     "jest-file-snapshot": "^0.5.0",
     "knip": "^5.25.1",
-    "prettier": "^3.2.2",
-    "ts-jest": "^29.1.1",
+    "prettier": "^3.3.2",
+    "ts-jest": "^29.2.0",
     "typescript": "catalog:"
   },
   "pnpm": {

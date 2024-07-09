@@ -19,8 +19,8 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@apollo/client": "^3.10.3",
-    "@azure/functions": "^4.4.0",
+    "@apollo/client": "^3.10.8",
+    "@azure/functions": "^4.5.0",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
     "@definitelytyped/utils": "workspace:*",
     "@octokit/webhooks-methods": "^4.1.0",
@@ -37,9 +37,9 @@
     "@types/prettyjson": "^0.0.33",
     "@types/yargs": "catalog:",
     "apollo": "^2.34.0",
-    "azure-functions-core-tools": "^4.0.5700",
+    "azure-functions-core-tools": "^4.0.5907",
     "esbuild": "^0.21.5",
-    "rimraf": "^5.0.7",
+    "rimraf": "^5.0.9",
     "typescript": "catalog:"
   },
   "scripts": {
