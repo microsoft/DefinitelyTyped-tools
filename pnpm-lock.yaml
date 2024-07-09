@@ -65,11 +65,6 @@ overrides:
   apollo>graphql: 15.8.0
   apollo-language-server>graphql: 15.8.0
 
-patchedDependencies:
-  jest-file-snapshot@0.5.0:
-    hash: onu36a7gyyhv46dluxj27tjeqe
-    path: patches/jest-file-snapshot@0.5.0.patch
-
 importers:
 
   .:
@@ -102,8 +97,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.19.39)(ts-node@9.1.1(typescript@5.5.3))
       jest-file-snapshot:
-        specifier: ^0.5.0
-        version: 0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe)
+        specifier: ^0.6.0
+        version: 0.6.0
       knip:
         specifier: ^5.25.1
         version: 5.25.1(@types/node@18.19.39)(typescript@5.5.3)
@@ -1140,10 +1135,6 @@ packages:
     resolution: {integrity: sha512-ok/BTPFzFKVMwO5eOHRrvnBVHdRy9IrsrW1GpMaQ9MCnilNLXQKmAX8s1YXDFaai9xJpac2ySzV0YeRRECr2Vw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  '@jest/types@26.6.2':
-    resolution: {integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==}
-    engines: {node: '>= 10.14.2'}
-
   '@jest/types@29.6.3':
     resolution: {integrity: sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -1536,9 +1527,6 @@ packages:
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
-
-  '@types/yargs@15.0.19':
-    resolution: {integrity: sha512-2XUaGVmyQjgyAZldf0D0c14vvo/yv0MhQBSTJcejMMaitsn3nxCB6TmH4G0ZQf+uxROOa9mpanoSm8h6SG/1ZA==}
 
   '@types/yargs@17.0.32':
     resolution: {integrity: sha512-xQ67Yc/laOG5uMfX/093MRlGGCIBzZMarVa+gfNKJxWAIgykYpVGkBdbqEzGDDfCrVUj6Hiff4mTZ5BA6TmAog==}
@@ -2294,10 +2282,6 @@ packages:
 
   detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
-
-  diff-sequences@26.6.2:
-    resolution: {integrity: sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==}
-    engines: {node: '>= 10.14.2'}
 
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
@@ -3193,10 +3177,6 @@ packages:
       ts-node:
         optional: true
 
-  jest-diff@26.6.2:
-    resolution: {integrity: sha512-6m+9Z3Gv9wN0WFVasqjCL/06+EFCMTqDEUl/b87HYK2rAPTyfz4ZIuSlPhY51PIQRWx5TaxeF1qmXKe9gfN3sA==}
-    engines: {node: '>= 10.14.2'}
-
   jest-diff@29.7.0:
     resolution: {integrity: sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3213,12 +3193,8 @@ packages:
     resolution: {integrity: sha512-DOSwCRqXirTOyheM+4d5YZOrWcdu0LNZ87ewUoywbcb2XR4wKgqiG8vNeYwhjFMbEkfju7wx2GYH0P2gevGvFw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  jest-file-snapshot@0.5.0:
-    resolution: {integrity: sha512-A3cqn9RRB6yl/bMsN9+EiNU94JTptLmoFqmSfSeuku22UYotYF6C/Ntw7C2Kai0C7deirYfpDwRpdlyLhItvMQ==}
-
-  jest-get-type@26.3.0:
-    resolution: {integrity: sha512-TpfaviN1R2pQWkIihlfEanwOXK0zcxrKEE4MlU6Tn7keoXdN6/3gK/xl0yEh8DOunn5pOVGKf8hB4R9gVh04ig==}
-    engines: {node: '>= 10.14.2'}
+  jest-file-snapshot@0.6.0:
+    resolution: {integrity: sha512-1ipFupAXh3JbbwkNlKG7C6VhXFO5D77NBLtQEgiMNqTt+W9v+coX3khpaoIfusR5+N5C55EMS8KZ1q7urrtE9Q==}
 
   jest-get-type@29.6.3:
     resolution: {integrity: sha512-zrteXnqYxfQh7l5FHyL38jL39di8H8rHoecLH3JNxH3BwOrBsNeabdap5e0I23lD4HHI8W5VFBZqG4Eaq5LNcw==}
@@ -3641,6 +3617,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  mkdirp@3.0.1:
+    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   moment@2.29.3:
     resolution: {integrity: sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==}
 
@@ -3964,10 +3945,6 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  pretty-format@26.6.2:
-    resolution: {integrity: sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==}
-    engines: {node: '>= 10'}
-
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -4059,9 +4036,6 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-
-  react-is@17.0.2:
-    resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
@@ -5736,14 +5710,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@jest/types@26.6.2':
-    dependencies:
-      '@types/istanbul-lib-coverage': 2.0.6
-      '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.39
-      '@types/yargs': 15.0.19
-      chalk: 4.1.2
-
   '@jest/types@29.6.3':
     dependencies:
       '@jest/schemas': 29.6.3
@@ -6304,10 +6270,6 @@ snapshots:
   '@types/which@3.0.4': {}
 
   '@types/yargs-parser@21.0.3': {}
-
-  '@types/yargs@15.0.19':
-    dependencies:
-      '@types/yargs-parser': 21.0.3
 
   '@types/yargs@17.0.32':
     dependencies:
@@ -7259,8 +7221,6 @@ snapshots:
   detect-newline@3.1.0: {}
 
   detect-node@2.1.0: {}
-
-  diff-sequences@26.6.2: {}
 
   diff-sequences@29.6.3: {}
 
@@ -8360,13 +8320,6 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-diff@26.6.2:
-    dependencies:
-      chalk: 4.1.2
-      diff-sequences: 26.6.2
-      jest-get-type: 26.3.0
-      pretty-format: 26.6.2
-
   jest-diff@29.7.0:
     dependencies:
       chalk: 4.1.2
@@ -8395,14 +8348,12 @@ snapshots:
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
-  jest-file-snapshot@0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe):
+  jest-file-snapshot@0.6.0:
     dependencies:
       chalk: 4.1.2
       filenamify: 4.3.0
-      jest-diff: 26.6.2
-      mkdirp: 1.0.4
-
-  jest-get-type@26.3.0: {}
+      jest-diff: 29.7.0
+      mkdirp: 3.0.1
 
   jest-get-type@29.6.3: {}
 
@@ -8954,6 +8905,8 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
+  mkdirp@3.0.1: {}
+
   moment@2.29.3: {}
 
   mri@1.2.0: {}
@@ -9310,13 +9263,6 @@ snapshots:
 
   prettier@3.3.2: {}
 
-  pretty-format@26.6.2:
-    dependencies:
-      '@jest/types': 26.6.2
-      ansi-regex: 5.0.1
-      ansi-styles: 4.3.0
-      react-is: 17.0.2
-
   pretty-format@29.7.0:
     dependencies:
       '@jest/schemas': 29.6.3
@@ -9396,8 +9342,6 @@ snapshots:
   queue-tick@1.0.1: {}
 
   react-is@16.13.1: {}
-
-  react-is@17.0.2: {}
 
   react-is@18.3.1: {}
 
