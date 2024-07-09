@@ -10,7 +10,6 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "longjohn": "^0.2.12",
     "pacote": "catalog:",
     "semver": "catalog:",
     "typescript": "catalog:",

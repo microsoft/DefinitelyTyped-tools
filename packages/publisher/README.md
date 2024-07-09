@@ -277,10 +277,6 @@ If present, packages are published with the provided version tag.
 
 These are needed to access all other secrets. See `src/lib/secrets.ts`.
 
-### `LONGJOHN`
-
-Setting this variable turns on [longjohn](https://github.com/mattinsler/longjohn) stacktraces.
-
 ### `NPM_TOKEN` and `GH_API_TOKEN`
 
 These are needed for running repair scripts, which should be rare.

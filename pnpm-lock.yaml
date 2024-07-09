@@ -16,7 +16,7 @@ catalogs:
       specifier: ^11.1.8
       version: 11.1.8
     '@types/semver':
-      specifier: ^7.5.6
+      specifier: ^7.5.8
       version: 7.5.8
     '@types/yargs':
       specifier: ^17.0.32
@@ -412,9 +412,6 @@ importers:
       '@definitelytyped/utils':
         specifier: workspace:*
         version: link:../utils
-      longjohn:
-        specifier: ^0.2.12
-        version: 0.2.12
       pacote:
         specifier: 'catalog:'
         version: 17.0.7
@@ -3461,10 +3458,6 @@ packages:
 
   long@4.0.0:
     resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
-
-  longjohn@0.2.12:
-    resolution: {integrity: sha512-36GDBamIwXTdCikEO29GWsE3GjtNGBGKNqSwWbwXczVC3KHNA1OzzIBKc9uocjQVYAPVGf/TWn9b0aPnraPjiQ==}
-    engines: {node: '>= 0.9.3'}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -8752,10 +8745,6 @@ snapshots:
       wrap-ansi: 3.0.1
 
   long@4.0.0: {}
-
-  longjohn@0.2.12:
-    dependencies:
-      source-map-support: 0.5.21
 
   loose-envify@1.4.0:
     dependencies:
