@@ -27,12 +27,12 @@
     "dts-dom": "^3.7.0",
     "parse-git-config": "^3.0.0",
     "typescript": "catalog:",
-    "yargs": "^17.7.2"
+    "yargs": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/parse-git-config": "^3.0.4",
-    "@types/yargs": "^17.0.32",
+    "@types/yargs": "catalog:",
     "ecurve": "1.0.6",
     "jquery": "3.7.1",
     "lodash": "4.17.21"

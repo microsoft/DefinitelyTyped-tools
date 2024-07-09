@@ -24,7 +24,7 @@
     "@definitelytyped/utils": "workspace:*",
     "pacote": "catalog:",
     "semver": "catalog:",
-    "yargs": "^17.7.2"
+    "yargs": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

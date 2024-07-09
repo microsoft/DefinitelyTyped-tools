@@ -28,14 +28,14 @@
     "fast-json-patch": "^3.1.1",
     "graphql": "15.8.0",
     "prettyjson": "^1.2.5",
-    "yargs": "^17.7.2"
+    "yargs": "catalog:"
   },
   "devDependencies": {
     "@octokit/graphql-schema": "^14.58.0",
     "@octokit/webhooks-types": "^7.5.1",
     "@types/node": "catalog:",
     "@types/prettyjson": "^0.0.33",
-    "@types/yargs": "^17.0.32",
+    "@types/yargs": "catalog:",
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.5700",
     "esbuild": "^0.21.5",

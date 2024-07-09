@@ -17,7 +17,7 @@
     "@changesets/cli": "^2.27.7",
     "@types/jest": "^29.5.11",
     "@types/node": "catalog:",
-    "@types/yargs": "^17.0.32",
+    "@types/yargs": "catalog:",
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "eslint": "catalog:",

@@ -9,7 +9,7 @@
   "dependencies": {
     "@definitelytyped/header-parser": "workspace:*",
     "typescript": "catalog:",
-    "yargs": "^17.7.2"
+    "yargs": "catalog:"
   },
   "peerDependencies": {
     "typescript": "*"
