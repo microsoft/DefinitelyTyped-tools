@@ -30,7 +30,7 @@
     "@types/node": "catalog:",
     "@types/pacote": "catalog:",
     "@types/semver": "catalog:",
-    "@types/yargs": "^17.0.32"
+    "@types/yargs": "catalog:"
   },
   "main": "dist/index.js",
   "bin": {

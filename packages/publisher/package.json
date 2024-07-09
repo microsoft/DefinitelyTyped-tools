@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/pacote": "catalog:",
     "@types/semver": "catalog:",
-    "@types/yargs": "^17.0.32"
+    "@types/yargs": "catalog:"
   },
   "scripts": {
     "build": "tsc -b",

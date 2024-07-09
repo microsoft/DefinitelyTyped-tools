@@ -30,7 +30,7 @@
     "yargs": "catalog:"
   },
   "devDependencies": {
-    "glob": "^10.3.10"
+    "glob": "catalog:"
   },
   "engines": {
     "node": ">=18.18.0"

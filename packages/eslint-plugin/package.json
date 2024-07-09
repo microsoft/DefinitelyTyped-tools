@@ -38,7 +38,7 @@
     "@definitelytyped/eslint-plugin": "link:",
     "@types/eslint": "catalog:",
     "@types/semver": "catalog:",
-    "glob": "^10.3.10",
+    "glob": "catalog:",
     "jest-file-snapshot": "catalog:",
     "strip-ansi": "^6.0.1",
     "typescript": "catalog:",
