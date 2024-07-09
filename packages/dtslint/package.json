@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/eslint": "catalog:",
-    "@types/semver": "^7.5.5",
+    "@types/semver": "catalog:",
     "@types/strip-json-comments": "^3.0.0",
     "typescript": "catalog:"
   },
