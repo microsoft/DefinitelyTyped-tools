@@ -22,7 +22,7 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "semver": "^7.5.4"
+    "semver": "catalog:"
   },
   "devDependencies": {
     "@types/semver": "^7.5.6"

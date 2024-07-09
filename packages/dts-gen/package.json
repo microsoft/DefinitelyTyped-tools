@@ -26,11 +26,11 @@
   "dependencies": {
     "dts-dom": "^3.7.0",
     "parse-git-config": "^3.0.0",
-    "typescript": "^5.5.2",
+    "typescript": "catalog:",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^18.19.7",
+    "@types/node": "catalog:",
     "@types/parse-git-config": "^3.0.4",
     "@types/yargs": "^17.0.32",
     "ecurve": "1.0.6",

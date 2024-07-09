@@ -1,2 +1,14 @@
 packages:
   - 'packages/*'
+
+catalog:
+  "@typescript-eslint/eslint-plugin": "^7.14.1"
+  "@typescript-eslint/parser": "^7.14.1"
+  "@typescript-eslint/types": "^7.14.1"
+  "@typescript-eslint/utils": "^7.14.1"
+  "@types/node": "^18.19.7"
+  "@types/pacote": "^11.1.8"
+  "@types/semver": "^7.5.6"
+  "semver": "^7.5.4"
+  pacote: "^17.0.5"
+  typescript: '^5.5.3'
