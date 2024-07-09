@@ -21,7 +21,6 @@
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "eslint": "catalog:",
-    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "catalog:",
     "jest": "^29.7.0",
     "knip": "^5.25.1",

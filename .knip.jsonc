@@ -24,8 +24,7 @@
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
         "@typescript-eslint/types",
-        "@typescript-eslint/utils",
-        "eslint-plugin-import"
+        "@typescript-eslint/utils"
       ]
     },
     "packages/dtslint-runner": {
