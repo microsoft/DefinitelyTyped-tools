@@ -39,11 +39,8 @@
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.5700",
     "esbuild": "^0.21.5",
-    "eslint": "catalog:",
-    "jest-file-snapshot": "catalog:",
     "rimraf": "^5.0.7",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.4.5"
+    "typescript": "catalog:"
   },
   "scripts": {
     "prestart": "pnpm run build",
@@ -56,7 +53,6 @@
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
     "start": "func start",
-    "lint": "eslint --report-unused-disable-directives . --ext .ts",
     "test": "jest"
   },
   "jest": {

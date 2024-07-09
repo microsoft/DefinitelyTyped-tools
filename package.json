@@ -23,6 +23,7 @@
     "eslint": "catalog:",
     "eslint-plugin-jsdoc": "catalog:",
     "jest": "^29.7.0",
+    "jest-file-snapshot": "^0.5.0",
     "knip": "^5.25.1",
     "prettier": "^3.2.2",
     "ts-jest": "^29.1.1",
