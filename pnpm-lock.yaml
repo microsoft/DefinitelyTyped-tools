@@ -27,6 +27,9 @@ catalogs:
     '@typescript-eslint/utils':
       specifier: ^7.14.1
       version: 7.14.1
+    eslint:
+      specifier: ^8.40.0
+      version: 8.57.0
     eslint-plugin-jsdoc:
       specifier: ^48.5.2
       version: 48.5.2
@@ -73,7 +76,7 @@ importers:
         specifier: 'catalog:'
         version: 7.14.1(eslint@8.57.0)(typescript@5.5.3)
       eslint:
-        specifier: ^8.57.0
+        specifier: 'catalog:'
         version: 8.57.0
       eslint-plugin-import:
         specifier: ^2.29.1
@@ -210,7 +213,7 @@ importers:
         specifier: ^7.14.1
         version: 7.14.1(eslint@8.57.0)(typescript@5.5.3)
       eslint:
-        specifier: ^8.57.0
+        specifier: 'catalog:'
         version: 8.57.0
       eslint-plugin-import:
         specifier: ^2.29.1
@@ -275,7 +278,7 @@ importers:
         specifier: 'catalog:'
         version: 7.14.1(eslint@8.57.0)(typescript@5.5.3)
       eslint:
-        specifier: ^8.40.0
+        specifier: 'catalog:'
         version: 8.57.0
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
@@ -386,7 +389,7 @@ importers:
         specifier: ^0.21.5
         version: 0.21.5
       eslint:
-        specifier: ^8.57.0
+        specifier: 'catalog:'
         version: 8.57.0
       jest:
         specifier: ^29.7.0
@@ -5754,10 +5757,10 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       espree: 9.6.1
       globals: 13.23.0
-      ignore: 5.2.4
+      ignore: 5.3.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       minimatch: 3.1.2
@@ -5776,7 +5779,7 @@ snapshots:
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -7926,7 +7929,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -7940,7 +7943,7 @@ snapshots:
       glob-parent: 6.0.2
       globals: 13.23.0
       graphemer: 1.4.0
-      ignore: 5.2.4
+      ignore: 5.3.1
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3

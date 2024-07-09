@@ -33,7 +33,7 @@
     "@typescript-eslint/types": "^7.14.1",
     "@typescript-eslint/typescript-estree": "^7.14.1",
     "@typescript-eslint/utils": "^7.14.1",
-    "eslint": "^8.57.0",
+    "eslint": "catalog:",
     "eslint-plugin-import": "^2.29.1",
     "semver": "catalog:",
     "strip-json-comments": "^3.1.1"
