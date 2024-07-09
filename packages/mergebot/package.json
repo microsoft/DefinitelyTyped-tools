@@ -38,7 +38,7 @@
     "@types/yargs": "catalog:",
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.5907",
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.23.0",
     "rimraf": "^5.0.9",
     "typescript": "catalog:"
   },
