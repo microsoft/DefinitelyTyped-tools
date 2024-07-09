@@ -245,9 +245,6 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.5.6
-      '@types/strip-json-comments':
-        specifier: ^3.0.0
-        version: 3.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.5.3
@@ -455,7 +452,7 @@ importers:
         specifier: 'catalog:'
         version: 7.5.6
       '@types/yargs':
-        specifier: ^17.0.32
+        specifier: 'catalog:'
         version: 17.0.32
 
   packages/retag:
@@ -489,7 +486,7 @@ importers:
         specifier: 'catalog:'
         version: 7.5.6
       '@types/yargs':
-        specifier: ^17.0.32
+        specifier: 'catalog:'
         version: 17.0.32
 
   packages/typescript-packages:
@@ -1532,10 +1529,6 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
-
-  '@types/strip-json-comments@3.0.0':
-    resolution: {integrity: sha512-+vSlZeCCGm/1Q3WwBJDUSGHvADTQjRl4Fve0AG9H+A4+xgJ7yAkWKoc4g7I9UoVqtwCzjv2g/GZn4xipokMYyQ==}
-    deprecated: This is a stub types definition. strip-json-comments provides its own type definitions, so you do not need this installed.
 
   '@types/tar-stream@3.1.3':
     resolution: {integrity: sha512-Zbnx4wpkWBMBSu5CytMbrT5ZpMiF55qgM+EpHzR4yIDu7mv52cej8hTkOc6K+LzpkOAbxwn/m7j3iO+/l42YkQ==}
@@ -6447,10 +6440,6 @@ snapshots:
       '@types/node': 18.19.39
 
   '@types/stack-utils@2.0.3': {}
-
-  '@types/strip-json-comments@3.0.0':
-    dependencies:
-      strip-json-comments: 3.1.1
 
   '@types/tar-stream@3.1.3':
     dependencies:
