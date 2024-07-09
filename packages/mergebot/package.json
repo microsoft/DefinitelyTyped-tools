@@ -40,8 +40,7 @@
     "azure-functions-core-tools": "^4.0.5700",
     "esbuild": "^0.21.5",
     "eslint": "catalog:",
-    "jest": "^29.7.0",
-    "jest-file-snapshot": "^0.5.0",
+    "jest-file-snapshot": "catalog:",
     "rimraf": "^5.0.7",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"

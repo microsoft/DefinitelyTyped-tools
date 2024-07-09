@@ -39,7 +39,7 @@
     "@types/eslint": "catalog:",
     "@types/semver": "catalog:",
     "glob": "^10.3.10",
-    "jest-file-snapshot": "^0.5.0",
+    "jest-file-snapshot": "catalog:",
     "strip-ansi": "^6.0.1",
     "typescript": "catalog:",
     "typescript-5.4": "npm:typescript@~5.4.0-0",

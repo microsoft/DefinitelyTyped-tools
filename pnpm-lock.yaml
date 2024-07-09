@@ -36,6 +36,9 @@ catalogs:
     eslint-plugin-jsdoc:
       specifier: ^48.5.2
       version: 48.5.2
+    jest-file-snapshot:
+      specifier: ^0.5.0
+      version: 0.5.0
     pacote:
       specifier: ^17.0.5
       version: 17.0.6
@@ -303,7 +306,7 @@ importers:
         specifier: ^10.3.10
         version: 10.3.10
       jest-file-snapshot:
-        specifier: ^0.5.0
+        specifier: 'catalog:'
         version: 0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe)
       strip-ansi:
         specifier: ^6.0.1
@@ -394,11 +397,8 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@18.19.39)(ts-node@9.1.1(typescript@5.5.2))
       jest-file-snapshot:
-        specifier: ^0.5.0
+        specifier: 'catalog:'
         version: 0.5.0(patch_hash=onu36a7gyyhv46dluxj27tjeqe)
       rimraf:
         specifier: ^5.0.7

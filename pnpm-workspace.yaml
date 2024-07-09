@@ -13,5 +13,6 @@ catalog:
   "semver": "^7.5.4"
   eslint: '^8.40.0'
   eslint-plugin-jsdoc: '^48.5.2'
+  "jest-file-snapshot": "^0.5.0"
   pacote: "^17.0.5"
   typescript: '^5.5.3'
