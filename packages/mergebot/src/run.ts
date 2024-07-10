@@ -153,10 +153,9 @@ const start = async function () {
     const ids = cards.map((c) => c.id).filter((c) => !cardIDs.includes(c));
     if (ids.length === 0) continue;
     console.log(`Cleaning up closed PRs in "${name}"`);
-    // don't actually do the deletions, until I follow this and make sure that it's working fine
     for (const id of ids) {
       const info = await runQueryToGetPRForCardId(id);
-      await deleteObject(id, info === undefined ? "???" : info.state === "CLOSED" ? undefined : "#" + info.number);
+      await deleteObject(id, info === undefined ? "???" : (info.state === "CLOSED" || info.state === "MERGED") ? undefined : "#" + info.number);
     }
   }
   if (failures.length) {

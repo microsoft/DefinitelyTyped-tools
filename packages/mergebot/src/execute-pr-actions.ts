@@ -99,14 +99,11 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
 
 async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository_pullRequest) {
   if (!actions.projectColumn) return [];
-  // TODO: New code is very repetitive and verbose
   const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
+  const columnName =
+    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
   if (actions.projectColumn === "*REMOVE*") {
-    if (
-      !card ||
-      (card.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
-        card.fieldValueByName.name === "Recently Merged")
-    ) {
+    if (!card || columnName === "Recently Merged") {
       return [];
     } else {
       return [
@@ -118,13 +115,9 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
     }
   }
   // Existing card is ok => do nothing
-  if (
-    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
-    card.fieldValueByName.name === actions.projectColumn
-  )
-    return [];
+  if (columnName === actions.projectColumn) return [];
   const columns = await getProjectBoardColumns();
-  const projectId = projectIdStatic;
+  const projectId = card ? card.project.id : projectIdStatic;
   const fieldId =
     card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
     card.fieldValueByName.field.__typename === "ProjectV2SingleSelectField"
@@ -152,7 +145,7 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
     return [
       createMutation<schema.UpdateProjectV2ItemFieldValueInput>("updateProjectV2ItemFieldValue", {
         itemId: card.id,
-        projectId: card.project.id,
+        projectId,
         fieldId,
         value: { singleSelectOptionId: columns.get(actions.projectColumn!) },
       }),

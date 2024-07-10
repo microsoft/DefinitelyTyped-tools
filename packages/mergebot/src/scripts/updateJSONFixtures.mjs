@@ -3,10 +3,11 @@ import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
 // Converts old project board cards to new project board cards, left
-// around so that someone whio needs to edit fixtures can start from
+// around so that someone who needs to edit fixtures can start from
 // an existing framework
 
-//  node src/scripts/updateJSONFixtures.js
+//  node src/scripts/updateJSONFixtures.mjs
+//  (requires node >20.11 for import.meta.dirname support)
 
 // https://github.com/orgs/DefinitelyTyped/projects/1
 const projectBoardNumber = 1;
