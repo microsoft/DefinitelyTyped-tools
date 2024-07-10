@@ -8,7 +8,7 @@ import { PR } from "../queries/schema/PR";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
 import * as cachedQueries from "./cachedQueries.json";
 jest.mock("../util/cachedQueries", () => ({
-  getProjectBoardColumns: jest.fn(() => new Map(cachedQueries.getProjectBoardColumns.map(o => [o.name,o.optionId]))),
+  getProjectBoardColumns: jest.fn(() => new Map(cachedQueries.getProjectBoardColumns.map((o) => [o.name, o.optionId]))),
   getLabels: jest.fn(() => cachedQueries.getLabels),
 }));
 import { executePrActions } from "../execute-pr-actions";

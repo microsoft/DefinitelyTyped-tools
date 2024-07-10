@@ -24,7 +24,17 @@ export interface GetProjectBoardCards_repository_projectV2_items_pageInfo {
 }
 
 export interface GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
-  __typename: "ProjectV2ItemFieldDateValue" | "ProjectV2ItemFieldIterationValue" | "ProjectV2ItemFieldLabelValue" | "ProjectV2ItemFieldMilestoneValue" | "ProjectV2ItemFieldNumberValue" | "ProjectV2ItemFieldPullRequestValue" | "ProjectV2ItemFieldRepositoryValue" | "ProjectV2ItemFieldReviewerValue" | "ProjectV2ItemFieldTextValue" | "ProjectV2ItemFieldUserValue";
+  __typename:
+    | "ProjectV2ItemFieldDateValue"
+    | "ProjectV2ItemFieldIterationValue"
+    | "ProjectV2ItemFieldLabelValue"
+    | "ProjectV2ItemFieldMilestoneValue"
+    | "ProjectV2ItemFieldNumberValue"
+    | "ProjectV2ItemFieldPullRequestValue"
+    | "ProjectV2ItemFieldRepositoryValue"
+    | "ProjectV2ItemFieldReviewerValue"
+    | "ProjectV2ItemFieldTextValue"
+    | "ProjectV2ItemFieldUserValue";
 }
 
 export interface GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
@@ -35,7 +45,9 @@ export interface GetProjectBoardCards_repository_projectV2_items_nodes_fieldValu
   name: string | null;
 }
 
-export type GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName = GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue | GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
+export type GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName =
+  | GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue
+  | GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
 
 export interface GetProjectBoardCards_repository_projectV2_items_nodes {
   __typename: "ProjectV2Item";

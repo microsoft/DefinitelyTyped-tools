@@ -3,7 +3,15 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CommentAuthorAssociation, MergeableState, PullRequestState, PullRequestReviewState, CheckConclusionState, CheckStatusState, StatusState } from "./graphql-global-types";
+import {
+  CommentAuthorAssociation,
+  MergeableState,
+  PullRequestState,
+  PullRequestReviewState,
+  CheckConclusionState,
+  CheckStatusState,
+  StatusState,
+} from "./graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: PR
@@ -86,7 +94,62 @@ export interface PR_repository_pullRequest_commitIds {
 }
 
 export interface PR_repository_pullRequest_timelineItems_nodes_AddedToMergeQueueEvent {
-  __typename: "AddedToMergeQueueEvent" | "AddedToProjectEvent" | "AssignedEvent" | "AutoMergeDisabledEvent" | "AutoMergeEnabledEvent" | "AutoRebaseEnabledEvent" | "AutoSquashEnabledEvent" | "AutomaticBaseChangeFailedEvent" | "AutomaticBaseChangeSucceededEvent" | "BaseRefChangedEvent" | "BaseRefDeletedEvent" | "BaseRefForcePushedEvent" | "ClosedEvent" | "CommentDeletedEvent" | "ConnectedEvent" | "ConvertToDraftEvent" | "ConvertedNoteToIssueEvent" | "ConvertedToDiscussionEvent" | "CrossReferencedEvent" | "DemilestonedEvent" | "DeployedEvent" | "DeploymentEnvironmentChangedEvent" | "DisconnectedEvent" | "HeadRefDeletedEvent" | "HeadRefForcePushedEvent" | "HeadRefRestoredEvent" | "IssueComment" | "LabeledEvent" | "LockedEvent" | "MarkedAsDuplicateEvent" | "MentionedEvent" | "MergedEvent" | "MilestonedEvent" | "PinnedEvent" | "PullRequestCommit" | "PullRequestCommitCommentThread" | "PullRequestReview" | "PullRequestReviewThread" | "PullRequestRevisionMarker" | "ReferencedEvent" | "RemovedFromMergeQueueEvent" | "RemovedFromProjectEvent" | "RenamedTitleEvent" | "ReviewDismissedEvent" | "ReviewRequestRemovedEvent" | "ReviewRequestedEvent" | "SubscribedEvent" | "TransferredEvent" | "UnassignedEvent" | "UnlabeledEvent" | "UnlockedEvent" | "UnmarkedAsDuplicateEvent" | "UnpinnedEvent" | "UnsubscribedEvent" | "UserBlockedEvent";
+  __typename:
+    | "AddedToMergeQueueEvent"
+    | "AddedToProjectEvent"
+    | "AssignedEvent"
+    | "AutoMergeDisabledEvent"
+    | "AutoMergeEnabledEvent"
+    | "AutoRebaseEnabledEvent"
+    | "AutoSquashEnabledEvent"
+    | "AutomaticBaseChangeFailedEvent"
+    | "AutomaticBaseChangeSucceededEvent"
+    | "BaseRefChangedEvent"
+    | "BaseRefDeletedEvent"
+    | "BaseRefForcePushedEvent"
+    | "ClosedEvent"
+    | "CommentDeletedEvent"
+    | "ConnectedEvent"
+    | "ConvertToDraftEvent"
+    | "ConvertedNoteToIssueEvent"
+    | "ConvertedToDiscussionEvent"
+    | "CrossReferencedEvent"
+    | "DemilestonedEvent"
+    | "DeployedEvent"
+    | "DeploymentEnvironmentChangedEvent"
+    | "DisconnectedEvent"
+    | "HeadRefDeletedEvent"
+    | "HeadRefForcePushedEvent"
+    | "HeadRefRestoredEvent"
+    | "IssueComment"
+    | "LabeledEvent"
+    | "LockedEvent"
+    | "MarkedAsDuplicateEvent"
+    | "MentionedEvent"
+    | "MergedEvent"
+    | "MilestonedEvent"
+    | "PinnedEvent"
+    | "PullRequestCommit"
+    | "PullRequestCommitCommentThread"
+    | "PullRequestReview"
+    | "PullRequestReviewThread"
+    | "PullRequestRevisionMarker"
+    | "ReferencedEvent"
+    | "RemovedFromMergeQueueEvent"
+    | "RemovedFromProjectEvent"
+    | "RenamedTitleEvent"
+    | "ReviewDismissedEvent"
+    | "ReviewRequestRemovedEvent"
+    | "ReviewRequestedEvent"
+    | "SubscribedEvent"
+    | "TransferredEvent"
+    | "UnassignedEvent"
+    | "UnlabeledEvent"
+    | "UnlockedEvent"
+    | "UnmarkedAsDuplicateEvent"
+    | "UnpinnedEvent"
+    | "UnsubscribedEvent"
+    | "UserBlockedEvent";
 }
 
 export interface PR_repository_pullRequest_timelineItems_nodes_ReopenedEvent {
@@ -129,7 +192,11 @@ export interface PR_repository_pullRequest_timelineItems_nodes_MovedColumnsInPro
   projectColumnName: string;
 }
 
-export type PR_repository_pullRequest_timelineItems_nodes = PR_repository_pullRequest_timelineItems_nodes_AddedToMergeQueueEvent | PR_repository_pullRequest_timelineItems_nodes_ReopenedEvent | PR_repository_pullRequest_timelineItems_nodes_ReadyForReviewEvent | PR_repository_pullRequest_timelineItems_nodes_MovedColumnsInProjectEvent;
+export type PR_repository_pullRequest_timelineItems_nodes =
+  | PR_repository_pullRequest_timelineItems_nodes_AddedToMergeQueueEvent
+  | PR_repository_pullRequest_timelineItems_nodes_ReopenedEvent
+  | PR_repository_pullRequest_timelineItems_nodes_ReadyForReviewEvent
+  | PR_repository_pullRequest_timelineItems_nodes_MovedColumnsInProjectEvent;
 
 export interface PR_repository_pullRequest_timelineItems {
   __typename: "PullRequestTimelineItemsConnection";
@@ -528,7 +595,17 @@ export interface PR_repository_pullRequest_projectItems_nodes_project {
 }
 
 export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
-  __typename: "ProjectV2ItemFieldDateValue" | "ProjectV2ItemFieldIterationValue" | "ProjectV2ItemFieldLabelValue" | "ProjectV2ItemFieldMilestoneValue" | "ProjectV2ItemFieldNumberValue" | "ProjectV2ItemFieldPullRequestValue" | "ProjectV2ItemFieldRepositoryValue" | "ProjectV2ItemFieldReviewerValue" | "ProjectV2ItemFieldTextValue" | "ProjectV2ItemFieldUserValue";
+  __typename:
+    | "ProjectV2ItemFieldDateValue"
+    | "ProjectV2ItemFieldIterationValue"
+    | "ProjectV2ItemFieldLabelValue"
+    | "ProjectV2ItemFieldMilestoneValue"
+    | "ProjectV2ItemFieldNumberValue"
+    | "ProjectV2ItemFieldPullRequestValue"
+    | "ProjectV2ItemFieldRepositoryValue"
+    | "ProjectV2ItemFieldReviewerValue"
+    | "ProjectV2ItemFieldTextValue"
+    | "ProjectV2ItemFieldUserValue";
 }
 
 export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2Field {
@@ -543,7 +620,9 @@ export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_P
   id: string;
 }
 
-export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field = PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2Field | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2SingleSelectField;
+export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field =
+  | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2Field
+  | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field_ProjectV2SingleSelectField;
 
 export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
   __typename: "ProjectV2ItemFieldSingleSelectValue";
@@ -557,7 +636,9 @@ export interface PR_repository_pullRequest_projectItems_nodes_fieldValueByName_P
   field: PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue_field;
 }
 
-export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName = PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
+export type PR_repository_pullRequest_projectItems_nodes_fieldValueByName =
+  | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldDateValue
+  | PR_repository_pullRequest_projectItems_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
 
 export interface PR_repository_pullRequest_projectItems_nodes {
   __typename: "ProjectV2Item";

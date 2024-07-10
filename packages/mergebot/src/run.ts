@@ -155,7 +155,10 @@ const start = async function () {
     console.log(`Cleaning up closed PRs in "${name}"`);
     for (const id of ids) {
       const info = await runQueryToGetPRForCardId(id);
-      await deleteObject(id, info === undefined ? "???" : (info.state === "CLOSED" || info.state === "MERGED") ? undefined : "#" + info.number);
+      await deleteObject(
+        id,
+        info === undefined ? "???" : info.state === "CLOSED" || info.state === "MERGED" ? undefined : "#" + info.number,
+      );
     }
   }
   if (failures.length) {

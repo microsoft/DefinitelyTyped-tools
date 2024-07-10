@@ -24,7 +24,17 @@ export interface GetProjectColumns_repository_projectV2_items_pageInfo {
 }
 
 export interface GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
-  __typename: "ProjectV2ItemFieldDateValue" | "ProjectV2ItemFieldIterationValue" | "ProjectV2ItemFieldLabelValue" | "ProjectV2ItemFieldMilestoneValue" | "ProjectV2ItemFieldNumberValue" | "ProjectV2ItemFieldPullRequestValue" | "ProjectV2ItemFieldRepositoryValue" | "ProjectV2ItemFieldReviewerValue" | "ProjectV2ItemFieldTextValue" | "ProjectV2ItemFieldUserValue";
+  __typename:
+    | "ProjectV2ItemFieldDateValue"
+    | "ProjectV2ItemFieldIterationValue"
+    | "ProjectV2ItemFieldLabelValue"
+    | "ProjectV2ItemFieldMilestoneValue"
+    | "ProjectV2ItemFieldNumberValue"
+    | "ProjectV2ItemFieldPullRequestValue"
+    | "ProjectV2ItemFieldRepositoryValue"
+    | "ProjectV2ItemFieldReviewerValue"
+    | "ProjectV2ItemFieldTextValue"
+    | "ProjectV2ItemFieldUserValue";
 }
 
 export interface GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
@@ -39,7 +49,9 @@ export interface GetProjectColumns_repository_projectV2_items_nodes_fieldValueBy
   optionId: string | null;
 }
 
-export type GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName = GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue | GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
+export type GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName =
+  | GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue
+  | GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
 
 export interface GetProjectColumns_repository_projectV2_items_nodes {
   __typename: "ProjectV2Item";

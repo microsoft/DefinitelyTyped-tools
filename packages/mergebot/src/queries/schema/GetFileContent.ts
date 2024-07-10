@@ -23,7 +23,9 @@ export interface GetFileContent_repository_object_Blob {
   byteSize: number;
 }
 
-export type GetFileContent_repository_object = GetFileContent_repository_object_Commit | GetFileContent_repository_object_Blob;
+export type GetFileContent_repository_object =
+  | GetFileContent_repository_object_Commit
+  | GetFileContent_repository_object_Blob;
 
 export interface GetFileContent_repository {
   __typename: "Repository";
