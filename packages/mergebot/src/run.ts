@@ -26,6 +26,7 @@ const args = yargs(process.argv.slice(2))
     "show-extended": { alias: ["s3"], type: "boolean", desc: "display extended info" },
     "show-actions": { alias: ["s4"], type: "boolean", desc: "display actions" },
     "show-mutations": { alias: ["s5"], type: "boolean", desc: "display mutations" },
+    "project-only": { type: "boolean", desc: "Only change the project board, nothing else." },
   })
   .coerce("_", (prs: (number | string)[]) =>
     prs.map((pr) => {
@@ -56,6 +57,7 @@ const args = yargs(process.argv.slice(2))
   showActions: boolean | undefined;
   "show-mutations": boolean | undefined;
   showMutations: boolean | undefined;
+  "project-only": boolean | undefined;
   _: ((n: number) => boolean)[] & (string | number)[];
 };
 const shouldRunOn: (n: number) => boolean = args._.length === 0 ? (_n) => true : (n) => args._.some((p) => p(n));
@@ -117,7 +119,7 @@ const start = async function () {
     const actions = computeActions(state, args["show-extended"] ? (i) => show("Extended Info", i) : undefined);
     if (args["show-actions"]) show("Actions", actions);
     // Act on the actions
-    const mutations = await executePrActions(actions, prInfo, args.dry);
+    const mutations = await executePrActions(actions, prInfo, args.dry, args["project-only"]);
     if (args["show-mutations"] ?? args.dry) show("Mutations", mutations);
   }
   if (args.dry || !args.cleanup) return;

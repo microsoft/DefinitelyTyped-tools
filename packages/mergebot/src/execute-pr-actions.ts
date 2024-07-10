@@ -23,22 +23,31 @@ const projectIdStatic = "PVT_kwDOADeBNM4AkH1q";
  */
 const fieldIdStatic = "PVTSSF_lADOADeBNM4AkH1qzgcYOEM";
 
-export async function executePrActions(actions: Actions, pr: PR_repository_pullRequest, dry?: boolean) {
+export async function executePrActions(
+  actions: Actions,
+  pr: PR_repository_pullRequest,
+  dry?: boolean,
+  projectOnly?: boolean,
+) {
   const botComments: ParsedComment[] = getBotComments(pr);
-  const mutations = noNullish([
-    // the mutations are ordered for presentation in the timeline:
-    // * welcome comment is always first
-    // * then labels, as a short "here's what I noticed"
-    // * column changes after that (follow the labels since this is the consequence)
-    // * state changes next, similar to column changes
-    // * finally, any other comments (better to see label changes and then a comment that explains what happens now)
-    ...getMutationsForComments(actions, pr.id, botComments, true),
-    ...(await getMutationsForLabels(actions, pr)),
-    ...(await getMutationsForProjectChanges(actions, pr)),
-    ...getMutationsForCommentRemovals(actions, botComments),
-    ...getMutationsForChangingPRState(actions, pr),
-    ...getMutationsForComments(actions, pr.id, botComments, false),
-  ]);
+  const mutations = noNullish(
+    projectOnly
+      ? await getMutationsForProjectChanges(actions, pr)
+      : [
+          // the mutations are ordered for presentation in the timeline:
+          // * welcome comment is always first
+          // * then labels, as a short "here's what I noticed"
+          // * column changes after that (follow the labels since this is the consequence)
+          // * state changes next, similar to column changes
+          // * finally, any other comments (better to see label changes and then a comment that explains what happens now)
+          ...getMutationsForComments(actions, pr.id, botComments, true),
+          ...(await getMutationsForLabels(actions, pr)),
+          ...(await getMutationsForProjectChanges(actions, pr)),
+          ...getMutationsForCommentRemovals(actions, botComments),
+          ...getMutationsForChangingPRState(actions, pr),
+          ...getMutationsForComments(actions, pr.id, botComments, false),
+        ],
+  );
   const restCalls = getMutationsForReRunningCI(actions);
   if (!dry) {
     // Perform mutations one at a time, passing in the result of the previous mutation to the next
