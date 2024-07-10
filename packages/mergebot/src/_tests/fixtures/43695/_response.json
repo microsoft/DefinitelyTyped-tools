@@ -370,42 +370,44 @@
           "__typename": "PullRequestChangedFileConnection",
           "totalCount": 4
         },
-        "projectCards": {
+        "__typename": "PullRequest",
+        "projectItems": {
           "nodes": [
             {
               "id": "MDExOlByb2plY3RDYXJkMzU4NjkxNTQ=",
               "project": {
-                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
-                "number": 5,
-                "name": "New Pull Request Status Board",
-                "__typename": "Project"
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
               },
-              "column": {
-                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
                 "name": "Waiting for Code Reviews",
-                "__typename": "ProjectColumn"
-              },
-              "__typename": "ProjectCard"
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
+              }
             },
             {
               "id": "MDExOlByb2plY3RDYXJkMzU4NzA5Njc=",
               "project": {
-                "id": "MDc6UHJvamVjdDE0NDQ5NTY=",
-                "number": 4,
-                "name": "Pull Request Status Board",
-                "__typename": "Project"
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
               },
-              "column": {
-                "id": "MDEzOlByb2plY3RDb2x1bW4yNTYxMzU5",
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
                 "name": "Needs Author Attention",
-                "__typename": "ProjectColumn"
-              },
-              "__typename": "ProjectCard"
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
+              }
             }
           ],
-          "__typename": "ProjectCardConnection"
-        },
-        "__typename": "PullRequest"
+          "__typename": "ProjectV2ItemConnection"
+        }
       },
       "__typename": "Repository"
     }

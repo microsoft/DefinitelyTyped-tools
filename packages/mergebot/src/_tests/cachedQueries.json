@@ -2,38 +2,38 @@
   "comment": "Generate & update with `pnpm run update-test-data`",
   "getProjectBoardColumns": [
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "d389394c",
       "name": "Needs Author Action"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "f75ad846",
       "name": "Needs Maintainer Action"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "47fc9ee4",
       "name": "Needs Maintainer Review"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI2",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "4ab7a682",
       "name": "Other"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI1",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "fee515dc",
       "name": "Recently Merged"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIz",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "7da042bf",
       "name": "Waiting for Author to Merge"
     },
     {
-      "__typename": "ProjectColumn",
-      "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw",
+      "__typename": "ProjectV2ItemFieldSingleSelectValue",
+      "optionId": "98236657",
       "name": "Waiting for Code Reviews"
     }
   ],

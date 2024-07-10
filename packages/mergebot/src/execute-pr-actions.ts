@@ -10,33 +10,73 @@ import { tagsToDeleteIfNotPosted } from "./comments";
 import * as comment from "./util/comment";
 import { request } from "https";
 
-// https://github.com/DefinitelyTyped/DefinitelyTyped/projects/5
-const projectBoardNumber = 5;
+// https://github.com/orgs/DefinitelyTyped/projects/1
+const projectBoardNumber = 1;
+/**
+ * The id for the project board, saved statically for inserting new cards.
+ * you can query this with `projectV2(number: 1) { id }`
+ */
+const projectIdStatic = "PVT_kwDOADeBNM4AkH1q";
+/**
+ * The id for the Status field, which controls the column that the card appears in.
+ * This is the statically saved ID, used as a fallback if the field id isn't found dynamically.
+ */
+const fieldIdStatic = "PVTSSF_lADOADeBNM4AkH1qzgcYOEM";
 
-export async function executePrActions(actions: Actions, pr: PR_repository_pullRequest, dry?: boolean) {
+export async function executePrActions(
+  actions: Actions,
+  pr: PR_repository_pullRequest,
+  dry?: boolean,
+  projectOnly?: boolean,
+) {
   const botComments: ParsedComment[] = getBotComments(pr);
-  const mutations = noNullish([
-    // the mutations are ordered for presentation in the timeline:
-    // * welcome comment is always first
-    // * then labels, as a short "here's what I noticed"
-    // * column changes after that (follow the labels since this is the consequence)
-    // * state changes next, similar to column changes
-    // * finally, any other comments (better to see label changes and then a comment that explains what happens now)
-    ...getMutationsForComments(actions, pr.id, botComments, true),
-    ...(await getMutationsForLabels(actions, pr)),
-    ...(await getMutationsForProjectChanges(actions, pr)),
-    ...getMutationsForCommentRemovals(actions, botComments),
-    ...getMutationsForChangingPRState(actions, pr),
-    ...getMutationsForComments(actions, pr.id, botComments, false),
-  ]);
+  const mutations = noNullish(
+    projectOnly
+      ? await getMutationsForProjectChanges(actions, pr)
+      : [
+          // the mutations are ordered for presentation in the timeline:
+          // * welcome comment is always first
+          // * then labels, as a short "here's what I noticed"
+          // * column changes after that (follow the labels since this is the consequence)
+          // * state changes next, similar to column changes
+          // * finally, any other comments (better to see label changes and then a comment that explains what happens now)
+          ...getMutationsForComments(actions, pr.id, botComments, true),
+          ...(await getMutationsForLabels(actions, pr)),
+          ...(await getMutationsForProjectChanges(actions, pr)),
+          ...getMutationsForCommentRemovals(actions, botComments),
+          ...getMutationsForChangingPRState(actions, pr),
+          ...getMutationsForComments(actions, pr.id, botComments, false),
+        ],
+  );
   const restCalls = getMutationsForReRunningCI(actions);
   if (!dry) {
-    // Perform mutations one at a time
-    for (const mutation of mutations)
-      await client.mutate(mutation as MutationOptions<void, { input: schema.AddCommentInput }>);
+    // Perform mutations one at a time, passing in the result of the previous mutation to the next
+    let last: schema.Mutation = {};
+    for (const mutation of mutations) {
+      if (typeof mutation === "function") last = (await client.mutate(mutation(last))).data ?? {};
+      else
+        last =
+          (await client.mutate(mutation as MutationOptions<schema.Mutation, { input: schema.AddCommentInput }>)).data ??
+          {};
+    }
     for (const restCall of restCalls) await doRestCall(restCall);
+    return [...mutations, ...restCalls];
+  } else {
+    return [
+      ...mutations.map((m) =>
+        typeof m === "function"
+          ? m({
+              addProjectV2ItemById: {
+                item: {
+                  id: "TEST",
+                } as any,
+              },
+            })
+          : m,
+      ),
+      ...restCalls,
+    ];
   }
-  return [...mutations, ...restCalls];
 }
 
 async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullRequest) {
@@ -59,21 +99,58 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
 
 async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository_pullRequest) {
   if (!actions.projectColumn) return [];
-  const card = pr.projectCards.nodes?.find((card) => card?.project.number === projectBoardNumber);
+  const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
+  const columnName =
+    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
   if (actions.projectColumn === "*REMOVE*") {
-    if (!card || card.column?.name === "Recently Merged") return [];
-    return [createMutation<schema.DeleteProjectCardInput>("deleteProjectCard", { cardId: card.id })];
+    if (!card || columnName === "Recently Merged") {
+      return [];
+    } else {
+      return [
+        createMutation<schema.DeleteProjectV2ItemInput>("deleteProjectV2Item", {
+          itemId: card.id,
+          projectId: card.project.id,
+        }),
+      ];
+    }
   }
   // Existing card is ok => do nothing
-  if (card?.column?.name === actions.projectColumn) return [];
-  const columnId = await getProjectBoardColumnIdByName(actions.projectColumn);
-  return [
-    card
-      ? // Move existing card
-        createMutation<schema.MoveProjectCardInput>("moveProjectCard", { cardId: card.id, columnId })
-      : // No existing card => create a new one
-        createMutation<schema.AddProjectCardInput>("addProjectCard", { contentId: pr.id, projectColumnId: columnId }),
-  ];
+  if (columnName === actions.projectColumn) return [];
+  const columns = await getProjectBoardColumns();
+  const projectId = card ? card.project.id : projectIdStatic;
+  const fieldId =
+    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
+    card.fieldValueByName.field.__typename === "ProjectV2SingleSelectField"
+      ? card.fieldValueByName.field.id
+      : fieldIdStatic;
+  if (!card) {
+    return [
+      createMutation<schema.AddProjectV2ItemByIdInput>(
+        "addProjectV2ItemById",
+        {
+          contentId: pr.id,
+          projectId,
+        },
+        "item { id }",
+      ),
+      (prev: schema.Mutation) =>
+        createMutation<schema.UpdateProjectV2ItemFieldValueInput>("updateProjectV2ItemFieldValue", {
+          itemId: prev.addProjectV2ItemById?.item?.id!,
+          projectId,
+          fieldId,
+          value: { singleSelectOptionId: columns.get(actions.projectColumn!) },
+        }),
+    ];
+  } else {
+    return [
+      createMutation<schema.UpdateProjectV2ItemFieldValueInput>("updateProjectV2ItemFieldValue", {
+        itemId: card.id,
+        projectId,
+        fieldId,
+        value: { singleSelectOptionId: columns.get(actions.projectColumn!) },
+      }),
+    ];
+  }
 }
 
 interface ParsedComment {
@@ -147,13 +224,6 @@ function getMutationsForChangingPRState(actions: Actions, pr: PR_repository_pull
       ? createMutation<schema.ClosePullRequestInput>("closePullRequest", { pullRequestId: pr.id })
       : null,
   ];
-}
-
-async function getProjectBoardColumnIdByName(name: string): Promise<string> {
-  const columns = await getProjectBoardColumns();
-  const res = columns.find((e) => e.name === name)?.id;
-  if (!res) throw new Error(`No project board column named "${name}" exists`);
-  return res;
 }
 
 async function getLabelIdByName(name: string): Promise<string> {

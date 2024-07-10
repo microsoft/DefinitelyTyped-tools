@@ -1,10 +1,10 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { GetLabels, GetLabelsVariables, GetLabels_repository_labels_nodes } from "./schema/GetLabels";
-import { GetProjectColumns as getProjectColumns } from "./schema/GetProjectColumns";
+import { GetProjectColumns, GetProjectColumnsVariables } from "./schema/GetProjectColumns";
 import { client } from "../graphql-client";
 import { noNullish } from "../util/util";
 
-export { getLabels, getProjectColumns as GetProjectColumns };
+export { getLabels, getProjectColumns };
 
 const getLabelsQuery: TypedDocumentNode<GetLabels, GetLabelsVariables> = gql`
   query GetLabels($endCursor: String) {
@@ -39,18 +39,26 @@ async function getLabels() {
     endCursor = someLabels.pageInfo.endCursor;
   }
 }
-// TODO: projects don't have columns anymore; they have states -- and I'm not sure they're enumerable
-// might need to iterate thru cards and check the state of them
-const getProjectColumns: TypedDocumentNode<getProjectColumns, unknown> = gql`
-  query GetProjectColumns {
+
+const getProjectColumns: TypedDocumentNode<GetProjectColumns, GetProjectColumnsVariables> = gql`
+  query GetProjectColumns($cursor: String) {
     repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
       id
-      project(number: 5) {
+      projectV2(number: 1) {
         id
-        columns(first: 30) {
+        items(first: 100, after: $cursor) {
+          pageInfo {
+            startCursor
+            hasNextPage
+            endCursor
+          }
           nodes {
-            id
-            name
+            fieldValueByName(name: "Status") {
+              ... on ProjectV2ItemFieldSingleSelectValue {
+                name
+                optionId
+              }
+            }
           }
         }
       }

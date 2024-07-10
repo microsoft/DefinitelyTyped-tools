@@ -1,29 +1,27 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
+import { ApolloQueryResult, gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetProjectBoardCards } from "./schema/GetProjectBoardCards";
+import { GetProjectBoardCards, GetProjectBoardCardsVariables } from "./schema/GetProjectBoardCards";
 
-// 1. bold to assume that no column has >100 cards (I've done this)
-// 2. need to unnest card expr
-// 3. need to paginate card exprs
-// 4. need to gather back into columns by hand probably
-// (and maybe assert that the card is only in one column)
-const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, never> = gql`
-  query GetProjectBoardCards {
+const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, GetProjectBoardCardsVariables> = gql`
+  query GetProjectBoardCards($cursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
-      id
-      project(number: 5) {
+      projectV2(number: 1) {
         id
-        columns(first: 100) {
+        items(first: 100, after: $cursor) {
+          pageInfo {
+            startCursor
+            hasNextPage
+            endCursor
+          }
+          totalCount
           nodes {
             id
-            name
-            cards(last: 100) {
-              totalCount
-              nodes {
-                id
-                updatedAt
+            fieldValueByName(name: "Status") {
+              ... on ProjectV2ItemFieldSingleSelectValue {
+                name
               }
             }
+            updatedAt
           }
         }
       }
@@ -35,35 +33,42 @@ interface CardInfo {
   id: string;
   updatedAt: string;
 }
-interface ColumnInfo {
-  name: string;
-  totalCount: number;
-  cards: CardInfo[];
+interface BoardInfo {
+  id: string;
+  columns: Map<string, CardInfo[]>;
 }
-
-export async function getProjectBoardCards() {
-  const results = await client.query({
-    query: getProjectBoardCardsQuery,
-    fetchPolicy: "no-cache",
-  });
-
-  const project = results.data.repository?.project;
-
-  if (!project) {
-    throw new Error("No project found");
-  }
-
-  const columns: ColumnInfo[] = [];
-  project.columns.nodes?.forEach((col) => {
-    if (!col) return;
-    const cards: CardInfo[] = [];
-    col.cards.nodes?.forEach((card) => card && cards.push({ id: card.id, updatedAt: card.updatedAt }));
-    columns.push({
-      name: col.name,
-      totalCount: col.cards.totalCount,
-      cards,
+export async function getProjectBoardCards(): Promise<BoardInfo> {
+  let cursor: string | null = null;
+  let id: string;
+  const columns: Map<string, CardInfo[]> = new Map();
+  do {
+    const results: ApolloQueryResult<GetProjectBoardCards> = await client.query({
+      query: getProjectBoardCardsQuery,
+      variables: { cursor },
+      fetchPolicy: "no-cache",
     });
-  });
 
-  return columns;
+    const project = results.data.repository?.projectV2;
+    if (!project || !project.items.nodes) {
+      throw new Error("No project found");
+    }
+    id = project.id;
+    for (const card of project.items.nodes) {
+      if (!card) {
+        continue;
+      }
+      if (card.fieldValueByName?.__typename !== "ProjectV2ItemFieldSingleSelectValue") {
+        throw new Error("Unexpected card property type: " + card.fieldValueByName?.__typename);
+      }
+      const status = card.fieldValueByName.name;
+      if (status === null) {
+        throw new Error("Unexpected column: " + status);
+      }
+      const column = columns.get(status) || [];
+      column.push({ id: card.id, updatedAt: card.updatedAt });
+      columns.set(status, column);
+    }
+    cursor = project.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor : null;
+  } while (cursor);
+  return { columns, id };
 }

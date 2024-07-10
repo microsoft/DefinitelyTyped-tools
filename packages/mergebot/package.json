@@ -58,7 +58,7 @@
   "scripts": {
     "prestart": "pnpm run build",
     "prepublishOnly": "pnpm run build",
-    "build": "tsc",
+    "build": "tsc -b",
     "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
     "watch": "tsc --watch",
     "graphql-schema": "apollo client:codegen schema --target typescript --globalTypesFile=src/queries/schema/graphql-global-types.ts",
