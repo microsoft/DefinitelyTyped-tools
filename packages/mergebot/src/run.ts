@@ -127,6 +127,7 @@ const start = async function () {
   console.log("Cleaning up cards");
   const { columns, id: projectId } = await getProjectBoardCards();
   const deleteObject = async (id: string) => {
+    console.log(`  Deleting card ${id}`);
     const mutation = createMutation<schema.DeleteProjectV2ItemInput>("deleteProjectV2Item", { projectId, itemId: id });
     await client.mutate(mutation);
   };
@@ -153,10 +154,10 @@ const start = async function () {
       if (!info) {
         // don't automatically delete these, eg, PRs that were created
         // during the scan would end up here.
-        return console.log(`  Should delete "${id}" (PR #???)`);
+        console.log(`  Should delete "${id}" (PR #???)`);
+      } else if (info.state !== "OPEN") {
+        await deleteObject(id);
       }
-      if (info.state === "OPEN") continue;
-      await deleteObject(id);
     }
   }
   if (failures.length) {
