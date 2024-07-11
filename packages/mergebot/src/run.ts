@@ -126,12 +126,8 @@ const start = async function () {
   //
   console.log("Cleaning up cards");
   const { columns, id: projectId } = await getProjectBoardCards();
-  const deleteObject = async (id: string, shoulda?: string) => {
-    if (shoulda) {
-      // don't automatically delete these, eg, PRs that were created
-      // during the scan would end up here.
-      return console.log(`  Should delete "${id}" (${shoulda})`);
-    }
+  const deleteObject = async (id: string) => {
+    console.log(`  Deleting card ${id}`);
     const mutation = createMutation<schema.DeleteProjectV2ItemInput>("deleteProjectV2Item", { projectId, itemId: id });
     await client.mutate(mutation);
   };
@@ -150,15 +146,18 @@ const start = async function () {
   // Handle other columns
   for (const [name, cards] of columns) {
     if (name === "Recently Merged") continue;
-    const ids = cards.map((c) => c.id).filter((c) => !cardIDs.includes(c));
+    const ids = cards.map((c) => c.id).filter((id) => !cardIDs.includes(id));
     if (ids.length === 0) continue;
     console.log(`Cleaning up closed PRs in "${name}"`);
     for (const id of ids) {
       const info = await runQueryToGetPRForCardId(id);
-      await deleteObject(
-        id,
-        info === undefined ? "???" : info.state === "CLOSED" || info.state === "MERGED" ? undefined : "#" + info.number,
-      );
+      if (!info) {
+        // don't automatically delete these, eg, PRs that were created
+        // during the scan would end up here.
+        console.log(`  Should delete "${id}" (PR #???)`);
+      } else if (info.state !== "OPEN") {
+        await deleteObject(id);
+      }
     }
   }
   if (failures.length) {
