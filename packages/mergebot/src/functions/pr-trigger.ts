@@ -12,10 +12,11 @@ import { httpLog, shouldRunRequest } from "../util/verify";
 import type {
   CheckSuiteEvent,
   IssueCommentEvent,
-  ProjectCardEvent,
+  ProjectsV2ItemEvent,
   PullRequestEvent,
   PullRequestReviewEvent,
 } from "@octokit/webhooks-types";
+import { runQueryToGetPRForCardId } from "../queries/card-id-to-pr-query";
 
 app.http("PR-Trigger", { methods: ["GET", "POST"], authLevel: "anonymous", handler: httpTrigger });
 const eventNames = [
@@ -23,7 +24,7 @@ const eventNames = [
   "issue_comment.created",
   "issue_comment.deleted",
   "issue_comment.edited",
-  "project_card.moved",
+  "projects_v2_item.edited",
   "pull_request.closed",
   "pull_request.edited",
   "pull_request.opened",
@@ -36,7 +37,7 @@ const eventNames = [
 type PrEvent =
   | { name: "check_suite"; payload: CheckSuiteEvent }
   | { name: "issue_comment"; payload: IssueCommentEvent }
-  | { name: "project_card"; payload: ProjectCardEvent }
+  | { name: "projects_v2_item"; payload: ProjectsV2ItemEvent }
   | { name: "pull_request"; payload: PullRequestEvent }
   | { name: "pull_request_review"; payload: PullRequestReviewEvent };
 
@@ -120,15 +121,11 @@ const prFromEvent = async (event: PrEvent) => {
       return prFromCheckSuiteEvent(event.payload);
     case "issue_comment":
       return event.payload.issue;
-    // "Parse" project_card.content_url according to repository.pulls_url
-    case "project_card": {
-      const url = event.payload.project_card.content_url;
-      return url
-        ? { number: +url.replace(/^.*\//, "") }
-        : new IgnoredBecause(
-            `Couldn't find PR number since content_url is missing: ${JSON.stringify(event.payload.project_card)}`,
-          );
-    }
+    case "projects_v2_item":
+      const pr = await runQueryToGetPRForCardId(event.payload.projects_v2_item.node_id);
+      return pr
+        ? { number: pr.number }
+        : new IgnoredBecause(`Could not find PR for card_id: ${event.payload.projects_v2_item.node_id}`);
     case "pull_request":
       return event.payload.pull_request;
     case "pull_request_review":
