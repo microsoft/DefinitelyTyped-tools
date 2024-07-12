@@ -82,7 +82,7 @@ pnpm run graphql-schema
 Run this to update the cached values:
 
 ```sh
-# Regenerate src/_tests/cachedQueries.json
+# Regenerate src/_tests/cachedQueries.js
 pnpm run update-test-data
 ```
 
