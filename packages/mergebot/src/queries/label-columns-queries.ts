@@ -47,7 +47,7 @@ const getProjectColumns: TypedDocumentNode<GetProjectColumns, GetProjectColumnsV
       projectV2(number: 1) {
         id
         fields(first: 100, after: $cursor) {
-        pageInfo {
+          pageInfo {
             startCursor
             hasNextPage
             endCursor
