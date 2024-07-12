@@ -1,0 +1,62 @@
+{
+  "type": "info",
+  "now": "2024-07-12T19:13:34.330Z",
+  "pr_number": 70024,
+  "author": "ITenthusiasm",
+  "headCommitOid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+  "mergeBaseOid": "8f212658bddb0788b463565a0f58b09e5a1d1171",
+  "lastPushDate": "2024-07-10T17:50:38.000Z",
+  "lastActivityDate": "2024-07-12T01:16:01.000Z",
+  "mergeRequestDate": "2024-07-11T22:31:59.000Z",
+  "mergeRequestUser": "k-yle",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "ws",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ws/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/ws/ws-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "loyd",
+        "mlamp",
+        "TitaneBoy",
+        "reduckted",
+        "teidesu",
+        "wojtkowiak",
+        "k-yle",
+        "cwadrupldijjit"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "rbuckton",
+      "date": "2024-07-11T21:53:41.000Z",
+      "isMaintainer": true
+    },
+    {
+      "type": "approved",
+      "reviewer": "k-yle",
+      "date": "2024-07-11T09:05:08.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 2221115037,
+  "ciResult": "pass"
+}
