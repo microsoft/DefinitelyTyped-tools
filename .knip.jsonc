@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/knip@2/schema.json",
+  "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
       "ignoreBinaries": ["only-allow"]
@@ -24,13 +24,15 @@
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
         "@typescript-eslint/types",
-        "@typescript-eslint/utils",
-        "eslint-plugin-import"
+        "@typescript-eslint/utils"
       ]
     },
     "packages/dtslint-runner": {
       "entry": ["src/index.ts", "src/post-results.ts"],
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": [
+        "@definitelytyped/dtslint"
+      ]
     },
     "packages/eslint-plugin": {
       "entry": "src/index.ts",
