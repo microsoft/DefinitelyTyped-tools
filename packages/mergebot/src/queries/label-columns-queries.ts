@@ -46,17 +46,18 @@ const getProjectColumns: TypedDocumentNode<GetProjectColumns, GetProjectColumnsV
       id
       projectV2(number: 1) {
         id
-        items(first: 100, after: $cursor) {
+        fields(first: 100, after: $cursor) {
           pageInfo {
             startCursor
             hasNextPage
             endCursor
           }
           nodes {
-            fieldValueByName(name: "Status") {
-              ... on ProjectV2ItemFieldSingleSelectValue {
+            ... on ProjectV2SingleSelectField {
+              name
+              options {
+                id
                 name
-                optionId
               }
             }
           }

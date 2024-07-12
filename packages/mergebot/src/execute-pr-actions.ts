@@ -9,6 +9,7 @@ import { noNullish, flatten } from "./util/util";
 import { tagsToDeleteIfNotPosted } from "./comments";
 import * as comment from "./util/comment";
 import { request } from "https";
+import { assertDefined } from "@definitelytyped/utils";
 
 // https://github.com/orgs/DefinitelyTyped/projects/1
 const projectBoardNumber = 1;
@@ -138,7 +139,7 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
           itemId: prev.addProjectV2ItemById?.item?.id!,
           projectId,
           fieldId,
-          value: { singleSelectOptionId: columns.get(actions.projectColumn!) },
+          value: { singleSelectOptionId: assertDefined(columns.get(actions.projectColumn!)) },
         }),
     ];
   } else {
@@ -147,7 +148,7 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
         itemId: card.id,
         projectId,
         fieldId,
-        value: { singleSelectOptionId: columns.get(actions.projectColumn!) },
+        value: { singleSelectOptionId: assertDefined(columns.get(actions.projectColumn!)) },
       }),
     ];
   }

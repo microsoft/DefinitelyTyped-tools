@@ -7,7 +7,7 @@
 // GraphQL query operation: GetProjectColumns
 // ====================================================
 
-export interface GetProjectColumns_repository_projectV2_items_pageInfo {
+export interface GetProjectColumns_repository_projectV2_fields_pageInfo {
   __typename: "PageInfo";
   /**
    * When paginating backwards, the cursor to continue.
@@ -23,54 +23,46 @@ export interface GetProjectColumns_repository_projectV2_items_pageInfo {
   endCursor: string | null;
 }
 
-export interface GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
-  __typename:
-    | "ProjectV2ItemFieldDateValue"
-    | "ProjectV2ItemFieldIterationValue"
-    | "ProjectV2ItemFieldLabelValue"
-    | "ProjectV2ItemFieldMilestoneValue"
-    | "ProjectV2ItemFieldNumberValue"
-    | "ProjectV2ItemFieldPullRequestValue"
-    | "ProjectV2ItemFieldRepositoryValue"
-    | "ProjectV2ItemFieldReviewerValue"
-    | "ProjectV2ItemFieldTextValue"
-    | "ProjectV2ItemFieldUserValue";
+export interface GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2Field {
+  __typename: "ProjectV2Field" | "ProjectV2IterationField";
 }
 
-export interface GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
-  __typename: "ProjectV2ItemFieldSingleSelectValue";
+export interface GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2SingleSelectField_options {
+  __typename: "ProjectV2SingleSelectFieldOption";
   /**
-   * The name of the selected single select option.
+   * The option's ID.
    */
-  name: string | null;
+  id: string;
   /**
-   * The id of the selected single select option.
+   * The option's name.
    */
-  optionId: string | null;
+  name: string;
 }
 
-export type GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName =
-  | GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue
-  | GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
-
-export interface GetProjectColumns_repository_projectV2_items_nodes {
-  __typename: "ProjectV2Item";
+export interface GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2SingleSelectField {
+  __typename: "ProjectV2SingleSelectField";
   /**
-   * The field value of the first project field which matches the 'name' argument that is set on the item.
+   * The project field's name.
    */
-  fieldValueByName: GetProjectColumns_repository_projectV2_items_nodes_fieldValueByName | null;
+  name: string;
+  /**
+   * Options for the single select field
+   */
+  options: GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2SingleSelectField_options[];
 }
 
-export interface GetProjectColumns_repository_projectV2_items {
-  __typename: "ProjectV2ItemConnection";
+export type GetProjectColumns_repository_projectV2_fields_nodes = GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2Field | GetProjectColumns_repository_projectV2_fields_nodes_ProjectV2SingleSelectField;
+
+export interface GetProjectColumns_repository_projectV2_fields {
+  __typename: "ProjectV2FieldConfigurationConnection";
   /**
    * Information to aid in pagination.
    */
-  pageInfo: GetProjectColumns_repository_projectV2_items_pageInfo;
+  pageInfo: GetProjectColumns_repository_projectV2_fields_pageInfo;
   /**
    * A list of nodes.
    */
-  nodes: (GetProjectColumns_repository_projectV2_items_nodes | null)[] | null;
+  nodes: (GetProjectColumns_repository_projectV2_fields_nodes | null)[] | null;
 }
 
 export interface GetProjectColumns_repository_projectV2 {
@@ -80,9 +72,9 @@ export interface GetProjectColumns_repository_projectV2 {
    */
   id: string;
   /**
-   * List of items in the project
+   * List of fields and their constraints in the project
    */
-  items: GetProjectColumns_repository_projectV2_items;
+  fields: GetProjectColumns_repository_projectV2_fields;
 }
 
 export interface GetProjectColumns_repository {

@@ -9,16 +9,19 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
   do {
     const results: GetProjectColumns = (await client.query({ query: getProjectColumns, variables: { cursor } })).data;
     const project = results.repository?.projectV2;
-    for (const card of noNullish(project?.items?.nodes)) {
-      if (
-        card.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
-        card.fieldValueByName.name &&
-        card.fieldValueByName.optionId
-      ) {
-        columns.set(card.fieldValueByName.name, card.fieldValueByName.optionId);
+    for (const field of noNullish(project?.fields?.nodes)) {
+      if (field.__typename === "ProjectV2SingleSelectField" && field.name === "Status") {
+        for (const option of field.options) {
+          if (
+            option.name &&
+            option.id
+          ) {
+            columns.set(option.name, option.id);
+          }
+        }
       }
     }
-    cursor = project?.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor : null;
+    cursor = project?.fields.pageInfo.hasNextPage ? project.fields.pageInfo.endCursor : null;
   } while (cursor);
   return columns;
 }
