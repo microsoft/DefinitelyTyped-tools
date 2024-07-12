@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as cachedQueries from "../util/cachedQueries";
 import { serialize } from "seroval";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { format } from "prettier";
 
 async function main() {
