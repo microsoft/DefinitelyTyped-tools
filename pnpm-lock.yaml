@@ -27,6 +27,9 @@ importers:
       '@types/node':
         specifier: ^18.19.7
         version: 18.19.8
+      '@types/prettier':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@types/yargs':
         specifier: ^17.0.32
         version: 17.0.32
@@ -364,6 +367,9 @@ importers:
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
+      seroval:
+        specifier: ^1.0.7
+        version: 1.0.7
       ts-jest:
         specifier: ^29.1.2
         version: 29.1.5(@babel/core@7.23.3)(esbuild@0.21.5)(jest@29.7.0)(typescript@5.5.2)
@@ -2806,6 +2812,13 @@ packages:
 
   /@types/picomatch@2.3.3:
     resolution: {integrity: sha512-Yll76ZHikRFCyz/pffKGjrCwe/le2CDwOP5F210KQo27kpRE46U2rDnzikNlVn6/ezH3Mhn46bJMTfeVTtcYMg==}
+    dev: true
+
+  /@types/prettier@3.0.0:
+    resolution: {integrity: sha512-mFMBfMOz8QxhYVbuINtswBp9VL2b4Y0QqYHwqLz3YbgtfAcat2Dl6Y1o4e22S/OVE6Ebl9m7wWiMT2lSbAs1wA==}
+    deprecated: This is a stub types definition. prettier provides its own type definitions, so you do not need this installed.
+    dependencies:
+      prettier: 3.2.4
     dev: true
 
   /@types/prettyjson@0.0.33:
@@ -8898,6 +8911,11 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       type-fest: 0.13.1
+    dev: true
+
+  /seroval@1.0.7:
+    resolution: {integrity: sha512-n6ZMQX5q0Vn19Zq7CIKNIo7E75gPkGCFUEqDpa8jgwpYr/vScjqnQ6H09t1uIiZ0ZSK0ypEGvrYK2bhBGWsGdw==}
+    engines: {node: '>=10'}
     dev: true
 
   /set-blocking@2.0.0:

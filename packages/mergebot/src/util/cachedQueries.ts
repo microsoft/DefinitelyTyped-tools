@@ -10,7 +10,7 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
     const results: GetProjectColumns = (await client.query({ query: getProjectColumns, variables: { cursor } })).data;
     const project = results.repository?.projectV2;
     for (const field of noNullish(project?.fields?.nodes)) {
-      if (field?.__typename === "ProjectV2SingleSelectField" && field.name === "Status") {
+      if (field.__typename === "ProjectV2SingleSelectField" && field.name === "Status") {
         for (const option of field.options) {
           if (
             option.name &&
