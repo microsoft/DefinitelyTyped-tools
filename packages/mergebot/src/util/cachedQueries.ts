@@ -12,10 +12,7 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
     for (const field of noNullish(project?.fields?.nodes)) {
       if (field.__typename === "ProjectV2SingleSelectField" && field.name === "Status") {
         for (const option of field.options) {
-          if (
-            option.name &&
-            option.id
-          ) {
+          if (option.name && option.id) {
             columns.set(option.name, option.id);
           }
         }

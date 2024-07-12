@@ -7,9 +7,8 @@ import { deriveStateForPR } from "../pr-info";
 import { PR } from "../queries/schema/PR";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
 import * as cachedQueries from "./cachedQueries";
-jest.mock(
-  "../util/cachedQueries",
-  () => Object.fromEntries(Object.entries(cachedQueries).map(([k, v]) => [k, jest.fn(() => Promise.resolve(v))])),
+jest.mock("../util/cachedQueries", () =>
+  Object.fromEntries(Object.entries(cachedQueries).map(([k, v]) => [k, jest.fn(() => Promise.resolve(v))])),
 );
 import { executePrActions } from "../execute-pr-actions";
 
