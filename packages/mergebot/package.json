@@ -28,6 +28,7 @@
     "fast-json-patch": "^3.1.1",
     "graphql": "15.8.0",
     "prettyjson": "^1.2.5",
+    "source-map-support": "^0.5.21",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@octokit/webhooks-types": "^7.5.1",
     "@types/node": "^18.19.33",
     "@types/prettyjson": "^0.0.33",
+    "@types/source-map-support": "^0.5.10",
     "@types/yargs": "^17.0.32",
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.5700",
@@ -59,7 +61,7 @@
     "prestart": "pnpm run build",
     "prepublishOnly": "pnpm run build",
     "build": "tsc -b",
-    "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
+    "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js --sourcemap src/functions/index.ts",
     "watch": "tsc --watch",
     "graphql-schema": "apollo client:codegen schema --target typescript --globalTypesFile=src/queries/schema/graphql-global-types.ts",
     "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
