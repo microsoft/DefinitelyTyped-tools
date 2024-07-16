@@ -134,6 +134,7 @@ exports[`plugin should have the expected exports 1`] = `
               "declaration",
               "defApiFeature",
               "defaultValue",
+              "deferred",
               "detail",
               "end",
               "eventproperty",
