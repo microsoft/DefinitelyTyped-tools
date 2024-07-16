@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.18
+
+### Patch Changes
+
+- dc7fcdb: Allow @deferred tag
+
 ## 0.1.17
 
 ### Patch Changes
