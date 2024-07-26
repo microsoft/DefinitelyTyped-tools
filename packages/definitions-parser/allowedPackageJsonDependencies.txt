@@ -795,6 +795,7 @@ long
 lottie-web
 magic-string
 mali
+mapbox-gl
 markdownlint
 marked
 meshoptimizer
