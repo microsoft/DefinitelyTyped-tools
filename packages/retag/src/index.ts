@@ -14,6 +14,7 @@ import {
   LoggerWithErrors,
   cacheDir,
   nAtATime,
+  sleep,
 } from "@definitelytyped/utils";
 import { AnyPackage, TypingsData, AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
@@ -84,6 +85,7 @@ async function retry<T>(fn: () => Promise<T>, count: number): Promise<T> {
     try {
       return await fn();
     } catch (e) {
+      await sleep(5);
       lastError = e;
     }
   }
