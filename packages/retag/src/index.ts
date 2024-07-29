@@ -65,7 +65,7 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
           const version = await getLatestTypingVersion(pkg);
           await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
           await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
-        }, 2);
+        }, /*count*/ 2, /*delaySeconds*/ 5);
       } catch (e: any) {
         consoleLogger.error(`Error tagging ${pkg.name}: ${e.stack || e}`);
         allowedErrors--;
@@ -79,13 +79,13 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
   // Don't tag notNeeded packages
 }
 
-async function retry<T>(fn: () => Promise<T>, count: number): Promise<T> {
+async function retry<T>(fn: () => Promise<T>, count: number, delaySeconds: number): Promise<T> {
   let lastError: any;
   for (let i = 0; i < count; i++) {
     try {
       return await fn();
     } catch (e) {
-      await sleep(5);
+      await sleep(delaySeconds);
       lastError = e;
     }
   }
