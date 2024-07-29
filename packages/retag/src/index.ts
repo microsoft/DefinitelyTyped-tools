@@ -60,12 +60,16 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
     let allowedErrors = 10;
     await nAtATime(5, await allPackages.allLatestTypings(), async (pkg) => {
       try {
-        await retry(async () => {
-          // Only update tags for the latest version of the package.
-          const version = await getLatestTypingVersion(pkg);
-          await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-          await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
-        }, /*count*/ 2, /*delaySeconds*/ 5);
+        await retry(
+          async () => {
+            // Only update tags for the latest version of the package.
+            const version = await getLatestTypingVersion(pkg);
+            await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+            await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
+          },
+          /*count*/ 2,
+          /*delaySeconds*/ 5,
+        );
       } catch (e: any) {
         consoleLogger.error(`Error tagging ${pkg.name}: ${e.stack || e}`);
         allowedErrors--;
