@@ -56,14 +56,38 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
     await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
   } else {
     const allPackages = AllPackages.fromFS(dt);
+    let allowedErrors = 10;
     await nAtATime(5, await allPackages.allLatestTypings(), async (pkg) => {
-      // Only update tags for the latest version of the package.
-      const version = await getLatestTypingVersion(pkg);
-      await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-      await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
+      try {
+        await retry(async () => {
+          // Only update tags for the latest version of the package.
+          const version = await getLatestTypingVersion(pkg);
+          await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
+          await updateLatestTag(pkg.name, version, publishClient, consoleLogger.info, dry);
+        }, 2);
+      } catch (e: any) {
+        consoleLogger.error(`Error tagging ${pkg.name}: ${e.stack || e}`);
+        allowedErrors--;
+        if (allowedErrors <= 0) {
+          consoleLogger.error("Too many errors, exiting.");
+          throw e;
+        }
+      }
     });
   }
   // Don't tag notNeeded packages
+}
+
+async function retry<T>(fn: () => Promise<T>, count: number): Promise<T> {
+  let lastError: any;
+  for (let i = 0; i < count; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError;
 }
 
 export async function updateTypeScriptVersionTags(
