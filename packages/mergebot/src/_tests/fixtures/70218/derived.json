@@ -1,0 +1,50 @@
+{
+  "type": "info",
+  "now": "2024-08-06T22:39:38.761Z",
+  "pr_number": 70218,
+  "author": "huseeiin",
+  "headCommitOid": "b40b94cbeb5441526e8ef39ff8684258f16d0514",
+  "mergeBaseOid": "8d441071aff7f5def053bf8838de9a3559010cd9",
+  "lastPushDate": "2024-08-05T13:11:13.000Z",
+  "lastActivityDate": "2024-08-05T13:11:13.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "fast-decode-uri-component",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/fast-decode-uri-component/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/fast-decode-uri-component/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/fast-decode-uri-component/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/fast-decode-uri-component/tsconfig.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions`)"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "huseeiin"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 2269045852,
+  "ciResult": "fail",
+  "ciUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b40b94cbeb5441526e8ef39ff8684258f16d0514/checks?check_suite_id=26815858311"
+}

@@ -16,7 +16,7 @@ expect.extend({ toMatchFile });
 
 /* You can use the following command to add/update fixtures with an existing PR
  *
- *     BOT_AUTH_TOKEN=XYZ pnpm run create-fixture -- 43164
+ *     BOT_AUTH_TOKEN=XYZ pnpm run create-fixture 43164
  */
 
 async function testFixture(dir: string) {
