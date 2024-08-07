@@ -6,7 +6,21 @@ export type ColumnName =
   | "Needs Author Action"
   | "Recently Merged"
   | "Waiting for Code Reviews"
+  | BlessedColumnName
   | "*REMOVE*"; // special value: indicates closing the PR
+
+export type BlessedColumnName = (typeof blessedColumnNames)[number];
+const blessedColumnNames = [
+  "Waiting for Code Reviews (Blessed)",
+] as const;
+
+export function isBlessedColumnName(name: string): name is BlessedColumnName {
+  return blessedColumnNames.includes(name as BlessedColumnName);
+}
+
+export const columnNameToBlessed: { [K in ColumnName]?: BlessedColumnName } = {
+  "Waiting for Code Reviews": "Waiting for Code Reviews (Blessed)",
+};
 
 export type PopularityLevel = "Well-liked by everyone" | "Popular" | "Critical";
 
@@ -50,4 +64,17 @@ export const labelNames = [
 
 export type ApproverKind = "maintainer" | "owner" | "other";
 
-export type BlessingKind = "merge" | "review" | undefined;
+// https://github.com/orgs/DefinitelyTyped/projects/1
+export const projectBoardNumber = 1;
+
+/**
+ * The id for the project board, saved statically for inserting new cards.
+ * you can query this with `projectV2(number: 1) { id }`
+ */
+export const projectIdStatic = "PVT_kwDOADeBNM4AkH1q";
+
+/**
+ * The id for the Status field, which controls the column that the card appears in.
+ * This is the statically saved ID, used as a fallback if the field id isn't found dynamically.
+ */
+export const fieldIdStatic = "PVTSSF_lADOADeBNM4AkH1qzgcYOEM";

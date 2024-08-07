@@ -194,6 +194,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
                 }
               }
             }
+            updatedAt
           }
         }
       }

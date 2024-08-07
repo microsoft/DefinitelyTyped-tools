@@ -1,4 +1,4 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind, BlessingKind } from "./basic";
+import { ColumnName, LabelName, StalenessKind, ApproverKind } from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
@@ -199,7 +199,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   }
 
   function isBlessed(): boolean {
-    return info.maintainerBlessed === "Waiting for Code Reviews";
+    return info.maintainerBlessed === "Waiting for Code Reviews (Blessed)";
   }
 
   function getApprovedBy() {
@@ -245,11 +245,10 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   function getReviewColumn(): ColumnName {
     // Get the project column for review with least access
     // E.g. let people review, but fall back to the DT maintainers based on the access rights above
-    return approverKind !== "maintainer"
-      ? "Waiting for Code Reviews"
-      : blessable
-        ? "Needs Maintainer Review"
-        : "Needs Maintainer Action";
+    return blessed ? "Waiting for Code Reviews (Blessed)"
+      : approverKind !== "maintainer" ? "Waiting for Code Reviews"
+      : blessable ? "Needs Maintainer Review"
+      : "Needs Maintainer Action";
   }
 }
 

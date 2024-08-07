@@ -1,4 +1,4 @@
-import { LabelName, labelNames } from "./basic";
+import { fieldIdStatic, LabelName, labelNames, projectBoardNumber, projectIdStatic } from "./basic";
 import { MutationOptions } from "@apollo/client/core";
 import * as schema from "@octokit/graphql-schema/schema";
 import { PR_repository_pullRequest } from "./queries/schema/PR";
@@ -10,19 +10,6 @@ import { tagsToDeleteIfNotPosted } from "./comments";
 import * as comment from "./util/comment";
 import { request } from "https";
 import { assertDefined } from "@definitelytyped/utils";
-
-// https://github.com/orgs/DefinitelyTyped/projects/1
-const projectBoardNumber = 1;
-/**
- * The id for the project board, saved statically for inserting new cards.
- * you can query this with `projectV2(number: 1) { id }`
- */
-const projectIdStatic = "PVT_kwDOADeBNM4AkH1q";
-/**
- * The id for the Status field, which controls the column that the card appears in.
- * This is the statically saved ID, used as a fallback if the field id isn't found dynamically.
- */
-const fieldIdStatic = "PVTSSF_lADOADeBNM4AkH1qzgcYOEM";
 
 export async function executePrActions(
   actions: Actions,
