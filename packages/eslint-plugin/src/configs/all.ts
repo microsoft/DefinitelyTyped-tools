@@ -186,5 +186,18 @@ export const all: Linter.BaseConfig = {
         ],
       },
     },
+    {
+      files: ["*.d.cts", "*.d.mts", "*.d.ts", "*.d.*.ts"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+              // Ignore: (solely underscores | starting with exactly one underscore)
+              "argsIgnorePattern": "^(_+$|_[^_])",
+              "varsIgnorePattern": "^(_+$|_[^_])"
+          }
+      ],
+      },
+    },
   ],
 };
