@@ -434,7 +434,12 @@ configSuspicious["tsconfig.json"] = makeChecker(
     ignore: (data) => {
       if (!data || typeof data !== "object") return;
 
-      if ("compilerOptions" in data && data.compilerOptions && typeof data.compilerOptions === "object" && !Array.isArray(data.compilerOptions)) {
+      if (
+        "compilerOptions" in data &&
+        data.compilerOptions &&
+        typeof data.compilerOptions === "object" &&
+        !Array.isArray(data.compilerOptions)
+      ) {
         if (Array.isArray(data.compilerOptions.lib)) {
           data.compilerOptions.lib = data.compilerOptions.lib.filter(
             (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
@@ -461,7 +466,7 @@ type JSONLike = boolean | number | string | null | { [key: string]: JSONLike } |
 function makeChecker(
   expectedForm: any,
   expectedFormUrl: string,
-  options?: { parse?: (text: string) => JSONLike, ignore?: (data: JSONLike) => void },
+  options?: { parse?: (text: string) => JSONLike; ignore?: (data: JSONLike) => void },
 ) {
   const diffFromExpected = (text: string) => {
     let data: any;
