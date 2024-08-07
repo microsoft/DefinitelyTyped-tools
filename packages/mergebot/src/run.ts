@@ -137,7 +137,7 @@ const start = async function () {
     if (!recentlyMerged) {
       throw new Error(`Could not find the 'Recently Merged' column in ${Array.from(columns.keys())}`);
     }
-    const afterFirst50 = recentlyMerged.sort((l, r) => l.updatedAt.localeCompare(r.updatedAt)).slice(50);
+    const afterFirst50 = recentlyMerged.sort((l, r) => r.updatedAt.localeCompare(l.updatedAt)).slice(50);
     if (afterFirst50.length > 0) {
       console.log(`Cutting "Recently Merged" projects to the last 50`);
       for (const card of afterFirst50) await deleteObject(card.id);
