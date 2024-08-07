@@ -432,19 +432,28 @@ configSuspicious["tsconfig.json"] = makeChecker(
   urls.tsconfigJson,
   {
     ignore: (data) => {
-      if (Array.isArray(data.compilerOptions?.lib)) {
-        data.compilerOptions.lib = data.compilerOptions.lib.filter(
-          (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
-        );
+      if (!data || typeof data !== "object") return;
+
+      if ("compilerOptions" in data && data.compilerOptions && typeof data.compilerOptions === "object" && !Array.isArray(data.compilerOptions)) {
+        if (Array.isArray(data.compilerOptions.lib)) {
+          data.compilerOptions.lib = data.compilerOptions.lib.filter(
+            (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
+          );
+        }
+        for (const k of ["baseUrl", "typeRoots", "paths", "jsx", "module"]) {
+          if (k in data.compilerOptions) delete data.compilerOptions[k];
+        }
+        if (typeof data.compilerOptions.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
+          delete data.compilerOptions.target;
+        }
       }
-      ["baseUrl", "typeRoots", "paths", "jsx", "module"].forEach((k) => delete data.compilerOptions?.[k]);
-      if (typeof data.compilerOptions?.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
-        delete data.compilerOptions.target;
-      }
-      delete data.files;
+
+      if ("files" in data) delete data.files;
     },
   },
 );
+
+type JSONLike = boolean | number | string | null | { [key: string]: JSONLike } | JSONLike[];
 
 // helper for file checkers: allow either a given "expectedForm", or any edits that get closer
 // to it, ignoring some keys.  The ignored properties are in most cases checked
@@ -452,11 +461,11 @@ configSuspicious["tsconfig.json"] = makeChecker(
 function makeChecker(
   expectedForm: any,
   expectedFormUrl: string,
-  options?: { parse: (text: string) => unknown } | { ignore: (data: any) => void },
+  options?: { parse?: (text: string) => JSONLike, ignore?: (data: JSONLike) => void },
 ) {
   const diffFromExpected = (text: string) => {
     let data: any;
-    if (options && "parse" in options) {
+    if (options?.parse) {
       data = options.parse(text);
     } else {
       try {
@@ -465,7 +474,7 @@ function makeChecker(
         return "couldn't parse json";
       }
     }
-    if (options && "ignore" in options) options.ignore(data);
+    options?.ignore?.(data);
     try {
       return jsonDiff.compare(expectedForm, data);
     } catch (e) {
