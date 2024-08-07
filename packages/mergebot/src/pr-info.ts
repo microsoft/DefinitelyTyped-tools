@@ -435,7 +435,7 @@ configSuspicious["tsconfig.json"] = makeChecker(
       if (!data || typeof data !== "object") return;
 
       if ("compilerOptions" in data && data.compilerOptions && typeof data.compilerOptions === "object" && !Array.isArray(data.compilerOptions)) {
-        if (Array.isArray(data.compilerOptions?.lib)) {
+        if (Array.isArray(data.compilerOptions.lib)) {
           data.compilerOptions.lib = data.compilerOptions.lib.filter(
             (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
           );
@@ -443,7 +443,7 @@ configSuspicious["tsconfig.json"] = makeChecker(
         for (const k of ["baseUrl", "typeRoots", "paths", "jsx", "module"]) {
           if (k in data.compilerOptions) delete data.compilerOptions[k];
         }
-        if (typeof data.compilerOptions?.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
+        if (typeof data.compilerOptions.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
           delete data.compilerOptions.target;
         }
       }
