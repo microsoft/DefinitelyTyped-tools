@@ -165,7 +165,6 @@ export const all: Linter.BaseConfig = {
         "@typescript-eslint/triple-slash-reference": ["error", { types: "prefer-import", path: "always" }],
         "@typescript-eslint/no-empty-interface": "error",
         "no-duplicate-imports": "error",
-        "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
         "@typescript-eslint/naming-convention": [
           "error",
           {
