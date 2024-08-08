@@ -245,10 +245,13 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   function getReviewColumn(): ColumnName {
     // Get the project column for review with least access
     // E.g. let people review, but fall back to the DT maintainers based on the access rights above
-    return blessed ? "Waiting for Code Reviews (Blessed)"
-      : approverKind !== "maintainer" ? "Waiting for Code Reviews"
-      : blessable ? "Needs Maintainer Review"
-      : "Needs Maintainer Action";
+    return blessed
+      ? "Waiting for Code Reviews (Blessed)"
+      : approverKind !== "maintainer"
+        ? "Waiting for Code Reviews"
+        : blessable
+          ? "Needs Maintainer Review"
+          : "Needs Maintainer Action";
   }
 }
 

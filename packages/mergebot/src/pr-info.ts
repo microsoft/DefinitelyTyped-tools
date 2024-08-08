@@ -302,7 +302,10 @@ function getLastCommentishActivityDate(prInfo: PR_repository_pullRequest) {
   return max([...latestIssueCommentDate, ...latestReviewCommentDate]);
 }
 
-function getLastMaintainerBlessing(after: Date, pr: PR_repository_pullRequest): { date: Date | undefined; column: BlessedColumnName } | undefined {
+function getLastMaintainerBlessing(
+  after: Date,
+  pr: PR_repository_pullRequest,
+): { date: Date | undefined; column: BlessedColumnName } | undefined {
   const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
   const columnName =
     card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
