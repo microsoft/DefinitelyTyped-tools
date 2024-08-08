@@ -1,4 +1,4 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind, isBlessedColumnName } from "./basic";
+import { ColumnName, LabelName, StalenessKind, ApproverKind } from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
@@ -199,7 +199,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   }
 
   function isBlessed(): boolean {
-    return !!info.maintainerBlessed && isBlessedColumnName(info.maintainerBlessed);
+    return !!info.maintainerBlessed;
   }
 
   function getApprovedBy() {
