@@ -1,4 +1,4 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind } from "./basic";
+import { ColumnName, LabelName, StalenessKind, ApproverKind, isBlessedColumnName } from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
@@ -199,7 +199,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   }
 
   function isBlessed(): boolean {
-    return info.maintainerBlessed === "Waiting for Code Reviews (Blessed)";
+    return !!info.maintainerBlessed && isBlessedColumnName(info.maintainerBlessed);
   }
 
   function getApprovedBy() {
@@ -379,7 +379,7 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
         actions.shouldMerge = true;
         actions.projectColumn = "Recently Merged";
       } else {
-        actions.projectColumn = "Waiting for Author to Merge";
+        actions.projectColumn = prInfo.maintainerBlessed ? "Waiting for Author to Merge (Blessed)" : "Waiting for Author to Merge";
       }
     }
     // Ping stale reviewers if any

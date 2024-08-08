@@ -1,4 +1,4 @@
-import { BlessedColumnName, ColumnName, PopularityLevel, projectBoardNumber } from "./basic";
+import { BlessedColumnName, ColumnName, columnNameToBlessed, PopularityLevel, projectBoardNumber } from "./basic";
 import {
   PR_repository_pullRequest,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites,
@@ -330,8 +330,9 @@ function getLastMaintainerBlessing(
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
       const columnName = item.projectColumnName as ColumnName;
-      if (columnName === "Waiting for Code Reviews") {
-        return { date: d, column: "Waiting for Code Reviews (Blessed)" };
+      const blessedColumnName = columnNameToBlessed[columnName];
+      if (blessedColumnName) {
+        return { date: d, column: blessedColumnName };
       }
       return undefined;
     }) || undefined
