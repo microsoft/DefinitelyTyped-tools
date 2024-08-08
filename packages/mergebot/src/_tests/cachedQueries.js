@@ -4,6 +4,7 @@ module.exports = ((h) => ({
     new Map([
       ["Needs Maintainer Action", "f75ad846"],
       ["Needs Maintainer Review", "47fc9ee4"],
+      ["Waiting for Code Reviews (Blessed)", "e2dd54d5"],
       ["Waiting for Code Reviews", "98236657"],
       ["Needs Author Action", "d389394c"],
       ["Waiting for Author to Merge", "7da042bf"],

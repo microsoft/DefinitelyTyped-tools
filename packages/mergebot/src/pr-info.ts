@@ -1,4 +1,4 @@
-import { ColumnName, PopularityLevel } from "./basic";
+import { BlessedColumnName, ColumnName, PopularityLevel, projectBoardNumber } from "./basic";
 import {
   PR_repository_pullRequest,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites,
@@ -118,7 +118,7 @@ export interface PrInfo {
   /**
    * Name of column used if a maintainer blessed this PR
    */
-  readonly maintainerBlessed?: ColumnName;
+  readonly maintainerBlessed?: BlessedColumnName;
 
   /**
    * The time we posted a merge offer, if any (required for merge request in addition to passing CI and a review)
@@ -201,7 +201,7 @@ export async function deriveStateForPR(
   // (it would be bad to use `committedDate`/`authoredDate`, since these can be set to arbitrary values)
   const lastPushDate = new Date(headCommit.pushedDate || prInfo.createdAt);
   const lastCommentDate = getLastCommentishActivityDate(prInfo);
-  const blessing = getLastMaintainerBlessing(lastPushDate, prInfo.timelineItems);
+  const blessing = getLastMaintainerBlessing(lastPushDate, prInfo);
   const reopenedDate = getReopenedDate(prInfo.timelineItems);
   // we should generally have all files (except for draft PRs)
   const fileCount = prInfo.changedFiles;
@@ -302,13 +302,35 @@ function getLastCommentishActivityDate(prInfo: PR_repository_pullRequest) {
   return max([...latestIssueCommentDate, ...latestReviewCommentDate]);
 }
 
-function getLastMaintainerBlessing(after: Date, timelineItems: PR_repository_pullRequest_timelineItems) {
+function getLastMaintainerBlessing(after: Date, pr: PR_repository_pullRequest): { date: Date | undefined; column: BlessedColumnName } | undefined {
+  const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
+  const columnName =
+    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
+  if (columnName === "Waiting for Code Reviews (Blessed)" && card?.updatedAt) {
+    // Normally relying on the updatedAt of the card is not reliable, but in this case it's fine
+    // becuase the bot will never move the card into the blessed state, only out of it.
+    // If the card is already in a blessed state, the bot will not mutate the card.
+    const d = new Date(card.updatedAt);
+    if (d <= after) return undefined;
+    return { date: undefined, column: columnName };
+  }
+
+  // This doesn't work with the Projects V2, but is needed for old tests.
+  // If V2 ever adds an API for this, we should drop the special "blessed" column above
+  // and just reuse the below.
+  // https://github.com/orgs/community/discussions/49602
+  // https://github.com/orgs/community/discussions/57326
+  const timelineItems = pr.timelineItems;
   return (
     someLast(timelineItems.nodes, (item) => {
       if (!(item.__typename === "MovedColumnsInProjectEvent" && authorNotBot(item))) return undefined;
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
-      return { date: d, column: item.projectColumnName as ColumnName };
+      const columnName = item.projectColumnName as ColumnName;
+      if (columnName === "Waiting for Code Reviews") {
+        return { date: d, column: "Waiting for Code Reviews (Blessed)" };
+      }
+      return undefined;
     }) || undefined
   );
 }

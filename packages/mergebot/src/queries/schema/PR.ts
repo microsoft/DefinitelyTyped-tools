@@ -573,6 +573,10 @@ export interface PR_repository_pullRequest_projectItems_nodes {
    * The field value of the first project field which matches the 'name' argument that is set on the item.
    */
   fieldValueByName: PR_repository_pullRequest_projectItems_nodes_fieldValueByName | null;
+  /**
+   * Identifies the date and time when the object was last updated.
+   */
+  updatedAt: any;
 }
 
 export interface PR_repository_pullRequest_projectItems {
