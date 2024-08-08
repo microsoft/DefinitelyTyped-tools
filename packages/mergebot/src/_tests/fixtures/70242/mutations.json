@@ -1,0 +1,44 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM6HhVto",
+        "body": "@mfedderly Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 3 packages in this PR\n\n* `polygon-lookup` — [on npm](https://www.npmjs.com/package/polygon-lookup), [on unpkg](https://unpkg.com/browse/polygon-lookup@latest/)\n  - owner-approval: @ffflorian\n* `rbush` — [on npm](https://www.npmjs.com/package/rbush), [on unpkg](https://unpkg.com/browse/rbush@latest/)\n* `which-polygon` — [on npm](https://www.npmjs.com/package/which-polygon), [on unpkg](https://unpkg.com/browse/which-polygon@latest/)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70242&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Type definition owners or DT maintainers needs to approve changes that affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWw2OTcwMTg5NzI="
+        ],
+        "labelableId": "PR_kwDOAFz6BM53uVmH"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "itemId": "PVTI_lADOADeBNM4AkH1qzgRnZjQ",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "7da042bf"
+        }
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "PR_kwDOAFz6BM53uVmH",
+        "body": "@mfedderly: Everything looks good here. I am ready to merge this PR (at 4bd59ac) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n<!--typescript_bot_merge-offer-->"
+      }
+    }
+  }
+]
