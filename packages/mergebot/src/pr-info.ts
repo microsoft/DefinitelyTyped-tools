@@ -1,4 +1,4 @@
-import { BlessedColumnName, ColumnName, columnNameToBlessed, isBlessedColumnName, PopularityLevel, projectBoardNumber } from "./basic";
+import { BlessedColumnName, ColumnName, PopularityLevel, projectBoardNumber } from "./basic";
 import {
   PR_repository_pullRequest,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites,
@@ -306,7 +306,7 @@ function getLastMaintainerBlessing(after: Date, pr: PR_repository_pullRequest): 
   const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
   const columnName =
     card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
-  if (columnName && isBlessedColumnName(columnName) && card.updatedAt) {
+  if (columnName === "Waiting for Code Reviews (Blessed)" && card?.updatedAt) {
     // Normally relying on the updatedAt of the card is not reliable, but in this case it's fine
     // becuase the bot will never move the card into the blessed state, only out of it.
     // If the card is already in a blessed state, the bot will not mutate the card.
@@ -327,9 +327,8 @@ function getLastMaintainerBlessing(after: Date, pr: PR_repository_pullRequest): 
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
       const columnName = item.projectColumnName as ColumnName;
-      const blessedColumnName = columnNameToBlessed[columnName];
-      if (blessedColumnName) {
-        return { date: d, column: blessedColumnName };
+      if (columnName === "Waiting for Code Reviews") {
+        return { date: d, column: "Waiting for Code Reviews (Blessed)" };
       }
       return undefined;
     }) || undefined

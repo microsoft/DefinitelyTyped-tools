@@ -9,18 +9,7 @@ export type ColumnName =
   | BlessedColumnName
   | "*REMOVE*"; // special value: indicates closing the PR
 
-export type BlessedColumnName = (typeof blessedColumnNames)[number];
-const blessedColumnNames = [
-  "Waiting for Code Reviews (Blessed)",
-] as const;
-
-export function isBlessedColumnName(name: string): name is BlessedColumnName {
-  return blessedColumnNames.includes(name as BlessedColumnName);
-}
-
-export const columnNameToBlessed: { [K in ColumnName]?: BlessedColumnName } = {
-  "Waiting for Code Reviews": "Waiting for Code Reviews (Blessed)",
-};
+export type BlessedColumnName = "Waiting for Code Reviews (Blessed)";
 
 export type PopularityLevel = "Well-liked by everyone" | "Popular" | "Critical";
 
