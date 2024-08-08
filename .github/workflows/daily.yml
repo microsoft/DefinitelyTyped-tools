@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: '20.x'
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
@@ -30,4 +30,4 @@ jobs:
       actions: write
     steps:
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-      - uses: gautamkrishnar/keepalive-workflow@05456e7809058d586d96392e99217726ccc10076 # v2.0.5
+      - uses: gautamkrishnar/keepalive-workflow@24ba73b43d5ea8d2b3d56fb9b8de951ba9a3dd18 # v2.0.6
