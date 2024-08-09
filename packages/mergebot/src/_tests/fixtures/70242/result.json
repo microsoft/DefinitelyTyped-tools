@@ -1,11 +1,10 @@
 {
-  "projectColumn": "Waiting for Author to Merge (Blessed)",
+  "projectColumn": "Waiting for Code Reviews (Blessed)",
   "labels": [
     "Popular package",
     "Owner Approved",
     "Edits multiple packages",
-    "Untested Change",
-    "Self Merge"
+    "Untested Change"
   ],
   "responseComments": [
     {
@@ -14,11 +13,7 @@
     },
     {
       "tag": "welcome",
-      "status": "@mfedderly Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 3 packages in this PR\n\n* `polygon-lookup` — [on npm](https://www.npmjs.com/package/polygon-lookup), [on unpkg](https://unpkg.com/browse/polygon-lookup@latest/)\n  - owner-approval: @ffflorian\n* `rbush` — [on npm](https://www.npmjs.com/package/rbush), [on unpkg](https://unpkg.com/browse/rbush@latest/)\n* `which-polygon` — [on npm](https://www.npmjs.com/package/which-polygon), [on unpkg](https://unpkg.com/browse/which-polygon@latest/)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70242&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Type definition owners or DT maintainers needs to approve changes that affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
-    },
-    {
-      "tag": "merge-offer",
-      "status": "@mfedderly: Everything looks good here. I am ready to merge this PR (at 4bd59ac) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n"
+      "status": "@mfedderly Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 3 packages in this PR\n\n* `polygon-lookup` — [on npm](https://www.npmjs.com/package/polygon-lookup), [on unpkg](https://unpkg.com/browse/polygon-lookup@latest/)\n  - owner-approval: @ffflorian\n* `rbush` — [on npm](https://www.npmjs.com/package/rbush), [on unpkg](https://unpkg.com/browse/rbush@latest/)\n* `which-polygon` — [on npm](https://www.npmjs.com/package/which-polygon), [on unpkg](https://unpkg.com/browse/which-polygon@latest/)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70242&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Type definition owners or DT maintainers needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
     }
   ],
   "shouldClose": false,
