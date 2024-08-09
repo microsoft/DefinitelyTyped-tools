@@ -1,0 +1,92 @@
+{
+  "type": "info",
+  "now": "2024-08-08T19:44:45.603Z",
+  "pr_number": 70242,
+  "author": "mfedderly",
+  "headCommitOid": "4bd59ac2f21f5dac3d449669d50e03e7fbd0855b",
+  "mergeBaseOid": "74fbc3d0e182be4e15cd85cf84dc0d02ba6b78f3",
+  "lastPushDate": "2024-08-07T14:50:19.000Z",
+  "lastActivityDate": "2024-08-08T17:56:06.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews (Blessed)",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "attw.json",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": true
+    },
+    {
+      "name": "polygon-lookup",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/polygon-lookup/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "ffflorian"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "rbush",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/rbush/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "danvk",
+        "cmslewis"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "which-polygon",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/which-polygon/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "k-yle"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "ffflorian",
+      "date": "2024-08-08T17:56:06.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 2273663848,
+  "ciResult": "pass"
+}

@@ -1,8 +1,8 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind } from "./basic";
+import { ColumnName, LabelName, StalenessKind, ApproverKind, getMaxApproverKind } from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
-import { PrInfo, BotResult, FileInfo, ReviewInfo } from "./pr-info";
+import { PrInfo, BotResult, FileInfo, ReviewInfo, PackageInfo } from "./pr-info";
 import { noNullish, flatten, unique, sameUser, min, sha256, abbrOid, txt } from "./util/util";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -114,9 +114,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   const changereqReviews = info.reviews.filter((r) => r.type === "changereq") as ExtendedPrInfo["changereqReviews"];
   const staleReviews = info.reviews.filter((r) => r.type === "stale") as ExtendedPrInfo["staleReviews"];
   const hasChangereqs = changereqReviews.length > 0;
-  const approvedBy = getApprovedBy();
-  const pendingCriticalPackages = getPendingCriticalPackages();
-  const approverKind = getApproverKind();
+  const maxApproverKind = getMaxApproverKind(...info.pkgInfo.map(getApproverKind));
   const approved = getApproved();
   const failedCI = info.ciResult === "fail";
   const blockedCI = info.ciResult === "action_required";
@@ -145,9 +143,9 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     editsOwners,
     canBeSelfMerged,
     hasValidMergeRequest,
-    pendingCriticalPackages,
+    pendingCriticalPackages: getPendingCriticalPackages(),
     approved,
-    approverKind,
+    approverKind: maxApproverKind,
     requireMaintainer,
     blessable,
     blessed,
@@ -166,7 +164,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     approvedReviews,
     changereqReviews,
     staleReviews,
-    approvedBy,
+    approvedBy: getApprovedBy(),
     hasChangereqs,
     needsAuthorAction,
     reviewColumn,
@@ -199,7 +197,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   }
 
   function isBlessed(): boolean {
-    return info.maintainerBlessed === "Waiting for Code Reviews (Blessed)";
+    return !!info.maintainerBlessed;
   }
 
   function getApprovedBy() {
@@ -220,7 +218,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     );
   }
 
-  function getApproverKind() {
+  function getApproverKind(pkg: PackageInfo): ApproverKind {
     const who: ApproverKind = requireMaintainer
       ? "maintainer"
       : (
@@ -229,17 +227,24 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
             Popular: "owner",
             Critical: "maintainer",
           } as const
-        )[info.popularityLevel];
+        )[pkg.popularityLevel];
     return who === "maintainer" && blessed ? "owner" : who === "owner" && noOtherOwners ? "maintainer" : who;
   }
 
   function getApproved() {
-    if (approvedBy.includes("maintainer")) return true; // maintainer approval => no need for anything else
-    return (
-      pendingCriticalPackages.length === 0 &&
-      approvedBy.length > 0 &&
-      (approverKind === "other" || approvedBy.includes("maintainer") || approvedBy.includes(approverKind))
-    );
+    if (hasChangereqs) return false;
+    if (approvedReviews.some((r) => r.isMaintainer)) return true; // maintainer approval => no need for anything else
+
+    return info.pkgInfo.every((pkg) => {
+      const requiredApproverKind = getApproverKind(pkg);
+      for (const r of approvedReviews) {
+        const approverKind = pkg.owners.some((o) => sameUser(o, r.reviewer)) ? "owner" : "other";
+        if (getMaxApproverKind(approverKind, requiredApproverKind) === approverKind) {
+          return true;
+        }
+      }
+      return false;
+    })
   }
 
   function getReviewColumn(): ColumnName {
@@ -247,7 +252,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     // E.g. let people review, but fall back to the DT maintainers based on the access rights above
     return blessed
       ? "Waiting for Code Reviews (Blessed)"
-      : approverKind !== "maintainer"
+      : maxApproverKind !== "maintainer"
         ? "Waiting for Code Reviews"
         : blessable
           ? "Needs Maintainer Review"
@@ -379,7 +384,7 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
         actions.shouldMerge = true;
         actions.projectColumn = "Recently Merged";
       } else {
-        actions.projectColumn = "Waiting for Author to Merge";
+        actions.projectColumn = prInfo.maintainerBlessed ? "Waiting for Author to Merge (Blessed)" : "Waiting for Author to Merge";
       }
     }
     // Ping stale reviewers if any

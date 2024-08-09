@@ -1,0 +1,309 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM53uVmH",
+        "title": "Fix attw for rbush",
+        "createdAt": "2024-08-07T14:50:19Z",
+        "author": {
+          "login": "mfedderly",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 70242,
+        "state": "OPEN",
+        "headRefOid": "4bd59ac2f21f5dac3d449669d50e03e7fbd0855b",
+        "changedFiles": 4,
+        "additions": 15,
+        "deletions": 12,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "68d9f5250a0d2cac52a121ced169896dd12a8e6b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "74fbc3d0e182be4e15cd85cf84dc0d02ba6b78f3",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "4bd59ac2f21f5dac3d449669d50e03e7fbd0855b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "68d9f5250a0d2cac52a121ced169896dd12a8e6b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "ffflorian",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "4bd59ac2f21f5dac3d449669d50e03e7fbd0855b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "COLLABORATOR",
+              "state": "APPROVED",
+              "submittedAt": "2024-08-08T17:56:06Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70242#pullrequestreview-2228526321",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 26910504715,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4bd59ac2f21f5dac3d449669d50e03e7fbd0855b/checks?check_suite_id=26910504715",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4bd59ac2f21f5dac3d449669d50e03e7fbd0855b/checks?check_suite_id=26910504715",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-08-07T14:57:44Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-08-07T14:57:29Z",
+                "committedDate": "2024-08-07T14:57:29Z",
+                "pushedDate": null,
+                "oid": "4bd59ac2f21f5dac3d449669d50e03e7fbd0855b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM6HhVto",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2273663848,
+              "body": "@mfedderly Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 3 packages in this PR\n\n* `polygon-lookup` — [on npm](https://www.npmjs.com/package/polygon-lookup), [on unpkg](https://unpkg.com/browse/polygon-lookup@latest/)\n  - owner-approval: @ffflorian\n* `rbush` — [on npm](https://www.npmjs.com/package/rbush), [on unpkg](https://unpkg.com/browse/rbush@latest/)\n* `which-polygon` — [on npm](https://www.npmjs.com/package/which-polygon), [on unpkg](https://unpkg.com/browse/which-polygon@latest/)\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70242&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-08-07T14:50:55Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HhVus",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2273663916,
+              "body": "Hey @mfedderly,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2024-08-07T14:50:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HhVvL",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2273663947,
+              "body": "🔔 @ffflorian @danvk @cmslewis @k-yle — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70242/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-08-07T14:50:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HhXDU",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2273669332,
+              "body": "@mfedderly The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/68d9f5250a0d2cac52a121ced169896dd12a8e6b/checks?check_suite_id=26910149818).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-68d9f52-->",
+              "createdAt": "2024-08-07T14:53:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Hrp2i",
+              "author": {
+                "login": "ffflorian",
+                "__typename": "User"
+              },
+              "databaseId": 2276367778,
+              "body": "LGTM for package `polygon-lookup`.",
+              "createdAt": "2024-08-08T17:55:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "path": "attw.json",
+              "additions": 0,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/polygon-lookup/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/rbush/index.d.ts",
+              "additions": 13,
+              "deletions": 9,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/which-polygon/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "NA",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgRnZjQ",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Waiting for Code Reviews (Blessed)",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2024-08-08T19:44:41Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

@@ -1,0 +1,275 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM52pmtc",
+        "title": "Fix getCurrent API return type",
+        "createdAt": "2024-07-27T18:32:13Z",
+        "author": {
+          "login": "sebasjm",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Popular package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Untested Change",
+              "__typename": "Label"
+            },
+            {
+              "name": "Unreviewed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 70150,
+        "state": "OPEN",
+        "headRefOid": "22560146e216e1508aa2cd038b4c856d3a99d297",
+        "changedFiles": 1,
+        "additions": 1,
+        "deletions": 1,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "22560146e216e1508aa2cd038b4c856d3a99d297",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "1d59977cdbcf917a961d68022373e42858d55b08",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "nicolas377",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "22560146e216e1508aa2cd038b4c856d3a99d297",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2024-08-08T01:48:22Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70150#pullrequestreview-2226663312",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 26499959468,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/22560146e216e1508aa2cd038b4c856d3a99d297/checks?check_suite_id=26499959468",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/22560146e216e1508aa2cd038b4c856d3a99d297/checks?check_suite_id=26499959468",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-07-27T18:32:16Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-07-27T18:27:23Z",
+                "committedDate": "2024-07-27T18:27:23Z",
+                "pushedDate": null,
+                "oid": "22560146e216e1508aa2cd038b4c856d3a99d297",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM6GXLU7",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2254222651,
+              "body": "@sebasjm Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `chrome` — [on npm](https://www.npmjs.com/package/chrome), [on unpkg](https://unpkg.com/browse/chrome@latest/)\n  - owner-approval: @nicolas377\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70150&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 12 days — please try to get reviewers!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-07-27T18:32:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6GXLVD",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2254222659,
+              "body": "Hey @sebasjm,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***\n<!--typescript_bot_suggest-testing-->",
+              "createdAt": "2024-07-27T18:32:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6GXLVH",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2254222663,
+              "body": "🔔 @matthewkimber @otiai10 @sreimer15 @MatCarlson @ekinsol @echoabstract @spasma @bdbai @pokutuna @JasonXian @usertim @idan315 @nicolas377 @idosal @fregante — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70150/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-07-27T18:32:50Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HjFTU",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2274120916,
+              "body": "Re-ping @matthewkimber, @otiai10, @sreimer15, @MatCarlson, @ekinsol, @echoabstract, @spasma, @bdbai, @pokutuna, @JasonXian, @usertim, @idan315, @idosal, @fregante:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2024-07-27-->",
+              "createdAt": "2024-08-07T18:46:14Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Hll8v",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2274778927,
+              "body": ":hourglass_flowing_sand: Hi @sebasjm,\n\nIt's been a few days since this PR was approved by nicolas377 and we're waiting for a DT maintainer to give a review.\n\nIf you would like to short-circuit this wait, you can edit some of the [test files](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-my-package-teststs) in the package that verify how the `.d.ts` files work. This would allow the PR to be merged by you or the DT module owners after a re-review.\n<!--typescript_bot_wait-for-merge-offer-2256014-->",
+              "createdAt": "2024-08-08T01:48:58Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "types/chrome/index.d.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgRRbnM",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Waiting for Code Reviews (Blessed)",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2024-08-08T20:06:29Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}
