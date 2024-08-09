@@ -65,9 +65,9 @@ export const labelNames = [
   ...stalenessKinds,
 ] as const;
 
-export type ApproverKind = "maintainer" | "owner" | "other";
+export type ApproverKind = (typeof approverKindOrder)[number];
 
-const approverKindOrder: ApproverKind[] = ["other", "owner", "maintainer"];
+const approverKindOrder = ["other", "owner", "maintainer"] as const;
 
 export function getMaxApproverKind(...kinds: ApproverKind[]): ApproverKind {
   return approverKindOrder[kinds.reduce((max, kind) => Math.max(max, approverKindOrder.indexOf(kind)), 0)]!;
