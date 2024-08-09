@@ -7,6 +7,7 @@ module.exports = ((h) => ({
       ["Waiting for Code Reviews (Blessed)", "e2dd54d5"],
       ["Waiting for Code Reviews", "98236657"],
       ["Needs Author Action", "d389394c"],
+      ["Waiting for Author to Merge (Blessed)", "a4b0585f"],
       ["Waiting for Author to Merge", "7da042bf"],
       ["Recently Merged", "fee515dc"],
       ["Other", "4ab7a682"],

@@ -4,7 +4,7 @@
   "responseComments": [
     {
       "tag": "welcome",
-      "status": "@andrewbranch Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 0 packages in this PR\n\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68510&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+      "status": "@andrewbranch Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 0 packages in this PR\n\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=68510&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 Most recent commit is approved by a DT maintainer\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
     },
     {
       "tag": "pinging-reviewers-others",
