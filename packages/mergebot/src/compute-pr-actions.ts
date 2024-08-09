@@ -244,7 +244,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
         }
       }
       return false;
-    })
+    });
   }
 
   function getReviewColumn(): ColumnName {
@@ -384,7 +384,9 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
         actions.shouldMerge = true;
         actions.projectColumn = "Recently Merged";
       } else {
-        actions.projectColumn = prInfo.maintainerBlessed ? "Waiting for Author to Merge (Blessed)" : "Waiting for Author to Merge";
+        actions.projectColumn = prInfo.maintainerBlessed
+          ? "Waiting for Author to Merge (Blessed)"
+          : "Waiting for Author to Merge";
       }
     }
     // Ping stale reviewers if any

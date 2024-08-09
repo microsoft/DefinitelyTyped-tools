@@ -1,4 +1,11 @@
-import { BlessedColumnName, ColumnName, columnNameToBlessed, isBlessedColumnName, PopularityLevel, projectBoardNumber } from "./basic";
+import {
+  BlessedColumnName,
+  ColumnName,
+  columnNameToBlessed,
+  isBlessedColumnName,
+  PopularityLevel,
+  projectBoardNumber,
+} from "./basic";
 import {
   PR_repository_pullRequest,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites,

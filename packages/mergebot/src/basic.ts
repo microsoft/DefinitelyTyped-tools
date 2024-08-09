@@ -11,10 +11,7 @@ export type ColumnName =
 
 export type BlessedColumnName = (typeof blessedColumnNames)[number];
 
-const blessedColumnNames = [
-  "Waiting for Code Reviews (Blessed)",
-  "Waiting for Author to Merge (Blessed)",
-] as const;
+const blessedColumnNames = ["Waiting for Code Reviews (Blessed)", "Waiting for Author to Merge (Blessed)"] as const;
 
 export function isBlessedColumnName(column: string): column is BlessedColumnName {
   return blessedColumnNames.includes(column as BlessedColumnName);
