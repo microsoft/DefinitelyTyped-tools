@@ -1,5 +1,12 @@
 # @definitelytyped/header-parser
 
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [7ca2577]
+  - @definitelytyped/typescript-versions@0.1.4
+
 ## 0.2.11
 
 ### Patch Changes
