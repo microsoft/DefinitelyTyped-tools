@@ -631,6 +631,7 @@
 @uirouter/angularjs
 @vue/reactivity
 @vue/test-utils
+@webgpu/types
 @wordpress/api-fetch
 @wordpress/components
 @wordpress/core-data
