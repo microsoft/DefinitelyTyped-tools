@@ -902,6 +902,7 @@ scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
+sharp
 shell-exec
 should
 simple-markdown
