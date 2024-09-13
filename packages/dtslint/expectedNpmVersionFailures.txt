@@ -24,7 +24,6 @@ app-root-dir
 arbiter
 assertsharp
 async-polling
-async-retry
 atmosphere.js
 atpl
 azdata
