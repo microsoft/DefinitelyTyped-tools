@@ -215,7 +215,6 @@ js.spec
 jsbn
 jsdeferred
 json-editor
-json-merge-patch
 json-patch
 json-pointer
 json-schema
