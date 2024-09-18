@@ -14,7 +14,7 @@ import {
   LoggerWithErrors,
   cacheDir,
   nAtATime,
-  sleep,
+  retry,
 } from "@definitelytyped/utils";
 import { AnyPackage, TypingsData, AllPackages, getDefinitelyTyped } from "@definitelytyped/definitions-parser";
 import * as pacote from "pacote";
@@ -81,19 +81,6 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
     });
   }
   // Don't tag notNeeded packages
-}
-
-async function retry<T>(fn: () => Promise<T>, count: number, delaySeconds: number): Promise<T> {
-  let lastError: any;
-  for (let i = 0; i < count; i++) {
-    try {
-      return await fn();
-    } catch (e) {
-      await sleep(delaySeconds);
-      lastError = e;
-    }
-  }
-  throw lastError;
 }
 
 export async function updateTypeScriptVersionTags(

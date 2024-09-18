@@ -1,5 +1,6 @@
 import { ProgressBar } from "./progress";
 import { initArray } from "./collections";
+import { sleep } from "./miscellany";
 
 /** Progress options needed for `nAtATime`. Other options will be inferred. */
 interface ProgressOptions<T, U> {
@@ -77,4 +78,17 @@ export function logUncaughtErrors<T>(promise: Promise<T> | (() => Promise<T>)): 
     }
     process.exit(1);
   });
+}
+
+export async function retry<T>(fn: () => Awaitable<T>, count: number, delaySeconds: number): Promise<T> {
+  let lastError: any;
+  for (let i = 0; i < count; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      await sleep(delaySeconds);
+      lastError = e;
+    }
+  }
+  throw lastError;
 }
