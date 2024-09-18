@@ -29,6 +29,8 @@ import {
   NpmPublishClient,
   cacheDir,
   isObject,
+  nAtATime,
+  retry,
 } from "@definitelytyped/utils";
 import * as pacote from "pacote";
 import * as semver from "semver";
@@ -233,11 +235,20 @@ interface Registry {
 async function generateRegistry(typings: readonly TypingsData[]): Promise<Registry> {
   return {
     entries: Object.fromEntries(
-      await Promise.all(
-        typings.map(async (typing) => [
-          typing.typesDirectoryName,
-          filterTags((await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"]),
-        ]),
+      await nAtATime(
+        10,
+        typings,
+        async (typing) => {
+          const tags = await retry(
+            async () => (await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"],
+            /*count*/ 2,
+            /*delaySeconds*/ 5,
+          );
+          return [
+            typing.typesDirectoryName,
+            filterTags(tags),
+          ];
+        },
       ),
     ),
   };
