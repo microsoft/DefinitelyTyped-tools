@@ -235,21 +235,14 @@ interface Registry {
 async function generateRegistry(typings: readonly TypingsData[]): Promise<Registry> {
   return {
     entries: Object.fromEntries(
-      await nAtATime(
-        10,
-        typings,
-        async (typing) => {
-          const tags = await retry(
-            async () => (await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"],
-            /*count*/ 2,
-            /*delaySeconds*/ 5,
-          );
-          return [
-            typing.typesDirectoryName,
-            filterTags(tags),
-          ];
-        },
-      ),
+      await nAtATime(10, typings, async (typing) => {
+        const tags = await retry(
+          async () => (await pacote.packument(typing.name, { cache: cacheDir }))["dist-tags"],
+          /*count*/ 2,
+          /*delaySeconds*/ 5,
+        );
+        return [typing.typesDirectoryName, filterTags(tags)];
+      }),
     ),
   };
 
