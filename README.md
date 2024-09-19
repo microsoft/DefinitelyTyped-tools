@@ -1,5 +1,9 @@
 # DefinitelyTyped-tools
 
+[![Publish Packages](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/publish-packages.yml/badge.svg)](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/publish-packages.yml)
+[![Publish registry](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/publish-registry.yml/badge.svg)](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/publish-registry.yml)
+[![Daily Open PR Sync](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/daily.yml/badge.svg)](https://github.com/microsoft/DefinitelyTyped-tools/actions/workflows/daily.yml)
+
 A monorepo for formerly disparate DefinitelyTyped-related tools:
 
 - [definitions-parser](packages/definitions-parser): the part of [microsoft/types-publisher](https://github.com/microsoft/types-publisher) that reads DefinitelyTyped repository data
