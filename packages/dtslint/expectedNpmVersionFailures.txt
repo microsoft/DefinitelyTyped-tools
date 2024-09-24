@@ -295,7 +295,6 @@ node-sass-middleware
 node-uuid
 nodegit
 nodeunit
-noisejs
 nomnom
 notify
 notifyjs-browser
