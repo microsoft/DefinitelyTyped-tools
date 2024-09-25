@@ -88,7 +88,6 @@ decorum
 deep-freeze
 deku
 desmos
-domurl
 double-ended-queue
 dts-bundle
 durandal/v1
