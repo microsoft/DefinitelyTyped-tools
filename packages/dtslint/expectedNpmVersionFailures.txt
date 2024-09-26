@@ -233,7 +233,6 @@ knockstrap
 koa-proxy
 konami.js
 kos-core
-lazypipe
 leadfoot
 leaflet-curve
 leaflet-editable/v0
