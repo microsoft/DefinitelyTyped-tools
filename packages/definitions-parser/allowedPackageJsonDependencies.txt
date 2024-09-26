@@ -663,6 +663,7 @@ aws-sdk
 aws-xray-sdk-core
 axe-core
 axios
+axios-mock-adapter
 base-x
 bee-queue
 bignumber.js
