@@ -261,7 +261,6 @@ material-ui
 mathjax
 mdast
 mem-cache
-merge-stream
 messenger
 method-override
 microservice-utilities
