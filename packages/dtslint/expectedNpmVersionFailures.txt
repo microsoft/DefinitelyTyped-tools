@@ -154,7 +154,6 @@ gulp-changed
 gulp-cheerio
 gulp-coffeeify
 gulp-espower
-gulp-help-doc
 gulp-load-plugins
 gulp-mocha
 gulp-ng-annotate
