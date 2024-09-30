@@ -391,6 +391,11 @@ export interface TypingsDataRaw {
   readonly devDependencies: PackageJsonDependencies;
 
   /**
+   * Packages that this package peer depends on.
+   */
+  readonly peerDependencies?: PackageJsonDependencies;
+
+  /**
    * The [older] version of the library that this definition package refers to, as represented *on-disk*.
    *
    * @note The latest version always exists in the root of the package tree and thus does not have a value for this property.
@@ -523,11 +528,17 @@ export class TypingsData extends PackageBase {
   get devDependencies(): PackageJsonDependencies {
     return this.data.devDependencies ?? {};
   }
+  get peerDependencies(): PackageJsonDependencies {
+    return this.data.peerDependencies ?? {};
+  }
   *allPackageJsonDependencies(): Iterable<[string, string]> {
     for (const [name, version] of Object.entries(this.dependencies)) {
       yield [name, version];
     }
     for (const [name, version] of Object.entries(this.devDependencies)) {
+      yield [name, version];
+    }
+    for (const [name, version] of Object.entries(this.peerDependencies)) {
       yield [name, version];
     }
   }

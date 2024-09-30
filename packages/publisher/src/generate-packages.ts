@@ -142,6 +142,7 @@ export function createPackageJSON(typing: TypingsData, version: string): string 
     },
     scripts: {},
     dependencies: typing.dependencies,
+    peerDependencies: typing.peerDependencies,
     typesPublisherContentHash: typing.getContentHash(),
     typeScriptVersion: typing.minTypeScriptVersion,
     nonNpm: typing.nonNpm === true ? typing.nonNpm : undefined,
@@ -206,6 +207,11 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
     }`,
   );
   lines.push("");
+  const peerDependencies = Object.keys(typing.peerDependencies).sort();
+  if (peerDependencies.length) {
+    lines.push(` * Peer dependencies: ${peerDependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ")}`);
+    lines.push("");
+  }
 
   lines.push("# Credits");
   const contributors = typing.contributors
