@@ -11,6 +11,7 @@ export const testingNewPackages = readmeLink("Adding tests to a new package");
 export const definitionOwners = readmeLink("Definition Owners");
 export const workflow = readmeLink("Make a pull request");
 export const tsconfigJson = readmeLink("`tsconfig.json`");
+export const packageJson = readmeLink("`package.json`");
 export const testsTs = readmeLink("`<my-package>-tests.ts`");
 
 export const playground = (prNum: number) =>
