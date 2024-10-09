@@ -63,6 +63,7 @@ export function validatePackageJson(
       case "name":
       case "version":
       case "devDependencies":
+      case "peerDependencies":
       case "projects":
       case "minimumTypeScriptVersion":
       case "owners":

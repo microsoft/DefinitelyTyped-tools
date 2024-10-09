@@ -42,6 +42,7 @@ describe("validatePackageJson", () => {
   const header = { ...pkgJson, nonNpm: false, libraryMajorVersion: 18, libraryMinorVersion: 0 };
   delete (header as any).dependencies;
   delete (header as any).devDependencies;
+  delete (header as any).peerDependencies;
   delete (header as any).private;
   delete (header as any).version;
   it("requires private: true", () => {
