@@ -373,7 +373,6 @@ rickshaw
 riderize__passport-strava-oauth2
 riot-api-nodejs
 riotjs
-rison
 rn-fetch-blob
 rollup-plugin-svelte-svg
 rosie
