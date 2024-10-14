@@ -21,7 +21,7 @@ jobs:
       - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - uses: actions/cache/restore@2cdf405574d6ef1f33a1d12acccd3ae82f47b3f2 # v4.1.0
+      - uses: actions/cache/restore@3624ceb22c1c5a301c8db4169662070a689d9ea8 # v4.1.1
         with:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt}}
@@ -31,10 +31,10 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_RETAG_TOKEN }}
       - if: always()
-        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           path: packages/definitions-parser/data/
-      - uses: actions/cache/save@2cdf405574d6ef1f33a1d12acccd3ae82f47b3f2 # v4.1.0
+      - uses: actions/cache/save@3624ceb22c1c5a301c8db4169662070a689d9ea8 # v4.1.1
         if: always()
         with:
           path: ./cache
