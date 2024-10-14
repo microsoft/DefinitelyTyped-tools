@@ -705,27 +705,28 @@
           },
           "__typename": "PullRequestChangedFileConnection"
         },
-        "projectCards": {
+        "__typename": "PullRequest",
+        "projectItems": {
           "nodes": [
             {
               "id": "PRC_lALOAFz6BM4AORWwzgQLTuM",
               "project": {
-                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
-                "number": 5,
-                "name": "New Pull Request Status Board",
-                "__typename": "Project"
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
               },
-              "column": {
-                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTIy",
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
                 "name": "Needs Maintainer Review",
-                "__typename": "ProjectColumn"
-              },
-              "__typename": "ProjectCard"
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
+              }
             }
           ],
-          "__typename": "ProjectCardConnection"
-        },
-        "__typename": "PullRequest"
+          "__typename": "ProjectV2ItemConnection"
+        }
       },
       "__typename": "Repository"
     }

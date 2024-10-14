@@ -364,6 +364,9 @@ importers:
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
+      seroval:
+        specifier: ^1.0.7
+        version: 1.0.7
       ts-jest:
         specifier: ^29.1.2
         version: 29.1.5(@babel/core@7.23.3)(esbuild@0.21.5)(jest@29.7.0)(typescript@5.5.2)
@@ -477,6 +480,9 @@ importers:
       typescript-5.6:
         specifier: npm:typescript@~5.6.0-0
         version: /typescript@5.6.0-dev.20240628
+      typescript-5.7:
+        specifier: npm:typescript@~5.7.0-0
+        version: /typescript@5.7.0-dev.20240822
 
   packages/typescript-versions: {}
 
@@ -8900,6 +8906,11 @@ packages:
       type-fest: 0.13.1
     dev: true
 
+  /seroval@1.0.7:
+    resolution: {integrity: sha512-n6ZMQX5q0Vn19Zq7CIKNIo7E75gPkGCFUEqDpa8jgwpYr/vScjqnQ6H09t1uIiZ0ZSK0ypEGvrYK2bhBGWsGdw==}
+    engines: {node: '>=10'}
+    dev: true
+
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
@@ -9914,6 +9925,12 @@ packages:
 
   /typescript@5.6.0-dev.20240628:
     resolution: {integrity: sha512-XT57Gllario2IUjypenMgUbdHrNGtD52J13FyZckIC+h4ic13TllkJmoypbUr0HIYQ9IUB3SLq6/SaSBD4DoyQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
+
+  /typescript@5.7.0-dev.20240822:
+    resolution: {integrity: sha512-JL60efPDEbshbweVXX18Ic5g+9iVbf2Nc3xh3eBGbLjrt5+x6KZzB3c2d+J5PoqOzPjbFATCT2FQ3W8vEGOXTg==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false

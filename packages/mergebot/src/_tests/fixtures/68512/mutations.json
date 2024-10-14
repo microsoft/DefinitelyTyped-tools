@@ -20,11 +20,24 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddProjectCardInput!) {\n  addProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}\n",
     "variables": {
       "input": {
         "contentId": "PR_kwDOAFz6BM5mMjbY",
-        "projectColumnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTMw"
+        "projectId": "PVT_kwDOADeBNM4AkH1q"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "itemId": "TEST",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "98236657"
+        }
       }
     }
   },

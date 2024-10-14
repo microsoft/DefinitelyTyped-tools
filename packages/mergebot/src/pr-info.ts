@@ -1,4 +1,11 @@
-import { ColumnName, PopularityLevel } from "./basic";
+import {
+  BlessedColumnName,
+  ColumnName,
+  columnNameToBlessed,
+  isBlessedColumnName,
+  PopularityLevel,
+  projectBoardNumber,
+} from "./basic";
 import {
   PR_repository_pullRequest,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites,
@@ -118,7 +125,7 @@ export interface PrInfo {
   /**
    * Name of column used if a maintainer blessed this PR
    */
-  readonly maintainerBlessed?: ColumnName;
+  readonly maintainerBlessed?: BlessedColumnName;
 
   /**
    * The time we posted a merge offer, if any (required for merge request in addition to passing CI and a review)
@@ -201,7 +208,7 @@ export async function deriveStateForPR(
   // (it would be bad to use `committedDate`/`authoredDate`, since these can be set to arbitrary values)
   const lastPushDate = new Date(headCommit.pushedDate || prInfo.createdAt);
   const lastCommentDate = getLastCommentishActivityDate(prInfo);
-  const blessing = getLastMaintainerBlessing(lastPushDate, prInfo.timelineItems);
+  const blessing = getLastMaintainerBlessing(lastPushDate, prInfo);
   const reopenedDate = getReopenedDate(prInfo.timelineItems);
   // we should generally have all files (except for draft PRs)
   const fileCount = prInfo.changedFiles;
@@ -302,13 +309,39 @@ function getLastCommentishActivityDate(prInfo: PR_repository_pullRequest) {
   return max([...latestIssueCommentDate, ...latestReviewCommentDate]);
 }
 
-function getLastMaintainerBlessing(after: Date, timelineItems: PR_repository_pullRequest_timelineItems) {
+function getLastMaintainerBlessing(
+  after: Date,
+  pr: PR_repository_pullRequest,
+): { date: Date | undefined; column: BlessedColumnName } | undefined {
+  const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
+  const columnName =
+    card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" && card.fieldValueByName.name;
+  if (columnName && isBlessedColumnName(columnName) && card?.updatedAt) {
+    // Normally relying on the updatedAt of the card is not reliable, but in this case it's fine
+    // becuase the bot will never move the card into the blessed state, only out of it.
+    // If the card is already in a blessed state, the bot will not mutate the card.
+    const d = new Date(card.updatedAt);
+    if (d <= after) return undefined;
+    return { date: undefined, column: columnName };
+  }
+
+  // This doesn't work with the Projects V2, but is needed for old tests.
+  // If V2 ever adds an API for this, we should drop the special "blessed" column above
+  // and just reuse the below.
+  // https://github.com/orgs/community/discussions/49602
+  // https://github.com/orgs/community/discussions/57326
+  const timelineItems = pr.timelineItems;
   return (
     someLast(timelineItems.nodes, (item) => {
       if (!(item.__typename === "MovedColumnsInProjectEvent" && authorNotBot(item))) return undefined;
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
-      return { date: d, column: item.projectColumnName as ColumnName };
+      const columnName = item.projectColumnName as ColumnName;
+      const blessedColumnName = columnNameToBlessed[columnName];
+      if (blessedColumnName) {
+        return { date: d, column: blessedColumnName };
+      }
+      return undefined;
     }) || undefined
   );
 }
@@ -432,19 +465,33 @@ configSuspicious["tsconfig.json"] = makeChecker(
   urls.tsconfigJson,
   {
     ignore: (data) => {
-      if (Array.isArray(data.compilerOptions?.lib)) {
-        data.compilerOptions.lib = data.compilerOptions.lib.filter(
-          (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
-        );
+      if (!data || typeof data !== "object") return;
+
+      if (
+        "compilerOptions" in data &&
+        data.compilerOptions &&
+        typeof data.compilerOptions === "object" &&
+        !Array.isArray(data.compilerOptions)
+      ) {
+        if (Array.isArray(data.compilerOptions.lib)) {
+          data.compilerOptions.lib = data.compilerOptions.lib.filter(
+            (value: unknown) => !(typeof value === "string" && value.toLowerCase() === "dom"),
+          );
+        }
+        for (const k of ["baseUrl", "typeRoots", "paths", "jsx", "module"]) {
+          if (k in data.compilerOptions) delete data.compilerOptions[k];
+        }
+        if (typeof data.compilerOptions.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
+          delete data.compilerOptions.target;
+        }
       }
-      ["baseUrl", "typeRoots", "paths", "jsx", "module"].forEach((k) => delete data.compilerOptions[k]);
-      if (typeof data.compilerOptions?.target === "string" && data.compilerOptions.target.toLowerCase() === "es6") {
-        delete data.compilerOptions.target;
-      }
-      delete data.files;
+
+      if ("files" in data) delete data.files;
     },
   },
 );
+
+type JSONLike = boolean | number | string | null | { [key: string]: JSONLike } | JSONLike[];
 
 // helper for file checkers: allow either a given "expectedForm", or any edits that get closer
 // to it, ignoring some keys.  The ignored properties are in most cases checked
@@ -452,11 +499,11 @@ configSuspicious["tsconfig.json"] = makeChecker(
 function makeChecker(
   expectedForm: any,
   expectedFormUrl: string,
-  options?: { parse: (text: string) => unknown } | { ignore: (data: any) => void },
+  options?: { parse?: (text: string) => JSONLike; ignore?: (data: JSONLike) => void },
 ) {
   const diffFromExpected = (text: string) => {
     let data: any;
-    if (options && "parse" in options) {
+    if (options?.parse) {
       data = options.parse(text);
     } else {
       try {
@@ -465,7 +512,7 @@ function makeChecker(
         return "couldn't parse json";
       }
     }
-    if (options && "ignore" in options) options.ignore(data);
+    options?.ignore?.(data);
     try {
       return jsonDiff.compare(expectedForm, data);
     } catch (e) {

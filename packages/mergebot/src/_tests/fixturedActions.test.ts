@@ -6,18 +6,17 @@ import { process } from "../compute-pr-actions";
 import { deriveStateForPR } from "../pr-info";
 import { PR } from "../queries/schema/PR";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
-import * as cachedQueries from "./cachedQueries.json";
-jest.mock("../util/cachedQueries", () => ({
-  getProjectBoardColumns: jest.fn(() => cachedQueries.getProjectBoardColumns),
-  getLabels: jest.fn(() => cachedQueries.getLabels),
-}));
+import * as cachedQueries from "./cachedQueries";
+jest.mock("../util/cachedQueries", () =>
+  Object.fromEntries(Object.entries(cachedQueries).map(([k, v]) => [k, jest.fn(() => Promise.resolve(v))])),
+);
 import { executePrActions } from "../execute-pr-actions";
 
 expect.extend({ toMatchFile });
 
 /* You can use the following command to add/update fixtures with an existing PR
  *
- *     BOT_AUTH_TOKEN=XYZ pnpm run create-fixture -- 43164
+ *     BOT_AUTH_TOKEN=XYZ pnpm run create-fixture 43164
  */
 
 async function testFixture(dir: string) {
@@ -49,7 +48,6 @@ async function testFixture(dir: string) {
 
   expect(jsonString(action)).toMatchFile(resultPath);
   expect(jsonString(derived)).toMatchFile(derivedPath);
-
   const mutations = await executePrActions(action, prInfo, /*dry*/ true);
   expect(jsonString(mutations)).toMatchFile(mutationsPath);
 }

@@ -769,11 +769,11 @@
           "__typename": "PullRequestChangedFileConnection",
           "totalCount": 3
         },
-        "projectCards": {
+        "__typename": "PullRequest",
+        "projectItems": {
           "nodes": [],
-          "__typename": "ProjectCardConnection"
-        },
-        "__typename": "PullRequest"
+          "__typename": "ProjectV2ItemConnection"
+        }
       },
       "__typename": "Repository"
     }

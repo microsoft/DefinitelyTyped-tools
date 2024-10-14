@@ -41,6 +41,7 @@ export const all: Linter.BaseConfig = {
           "declaration",
           "defApiFeature",
           "defaultValue",
+          "deferred",
           "detail",
           "end",
           "eventproperty",

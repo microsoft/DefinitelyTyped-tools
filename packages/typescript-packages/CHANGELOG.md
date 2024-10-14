@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.4
+
+### Patch Changes
+
+- 7ca2577: Add TypeScript 5.7
+- Updated dependencies [7ca2577]
+  - @definitelytyped/typescript-versions@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

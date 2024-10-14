@@ -9,3 +9,5 @@ packages/dts-critic/testsource
 *.yml
 *.yaml
 *.md
+
+packages/mergebot/src/queries/schema
