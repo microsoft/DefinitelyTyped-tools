@@ -39,12 +39,6 @@ exports[`plugin should have the expected exports 1`] = `
             "@definitelytyped/redundant-undefined": "error",
             "@definitelytyped/strict-export-declare-modifiers": "error",
             "@typescript-eslint/adjacent-overload-signatures": "error",
-            "@typescript-eslint/array-type": [
-              "error",
-              {
-                "default": "array-simple",
-              },
-            ],
             "@typescript-eslint/ban-ts-comment": [
               "error",
               {

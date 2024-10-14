@@ -1,8 +1,4 @@
-types/expect/index.d.ts
-  7:12  error  Array type using 'readonly T[]' is forbidden for non-simple types. Use 'ReadonlyArray<T>' instead  @typescript-eslint/array-type
-
-✖ 1 problem (1 error, 0 warnings)
-  1 error and 0 warnings potentially fixable with the `--fix` option.
+No errors
 
 ==== types/expect/index.d.ts ====
 
@@ -13,7 +9,5 @@ types/expect/index.d.ts
     export function complicatedUnion<T extends string | number>(x: T, y: T): {
         prop1: "a" | "b" | "c";
         prop2: readonly (string | number)[];
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! @typescript-eslint/array-type: Array type using 'readonly T[]' is forbidden for non-simple types. Use 'ReadonlyArray<T>' instead.
         prop3: ReadonlyArray<string | number>;
     };
