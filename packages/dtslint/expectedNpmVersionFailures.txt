@@ -274,7 +274,6 @@ moment-precise-range-plugin
 mongoose-promise
 msgpack
 mu2
-natural-sort
 nedb-logger
 neo4j
 netlify-auth-providers
