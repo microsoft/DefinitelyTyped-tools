@@ -22,15 +22,15 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "pacote": "^17.0.5",
-    "semver": "^7.5.4",
-    "yargs": "^17.7.2"
+    "pacote": "catalog:",
+    "semver": "catalog:",
+    "yargs": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^18.19.7",
-    "@types/pacote": "^11.1.8",
-    "@types/semver": "^7.5.6",
-    "@types/yargs": "^17.0.32"
+    "@types/node": "catalog:",
+    "@types/pacote": "catalog:",
+    "@types/semver": "catalog:",
+    "@types/yargs": "catalog:"
   },
   "main": "dist/index.js",
   "bin": {
