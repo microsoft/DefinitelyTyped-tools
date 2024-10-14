@@ -64,7 +64,7 @@ jobs:
     - name: Check for missing changesets
       run: |
         PR_CHANGESETS=$(ls .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
-        MAIN_CHANGESETS=$(git ls-tree -r origin/main .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
+        MAIN_CHANGESETS=$(git ls-tree -r HEAD^1 .changeset | (grep -v -E 'README\.md|config\.json' || true) | wc -l)
 
         # If the PR has no changesets, but main has changesets, assume this is PR is a versioning PR and exit
         if [[ $PR_CHANGESETS -eq 0 && $MAIN_CHANGESETS -gt 0 ]]; then
@@ -73,5 +73,5 @@ jobs:
         fi
 
         git switch -c changesets-temp
-        git checkout origin/main -- packages/definitions-parser/allowedPackageJsonDependencies.txt packages/dtslint/expectedNpmVersionFailures.txt
-        pnpm changeset status --since=origin/main
+        git checkout HEAD^1 -- packages/definitions-parser/allowedPackageJsonDependencies.txt packages/dtslint/expectedNpmVersionFailures.txt
+        pnpm changeset status --since=HEAD^1
