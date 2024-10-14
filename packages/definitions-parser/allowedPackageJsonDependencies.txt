@@ -638,6 +638,7 @@
 @wordpress/data
 @wordpress/element
 @wordpress/keycodes
+@wordpress/media-utils
 abort-controller
 acorn
 actions-on-google
