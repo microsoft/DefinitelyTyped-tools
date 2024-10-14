@@ -31,11 +31,15 @@
     }
   },
   {
-    "mutation": "mutation ($input: MoveProjectCardInput!) {\n  moveProjectCard(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
     "variables": {
       "input": {
-        "cardId": "MDExOlByb2plY3RDYXJkMzc5Mzc5NjA=",
-        "columnId": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI0"
+        "itemId": "MDExOlByb2plY3RDYXJkMzc5Mzc5NjA=",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "d389394c"
+        }
       }
     }
   },

@@ -82,7 +82,7 @@ pnpm run graphql-schema
 Run this to update the cached values:
 
 ```sh
-# Regenerate src/_tests/cachedQueries.json
+# Regenerate src/_tests/cachedQueries.js
 pnpm run update-test-data
 ```
 
@@ -99,7 +99,7 @@ To create fixtures of a current PR:
 
 ```sh
 # To create a fixture for PR 43161
-pnpm run create-fixture -- 43161
+pnpm run create-fixture 43161
 ```
 
 Then you can work against these fixtures offline with:

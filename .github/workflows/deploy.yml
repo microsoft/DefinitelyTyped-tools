@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
-      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+      - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -47,7 +47,7 @@ jobs:
         run: zip -r ${{ github.workspace }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
         with:
           name: node-app
           path: ${{ env.FUNCTION_ZIP_NAME }}
@@ -67,7 +67,7 @@ jobs:
         with:
           name: node-app
 
-      - uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a # v2.1.1
+      - uses: azure/login@a65d910e8af852a8061c627c456678983e180302 # v2.2.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}

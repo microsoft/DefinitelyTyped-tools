@@ -9,6 +9,19 @@
     }
   },
   {
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "itemId": "MDExOlByb2plY3RDYXJkNDEyNjY1MTY=",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "e2dd54d5"
+        }
+      }
+    }
+  },
+  {
     "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
     "variables": {
       "input": {

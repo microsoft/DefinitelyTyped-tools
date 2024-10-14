@@ -841,25 +841,26 @@
             }
           ]
         },
-        "projectCards": {
-          "__typename": "ProjectCardConnection",
+        "projectItems": {
           "nodes": [
             {
-              "__typename": "ProjectCard",
               "id": "MDExOlByb2plY3RDYXJkNTIzMTg2ODk=",
               "project": {
-                "__typename": "Project",
-                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
-                "number": 5,
-                "name": "New Pull Request Status Board"
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
               },
-              "column": {
-                "__typename": "ProjectColumn",
-                "id": "MDEzOlByb2plY3RDb2x1bW43NTUyOTI1",
-                "name": "Recently Merged"
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
+                "name": "Recently Merged",
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
               }
             }
-          ]
+          ],
+          "__typename": "ProjectV2ItemConnection"
         }
       }
     }

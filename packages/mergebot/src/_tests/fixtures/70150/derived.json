@@ -1,0 +1,58 @@
+{
+  "type": "info",
+  "now": "2024-08-08T20:06:31.899Z",
+  "pr_number": 70150,
+  "author": "sebasjm",
+  "headCommitOid": "22560146e216e1508aa2cd038b4c856d3a99d297",
+  "mergeBaseOid": "1d59977cdbcf917a961d68022373e42858d55b08",
+  "lastPushDate": "2024-07-27T18:32:13.000Z",
+  "lastActivityDate": "2024-08-08T01:48:22.000Z",
+  "maintainerBlessed": "Waiting for Code Reviews (Blessed)",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Popular",
+  "pkgInfo": [
+    {
+      "name": "chrome",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/chrome/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "matthewkimber",
+        "otiai10",
+        "sreimer15",
+        "MatCarlson",
+        "ekinsol",
+        "echoabstract",
+        "spasma",
+        "bdbai",
+        "pokutuna",
+        "JasonXian",
+        "usertim",
+        "idan315",
+        "nicolas377",
+        "idosal",
+        "fregante"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "nicolas377",
+      "date": "2024-08-08T01:48:22.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 2254222651,
+  "ciResult": "pass"
+}

@@ -1,0 +1,30 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "The CI failed",
+    "New Definition",
+    "Check Config",
+    "Untested Change"
+  ],
+  "responseComments": [
+    {
+      "tag": "suggest-testing",
+      "status": "Hey @huseeiin,\n\n:unamused: Your PR doesn't modify any tests, so it's hard to know what's being fixed, and your changes might regress in the future. Please consider [adding tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-adding-tests-to-a-new-package) to cover the change you're making. Including tests allows this PR to be merged by yourself and the owners of this module.\n\n***This can potentially save days of time for you!***"
+    },
+    {
+      "tag": "welcome",
+      "status": "@huseeiin Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `fast-decode-uri-component` (*new!*) — [on npm](https://www.npmjs.com/package/fast-decode-uri-component), [on unpkg](https://unpkg.com/browse/fast-decode-uri-component@latest/)\n  - 1 added owner: ✎@huseeiin\n  - Config files to check:\n    - [`fast-decode-uri-component/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70218/files/b40b94cbeb5441526e8ef39ff8684258f16d0514#diff-533ae5a3ce61574804bc5074b19ca431b11098f32353f7a2325b96ec0a72e686): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions`)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70218&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-others",
+      "status": "🔔 @huseeiin — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70218/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
+    },
+    {
+      "tag": "gh-actions-complaint-b40b94c",
+      "status": "@huseeiin The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b40b94cbeb5441526e8ef39ff8684258f16d0514/checks?check_suite_id=26815858311).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

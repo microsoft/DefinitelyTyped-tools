@@ -1,0 +1,347 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM50_-9R",
+        "title": "feat(ws): Enable `addEventListener`/`removeEventListener` to Work with Unions of Event Types",
+        "createdAt": "2024-07-10T17:50:38Z",
+        "author": {
+          "login": "ITenthusiasm",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Maintainer Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 70024,
+        "state": "OPEN",
+        "headRefOid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+        "changedFiles": 2,
+        "additions": 21,
+        "deletions": 29,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "8f212658bddb0788b463565a0f58b09e5a1d1171",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-10T18:01:02Z",
+              "projectColumnName": "Needs Maintainer Review",
+              "__typename": "MovedColumnsInProjectEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "k-yle",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2024-07-11T09:05:08Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70024#pullrequestreview-2171336629",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "rbuckton",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2024-07-11T21:53:41Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70024#pullrequestreview-2173135611",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 25858317844,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6/checks?check_suite_id=25858317844",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6/checks?check_suite_id=25858317844",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-07-10T17:53:40Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-07-10T17:17:36Z",
+                "committedDate": "2024-07-10T17:53:24Z",
+                "pushedDate": null,
+                "oid": "524bf6f79d0c9e32a76f73f699a2ea59dfba7eb6",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 7,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM6EY4ad",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2221115037,
+              "body": "@ITenthusiasm Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `ws` — [on npm](https://www.npmjs.com/package/ws), [on unpkg](https://unpkg.com/browse/ws@latest/)\n  - owner-approval: @k-yle\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70024&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by a DT maintainer\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-07-10T17:51:14Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6EY4bp",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2221115113,
+              "body": "🔔 @loyd @mlamp @TitaneBoy @reduckted @teidesu @wojtkowiak @k-yle @cwadrupldijjit — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70024/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-07-10T17:51:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Ej8pr",
+              "author": {
+                "login": "ITenthusiasm",
+                "__typename": "User"
+              },
+              "databaseId": 2224015979,
+              "body": "Ready to merge",
+              "createdAt": "2024-07-11T22:01:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6EkAgr",
+              "author": {
+                "login": "ITenthusiasm",
+                "__typename": "User"
+              },
+              "databaseId": 2224031787,
+              "body": "Hmm. Does someone else need to say the magic words? :thinking:",
+              "createdAt": "2024-07-11T22:12:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6EkIRW",
+              "author": {
+                "login": "k-yle",
+                "__typename": "User"
+              },
+              "databaseId": 2224063574,
+              "body": "Ready to merge",
+              "createdAt": "2024-07-11T22:31:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Ekat9",
+              "author": {
+                "login": "ITenthusiasm",
+                "__typename": "User"
+              },
+              "databaseId": 2224139133,
+              "body": "@rbuckton Is the bot stuck, by chance? :sweat_smile:",
+              "createdAt": "2024-07-12T00:01:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Ek00r",
+              "author": {
+                "login": "rbuckton",
+                "__typename": "User"
+              },
+              "databaseId": 2224246059,
+              "body": "I'll check, we've been doing some merge bot infrastructure changes this week. ",
+              "createdAt": "2024-07-12T01:16:01Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "ITenthusiasm",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/ws/index.d.ts",
+              "additions": 13,
+              "deletions": 22,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ws/ws-tests.ts",
+              "additions": 8,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mg",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgQ0ON0",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Maintainer Review",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

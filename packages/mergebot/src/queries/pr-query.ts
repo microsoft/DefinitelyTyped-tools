@@ -177,25 +177,30 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
           }
         }
 
-        projectCards(first: 10) {
+        projectItems(first: 10) {
           nodes {
             id
             project {
               id
               number
-              name
             }
-            column {
-              id
-              name
+            fieldValueByName(name: "Status") {
+              ... on ProjectV2ItemFieldSingleSelectValue {
+                name
+                field {
+                  ... on ProjectV2SingleSelectField {
+                    id
+                  }
+                }
+              }
             }
+            updatedAt
           }
         }
       }
     }
   }
 `;
-// TODO: Need to double-check how addition to a new project board is prepresented
 export async function getPRInfo(prNumber: number) {
   const info = await getPRInfoFirst(prNumber);
   const prInfo = info.data.repository?.pullRequest;

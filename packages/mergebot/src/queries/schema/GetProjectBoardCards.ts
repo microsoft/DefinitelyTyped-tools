@@ -7,20 +7,58 @@
 // GraphQL query operation: GetProjectBoardCards
 // ====================================================
 
-export interface GetProjectBoardCards_repository_project_columns_nodes_cards_nodes {
-  __typename: "ProjectCard";
+export interface GetProjectBoardCards_repository_projectV2_items_pageInfo {
+  __typename: "PageInfo";
   /**
-   * The Node ID of the ProjectCard object
+   * When paginating backwards, the cursor to continue.
+   */
+  startCursor: string | null;
+  /**
+   * When paginating forwards, are there more items?
+   */
+  hasNextPage: boolean;
+  /**
+   * When paginating forwards, the cursor to continue.
+   */
+  endCursor: string | null;
+}
+
+export interface GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue {
+  __typename: "ProjectV2ItemFieldDateValue" | "ProjectV2ItemFieldIterationValue" | "ProjectV2ItemFieldLabelValue" | "ProjectV2ItemFieldMilestoneValue" | "ProjectV2ItemFieldNumberValue" | "ProjectV2ItemFieldPullRequestValue" | "ProjectV2ItemFieldRepositoryValue" | "ProjectV2ItemFieldReviewerValue" | "ProjectV2ItemFieldTextValue" | "ProjectV2ItemFieldUserValue";
+}
+
+export interface GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue {
+  __typename: "ProjectV2ItemFieldSingleSelectValue";
+  /**
+   * The name of the selected single select option.
+   */
+  name: string | null;
+}
+
+export type GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName = GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldDateValue | GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName_ProjectV2ItemFieldSingleSelectValue;
+
+export interface GetProjectBoardCards_repository_projectV2_items_nodes {
+  __typename: "ProjectV2Item";
+  /**
+   * The Node ID of the ProjectV2Item object
    */
   id: string;
+  /**
+   * The field value of the first project field which matches the 'name' argument that is set on the item.
+   */
+  fieldValueByName: GetProjectBoardCards_repository_projectV2_items_nodes_fieldValueByName | null;
   /**
    * Identifies the date and time when the object was last updated.
    */
   updatedAt: any;
 }
 
-export interface GetProjectBoardCards_repository_project_columns_nodes_cards {
-  __typename: "ProjectCardConnection";
+export interface GetProjectBoardCards_repository_projectV2_items {
+  __typename: "ProjectV2ItemConnection";
+  /**
+   * Information to aid in pagination.
+   */
+  pageInfo: GetProjectBoardCards_repository_projectV2_items_pageInfo;
   /**
    * Identifies the total count of items in the connection.
    */
@@ -28,55 +66,27 @@ export interface GetProjectBoardCards_repository_project_columns_nodes_cards {
   /**
    * A list of nodes.
    */
-  nodes: (GetProjectBoardCards_repository_project_columns_nodes_cards_nodes | null)[] | null;
+  nodes: (GetProjectBoardCards_repository_projectV2_items_nodes | null)[] | null;
 }
 
-export interface GetProjectBoardCards_repository_project_columns_nodes {
-  __typename: "ProjectColumn";
+export interface GetProjectBoardCards_repository_projectV2 {
+  __typename: "ProjectV2";
   /**
-   * The Node ID of the ProjectColumn object
+   * The Node ID of the ProjectV2 object
    */
   id: string;
   /**
-   * The project column's name.
+   * List of items in the project
    */
-  name: string;
-  /**
-   * List of cards in the column
-   */
-  cards: GetProjectBoardCards_repository_project_columns_nodes_cards;
-}
-
-export interface GetProjectBoardCards_repository_project_columns {
-  __typename: "ProjectColumnConnection";
-  /**
-   * A list of nodes.
-   */
-  nodes: (GetProjectBoardCards_repository_project_columns_nodes | null)[] | null;
-}
-
-export interface GetProjectBoardCards_repository_project {
-  __typename: "Project";
-  /**
-   * The Node ID of the Project object
-   */
-  id: string;
-  /**
-   * List of columns in the project
-   */
-  columns: GetProjectBoardCards_repository_project_columns;
+  items: GetProjectBoardCards_repository_projectV2_items;
 }
 
 export interface GetProjectBoardCards_repository {
   __typename: "Repository";
   /**
-   * The Node ID of the Repository object
+   * Finds and returns the Project according to the provided Project number.
    */
-  id: string;
-  /**
-   * Find project by number.
-   */
-  project: GetProjectBoardCards_repository_project | null;
+  projectV2: GetProjectBoardCards_repository_projectV2 | null;
 }
 
 export interface GetProjectBoardCards {
@@ -84,4 +94,8 @@ export interface GetProjectBoardCards {
    * Lookup a given repository by the owner and repository name.
    */
   repository: GetProjectBoardCards_repository | null;
+}
+
+export interface GetProjectBoardCardsVariables {
+  cursor?: string | null;
 }

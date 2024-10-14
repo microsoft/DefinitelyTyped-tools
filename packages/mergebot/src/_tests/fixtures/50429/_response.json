@@ -248,25 +248,26 @@
             }
           ]
         },
-        "projectCards": {
-          "__typename": "ProjectCardConnection",
+        "projectItems": {
           "nodes": [
             {
-              "__typename": "ProjectCard",
               "id": "MDExOlByb2plY3RDYXJkNTIyOTYzODM=",
               "project": {
-                "__typename": "Project",
-                "id": "MDc6UHJvamVjdDM3NDExMDQ=",
-                "number": 5,
-                "name": "New Pull Request Status Board"
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
               },
-              "column": {
-                "__typename": "ProjectColumn",
-                "id": "MDEzOlByb2plY3RDb2x1bW45ODY3MDA2",
-                "name": "Needs Maintainer Action"
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
+                "name": "Needs Maintainer Action",
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
               }
             }
-          ]
+          ],
+          "__typename": "ProjectV2ItemConnection"
         }
       }
     }

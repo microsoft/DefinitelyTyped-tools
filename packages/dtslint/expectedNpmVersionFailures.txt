@@ -88,7 +88,6 @@ decorum
 deep-freeze
 deku
 desmos
-domurl
 double-ended-queue
 dts-bundle
 durandal/v1
@@ -155,7 +154,6 @@ gulp-changed
 gulp-cheerio
 gulp-coffeeify
 gulp-espower
-gulp-help-doc
 gulp-load-plugins
 gulp-mocha
 gulp-ng-annotate
@@ -215,7 +213,6 @@ js.spec
 jsbn
 jsdeferred
 json-editor
-json-merge-patch
 json-patch
 json-pointer
 json-schema
@@ -235,7 +232,6 @@ knockstrap
 koa-proxy
 konami.js
 kos-core
-lazypipe
 leadfoot
 leaflet-curve
 leaflet-editable/v0
@@ -264,11 +260,9 @@ material-ui
 mathjax
 mdast
 mem-cache
-merge-stream
 messenger
 method-override
 microservice-utilities
-milliseconds
 mina
 mixpanel
 mixto
@@ -280,8 +274,6 @@ moment-precise-range-plugin
 mongoose-promise
 msgpack
 mu2
-multiparty
-natural-sort
 nedb-logger
 neo4j
 netlify-auth-providers
@@ -296,7 +288,6 @@ node-sass-middleware
 node-uuid
 nodegit
 nodeunit
-noisejs
 nomnom
 notify
 notifyjs-browser
@@ -337,7 +328,6 @@ purl
 q-retry
 qunit/v1
 radius
-random-string
 rangy
 raty
 react-better-password
@@ -382,7 +372,6 @@ rickshaw
 riderize__passport-strava-oauth2
 riot-api-nodejs
 riotjs
-rison
 rn-fetch-blob
 rollup-plugin-svelte-svg
 rosie
@@ -421,7 +410,6 @@ stream-series
 stream-to-array/v0
 styled-components-react-native
 succinct
-svg-injector
 swagger-schema-official
 swig
 swipe

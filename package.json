@@ -14,8 +14,8 @@
     "ci:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.7",
-    "@types/jest": "^29.5.12",
+    "@changesets/cli": "^2.27.9",
+    "@types/jest": "^29.5.13",
     "@types/node": "catalog:",
     "@types/yargs": "catalog:",
     "@typescript-eslint/eslint-plugin": "catalog:",
@@ -23,10 +23,10 @@
     "eslint": "catalog:",
     "eslint-plugin-jsdoc": "catalog:",
     "jest": "^29.7.0",
-    "jest-file-snapshot": "^0.6.0",
-    "knip": "^5.25.1",
-    "prettier": "^3.3.2",
-    "ts-jest": "^29.2.0",
+    "jest-file-snapshot": "^0.7.0",
+    "knip": "^5.33.3",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
     "typescript": "catalog:"
   },
   "pnpm": {
@@ -45,5 +45,5 @@
       ]
     }
   },
-  "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
+  "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4"
 }

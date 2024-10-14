@@ -1,0 +1,5 @@
+{
+  "b40b94cbeb5441526e8ef39ff8684258f16d0514:types/fast-decode-uri-component/.npmignore": "\n",
+  "b40b94cbeb5441526e8ef39ff8684258f16d0514:types/fast-decode-uri-component/package.json": "{\n  \"name\": \"@types/fast-decode-uri-component\",\n  \"version\": \"0.1.9999\",\n  \"private\": true,\n  \"owners\": [{ \"name\": \"Hussein\", \"githubUsername\": \"huseeiin\" }],\n  \"projects\": [\"https://github.com/delvedor/fast-decode-uri-component\"],\n  \"devDependencies\": {\n    \"@types/fast-decode-uri-component\": \"workspace:.\"\n  }\n}\n",
+  "b40b94cbeb5441526e8ef39ff8684258f16d0514:types/fast-decode-uri-component/tsconfig.json": "{}\n"
+}

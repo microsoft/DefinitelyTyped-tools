@@ -631,12 +631,14 @@
 @uirouter/angularjs
 @vue/reactivity
 @vue/test-utils
+@webgpu/types
 @wordpress/api-fetch
 @wordpress/components
 @wordpress/core-data
 @wordpress/data
 @wordpress/element
 @wordpress/keycodes
+@wordpress/media-utils
 abort-controller
 acorn
 actions-on-google
@@ -717,6 +719,7 @@ ember-qunit
 ember-resolver
 ember-source
 eris
+esbuild
 eslint-visitor-keys
 ethers
 eventemitter2
@@ -733,6 +736,7 @@ final-form
 firebase-admin
 flatbush
 flatpickr
+focus-trap
 form-data
 fs-capacitor
 fs-jetpack
@@ -795,6 +799,7 @@ long
 lottie-web
 magic-string
 mali
+mapbox-gl
 markdownlint
 marked
 meshoptimizer
@@ -900,6 +905,7 @@ scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
 serialize-query-params
+sharp
 shell-exec
 should
 simple-markdown

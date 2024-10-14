@@ -1,8 +1,8 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind, BlessingKind } from "./basic";
+import { ColumnName, LabelName, StalenessKind, ApproverKind, getMaxApproverKind } from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
-import { PrInfo, BotResult, FileInfo, ReviewInfo } from "./pr-info";
+import { PrInfo, BotResult, FileInfo, ReviewInfo, PackageInfo } from "./pr-info";
 import { noNullish, flatten, unique, sameUser, min, sha256, abbrOid, txt } from "./util/util";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -66,7 +66,7 @@ interface ExtendedPrInfo extends PrInfo {
   readonly approverKind: ApproverKind;
   readonly requireMaintainer: boolean;
   readonly blessable: boolean;
-  readonly blessingKind: BlessingKind;
+  readonly blessed: boolean;
   readonly approvedReviews: (ReviewInfo & { type: "approved" })[];
   readonly changereqReviews: (ReviewInfo & { type: "changereq" })[];
   readonly staleReviews: (ReviewInfo & { type: "stale" })[];
@@ -109,19 +109,17 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   const requireMaintainer =
     possiblyEditsInfra || checkConfig || hasMultiplePackages || isUntested || hasNewPackages || tooManyOwners;
   const blessable = !(hasNewPackages || possiblyEditsInfra || noOtherOwners);
-  const blessingKind = getBlessingKind();
+  const blessed = blessable && isBlessed();
   const approvedReviews = info.reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];
   const changereqReviews = info.reviews.filter((r) => r.type === "changereq") as ExtendedPrInfo["changereqReviews"];
   const staleReviews = info.reviews.filter((r) => r.type === "stale") as ExtendedPrInfo["staleReviews"];
   const hasChangereqs = changereqReviews.length > 0;
-  const approvedBy = getApprovedBy();
-  const pendingCriticalPackages = getPendingCriticalPackages();
-  const approverKind = getApproverKind();
+  const maxApproverKind = getMaxApproverKind(...info.pkgInfo.map(getApproverKind));
   const approved = getApproved();
   const failedCI = info.ciResult === "fail";
   const blockedCI = info.ciResult === "action_required";
   const ciResult = blockedCI && !possiblyEditsInfra ? "unknown" : info.ciResult; // override ciResult: treated as in-progress if it's approved (blockedCI distinguishes it from real unknown)
-  const canBeSelfMerged = info.ciResult === "pass" && !info.hasMergeConflict && (approved || blessingKind === "merge");
+  const canBeSelfMerged = info.ciResult === "pass" && !info.hasMergeConflict && approved;
   const hasValidMergeRequest = !!(
     info.mergeOfferDate &&
     info.mergeRequestDate &&
@@ -145,12 +143,12 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     editsOwners,
     canBeSelfMerged,
     hasValidMergeRequest,
-    pendingCriticalPackages,
+    pendingCriticalPackages: getPendingCriticalPackages(),
     approved,
-    approverKind,
+    approverKind: maxApproverKind,
     requireMaintainer,
     blessable,
-    blessingKind,
+    blessed,
     failedCI,
     blockedCI,
     ciResult,
@@ -166,7 +164,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     approvedReviews,
     changereqReviews,
     staleReviews,
-    approvedBy,
+    approvedBy: getApprovedBy(),
     hasChangereqs,
     needsAuthorAction,
     reviewColumn,
@@ -198,12 +196,8 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     return undefined;
   }
 
-  function getBlessingKind() {
-    return info.maintainerBlessed === "Waiting for Author to Merge"
-      ? "merge"
-      : info.maintainerBlessed === "Waiting for Code Reviews"
-        ? "review"
-        : undefined;
+  function isBlessed(): boolean {
+    return !!info.maintainerBlessed;
   }
 
   function getApprovedBy() {
@@ -224,8 +218,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     );
   }
 
-  function getApproverKind() {
-    const blessed = blessable && blessingKind === "review";
+  function getApproverKind(pkg: PackageInfo): ApproverKind {
     const who: ApproverKind = requireMaintainer
       ? "maintainer"
       : (
@@ -234,27 +227,36 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
             Popular: "owner",
             Critical: "maintainer",
           } as const
-        )[info.popularityLevel];
+        )[pkg.popularityLevel];
     return who === "maintainer" && blessed ? "owner" : who === "owner" && noOtherOwners ? "maintainer" : who;
   }
 
   function getApproved() {
-    if (approvedBy.includes("maintainer")) return true; // maintainer approval => no need for anything else
-    return (
-      pendingCriticalPackages.length === 0 &&
-      approvedBy.length > 0 &&
-      (approverKind === "other" || approvedBy.includes("maintainer") || approvedBy.includes(approverKind))
-    );
+    if (hasChangereqs) return false;
+    if (approvedReviews.some((r) => r.isMaintainer)) return true; // maintainer approval => no need for anything else
+
+    return info.pkgInfo.every((pkg) => {
+      const requiredApproverKind = getApproverKind(pkg);
+      for (const r of approvedReviews) {
+        const approverKind = pkg.owners.some((o) => sameUser(o, r.reviewer)) ? "owner" : "other";
+        if (getMaxApproverKind(approverKind, requiredApproverKind) === approverKind) {
+          return true;
+        }
+      }
+      return false;
+    });
   }
 
   function getReviewColumn(): ColumnName {
     // Get the project column for review with least access
     // E.g. let people review, but fall back to the DT maintainers based on the access rights above
-    return approverKind !== "maintainer"
-      ? "Waiting for Code Reviews"
-      : blessable
-        ? "Needs Maintainer Review"
-        : "Needs Maintainer Action";
+    return blessed
+      ? "Waiting for Code Reviews (Blessed)"
+      : maxApproverKind !== "maintainer"
+        ? "Waiting for Code Reviews"
+        : blessable
+          ? "Needs Maintainer Review"
+          : "Needs Maintainer Action";
   }
 }
 
@@ -382,7 +384,9 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
         actions.shouldMerge = true;
         actions.projectColumn = "Recently Merged";
       } else {
-        actions.projectColumn = "Waiting for Author to Merge";
+        actions.projectColumn = prInfo.maintainerBlessed
+          ? "Waiting for Author to Merge (Blessed)"
+          : "Waiting for Author to Merge";
       }
     }
     // Ping stale reviewers if any
@@ -565,12 +569,10 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
 
   // Lets the author know who needs to review this
   display(``, `## Code Reviews`, ``);
-  if (info.blessingKind === "merge") {
-    display("This PR can be merged.");
-  } else if (info.hasNewPackages) {
+  if (info.hasNewPackages) {
     display(txt`This PR adds a new definition, so it needs to be reviewed by
                     ${requiredApproverLower} before it can be merged.`);
-  } else if (info.popularityLevel === "Critical" && info.blessingKind !== "review") {
+  } else if (info.popularityLevel === "Critical" && !info.blessed) {
     display(txt`Because this is a widely-used package, ${requiredApproverLower}
                     will need to review it before it can be merged.`);
   } else if (!info.requireMaintainer) {
@@ -578,7 +580,7 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
       info.hasDefinitions && info.hasTests ? "and updated the tests (👏)" : "and there were no type definition changes";
     display(txt`Because you edited one package ${and}, I can help you merge this PR
                     once someone else signs off on it.`);
-  } else if (info.blessingKind === "review") {
+  } else if (info.blessed) {
     display("This PR can be merged once it's reviewed.");
   } else {
     if (info.noOtherOwners) {
@@ -608,7 +610,7 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     display(` * ${result.emoji} Continuous integration tests ${result.text}`);
   }
 
-  const approved = emoji.pending(!(info.approved || info.blessingKind === "merge"));
+  const approved = emoji.pending(!info.approved);
 
   if (info.hasNewPackages) {
     display(` * ${approved} Only ${requiredApproverLower} can approve changes when there are new packages added`);
@@ -618,7 +620,7 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     display(
       ` * ${approved} ${requiredApproverUpper} needs to approve changes that affect DT infrastructure (${links.join(", ")})`,
     );
-  } else if (criticalNum > 1 && info.blessingKind === "review") {
+  } else if (criticalNum > 1 && info.blessed) {
     display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect more than one package`);
     for (const p of info.pkgInfo) {
       if (!(p.name && p.popularityLevel === "Critical")) continue;
@@ -626,7 +628,7 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     }
   } else if (info.hasMultiplePackages) {
     display(` * ${approved} ${requiredApproverUpper} needs to approve changes that affect more than one package`);
-  } else if (!info.requireMaintainer || info.blessingKind === "review") {
+  } else if (!info.requireMaintainer || info.blessed) {
     display(` * ${approved} Most recent commit is approved by ${requiredApproverLower}`);
   } else if (info.noOtherOwners) {
     display(` * ${approved} ${requiredApproverUpper} can merge changes when there are no other reviewers`);
