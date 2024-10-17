@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/eslint-plugin"
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",

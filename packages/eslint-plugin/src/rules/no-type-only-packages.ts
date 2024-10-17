@@ -41,8 +41,10 @@ const rule = createRule({
         sourceFile.statements.length === 0 ||
         isOutsidePackage(sourceFile.fileName)
       ) {
+        console.log(`no-type-only-packages skipped ${sourceFile.fileName}`)
         continue;
       }
+      console.log(`no-type-only-packages checked ${sourceFile.fileName}`)
 
       hasNonEmptyFile = true;
 
