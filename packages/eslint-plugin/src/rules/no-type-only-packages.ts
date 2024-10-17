@@ -48,7 +48,9 @@ const rule = createRule({
         }
         continue;
       }
-      console.log(`no-type-only-packages: checking ${sourceFile.fileName}`);
+      if (debugLogging) {
+        console.log(`no-type-only-packages: checking ${sourceFile.fileName}`);
+      }
 
       hasNonEmptyFile = true;
 
