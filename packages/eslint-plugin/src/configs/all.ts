@@ -154,13 +154,8 @@ export const all: Linter.BaseConfig = {
           },
         ],
         "@typescript-eslint/adjacent-overload-signatures": "error",
-        "@typescript-eslint/ban-types": [
-          "error",
-          {
-            types: { "{}": false },
-            extendDefaults: true,
-          },
-        ],
+        "@typescript-eslint/no-wrapper-object-types": "error",
+        "@typescript-eslint/no-unsafe-function-type": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/triple-slash-reference": ["error", { types: "prefer-import", path: "always" }],
         "@typescript-eslint/no-empty-interface": "error",
