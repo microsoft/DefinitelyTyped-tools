@@ -235,7 +235,6 @@ kos-core
 leadfoot
 leaflet-curve
 leaflet-editable/v0
-leaflet-gpx
 leaflet-label
 leaflet.awesome-markers/v0
 lerna__collect-updates
