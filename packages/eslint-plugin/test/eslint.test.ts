@@ -25,23 +25,15 @@ function getAllExpectedLintSnapshots() {
   return new Set(allFixtures.map(getLintSnapshotPath));
 }
 
-let eslint: ESLint;
-
-beforeAll(() => {
-  eslint = new ESLint({
-    cwd: fixtureRoot,
-    plugins: { [plugin.meta.name]: plugin },
-  });
-});
-
-afterAll(() => {
-  eslint = undefined as any;
-});
-
 // Force one test per fixture so we can see when a file has no errors.
 for (const fixture of allFixtures) {
   describe(`fixture ${fixture}`, () => {
     it("should lint", async () => {
+      const eslint = new ESLint({
+        cwd: fixtureRoot,
+        plugins: { [plugin.meta.name]: plugin },
+      });
+
       const results = await eslint.lintFiles([fixture]);
       for (const result of results) {
         result.filePath = path.relative(fixtureRoot, result.filePath);

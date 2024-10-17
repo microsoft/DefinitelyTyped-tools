@@ -32,7 +32,11 @@ const rule = createRule({
     let hasNonEmptyFile = false;
 
     function isOutsidePackage(fileName: string): boolean {
-      return fileName.includes("node_modules") || path.relative(pkg!.dir, fileName).startsWith("..");
+      if (fileName.includes("node_modules") || path.relative(pkg!.dir, fileName).startsWith("..")) {
+        return true;
+      }
+      const other = findTypesPackage(fileName);
+      return !other || other.dir !== pkg!.dir;
     }
 
     for (const sourceFile of program.getSourceFiles()) {
