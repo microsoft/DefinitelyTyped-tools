@@ -210,6 +210,7 @@ export async function deriveStateForPR(
   const lastCommentDate = getLastCommentishActivityDate(prInfo);
   const blessing = getLastMaintainerBlessing(lastPushDate, prInfo);
   const reopenedDate = getReopenedDate(prInfo.timelineItems);
+  const lastForcePushDate = getLastForcePushDate(prInfo.timelineItems);
   // we should generally have all files (except for draft PRs)
   const fileCount = prInfo.changedFiles;
   // we fetch all files so this shouldn't happen, but GH has a limit of 3k files even with
@@ -246,6 +247,7 @@ export async function deriveStateForPR(
     lastPushDate,
     lastCommentDate,
     blessing?.date,
+    lastForcePushDate,
     reopenedDate,
     latestReview,
   ]);
@@ -307,6 +309,15 @@ function getLastCommentishActivityDate(prInfo: PR_repository_pullRequest) {
     max(noNullish(review.comments.nodes).map(getCommentDate)),
   );
   return max([...latestIssueCommentDate, ...latestReviewCommentDate]);
+}
+
+function getLastForcePushDate(timelineItems: PR_repository_pullRequest_timelineItems) {
+  return (
+    someLast(
+      timelineItems.nodes,
+      (item) => item.__typename === "HeadRefForcePushedEvent" && new Date(item.createdAt),
+    ) || undefined
+  );
 }
 
 function getLastMaintainerBlessing(

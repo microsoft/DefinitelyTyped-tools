@@ -57,7 +57,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
           }
         }
 
-        timelineItems(last: 200, itemTypes: [REOPENED_EVENT, READY_FOR_REVIEW_EVENT, MOVED_COLUMNS_IN_PROJECT_EVENT]) {
+        timelineItems(last: 200, itemTypes: [REOPENED_EVENT, READY_FOR_REVIEW_EVENT, MOVED_COLUMNS_IN_PROJECT_EVENT, HEAD_REF_FORCE_PUSHED_EVENT]) {
           nodes {
             ... on ReopenedEvent {
               createdAt
@@ -71,6 +71,12 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
               }
               createdAt
               projectColumnName
+            }
+            ... on HeadRefForcePushedEvent {
+              actor {
+                login
+              }
+              createdAt
             }
           }
         }

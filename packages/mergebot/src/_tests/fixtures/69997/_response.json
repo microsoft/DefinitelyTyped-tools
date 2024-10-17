@@ -1,0 +1,1363 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM50oOmp",
+        "title": "[node] Add generics to static members of `EventEmitter`",
+        "createdAt": "2024-07-08T01:23:57Z",
+        "author": {
+          "login": "ckohen",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Has Merge Conflict",
+              "__typename": "Label"
+            },
+            {
+              "name": "Abandoned",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Too Many Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "CONFLICTING",
+        "number": 69997,
+        "state": "OPEN",
+        "headRefOid": "75598a6c7b65424bccbae67e2f99b0967b1d3696",
+        "changedFiles": 24,
+        "additions": 1324,
+        "deletions": 350,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "d1a50d338471725ceab96b0c7376f68f6c86ad53",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "85343a692d8add5c4c280280a80bcbd65f418906",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "f13fdb75987c8f90f951e5393bf0971fe50c748c",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "d1a50d338471725ceab96b0c7376f68f6c86ad53",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "a9abe819aae5765740e214a470212c8b08b45ae7",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "f13fdb75987c8f90f951e5393bf0971fe50c748c",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "75598a6c7b65424bccbae67e2f99b0967b1d3696",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "a9abe819aae5765740e214a470212c8b08b45ae7",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T01:38:14Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T01:44:36Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T01:45:16Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T01:59:21Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T02:15:02Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T02:15:39Z",
+              "projectColumnName": "Waiting for Code Reviews",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T02:31:20Z",
+              "projectColumnName": "Needs Author Action",
+              "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-17T04:21:48Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T08:43:58Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T10:11:32Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T11:15:04Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T11:17:30Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-29T22:42:13Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-10-11T02:18:44Z",
+              "__typename": "HeadRefForcePushedEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Anonymous4078",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c05cc611fda30d74f296c0b253f18223b81859c5",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2024-07-17T03:08:35Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2181785987",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "quinnlangille",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "28aa21c89ec9ccf5a1f330d2e19716292c487682",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2024-07-23T15:27:38Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2194327921",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Semigradsky",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "dce179a1f890d000d62fb45bc59aa22cd46dea43",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2024-07-30T19:58:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2208571001",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-04T22:32:38Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-04T22:32:38Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2217825657",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-04T23:15:07Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-04T23:15:07Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2217832185",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "sheetalkamat",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-06T19:45:58Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-06T19:45:58Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2222109506",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2024-08-06T19:46:23Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2222110149",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-06T20:05:35Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-06T20:05:35Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2222146651",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sheetalkamat",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "sheetalkamat",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-06T22:14:48Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-06T22:14:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2222324075",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ae1dd746a4e63c3c407cb895b079f82fd08f69f1",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2024-08-06T22:33:03Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "COMMENTED",
+              "submittedAt": "2024-08-06T22:33:03Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2222341809",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Harry5012",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ce5426df2ae914e4f4a7c89d404ee5f132a26e6a",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "APPROVED",
+              "submittedAt": "2024-08-28T05:55:24Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997#pullrequestreview-2265218935",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 29489071950,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/75598a6c7b65424bccbae67e2f99b0967b1d3696/checks?check_suite_id=29489071950",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/75598a6c7b65424bccbae67e2f99b0967b1d3696/checks?check_suite_id=29489071950",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-10-11T02:18:47Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-08-22T08:05:17Z",
+                "committedDate": "2024-10-11T02:18:29Z",
+                "pushedDate": null,
+                "oid": "75598a6c7b65424bccbae67e2f99b0967b1d3696",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 39,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM6D48lN",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212743501,
+              "body": "@ckohen Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 14 packages in this PR\n\n* `imap` — [on npm](https://www.npmjs.com/package/imap), [on unpkg](https://unpkg.com/browse/imap@latest/)\n* `jake` — [on npm](https://www.npmjs.com/package/jake), [on unpkg](https://unpkg.com/browse/jake@latest/)\n* `newman` — [on npm](https://www.npmjs.com/package/newman), [on unpkg](https://unpkg.com/browse/newman@latest/)\n* `node-red` — [on npm](https://www.npmjs.com/package/node-red), [on unpkg](https://unpkg.com/browse/node-red@latest/)\n* `node` — [on npm](https://www.npmjs.com/package/node), [on unpkg](https://unpkg.com/browse/node@latest/)\n* `opossum` — [on npm](https://www.npmjs.com/package/opossum), [on unpkg](https://unpkg.com/browse/opossum@latest/)\n* `rdf-store-fs` — [on npm](https://www.npmjs.com/package/rdf-store-fs), [on unpkg](https://unpkg.com/browse/rdf-store-fs@latest/)\n* `readable-stream` — [on npm](https://www.npmjs.com/package/readable-stream), [on unpkg](https://unpkg.com/browse/readable-stream@latest/)\n* `sane` — [on npm](https://www.npmjs.com/package/sane), [on unpkg](https://unpkg.com/browse/sane@latest/)\n* `sse` — [on npm](https://www.npmjs.com/package/sse), [on unpkg](https://unpkg.com/browse/sse@latest/)\n* `steam` — [on npm](https://www.npmjs.com/package/steam), [on unpkg](https://unpkg.com/browse/steam@latest/)\n* `twitter` — [on npm](https://www.npmjs.com/package/twitter), [on unpkg](https://unpkg.com/browse/twitter@latest/)\n* `umzug` — [on npm](https://www.npmjs.com/package/umzug), [on unpkg](https://unpkg.com/browse/umzug@latest/)\n* `xml-flow` — [on npm](https://www.npmjs.com/package/xml-flow), [on unpkg](https://unpkg.com/browse/xml-flow@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=69997&install-plugin=playground-dt-review).\n\n## Status\n\n * ❌ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 23 days — it is considered nearly abandoned!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-07-08T01:24:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D48l5",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212743545,
+              "body": "🔔 @Microsoft @jkomyno @alvis @r3nya @btoueg @smac89 @touffy @DeividasBakanas @eyqs @Hannes-Magnusson-CK @hoo29 @kjin @ajafff @islishude @mwiktorczyk @mohsen1 @galkin @parambirs @eps1lon @ThomasdenH @WilcoBakker @wwwy3y3 @samuela @kuehlein @bhongy @chyzwar @trivikr @yoursunny @qwelias @ExE-Boss @peterblazejewicz @addaleax @victorperin @ZYSzys @NodeJS @LinusU @wafuwafu13 @mcollina @Semigradsky — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2024-07-08T01:24:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D5DEo",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212770088,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/468eea3525089902679e62748ad2039397283f15/checks?check_suite_id=25730313666).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-468eea3-->",
+              "createdAt": "2024-07-08T01:38:15Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D5Elo",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212776296,
+              "body": "⚠️ There are too many reviewers for this PR change (62). Merging can only be handled by a DT maintainer.\n\n<details>\n<summary>People who would have been pinged</summary>\npsnider LogvinovLeon andersea tbowmo bernardobelchior alexk111 Shaquu Microsoft jkomyno alvis r3nya btoueg smac89 touffy DeividasBakanas eyqs Hannes-Magnusson-CK hoo29 kjin ajafff islishude mwiktorczyk mohsen1 galkin parambirs eps1lon ThomasdenH WilcoBakker wwwy3y3 samuela kuehlein bhongy chyzwar trivikr yoursunny qwelias ExE-Boss peterblazejewicz addaleax victorperin ZYSzys NodeJS LinusU wafuwafu13 mcollina Semigradsky quinnlangille merufm lance mastermatt tjenkinson tpluscode TeamworkGuy2 markdreyer BendingBender yutak23 kant2002 drinchev mlamp trodi emmanuelgautier Warerebel\n</details>\n<!--typescript_bot_pinging-reviewers-too-many-->",
+              "createdAt": "2024-07-08T01:45:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D5L5A",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212806208,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/118c57cb8d0b0a0f7d71c925fd75b7f831498dbc/checks?check_suite_id=25730685608).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-118c57c-->",
+              "createdAt": "2024-07-08T01:59:22Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D5aW_",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2212865471,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/c05cc611fda30d74f296c0b253f18223b81859c5/checks?check_suite_id=25731253943).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-c05cc61-->",
+              "createdAt": "2024-07-08T02:31:21Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6D5bD4",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2212868344,
+              "body": "As far as I can tell, everything that fails in CI is either unaffected by the changes I made or should've never passed in the first place. Basically every quick way to generate types for some of the methods (before the original PR) *narrows the parameters* of said methods, which is not allowed because it breaks assignability...as CI correctly identifies.",
+              "createdAt": "2024-07-08T02:34:55Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FDezR",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2232282321,
+              "body": "@ckohen One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-c05cc61-->",
+              "createdAt": "2024-07-17T03:09:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FD0Pv",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2232370159,
+              "body": "> CI is fail, fix\r\n\r\nAs mentioned in my previous comment, the CI is failing correctly. I need some guidance from maintainers because those tests should have *never ever* passed in the first place.",
+              "createdAt": "2024-07-17T04:23:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FD58J",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2232393481,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d932023b135c060cec46b69f0e097a9143ed7ee9/checks?check_suite_id=26089779730).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-d932023-->",
+              "createdAt": "2024-07-17T04:36:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FIwCB",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 2233663617,
+              "body": "CI has to pass for this to go in, yes; the other packages have to be updated to pass. This also may be an indicator that this sort of change would break packages outside of DT as well.",
+              "createdAt": "2024-07-17T15:59:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FRn0w",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2235989296,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/01e0133b36fe68aca2581c5256a8452fc503dafd/checks?check_suite_id=26145708618).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-01e0133-->",
+              "createdAt": "2024-07-18T08:58:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FSRxz",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2236161139,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/ca70d64ae21675509af6a54072c379438de42693/checks?check_suite_id=26149292024).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-ca70d64-->",
+              "createdAt": "2024-07-18T10:25:36Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FStrH",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2236275399,
+              "body": "@Anonymous4078 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-cb98ec-c05cc61-->",
+              "createdAt": "2024-07-18T11:32:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6FbCgr",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2238457899,
+              "body": "Re-ping @psnider, @LogvinovLeon, @andersea, @tbowmo, @bernardobelchior, @alexk111, @Shaquu, @Microsoft, @jkomyno, @alvis, @r3nya, @btoueg, @smac89, @touffy, @DeividasBakanas, @eyqs, @Hannes-Magnusson-CK, @hoo29, @kjin, @ajafff, @islishude, @mwiktorczyk, @mohsen1, @galkin, @parambirs, @eps1lon, @ThomasdenH, @WilcoBakker, @wwwy3y3, @samuela, @kuehlein, @bhongy, @chyzwar, @trivikr, @yoursunny, @qwelias, @ExE-Boss, @peterblazejewicz, @addaleax, @victorperin, @ZYSzys, @NodeJS, @LinusU, @wafuwafu13, @mcollina, @Semigradsky, @merufm, @lance, @mastermatt, @tjenkinson, @tpluscode, @TeamworkGuy2, @markdreyer, @BendingBender, @yutak23, @kant2002, @drinchev, @mlamp, @trodi, @emmanuelgautier, @Warerebel:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2024-07-08-->",
+              "createdAt": "2024-07-19T06:44:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6GPA1L",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2252082507,
+              "body": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @ckohen.\n\n(Ping @psnider, @LogvinovLeon, @andersea, @tbowmo, @bernardobelchior, @alexk111, @Shaquu, @Microsoft, @jkomyno, @alvis, @r3nya, @btoueg, @smac89, @touffy, @DeividasBakanas, @eyqs, @Hannes-Magnusson-CK, @hoo29, @kjin, @ajafff, @islishude, @mwiktorczyk, @mohsen1, @galkin, @parambirs, @eps1lon, @ThomasdenH, @WilcoBakker, @wwwy3y3, @samuela, @kuehlein, @bhongy, @chyzwar, @trivikr, @yoursunny, @qwelias, @ExE-Boss, @peterblazejewicz, @addaleax, @victorperin, @ZYSzys, @NodeJS, @LinusU, @wafuwafu13, @mcollina, @Semigradsky, @quinnlangille, @merufm, @lance, @mastermatt, @tjenkinson, @tpluscode, @TeamworkGuy2, @markdreyer, @BendingBender, @yutak23, @kant2002, @drinchev, @mlamp, @trodi, @emmanuelgautier, @Warerebel.)\n<!--typescript_bot_Unreviewed:done-->",
+              "createdAt": "2024-07-26T06:44:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Gfuc3",
+              "author": {
+                "login": "Semigradsky",
+                "__typename": "User"
+              },
+              "databaseId": 2256463671,
+              "body": "@ckohen please add changes to `v20` folder too",
+              "createdAt": "2024-07-29T17:08:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Ggx3n",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2256739815,
+              "body": "Ah, of course v22 merges first. I'll rebase and do v20",
+              "createdAt": "2024-07-29T19:30:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6GiWsC",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2257152770,
+              "body": "@quinnlangille, @Anonymous4078 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-14ab11-c05cc61-->",
+              "createdAt": "2024-07-29T23:01:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Gy-fL",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "databaseId": 2261510091,
+              "body": "Unfortunately, the way the static methods are typed fails to successfully derive the passed emitter's event map when the object is constructed by a child class of EventEmitter, rather than EventEmitter itself.\r\n\r\n```ts\r\nimport { EventEmitter, on, once } from 'node:events';\r\n\r\ninterface EventMap {\r\n  'no-parameters': [];\r\n  'with-parameters': [n: number, s: string];\r\n}\r\n\r\nconst baseEmitter = new EventEmitter<EventMap>();\r\non(baseEmitter, 'no-parameters'); // AsyncIterableIterator<[]>\r\non(baseEmitter, 'with-parameters'); // AsyncIterableIterator<[n: number, s: string]>\r\nonce(baseEmitter, 'no-parameters'); // Promise<[]>\r\nonce(baseEmitter, 'with-parameters'); // Promise<[n: number, s: string]>\r\n\r\nclass DerivedEmitter extends EventEmitter<EventMap> {}\r\n\r\nconst derivedEmitter = new DerivedEmitter();\r\non(derivedEmitter, 'no-parameters'); // AsyncIterableIterator<any>\r\non(derivedEmitter, 'with-parameters'); // AsyncIterableIterator<any>\r\nonce(derivedEmitter, 'no-parameters'); // Promise<any>\r\nonce(derivedEmitter, 'with-parameters'); // Promise<any>\r\n\r\n// Same occurs if DerivedEmitter is itself generic, eg.\r\nclass DerivedEmitter<Events extends Record<keyof Events, unknown[]>> extends EventEmitter<Events> {}\r\nconst derivedEmitter = new DerivedEmitter<EventMap>();\r\n// ...etc.\r\n```\r\n\r\nWith the derived emitters, the inferred EventMap type is of the form `{ [keyof EventMap]: any }`, keeping the keys but transmuting the tuples to `any`. I guess that since `Events` doesn't appear as a simple type anywhere in the interface signature, TS isn't able to correctly infer it. No idea what the best solution is.",
+              "createdAt": "2024-07-31T21:41:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6GzVmo",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2261604776,
+              "body": "Well that's very unfortunate.\r\nThis ultimately seems to be a limitation in the type system currently.\r\nTake a look at this simplified example.\r\n```ts\r\nclass Base<Generic> {}\r\nclass Derived extends Base<any> {}\r\ntype Infer<Type> = Type extends Base<infer Generic> ? Generic : never;\r\ntype Test = Infer<Derived>; // unknown\r\n```\r\n\r\nThe resulting type is *always* unknown (or whatever `Generic` in the base is constrained to.) It appears we're lucky to even get inferred event names. I'd suggest to just pass the generics in this case unless someone has some genius idea for how to overcome this.",
+              "createdAt": "2024-07-31T22:58:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Gzn42",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "databaseId": 2261679670,
+              "body": "Even if the static method definitions are reverted, it might be worth adding some child class tests to `*/test/events_generic.ts` to ensure that the member methods also work as expected on derived emitters.",
+              "createdAt": "2024-07-31T23:58:51Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HKHOt",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2267575213,
+              "body": "@Semigradsky, @quinnlangille, @Anonymous4078 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-23b615-c05cc61-->",
+              "createdAt": "2024-08-04T15:07:47Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HKLUT",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2267591955,
+              "body": "@Renegade334 vlad and I figured out how to let infer do what we want (similarly to what you noticed, as long as it's on the object it can infer from that instead of the type arguments). I'd love to see typescript eventually support this, but it's almost certainly only a problem for type-only things like this, and that might take a while to figure out the semantics of.",
+              "createdAt": "2024-08-04T16:06:54Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6HbFqe",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2272025246,
+              "body": "@ckohen One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-ae1dd74-->",
+              "createdAt": "2024-08-06T19:47:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6JSYc5",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2303297337,
+              "body": "One more option we have discovered is an es private property (e.g. `readonly #internalTypeOnlyBrand`) on the `EventEmitter` class (pushed as https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69997/commits/ce5426df2ae914e4f4a7c89d404ee5f132a26e6a since this seems more reasonable). This will work for any case where you actually use or extend the class, and if you're only using the interface for some reason that will fallback to the other overloads (as it would have anyways). Doing it as a private property in this way will have 0 impact to anything currently, and only minimal impact if the `typeof this.#privateProperty` syntax comes back.\r\n\r\nAnd since it hasn't received any attention, I'll also provide \"evidence\" for why this is needed.\r\n\r\nEach of the following packages is used quite widely and does not keep up with the core module, not to mention their types are not nearly as correct. Note: Several of these packages are statically included within many packages in the DefinitelyTyped monorepo.\r\n\r\n- [strict-event-emitter](https://www.npmjs.com/package/strict-event-emitter) reimplements EventEmitter as a whole and requires the generic to be passed. ~4.1 million weekly downloads \r\n- [typed-emitter](https://www.npmjs.com/package/typed-emitter?activeTab=readme) no runtime code, requires casting an EventEmitter instance as TypedEmitter<Events>. ~225 thousand weekly downloads\r\n- [tiny-typed-emitter](https://www.npmjs.com/package/tiny-typed-emitter) re-exports EventEmitter adding an optional event contract. ~200 thousand weekly downloads (this is also the package I've see statically linked in DT most often)\r\n- [strict-event-emitter-types](https://www.npmjs.com/package/strict-event-emitter-types) similar to typed-emitter. ~130 thousand weekly downloads\r\n\r\nIncluding this separately because it's a different implementation so the improved types aren't the only reasons for it's downloads\r\n- [emittery](https://www.npmjs.com/package/emittery) reimplements a similar api to EventEmitter but with a focus on async support. Supports (but does not require) an event contract. ~22.5 million weekly downloads (nearly a quarter of `@types/node`)\r\n",
+              "createdAt": "2024-08-21T23:38:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6JVUVd",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2304066909,
+              "body": "@sheetalkamat, @Renegade334, @Semigradsky, @quinnlangille, @Anonymous4078 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-4e4f28-c05cc61-->",
+              "createdAt": "2024-08-22T08:20:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6JZalN",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "databaseId": 2305141069,
+              "body": "Ultimately, this approach still has side-effects - ~~for example, [these examples](https://github.com/search?q=%22implements+eventemitter%22+language%3ATypeScript+&type=code) of classes which `implements EventEmitter` would immediately break.~~\r\n\r\nRealistically, within @types/node, the only benefit these various proposed workarounds are targeting is event map awareness for the two static methods; the instance methods, which comprise the bulk of the library definitions (as well as I guess the vast majority of end usage) aren't affected either way. Although it would be nice behaviour to have, the current agnostic static method return types aren't broken, and I don't really see those changes as workable in such a high-exposure library.",
+              "createdAt": "2024-08-22T16:08:54Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6JbPxE",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2305621060,
+              "body": "It's funny you use that search to check that, because ironically at least 75% of the first search page doesn't even use the native EventEmitter, using extremely stripped down custom interfaces or other packages (yes including the microsoft result).\r\n\r\nAlso, it does not actually break anything - that's why the prop is optional. Heck, even if you do `implements Required<EventEmitter>` it still doesn't break, because typescript has no way to work with truly private props outside of direct assignability.",
+              "createdAt": "2024-08-22T20:56:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6JcYX9",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "databaseId": 2305918461,
+              "body": "Indeed, the `?` I missed for that example. My underlying point is the same though: it's altering the symbol definition with a member that doesn't exist, in a high-exposure library, to facilitate adding type behaviour to a couple of functions that is desirable but not essential. Will be interested to see the verdict.",
+              "createdAt": "2024-08-22T23:35:21Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6NNI4D",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 2369031683,
+              "body": "The current state of the PR does not contain any marker symbols, and does seem to have a good motiviation; are there any remaining concerns with this change? It has been previously approved by a few people.",
+              "createdAt": "2024-09-23T18:17:09Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6NNzzF",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 2369207493,
+              "body": "> The current state of the PR does not contain any marker symbols\r\n\r\nOops, it has the private identifier (same diff kinda).",
+              "createdAt": "2024-09-23T19:39:22Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6NN0rZ",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "databaseId": 2369211097,
+              "body": "> The current state of the PR does not contain any marker symbols, and does seem to have a good motiviation; are there any remaining concerns with this change? It has been previously approved by a few people.\r\n\r\nDon't think this is true? https://github.com/DefinitelyTyped/DefinitelyTyped/blob/ce5426df2ae914e4f4a7c89d404ee5f132a26e6a/types/node/events.d.ts#L144\r\n\r\nRegardless of the fate of the top-level `once()` and `on()` functions (and I still do think that the non-existent class property shouldn't be added, which realistically leads to those function signatures staying non-generic), the overall module cleanup should definitely be kept either way.",
+              "createdAt": "2024-09-23T19:41:14Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6NOlfQ",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "databaseId": 2369411024,
+              "body": "As long as typescript behaves like it currently does with es private fields, this only affects `implements` clauses and quite minimally at that (ie it would only break if it was `implements Required<EventEmitter>`, which is potentially something someone has done, though extremely strange). This is significantly better than the marker symbol which exposes itself everywhere.\r\n\r\nIf we don't keep that, would I would love to do is keep the static generics but make it so they can't be inferred by `NoInfer<Events>` which does work, tested to fallback to the other overload (even though vsc doesn't display that for some reason?). It sucks to use as a consumer, but it leaves an option rather than not.  The only issue I see is that since `NoInfer` is a TS 5.4 concept that wouldn't be viable in this package right now.",
+              "createdAt": "2024-09-23T21:18:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6NYXvO",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "databaseId": 2371976142,
+              "body": "Theoretically we could use the userland `NoInfer` if that's a requirement.\r\n\r\n#70635 will also conflict with this PR; may be better to apply this one after that one?",
+              "createdAt": "2024-09-24T18:09:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Nl8lf",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2375534943,
+              "body": "@ckohen Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!\n<!--typescript_bot_merge-complaint-ce5426d-->",
+              "createdAt": "2024-09-26T01:03:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Pb0Wu",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2406434222,
+              "body": "@Harry5012, @sheetalkamat, @Renegade334, @Semigradsky, @quinnlangille, @Anonymous4078 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-8e67fe-c05cc61-->",
+              "createdAt": "2024-10-11T02:38:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6QI_Qs",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2418275372,
+              "body": "@ckohen Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!\n<!--typescript_bot_merge-complaint-75598a6-->",
+              "createdAt": "2024-10-17T01:04:41Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6QQrB2",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "databaseId": 2420289654,
+              "body": "@ckohen I haven't seen any activity on this PR in more than three weeks, and it still has problems that prevent it from being merged. The PR will be closed on Oct 24th (in a week) if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2024-09-24-->",
+              "createdAt": "2024-10-17T18:47:55Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 24,
+          "nodes": [
+            {
+              "path": "types/imap/index.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/jake/index.d.ts",
+              "additions": 0,
+              "deletions": 10,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/newman/newman-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node-red/node-red-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/events.d.ts",
+              "additions": 178,
+              "deletions": 35,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events.ts",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events_generic.ts",
+              "additions": 80,
+              "deletions": 13,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/events.d.ts",
+              "additions": 312,
+              "deletions": 81,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v16/test/events_generic.ts",
+              "additions": 80,
+              "deletions": 13,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/events.d.ts",
+              "additions": 305,
+              "deletions": 79,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events_generic.ts",
+              "additions": 80,
+              "deletions": 13,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/events.d.ts",
+              "additions": 178,
+              "deletions": 35,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/test/events.ts",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/test/events_generic.ts",
+              "additions": 80,
+              "deletions": 13,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/opossum/opossum-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/rdf-store-fs/rdf-store-fs-tests.ts",
+              "additions": 4,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/readable-stream/index.d.ts",
+              "additions": 2,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sane/index.d.ts",
+              "additions": 1,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sse/sse-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/steam/index.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twitter/twitter-tests.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/umzug/index.d.ts",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xml-flow/xml-flow-tests.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MjQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgQzr-I",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Author Action",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2024-10-17T18:47:58Z",
+              "__typename": "ProjectV2Item"
+            },
+            {
+              "id": "PVTI_lADOADeBNM4Am3xLzgSS4XI",
+              "project": {
+                "id": "PVT_kwDOADeBNM4Am3xL",
+                "number": 2,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Author Action",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4Am3xLzges4V4",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2024-10-17T18:47:58Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}
