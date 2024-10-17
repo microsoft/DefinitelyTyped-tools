@@ -136,6 +136,9 @@ describe(TypingsData, () => {
       {
         "@types/known": "workspace:.",
       },
+      {
+        "peer-dependency-1": "*",
+      }
     );
     data = new TypingsData(dt.fs, versions["1.0"], true);
   });
@@ -163,6 +166,9 @@ describe(TypingsData, () => {
     });
     expect(data.devDependencies).toEqual({
       "@types/known": "workspace:.",
+    });
+    expect(data.peerDependencies).toEqual({
+      "peer-dependency-1": "*",
     });
     expect(data.id).toEqual({
       typesDirectoryName: "known",

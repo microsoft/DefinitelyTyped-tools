@@ -1,0 +1,149 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM59K3Uu",
+        "title": "Use peer dep for express",
+        "createdAt": "2024-09-30T20:54:41Z",
+        "author": {
+          "login": "jakebailey",
+          "__typename": "User"
+        },
+        "authorAssociation": "MEMBER",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 70751,
+        "state": "OPEN",
+        "headRefOid": "9856226df8d03bf135be670297bb5bf01f79625a",
+        "changedFiles": 2,
+        "additions": 6,
+        "deletions": 2,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "9856226df8d03bf135be670297bb5bf01f79625a",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b6d1f2876fe51aed6de22ab5a293daf0e3b16ab2",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 29037908492,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/9856226df8d03bf135be670297bb5bf01f79625a/checks?check_suite_id=29037908492",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/9856226df8d03bf135be670297bb5bf01f79625a/checks?check_suite_id=29037908492",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2024-09-30T20:54:45Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2024-09-30T20:54:04Z",
+                "committedDate": "2024-09-30T20:54:04Z",
+                "pushedDate": null,
+                "oid": "9856226df8d03bf135be670297bb5bf01f79625a",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/express/package.json",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/express/v4/package.json",
+              "additions": 3,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mg",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}

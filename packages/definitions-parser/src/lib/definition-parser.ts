@@ -199,6 +199,7 @@ async function getPackageJsonInfoForPackage(
   const packageJson = fs.readJson(packageJsonName) as {
     readonly license?: unknown;
     readonly dependencies?: unknown;
+    readonly peerDependencies?: unknown;
     readonly devDependencies?: unknown;
     readonly imports?: unknown;
     readonly exports?: unknown;
@@ -217,6 +218,7 @@ async function getPackageJsonInfoForPackage(
   const header = Array.isArray(packageJsonResult) ? undefined : packageJsonResult;
   const allowedDependencies = await getAllowedPackageJsonDependencies();
   errors.push(...checkPackageJsonDependencies(packageJson.dependencies, packageJsonName, allowedDependencies));
+  errors.push(...checkPackageJsonDependencies(packageJson.peerDependencies, packageJsonName, allowedDependencies));
   errors.push(
     ...checkPackageJsonDependencies(
       packageJson.devDependencies,
@@ -248,6 +250,7 @@ async function getPackageJsonInfoForPackage(
     license: license as License,
     dependencies: packageJson.dependencies as Record<string, string>,
     devDependencies: packageJson.devDependencies as Record<string, string>,
+    peerDependencies: packageJson.peerDependencies as Record<string, string> | undefined,
     imports: imports as object | undefined,
     exports: exports as string | object | undefined,
     type: packageJsonType as "module" | undefined,
