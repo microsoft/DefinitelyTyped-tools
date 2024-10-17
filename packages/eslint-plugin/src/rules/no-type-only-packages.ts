@@ -131,6 +131,7 @@ const rule = createRule({
     }
 
     if (hasNonEmptyFile && !hasValueDeclaration) {
+      console.log(`no-type-only-packages: ${context.filename}`);
       context.report({
         loc: { line: 1, column: 0 },
         messageId: "onlyTypes",
