@@ -28,6 +28,8 @@ const rule = createRule({
 
     const program = ESLintUtils.getParserServices(context).program;
 
+    const debugLogging = context.filename.includes("types/no-bad-reference/index.d.ts");
+
     let hasValueDeclaration = false;
     let hasNonEmptyFile = false;
 
@@ -41,8 +43,12 @@ const rule = createRule({
         sourceFile.statements.length === 0 ||
         isOutsidePackage(sourceFile.fileName)
       ) {
+        if (debugLogging) {
+          console.log(`no-type-only-packages: skipping ${sourceFile.fileName}, isDeclarationFile=${sourceFile.isDeclarationFile}, statements=${sourceFile.statements.length}, isOutsidePackage=${isOutsidePackage(sourceFile.fileName)}`);
+        }
         continue;
       }
+      console.log(`no-type-only-packages: checking ${sourceFile.fileName}`);
 
       hasNonEmptyFile = true;
 
@@ -125,13 +131,16 @@ const rule = createRule({
       }
 
       if (containsValueDeclaration(sourceFile)) {
+        console.log(`no-type-only-packages: ${sourceFile.fileName} hasValueDeclaration=true`);
         hasValueDeclaration = true;
         break;
       }
     }
 
     if (hasNonEmptyFile && !hasValueDeclaration) {
-      console.log(`no-type-only-packages: ${context.filename}`);
+      if (debugLogging) {
+        console.log(`no-type-only-packages: hasNonEmptyFile=${hasNonEmptyFile}, hasValueDeclaration=${hasValueDeclaration}`);
+      }
       context.report({
         loc: { line: 1, column: 0 },
         messageId: "onlyTypes",
