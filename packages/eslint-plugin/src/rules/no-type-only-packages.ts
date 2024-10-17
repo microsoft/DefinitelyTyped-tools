@@ -133,7 +133,9 @@ const rule = createRule({
       }
 
       if (containsValueDeclaration(sourceFile)) {
-        console.log(`no-type-only-packages: ${sourceFile.fileName} hasValueDeclaration=true`);
+        if (debugLogging) {
+          console.log(`no-type-only-packages: ${sourceFile.fileName} hasValueDeclaration=true`);
+        }
         hasValueDeclaration = true;
         break;
       }
