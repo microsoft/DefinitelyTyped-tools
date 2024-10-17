@@ -130,6 +130,14 @@
             },
             {
               "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T01:44:36Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
                 "login": "typescript-bot",
                 "__typename": "User"
               },
@@ -148,6 +156,14 @@
             },
             {
               "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-08T02:15:02Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
                 "login": "typescript-bot",
                 "__typename": "User"
               },
@@ -163,6 +179,62 @@
               "createdAt": "2024-07-08T02:31:20Z",
               "projectColumnName": "Needs Author Action",
               "__typename": "MovedColumnsInProjectEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-17T04:21:48Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T08:43:58Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T10:11:32Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T11:15:04Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-18T11:17:30Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-07-29T22:42:13Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-10-11T02:18:44Z",
+              "__typename": "HeadRefForcePushedEvent"
             }
           ],
           "__typename": "PullRequestTimelineItemsConnection"
