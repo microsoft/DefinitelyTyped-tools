@@ -1,5 +1,14 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.19
+
+### Patch Changes
+
+- b98ee74: Add support for peerDependencies
+- 9f35009: Remove array-type from config
+- Updated dependencies [6a7fc61]
+  - @definitelytyped/utils@0.1.8
+
 ## 0.1.18
 
 ### Patch Changes
