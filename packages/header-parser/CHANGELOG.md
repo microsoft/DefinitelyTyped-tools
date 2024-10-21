@@ -1,5 +1,13 @@
 # @definitelytyped/header-parser
 
+## 0.2.13
+
+### Patch Changes
+
+- b98ee74: Add support for peerDependencies
+- Updated dependencies [6a7fc61]
+  - @definitelytyped/utils@0.1.8
+
 ## 0.2.12
 
 ### Patch Changes
