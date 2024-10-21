@@ -11,7 +11,7 @@
         "es6": true
     },
     "plugins": [
-        "@typescript-eslint", "jsdoc", "import"
+        "@typescript-eslint", "jsdoc"
     ],
     "rules": {
         "@typescript-eslint/adjacent-overload-signatures": "error",
@@ -56,9 +56,6 @@
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/triple-slash-reference": "error",
         "@typescript-eslint/unified-signatures": "error",
-
-        // eslint-plugin-import
-        "import/no-extraneous-dependencies": ["error", { "optionalDependencies": false }],
 
         // eslint-plugin-jsdoc
         "jsdoc/check-alignment": "error",
