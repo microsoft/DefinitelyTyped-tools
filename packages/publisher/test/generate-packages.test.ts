@@ -32,7 +32,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     typesVersions: [],
     license,
     dependencies: { "@types/madeira": "^1" },
-    peerDependencies: { "@types/express": "*"},
+    peerDependencies: { "@types/express": "*" },
     devDependencies: { "@types/jquery": "workspace:." },
     olderVersionDirectories: [],
   };
@@ -58,7 +58,7 @@ function defaultFS() {
             { name: "E", githubUsername: "e" },
           ],
           dependencies: { "@types/madeira": "^1" },
-          peerDependencies: { "@types/express": "*"},
+          peerDependencies: { "@types/express": "*" },
           devDependencies: { "@types/jquery": "workspace:." },
         },
         undefined,

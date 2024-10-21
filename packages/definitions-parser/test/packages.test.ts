@@ -138,7 +138,7 @@ describe(TypingsData, () => {
       },
       {
         "peer-dependency-1": "*",
-      }
+      },
     );
     data = new TypingsData(dt.fs, versions["1.0"], true);
   });

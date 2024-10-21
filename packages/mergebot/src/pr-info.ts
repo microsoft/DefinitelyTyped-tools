@@ -467,7 +467,7 @@ configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
       return { peerDependencies: data.peerDependencies };
     }
     return {};
-  }
+  },
 });
 configSuspicious[".npmignore"] = () => undefined;
 configSuspicious["tsconfig.json"] = makeChecker(

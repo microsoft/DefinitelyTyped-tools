@@ -442,7 +442,7 @@ import route = require('@ember/routing/route');
     return expect(getTypingInfo("non-allowed-dep", dt.fs)).resolves.toEqual({
       errors: [
         "In package.json: Dependency not-allowed not in the allowed dependencies list.\n" +
-        "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
+          "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
       ],
     });
   });
@@ -459,7 +459,7 @@ import route = require('@ember/routing/route');
     return expect(getTypingInfo("non-allowed-peer-dep", dt.fs)).resolves.toEqual({
       errors: [
         "In package.json: Dependency not-allowed-peer not in the allowed dependencies list.\n" +
-        "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
+          "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
       ],
     });
   });

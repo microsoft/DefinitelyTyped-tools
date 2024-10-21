@@ -209,7 +209,9 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
   lines.push("");
   const peerDependencies = Object.keys(typing.peerDependencies).sort();
   if (peerDependencies.length) {
-    lines.push(` * Peer dependencies: ${peerDependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ")}`);
+    lines.push(
+      ` * Peer dependencies: ${peerDependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ")}`,
+    );
     lines.push("");
   }
 

@@ -257,13 +257,13 @@ console.log(jQuery);
   );
 
   const allowedDep = dt.pkgDir("allowed-dep");
-  allowedDep.set("package.json", packageJson("allowed-dep", "1.0", { "prettier": "*" }));
+  allowedDep.set("package.json", packageJson("allowed-dep", "1.0", { prettier: "*" }));
 
   const nonAllowedDep = dt.pkgDir("non-allowed-dep");
   nonAllowedDep.set("package.json", packageJson("non-allowed-dep", "1.0", { "not-allowed": "*" }));
 
   const allowedPeerDep = dt.pkgDir("allowed-peer-dep");
-  allowedPeerDep.set("package.json", packageJson("allowed-peer-dep", "1.0", {}, { "prettier": "*" }));
+  allowedPeerDep.set("package.json", packageJson("allowed-peer-dep", "1.0", {}, { prettier: "*" }));
 
   const nonAllowedPeerDep = dt.pkgDir("non-allowed-peer-dep");
   nonAllowedPeerDep.set("package.json", packageJson("non-allowed-peer-dep", "1.0", {}, { "not-allowed-peer": "*" }));
@@ -299,7 +299,12 @@ ${testNames.map((s) => "        " + JSON.stringify(s)).join(",\n")}
 }`;
 }
 
-function packageJson(packageName: string, version: string, dependencies: Record<string, string>, peerDependencies?: Record<string, string>) {
+function packageJson(
+  packageName: string,
+  version: string,
+  dependencies: Record<string, string>,
+  peerDependencies?: Record<string, string>,
+) {
   return `{
     "private": true,
     "name": "@types/${packageName}",
@@ -314,11 +319,15 @@ function packageJson(packageName: string, version: string, dependencies: Record<
           .map(([name, version]) => `        "${name}": "${version}"`)
           .join(",\n")}
     },
-    ${peerDependencies ? `"peerDependencies": {
+    ${
+      peerDependencies
+        ? `"peerDependencies": {
         ${Object.entries(peerDependencies)
           .map(([name, version]) => `        "${name}": "${version}"`)
           .join(",\n")}
-    },` : ""}
+    },`
+        : ""
+    }
     "devDependencies": {
         "@types/${packageName}": "workspace:."
     }
