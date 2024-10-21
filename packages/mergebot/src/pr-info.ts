@@ -458,7 +458,17 @@ const configSuspicious = <ConfigSuspicious>(async (path, newContents, oldContent
   const oldText = await oldContents();
   return checker(text, oldText);
 });
-configSuspicious["package.json"] = () => undefined;
+configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
+  parse: (text) => {
+    const data = JSON.parse(text);
+    if (!data || typeof data !== "object" || Array.isArray(data)) return data;
+    // Only look at peer dependencies, with the goal of making them empty.
+    if (data.peerDependencies) {
+      return { peerDependencies: data.peerDependencies };
+    }
+    return {};
+  }
+});
 configSuspicious[".npmignore"] = () => undefined;
 configSuspicious["tsconfig.json"] = makeChecker(
   {

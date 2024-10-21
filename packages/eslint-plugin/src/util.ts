@@ -67,6 +67,7 @@ export interface PackageJSON {
   owners: string[];
   dependencies?: Record<string, string | undefined>;
   devDependencies?: Record<string, string | undefined>;
+  peerDependencies?: Record<string, string | undefined>;
   tsconfigs?: string[];
 }
 

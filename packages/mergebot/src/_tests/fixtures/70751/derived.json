@@ -1,0 +1,44 @@
+{
+  "type": "info",
+  "now": "2024-09-30T20:55:05.622Z",
+  "pr_number": 70751,
+  "author": "jakebailey",
+  "headCommitOid": "9856226df8d03bf135be670297bb5bf01f79625a",
+  "mergeBaseOid": "b6d1f2876fe51aed6de22ab5a293daf0e3b16ab2",
+  "lastPushDate": "2024-09-30T20:54:41.000Z",
+  "lastActivityDate": "2024-09-30T20:54:41.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "express",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/express/package.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)"
+        },
+        {
+          "path": "types/express/v4/package.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)"
+        }
+      ],
+      "owners": [
+        "borisyankov",
+        "CMUH",
+        "puneetar",
+        "dfrankland"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [],
+  "ciResult": "unknown"
+}

@@ -32,6 +32,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     typesVersions: [],
     license,
     dependencies: { "@types/madeira": "^1" },
+    peerDependencies: { "@types/express": "*"},
     devDependencies: { "@types/jquery": "workspace:." },
     olderVersionDirectories: [],
   };
@@ -57,6 +58,7 @@ function defaultFS() {
             { name: "E", githubUsername: "e" },
           ],
           dependencies: { "@types/madeira": "^1" },
+          peerDependencies: { "@types/express": "*"},
           devDependencies: { "@types/jquery": "workspace:." },
         },
         undefined,
@@ -114,6 +116,13 @@ testo({
       ),
     );
   },
+  readmeOnePeer() {
+    const dt = defaultFS();
+    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
+    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
+      expect.stringContaining("Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)"),
+    );
+  },
   readmeContainsSingleFileDTS() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
@@ -156,7 +165,10 @@ testo({
     "dependencies": {
         "@types/madeira": "^1"
     },
-    "typesPublisherContentHash": "05febc04df55db2687c2ac05a291177c2f4fd90f76d679faaf1b01896fe5600c",
+    "peerDependencies": {
+        "@types/express": "*"
+    },
+    "typesPublisherContentHash": "53300522250468c4161b10d962cac2d9d8f2cfee1b3dfef4b749a7c3ec839275",
     "typeScriptVersion": "4.8"
 }`);
   },

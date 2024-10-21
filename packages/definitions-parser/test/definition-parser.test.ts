@@ -429,4 +429,38 @@ import route = require('@ember/routing/route');
     const dt = createMockDT();
     return expect(getTypingInfo("wordpress__plugins", dt.fs)).resolves.toBeDefined();
   });
+
+  it("does not error on allowed dependencies", () => {
+    const dt = createMockDT();
+
+    return expect(getTypingInfo("allowed-dep", dt.fs)).resolves.not.toHaveProperty("errors");
+  });
+
+  it("errors on non-allowed dependencies", () => {
+    const dt = createMockDT();
+
+    return expect(getTypingInfo("non-allowed-dep", dt.fs)).resolves.toEqual({
+      errors: [
+        "In package.json: Dependency not-allowed not in the allowed dependencies list.\n" +
+        "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
+      ],
+    });
+  });
+
+  it("does not error on allowed peer dependencies", () => {
+    const dt = createMockDT();
+
+    return expect(getTypingInfo("allowed-peer-dep", dt.fs)).resolves.not.toHaveProperty("errors");
+  });
+
+  it("errors on non-allowed peer dependencies", () => {
+    const dt = createMockDT();
+
+    return expect(getTypingInfo("non-allowed-peer-dep", dt.fs)).resolves.toEqual({
+      errors: [
+        "In package.json: Dependency not-allowed-peer not in the allowed dependencies list.\n" +
+        "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
+      ],
+    });
+  });
 });
