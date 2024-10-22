@@ -39,7 +39,6 @@
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.5700",
     "esbuild": "^0.21.5",
-    "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "jest-file-snapshot": "^0.5.0",
     "knip": "^5.15.1",
@@ -67,7 +66,6 @@
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
     "start": "func start",
-    "lint": "eslint --report-unused-disable-directives . --ext .ts",
     "test": "jest"
   },
   "jest": {

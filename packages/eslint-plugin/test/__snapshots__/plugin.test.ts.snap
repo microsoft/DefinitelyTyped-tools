@@ -48,15 +48,6 @@ exports[`plugin should have the expected exports 1`] = `
                 "ts-nocheck": true,
               },
             ],
-            "@typescript-eslint/ban-types": [
-              "error",
-              {
-                "extendDefaults": true,
-                "types": {
-                  "{}": false,
-                },
-              },
-            ],
             "@typescript-eslint/consistent-type-definitions": "error",
             "@typescript-eslint/explicit-member-accessibility": [
               "error",
@@ -84,6 +75,8 @@ exports[`plugin should have the expected exports 1`] = `
               },
             ],
             "@typescript-eslint/no-misused-new": "error",
+            "@typescript-eslint/no-unsafe-function-type": "error",
+            "@typescript-eslint/no-wrapper-object-types": "error",
             "@typescript-eslint/prefer-namespace-keyword": "error",
             "@typescript-eslint/triple-slash-reference": [
               "error",
