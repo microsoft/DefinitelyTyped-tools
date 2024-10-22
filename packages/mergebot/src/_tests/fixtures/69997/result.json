@@ -1,0 +1,26 @@
+{
+  "projectColumn": "Needs Author Action",
+  "labels": [
+    "Has Merge Conflict",
+    "Critical package",
+    "Edits multiple packages",
+    "Too Many Owners"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@ckohen Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 14 packages in this PR\n\n* `imap` — [on npm](https://www.npmjs.com/package/imap), [on unpkg](https://unpkg.com/browse/imap@latest/)\n* `jake` — [on npm](https://www.npmjs.com/package/jake), [on unpkg](https://unpkg.com/browse/jake@latest/)\n* `newman` — [on npm](https://www.npmjs.com/package/newman), [on unpkg](https://unpkg.com/browse/newman@latest/)\n* `node-red` — [on npm](https://www.npmjs.com/package/node-red), [on unpkg](https://unpkg.com/browse/node-red@latest/)\n* `node` — [on npm](https://www.npmjs.com/package/node), [on unpkg](https://unpkg.com/browse/node@latest/)\n* `opossum` — [on npm](https://www.npmjs.com/package/opossum), [on unpkg](https://unpkg.com/browse/opossum@latest/)\n* `rdf-store-fs` — [on npm](https://www.npmjs.com/package/rdf-store-fs), [on unpkg](https://unpkg.com/browse/rdf-store-fs@latest/)\n* `readable-stream` — [on npm](https://www.npmjs.com/package/readable-stream), [on unpkg](https://unpkg.com/browse/readable-stream@latest/)\n* `sane` — [on npm](https://www.npmjs.com/package/sane), [on unpkg](https://unpkg.com/browse/sane@latest/)\n* `sse` — [on npm](https://www.npmjs.com/package/sse), [on unpkg](https://unpkg.com/browse/sse@latest/)\n* `steam` — [on npm](https://www.npmjs.com/package/steam), [on unpkg](https://unpkg.com/browse/steam@latest/)\n* `twitter` — [on npm](https://www.npmjs.com/package/twitter), [on unpkg](https://unpkg.com/browse/twitter@latest/)\n* `umzug` — [on npm](https://www.npmjs.com/package/umzug), [on unpkg](https://unpkg.com/browse/umzug@latest/)\n* `xml-flow` — [on npm](https://www.npmjs.com/package/xml-flow), [on unpkg](https://unpkg.com/browse/xml-flow@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=69997&install-plugin=playground-dt-review).\n\n## Status\n\n * ❌ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers-too-many",
+      "status": "⚠️ There are too many reviewers for this PR change (62). Merging can only be handled by a DT maintainer.\n\n<details>\n<summary>People who would have been pinged</summary>\npsnider LogvinovLeon andersea tbowmo bernardobelchior alexk111 Shaquu Microsoft jkomyno alvis r3nya btoueg smac89 touffy DeividasBakanas eyqs Hannes-Magnusson-CK hoo29 kjin ajafff islishude mwiktorczyk mohsen1 galkin parambirs eps1lon ThomasdenH WilcoBakker wwwy3y3 samuela kuehlein bhongy chyzwar trivikr yoursunny qwelias ExE-Boss peterblazejewicz addaleax victorperin ZYSzys NodeJS LinusU wafuwafu13 mcollina Semigradsky quinnlangille merufm lance mastermatt tjenkinson tpluscode TeamworkGuy2 markdreyer BendingBender yutak23 kant2002 drinchev mlamp trodi emmanuelgautier Warerebel\n</details>"
+    },
+    {
+      "tag": "merge-complaint-75598a6",
+      "status": "@ckohen Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

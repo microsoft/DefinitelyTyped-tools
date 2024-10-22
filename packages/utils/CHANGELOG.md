@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.8
+
+### Patch Changes
+
+- 6a7fc61: Add retry function
+
 ## 0.1.7
 
 ### Patch Changes

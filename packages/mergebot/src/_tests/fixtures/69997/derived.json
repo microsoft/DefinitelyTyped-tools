@@ -1,0 +1,370 @@
+{
+  "type": "info",
+  "now": "2024-10-17T21:15:38.716Z",
+  "pr_number": 69997,
+  "author": "ckohen",
+  "headCommitOid": "75598a6c7b65424bccbae67e2f99b0967b1d3696",
+  "mergeBaseOid": "85343a692d8add5c4c280280a80bcbd65f418906",
+  "lastPushDate": "2024-07-08T01:23:57.000Z",
+  "lastActivityDate": "2024-10-11T02:18:44.000Z",
+  "hasMergeConflict": true,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "imap",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/imap/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "psnider"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "jake",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/jake/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "newman",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/newman/newman-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "LogvinovLeon"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "node-red",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/node-red/node-red-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "andersea",
+        "tbowmo",
+        "bernardobelchior",
+        "alexk111",
+        "Shaquu"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "node",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/node/events.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/node/test/events.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/test/events_generic.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/v16/events.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/node/v16/test/events_generic.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/v18/events.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/node/v18/test/events.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/v18/test/events_generic.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/v20/events.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/node/v20/test/events.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/node/v20/test/events_generic.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "Microsoft",
+        "jkomyno",
+        "alvis",
+        "r3nya",
+        "btoueg",
+        "smac89",
+        "touffy",
+        "DeividasBakanas",
+        "eyqs",
+        "Hannes-Magnusson-CK",
+        "hoo29",
+        "kjin",
+        "ajafff",
+        "islishude",
+        "mwiktorczyk",
+        "mohsen1",
+        "galkin",
+        "parambirs",
+        "eps1lon",
+        "ThomasdenH",
+        "WilcoBakker",
+        "wwwy3y3",
+        "samuela",
+        "kuehlein",
+        "bhongy",
+        "chyzwar",
+        "trivikr",
+        "yoursunny",
+        "qwelias",
+        "ExE-Boss",
+        "peterblazejewicz",
+        "addaleax",
+        "victorperin",
+        "ZYSzys",
+        "NodeJS",
+        "LinusU",
+        "wafuwafu13",
+        "mcollina",
+        "Semigradsky"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    },
+    {
+      "name": "opossum",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/opossum/opossum-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "quinnlangille",
+        "merufm",
+        "lance",
+        "mastermatt",
+        "tjenkinson"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "rdf-store-fs",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/rdf-store-fs/rdf-store-fs-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "tpluscode"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "readable-stream",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/readable-stream/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "TeamworkGuy2",
+        "markdreyer",
+        "mcollina"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    },
+    {
+      "name": "sane",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/sane/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "BendingBender"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "sse",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/sse/sse-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "yutak23"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "steam",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/steam/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "kant2002"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "twitter",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/twitter/twitter-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "BendingBender"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "umzug",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/umzug/index.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [
+        "drinchev",
+        "mlamp",
+        "trodi",
+        "emmanuelgautier"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Popular"
+    },
+    {
+      "name": "xml-flow",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/xml-flow/xml-flow-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "Warerebel"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "Harry5012",
+      "date": "2024-08-28T05:55:24.000Z",
+      "abbrOid": "ce5426d"
+    },
+    {
+      "type": "stale",
+      "reviewer": "sheetalkamat",
+      "date": "2024-08-06T22:14:48.000Z",
+      "abbrOid": "ae1dd74"
+    },
+    {
+      "type": "stale",
+      "reviewer": "Renegade334",
+      "date": "2024-08-04T22:32:38.000Z",
+      "abbrOid": "ae1dd74"
+    },
+    {
+      "type": "stale",
+      "reviewer": "Semigradsky",
+      "date": "2024-07-30T19:58:25.000Z",
+      "abbrOid": "dce179a"
+    },
+    {
+      "type": "stale",
+      "reviewer": "quinnlangille",
+      "date": "2024-07-23T15:27:38.000Z",
+      "abbrOid": "28aa21c"
+    },
+    {
+      "type": "stale",
+      "reviewer": "Anonymous4078",
+      "date": "2024-07-17T03:08:35.000Z",
+      "abbrOid": "c05cc61"
+    }
+  ],
+  "mainBotCommentID": 2212743501,
+  "ciResult": "pass"
+}

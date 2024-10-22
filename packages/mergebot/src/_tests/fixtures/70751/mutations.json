@@ -1,0 +1,54 @@
+[
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "PR_kwDOAFz6BM59K3Uu",
+        "body": "@jakebailey Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `express` — [on npm](https://www.npmjs.com/package/express), [on unpkg](https://unpkg.com/browse/express@latest/)\n  - Config files to check:\n    - [`express/package.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70751/files/9856226df8d03bf135be670297bb5bf01f79625a#diff-d8a8870b20691ea142d2c76db164e2732ff20bf2e1ba742a04d86e4a6adacc18): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)\n    - [`express/v4/package.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70751/files/9856226df8d03bf135be670297bb5bf01f79625a#diff-6d96baa63d84c72911de2708233f00cd6bd6ef09dd3f91e9b4b412fa51cfd51b): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=70751&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 A DT maintainer needs to approve changes that affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwxNjA4NjM0NDg0",
+          "MDU6TGFiZWwyMTU0ODE2NTQ5"
+        ],
+        "labelableId": "PR_kwDOAFz6BM59K3Uu"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}\n",
+    "variables": {
+      "input": {
+        "contentId": "PR_kwDOAFz6BM59K3Uu",
+        "projectId": "PVT_kwDOADeBNM4AkH1q"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "itemId": "TEST",
+        "projectId": "PVT_kwDOADeBNM4AkH1q",
+        "fieldId": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+        "value": {
+          "singleSelectOptionId": "98236657"
+        }
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "subjectId": "PR_kwDOAFz6BM59K3Uu",
+        "body": "🔔 @borisyankov @CMUH @puneetar @dfrankland — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/70751/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->"
+      }
+    }
+  }
+]
