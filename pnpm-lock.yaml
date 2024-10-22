@@ -349,9 +349,6 @@ importers:
       esbuild:
         specifier: ^0.21.5
         version: 0.21.5
-      eslint:
-        specifier: ^8.57.1
-        version: 8.57.1
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.19.58)
