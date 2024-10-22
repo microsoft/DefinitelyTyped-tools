@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.25
+
+### Patch Changes
+
+- 5f556cf: Update to typescript-eslint v8
+
 ## 0.2.24
 
 ### Patch Changes
