@@ -400,7 +400,6 @@ simple-xml
 sipml
 six-runtime
 ski
-sleep
 socket.io.users
 soundjs
 space-pen
