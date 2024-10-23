@@ -30,7 +30,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^18.19.7",
+    "@types/node": "^18.19.58",
     "@types/parse-git-config": "^3.0.4",
     "@types/yargs": "^17.0.32",
     "ecurve": "1.0.6",
