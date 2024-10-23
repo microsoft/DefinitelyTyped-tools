@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.20
+
+### Patch Changes
+
+- 5f556cf: Update to typescript-eslint v8
+
 ## 0.1.19
 
 ### Patch Changes
