@@ -404,7 +404,6 @@ socket.io.users
 soundjs
 space-pen
 spectrum
-stream-series
 stream-to-array/v0
 styled-components-react-native
 succinct
