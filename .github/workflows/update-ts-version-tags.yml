@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
-    - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
+    - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
       with:
         node-version: 'lts/*'
     - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
@@ -31,7 +31,7 @@ jobs:
       id: pnpm-cache
       shell: bash
       run: echo "store=$(pnpm store path)" >> $GITHUB_OUTPUT
-    - uses: actions/cache/restore@3624ceb22c1c5a301c8db4169662070a689d9ea8 # v4.1.1
+    - uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
       with:
         path: ${{ steps.pnpm-cache.outputs.store }}
         key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
