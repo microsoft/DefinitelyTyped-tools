@@ -420,7 +420,6 @@ tinajs__tina-redux
 tooltipster
 topojson
 torrent-stream
-trayballoon
 trim
 underscore-ko
 underscore.string
