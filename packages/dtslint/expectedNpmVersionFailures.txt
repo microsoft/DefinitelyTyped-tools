@@ -132,7 +132,6 @@ flot
 flowjs
 fm-websync
 foundation
-friendly-errors-webpack-plugin
 ftdomdelegate
 gamedig
 generic-functions
