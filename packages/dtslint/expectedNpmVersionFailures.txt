@@ -268,7 +268,6 @@ mixto
 mojang-minecraft-server-admin
 mojang-minecraft-ui
 mojang-net
-moment-business
 moment-precise-range-plugin
 mongoose-promise
 msgpack
