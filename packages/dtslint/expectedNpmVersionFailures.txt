@@ -268,7 +268,6 @@ mixto
 mojang-minecraft-server-admin
 mojang-minecraft-ui
 mojang-net
-moment-business
 mongoose-promise
 msgpack
 mu2
@@ -375,7 +374,6 @@ rollup-plugin-svelte-svg
 rosie
 route-parser
 routie
-run-sequence
 rx-jquery
 rx-node
 s3-uploader
