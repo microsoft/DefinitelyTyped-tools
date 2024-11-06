@@ -44,7 +44,7 @@ describe("range", () => {
   it("works", () => {
     expect(TypeScriptVersion.range("5.0")).toEqual(["5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8"]);
   });
-  it("includes 4.8 onwards", () => {
+  it("includes 4.9 onwards", () => {
     expect(TypeScriptVersion.range("4.9")).toEqual(TypeScriptVersion.supported);
   });
 });
