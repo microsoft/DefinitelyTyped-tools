@@ -109,7 +109,7 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
   return { changedTypings: compact(changedTypings), changedNotNeededPackages: compact(changedNotNeededPackages) };
 }
 
-async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
+export async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
   const offline = await pacote.manifest(pkg.name, { cache: cacheDir, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED") throw reason;
     return undefined;
