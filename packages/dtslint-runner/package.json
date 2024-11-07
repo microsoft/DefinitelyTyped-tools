@@ -26,11 +26,11 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/dtslint": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@octokit/rest": "^20.0.2",
+    "@octokit/rest": "^20.1.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "glob": "^10.3.10"
+    "glob": "^10.4.5"
   },
   "engines": {
     "node": ">=18.18.0"

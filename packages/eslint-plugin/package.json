@@ -23,9 +23,9 @@
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/types": "^8.11.0",
-    "@typescript-eslint/utils": "^8.11.0",
-    "semver": "^7.5.4"
+    "@typescript-eslint/types": "^8.13.0",
+    "@typescript-eslint/utils": "^8.13.0",
+    "semver": "^7.6.3"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.10.0",
@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@definitelytyped/eslint-plugin": "link:",
-    "@types/eslint": "^8.56.2",
-    "@types/semver": "^7.5.6",
-    "glob": "^10.3.10",
+    "@types/eslint": "^8.56.12",
+    "@types/semver": "^7.5.8",
+    "glob": "^10.4.5",
     "jest-file-snapshot": "^0.7.0",
     "strip-ansi": "^6.0.1",
     "typescript": "^5.6.3",
