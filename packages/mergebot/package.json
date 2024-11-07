@@ -44,14 +44,6 @@
     "seroval": "^1.0.7",
     "typescript": "^5.4.5"
   },
-  "overrides": {
-    "apollo": {
-      "graphql": "15.8.0"
-    },
-    "apollo-language-server": {
-      "graphql": "15.8.0"
-    }
-  },
   "scripts": {
     "prestart": "pnpm run build",
     "prepublishOnly": "pnpm run build",
