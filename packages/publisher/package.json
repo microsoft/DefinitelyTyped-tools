@@ -11,15 +11,15 @@
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "longjohn": "^0.2.12",
-    "pacote": "^17.0.5",
-    "semver": "^7.5.4",
+    "pacote": "^20.0.0",
+    "semver": "^7.6.3",
     "typescript": "^5.6.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "@types/semver": "^7.5.6",
-    "@types/yargs": "^17.0.32"
+    "@types/semver": "^7.5.8",
+    "@types/yargs": "^17.0.33"
   },
   "scripts": {
     "build": "tsc -b",

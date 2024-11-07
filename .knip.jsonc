@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/knip@2/schema.json",
+  "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
       "ignoreBinaries": ["only-allow"]
@@ -30,7 +30,10 @@
     },
     "packages/dtslint-runner": {
       "entry": ["src/index.ts", "src/post-results.ts"],
-      "project": "**/*.ts"
+      "project": "**/*.ts",
+      "ignoreDependencies": [
+        "@definitelytyped/dtslint"
+      ]
     },
     "packages/eslint-plugin": {
       "entry": "src/index.ts",

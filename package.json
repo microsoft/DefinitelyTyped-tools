@@ -14,19 +14,19 @@
     "ci:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.5",
-    "@types/jest": "^29.5.11",
-    "@types/node": "^18.19.58",
-    "@types/yargs": "^17.0.32",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
+    "@changesets/cli": "^2.27.9",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^18.19.64",
+    "@types/yargs": "^17.0.33",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
     "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.0.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^48.11.0",
     "jest": "^29.7.0",
-    "knip": "^4.6.0",
-    "prettier": "^3.2.2",
-    "ts-jest": "^29.1.1",
+    "knip": "^5.36.3",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.6.3"
   },
   "pnpm": {
@@ -41,9 +41,6 @@
         "strip-json-comments",
         "typescript-*.*"
       ]
-    },
-    "patchedDependencies": {
-      "jest-file-snapshot@0.5.0": "patches/jest-file-snapshot@0.5.0.patch"
     }
   },
   "packageManager": "pnpm@8.10.4"

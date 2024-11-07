@@ -109,13 +109,17 @@ async function computeChangedPackages(allPackages: AllPackages, log: LoggerWithE
   return { changedTypings: compact(changedTypings), changedNotNeededPackages: compact(changedNotNeededPackages) };
 }
 
-async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
-  const offline = await pacote.manifest(pkg.name, { cache: cacheDir, offline: true }).catch((reason) => {
+export async function isAlreadyDeprecated(pkg: NotNeededPackage, log: LoggerWithErrors): Promise<unknown> {
+  // As of npm-pick-manifest 9.1.0, asking for the package without @latest returns the newest non-deprecated
+  // version, so we'll never see that we're deprecated. But, we always publish deprecated versions as @latest,.
+  // so asking for that explicitly works around the behavior change.
+  const spec = `${pkg.name}@latest`;
+  const offline = await pacote.manifest(spec, { cache: cacheDir, offline: true }).catch((reason) => {
     if (reason.code !== "ENOTCACHED") throw reason;
     return undefined;
   });
   if (offline?.deprecated) return offline.deprecated;
   log.info(`Version info not cached for deprecated package ${pkg.desc}`);
-  const online = await pacote.manifest(pkg.name, { cache: cacheDir, preferOnline: true });
+  const online = await pacote.manifest(spec, { cache: cacheDir, preferOnline: true });
   return online.deprecated;
 }
