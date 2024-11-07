@@ -13,3 +13,5 @@ packages/utils/cache
 !**/.vscode/settings.template.json
 !**/.vscode/launch.json
 !**/.vscode/extensions.json
+
+/cache
