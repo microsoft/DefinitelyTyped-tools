@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.2.15
+
+### Patch Changes
+
+- 3a00e49: Update deps
+
 ## 0.2.14
 
 ### Patch Changes

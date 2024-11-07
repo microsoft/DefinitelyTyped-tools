@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.21
+
+### Patch Changes
+
+- 3a00e49: Update deps
+
 ## 0.1.20
 
 ### Patch Changes

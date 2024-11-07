@@ -1,5 +1,13 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.18
+
+### Patch Changes
+
+- 3a00e49: Update pacote
+- Updated dependencies [3a00e49]
+  - @definitelytyped/header-parser@0.2.15
+
 ## 0.1.17
 
 ### Patch Changes
