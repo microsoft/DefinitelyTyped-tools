@@ -9,4 +9,4 @@ describe("isAlreadyDeprecated", () => {
     const result = await isAlreadyDeprecated(pkg, { info: () => {}, error: () => {} });
     expect(!!result).toBe(true);
   });
-})
+});
