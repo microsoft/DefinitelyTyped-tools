@@ -22,7 +22,7 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "pacote": "^17.0.5",
+    "pacote": "^20.0.0",
     "semver": "^7.5.4",
     "yargs": "^17.7.2"
   },
