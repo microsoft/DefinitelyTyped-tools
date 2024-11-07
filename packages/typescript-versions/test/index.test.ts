@@ -18,13 +18,13 @@ describe("all", () => {
 
 describe("isSupported", () => {
   it("works", () => {
-    expect(TypeScriptVersion.isSupported("5.1")).toBeTruthy();
+    expect(TypeScriptVersion.isSupported("5.6")).toBeTruthy();
   });
-  it("supports 4.8", () => {
-    expect(TypeScriptVersion.isSupported("4.8")).toBeTruthy();
+  it("supports 4.9", () => {
+    expect(TypeScriptVersion.isSupported("4.9")).toBeTruthy();
   });
-  it("does not support 4.7", () => {
-    expect(!TypeScriptVersion.isSupported("4.7")).toBeTruthy();
+  it("does not support 4.8", () => {
+    expect(!TypeScriptVersion.isSupported("4.8")).toBeTruthy();
   });
 });
 
@@ -42,10 +42,10 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("4.9")).toEqual(["4.9", "5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7"]);
+    expect(TypeScriptVersion.range("5.0")).toEqual(["5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8"]);
   });
-  it("includes 4.8 onwards", () => {
-    expect(TypeScriptVersion.range("4.8")).toEqual(TypeScriptVersion.supported);
+  it("includes 4.9 onwards", () => {
+    expect(TypeScriptVersion.range("4.9")).toEqual(TypeScriptVersion.supported);
   });
 });
 
@@ -60,11 +60,12 @@ describe("tagsToUpdate", () => {
       "ts5.5",
       "ts5.6",
       "ts5.7",
+      "ts5.8",
       "latest",
     ]);
   });
-  it("allows 4.8 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("4.8")).toEqual(
+  it("allows 4.9 onwards", () => {
+    expect(TypeScriptVersion.tagsToUpdate("4.9")).toEqual(
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest"),
     );
   });

@@ -1,6 +1,6 @@
 {
   "name": "@definitelytyped/dts-critic",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "author": "Nathan Shively-Sanders",
   "description": "Checks a new .d.ts against the Javascript source and tells you what problems it has",
   "publishConfig": {
