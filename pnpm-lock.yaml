@@ -450,9 +450,6 @@ importers:
       '@definitelytyped/typescript-versions':
         specifier: workspace:*
         version: link:../typescript-versions
-      typescript-4.8:
-        specifier: npm:typescript@~4.8.0-0
-        version: /typescript@4.8.4
       typescript-4.9:
         specifier: npm:typescript@~4.9.0-0
         version: /typescript@4.9.5
@@ -476,10 +473,13 @@ importers:
         version: /typescript@5.5.2
       typescript-5.6:
         specifier: npm:typescript@~5.6.0-0
-        version: /typescript@5.6.0-dev.20240628
+        version: /typescript@5.6.3
       typescript-5.7:
         specifier: npm:typescript@~5.7.0-0
         version: /typescript@5.7.0-dev.20240930
+      typescript-5.8:
+        specifier: npm:typescript@~5.8.0-0
+        version: /typescript@5.8.0-dev.20241106
 
   packages/typescript-versions: {}
 
@@ -10030,12 +10030,6 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typescript@4.8.4:
-    resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: false
-
   /typescript@4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
@@ -10076,12 +10070,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  /typescript@5.6.0-dev.20240628:
-    resolution: {integrity: sha512-XT57Gllario2IUjypenMgUbdHrNGtD52J13FyZckIC+h4ic13TllkJmoypbUr0HIYQ9IUB3SLq6/SaSBD4DoyQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: false
-
   /typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
@@ -10089,6 +10077,12 @@ packages:
 
   /typescript@5.7.0-dev.20240930:
     resolution: {integrity: sha512-mGW96cpbwcYuc264UPqGpKBLNebFFtVEXRLPwSwxVEub9tSyMI+XGFGxsznop7pU8E1ntx4OC4cN1n5MnzO0+Q==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
+
+  /typescript@5.8.0-dev.20241106:
+    resolution: {integrity: sha512-oFqIoJnR/s4hq5I2MBDdeJThRVyyhRV5eo2EmxllNkSe76ycucq2h4QgWnq0g4Opf4KQjpi1m/jhgMoiwDc8CQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
