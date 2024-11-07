@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.5
+
+### Patch Changes
+
+- a4b62cd: Update TS versions; removing 4.8, shipping 5.6, supporting 5.8
+- Updated dependencies [a4b62cd]
+  - @definitelytyped/typescript-versions@0.1.5
+
 ## 0.1.4
 
 ### Patch Changes
