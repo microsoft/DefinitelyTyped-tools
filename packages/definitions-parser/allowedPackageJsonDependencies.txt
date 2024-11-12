@@ -845,6 +845,7 @@ plugin-error
 polished
 popper.js
 postcss
+posthtml-render
 preact
 prettier
 pretty-format
