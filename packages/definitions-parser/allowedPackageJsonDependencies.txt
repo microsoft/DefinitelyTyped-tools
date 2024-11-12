@@ -639,6 +639,7 @@
 @wordpress/element
 @wordpress/keycodes
 @wordpress/media-utils
+11ty.ts
 abort-controller
 acorn
 actions-on-google
