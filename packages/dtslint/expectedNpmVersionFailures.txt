@@ -432,7 +432,6 @@ utils-merge
 uws
 venn
 viewporter
-vinyl-paths
 vision/v4
 vscode
 vue-datetime
