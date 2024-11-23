@@ -41,7 +41,7 @@
     "glob": "^10.4.5",
     "jest-file-snapshot": "^0.7.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "typescript-5.4": "npm:typescript@~5.4.0-0",
     "typescript-5.5": "npm:typescript@~5.5.0-0"
   },

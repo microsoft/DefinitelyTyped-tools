@@ -53,7 +53,7 @@ importers:
         specifier: ^29.2.5
         version: 29.2.5(@babel/core@7.26.0)(jest@29.7.0)(typescript@5.7.2)
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
 
   packages/definitions-parser:
@@ -84,7 +84,7 @@ importers:
         specifier: ^11.1.8
         version: 11.1.8
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
 
   packages/dts-critic:
@@ -93,7 +93,7 @@ importers:
         specifier: workspace:*
         version: link:../header-parser
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
       yargs:
         specifier: ^17.7.2
@@ -108,7 +108,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
       yargs:
         specifier: ^17.7.2
@@ -191,7 +191,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
 
   packages/dtslint-runner:
@@ -262,7 +262,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
       typescript-5.4:
         specifier: npm:typescript@~5.4.0-0
@@ -354,7 +354,7 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
 
   packages/publisher:
@@ -381,7 +381,7 @@ importers:
         specifier: ^7.6.3
         version: 7.6.3
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.7.2
         version: 5.7.2
       yargs:
         specifier: ^17.7.2
