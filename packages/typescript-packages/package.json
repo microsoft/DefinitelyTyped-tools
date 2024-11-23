@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
-    "typescript-4.9": "npm:typescript@~4.9.0-0",
     "typescript-5.0": "npm:typescript@~5.0.0-0",
     "typescript-5.1": "npm:typescript@~5.1.0-0",
     "typescript-5.2": "npm:typescript@~5.2.0-0",
