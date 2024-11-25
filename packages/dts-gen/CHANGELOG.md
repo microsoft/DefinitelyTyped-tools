@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.4
+
+### Patch Changes
+
+- 3af1e86: Use TS 5.7
+
 ## 0.10.3
 
 ### Patch Changes

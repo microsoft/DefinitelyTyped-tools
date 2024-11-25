@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.19
+
+### Patch Changes
+
+- 3af1e86: Use TS 5.7
+- Updated dependencies [3af1e86]
+- Updated dependencies [3af1e86]
+  - @definitelytyped/typescript-versions@0.1.6
+  - @definitelytyped/header-parser@0.2.16
+
 ## 0.1.18
 
 ### Patch Changes
