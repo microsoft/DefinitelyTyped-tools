@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.22
+
+### Patch Changes
+
+- 3af1e86: Use TS 5.7
+
 ## 0.1.21
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @definitelytyped/dts-critic
 
+## 0.1.17
+
+### Patch Changes
+
+- 3af1e86: Use TS 5.7
+  - @definitelytyped/header-parser@0.2.16
+
 ## 0.1.16
 
 ### Patch Changes

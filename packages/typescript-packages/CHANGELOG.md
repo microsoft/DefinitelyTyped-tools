@@ -1,5 +1,15 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.6
+
+### Patch Changes
+
+- 3af1e86: Drop support for TS 4.9, mark TS 5.7 as shipped
+- 3af1e86: Use TS 5.7
+- Updated dependencies [3af1e86]
+- Updated dependencies [3af1e86]
+  - @definitelytyped/typescript-versions@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes
