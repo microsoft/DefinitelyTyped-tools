@@ -169,7 +169,7 @@ testo({
         "@types/express": "*"
     },
     "typesPublisherContentHash": "53300522250468c4161b10d962cac2d9d8f2cfee1b3dfef4b749a7c3ec839275",
-    "typeScriptVersion": "4.9"
+    "typeScriptVersion": "5.0"
 }`);
   },
   basicNotNeededPackageJson() {
