@@ -29,6 +29,7 @@
 @hapi/podium
 @hapi/wreck
 @hotwired/turbo
+@ljharb/through
 @jest/environment
 @jest/expect
 @jest/fake-timers
