@@ -651,6 +651,7 @@ ajv
 algoliasearch
 algoliasearch-helper
 analytics
+antlr4
 anydb-sql
 anymatch
 aphrodite
