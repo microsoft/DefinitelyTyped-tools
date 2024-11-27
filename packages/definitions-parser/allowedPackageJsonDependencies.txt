@@ -637,6 +637,7 @@
 @wordpress/components
 @wordpress/core-data
 @wordpress/data
+@wordpress/editor
 @wordpress/element
 @wordpress/keycodes
 @wordpress/media-utils
