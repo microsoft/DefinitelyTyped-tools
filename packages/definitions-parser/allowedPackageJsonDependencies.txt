@@ -638,6 +638,7 @@
 @wordpress/core-data
 @wordpress/data
 @wordpress/element
+@wordpress/editor
 @wordpress/keycodes
 @wordpress/media-utils
 11ty.ts
