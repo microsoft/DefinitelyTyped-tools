@@ -338,7 +338,6 @@ react-infinite
 react-input-mask
 react-jsonschema-form
 react-key-handler
-react-leaflet-markercluster
 react-linkify
 react-native-bluetooth-serial
 react-native-huawei-protected-apps
