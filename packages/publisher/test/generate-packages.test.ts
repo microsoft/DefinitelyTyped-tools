@@ -71,7 +71,7 @@ function defaultFS() {
   return dt;
 }
 
-const now = new Date("2024-12-09 12:00:00");
+const now = new Date(1733775005612);
 
 testo({
   mitLicenseText() {
