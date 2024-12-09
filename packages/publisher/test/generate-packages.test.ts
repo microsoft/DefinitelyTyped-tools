@@ -71,6 +71,8 @@ function defaultFS() {
   return dt;
 }
 
+const now = new Date("2024-12-09 12:00:00");
+
 testo({
   mitLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
@@ -83,20 +85,20 @@ testo({
   readmeJquery() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toMatchSnapshot();
+    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
   },
   readmeMultipleDependencies() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     typing.dependencies["@types/example"] = "*";
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toMatchSnapshot();
+    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
   },
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
     dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(createReadme(typing, dt.fs)).toMatchSnapshot();
+    expect(createReadme(typing, dt.fs, now)).toMatchSnapshot();
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
