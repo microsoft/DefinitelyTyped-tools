@@ -206,14 +206,13 @@ export function createReadme(typing: TypingsData, packageFS: FS, now: Date): str
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
     }`,
   );
-  lines.push("");
   const peerDependencies = Object.keys(typing.peerDependencies).sort();
   if (peerDependencies.length) {
     lines.push(
       ` * Peer dependencies: ${peerDependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ")}`,
     );
-    lines.push("");
   }
+  lines.push("");
 
   lines.push("# Credits");
   const contributors = typing.contributors

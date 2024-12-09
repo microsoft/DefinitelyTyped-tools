@@ -99,7 +99,6 @@ Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree
 ### Additional Details
  * Last updated: Mon, 09 Dec 2024 20:00:00 GMT
  * Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)
-
  * Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)
 
 # Credits
@@ -125,7 +124,6 @@ type T = import("./types");
 ### Additional Details
  * Last updated: Mon, 09 Dec 2024 20:00:00 GMT
  * Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)
-
  * Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)
 
 # Credits
@@ -151,7 +149,6 @@ type T = import("./types");
 ### Additional Details
  * Last updated: Mon, 09 Dec 2024 20:00:00 GMT
  * Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)
-
  * Peer dependencies: [@types/example2](https://npmjs.com/package/@types/example2), [@types/express](https://npmjs.com/package/@types/express)
 
 # Credits
