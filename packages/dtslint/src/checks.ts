@@ -263,7 +263,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
         `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
           `If these types are being added to DefinitelyTyped for the first time, please choose ` +
           `a different name that does not conflict with an existing npm package. If this is an ` +
-          `existing conflict, mark these types as \`"nonNpm": "conflict"\`. `,
+          `existing conflict, mark these types as \`"nonNpm": "conflict"\`.`,
       );
     } else if (!packageJson.nonNpm) {
       if (!satisfies(packageVersion, typesPackageVersion)) {
