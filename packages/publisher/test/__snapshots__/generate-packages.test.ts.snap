@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`apacheLicenseText 1`] = `
+"Copyright 2024 A, E
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License."
+`;
+
+exports[`basicNotNeededPackageJson 1`] = `
+"{
+    "name": "@types/absalom",
+    "version": "1.1.1",
+    "description": "Stub TypeScript definitions entry for alternate, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "license": "MIT",
+    "dependencies": {
+        "alternate": "*"
+    },
+    "deprecated": "This is a stub types definition. alternate provides its own type definitions, so you do not need this installed."
+}"
+`;
+
+exports[`basicPackageJson 1`] = `
+"{
+    "name": "@types/jquery",
+    "version": "1.0",
+    "description": "TypeScript definitions for jquery",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "A",
+            "url": "b@c.d"
+        },
+        {
+            "name": "E",
+            "githubUsername": "e",
+            "url": "https://github.com/e"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/jquery"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/madeira": "^1"
+    },
+    "peerDependencies": {
+        "@types/express": "*"
+    },
+    "typesPublisherContentHash": "53300522250468c4161b10d962cac2d9d8f2cfee1b3dfef4b749a7c3ec839275",
+    "typeScriptVersion": "5.0"
+}"
+`;
+
+exports[`mitLicenseText 1`] = `
+"    MIT License
+
+    Copyright (c) Microsoft Corporation.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+"
+`;
+
+exports[`readmeContainsManyDTSFilesDoesNotAmendREADME 1`] = `
+"# Installation
+> \`npm install --save @types/jquery\`
+
+# Summary
+This package contains type definitions for jquery (jquery.org).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery.
+
+### Additional Details
+ * Last updated: Mon, 09 Dec 2024 20:10:05 GMT
+ * Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)
+ * Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)
+
+# Credits
+These definitions were written by [A](b@c.d), and [E](https://github.com/e).
+"
+`;
+
+exports[`readmeJquery 1`] = `
+"# Installation
+> \`npm install --save @types/jquery\`
+
+# Summary
+This package contains type definitions for jquery (jquery.org).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery.
+## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery/index.d.ts)
+\`\`\`\`ts
+type T = import("./types");
+
+\`\`\`\`
+
+### Additional Details
+ * Last updated: Mon, 09 Dec 2024 20:10:05 GMT
+ * Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)
+ * Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)
+
+# Credits
+These definitions were written by [A](b@c.d), and [E](https://github.com/e).
+"
+`;
+
+exports[`readmeMultipleDependencies 1`] = `
+"# Installation
+> \`npm install --save @types/jquery\`
+
+# Summary
+This package contains type definitions for jquery (jquery.org).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery.
+## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery/index.d.ts)
+\`\`\`\`ts
+type T = import("./types");
+
+\`\`\`\`
+
+### Additional Details
+ * Last updated: Mon, 09 Dec 2024 20:10:05 GMT
+ * Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)
+ * Peer dependencies: [@types/example2](https://npmjs.com/package/@types/example2), [@types/express](https://npmjs.com/package/@types/express)
+
+# Credits
+These definitions were written by [A](b@c.d), and [E](https://github.com/e).
+"
+`;
+
+exports[`scopedNotNeededPackageJson 1`] = `
+"{
+    "name": "@types/google-cloud__pubsub",
+    "version": "0.26.0",
+    "description": "Stub TypeScript definitions entry for @google-cloud/chubdub, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "license": "MIT",
+    "dependencies": {
+        "@google-cloud/chubdub": "*"
+    },
+    "deprecated": "This is a stub types definition. @google-cloud/chubdub provides its own type definitions, so you do not need this installed."
+}"
+`;

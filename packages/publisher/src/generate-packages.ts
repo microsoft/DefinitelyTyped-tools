@@ -81,7 +81,7 @@ async function generateTypingPackage(typing: TypingsData, version: string, dt: F
       ? typesDirectory
       : typesDirectory.subDir(typing.versionDirectoryName);
 
-  await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS));
+  await writeCommonOutputs(typing, createPackageJSON(typing, version), createReadme(typing, packageFS, new Date()));
   await Promise.all(
     typing.getFiles().map(async (file) => writeFile(await outputFilePath(typing, file), packageFS.readFile(file))),
   );
@@ -170,7 +170,7 @@ export function createNotNeededPackageJSON(pkg: NotNeededPackage): string {
   return JSON.stringify(out, undefined, 4);
 }
 
-export function createReadme(typing: TypingsData, packageFS: FS): string {
+export function createReadme(typing: TypingsData, packageFS: FS, now: Date): string {
   const lines: string[] = [];
   lines.push("# Installation");
   lines.push(`> \`npm install --save ${typing.name}\``);
@@ -199,21 +199,20 @@ export function createReadme(typing: TypingsData, packageFS: FS): string {
 
   lines.push("");
   lines.push("### Additional Details");
-  lines.push(` * Last updated: ${new Date().toUTCString()}`);
+  lines.push(` * Last updated: ${now.toUTCString()}`);
   const dependencies = Object.keys(typing.dependencies).sort();
   lines.push(
     ` * Dependencies: ${
       dependencies.length ? dependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ") : "none"
     }`,
   );
-  lines.push("");
   const peerDependencies = Object.keys(typing.peerDependencies).sort();
   if (peerDependencies.length) {
     lines.push(
       ` * Peer dependencies: ${peerDependencies.map((d) => `[${d}](https://npmjs.com/package/${d})`).join(", ")}`,
     );
-    lines.push("");
   }
+  lines.push("");
 
   lines.push("# Credits");
   const contributors = typing.contributors

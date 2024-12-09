@@ -71,137 +71,48 @@ function defaultFS() {
   return dt;
 }
 
+const now = new Date(1733775005612);
+
 testo({
   mitLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("MIT License"));
+    expect(getLicenseFileText(typing)).toMatchSnapshot();
   },
   apacheLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(getLicenseFileText(typing)).toEqual(expect.stringContaining("Apache License, Version 2.0"));
+    expect(getLicenseFileText(typing)).toMatchSnapshot();
   },
-  basicReadme() {
+  readmeJquery() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("This package contains type definitions for"),
-    );
-  },
-  readmeContainsContributors() {
-    const dt = defaultFS();
-    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("written by [A](b@c.d), and [E](https://github.com/e)"),
-    );
-  },
-  readmeContainsProjectName() {
-    const dt = defaultFS();
-    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(expect.stringContaining("jquery.org"));
-  },
-  readmeOneDependency() {
-    const dt = defaultFS();
-    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("Dependencies: [@types/madeira](https://npmjs.com/package/@types/madeira)"),
-    );
+    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
   },
   readmeMultipleDependencies() {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     typing.dependencies["@types/example"] = "*";
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining(
-        "Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)",
-      ),
-    );
-  },
-  readmeOnePeer() {
-    const dt = defaultFS();
-    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toEqual(
-      expect.stringContaining("Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)"),
-    );
-  },
-  readmeContainsSingleFileDTS() {
-    const dt = defaultFS();
-    const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"))).toContain("type T = import");
+    typing.peerDependencies["@types/example2"] = "*";
+    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
   },
   readmeContainsManyDTSFilesDoesNotAmendREADME() {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
     dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(createReadme(typing, dt.fs)).not.toContain("type T = import");
+    expect(createReadme(typing, dt.fs, now)).toMatchSnapshot();
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0")).toEqual(`{
-    "name": "@types/jquery",
-    "version": "1.0",
-    "description": "TypeScript definitions for jquery",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jquery",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "A",
-            "url": "b@c.d"
-        },
-        {
-            "name": "E",
-            "githubUsername": "e",
-            "url": "https://github.com/e"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/jquery"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@types/madeira": "^1"
-    },
-    "peerDependencies": {
-        "@types/express": "*"
-    },
-    "typesPublisherContentHash": "53300522250468c4161b10d962cac2d9d8f2cfee1b3dfef4b749a7c3ec839275",
-    "typeScriptVersion": "5.0"
-}`);
+    expect(createPackageJSON(typing, "1.0")).toMatchSnapshot();;
   },
   basicNotNeededPackageJson() {
     const s = createNotNeededPackageJSON(createUnneededPackage());
-    expect(s).toEqual(`{
-    "name": "@types/absalom",
-    "version": "1.1.1",
-    "description": "Stub TypeScript definitions entry for alternate, which provides its own types definitions",
-    "main": "",
-    "scripts": {},
-    "license": "MIT",
-    "dependencies": {
-        "alternate": "*"
-    },
-    "deprecated": "This is a stub types definition. alternate provides its own type definitions, so you do not need this installed."
-}`);
+    expect(s).toMatchSnapshot();
   },
   scopedNotNeededPackageJson() {
     const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
     const s = createNotNeededPackageJSON(scopedUnneeded);
-    expect(s).toEqual(`{
-    "name": "@types/google-cloud__pubsub",
-    "version": "0.26.0",
-    "description": "Stub TypeScript definitions entry for @google-cloud/chubdub, which provides its own types definitions",
-    "main": "",
-    "scripts": {},
-    "license": "MIT",
-    "dependencies": {
-        "@google-cloud/chubdub": "*"
-    },
-    "deprecated": "This is a stub types definition. @google-cloud/chubdub provides its own type definitions, so you do not need this installed."
-}`);
+    expect(s).toMatchSnapshot();
   },
   async versionedPackage() {
     const dt = defaultFS();
