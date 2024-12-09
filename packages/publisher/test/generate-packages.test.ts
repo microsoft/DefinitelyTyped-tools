@@ -103,7 +103,7 @@ testo({
   },
   basicPackageJson() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0")).toMatchSnapshot();;
+    expect(createPackageJSON(typing, "1.0")).toMatchSnapshot();
   },
   basicNotNeededPackageJson() {
     const s = createNotNeededPackageJSON(createUnneededPackage());
