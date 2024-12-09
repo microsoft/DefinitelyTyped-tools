@@ -91,6 +91,7 @@ testo({
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     typing.dependencies["@types/example"] = "*";
+    typing.peerDependencies["@types/example2"] = "*";
     expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
   },
   readmeContainsManyDTSFilesDoesNotAmendREADME() {

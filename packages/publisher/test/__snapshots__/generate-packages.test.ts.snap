@@ -152,7 +152,7 @@ type T = import("./types");
  * Last updated: Mon, 09 Dec 2024 20:00:00 GMT
  * Dependencies: [@types/example](https://npmjs.com/package/@types/example), [@types/madeira](https://npmjs.com/package/@types/madeira)
 
- * Peer dependencies: [@types/express](https://npmjs.com/package/@types/express)
+ * Peer dependencies: [@types/example2](https://npmjs.com/package/@types/example2), [@types/express](https://npmjs.com/package/@types/express)
 
 # Credits
 These definitions were written by [A](b@c.d), and [E](https://github.com/e).
