@@ -103,7 +103,7 @@ Also:
 
 For types that do not have a matching NPM package, add two properties:
 
-1. `"nonNpm": true`, or `"nonNpm": "conflict"` if there is a NPM package but it is unrelated.
+1. `"nonNpm": true`, or `"nonNpm": "conflict"` if there is an npm package but it is unrelated.
 2. `"nonNpmDescription"`, a human-readable name for the project that is being typed.
 
 #### `types/.eslintrc.json`
