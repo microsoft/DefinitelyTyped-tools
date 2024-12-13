@@ -811,6 +811,7 @@ metascraper
 meteor-typings
 middy
 minipass
+mock-property
 moment
 moment-range
 moment-timezone
