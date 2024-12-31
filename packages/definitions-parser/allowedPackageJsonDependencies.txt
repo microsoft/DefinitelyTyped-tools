@@ -930,6 +930,7 @@ tailwindcss
 tapable
 tarn
 tasker-types
+tedious
 terser
 three
 treat
