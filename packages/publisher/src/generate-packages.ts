@@ -101,7 +101,7 @@ async function writeCommonOutputs(pkg: AnyPackage, packageJson: string, readme: 
   await Promise.all([
     writeOutputFile("package.json", packageJson),
     writeOutputFile("README.md", readme),
-    writeOutputFile("LICENSE", getLicenseFileText(pkg)),
+    writeOutputFile("LICENSE", getLicenseFileText(pkg, new Date())),
   ]);
 
   async function writeOutputFile(filename: string, content: string): Promise<void> {
@@ -225,19 +225,19 @@ export function createReadme(typing: TypingsData, packageFS: FS, now: Date): str
   return lines.join("\r\n");
 }
 
-export function getLicenseFileText(typing: AnyPackage): string {
+export function getLicenseFileText(typing: AnyPackage, now: Date): string {
   switch (typing.license) {
     case License.MIT:
       return mitLicense;
     case License.Apache20:
-      return apacheLicense(typing);
+      return apacheLicense(typing, now);
     default:
       throw assertNever(typing);
   }
 }
 
-function apacheLicense(typing: TypingsData): string {
-  const year = new Date().getFullYear();
+function apacheLicense(typing: TypingsData, now: Date): string {
+  const year = now.getFullYear();
   const names = typing.contributors.map((c) => c.name);
   return `Copyright ${year} ${names.join(", ")}
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

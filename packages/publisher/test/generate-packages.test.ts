@@ -76,11 +76,11 @@ const now = new Date(1733775005612);
 testo({
   mitLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(getLicenseFileText(typing)).toMatchSnapshot();
+    expect(getLicenseFileText(typing, now)).toMatchSnapshot();
   },
   apacheLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(getLicenseFileText(typing)).toMatchSnapshot();
+    expect(getLicenseFileText(typing, now)).toMatchSnapshot();
   },
   readmeJquery() {
     const dt = defaultFS();
