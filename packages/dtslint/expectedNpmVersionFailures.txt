@@ -350,7 +350,6 @@ react-pointable
 react-router-navigation
 react-router-navigation-core
 react-router-redux
-react-s-alert
 react-sortable-tree
 react-sortable-tree-theme-file-explorer
 react-svg-pan-zoom-loader
