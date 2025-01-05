@@ -387,7 +387,6 @@ scrolltofixed
 sequencify
 servicenow
 sharepoint
-shortid
 signalfx-collect
 signalr/v1
 simple-cw-node
