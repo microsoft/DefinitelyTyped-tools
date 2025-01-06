@@ -7,7 +7,7 @@ on:
 
 # publishing can take longer than 30 minutes but we never want to
 # run more than one publish job at a time
-concurrency: 1
+concurrency: publish-packages
 
 env:
   CI: true

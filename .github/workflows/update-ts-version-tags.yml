@@ -15,6 +15,8 @@ on:
     # https://crontab.guru/#5_8_*_*_1
     - cron: "5 8 * * 1"
 
+concurrency: publish-packages
+
 env:
   CI: true
 
