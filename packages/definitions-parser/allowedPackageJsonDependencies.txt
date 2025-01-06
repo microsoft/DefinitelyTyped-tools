@@ -641,6 +641,7 @@
 @wordpress/element
 @wordpress/keycodes
 @wordpress/media-utils
+@wordpress/shortcode
 11ty.ts
 abort-controller
 acorn
