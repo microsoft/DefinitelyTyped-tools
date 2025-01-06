@@ -12,8 +12,10 @@ on:
         required: true
         default: main
   schedule:
-    # https://crontab.guru/#5_8_*_*_1
-    - cron: "5 8 * * 1"
+    # https://crontab.guru/#5_6_*_*_0
+    - cron: "5 6 * * 0"
+
+concurrency: publish-packages
 
 env:
   CI: true

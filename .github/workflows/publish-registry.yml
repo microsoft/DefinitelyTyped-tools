@@ -9,6 +9,8 @@ env:
   CI: true
   PNPM_CACHE_FOLDER: .pnpm-store
 
+concurrency: publish-packages
+
 jobs:
   publish-registry:
     runs-on: ubuntu-latest
