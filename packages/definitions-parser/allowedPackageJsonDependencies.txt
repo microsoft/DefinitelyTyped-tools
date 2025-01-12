@@ -959,6 +959,7 @@ web3
 web3-core
 webpack
 webpack-chain
+windows-cpu
 winston
 winston-transport
 workbox-build
