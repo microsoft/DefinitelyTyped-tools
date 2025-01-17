@@ -2,7 +2,7 @@
 
 import { getTypesVersions } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { deepEquals, readJson } from "@definitelytyped/utils";
+import { deepEquals, mangleScopedPackage, readJson } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 import {
@@ -74,13 +74,7 @@ async function main(): Promise<void> {
           process.exit(1);
         }
 
-        const path =
-          arg.indexOf("@") === 0 && arg.indexOf("/") !== -1
-            ? // we have a scoped module, e.g. @bla/foo
-              // which should be converted to   bla__foo
-              arg.slice(1).replace("/", "__")
-            : arg;
-        dirPath = joinPaths(dirPath, path);
+        dirPath = joinPaths(dirPath, mangleScopedPackage(arg));
       }
     }
   }
