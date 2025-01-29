@@ -53,7 +53,10 @@ jobs:
           path: ${{ env.FUNCTION_ZIP_NAME }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on:
+      - "self-hosted"
+      - "1ES.Pool=TypeScript-1ES-GitHub-Deploys"
+      - "1ES.ImageOverride=mariner-2.0"
     needs: build
     environment:
       name: 'Production'
