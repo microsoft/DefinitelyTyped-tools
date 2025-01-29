@@ -724,6 +724,7 @@ ember-qunit
 ember-resolver
 ember-source
 eris
+es-to-primitive
 esbuild
 eslint-visitor-keys
 ethers
