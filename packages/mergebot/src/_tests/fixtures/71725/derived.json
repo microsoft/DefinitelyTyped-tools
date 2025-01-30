@@ -21,7 +21,7 @@
         {
           "path": "types/enhance__enhance/.eslintrc.json",
           "kind": "package-meta",
-          "suspect": "edited"
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-eslintrcjson) (check: `rules`)"
         },
         {
           "path": "types/enhance__enhance/.npmignore",

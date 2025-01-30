@@ -34,8 +34,7 @@
       "files": [
         {
           "path": "types/hapi__catbox-memory/.eslintrc.json",
-          "kind": "package-meta",
-          "suspect": "edited"
+          "kind": "package-meta-ok"
         },
         {
           "path": "types/hapi__catbox-memory/.npmignore",
