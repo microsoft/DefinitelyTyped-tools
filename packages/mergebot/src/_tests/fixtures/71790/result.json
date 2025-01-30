@@ -1,0 +1,19 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Edits Infrastructure"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@hkleungai Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\nThis PR touches some part of DefinitelyTyped infrastructure, so a DT maintainer will need to review it. This is rare — did you mean to do this?\n\n## 1 package in this PR (and infra files)\n\n* `hapi__catbox-memory` (*probably deleted!*) — [on npm](https://www.npmjs.com/package/@hapi/catbox-memory), [on unpkg](https://unpkg.com/browse/@hapi/catbox-memory@latest/)\n* Infra files\n  - [`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71790/files/0a964f11f0a26b05b176e5d56763599b0c16e044#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621)\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=71790&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect DT infrastructure ([`notNeededPackages.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71790/files/0a964f11f0a26b05b176e5d56763599b0c16e044#diff-a275c2eae7b8f788a52327e76809026ee1bc5ea614393806c8f3cbab07202621))\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @SimonSchick @lenovouser — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71790/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

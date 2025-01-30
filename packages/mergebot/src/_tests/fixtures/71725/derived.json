@@ -1,0 +1,65 @@
+{
+  "type": "info",
+  "now": "2025-01-30T19:56:06.175Z",
+  "pr_number": 71725,
+  "author": "agawley",
+  "headCommitOid": "10894aa4e8d1717516ae8867f3fbaa50e88785ea",
+  "mergeBaseOid": "1d976b9454356ea4146621002c270b78b2c4d7cf",
+  "lastPushDate": "2025-01-22T17:33:05.000Z",
+  "lastActivityDate": "2025-01-27T15:35:48.000Z",
+  "mergeOfferDate": "2025-01-27T15:36:27.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "enhance__enhance",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/enhance__enhance/.eslintrc.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-eslintrcjson) (check: `rules`)"
+        },
+        {
+          "path": "types/enhance__enhance/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/enhance__enhance/enhance__enhance-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/enhance__enhance/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/enhance__enhance/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/enhance__enhance/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "agawley"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "rbuckton",
+      "date": "2025-01-27T15:35:48.000Z",
+      "isMaintainer": true
+    }
+  ],
+  "mainBotCommentID": 2607855655,
+  "ciResult": "pass"
+}

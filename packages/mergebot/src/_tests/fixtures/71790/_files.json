@@ -1,0 +1,3 @@
+{
+  "ff7a6a9358f8b7d5ebb2eb9bdcd0852390fbe887:types/hapi__catbox-memory/package.json": "{\n    \"private\": true,\n    \"name\": \"@types/hapi__catbox-memory\",\n    \"version\": \"4.1.9999\",\n    \"projects\": [\n        \"https://github.com/hapijs/catbox-memory#readme\"\n    ],\n    \"dependencies\": {\n        \"@types/hapi__catbox\": \"*\"\n    },\n    \"devDependencies\": {\n        \"@types/hapi__catbox-memory\": \"workspace:.\"\n    },\n    \"owners\": [\n        {\n            \"name\": \"Simon Schick\",\n            \"githubUsername\": \"SimonSchick\"\n        },\n        {\n            \"name\": \"Silas Rech\",\n            \"githubUsername\": \"lenovouser\"\n        }\n    ]\n}\n"
+}

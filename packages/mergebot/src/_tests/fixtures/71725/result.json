@@ -1,0 +1,22 @@
+{
+  "projectColumn": "Waiting for Author to Merge",
+  "labels": [
+    "Maintainer Approved",
+    "New Definition",
+    "Check Config",
+    "Self Merge"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@agawley Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `enhance__enhance` (*new!*) — [on npm](https://www.npmjs.com/package/@enhance/enhance), [on unpkg](https://unpkg.com/browse/@enhance/enhance@latest/)\n  - 1 added owner: ✎@agawley\n  - Config files to check:\n    - [`enhance__enhance/.eslintrc.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71725/files/10894aa4e8d1717516ae8867f3fbaa50e88785ea#diff-8396f43ae17f6ac375fa3ccd977f1fa5f4623a11ad7d4bb5d770a7f49d0feebd): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-eslintrcjson) (check: `rules`)\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=71725&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Only a DT maintainer can approve changes when there are new packages added\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "merge-offer",
+      "status": "@agawley: Everything looks good here. I am ready to merge this PR (at 10894aa) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true
+}

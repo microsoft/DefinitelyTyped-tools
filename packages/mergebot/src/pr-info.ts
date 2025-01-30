@@ -511,6 +511,7 @@ configSuspicious["tsconfig.json"] = makeChecker(
     },
   },
 );
+configSuspicious[".eslintrc.json"] = makeChecker({}, urls.eslintrc);
 
 type JSONLike = boolean | number | string | null | { [key: string]: JSONLike } | JSONLike[];
 

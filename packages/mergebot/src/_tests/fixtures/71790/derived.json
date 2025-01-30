@@ -1,0 +1,72 @@
+{
+  "type": "info",
+  "now": "2025-01-30T19:49:42.620Z",
+  "pr_number": 71790,
+  "author": "hkleungai",
+  "headCommitOid": "0a964f11f0a26b05b176e5d56763599b0c16e044",
+  "mergeBaseOid": "ff7a6a9358f8b7d5ebb2eb9bdcd0852390fbe887",
+  "lastPushDate": "2025-01-30T03:40:18.000Z",
+  "lastActivityDate": "2025-01-30T03:40:18.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": null,
+      "kind": "edit",
+      "files": [
+        {
+          "path": "notNeededPackages.json",
+          "kind": "infrastructure"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical",
+      "isSafeInfrastructureEdit": false
+    },
+    {
+      "name": "hapi__catbox-memory",
+      "kind": "delete",
+      "files": [
+        {
+          "path": "types/hapi__catbox-memory/.eslintrc.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/hapi__catbox-memory/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/hapi__catbox-memory/hapi__catbox-memory-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/hapi__catbox-memory/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/hapi__catbox-memory/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/hapi__catbox-memory/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "SimonSchick",
+        "lenovouser"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 2623449424,
+  "ciResult": "pass"
+}
