@@ -46,7 +46,12 @@ class IgnoredBecause {
 }
 
 async function httpTrigger(req: HttpRequest, context: InvocationContext) {
-  const body = (await req.json()) as any;
+  let body: any;
+  try {
+    body = (await req.json()) as any;
+  } catch {
+    return reply(context, 400, "Invalid JSON");
+  }
   httpLog(context, req.headers, body);
   const evName = req.headers.get("x-github-event"),
     evAction = body.action;

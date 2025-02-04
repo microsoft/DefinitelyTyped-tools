@@ -12,7 +12,12 @@ import { fetchFile } from "../util/fetchFile";
 app.http("Discussions-Trigger", {
   methods: ["GET", "POST"],
   handler: async (req, context) => {
-    const body = (await req.json()) as DiscussionWebhook;
+    let body: DiscussionWebhook;
+    try {
+      body = (await req.json()) as DiscussionWebhook;
+    } catch {
+      return reply(context, 400, "Invalid JSON");
+    }
     httpLog(context, req.headers, body);
 
     if (!(await shouldRunRequest(context, req.headers, body, canHandleRequest))) {
