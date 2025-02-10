@@ -38,7 +38,7 @@
     "@types/yargs": "^17.0.33",
     "apollo": "^2.34.0",
     "azure-functions-core-tools": "^4.0.6543",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.25.0",
     "jest-file-snapshot": "^0.7.0",
     "rimraf": "^5.0.10",
     "seroval": "^1.1.1",
