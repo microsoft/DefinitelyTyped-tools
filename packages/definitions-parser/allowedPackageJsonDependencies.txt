@@ -736,6 +736,7 @@ express-graphql
 express-rate-limit
 fast-glob
 fastify
+fastify-user-agent
 fflate
 filestack-js
 final-form
@@ -946,6 +947,7 @@ typescript-tuple
 undici-types
 unified
 url-pattern
+useragent
 utility-types
 vega-typings
 vfile-message
