@@ -463,6 +463,9 @@ importers:
       typescript-5.8:
         specifier: npm:typescript@~5.8.0-0
         version: typescript@5.8.0-dev.20241123
+      typescript-5.9:
+        specifier: npm:typescript@~5.9.0-0
+        version: typescript@5.9.0-dev.20250219
 
   packages/typescript-versions: {}
 
@@ -4795,6 +4798,11 @@ packages:
 
   typescript@5.8.0-dev.20241123:
     resolution: {integrity: sha512-9+P/Jtdlzl8CkmGg80mFnyjyqVEccRfQZYwvL1rRBctJ2PN3OfeuDq9YFJcv5tRZ3Y59+AuHiADSJpoRUKvVaQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.9.0-dev.20250219:
+    resolution: {integrity: sha512-BzBFdaj0tnTp9fp9pu1rgi7vt3u7z6EDL3IbjTgkf5GvpXTjWmQkE633De5S3ySeNL6dyZvBeVvLCKXKcOvbQA==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -10310,6 +10318,8 @@ snapshots:
   typescript@5.7.2: {}
 
   typescript@5.8.0-dev.20241123: {}
+
+  typescript@5.9.0-dev.20250219: {}
 
   unbox-primitive@1.0.2:
     dependencies:
