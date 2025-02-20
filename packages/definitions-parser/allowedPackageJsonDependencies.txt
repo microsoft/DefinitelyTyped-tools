@@ -687,6 +687,7 @@ cac
 canvas
 cash-dom
 cassandra-driver
+cesium
 chalk
 chart.js
 chokidar
