@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.7
+
+### Patch Changes
+
+- 70111bc: Support TS 5.9
+- Updated dependencies [70111bc]
+  - @definitelytyped/typescript-versions@0.1.7
+
 ## 0.1.6
 
 ### Patch Changes
