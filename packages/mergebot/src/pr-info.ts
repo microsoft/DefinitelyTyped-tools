@@ -12,6 +12,7 @@ import {
   PR_repository_pullRequest_timelineItems,
   PR_repository_pullRequest_comments_nodes,
   PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes,
+  PR_repository_pullRequest_reviews_nodes,
 } from "./queries/schema/PR";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
@@ -577,8 +578,8 @@ function getMergeRequest(comments: PR_repository_pullRequest_comments_nodes[], u
   const request = latestComment(
     comments.filter(
       (comment) =>
-        users.some((u) => comment.author && sameUser(u, comment.author.login)) &&
-        comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge")),
+        (isMaintainerComment(comment) || users.some((u) => comment.author && sameUser(u, comment.author.login))) &&
+        comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge"))
     ),
   );
   if (!request) return request;
@@ -609,10 +610,13 @@ function getReviews(prInfo: PR_repository_pullRequest) {
       continue;
     }
     if (r.state !== "APPROVED") continue;
-    const isMaintainer = r.authorAssociation === "MEMBER" || r.authorAssociation === "OWNER";
-    reviews.push({ type: "approved", reviewer, date, isMaintainer });
+    reviews.push({ type: "approved", reviewer, date, isMaintainer: isMaintainerComment(r) });
   }
   return reviews;
+}
+
+function isMaintainerComment(comment: PR_repository_pullRequest_reviews_nodes | PR_repository_pullRequest_comments_nodes) {
+  return (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") && !sameUser("typescript-bot", comment.author?.login || "-");
 }
 
 function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit_checkSuites | null): {

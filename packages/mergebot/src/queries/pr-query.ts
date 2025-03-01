@@ -165,6 +165,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
             author {
               login
             }
+            authorAssociation
             databaseId
             body
             createdAt

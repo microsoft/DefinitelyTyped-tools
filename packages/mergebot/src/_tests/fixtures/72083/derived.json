@@ -1,0 +1,59 @@
+{
+  "type": "info",
+  "now": "2025-03-01T00:48:26.366Z",
+  "pr_number": 72083,
+  "author": "sandersn",
+  "headCommitOid": "6db83c8e73b249baaf8f82deb5d5741802244280",
+  "mergeBaseOid": "2e4d8d8e6f58557a116b9898d93edbf169c978ca",
+  "lastPushDate": "2025-02-28T23:51:56.000Z",
+  "lastActivityDate": "2025-03-01T00:28:44.000Z",
+  "mergeOfferDate": "2025-02-28T23:56:05.000Z",
+  "mergeRequestDate": "2025-03-01T00:28:44.000Z",
+  "mergeRequestUser": "jakebailey",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "uswds__uswds",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/uswds__uswds/uswds__uswds-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "lunchbreakdev",
+        "aduth"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "andrewbranch",
+      "date": "2025-03-01T00:06:35.000Z",
+      "isMaintainer": true
+    },
+    {
+      "type": "approved",
+      "reviewer": "morganmspencer-va",
+      "date": "2025-02-28T23:58:22.000Z",
+      "isMaintainer": false
+    },
+    {
+      "type": "approved",
+      "reviewer": "jakebailey",
+      "date": "2025-02-28T23:53:57.000Z",
+      "isMaintainer": true
+    }
+  ],
+  "mainBotCommentID": 2691733438,
+  "ciResult": "pass"
+}
