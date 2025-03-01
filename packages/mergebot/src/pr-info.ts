@@ -576,11 +576,9 @@ function getMergeOfferDate(comments: PR_repository_pullRequest_comments_nodes[],
 function getMergeRequest(comments: PR_repository_pullRequest_comments_nodes[], users: string[], sinceDate: Date) {
   const request = latestComment(
     comments.filter(
-      (comment) => {
-        const isMaintainer = comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER";
-        const isUser = users.some((u) => comment.author && sameUser(u, comment.author.login));
-        return (isMaintainer || isUser) && comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge"));
-      }
+      (comment) =>
+        (isMaintainer(comment.authorAssociation) || users.some((u) => comment.author && sameUser(u, comment.author.login))) &&
+        comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge"))
     ),
   );
   if (!request) return request;
@@ -611,10 +609,13 @@ function getReviews(prInfo: PR_repository_pullRequest) {
       continue;
     }
     if (r.state !== "APPROVED") continue;
-    const isMaintainer = r.authorAssociation === "MEMBER" || r.authorAssociation === "OWNER";
-    reviews.push({ type: "approved", reviewer, date, isMaintainer });
+    reviews.push({ type: "approved", reviewer, date, isMaintainer: isMaintainer(r.authorAssociation) });
   }
   return reviews;
+}
+
+function isMaintainer(authorAssociation: string | undefined) {
+  return authorAssociation === "MEMBER" || authorAssociation === "OWNER";
 }
 
 function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit_checkSuites | null): {
