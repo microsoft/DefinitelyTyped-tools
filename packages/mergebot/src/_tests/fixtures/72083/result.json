@@ -1,5 +1,5 @@
 {
-  "projectColumn": "Waiting for Author to Merge",
+  "projectColumn": "Recently Merged",
   "labels": [
     "Other Approved",
     "Maintainer Approved",
@@ -16,6 +16,6 @@
     }
   ],
   "shouldClose": false,
-  "shouldMerge": false,
+  "shouldMerge": true,
   "shouldUpdateLabels": true
 }

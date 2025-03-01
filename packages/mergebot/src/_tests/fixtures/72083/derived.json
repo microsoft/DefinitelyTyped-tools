@@ -1,6 +1,6 @@
 {
   "type": "info",
-  "now": "2025-03-01T00:32:26.658Z",
+  "now": "2025-03-01T00:48:26.366Z",
   "pr_number": 72083,
   "author": "sandersn",
   "headCommitOid": "6db83c8e73b249baaf8f82deb5d5741802244280",
@@ -8,6 +8,8 @@
   "lastPushDate": "2025-02-28T23:51:56.000Z",
   "lastActivityDate": "2025-03-01T00:28:44.000Z",
   "mergeOfferDate": "2025-02-28T23:56:05.000Z",
+  "mergeRequestDate": "2025-03-01T00:28:44.000Z",
+  "mergeRequestUser": "jakebailey",
   "hasMergeConflict": false,
   "isFirstContribution": false,
   "tooManyFiles": false,
