@@ -579,7 +579,7 @@ function getMergeRequest(comments: PR_repository_pullRequest_comments_nodes[], u
     comments.filter(
       (comment) =>
         (isMaintainerComment(comment) || users.some((u) => comment.author && sameUser(u, comment.author.login))) &&
-        comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge"))
+        comment.body.split("\n").some((line) => line.trim().toLowerCase().startsWith("ready to merge")),
     ),
   );
   if (!request) return request;
@@ -615,8 +615,13 @@ function getReviews(prInfo: PR_repository_pullRequest) {
   return reviews;
 }
 
-function isMaintainerComment(comment: PR_repository_pullRequest_reviews_nodes | PR_repository_pullRequest_comments_nodes) {
-  return (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") && !sameUser("typescript-bot", comment.author?.login || "-");
+function isMaintainerComment(
+  comment: PR_repository_pullRequest_reviews_nodes | PR_repository_pullRequest_comments_nodes,
+) {
+  return (
+    (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") &&
+    !sameUser("typescript-bot", comment.author?.login || "-")
+  );
 }
 
 function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit_checkSuites | null): {
