@@ -26,7 +26,7 @@ jobs:
         id: pnpm-cache
         shell: bash
         run: echo "store=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache/restore@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      - uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ steps.pnpm-cache.outputs.store }}
           key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -35,7 +35,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - uses: actions/cache/restore@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      - uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -45,14 +45,14 @@ jobs:
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TYPES_TOKEN: ${{ secrets.NPM_TYPES_TOKEN }}
-      - uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      - uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         if: always()
         with:
           path: ./cache
           key: pacote-cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       - run: pnpm store prune
-      - uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      - uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ steps.pnpm-cache.outputs.store }}
           key: ${{ runner.os }}-pnpm-store-cache-${{ github.run_id }}-${{ github.run_attempt }}
