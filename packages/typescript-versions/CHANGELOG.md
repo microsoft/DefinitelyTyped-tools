@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.8
+
+### Patch Changes
+
+- 9aaf5fb: Remove support for TypeScript 5.0. TypeScript 5.8 is now marked as stable.
+
 ## 0.1.7
 
 ### Patch Changes
