@@ -162,10 +162,10 @@ Normally packages will be tested according to [DefinitelyType's support window](
 To restrict testing to new versions only, specify it in package.json:
 
 ```ts
-"minimumTypeScriptVersion: 5.0"
+"minimumTypeScriptVersion: 5.6"
 ```
 
-This tests only 5.0 and above, although people can still depend on the package with lower versions of Typescript if they want.
+This tests only 5.6 and above, although people can still depend on the package with lower versions of Typescript if they want.
 
 ## Run tests
 
