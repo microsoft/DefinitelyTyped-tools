@@ -42,10 +42,7 @@ export function sameUser(u1: string, u2: string) {
   return u1.toLowerCase() === u2.toLowerCase();
 }
 
-const knownBots = new Set([
-  "typescript-bot",
-  "copilot-pull-request-reviewer",
-])
+const knownBots = new Set(["typescript-bot", "copilot-pull-request-reviewer"]);
 
 export function authorNotBot(
   node: { login: string } | { author?: { login: string } | null } | { actor?: { login: string } | null },
