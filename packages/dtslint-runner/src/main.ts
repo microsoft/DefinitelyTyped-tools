@@ -54,7 +54,7 @@ export async function runDTSLint({
   const expectedFailures = getExpectedFailures(onlyRunAffectedPackages, dependents);
 
   const allPackages = [...packageNames, ...attwChanges, ...dependents];
-  const testedPackages = shard ? allPackages.filter((_, i) => i % shard.count === shard.id - 1) : allPackages;
+  const testedPackages = getTestedPackages(shard, allPackages);
 
   const dtslintArgs = [
     "--listen",
@@ -203,4 +203,37 @@ async function cloneDefinitelyTyped(cwd: string, sha: string | undefined): Promi
     console.log(`${switchCmd[0]} ${switchCmd[1].join(" ")}`);
     await execAndThrowErrors(switchCmd[0], switchCmd[1], cwd);
   }
+}
+
+function getTestedPackages(shard: { id: number; count: number } | undefined, packages: string[]) {
+  if (!shard) {
+    return packages;
+  }
+
+  // When sharding packages, keep versioned packages together to avoid failing
+  // multiple CI jobs on issues that affect all versions of a package.
+
+  const groups = new Map<string, string[]>();
+
+  for (const pkg of packages) {
+    const prefix = pkg.split("/")[0];
+    const group = groups.get(prefix);
+    if (group) {
+      group.push(pkg);
+    } else {
+      groups.set(prefix, [pkg]);
+    }
+  }
+
+  const shardedPackages: string[] = [];
+
+  let i = 0;
+  for (const group of groups.values()) {
+    if (i % shard.count === shard.id - 1) {
+      shardedPackages.push(...group);
+    }
+    i++;
+  }
+
+  return shardedPackages;
 }
