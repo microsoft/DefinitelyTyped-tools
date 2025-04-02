@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.31
+
+### Patch Changes
+
+- f98e138: More aggressively drop Programs to prevent OOMs
+
 ## 0.2.30
 
 ### Patch Changes

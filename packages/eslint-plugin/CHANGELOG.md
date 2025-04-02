@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.23
+
+### Patch Changes
+
+- f98e138: More aggressively drop Programs to prevent OOMs
+
 ## 0.1.22
 
 ### Patch Changes
