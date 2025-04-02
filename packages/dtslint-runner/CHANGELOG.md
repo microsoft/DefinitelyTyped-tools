@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.35
+
+### Patch Changes
+
+- ad9fccf: Place all versions of a single package into the same shard
+
 ## 0.1.34
 
 ### Patch Changes
