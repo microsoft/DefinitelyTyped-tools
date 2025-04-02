@@ -209,12 +209,12 @@ function getTestedPackages(shard: { id: number; count: number } | undefined, pac
   if (!shard) {
     return packages;
   }
-  
+
   // When sharding packages, keep versioned packages together to avoid failing
   // multiple CI jobs on issues that affect all versions of a package.
 
   const groups = new Map<string, string[]>();
-  
+
   for (const pkg of packages) {
     const prefix = pkg.split("/")[0];
     const group = groups.get(prefix);
