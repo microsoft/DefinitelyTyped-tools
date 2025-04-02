@@ -25,7 +25,7 @@ export async function lint(
     tryResolve("@typescript-eslint/typescript-estree", { paths: [resolve(__dirname, "../../eslint-plugin")] }),
   ];
   process.env.TSESTREE_SINGLE_RUN = "true";
-  
+
   const files = getSourceFiles(dirPath, isLatest);
   if (typeof files === "string") {
     return files;
