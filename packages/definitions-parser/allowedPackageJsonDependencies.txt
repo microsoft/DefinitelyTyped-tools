@@ -761,6 +761,7 @@ openapi-types
 opentracing
 parchment
 parse5
+parse-url
 path-to-regexp
 pdfjs-dist
 pg-protocol
