@@ -211,7 +211,9 @@ async function runTests(
       const supportedTypesVersions = typesVersions.filter(TypeScriptVersion.isSupported);
       if (supportedTypesVersions.length !== typesVersions.length) {
         const unsupportedTypesVersions = typesVersions.filter((v) => !TypeScriptVersion.isSupported(v));
-        warnings.push(`Package ${packageName} has unsupported TypeScript versions that will not be tested: ${unsupportedTypesVersions.join(", ")}`);
+        warnings.push(
+          `Package ${packageName} has unsupported TypeScript versions that will not be tested: ${unsupportedTypesVersions.join(", ")}`,
+        );
       }
       const lows = [TypeScriptVersion.lowest, ...supportedTypesVersions.map(next)];
       const his = [...supportedTypesVersions, TypeScriptVersion.latest];
