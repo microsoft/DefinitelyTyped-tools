@@ -445,10 +445,6 @@ wonder.js
 wrench
 xmltojson
 xmpp__jid
-xrm
-xrm/v6
-xrm/v7
-xrm/v8
 xsockets
 xss-filters
 yandex-money-sdk
