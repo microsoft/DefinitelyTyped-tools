@@ -16,7 +16,6 @@ export async function lint(
   expectOnly: boolean,
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
-  const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   // If this package has been linked for local development,
   // we may end up with duplicate copies of typescript-estree.
   // Clear both so we are sure that we've cleared all caches.
@@ -26,6 +25,27 @@ export async function lint(
     tryResolve("@typescript-eslint/typescript-estree", { paths: [resolve(__dirname, "../../eslint-plugin")] }),
   ];
   process.env.TSESTREE_SINGLE_RUN = "true";
+
+  const files = getSourceFiles(dirPath, isLatest);
+  if (typeof files === "string") {
+    return files;
+  }
+
+  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
+  const eslint = new ESLint(options);
+  const formatter = await eslint.loadFormatter("stylish");
+  const results = await eslint.lintFiles(files);
+  const output = formatter.format(results);
+  for (const estreePath of estrees) {
+    if (!estreePath) continue;
+    const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
+    estree.clearCaches();
+  }
+  return output;
+}
+
+function getSourceFiles(dirPath: string, isLatest: boolean) {
+  const tsconfigPath = joinPaths(dirPath, "tsconfig.json");
   const lintProgram = createProgram(tsconfigPath);
   const files = [];
 
@@ -51,17 +71,7 @@ export async function lint(
     }
   }
 
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
-  const eslint = new ESLint(options);
-  const formatter = await eslint.loadFormatter("stylish");
-  const results = await eslint.lintFiles(files);
-  const output = formatter.format(results);
-  for (const estreePath of estrees) {
-    if (!estreePath) continue;
-    const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
-    estree.clearCaches();
-  }
-  return output;
+  return files;
 }
 
 function tryResolve(path: string, options?: { paths?: string[] | undefined }): string | undefined {
