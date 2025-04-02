@@ -1,6 +1,5 @@
 akumina-core
 akumina-core/v4
-allure-js-commons
 amcharts
 amplifier
 amplify
@@ -40,7 +39,6 @@ bitcoin-computer__lib
 blissfuljs
 bluebird-global
 boolify-string
-bootstrap-datepicker
 bootstrap-maxlength
 bootstrap-switch
 bootstrap-touchspin
@@ -55,7 +53,6 @@ carbon__layout
 carbon__motion
 carbon__themes
 carbon__type
-chai-datetime
 chartjs-plugin-doughnutlabel-rebourne
 chessboardjs
 chui
@@ -105,9 +102,7 @@ ember/v1
 ember/v2
 ember/v3
 emissary
-emscripten
 engine-check
-epub
 eq.js
 es6-weak-map
 esbuild-plugin-import-map
@@ -133,14 +128,12 @@ flowjs
 fm-websync
 foundation
 ftdomdelegate
-gamedig
 generic-functions
 gensync
 gently
 git
 glidejs
 go
-google-closure-compiler
 google-libphonenumber
 google-one-tap
 graphql-resolve-batch
@@ -152,7 +145,6 @@ guid
 gulp-changed
 gulp-cheerio
 gulp-coffeeify
-gulp-espower
 gulp-load-plugins
 gulp-mocha
 gulp-ng-annotate
@@ -164,7 +156,6 @@ hasher
 hashset
 hashtable
 hasura
-hellosign-sdk
 heroku-logger
 hmscore__react-native-hms-push
 hookrouter
@@ -173,8 +164,6 @@ hyperscript
 ignore-by-default
 imagemagick
 imagemapster
-inherits
-iniparser
 ion-rangeslider/v1
 isomorphic-fetch
 istanbul-middleware
@@ -204,7 +193,6 @@ jquery.ui.layout
 jquery.uniform
 jquery/v1
 jquery/v2
-jqueryui
 js-clipper
 js-schema
 js-url
@@ -237,19 +225,12 @@ leaflet-editable/v0
 leaflet-gpx
 leaflet-label
 leaflet.awesome-markers/v0
-lerna__collect-updates
-lerna__package
-lerna__package-graph
-lerna__project
-lerna__query-graph
-lerna__run-topologically
 level-sublevel
 line-reader
 lls
 logg
 lowlight
 macaca-circular-json
-magic-number
 maildev
 mapbox
 markdown-it-lazy-headers
@@ -260,7 +241,6 @@ mathjax
 mdast
 mem-cache
 messenger
-method-override
 microservice-utilities
 mina
 mixpanel
@@ -303,7 +283,6 @@ passport-weibo
 pathfinding
 phonegap
 phonegap-facebook-plugin
-phonegap-nfc
 phonegap-plugin-barcodescanner
 photoshop
 pi-spi
@@ -316,7 +295,6 @@ pouchdb-http
 preact-i18n
 precise
 preloadjs
-prismic-dom
 promise-pg
 promise-pool
 promise-sftp
@@ -335,7 +313,6 @@ react-document-meta
 react-facebook-login-component
 react-infinite
 react-input-mask
-react-jsonschema-form
 react-key-handler
 react-linkify
 react-native-bluetooth-serial
@@ -356,7 +333,6 @@ react-svg-pan-zoom-loader
 react-swf
 react-tap-event-plugin
 react-touch
-react-user-tour
 readmore-js
 recharts-scale
 redux-form/v7
@@ -423,11 +399,9 @@ urlrouter
 usage
 user-agents
 user-event
-utils-merge
 uws
 venn
 viewporter
-vision/v4
 vscode
 vue-datetime
 waitme
@@ -446,7 +420,6 @@ wrench
 xmltojson
 xmpp__jid
 xsockets
-xss-filters
 yandex-money-sdk
 zengin-code
 zmq
