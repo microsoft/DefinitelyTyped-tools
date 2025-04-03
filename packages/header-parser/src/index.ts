@@ -340,7 +340,9 @@ export function getTypesVersions(dirPath: string): readonly AllTypeScriptVersion
     if (!TypeScriptVersion.isTypeScriptVersion(version)) {
       throw new Error(`There is an entry named ${name}, but ${version} is not a valid TypeScript version.`);
     }
-
+    // if (!TypeScriptVersion.isSupported(version)) {
+    //   throw new Error(`At ${dirPath}/${name}: TypeScript version ${version} is not supported on Definitely Typed.`);
+    // }
     return version;
   });
 }
