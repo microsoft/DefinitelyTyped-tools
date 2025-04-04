@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.2.19
+
+### Patch Changes
+
+- eb258f1: Warn on unsupported versions but validate, skip tests
+
 ## 0.2.18
 
 ### Patch Changes

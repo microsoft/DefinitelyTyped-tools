@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint
 
+## 0.2.32
+
+### Patch Changes
+
+- eb258f1: Warn on unsupported versions but validate, skip tests
+- Updated dependencies [eb258f1]
+  - @definitelytyped/header-parser@0.2.19
+
 ## 0.2.31
 
 ### Patch Changes
