@@ -208,8 +208,15 @@ async function runTests(
       // associated ts3.2, ts3.5, ts3.6 directories, for
       // <=3.2, <=3.5, <=3.6 respectively; the root level is for 3.7 and above.
       // so this code needs to generate ranges [lowest-3.2, 3.3-3.5, 3.6-3.6, 3.7-latest]
-      const lows = [TypeScriptVersion.lowest, ...typesVersions.map(next)];
-      const his = [...typesVersions, TypeScriptVersion.latest];
+      const supportedTypesVersions = typesVersions.filter(TypeScriptVersion.isSupported);
+      if (supportedTypesVersions.length !== typesVersions.length) {
+        const unsupportedTypesVersions = typesVersions.filter((v) => !TypeScriptVersion.isSupported(v));
+        warnings.push(
+          `Package ${packageName} has unsupported TypeScript versions that will not be tested: ${unsupportedTypesVersions.join(", ")}`,
+        );
+      }
+      const lows = [TypeScriptVersion.lowest, ...supportedTypesVersions.map(next)];
+      const his = [...supportedTypesVersions, TypeScriptVersion.latest];
       assert.strictEqual(lows.length, his.length);
       for (let i = 0; i < lows.length; i++) {
         const low = maxVersion(minVersion, lows[i]);
