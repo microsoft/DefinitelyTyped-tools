@@ -7,32 +7,12 @@
 // GraphQL query operation: GetAllOpenPRsAndCardIDs
 // ====================================================
 
-export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes_projectCards_nodes {
-  __typename: "ProjectCard";
-  /**
-   * The Node ID of the ProjectCard object
-   */
-  id: string;
-}
-
-export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes_projectCards {
-  __typename: "ProjectCardConnection";
-  /**
-   * A list of nodes.
-   */
-  nodes: (GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes_projectCards_nodes | null)[] | null;
-}
-
 export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes {
   __typename: "PullRequest";
   /**
    * Identifies the pull request number.
    */
   number: number;
-  /**
-   * List of project cards associated with this pull request.
-   */
-  projectCards: GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes_projectCards;
 }
 
 export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_pageInfo {
