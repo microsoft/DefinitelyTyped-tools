@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetAllOpenPRsAndCardIDs
+// GraphQL query operation: GetAllOpenPRs
 // ====================================================
 
-export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes {
+export interface GetAllOpenPRs_repository_pullRequests_nodes {
   __typename: "PullRequest";
   /**
    * Identifies the pull request number.
@@ -15,7 +15,7 @@ export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes {
   number: number;
 }
 
-export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_pageInfo {
+export interface GetAllOpenPRs_repository_pullRequests_pageInfo {
   __typename: "PageInfo";
   /**
    * When paginating forwards, are there more items?
@@ -27,19 +27,19 @@ export interface GetAllOpenPRsAndCardIDs_repository_pullRequests_pageInfo {
   endCursor: string | null;
 }
 
-export interface GetAllOpenPRsAndCardIDs_repository_pullRequests {
+export interface GetAllOpenPRs_repository_pullRequests {
   __typename: "PullRequestConnection";
   /**
    * A list of nodes.
    */
-  nodes: (GetAllOpenPRsAndCardIDs_repository_pullRequests_nodes | null)[] | null;
+  nodes: (GetAllOpenPRs_repository_pullRequests_nodes | null)[] | null;
   /**
    * Information to aid in pagination.
    */
-  pageInfo: GetAllOpenPRsAndCardIDs_repository_pullRequests_pageInfo;
+  pageInfo: GetAllOpenPRs_repository_pullRequests_pageInfo;
 }
 
-export interface GetAllOpenPRsAndCardIDs_repository {
+export interface GetAllOpenPRs_repository {
   __typename: "Repository";
   /**
    * The Node ID of the Repository object
@@ -48,16 +48,16 @@ export interface GetAllOpenPRsAndCardIDs_repository {
   /**
    * A list of pull requests that have been opened in the repository.
    */
-  pullRequests: GetAllOpenPRsAndCardIDs_repository_pullRequests;
+  pullRequests: GetAllOpenPRs_repository_pullRequests;
 }
 
-export interface GetAllOpenPRsAndCardIDs {
+export interface GetAllOpenPRs {
   /**
    * Lookup a given repository by the owner and repository name.
    */
-  repository: GetAllOpenPRsAndCardIDs_repository | null;
+  repository: GetAllOpenPRs_repository | null;
 }
 
-export interface GetAllOpenPRsAndCardIDsVariables {
+export interface GetAllOpenPRsVariables {
   endCursor?: string | null;
 }

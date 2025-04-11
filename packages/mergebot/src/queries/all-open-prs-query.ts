@@ -1,10 +1,10 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetAllOpenPRsAndCardIDs, GetAllOpenPRsAndCardIDsVariables } from "./schema/GetAllOpenPRsAndCardIDs";
+import { GetAllOpenPRs, GetAllOpenPRsVariables } from "./schema/GetAllOpenPRs";
 import { noNullish } from "../util/util";
 
-const getAllOpenPRsQuery: TypedDocumentNode<GetAllOpenPRsAndCardIDs, GetAllOpenPRsAndCardIDsVariables> = gql`
-  query GetAllOpenPRsAndCardIDs($endCursor: String) {
+const getAllOpenPRsQuery: TypedDocumentNode<GetAllOpenPRs, GetAllOpenPRsVariables> = gql`
+  query GetAllOpenPRs($endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
       pullRequests(states: OPEN, orderBy: { field: UPDATED_AT, direction: DESC }, first: 100, after: $endCursor) {
