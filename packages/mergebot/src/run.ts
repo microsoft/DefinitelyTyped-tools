@@ -3,7 +3,7 @@
 import * as schema from "@octokit/graphql-schema/schema";
 import yargs from "yargs";
 import { process as computeActions } from "./compute-pr-actions";
-import { getAllOpenPRsAndCardIDs } from "./queries/all-open-prs-query";
+import { getAllOpenPRs } from "./queries/all-open-prs-query";
 import { getPRInfo } from "./queries/pr-query";
 import { deriveStateForPR, BotResult } from "./pr-info";
 import { executePrActions } from "./execute-pr-actions";
@@ -87,7 +87,7 @@ const show = (name: string, value: unknown) => {
 
 const start = async function () {
   console.log(`Getting open PRs.`);
-  const { prs, cardIDs } = await getAllOpenPRsAndCardIDs();
+  const prs = await getAllOpenPRs();
   //
   const failures = [];
   for (const pr of prs) {
@@ -146,7 +146,7 @@ const start = async function () {
   // Handle other columns
   for (const [name, cards] of columns) {
     if (name === "Recently Merged") continue;
-    const ids = cards.map((c) => c.id).filter((id) => !cardIDs.includes(id));
+    const ids = cards.map((c) => c.id);
     if (ids.length === 0) continue;
     console.log(`Cleaning up closed PRs in "${name}"`);
     for (const id of ids) {

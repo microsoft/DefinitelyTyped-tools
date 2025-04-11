@@ -1,20 +1,15 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetAllOpenPRsAndCardIDs, GetAllOpenPRsAndCardIDsVariables } from "./schema/GetAllOpenPRsAndCardIDs";
+import { GetAllOpenPRs, GetAllOpenPRsVariables } from "./schema/GetAllOpenPRs";
 import { noNullish } from "../util/util";
 
-const getAllOpenPRsAndCardIDsQuery: TypedDocumentNode<GetAllOpenPRsAndCardIDs, GetAllOpenPRsAndCardIDsVariables> = gql`
-  query GetAllOpenPRsAndCardIDs($endCursor: String) {
+const getAllOpenPRsQuery: TypedDocumentNode<GetAllOpenPRs, GetAllOpenPRsVariables> = gql`
+  query GetAllOpenPRs($endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
       pullRequests(states: OPEN, orderBy: { field: UPDATED_AT, direction: DESC }, first: 100, after: $endCursor) {
         nodes {
           number
-          projectCards(first: 100) {
-            nodes {
-              id
-            }
-          }
         }
         pageInfo {
           hasNextPage
@@ -25,23 +20,18 @@ const getAllOpenPRsAndCardIDsQuery: TypedDocumentNode<GetAllOpenPRsAndCardIDs, G
   }
 `;
 
-export async function getAllOpenPRsAndCardIDs() {
+export async function getAllOpenPRs() {
   const prs: number[] = [];
-  const cardIDs: string[] = [];
   let endCursor: string | undefined | null;
   while (true) {
     const result = await client.query({
-      query: getAllOpenPRsAndCardIDsQuery,
+      query: getAllOpenPRsQuery,
       fetchPolicy: "no-cache",
       variables: { endCursor },
     });
     const pullRequests = result.data.repository?.pullRequests;
-    const nodes = noNullish(pullRequests?.nodes);
-    prs.push(...nodes.map((pr) => pr.number));
-    for (const pr of nodes) {
-      cardIDs.push(...noNullish(pr.projectCards.nodes).map((card) => card.id));
-    }
-    if (!pullRequests?.pageInfo.hasNextPage) return { prs, cardIDs };
+    prs.push(...noNullish(pullRequests?.nodes).map((pr) => pr.number));
+    if (!pullRequests?.pageInfo.hasNextPage) return prs;
     endCursor = pullRequests.pageInfo.endCursor;
   }
 }
