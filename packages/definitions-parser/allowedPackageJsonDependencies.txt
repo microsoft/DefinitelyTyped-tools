@@ -11,6 +11,7 @@
 @babel/types
 @bitcoin-computer/nakamotojs
 @commander-js/extra-typings
+@dimforge/rapier3d-compat
 @elastic/elasticsearch
 @electron/get
 @ember/test-helpers
