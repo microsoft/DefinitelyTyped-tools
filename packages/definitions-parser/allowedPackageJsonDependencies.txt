@@ -612,6 +612,7 @@ cassandra-driver
 cesium
 chalk
 chart.js
+cheerio
 chokidar
 ci-info
 cids
