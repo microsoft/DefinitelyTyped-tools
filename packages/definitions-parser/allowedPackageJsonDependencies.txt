@@ -669,6 +669,7 @@ form-data
 fs-capacitor
 fs-jetpack
 generic-pool
+git-up
 gl-matrix
 glaze
 glob
