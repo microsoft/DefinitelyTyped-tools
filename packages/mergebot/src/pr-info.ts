@@ -608,7 +608,7 @@ function getReviews(prInfo: PR_repository_pullRequest) {
       continue;
     }
     if (r.state === "CHANGES_REQUESTED") {
-      reviews.push({ type: "changereq", reviewer, isMaintainer,date });
+      reviews.push({ type: "changereq", reviewer, isMaintainer, date });
       continue;
     }
     if (r.state !== "APPROVED") continue;
@@ -620,10 +620,7 @@ function getReviews(prInfo: PR_repository_pullRequest) {
 function isMaintainerComment(
   comment: PR_repository_pullRequest_reviews_nodes | PR_repository_pullRequest_comments_nodes,
 ) {
-  return (
-    (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") &&
-    authorNotBot(comment)
-  );
+  return (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") && authorNotBot(comment);
 }
 
 function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit_checkSuites | null): {
