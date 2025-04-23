@@ -1,0 +1,1598 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM6AlsqX",
+        "title": "[node] Cleanup generics of EventEmitter and correct types",
+        "createdAt": "2024-11-01T02:25:45Z",
+        "author": {
+          "login": "ckohen",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Too Many Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 71060,
+        "state": "OPEN",
+        "headRefOid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+        "changedFiles": 24,
+        "additions": 861,
+        "deletions": 277,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "25e794d1e275602c0146812b7e613a700b97bb35",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "a4450792b76f9faa16b0f91bcac5d6be1fcb66e6",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "7947ba735cd7bed4d32f111162fefda6bf13978d",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "25e794d1e275602c0146812b7e613a700b97bb35",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "53d0b94814f82349741f66481bd30216eb828faf",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "7947ba735cd7bed4d32f111162fefda6bf13978d",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "4eef83e88193f4d52c914ccba4bf2622644b6e46",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "53d0b94814f82349741f66481bd30216eb828faf",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "43577afb1db34f325101783a2fc9d878f9f29c72",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "4eef83e88193f4d52c914ccba4bf2622644b6e46",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "2b56e4b86b6080e5b02ab35078f896af3dd21493",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "43577afb1db34f325101783a2fc9d878f9f29c72",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "5fca2ba5fcf9e1f4a04e7d943d4a3fe3c7a58fd3",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "2b56e4b86b6080e5b02ab35078f896af3dd21493",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "66b20f5419e9fa0d1de781706b7541a72e89c6dd",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "5fca2ba5fcf9e1f4a04e7d943d4a3fe3c7a58fd3",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "6d4991973cf5698d332e069c51ce9ee23ca9bb3b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "66b20f5419e9fa0d1de781706b7541a72e89c6dd",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "d2e53548e6cb73015f12357e1f24fe5353342507",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "6d4991973cf5698d332e069c51ce9ee23ca9bb3b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "d2e53548e6cb73015f12357e1f24fe5353342507",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-11-01T02:51:23Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-11-01T03:15:46Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-12-03T10:04:31Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2024-12-23T19:08:23Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2025-01-22T11:36:49Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2025-01-22T11:59:30Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2025-03-18T04:51:11Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "createdAt": "2025-03-18T05:24:21Z",
+              "__typename": "HeadRefForcePushedEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "83f5b39044c8d2b458653302199a40f384aca7ef",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2024-11-03T15:14:50Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2411876799",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-28T19:49:54Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2025-01-28T19:52:23Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2579270642",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-28T21:42:24Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-01-28T21:42:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2579473311",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-30T20:06:15Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2025-01-30T20:06:15Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2584916505",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-30T20:08:26Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-30T20:36:51Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-30T22:59:49Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-30T23:43:40Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-31T00:00:01Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-31T00:04:42Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-31T00:06:39Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-31T00:21:13Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-01-31T00:50:19Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2584921359",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-01-31T01:31:18Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-01-31T01:31:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2585477547",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:13:18Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:13:18Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631657148",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:14:52Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:14:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631658532",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:19:27Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:19:27Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631662287",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:21:10Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:21:10Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631663698",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:24:09Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:24:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631666752",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:33:20Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:33:20Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631681685",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-02-21T02:34:47Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-02-21T02:34:47Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2631682916",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-03-17T01:35:08Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-03-17T01:35:09Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2688941466",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "c02af4bfd989655381c11568570b7cd2d5c28a87",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-03-17T07:31:34Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-03-17T07:31:34Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2689375354",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-04-04T11:02:53Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-04-04T11:05:06Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2742616919",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "ckohen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-04-12T01:22:25Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-04-12T01:22:25Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2761908255",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "Bashamega",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "NONE",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2025-04-23T13:08:01Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#pullrequestreview-2787242004",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 11,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 35827936269,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/b56a3af5afe0b04c752037e30a7e9999682f179e/checks?check_suite_id=35827936269",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/b56a3af5afe0b04c752037e30a7e9999682f179e/checks?check_suite_id=35827936269",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2025-03-18T05:24:24Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2025-03-18T04:50:52Z",
+                "committedDate": "2025-03-18T05:24:06Z",
+                "pushedDate": null,
+                "oid": "b56a3af5afe0b04c752037e30a7e9999682f179e",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 31,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM6SGfb-",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2451175166,
+              "body": "@ckohen Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 16 packages in this PR\n\n* `airbnb__node-memwatch` — [on npm](https://www.npmjs.com/package/@airbnb/node-memwatch), [on unpkg](https://unpkg.com/browse/@airbnb/node-memwatch@latest/)\n* `hubot` — [on npm](https://www.npmjs.com/package/hubot), [on unpkg](https://unpkg.com/browse/hubot@latest/)\n* `imap` — [on npm](https://www.npmjs.com/package/imap), [on unpkg](https://unpkg.com/browse/imap@latest/)\n* `jake` — [on npm](https://www.npmjs.com/package/jake), [on unpkg](https://unpkg.com/browse/jake@latest/)\n* `newman` — [on npm](https://www.npmjs.com/package/newman), [on unpkg](https://unpkg.com/browse/newman@latest/)\n* `node-red` — [on npm](https://www.npmjs.com/package/node-red), [on unpkg](https://unpkg.com/browse/node-red@latest/)\n* `node` — [on npm](https://www.npmjs.com/package/node), [on unpkg](https://unpkg.com/browse/node@latest/)\n* `opossum` — [on npm](https://www.npmjs.com/package/opossum), [on unpkg](https://unpkg.com/browse/opossum@latest/)\n* `rdf-store-fs` — [on npm](https://www.npmjs.com/package/rdf-store-fs), [on unpkg](https://unpkg.com/browse/rdf-store-fs@latest/)\n* `readable-stream` — [on npm](https://www.npmjs.com/package/readable-stream), [on unpkg](https://unpkg.com/browse/readable-stream@latest/)\n* `sane` — [on npm](https://www.npmjs.com/package/sane), [on unpkg](https://unpkg.com/browse/sane@latest/)\n* `sse` — [on npm](https://www.npmjs.com/package/sse), [on unpkg](https://unpkg.com/browse/sse@latest/)\n* `steam` — [on npm](https://www.npmjs.com/package/steam), [on unpkg](https://unpkg.com/browse/steam@latest/)\n* `twitter` — [on npm](https://www.npmjs.com/package/twitter), [on unpkg](https://unpkg.com/browse/twitter@latest/)\n* `umzug` — [on npm](https://www.npmjs.com/package/umzug), [on unpkg](https://unpkg.com/browse/umzug@latest/)\n* `xml-flow` — [on npm](https://www.npmjs.com/package/xml-flow), [on unpkg](https://unpkg.com/browse/xml-flow@latest/)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=71060&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2024-11-01T02:26:53Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6SGfcc",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2451175196,
+              "body": "⚠️ There are too many reviewers for this PR change (66). Merging can only be handled by a DT maintainer.\n\n<details>\n<summary>People who would have been pinged</summary>\ntylerlevine dirk KeesCBakker eeemil jphenow psnider LogvinovLeon andersea tbowmo bernardobelchior alexk111 Shaquu Microsoft jkomyno alvis r3nya btoueg smac89 touffy DeividasBakanas eyqs Hannes-Magnusson-CK hoo29 kjin ajafff islishude mwiktorczyk mohsen1 galkin parambirs eps1lon ThomasdenH WilcoBakker wwwy3y3 samuela kuehlein bhongy chyzwar trivikr yoursunny qwelias ExE-Boss peterblazejewicz addaleax victorperin NodeJS LinusU wafuwafu13 mcollina Semigradsky quinnlangille merufm lance mastermatt tjenkinson tpluscode TeamworkGuy2 markdreyer BendingBender yutak23 kant2002 drinchev mlamp trodi emmanuelgautier Warerebel\n</details>\n<!--typescript_bot_pinging-reviewers-too-many-->",
+              "createdAt": "2024-11-01T02:26:55Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6SGiil",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2451187877,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/908c4ea9ebbaebc41218beff29fc8160465a0d42/checks?check_suite_id=30364355560).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-908c4ea-->",
+              "createdAt": "2024-11-01T02:41:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6SGno8",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2451208764,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/e2a4c7ba9a453b89742756efac194b053d422669/checks?check_suite_id=30364892170).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-e2a4c7b-->",
+              "createdAt": "2024-11-01T03:07:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6SOTz_",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2453224703,
+              "body": "Note a separate reported issue, #71059.",
+              "createdAt": "2024-11-02T23:32:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6SPpsZ",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2453576473,
+              "body": "That is not the only root cause, and has nothing to do with the `this` type. This is observable without classes\r\n```ts\r\ntype Foo<T> = {\r\n    callable<K extends T>(str: K): number;\r\n}\r\n\r\ntype Bar<T> = {\r\n    callable<K extends T>(str: K): string;\r\n}\r\n\r\ntype FooBar = Foo<string> | Bar<'abc'>;\r\ndeclare const obj2: FooBar;\r\nobj2.callable('abc'); // TS2349\r\n```\r\n\r\nIt does work with the single definition, but that defeats the purpose of this PR.\r\nThe second overload allows IntelliSense to suggest valid events which is a critical piece of replacing the existing tooling for adding eventmaps. Without this, I expect to see very little adoption of native eventmaps which makes it harder on the compiler for no reason.",
+              "createdAt": "2024-11-03T21:04:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6TNR7c",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2469732060,
+              "body": "Re-ping @psnider, @LogvinovLeon, @andersea, @tbowmo, @bernardobelchior, @alexk111, @Shaquu, @Microsoft, @jkomyno, @alvis, @r3nya, @btoueg, @smac89, @touffy, @DeividasBakanas, @eyqs, @Hannes-Magnusson-CK, @hoo29, @kjin, @ajafff, @islishude, @mwiktorczyk, @mohsen1, @galkin, @parambirs, @eps1lon, @ThomasdenH, @WilcoBakker, @wwwy3y3, @samuela, @kuehlein, @bhongy, @chyzwar, @trivikr, @yoursunny, @qwelias, @ExE-Boss, @peterblazejewicz, @addaleax, @victorperin, @ZYSzys, @NodeJS, @LinusU, @wafuwafu13, @mcollina, @Semigradsky, @quinnlangille, @merufm, @lance, @mastermatt, @tjenkinson, @tpluscode, @TeamworkGuy2, @markdreyer, @BendingBender, @yutak23, @kant2002, @drinchev, @mlamp, @trodi, @emmanuelgautier, @Warerebel:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2024-11-01-->",
+              "createdAt": "2024-11-12T06:49:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6UG4Kt",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2484830893,
+              "body": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @ckohen.\n\n(Ping @tylerlevine, @dirk, @KeesCBakker, @eeemil, @jphenow, @psnider, @LogvinovLeon, @andersea, @tbowmo, @bernardobelchior, @alexk111, @Shaquu, @Microsoft, @jkomyno, @alvis, @r3nya, @btoueg, @smac89, @touffy, @DeividasBakanas, @eyqs, @Hannes-Magnusson-CK, @hoo29, @kjin, @ajafff, @islishude, @mwiktorczyk, @mohsen1, @galkin, @parambirs, @eps1lon, @ThomasdenH, @WilcoBakker, @wwwy3y3, @samuela, @kuehlein, @bhongy, @chyzwar, @trivikr, @yoursunny, @qwelias, @ExE-Boss, @peterblazejewicz, @addaleax, @victorperin, @NodeJS, @LinusU, @wafuwafu13, @mcollina, @Semigradsky, @quinnlangille, @merufm, @lance, @mastermatt, @tjenkinson, @tpluscode, @TeamworkGuy2, @markdreyer, @BendingBender, @yutak23, @kant2002, @drinchev, @mlamp, @trodi, @emmanuelgautier, @Warerebel.)\n<!--typescript_bot_Unreviewed:done-->",
+              "createdAt": "2024-11-19T06:47:52Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6VUsO6",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2505229242,
+              "body": "Given this is back on the table, does the PR contain tests from all of the breaks from last time to make sure that we aren't regressing anything a second time?",
+              "createdAt": "2024-11-28T04:14:10Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6VU-NW",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2505302870,
+              "body": "This PR does not contain the changes that caused the major issues with outdated targets, they will be added in a separate PR so that this cleanup can be done and then #70635 can land. Tbh I don't know how it would even be possible to test for having no es private properties anywhere other than attempting to compile to all possible targets (bigger question about when targets can be dropped from the support list, especially when the target should be strictly defined and matched to the version of node types you used). \n\nThe only thing left is the assignability issue (#71059). I have been thinking about this but have been very busy the last couple of weeks.\r\n\r\nAs outlined above https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71060#issuecomment-2453576473, the current behavior is very counter-intuitive and seems like a bug to me (should be an intersection of the types, but - maybe because type arguments don't play nice apparently - it seems to want the params to be bivariant which makes the intended effect of the simplistic example practically impossible)",
+              "createdAt": "2024-11-28T05:41:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6Vns6x",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2510212785,
+              "body": "> The only thing left is the assignability issue (#71059).\r\n\r\nA bit of digging relates this to microsoft/TypeScript#29011. Essentially, that patch introduced a fallback in `getUnionSignatures()` for resolving a single \"hybrid\" call signature from a union of dissimilar signatures, but it has constraints regarding signatures with type parameters:\r\n\r\n```ts\r\ninterface EventMap {\r\n\tfoo: [bar: string];\r\n}\r\n\r\ntype Listener<Event extends string | symbol> = (...args: Event extends keyof EventMap ? EventMap[Event] : any[]) => void;\r\n\r\ninterface Emitter {\r\n\tmethod1<Event extends string | symbol>(event: Event, listener: Listener<Event>): this;\r\n\r\n\tmethod2<Event extends keyof EventMap>(event: Event, listener: Listener<Event>): this;\r\n\tmethod2<Event extends string | symbol>(event: Event, listener: Listener<Event>): this;\r\n}\r\n\r\n// Declare a union of non-mutually-assignable emitters\r\ndeclare const union: (Emitter & { n: 1 }) | (Emitter & { n: 2 });\r\n\r\nunion.method1('blah', () => {});\r\nunion.method2('blah', () => {}); // error\r\n```\r\n\r\nIn both of these method calls, `findMatchingSignatures()` fails to find any valid signatures. However, in the first instance, `getUnionSignatures()` uses fallback union signature resolution to create a valid merged signature, whereas the second instance isn't eligible for this, as more than one of the union members has more than one signature with type parameters.\r\n\r\nI can't really see a way to get around this. If this paradigm is kept, it will cause errors for calls to affected EventEmitter methods on any unions of emitters, even where event maps aren't used at all. This doesn't appear to be too rare a usage case – it's present in high-exposure libraries like [vite](https://github.com/vitejs/vite/blob/b39e69638b3e2e658ff6712be83b549b28103c3d/packages/vite/src/node/server/index.ts#L240) and [hono](https://github.com/honojs/node-server/blob/590fe6cef8a795ea10c300033387f13ed31e144f/src/types.ts#L42), for example.",
+              "createdAt": "2024-12-01T19:11:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6V1yyx",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2513906865,
+              "body": "It seems this PR is illustrating some of the major shortcomings (and tbh bugs) of typescript. \r\n\r\nYou neglected the assignability issue that applies to instances that have generics set which has nothing to do with what you've mentioned. I have an idea to fix what you've described (remove the generic on the second overload) but it will not fix the assignability issue completely due to the other bug I mentioned. Will update when I know if it works.\r\n\r\nUpdate: removing the generic negates the purpose since it then just allows any params all the time. Did find what I was looking for in `string & {}` though. It allows intellisense to work without needing a second overload (this trick was suggested [here](https://github.com/microsoft/TypeScript/issues/29729) and works great. No side effects were mentioned and I haven't observed any). Pushing this change now to see if there's any issues with it.\r\n\r\n(For the Listener-returning methods I went with the remove overload method since that makes the return types happier and it doesn't affect the passed params)",
+              "createdAt": "2024-12-03T08:55:04Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "Renegade334",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6V2pbh",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2514130657,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/c72d37f574380f4cba3647b0d4239fae7b12bcba/checks?check_suite_id=31594908626).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-c72d37f-->",
+              "createdAt": "2024-12-03T10:20:36Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6V2qay",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2514134706,
+              "body": "And....that broke everything. Every single failed test illustrates exactly why this needed to be done natively instead of the current fragmented ecosystem. I'll revert this tomorrow so that people have a chance to look before it disappears from existence",
+              "createdAt": "2024-12-03T10:22:21Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6YmT4u",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2560179758,
+              "body": "I know this is broken in a known way, just adding tests for the cases that broke last time and going back to something that was a little closer to working everywhere",
+              "createdAt": "2024-12-23T19:10:05Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6YmX9o",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2560196456,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/426b871a562bb04ed9bd5a661cc0c11f12471e85/checks?check_suite_id=32390842666).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-426b871-->",
+              "createdAt": "2024-12-23T19:23:56Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6YngZo",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2560493160,
+              "body": "Alright, this should work. It's probably a much easier diff to read now too :). To summarize, this PR effectively just fixes the over strictness of some parts of the original generic system (overall just aligns everything to runtime much better) and prepares for adding generics to static members by using clearer names etc.. and adding the tests that should pass once that time comes.\r\n\r\nIt also adds tests for all of the bugs that were brought up the first time the static generics were added (that were related to the changes relevant here, obviously not the static generics as that was not a bug but a minimum target mismatch).",
+              "createdAt": "2024-12-24T00:59:55Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6YnhSH",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2560496775,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/8210509f2118ea47d726d18c397a3ab30c5ec143/checks?check_suite_id=32397886079).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-8210509-->",
+              "createdAt": "2024-12-24T01:05:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6aoSUC",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2594252034,
+              "body": "@ckohen I haven't seen any activity on this PR in more than three weeks, and it still has problems that prevent it from being merged. The PR will be closed on Jan 23rd (in a week) if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2024-12-24-->",
+              "createdAt": "2025-01-16T01:05:49Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6bY_qA",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2607020672,
+              "body": "The latest refactor brings to light that the change to the listener type is breaking in some very specific scenarios (only for existing generic consumers). In order to help with this, the internal Listener type has been exported as it provides an easy way to create a function which accepts a listener specific to an event as can be seen in the updated test.",
+              "createdAt": "2025-01-22T11:42:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6bZFaA",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2607044224,
+              "body": "@ckohen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/ec101aefa93261c485e30268ab2dcb2dafa6ee49/checks?check_suite_id=33369897615).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-ec101ae-->",
+              "createdAt": "2025-01-22T11:53:51Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6bZShW",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2607097942,
+              "body": "@Renegade334 Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-0f15e8-83f5b39-->",
+              "createdAt": "2025-01-22T12:17:39Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6cK9V2",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2620118390,
+              "body": "The reason I changed the name is that this no longer has the major point of contention that caused the reversion. I will be putting that in a separate PR, but this is necessary work for that PR to work and generally improves the accuracy of the types",
+              "createdAt": "2025-01-28T21:44:22Z",
+              "reactions": {
+                "nodes": [
+                  {
+                    "user": {
+                      "login": "yoursunny",
+                      "__typename": "User"
+                    },
+                    "__typename": "Reaction"
+                  }
+                ],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6gXvUz",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2690577715,
+              "body": "@ckohen Unfortunately, this pull request currently has a merge conflict 😥. Please update your PR branch to be up-to-date with respect to master. Have a nice day!\n<!--typescript_bot_merge-complaint-c02af4b-->",
+              "createdAt": "2025-02-28T12:53:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6iji7M",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2727227084,
+              "body": "@ckohen I haven't seen any activity on this PR in more than three weeks, and it still has problems that prevent it from being merged. The PR will be closed on Mar 23rd (in a week) if the issues aren't addressed.\n<!--typescript_bot_Abandoned:nearly:2025-02-21-->",
+              "createdAt": "2025-03-16T06:46:32Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6i0c4M",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2731658764,
+              "body": "@Renegade334, @jakebailey Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-ea4887-c02af4b-->",
+              "createdAt": "2025-03-18T05:08:03Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6liOXN",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2777212365,
+              "body": "@Renegade334 are you satisfied with the changes so far?",
+              "createdAt": "2025-04-03T23:34:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6llp0j",
+              "author": {
+                "login": "Renegade334",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2778111267,
+              "body": "Pretty good, I think. Just a couple of thoughts:\n\n- My own $0.02 is still in favour of removing event map awareness from the `[Symbol.for('nodejs.rejection')]` method – this is designed to be overridden by users, not called, and this only adds potential for the compiler to complain about a signature mismatch where the override is defined. (I appreciate that this was carried-over behaviour from before, but the conversion to multiple generic overload signatures would I suspect cause more trouble.)\n- Should `DefaultEventMap` be kept (as an alias to `{}`), and exported as a utility type?\n  - I'm thinking of cases where libraries may wish to implement emitters that are intended to be user-extended (eg. `abstract class AbstractEmitter<T extends ... = ???> extends EventEmitter<T> { ... }`), where the intermediate emitter class will need to define a type parameter default. Using a named type rather than `{}` would be more descriptive, and would also future-proof those definitions against any change to the default EventEmitter parameter.\n  - This would also (I believe?) change the displayed type of a non-event-mapped emitter from `EventEmitter<{}>` back to `EventEmitter<DefaultEventMap>`, which probably makes more sense to the casual consumer.",
+              "createdAt": "2025-04-04T09:45:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6my3Eg",
+              "author": {
+                "login": "ckohen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 2798350624,
+              "body": "I do think a type alias for the \"default\" map would make sense, though I'd venture to suggest it makes more logical sense to call it something akin to `AnyEventMap`. There's a case to be made for default meaning nodes default which *is* any, but it could be confusing downstream. I'd love to hear further thoughts on this.",
+              "createdAt": "2025-04-12T01:05:20Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6oVpVz",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2824246643,
+              "body": "@ckohen One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-b56a3af-->",
+              "createdAt": "2025-04-23T13:08:53Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM6oWhcv",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 2824476463,
+              "body": "@Bashamega Huh? I don't think that's possible.",
+              "createdAt": "2025-04-23T14:18:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 24,
+          "nodes": [
+            {
+              "path": "types/airbnb__node-memwatch/airbnb__node-memwatch-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/hubot/hubot-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/imap/index.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/jake/index.d.ts",
+              "additions": 0,
+              "deletions": 10,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/newman/newman-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node-red/node-red-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/events.d.ts",
+              "additions": 109,
+              "deletions": 36,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events.ts",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/test/events_generic.ts",
+              "additions": 123,
+              "deletions": 17,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/events.d.ts",
+              "additions": 237,
+              "deletions": 80,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events.ts",
+              "additions": 5,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v18/test/events_generic.ts",
+              "additions": 123,
+              "deletions": 17,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/events.d.ts",
+              "additions": 109,
+              "deletions": 36,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/test/events.ts",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/node/v20/test/events_generic.ts",
+              "additions": 123,
+              "deletions": 17,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/opossum/opossum-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/rdf-store-fs/rdf-store-fs-tests.ts",
+              "additions": 4,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/readable-stream/index.d.ts",
+              "additions": 2,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sane/index.d.ts",
+              "additions": 1,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sse/sse-tests.ts",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/steam/index.d.ts",
+              "additions": 0,
+              "deletions": 12,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/twitter/twitter-tests.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/umzug/index.d.ts",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/xml-flow/xml-flow-tests.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MjQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgUaNuc",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Author Action",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2025-04-23T14:18:42Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}
