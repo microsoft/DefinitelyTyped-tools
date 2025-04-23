@@ -21,6 +21,17 @@
     }
   },
   {
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWw1ODYxNzcwNjM="
+        ],
+        "labelableId": "MDExOlB1bGxSZXF1ZXN0NDExODkwMDY5"
+      }
+    }
+  },
+  {
     "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}\n",
     "variables": {
       "input": {

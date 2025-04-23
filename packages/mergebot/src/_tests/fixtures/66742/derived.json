@@ -39,6 +39,7 @@
     {
       "type": "changereq",
       "reviewer": "tmedwards",
+      "isMaintainer": false,
       "date": "2023-10-18T01:34:56.000Z"
     },
     {

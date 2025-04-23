@@ -36,6 +36,7 @@
     {
       "type": "changereq",
       "reviewer": "sheetalkamat",
+      "isMaintainer": true,
       "date": "2023-09-20T17:24:47.000Z"
     }
   ],

@@ -39,6 +39,7 @@
     {
       "type": "changereq",
       "reviewer": "andrewbranch",
+      "isMaintainer": true,
       "date": "2020-04-27T18:56:06.000Z"
     }
   ],

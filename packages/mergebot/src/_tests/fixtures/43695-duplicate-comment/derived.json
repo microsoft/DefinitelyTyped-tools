@@ -48,12 +48,14 @@
       "type": "stale",
       "reviewer": "andrewbranch",
       "date": "2020-04-30T23:59:41.000Z",
+      "isMaintainer": true,
       "abbrOid": "68463fd"
     },
     {
       "type": "stale",
       "reviewer": "RyanCavanaugh",
       "date": "2020-04-08T16:23:52.000Z",
+      "isMaintainer": true,
       "abbrOid": "a5285cd"
     }
   ],

@@ -326,12 +326,14 @@
       "type": "stale",
       "reviewer": "sandersn",
       "date": "2019-10-22T22:56:09.000Z",
+      "isMaintainer": true,
       "abbrOid": "3aba5ac"
     },
     {
       "type": "stale",
       "reviewer": "weswigham",
       "date": "2019-10-22T22:20:55.000Z",
+      "isMaintainer": true,
       "abbrOid": "0e6e7f4"
     }
   ],

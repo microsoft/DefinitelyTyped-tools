@@ -1,7 +1,6 @@
 {
   "projectColumn": "Needs Maintainer Action",
   "labels": [
-    "Other Approved",
     "New Definition",
     "Check Config"
   ],

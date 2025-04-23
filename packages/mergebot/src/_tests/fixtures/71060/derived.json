@@ -357,18 +357,21 @@
     {
       "type": "changereq",
       "reviewer": "Bashamega",
+      "isMaintainer": false,
       "date": "2025-04-23T13:08:01.000Z"
     },
     {
       "type": "stale",
       "reviewer": "Renegade334",
       "date": "2025-03-17T07:31:34.000Z",
+      "isMaintainer": false,
       "abbrOid": "c02af4b"
     },
     {
       "type": "stale",
       "reviewer": "jakebailey",
       "date": "2025-01-30T20:06:15.000Z",
+      "isMaintainer": true,
       "abbrOid": "c02af4b"
     }
   ],

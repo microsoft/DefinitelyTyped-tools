@@ -64,12 +64,14 @@
       "type": "stale",
       "reviewer": "elibarzilay",
       "date": "2020-12-03T12:09:12.000Z",
+      "isMaintainer": false,
       "abbrOid": "90ff51a"
     },
     {
       "type": "stale",
       "reviewer": "sandersn",
       "date": "2020-11-16T16:27:02.000Z",
+      "isMaintainer": false,
       "abbrOid": "6400f4c"
     }
   ],

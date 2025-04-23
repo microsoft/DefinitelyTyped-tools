@@ -47,12 +47,14 @@
     {
       "type": "changereq",
       "reviewer": "andrewbranch",
+      "isMaintainer": true,
       "date": "2020-04-30T23:07:49.000Z"
     },
     {
       "type": "stale",
       "reviewer": "RyanCavanaugh",
       "date": "2020-04-08T16:23:52.000Z",
+      "isMaintainer": true,
       "abbrOid": "a5285cd"
     }
   ],

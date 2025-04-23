@@ -2,7 +2,6 @@
   "projectColumn": "Needs Maintainer Action",
   "labels": [
     "Critical package",
-    "Other Approved",
     "Check Config",
     "Unreviewed"
   ],

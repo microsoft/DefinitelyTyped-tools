@@ -3,7 +3,6 @@
   "labels": [
     "The CI failed",
     "Popular package",
-    "Owner Approved",
     "Edits Owners",
     "Author is Owner",
     "Untested Change"
@@ -15,7 +14,11 @@
     },
     {
       "tag": "welcome",
-      "status": "@lirbank Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `mongodb` — [on npm](https://www.npmjs.com/package/mongodb), [on unpkg](https://unpkg.com/browse/mongodb@latest/) (author is owner)\n  - owner-approval: @LinusU\n  - 1 removed owner: ✎@lirbank\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45137&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+      "status": "@lirbank Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `mongodb` — [on npm](https://www.npmjs.com/package/mongodb), [on unpkg](https://unpkg.com/browse/mongodb@latest/) (author is owner)\n  - 1 removed owner: ✎@lirbank\n\n## Code Reviews\n\nThis PR can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=45137&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❌ Continuous integration tests have failed\n * 🕐 Only a DT maintainer can approve changes [without tests](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-test-editing-an-existing-package)\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @CaselIT @alanmarcell @dante-101 @mcortesi @EnricoPicci @AJCStriker @julien-c @daprahamian @denys-bushulyak @BastienAr @sindbach @geraldinelemeur @various89 @angela-1 @hector7 @floric @erikc5000 @Manc @jloveridge @ranguna @HosseinAgha @albertossilva @peterblazejewicz @LinusU @taxilian @xamgore @avaly @HitkoDev @jtassin — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45137/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
     },
     {
       "tag": "gh-actions-complaint-22c73c8",

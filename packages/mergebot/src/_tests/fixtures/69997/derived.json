@@ -332,36 +332,42 @@
       "type": "stale",
       "reviewer": "Harry5012",
       "date": "2024-08-28T05:55:24.000Z",
+      "isMaintainer": false,
       "abbrOid": "ce5426d"
     },
     {
       "type": "stale",
       "reviewer": "sheetalkamat",
       "date": "2024-08-06T22:14:48.000Z",
+      "isMaintainer": true,
       "abbrOid": "ae1dd74"
     },
     {
       "type": "stale",
       "reviewer": "Renegade334",
       "date": "2024-08-04T22:32:38.000Z",
+      "isMaintainer": false,
       "abbrOid": "ae1dd74"
     },
     {
       "type": "stale",
       "reviewer": "Semigradsky",
       "date": "2024-07-30T19:58:25.000Z",
+      "isMaintainer": false,
       "abbrOid": "dce179a"
     },
     {
       "type": "stale",
       "reviewer": "quinnlangille",
       "date": "2024-07-23T15:27:38.000Z",
+      "isMaintainer": false,
       "abbrOid": "28aa21c"
     },
     {
       "type": "stale",
       "reviewer": "Anonymous4078",
       "date": "2024-07-17T03:08:35.000Z",
+      "isMaintainer": false,
       "abbrOid": "c05cc61"
     }
   ],

@@ -153,6 +153,7 @@
       "type": "stale",
       "reviewer": "SimonSchick",
       "date": "2020-05-19T23:20:53.000Z",
+      "isMaintainer": false,
       "abbrOid": "b0cfd18"
     }
   ],

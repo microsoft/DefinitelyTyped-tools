@@ -64,6 +64,7 @@
     {
       "type": "changereq",
       "reviewer": "leonard-thieu",
+      "isMaintainer": true,
       "date": "2020-10-12T13:09:45.000Z"
     }
   ],

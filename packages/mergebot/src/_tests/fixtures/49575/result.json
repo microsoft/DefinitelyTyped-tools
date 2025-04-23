@@ -1,7 +1,6 @@
 {
   "projectColumn": "Needs Maintainer Action",
   "labels": [
-    "Other Approved",
     "Edits Infrastructure"
   ],
   "responseComments": [
@@ -12,10 +11,6 @@
     {
       "tag": "pinging-reviewers-others",
       "status": "🔔 @jablko — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/49575/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)"
-    },
-    {
-      "tag": "stale-ping-d2e897-6400f4c",
-      "status": "@elibarzilay, @sandersn Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
     }
   ],
   "shouldClose": false,

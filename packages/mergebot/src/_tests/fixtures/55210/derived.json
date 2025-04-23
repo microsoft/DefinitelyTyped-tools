@@ -75,12 +75,14 @@
       "type": "stale",
       "reviewer": "peterblazejewicz",
       "date": "2021-08-24T22:02:43.000Z",
+      "isMaintainer": true,
       "abbrOid": "23d91a5"
     },
     {
       "type": "stale",
       "reviewer": "RaschidJFR",
       "date": "2021-08-24T21:36:25.000Z",
+      "isMaintainer": false,
       "abbrOid": "23d91a5"
     }
   ],

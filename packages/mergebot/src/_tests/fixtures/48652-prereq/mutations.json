@@ -4,7 +4,7 @@
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDcwNjI2OTA0NA==",
-        "body": "@mgol Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 2 packages in this PR\n\n* `angular-sanitize` — [on npm](https://www.npmjs.com/package/angular-sanitize), [on unpkg](https://unpkg.com/browse/angular-sanitize@latest/)\n* `angular` — [on npm](https://www.npmjs.com/package/angular), [on unpkg](https://unpkg.com/browse/angular@latest/)\n  - owner-approval: @peterblazejewicz\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=48652&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes that affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+        "body": "@mgol Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 2 packages in this PR\n\n* `angular-sanitize` — [on npm](https://www.npmjs.com/package/angular-sanitize), [on unpkg](https://unpkg.com/browse/angular-sanitize@latest/)\n* `angular` — [on npm](https://www.npmjs.com/package/angular), [on unpkg](https://unpkg.com/browse/angular@latest/)\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=48652&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ A DT maintainer needs to approve changes that affect more than one package\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
       }
     }
   },
@@ -13,6 +13,7 @@
     "variables": {
       "input": {
         "labelIds": [
+          "MDU6TGFiZWw5MDUzMzQwOTU=",
           "MDU6TGFiZWw2ODQzMjE1NzY="
         ],
         "labelableId": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0"
@@ -55,7 +56,7 @@
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0",
-        "body": "@RyanCavanaugh, @thorn0, @falsyvalues Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-024242-753cdb3-->"
+        "body": "@RyanCavanaugh Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-fbf110-fa21531-->"
       }
     }
   },

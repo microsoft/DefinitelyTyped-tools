@@ -63,6 +63,7 @@
     {
       "type": "changereq",
       "reviewer": "andrewbranch",
+      "isMaintainer": true,
       "date": "2020-11-04T00:31:53.000Z"
     },
     {
@@ -75,18 +76,21 @@
       "type": "stale",
       "reviewer": "RyanCavanaugh",
       "date": "2020-10-29T23:54:49.000Z",
+      "isMaintainer": true,
       "abbrOid": "fa21531"
     },
     {
       "type": "stale",
       "reviewer": "thorn0",
       "date": "2020-10-13T08:31:51.000Z",
+      "isMaintainer": false,
       "abbrOid": "fa21531"
     },
     {
       "type": "stale",
       "reviewer": "falsyvalues",
       "date": "2020-10-12T07:07:50.000Z",
+      "isMaintainer": false,
       "abbrOid": "753cdb3"
     }
   ],
