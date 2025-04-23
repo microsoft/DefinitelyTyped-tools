@@ -110,11 +110,12 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     possiblyEditsInfra || checkConfig || hasMultiplePackages || isUntested || hasNewPackages || tooManyOwners;
   const blessable = !(hasNewPackages || possiblyEditsInfra || noOtherOwners);
   const blessed = blessable && isBlessed();
-  const approvedReviews = info.reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];
-  const changereqReviews = info.reviews.filter((r) => r.type === "changereq") as ExtendedPrInfo["changereqReviews"];
-  const staleReviews = info.reviews.filter((r) => r.type === "stale") as ExtendedPrInfo["staleReviews"];
+  const requiredApproverKind = getMaxApproverKind(...info.pkgInfo.map(getApproverKind));
+  const reviews = filterReviews(info.reviews, requiredApproverKind);
+  const approvedReviews = reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];
+  const changereqReviews = reviews.filter((r) => r.type === "changereq") as ExtendedPrInfo["changereqReviews"];
+  const staleReviews = reviews.filter((r) => r.type === "stale") as ExtendedPrInfo["staleReviews"];
   const hasChangereqs = changereqReviews.length > 0;
-  const maxApproverKind = getMaxApproverKind(...info.pkgInfo.map(getApproverKind));
   const approved = getApproved();
   const failedCI = info.ciResult === "fail";
   const blockedCI = info.ciResult === "action_required";
@@ -145,7 +146,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     hasValidMergeRequest,
     pendingCriticalPackages: getPendingCriticalPackages(),
     approved,
-    approverKind: maxApproverKind,
+    approverKind: requiredApproverKind,
     requireMaintainer,
     blessable,
     blessed,
@@ -231,6 +232,19 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     return who === "maintainer" && blessed ? "owner" : who === "owner" && noOtherOwners ? "maintainer" : who;
   }
 
+  function filterReviews(reviews: readonly ReviewInfo[], requiredApproverKind: ApproverKind) {
+    // Filter out drive-by reviews from non-owners/maintainers.
+    if (requiredApproverKind === "other") {
+      return reviews;
+    }
+
+    return reviews.filter((r) => {
+      if (r.isMaintainer) return true;
+      const approverKind = allOwners.some((o) => sameUser(o, r.reviewer)) ? "owner" : "other";
+      return getMaxApproverKind(approverKind, requiredApproverKind) === approverKind;
+    });
+  }
+
   function getApproved() {
     if (hasChangereqs) return false;
     if (approvedReviews.some((r) => r.isMaintainer)) return true; // maintainer approval => no need for anything else
@@ -252,7 +266,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     // E.g. let people review, but fall back to the DT maintainers based on the access rights above
     return blessed
       ? "Waiting for Code Reviews (Blessed)"
-      : maxApproverKind !== "maintainer"
+      : requiredApproverKind !== "maintainer"
         ? "Waiting for Code Reviews"
         : blessable
           ? "Needs Maintainer Review"

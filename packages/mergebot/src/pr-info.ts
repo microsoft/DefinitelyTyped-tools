@@ -66,7 +66,8 @@ export type ReviewInfo = {
   type: string;
   reviewer: string;
   date: Date;
-} & ({ type: "approved"; isMaintainer: boolean } | { type: "changereq" } | { type: "stale"; abbrOid: string });
+  isMaintainer: boolean;
+} & ({ type: "approved" } | { type: "changereq" } | { type: "stale"; abbrOid: string });
 
 export type CIResult = "unknown" | "pass" | "fail" | "missing" | "action_required";
 
@@ -600,17 +601,18 @@ function getReviews(prInfo: PR_repository_pullRequest) {
     if (reviewer === prInfo.author!.login) continue;
     // Only look at the most recent review per person (ignoring pending/commented)
     if (reviews.some((r) => sameUser(r.reviewer, reviewer))) continue;
+    const isMaintainer = isMaintainerComment(r);
     // collect reviews by type
     if (r.commit.oid !== headCommitOid) {
-      reviews.push({ type: "stale", reviewer, date, abbrOid: abbrOid(r.commit.oid) });
+      reviews.push({ type: "stale", reviewer, date, isMaintainer, abbrOid: abbrOid(r.commit.oid) });
       continue;
     }
     if (r.state === "CHANGES_REQUESTED") {
-      reviews.push({ type: "changereq", reviewer, date });
+      reviews.push({ type: "changereq", reviewer, isMaintainer,date });
       continue;
     }
     if (r.state !== "APPROVED") continue;
-    reviews.push({ type: "approved", reviewer, date, isMaintainer: isMaintainerComment(r) });
+    reviews.push({ type: "approved", reviewer, date, isMaintainer });
   }
   return reviews;
 }
@@ -620,7 +622,7 @@ function isMaintainerComment(
 ) {
   return (
     (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") &&
-    !sameUser("typescript-bot", comment.author?.login || "-")
+    authorNotBot(comment)
   );
 }
 
