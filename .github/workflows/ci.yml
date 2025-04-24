@@ -89,3 +89,21 @@ jobs:
       run: pnpm install
     - name: format
       run: pnpm format:check
+
+
+  required:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - build_and_test
+      - check-parse-results
+      - extension
+      - changesets
+      - format
+
+    steps:
+      - name: Check required jobs
+        env:
+          NEEDS: ${{ toJson(needs) }}
+        run: |
+          ! echo $NEEDS | jq -e 'to_entries[] | { job: .key, result: .value.result } | select((.result == "success" or .result == "skipped") | not)'
