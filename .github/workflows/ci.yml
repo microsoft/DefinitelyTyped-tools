@@ -55,6 +55,7 @@ jobs:
     - name: knip
       run: pnpm knip
   check-parse-results:
+    if: ${{ github.event_name != 'merge_group' }}
     needs: build_and_test
     uses: ./.github/workflows/check-parse-results.yml
   changesets:
