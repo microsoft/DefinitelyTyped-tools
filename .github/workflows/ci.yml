@@ -105,7 +105,6 @@ jobs:
     needs:
       - build_and_test
       - check-parse-results
-      - extension
       - changesets
       - format
 
