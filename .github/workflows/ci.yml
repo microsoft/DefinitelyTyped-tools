@@ -1,8 +1,16 @@
+name: CI
+
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-    - main
-      
+      - main
+  merge_group:
+    branches:
+      - main
+
 env:
   CI: true
   PNPM_CACHE_FOLDER: .pnpm-store
@@ -47,6 +55,7 @@ jobs:
     - name: knip
       run: pnpm knip
   check-parse-results:
+    if: ${{ github.event_name != 'merge_group' }}
     needs: build_and_test
     uses: ./.github/workflows/check-parse-results.yml
   changesets:
@@ -89,3 +98,20 @@ jobs:
       run: pnpm install
     - name: format
       run: pnpm format:check
+
+
+  required:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - build_and_test
+      - check-parse-results
+      - changesets
+      - format
+
+    steps:
+      - name: Check required jobs
+        env:
+          NEEDS: ${{ toJson(needs) }}
+        run: |
+          ! echo $NEEDS | jq -e 'to_entries[] | { job: .key, result: .value.result } | select((.result == "success" or .result == "skipped") | not)'
