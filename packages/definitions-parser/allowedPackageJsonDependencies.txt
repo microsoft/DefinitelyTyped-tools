@@ -773,6 +773,7 @@ phenomenon
 pino
 pino-http
 pino-pretty
+pixi.js
 pkcs11js
 plugin-error
 polished
