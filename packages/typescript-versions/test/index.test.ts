@@ -18,19 +18,19 @@ describe("all", () => {
 
 describe("isSupported", () => {
   it("works", () => {
-    expect(TypeScriptVersion.isSupported("5.6")).toBeTruthy();
+    expect(TypeScriptVersion.isSupported("5.8")).toBeTruthy();
   });
-  it("supports 5.1", () => {
-    expect(TypeScriptVersion.isSupported("5.1")).toBeTruthy();
+  it("supports 5.2", () => {
+    expect(TypeScriptVersion.isSupported("5.2")).toBeTruthy();
   });
-  it("does not support 4.0", () => {
-    expect(!TypeScriptVersion.isSupported("4.0")).toBeTruthy();
+  it("does not support 5.0", () => {
+    expect(!TypeScriptVersion.isSupported("5.0")).toBeTruthy();
   });
 });
 
 describe("isTypeScriptVersion", () => {
   it("accepts in-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("5.1")).toBeTruthy();
+    expect(TypeScriptVersion.isTypeScriptVersion("5.2")).toBeTruthy();
   });
   it("rejects out-of-range", () => {
     expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
@@ -42,17 +42,16 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("5.2")).toEqual(["5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9"]);
+    expect(TypeScriptVersion.range("5.3")).toEqual(["5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9"]);
   });
-  it("includes 5.1 onwards", () => {
-    expect(TypeScriptVersion.range("5.1")).toEqual(TypeScriptVersion.supported);
+  it("includes 5.2 onwards", () => {
+    expect(TypeScriptVersion.range("5.2")).toEqual(TypeScriptVersion.supported);
   });
 });
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.2")).toEqual([
-      "ts5.2",
+    expect(TypeScriptVersion.tagsToUpdate("5.3")).toEqual([
       "ts5.3",
       "ts5.4",
       "ts5.5",
@@ -64,7 +63,7 @@ describe("tagsToUpdate", () => {
     ]);
   });
   it("allows 5.1 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.1")).toEqual(
+    expect(TypeScriptVersion.tagsToUpdate("5.2")).toEqual(
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest"),
     );
   });
