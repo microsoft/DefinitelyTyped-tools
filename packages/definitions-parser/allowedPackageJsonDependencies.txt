@@ -650,6 +650,7 @@ ember-source
 eris
 es-to-primitive
 esbuild
+eslint
 eslint-visitor-keys
 ethers
 eventemitter2
