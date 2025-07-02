@@ -855,6 +855,7 @@ ssim.js
 styled-components
 stylelint
 svelte
+svgo
 sw-toolbox
 swagger-parser
 tailwindcss
