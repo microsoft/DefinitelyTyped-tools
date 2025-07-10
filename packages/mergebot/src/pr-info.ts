@@ -463,9 +463,14 @@ configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
   parse: (text) => {
     const data = JSON.parse(text);
     if (!data || typeof data !== "object" || Array.isArray(data)) return data;
-    // Only look at peer dependencies, with the goal of making them empty.
-    if (data.peerDependencies) {
-      return { peerDependencies: data.peerDependencies };
+    for (const key of Object.keys(data)) {
+      switch (key) {
+        case "peerDependencies":
+        case "nonNpm":
+          continue;
+        default:
+          delete data[key];
+      }
     }
     return {};
   },
