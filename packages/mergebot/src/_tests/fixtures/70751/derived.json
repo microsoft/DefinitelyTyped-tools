@@ -19,11 +19,13 @@
       "files": [
         {
           "path": "types/express/package.json",
-          "kind": "package-meta-ok"
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)"
         },
         {
           "path": "types/express/v4/package.json",
-          "kind": "package-meta-ok"
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) and not moving towards it (check: `peerDependencies`)"
         }
       ],
       "owners": [

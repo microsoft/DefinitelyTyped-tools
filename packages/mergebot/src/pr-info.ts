@@ -461,8 +461,9 @@ const configSuspicious = <ConfigSuspicious>(async (path, newContents, oldContent
 });
 configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
   parse: (text) => {
-    const data = JSON.parse(text);
+    let data = JSON.parse(text);
     if (!data || typeof data !== "object" || Array.isArray(data)) return data;
+    data = { ...data };
     for (const key of Object.keys(data)) {
       switch (key) {
         case "peerDependencies":
@@ -472,7 +473,7 @@ configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
           delete data[key];
       }
     }
-    return {};
+    return data;
   },
 });
 configSuspicious[".npmignore"] = () => undefined;
