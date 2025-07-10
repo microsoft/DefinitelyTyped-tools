@@ -461,9 +461,8 @@ const configSuspicious = <ConfigSuspicious>(async (path, newContents, oldContent
 });
 configSuspicious["package.json"] = makeChecker({}, urls.packageJson, {
   parse: (text) => {
-    let data = JSON.parse(text);
+    const data = JSON.parse(text);
     if (!data || typeof data !== "object" || Array.isArray(data)) return data;
-    data = { ...data };
     for (const key of Object.keys(data)) {
       switch (key) {
         case "peerDependencies":
