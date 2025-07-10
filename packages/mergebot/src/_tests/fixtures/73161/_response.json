@@ -1,0 +1,772 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM6c10ni",
+        "title": "Add types for frappe framework",
+        "createdAt": "2025-07-01T08:02:07Z",
+        "author": {
+          "login": "bawahakim",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Revision needed",
+              "__typename": "Label"
+            },
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 73161,
+        "state": "OPEN",
+        "headRefOid": "66a9b7b55c316ed93c73a7bee520382cd1f86426",
+        "changedFiles": 30,
+        "additions": 2431,
+        "deletions": 0,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "b4f494758f080747c7a39b1c561a17173f7af9d6",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "0deb353856a1e439359f9b27126bd957b0a34fab",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "38d666b861647d9ca009ab1d8684e7d2766efd24",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b4f494758f080747c7a39b1c561a17173f7af9d6",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "20624a1afbb9afc11d531d1db1e4bd3149a3c96b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "38d666b861647d9ca009ab1d8684e7d2766efd24",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "3bb466219f787bcff512a6fdf9fd40dd077f6dd6",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "20624a1afbb9afc11d531d1db1e4bd3149a3c96b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "0075b093f1f549d845037f1ab1024e0d47ec9157",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "3bb466219f787bcff512a6fdf9fd40dd077f6dd6",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "354c808453518e28cc440934a0ca3886f3e17853",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "0075b093f1f549d845037f1ab1024e0d47ec9157",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "262d7778d855bf392b82900d7d3b844e709c24c9",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "354c808453518e28cc440934a0ca3886f3e17853",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "595fb76ceaaa4cfb1dbf3fd4e322a48bfc1a0f67",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "262d7778d855bf392b82900d7d3b844e709c24c9",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "adfa98d8296df9bed60c99929e64ab10b0b586a0",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "595fb76ceaaa4cfb1dbf3fd4e322a48bfc1a0f67",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "3377784141b606529a1f694f621bc17c53d60b74",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "adfa98d8296df9bed60c99929e64ab10b0b586a0",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "b3a682b749e81049a21b9cada7441717247d69dc",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "3377784141b606529a1f694f621bc17c53d60b74",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "585e4c05d31778cca8516ee7548df3b72564ec88",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b3a682b749e81049a21b9cada7441717247d69dc",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "dbb5b57a37a0f6d4b9e5d081f8ad4aa078a2250d",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "585e4c05d31778cca8516ee7548df3b72564ec88",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "49cfee8e8f22c9e81312f5ee9afa2786474717ac",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "dbb5b57a37a0f6d4b9e5d081f8ad4aa078a2250d",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "05771f1b98e744cc53870084fad4edc6ab115dbc",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "49cfee8e8f22c9e81312f5ee9afa2786474717ac",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "1872bc9590d085b251dd625eb14f532bbc7ce4cc",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "05771f1b98e744cc53870084fad4edc6ab115dbc",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "b76d951d815528646ee9a1b2096d6437edfd5569",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "1872bc9590d085b251dd625eb14f532bbc7ce4cc",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "2e32ba1632bae59973fd1b47abd9c43162fa8598",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b76d951d815528646ee9a1b2096d6437edfd5569",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "833d134661c8c1c929b130aedecb29930f912e00",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "2e32ba1632bae59973fd1b47abd9c43162fa8598",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "66a9b7b55c316ed93c73a7bee520382cd1f86426",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "833d134661c8c1c929b130aedecb29930f912e00",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "gabritto",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "66a9b7b55c316ed93c73a7bee520382cd1f86426",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "gabritto",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2025-07-09T23:02:29Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2025-07-09T23:02:36Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73161#pullrequestreview-3003347311",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 20,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 41117847045,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/66a9b7b55c316ed93c73a7bee520382cd1f86426/checks?check_suite_id=41117847045",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/66a9b7b55c316ed93c73a7bee520382cd1f86426/checks?check_suite_id=41117847045",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2025-07-03T09:15:26Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/lint-md.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    },
+                    {
+                      "databaseId": 41117847049,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/66a9b7b55c316ed93c73a7bee520382cd1f86426/checks?check_suite_id=41117847049",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/66a9b7b55c316ed93c73a7bee520382cd1f86426/checks?check_suite_id=41117847049",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2025-07-03T09:15:26Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2025-07-03T05:55:01Z",
+                "committedDate": "2025-07-03T05:55:01Z",
+                "pushedDate": null,
+                "oid": "66a9b7b55c316ed93c73a7bee520382cd1f86426",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM60JtN2",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3022443382,
+              "body": "@bawahakim Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `frappe` (*new!*) — [on npm](https://www.npmjs.com/package/frappe), [on unpkg](https://unpkg.com/browse/frappe@latest/)\n  - 1 added owner: ✎@bawahakim\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=73161&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2025-07-01T08:02:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM60JtPo",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3022443496,
+              "body": "🔔 @bawahakim — you're the only owner, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73161/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2025-07-01T08:02:48Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM60JwxN",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3022457933,
+              "body": "@bawahakim The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/354c808453518e28cc440934a0ca3886f3e17853/checks?check_suite_id=40979154306).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-354c808-->",
+              "createdAt": "2025-07-01T08:05:35Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM62Dgei",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3054372770,
+              "body": "@bawahakim One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-66a9b7b-->",
+              "createdAt": "2025-07-09T23:03:16Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 30,
+          "nodes": [
+            {
+              "path": "types/frappe/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/README.md",
+              "additions": 111,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/index.d.ts",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/package.json",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/common-utilities-tests.ts",
+              "additions": 37,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/control-tests.ts",
+              "additions": 34,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/db-tests.ts",
+              "additions": 105,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/dialog-tests.ts",
+              "additions": 117,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/filters-tests.ts",
+              "additions": 43,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/form-handler-tests.ts",
+              "additions": 233,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/frappe-form-tests.ts",
+              "additions": 141,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/locals-tests.ts",
+              "additions": 29,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tests/requests-tests.ts",
+              "additions": 91,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/tsconfig.json",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/common/filters.d.ts",
+              "additions": 52,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/common/frappe-df-base.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/common/frappe-field-type.d.ts",
+              "additions": 32,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/common/response.d.ts",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/cypress/cypress.d.ts",
+              "additions": 243,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/db/db.d.ts",
+              "additions": 104,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/globals/locals.d.ts",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/model/doctype.d.ts",
+              "additions": 31,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/requests/requests.d.ts",
+              "additions": 89,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/ui/dialog/dialog.d.ts",
+              "additions": 75,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/ui/form/form-handler.d.ts",
+              "additions": 295,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/ui/form/frappe-form.d.ts",
+              "additions": 269,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/ui/form/make-control.d.ts",
+              "additions": 25,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/ui/grid/grid.d.ts",
+              "additions": 95,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/types/utilities/common-utilities.d.ts",
+              "additions": 49,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/frappe/utils/type-fest.d.ts",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MzA",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgcHNeE",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Author Action",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2025-07-09T23:03:17Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}
