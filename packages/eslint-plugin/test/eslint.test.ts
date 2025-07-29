@@ -6,7 +6,7 @@ import { toMatchFile } from "jest-file-snapshot";
 import * as plugin from "../src/index";
 import fs from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
-import { stripVTControlCharacters} from "util";
+import { stripVTControlCharacters } from "util";
 
 expect.extend({ toMatchFile });
 const snapshotDir = path.join(__dirname, "__file_snapshots__");
