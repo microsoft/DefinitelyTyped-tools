@@ -1,12 +1,12 @@
 import { ESLint, Linter } from "eslint";
 import path from "path";
-import stripAnsi from "strip-ansi";
 import { globSync } from "glob";
 import { fixtureRoot } from "./util";
 import { toMatchFile } from "jest-file-snapshot";
 import * as plugin from "../src/index";
 import fs from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
+import { stripVTControlCharacters } from "util";
 
 expect.extend({ toMatchFile });
 const snapshotDir = path.join(__dirname, "__file_snapshots__");
@@ -40,7 +40,7 @@ for (const fixture of allFixtures) {
       }
       const formatter = await eslint.loadFormatter("stylish");
       const formatted = await formatter.format(results);
-      const resultText = stripAnsi(formatted).trim() || "No errors";
+      const resultText = stripVTControlCharacters(formatted).trim() || "No errors";
       expect(resultText).not.toContain("Parsing error");
       const newOutput = formatResultsWithInlineErrors(results);
       expect(normalizeSnapshot(resultText + "\n\n" + newOutput)).toMatchFile(getLintSnapshotPath(fixture));
