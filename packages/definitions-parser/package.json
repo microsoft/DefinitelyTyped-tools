@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "typescript": "*"
