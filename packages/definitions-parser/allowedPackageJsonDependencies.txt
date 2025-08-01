@@ -653,6 +653,7 @@ eris
 es-to-primitive
 esbuild
 eslint
+eslint-plugin-playwright
 eslint-visitor-keys
 ethers
 eventemitter2
