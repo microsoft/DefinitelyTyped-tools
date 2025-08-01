@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.5
+
+### Patch Changes
+
+- e495a93: Mark 5.9 as shipped, 6.0 as supported, 5.1 as unsupported
+
 ## 0.10.4
 
 ### Patch Changes

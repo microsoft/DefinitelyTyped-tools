@@ -1,5 +1,12 @@
 # @definitelytyped/dts-critic
 
+## 0.1.21
+
+### Patch Changes
+
+- e495a93: Mark 5.9 as shipped, 6.0 as supported, 5.1 as unsupported
+  - @definitelytyped/header-parser@0.2.20
+
 ## 0.1.20
 
 ### Patch Changes

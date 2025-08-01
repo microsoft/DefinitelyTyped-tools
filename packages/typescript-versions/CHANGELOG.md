@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.9
+
+### Patch Changes
+
+- e495a93: Mark 5.9 as shipped, 6.0 as supported, 5.1 as unsupported
+
 ## 0.1.8
 
 ### Patch Changes
