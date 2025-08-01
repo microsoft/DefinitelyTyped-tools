@@ -1,5 +1,13 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.37
+
+### Patch Changes
+
+- Updated dependencies [e495a93]
+  - @definitelytyped/definitions-parser@0.1.23
+  - @definitelytyped/dtslint@0.2.33
+
 ## 0.1.36
 
 ### Patch Changes

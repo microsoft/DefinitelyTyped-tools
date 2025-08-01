@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.24
+
+### Patch Changes
+
+- e495a93: Mark 5.9 as shipped, 6.0 as supported, 5.1 as unsupported
+
 ## 0.1.23
 
 ### Patch Changes

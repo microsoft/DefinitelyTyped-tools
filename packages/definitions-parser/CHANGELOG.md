@@ -1,5 +1,14 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.23
+
+### Patch Changes
+
+- e495a93: Mark 5.9 as shipped, 6.0 as supported, 5.1 as unsupported
+- Updated dependencies [e495a93]
+  - @definitelytyped/typescript-versions@0.1.9
+  - @definitelytyped/header-parser@0.2.20
+
 ## 0.1.22
 
 ### Patch Changes
