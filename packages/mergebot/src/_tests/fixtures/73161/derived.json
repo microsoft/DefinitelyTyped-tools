@@ -1,0 +1,159 @@
+{
+  "type": "info",
+  "now": "2025-07-10T21:23:37.963Z",
+  "pr_number": 73161,
+  "author": "bawahakim",
+  "headCommitOid": "66a9b7b55c316ed93c73a7bee520382cd1f86426",
+  "mergeBaseOid": "0deb353856a1e439359f9b27126bd957b0a34fab",
+  "lastPushDate": "2025-07-01T08:02:07.000Z",
+  "lastActivityDate": "2025-07-09T23:02:36.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": true,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "frappe",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/frappe/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/frappe/README.md",
+          "kind": "markdown"
+        },
+        {
+          "path": "types/frappe/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/package.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-packagejson) (check: `nonNpm`)"
+        },
+        {
+          "path": "types/frappe/tests/common-utilities-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/control-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/db-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/dialog-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/filters-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/form-handler-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/frappe-form-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/locals-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tests/requests-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/frappe/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/frappe/types/common/filters.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/common/frappe-df-base.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/common/frappe-field-type.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/common/response.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/cypress/cypress.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/db/db.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/globals/locals.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/model/doctype.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/requests/requests.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/ui/dialog/dialog.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/ui/form/form-handler.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/ui/form/frappe-form.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/ui/form/make-control.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/ui/grid/grid.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/types/utilities/common-utilities.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/frappe/utils/type-fest.d.ts",
+          "kind": "definition"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "bawahakim"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "changereq",
+      "reviewer": "gabritto",
+      "date": "2025-07-09T23:02:36.000Z"
+    }
+  ],
+  "mainBotCommentID": 3022443382,
+  "ciResult": "pass"
+}
