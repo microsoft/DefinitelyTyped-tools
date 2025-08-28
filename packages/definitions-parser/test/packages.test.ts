@@ -180,6 +180,28 @@ describe(TypingsData, () => {
     expect(data.isNotNeeded()).toBe(false);
   });
 
+  it("includes nested package.json files in getFiles()", () => {
+    const dt = createMockDT();
+    dt.pkgDir("with-nested-package")
+      .set(
+        "package.json",
+        JSON.stringify({
+          name: "@types/with-nested-package",
+        }),
+      )
+      .set("index.d.ts", "declare const x: number;")
+      .set("tsconfig.json", `{ "files": ["index.d.ts"] }`)
+      .subdir("sub")
+      .set("package.json", JSON.stringify({ type: "module" }))
+      .set("index.d.ts", "export const y: string;");
+
+    const versions = createTypingsVersionRaw("with-nested-package", {}, {});
+    const dataWithNested = new TypingsData(dt.fs, versions["1.0"], true);
+
+    const files = [...dataWithNested.getFiles()].sort();
+    expect(files).toEqual(["index.d.ts", "sub/index.d.ts", "sub/package.json"]);
+  });
+
   describe("desc", () => {
     it("returns the name if latest version", () => {
       expect(data.desc).toBe("@types/known");
