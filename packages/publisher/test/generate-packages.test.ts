@@ -14,10 +14,10 @@ import {
 } from "../src/generate-packages";
 import { testo } from "./utils";
 
-function createRawPackage(license: License): TypingsDataRaw {
+function createRawPackage(license: License, packageName: string = "jquery"): TypingsDataRaw {
   return {
     header: {
-      name: "@types/jquery",
+      name: `@types/${packageName}`,
       owners: [
         { name: "A", url: "b@c.d" },
         { name: "E", githubUsername: "e" },
@@ -33,7 +33,7 @@ function createRawPackage(license: License): TypingsDataRaw {
     license,
     dependencies: { "@types/madeira": "^1" },
     peerDependencies: { "@types/express": "*" },
-    devDependencies: { "@types/jquery": "workspace:." },
+    devDependencies: { [`@types/${packageName}`]: "workspace:." },
     olderVersionDirectories: [],
   };
 }
@@ -77,6 +77,31 @@ testo({
   mitLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
     expect(getLicenseFileText(typing, now)).toMatchSnapshot();
+  },
+  nestedPackageJsonIncluded() {
+    const dt = new DTMock();
+    dt.pkgDir("with-nested")
+      .set(
+        "package.json",
+        JSON.stringify({
+          private: true,
+          name: "@types/with-nested",
+          version: "1.0.9999",
+          projects: ["example.com"],
+          owners: [{ name: "Test", url: "test@test.com" }],
+          dependencies: {},
+          devDependencies: { "@types/with-nested": "workspace:." },
+        }, undefined, 4),
+      )
+      .set("tsconfig.json", `{ "files": ["index.d.ts"] }`)
+      .set("index.d.ts", `declare const x: number;\nexport = x;`)
+      .subdir("subfolder")
+      .set("package.json", JSON.stringify({ type: "module" }, undefined, 4))
+      .set("index.d.ts", "export const y: string;");
+    
+    const typing = new TypingsData(dt.fs, createRawPackage(License.MIT, "with-nested"), /*isLatest*/ true);
+    const files = [...typing.getFiles()].sort();
+    expect(files).toEqual(["index.d.ts", "subfolder/index.d.ts", "subfolder/package.json"]);
   },
   apacheLicenseText() {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.Apache20), /*isLatest*/ true);
