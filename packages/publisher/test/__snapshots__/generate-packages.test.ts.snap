@@ -56,7 +56,7 @@ exports[`basicPackageJson 1`] = `
     "peerDependencies": {
         "@types/express": "*"
     },
-    "typesPublisherContentHash": "53300522250468c4161b10d962cac2d9d8f2cfee1b3dfef4b749a7c3ec839275",
+    "typesPublisherContentHash": "b48cf4ca9145f5ac4b2671975bdcb676ebd14a034ef86ec97b2ee3a922f207ec",
     "typeScriptVersion": "5.2"
 }"
 `;
