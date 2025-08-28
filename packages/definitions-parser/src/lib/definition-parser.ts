@@ -266,8 +266,8 @@ export function getFiles(
   const rootDir = dt.subDir("types").subDir(typingsData.subDirectoryPath);
 
   const files: string[] = [];
-  function addFileIfDeclaration(path: string): void {
-    if (isDeclarationPath(path) || path.endsWith('/package.json') || path === 'package.json') {
+  function addFileIfIncluded(path: string): void {
+    if (isDeclarationPath(path) || path.endsWith('/package.json')) {
       files.push(path);
     }
   }
@@ -276,7 +276,7 @@ export function getFiles(
     const path = rootName ? `${rootName}/${name}` : name;
 
     if (!root.isDirectory(name)) {
-      addFileIfDeclaration(path);
+      addFileIfIncluded(path);
       return;
     }
 

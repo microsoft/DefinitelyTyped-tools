@@ -157,9 +157,9 @@ describe(TypingsData, () => {
     expect(data.minor).toBe(0);
     expect(data.minTypeScriptVersion).toBe(TypeScriptVersion.lowest);
     expect(data.typesVersions).toEqual([]);
-    expect(data.getFiles()).toEqual(["package.json", "index.d.ts"]);
+    expect(data.getFiles()).toEqual(["index.d.ts"]);
     expect(data.license).toBe(License.MIT);
-    expect(data.getContentHash()).toBe("3dbfa50945c9654446bbdb1047393a5682d15f04fa9b45aa5f564af22c76b4a1");
+    expect(data.getContentHash()).toBe("f647d34b5793cea752bc5b892d2099c92f1ced5f13b8a4ec3e4826d9f9cd0163");
     expect(data.projectName).toBe("zombo.com");
     expect(data.dependencies).toEqual({
       "dependency-1": "*",
@@ -212,6 +212,8 @@ describe(TypingsData, () => {
     expect(files).toContain("lib/index.d.ts");
     expect(files).toContain("src/package.json");
     expect(files).toContain("lib/package.json");
+    // Should NOT include the root package.json as it's handled specially
+    expect(files).not.toContain("package.json");
   });
 
   describe("desc", () => {
