@@ -267,7 +267,7 @@ export function getFiles(
 
   const files: string[] = [];
   function addFileIfDeclaration(path: string): void {
-    if (isDeclarationPath(path)) {
+    if (isDeclarationPath(path) || path.endsWith('/package.json') || path === 'package.json') {
       files.push(path);
     }
   }
