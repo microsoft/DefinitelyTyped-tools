@@ -530,6 +530,7 @@
 @mui/material
 @mui/types
 @npm/types
+@playwright/test
 @pollyjs/adapter
 @pollyjs/core
 @pollyjs/persister
