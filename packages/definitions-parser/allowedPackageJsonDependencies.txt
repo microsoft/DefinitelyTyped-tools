@@ -1,5 +1,6 @@
 @adobe/ccweb-add-on-sdk-types
 @apollo/client
+@aws-sdk/client-dynamodb
 @aws-sdk/client-s3
 @aws-sdk/client-ses
 @aws-sdk/client-sesv2
