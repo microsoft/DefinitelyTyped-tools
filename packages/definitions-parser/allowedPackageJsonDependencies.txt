@@ -542,6 +542,7 @@
 @react-navigation/native
 @react-navigation/stack
 @redux-saga/types
+@sass/types
 @sentry/browser
 @serverless/typescript
 @sinonjs/fake-timers
@@ -842,6 +843,7 @@ rrule
 rxjs
 safe-buffer
 sass
+sass-embedded
 scroll-behavior
 scroll-into-view-if-needed
 semantic-ui-react
