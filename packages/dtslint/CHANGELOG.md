@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.34
+
+### Patch Changes
+
+- a43bab4: Improve error message when npmignore is missing
+
 ## 0.2.33
 
 ### Patch Changes
