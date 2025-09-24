@@ -383,8 +383,8 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
       if (!fs.existsSync(parentNpmIgnorePath)) {
         errors.push(`${dirPath}: Missing parent '.npmignore'`);
       } else {
-        const parentNpmIgnore = fs.readFileSync(parentNpmIgnorePath, "utf-8").trim().split(/\r?\n/);
-        if (!parentNpmIgnore.includes(thisDir)) {
+        const parentNpmIgnore = tryReadFileSync(parentNpmIgnorePath)?.trim().split(/\r?\n/);
+        if (!parentNpmIgnore || !parentNpmIgnore.includes(thisDir)) {
           errors.push(`${dirPath}: Parent package '.npmignore' should contain ${thisDir}`);
         }
       }
@@ -396,8 +396,8 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
       errors.push(`${dirPath}: Missing '.npmignore'; should contain:\n${expectedNpmIgnoreAsString}`);
     }
 
-    const actualNpmIgnore = fs.readFileSync(npmIgnorePath, "utf-8").trim().split(/\r?\n/);
-    if (!deepEquals(actualNpmIgnore, expectedNpmIgnore)) {
+    const actualNpmIgnore = tryReadFileSync(npmIgnorePath)?.trim().split(/\r?\n/);
+    if (!actualNpmIgnore || !deepEquals(actualNpmIgnore, expectedNpmIgnore)) {
       errors.push(`${dirPath}: Incorrect '.npmignore'; should be:\n${expectedNpmIgnoreAsString}`);
     }
 
@@ -419,4 +419,12 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
   }
 
   return { errors };
+}
+
+function tryReadFileSync(path: string): string | undefined {
+  try {
+    return fs.readFileSync(path, "utf-8");
+  } catch {
+    return undefined;
+  }
 }
