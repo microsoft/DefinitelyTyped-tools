@@ -424,8 +424,7 @@ function checkExpectedFiles(dirPath: string, isLatest: boolean): { errors: strin
 function tryReadFileSync(path: string): string | undefined {
   try {
     return fs.readFileSync(path, "utf-8");
-  }
-  catch {
+  } catch {
     return undefined;
   }
 }
