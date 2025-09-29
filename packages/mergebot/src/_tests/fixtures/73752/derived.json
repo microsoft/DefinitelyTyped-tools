@@ -1,0 +1,50 @@
+{
+  "type": "info",
+  "now": "2025-09-29T17:59:34.422Z",
+  "pr_number": 73752,
+  "author": "sorskoot",
+  "headCommitOid": "d95f839e8f8a345c37ebd7b242447c8fa4d1971b",
+  "mergeBaseOid": "bc685e16eb9e0c33df331e571993dd814aea9e20",
+  "lastPushDate": "2025-09-26T13:21:09.000Z",
+  "lastActivityDate": "2025-09-26T13:21:45.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "webxr",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/webxr/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/webxr/webxr-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "robrohan",
+        "RaananW",
+        "capnmidnight",
+        "sorskoot"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "copilot-pull-request-reviewer",
+      "date": "2025-09-26T13:21:45.000Z",
+      "abbrOid": "5169abe"
+    }
+  ],
+  "mainBotCommentID": 3338712396,
+  "ciResult": "pass"
+}
