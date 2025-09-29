@@ -12,10 +12,6 @@
     {
       "tag": "pinging-reviewers",
       "status": "🔔 @robrohan @RaananW @capnmidnight — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73752/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
-    },
-    {
-      "tag": "stale-ping-6d0325-5169abe",
-      "status": "@copilot-pull-request-reviewer Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?"
     }
   ],
   "shouldClose": false,
