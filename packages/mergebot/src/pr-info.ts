@@ -600,6 +600,8 @@ function getReviews(prInfo: PR_repository_pullRequest) {
     if (reviewer === prInfo.author!.login) continue;
     // Only look at the most recent review per person (ignoring pending/commented)
     if (reviews.some((r) => sameUser(r.reviewer, reviewer))) continue;
+    // Skip bot reviews
+    if (!authorNotBot(r)) continue;
     // collect reviews by type
     if (r.commit.oid !== headCommitOid) {
       reviews.push({ type: "stale", reviewer, date, abbrOid: abbrOid(r.commit.oid) });

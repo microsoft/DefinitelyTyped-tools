@@ -1,0 +1,303 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM6quEpg",
+        "title": "[WebXR] Enhance XRAnchor and XRSession with persistent anchor support",
+        "createdAt": "2025-09-26T13:21:09Z",
+        "author": {
+          "login": "sorskoot",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 73752,
+        "state": "OPEN",
+        "headRefOid": "d95f839e8f8a345c37ebd7b242447c8fa4d1971b",
+        "changedFiles": 2,
+        "additions": 115,
+        "deletions": 5,
+        "commitIds": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "5169abe781ebb8d80e3e247cfd46b9481cd6142b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "bc685e16eb9e0c33df331e571993dd814aea9e20",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "024f18e88aa3d2a9e40a50b798a778dd9cc43358",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "5169abe781ebb8d80e3e247cfd46b9481cd6142b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "d95f839e8f8a345c37ebd7b242447c8fa4d1971b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "024f18e88aa3d2a9e40a50b798a778dd9cc43358",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "copilot-pull-request-reviewer",
+                "__typename": "Bot"
+              },
+              "commit": {
+                "oid": "5169abe781ebb8d80e3e247cfd46b9481cd6142b",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "copilot-pull-request-reviewer",
+                      "__typename": "Bot"
+                    },
+                    "createdAt": "2025-09-26T13:21:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "copilot-pull-request-reviewer",
+                      "__typename": "Bot"
+                    },
+                    "createdAt": "2025-09-26T13:21:44Z",
+                    "__typename": "PullRequestReviewComment"
+                  },
+                  {
+                    "author": {
+                      "login": "copilot-pull-request-reviewer",
+                      "__typename": "Bot"
+                    },
+                    "createdAt": "2025-09-26T13:21:45Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2025-09-26T13:21:45Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73752#pullrequestreview-3272265809",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 46363170399,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/d95f839e8f8a345c37ebd7b242447c8fa4d1971b/checks?check_suite_id=46363170399",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/d95f839e8f8a345c37ebd7b242447c8fa4d1971b/checks?check_suite_id=46363170399",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2025-09-26T13:37:54Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2025-09-26T13:37:47Z",
+                "committedDate": "2025-09-26T13:37:47Z",
+                "pushedDate": null,
+                "oid": "d95f839e8f8a345c37ebd7b242447c8fa4d1971b",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM7HALVM",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3338712396,
+              "body": "@sorskoot Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `webxr` — [on npm](https://www.npmjs.com/package/webxr), [on unpkg](https://unpkg.com/browse/webxr@latest/) (author is owner)\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=73752&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by a DT maintainer\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2025-09-26T13:22:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM7HALXa",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3338712538,
+              "body": "🔔 @robrohan @RaananW @capnmidnight — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73752/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2025-09-26T13:22:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM7HATkL",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 3338746123,
+              "body": "@copilot-pull-request-reviewer Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-6d0325-5169abe-->",
+              "createdAt": "2025-09-26T13:31:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/webxr/index.d.ts",
+              "additions": 74,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/webxr/webxr-tests.ts",
+              "additions": 41,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mg",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgfNJNw",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Maintainer Review",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2025-09-26T13:44:04Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  },
+  "loading": false,
+  "networkStatus": 7
+}
