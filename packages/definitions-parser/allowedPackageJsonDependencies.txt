@@ -589,6 +589,7 @@ apollo-link
 apollo-link-http-common
 arweave
 asn1js
+assertion-error
 ast-types
 async-done
 autoprefixer
