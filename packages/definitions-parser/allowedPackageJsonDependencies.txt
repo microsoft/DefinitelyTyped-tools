@@ -632,6 +632,7 @@ cropperjs
 cssnano
 csstype
 cypress
+cytoscape
 d3
 date-fns
 dayjs
