@@ -742,6 +742,7 @@ mali
 mapbox-gl
 markdownlint
 marked
+mc-server-management
 meshoptimizer
 metascraper
 meteor-typings
