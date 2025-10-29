@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.11.9",
-    "@azure/functions": "^4.6.0",
+    "@azure/functions": "^4.8.0",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
     "@definitelytyped/utils": "workspace:*",
     "@octokit/webhooks-methods": "^4.1.0",

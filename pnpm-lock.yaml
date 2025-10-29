@@ -290,7 +290,7 @@ importers:
         specifier: ^3.11.9
         version: 3.14.0(graphql@15.8.0)
       '@azure/functions':
-        specifier: ^4.6.0
+        specifier: ^4.8.0
         version: 4.8.0
       '@definitelytyped/old-header-parser':
         specifier: npm:@definitelytyped/header-parser@0.0.178
