@@ -290,8 +290,8 @@ importers:
         specifier: ^3.11.9
         version: 3.11.9(graphql@15.8.0)
       '@azure/functions':
-        specifier: ^4.6.0
-        version: 4.6.0
+        specifier: ^4.8.0
+        version: 4.8.0
       '@definitelytyped/old-header-parser':
         specifier: npm:@definitelytyped/header-parser@0.0.178
         version: '@definitelytyped/header-parser@0.0.178'
@@ -336,8 +336,8 @@ importers:
         specifier: ^2.34.0
         version: 2.34.0(encoding@0.1.13)(typescript@5.9.2)
       azure-functions-core-tools:
-        specifier: ^4.0.6543
-        version: 4.0.6543
+        specifier: ^4.3.0
+        version: 4.3.0
       esbuild:
         specifier: ^0.25.0
         version: 0.25.0
@@ -581,8 +581,8 @@ packages:
     resolution: {integrity: sha512-FYp6GBAgsNz81BkfItRz8RLZO03w5+BaeiPma1uCfmxTnxbtuMrI/dbzGiOk8VghO108uFI0oJo0OkewdSHw7g==}
     engines: {node: '>=18'}
 
-  '@azure/functions@4.6.0':
-    resolution: {integrity: sha512-vGq9jXlgrJ3KaI8bepgfpk26zVY8vFZsQukF85qjjKTAR90eFOOBNaa+mc/0ViDY2lcdrU2fL/o1pQyZUtTDsw==}
+  '@azure/functions@4.8.0':
+    resolution: {integrity: sha512-LNtl3xZNE40vE7+SIST+GYQX5cnnI1M65fXPi26l9XCdPakuQrz54lHv+qQQt1GG5JbqLfQk75iM7A6Y9O+2dQ==}
     engines: {node: '>=18.0'}
 
   '@babel/code-frame@7.26.2':
@@ -1882,8 +1882,8 @@ packages:
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
 
-  azure-functions-core-tools@4.0.6543:
-    resolution: {integrity: sha512-YWbtgGWghgtFc4jZ6+Mrqnt88hsLIlbTBJz0SpkeZ4xTUqTFrlxj8n+tw//0vzIMYcC89T3zk+s3DFGawSV2gA==}
+  azure-functions-core-tools@4.3.0:
+    resolution: {integrity: sha512-BDxN9lkDy3hNQXnrdX79P94r8DibaTMyhXi4+HL//lOY7ePxgPM7CiPzAcbdGzNR7m5fxmX9dWzmtXsjJJuZtA==}
     engines: {node: '>=6.9.1'}
     os: [win32, darwin, linux]
     hasBin: true
@@ -4801,8 +4801,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici@5.28.4:
-    resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
+  undici@5.29.0:
+    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -5125,11 +5125,11 @@ snapshots:
       typescript: 5.3.3
       validate-npm-package-name: 5.0.1
 
-  '@azure/functions@4.6.0':
+  '@azure/functions@4.8.0':
     dependencies:
       cookie: 0.7.2
       long: 4.0.0
-      undici: 5.28.4
+      undici: 5.29.0
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -6905,7 +6905,7 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  azure-functions-core-tools@4.0.6543:
+  azure-functions-core-tools@4.3.0:
     dependencies:
       chalk: 3.0.0
       extract-zip: 2.0.1
@@ -10317,7 +10317,7 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici@5.28.4:
+  undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
 
