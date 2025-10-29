@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.1.22
+
+### Patch Changes
+
+- cfa769b: Bump TS version
+
 ## 0.1.21
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.25
+
+### Patch Changes
+
+- cfa769b: Bump TS version
+
 ## 0.1.24
 
 ### Patch Changes
