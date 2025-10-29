@@ -4,4 +4,4 @@
 "dts-gen": patch
 ---
 
-Bump TS version"
+Bump TS version
