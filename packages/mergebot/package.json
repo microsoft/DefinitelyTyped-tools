@@ -37,7 +37,6 @@
     "@types/prettyjson": "^0.0.33",
     "@types/yargs": "^17.0.33",
     "apollo": "^2.34.0",
-    "azure-functions-core-tools": "^4.0.6543",
     "esbuild": "^0.25.0",
     "jest-file-snapshot": "^0.7.0",
     "rimraf": "^5.0.10",
@@ -54,7 +53,6 @@
     "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
-    "start": "func start",
     "test": "jest"
   },
   "jest": {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Expression tests Generates the same declaration for Math: expr-Math.d.ts 1`] = `
 "declare namespace Math {
