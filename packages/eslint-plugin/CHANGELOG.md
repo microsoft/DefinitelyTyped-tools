@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.26
+
+### Patch Changes
+
+- 11fc5f7: Bump glob to 10.5.0
+
 ## 0.1.25
 
 ### Patch Changes
