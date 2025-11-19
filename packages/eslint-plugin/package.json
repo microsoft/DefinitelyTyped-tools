@@ -38,7 +38,7 @@
     "@definitelytyped/eslint-plugin": "link:",
     "@types/eslint": "^8.56.12",
     "@types/semver": "^7.5.8",
-    "glob": "^10.4.5",
+    "glob": "^10.5.0",
     "jest-file-snapshot": "^0.7.0",
     "typescript": "^5.9.3",
     "typescript-5.4": "npm:typescript@~5.4.0-0",
