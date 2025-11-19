@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.39
+
+### Patch Changes
+
+- 11fc5f7: Bump glob to 10.5.0
+
 ## 0.1.38
 
 ### Patch Changes
