@@ -147,7 +147,11 @@ export async function fetchTypesPackageVersionInfo(
   if (info.deprecated) {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22306
     assert(
-      pkg.typesDirectoryName === "angular-ui-router" || pkg.typesDirectoryName === "ui-router-extras",
+      [
+        "angular-ui-router",
+        "ui-router-extras",
+        "create-torrent",
+      ].includes(pkg.ypesDirectoryName),
       `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`,
     );
   }
