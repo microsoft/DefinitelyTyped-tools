@@ -151,7 +151,7 @@ export async function fetchTypesPackageVersionInfo(
         "angular-ui-router",
         "ui-router-extras",
         "create-torrent",
-      ].includes(pkg.ypesDirectoryName),
+      ].includes(pkg.typesDirectoryName),
       `Package ${pkg.libraryName} has been deprecated, so we shouldn't have parsed it. Was it re-added?`,
     );
   }
