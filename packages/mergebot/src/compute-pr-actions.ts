@@ -176,7 +176,9 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     const ownersToPing =
       otherOwners.length === 0
         ? ["«anyone?»"]
-        : otherOwners.filter((o) => !approvedReviews.some((r) => o === r.reviewer));
+        : tooManyOwners
+          ? ["«maintainers»"]
+          : otherOwners.filter((o) => !approvedReviews.some((r) => o === r.reviewer));
     const mkStaleness = makeStaleness(info.now, info.author, ownersToPing);
     if (canBeSelfMerged)
       return (
