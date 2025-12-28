@@ -567,6 +567,7 @@
 @wordpress/data
 @wordpress/editor
 @wordpress/element
+@wordpress/global-styles-engine
 @wordpress/keycodes
 @wordpress/media-utils
 @wordpress/shortcode
