@@ -13,7 +13,6 @@ angular-notify
 angular-odata-resources
 angular-q-spread
 angular-ui-notification
-angular-ui-router
 angular-ui-tree
 angularfire
 ansicolors
@@ -84,7 +83,6 @@ db-migrate-pg
 decorum
 deep-freeze
 deku
-desmos
 double-ended-queue
 dts-bundle
 durandal/v1
@@ -229,7 +227,6 @@ level-sublevel
 line-reader
 lls
 logg
-lowlight
 macaca-circular-json
 maildev
 mapbox
@@ -243,7 +240,6 @@ mem-cache
 messenger
 microservice-utilities
 mina
-mixpanel
 mixto
 mojang-minecraft-server-admin
 mojang-minecraft-ui
@@ -303,7 +299,6 @@ purl
 q-retry
 qunit/v1
 radius
-rangy
 raty
 react-better-password
 react-cache
@@ -393,23 +388,19 @@ torrent-stream
 trim
 underscore-ko
 underscore.string
-url-join/v0
 urlparser
 urlrouter
 usage
-user-agents
 user-event
 uws
 venn
 viewporter
-vscode
 vue-datetime
 waitme
 wampy
 weapp-api
 webcl
 webcrypto
-webpack-env
 websql
 wepy-redux
 winjs/v1
@@ -418,7 +409,6 @@ winston-dynamodb
 wonder.js
 wrench
 xmltojson
-xmpp__jid
 xsockets
 yandex-money-sdk
 zengin-code
