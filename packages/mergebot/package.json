@@ -40,7 +40,7 @@
     "esbuild": "^0.25.0",
     "jest-file-snapshot": "^0.7.0",
     "rimraf": "^5.0.10",
-    "seroval": "^1.1.1",
+    "seroval": "^1.4.1",
     "typescript": "^5.9.2"
   },
   "scripts": {
