@@ -24,7 +24,7 @@
     "@definitelytyped/utils": "workspace:*",
     "@types/node": "^25.1.0",
     "@types/semver": "^7.7.1",
-    "pacote": "^20.0.0",
+    "pacote": "^21.1.0",
     "semver": "^7.7.3"
   },
   "devDependencies": {
@@ -38,6 +38,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.17.0"
   }
 }

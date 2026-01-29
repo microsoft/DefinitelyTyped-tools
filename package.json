@@ -2,7 +2,7 @@
   "name": "definitelytyped-tools",
   "private": true,
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.17.0"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

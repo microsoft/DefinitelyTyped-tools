@@ -22,7 +22,7 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "pacote": "^20.0.0",
+    "pacote": "^21.1.0",
     "semver": "^7.7.3",
     "yargs": "^17.7.2"
   },
@@ -40,6 +40,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.17.0"
   }
 }

@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.17.0"
   },
   "dependencies": {
     "@apollo/client": "^3.14.0",
