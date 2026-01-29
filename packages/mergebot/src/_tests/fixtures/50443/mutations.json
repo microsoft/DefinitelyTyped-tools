@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDc1NTUwMTE4Nw==",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "commitHeadline": "🤖 Merge PR #50443 Types for reefjs by @shockdevv",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDc1NjM2ODA4NA==",

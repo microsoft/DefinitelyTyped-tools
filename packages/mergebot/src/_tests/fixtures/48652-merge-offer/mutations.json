@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDcwNjI2OTA0NA==",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "labelIds": [
@@ -20,7 +20,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}\n",
+    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}",
     "variables": {
       "input": {
         "contentId": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0",
@@ -29,7 +29,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "TEST",
@@ -42,7 +42,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0",
@@ -51,7 +51,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NTAwNjg4ODM0",

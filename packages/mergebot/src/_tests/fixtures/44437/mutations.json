@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDYyMjk0NDUxOA==",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "labelIds": [
@@ -20,7 +20,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDYyMjk0NTA1NA==",

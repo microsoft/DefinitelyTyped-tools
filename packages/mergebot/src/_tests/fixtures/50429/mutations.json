@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDc1NTI4NDk3Mw==",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "labelIds": [
@@ -20,7 +20,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "MDExOlByb2plY3RDYXJkNTIyOTYzODM=",
@@ -33,7 +33,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDc1NTI4NDk4Mg==",
@@ -42,7 +42,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NTUwNDE0ODEz",

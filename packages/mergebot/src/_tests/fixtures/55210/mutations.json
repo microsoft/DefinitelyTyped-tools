@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "IC_kwDOAFz6BM41sLf3",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "IC_kwDOAFz6BM41sLgG",
@@ -18,7 +18,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "IC_kwDOAFz6BM418VN8",

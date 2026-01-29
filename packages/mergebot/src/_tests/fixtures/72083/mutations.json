@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "IC_kwDOAFz6BM6gcJe-",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "PVTI_lADOADeBNM4AkH1qzgX0xcM",
@@ -22,7 +22,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "commitHeadline": "🤖 Merge PR #72083 Update uswds/uswds tests for TS 5.8 by @sandersn",
