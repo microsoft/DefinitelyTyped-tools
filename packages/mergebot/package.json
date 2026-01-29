@@ -33,7 +33,7 @@
   "devDependencies": {
     "@octokit/graphql-schema": "^14.58.0",
     "@octokit/webhooks-types": "^7.6.1",
-    "@types/node": "^18.19.64",
+    "@types/node": "^25.1.0",
     "@types/prettyjson": "^0.0.33",
     "@types/yargs": "^17.0.33",
     "apollo": "^2.34.0",

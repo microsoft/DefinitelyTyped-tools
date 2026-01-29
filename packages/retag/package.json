@@ -27,7 +27,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^18.19.64",
+    "@types/node": "^25.1.0",
     "@types/pacote": "^11.1.8",
     "@types/semver": "^7.5.8",
     "@types/yargs": "^17.0.33"
