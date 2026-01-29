@@ -29,7 +29,7 @@ export async function getAllOpenPRs() {
       fetchPolicy: "no-cache",
       variables: { endCursor },
     });
-    const pullRequests = result.data.repository?.pullRequests;
+    const pullRequests = result.data?.repository?.pullRequests;
     prs.push(...noNullish(pullRequests?.nodes).map((pr) => pr.number));
     if (!pullRequests?.pageInfo.hasNextPage) return prs;
     endCursor = pullRequests.pageInfo.endCursor;

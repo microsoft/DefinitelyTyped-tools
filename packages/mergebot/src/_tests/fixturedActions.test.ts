@@ -1,10 +1,8 @@
-import { ApolloQueryResult } from "@apollo/client/core";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { toMatchFile } from "jest-file-snapshot";
 import { process } from "../compute-pr-actions";
-import { deriveStateForPR } from "../pr-info";
-import type { PrQuery } from "../queries/schema/graphql";
+import { deriveStateForPR, PRQueryResponse } from "../pr-info";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
 import * as cachedQueries from "./cachedQueries";
 jest.mock("../util/cachedQueries", () =>
@@ -28,9 +26,9 @@ async function testFixture(dir: string) {
   const resultPath = join(dir, "result.json");
   const mutationsPath = join(dir, "mutations.json");
 
-  const jsonString = (value: any) => scrubDiagnosticDetails(JSON.stringify(value, null, "  ") + "\n");
+  const jsonString = (value: unknown) => scrubDiagnosticDetails(JSON.stringify(value, null, "  ") + "\n");
 
-  const response: ApolloQueryResult<PrQuery> = readJsonSync(responsePath);
+  const response: PRQueryResponse = readJsonSync(responsePath);
   const files = readJsonSync(filesPath);
   const downloads = readJsonSync(downloadsPath);
 

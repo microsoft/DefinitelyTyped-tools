@@ -97,7 +97,7 @@ const handleTrigger = async (context: InvocationContext, event: PrEvent) => {
 
   context.log(`Getting info for PR ${pr.number} - ${pr.title || "(title not fetched)"}`);
   const info = await getPRInfo(pr.number);
-  const prInfo = info.data.repository?.pullRequest;
+  const prInfo = info.data?.repository?.pullRequest;
 
   // If it didn't work, bail early
   if (!prInfo) {

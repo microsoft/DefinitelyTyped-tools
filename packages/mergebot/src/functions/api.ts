@@ -18,7 +18,7 @@ export async function httpTrigger(request: HttpRequest, context: InvocationConte
   if (!prNumber || isNaN(prNumber)) return notFound("No PR number");
 
   const info = await getPRInfo(prNumber);
-  const prInfo = info.data.repository?.pullRequest;
+  const prInfo = info.data?.repository?.pullRequest;
 
   if (!prInfo) return notFound("No PR metadata");
 

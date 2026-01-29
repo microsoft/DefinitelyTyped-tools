@@ -14,7 +14,7 @@ export const runQueryToGetPRMetadataForSHA1 = async (
     variables: { query: `${sha1} type:pr repo:${owner}/${repo}` },
     fetchPolicy: "no-cache",
   });
-  const pr = info.data.search.nodes?.[0];
+  const pr = info.data?.search.nodes?.[0];
   return pr?.__typename === "PullRequest" ? pr : undefined;
 };
 

@@ -10,7 +10,7 @@ import type { PrQuery } from "./queries/schema/graphql";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid } from "./util/util";
-import { fileLimit } from "./queries/pr-query";
+import { fileLimit, getPRInfo } from "./queries/pr-query";
 import * as comment from "./util/comment";
 import * as urls from "./urls";
 import * as OldHeaderParser from "@definitelytyped/old-header-parser";
@@ -19,7 +19,10 @@ import { isDeepStrictEqual } from "util";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
 // Type aliases for the nested types from the generated schema
-type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
+export type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
+
+// Type for fixture JSON files - intersects Apollo's QueryResult with { data: PrQuery } to narrow data from TData | undefined
+export type PRQueryResponse = Awaited<ReturnType<typeof getPRInfo>> & { data: PrQuery };
 type PR_repository_pullRequest_commits_nodes_commit_checkSuites = NonNullable<NonNullable<NonNullable<PR_repository_pullRequest["commits"]["nodes"]>[number]>["commit"]["checkSuites"]>;
 type PR_repository_pullRequest_timelineItems = PR_repository_pullRequest["timelineItems"];
 type PR_repository_pullRequest_comments_nodes = NonNullable<NonNullable<PR_repository_pullRequest["comments"]["nodes"]>[number]>;

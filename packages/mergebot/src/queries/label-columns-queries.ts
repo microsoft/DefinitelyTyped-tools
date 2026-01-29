@@ -34,7 +34,7 @@ async function getLabels() {
       fetchPolicy: "no-cache",
       variables: { endCursor },
     });
-    const someLabels = result.data.repository?.labels;
+    const someLabels = result.data?.repository?.labels;
     labels.push(...noNullish(someLabels?.nodes));
     if (!someLabels?.pageInfo.hasNextPage) return labels;
     endCursor = someLabels.pageInfo.endCursor;

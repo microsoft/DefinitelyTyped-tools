@@ -218,7 +218,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
 `;
 export async function getPRInfo(prNumber: number) {
   const info = await getPRInfoFirst(prNumber);
-  const prInfo = info.data.repository?.pullRequest;
+  const prInfo = info.data?.repository?.pullRequest;
   // reasons to not bother with getting all files:
   if (!prInfo) return info; // ... bad results (see below)
   if (prInfo.isDraft) return info; // ... draft PRs
@@ -243,12 +243,12 @@ async function getPRInfoFirst(prNumber: number) {
       variables: { prNumber },
       fetchPolicy: "no-cache",
     });
-    const prInfo = info.data.repository?.pullRequest;
+    const prInfo = info.data?.repository?.pullRequest;
     if (!prInfo) return info; // let `deriveStateForPR` handle the missing result
     if (!(prInfo.state === "OPEN" && prInfo.mergeable === "UNKNOWN")) return info;
     if (++retries > 5) {
       // we already did 5 tries, so give up and...
-      info.data.repository = null;
+      info.data!.repository = null;
       return info; // ...return a bad result to avoid using the bogus information
     }
     // wait 3N..3N+1 seconds (based on trial runs: it usually works after one wait)
@@ -290,7 +290,7 @@ async function getPRInfoRest(
       variables: { prNumber, endCursor },
       fetchPolicy: "no-cache",
     });
-    const newFiles = result.data.repository?.pullRequest?.files;
+    const newFiles = result.data?.repository?.pullRequest?.files;
     if (!newFiles) return;
     files.push(...noNullish(newFiles.nodes));
     if (files.length >= fileLimit || !newFiles.pageInfo.hasNextPage) return;
