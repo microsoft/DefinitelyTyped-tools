@@ -23,13 +23,13 @@
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "@types/node": "^25.1.0",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.1",
     "pacote": "^20.0.0",
-    "semver": "^7.6.3"
+    "semver": "^7.7.3"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "typescript": "*"

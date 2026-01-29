@@ -28,14 +28,14 @@
     "@definitelytyped/typescript-packages": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^8.13.0",
-    "@typescript-eslint/parser": "^8.13.0",
-    "@typescript-eslint/types": "^8.13.0",
-    "@typescript-eslint/typescript-estree": "^8.13.0",
-    "@typescript-eslint/utils": "^8.13.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@typescript-eslint/types": "^8.54.0",
+    "@typescript-eslint/typescript-estree": "^8.54.0",
+    "@typescript-eslint/utils": "^8.54.0",
     "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.31.0",
-    "semver": "^7.6.3",
+    "eslint-plugin-import": "^2.32.0",
+    "semver": "^7.7.3",
     "strip-json-comments": "^3.1.1"
   },
   "peerDependencies": {
@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.56.12",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.1",
     "@types/strip-json-comments": "^3.0.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=18.18.0"

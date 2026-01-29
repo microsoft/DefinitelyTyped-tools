@@ -15,6 +15,7 @@
     "composite": true,
     "types": ["node"],
     "lib": ["es2022"],
-    "strictBuiltinIteratorReturn": false
+    "strictBuiltinIteratorReturn": false,
+    "isolatedModules": true
   }
 }

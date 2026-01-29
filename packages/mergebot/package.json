@@ -19,14 +19,14 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@apollo/client": "^3.11.9",
-    "@azure/functions": "^4.8.0",
+    "@apollo/client": "^3.14.0",
+    "@azure/functions": "^4.11.0",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
     "@definitelytyped/utils": "workspace:*",
     "@octokit/webhooks-methods": "^4.1.0",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.19",
     "fast-json-patch": "^3.1.1",
-    "graphql": "15.8.0",
+    "graphql": "15.10.1",
     "prettyjson": "^1.2.5",
     "yargs": "^17.7.2"
   },
@@ -35,13 +35,13 @@
     "@octokit/webhooks-types": "^7.6.1",
     "@types/node": "^25.1.0",
     "@types/prettyjson": "^0.0.33",
-    "@types/yargs": "^17.0.33",
+    "@types/yargs": "^17.0.35",
     "apollo": "^2.34.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.2",
     "jest-file-snapshot": "^0.7.0",
     "rimraf": "^5.0.10",
-    "seroval": "^1.4.1",
-    "typescript": "^5.9.2"
+    "seroval": "^1.5.0",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "prestart": "pnpm run build",
