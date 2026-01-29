@@ -1,7 +1,7 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { PullRequestState } from "./schema/graphql-global-types";
-import { CardIdToPr, CardIdToPrVariables } from "./schema/CardIdToPr";
+import { PullRequestState } from "./schema/graphql";
+import type { CardIdToPrQuery, CardIdToPrQueryVariables } from "./schema/graphql";
 
 interface CardPRInfo {
   number: number;
@@ -22,7 +22,7 @@ export const runQueryToGetPRForCardId = async (id: string): Promise<CardPRInfo |
           }
         }
       }
-    ` as TypedDocumentNode<CardIdToPr, CardIdToPrVariables>,
+    ` as TypedDocumentNode<CardIdToPrQuery, CardIdToPrQueryVariables>,
     variables: { id },
     fetchPolicy: "no-cache",
   });

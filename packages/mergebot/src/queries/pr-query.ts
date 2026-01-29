@@ -1,8 +1,9 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { PR, PRVariables, PR_repository_pullRequest_files_nodes } from "./schema/PR";
-import { PRFiles, PRFilesVariables } from "./schema/PRFiles";
+import type { PrQuery, PrQueryVariables, PrFilesQuery, PrFilesQueryVariables } from "./schema/graphql";
 import { noNullish } from "../util/util";
+
+type PR_repository_pullRequest_files_nodes = NonNullable<NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>["files"]>["nodes"] extends (infer T)[] | null | undefined ? NonNullable<T> : never;
 
 export const fileLimit = 500;
 
@@ -15,7 +16,7 @@ export const fileLimit = 500;
 // - Now you're good to C&P the query below
 
 /** This is a GraphQL AST tree */
-const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
+const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
   query PR($prNumber: Int!) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
@@ -78,7 +79,6 @@ const getPRInfoQueryFirst: TypedDocumentNode<PR, PRVariables> = gql`
                 login
               }
               createdAt
-              projectColumnName
             }
             ... on HeadRefForcePushedEvent {
               actor {
@@ -258,7 +258,7 @@ async function getPRInfoFirst(prNumber: number) {
 }
 
 // Repeat just the file part, since that's all we need here
-const getPRInfoQueryRest: TypedDocumentNode<PRFiles, PRFilesVariables> = gql`
+const getPRInfoQueryRest: TypedDocumentNode<PrFilesQuery, PrFilesQueryVariables> = gql`
   query PRFiles($prNumber: Int!, $endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       pullRequest(number: $prNumber) {
@@ -294,6 +294,6 @@ async function getPRInfoRest(
     if (!newFiles) return;
     files.push(...noNullish(newFiles.nodes));
     if (files.length >= fileLimit || !newFiles.pageInfo.hasNextPage) return;
-    endCursor = newFiles.pageInfo.endCursor;
+    endCursor = newFiles.pageInfo.endCursor ?? null;
   }
 }

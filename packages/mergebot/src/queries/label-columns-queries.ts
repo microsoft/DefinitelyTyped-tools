@@ -1,12 +1,13 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
-import { GetLabels, GetLabelsVariables, GetLabels_repository_labels_nodes } from "./schema/GetLabels";
-import { GetProjectColumns, GetProjectColumnsVariables } from "./schema/GetProjectColumns";
+import type { GetLabelsQuery, GetLabelsQueryVariables, GetProjectColumnsQuery, GetProjectColumnsQueryVariables } from "./schema/graphql";
 import { client } from "../graphql-client";
 import { noNullish } from "../util/util";
 
+type GetLabels_repository_labels_nodes = NonNullable<NonNullable<NonNullable<GetLabelsQuery["repository"]>["labels"]>["nodes"]>[number];
+
 export { getLabels, getProjectColumns };
 
-const getLabelsQuery: TypedDocumentNode<GetLabels, GetLabelsVariables> = gql`
+const getLabelsQuery: TypedDocumentNode<GetLabelsQuery, GetLabelsQueryVariables> = gql`
   query GetLabels($endCursor: String) {
     repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
       id
@@ -40,7 +41,7 @@ async function getLabels() {
   }
 }
 
-const getProjectColumns: TypedDocumentNode<GetProjectColumns, GetProjectColumnsVariables> = gql`
+const getProjectColumns: TypedDocumentNode<GetProjectColumnsQuery, GetProjectColumnsQueryVariables> = gql`
   query GetProjectColumns($cursor: String) {
     repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
       id

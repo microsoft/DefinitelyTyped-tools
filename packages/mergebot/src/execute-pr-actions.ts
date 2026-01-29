@@ -1,7 +1,7 @@
 import { fieldIdStatic, LabelName, labelNames, projectBoardNumber, projectIdStatic } from "./basic";
 import { MutationOptions } from "@apollo/client/core";
 import * as schema from "@octokit/graphql-schema/schema";
-import { PR_repository_pullRequest } from "./queries/schema/PR";
+import type { PrQuery } from "./queries/schema/graphql";
 import { Actions } from "./compute-pr-actions";
 import { createMutation, client } from "./graphql-client";
 import { getProjectBoardColumns, getLabels } from "./util/cachedQueries";
@@ -10,6 +10,8 @@ import { tagsToDeleteIfNotPosted } from "./comments";
 import * as comment from "./util/comment";
 import { request } from "https";
 import { assertDefined } from "@definitelytyped/utils";
+
+type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
 
 export async function executePrActions(
   actions: Actions,
@@ -216,7 +218,7 @@ function getMutationsForChangingPRState(actions: Actions, pr: PR_repository_pull
 
 async function getLabelIdByName(name: string): Promise<string> {
   const labels = await getLabels();
-  const res = labels.find((l) => l.name === name)?.id;
+  const res = labels.find((l) => l?.name === name)?.id;
   if (!res) throw new Error(`No label named "${name}" exists`);
   return res;
 }

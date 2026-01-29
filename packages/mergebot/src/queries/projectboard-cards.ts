@@ -1,8 +1,8 @@
 import { ApolloQueryResult, gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetProjectBoardCards, GetProjectBoardCardsVariables } from "./schema/GetProjectBoardCards";
+import type { GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables } from "./schema/graphql";
 
-const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, GetProjectBoardCardsVariables> = gql`
+const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables> = gql`
   query GetProjectBoardCards($cursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       projectV2(number: 1) {
@@ -42,7 +42,7 @@ export async function getProjectBoardCards(): Promise<BoardInfo> {
   let id: string;
   const columns: Map<string, CardInfo[]> = new Map();
   do {
-    const results: ApolloQueryResult<GetProjectBoardCards> = await client.query({
+    const results: ApolloQueryResult<GetProjectBoardCardsQuery> = await client.query({
       query: getProjectBoardCardsQuery,
       variables: { cursor },
       fetchPolicy: "no-cache",
@@ -61,14 +61,14 @@ export async function getProjectBoardCards(): Promise<BoardInfo> {
         throw new Error("Unexpected card property type: " + card.fieldValueByName?.__typename);
       }
       const status = card.fieldValueByName.name;
-      if (status === null) {
+      if (!status) {
         throw new Error("Unexpected column: " + status);
       }
       const column = columns.get(status) || [];
       column.push({ id: card.id, updatedAt: card.updatedAt });
       columns.set(status, column);
     }
-    cursor = project.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor : null;
+    cursor = project.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor ?? null : null;
   } while (cursor);
   return { columns, id };
 }

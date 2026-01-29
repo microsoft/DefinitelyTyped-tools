@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "outDir": "dist",
+        "rootDir": "src",
         "strict": true,
         "module": "commonjs",
         "target": "es2022",
@@ -15,5 +16,6 @@
         "noImplicitReturns": true,
         "noUncheckedIndexedAccess": true,
         "skipLibCheck": true
-    }
+    },
+    "include": ["src"]
 }

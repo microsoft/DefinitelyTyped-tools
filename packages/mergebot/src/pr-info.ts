@@ -6,14 +6,7 @@ import {
   PopularityLevel,
   projectBoardNumber,
 } from "./basic";
-import {
-  PR_repository_pullRequest,
-  PR_repository_pullRequest_commits_nodes_commit_checkSuites,
-  PR_repository_pullRequest_timelineItems,
-  PR_repository_pullRequest_comments_nodes,
-  PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes,
-  PR_repository_pullRequest_reviews_nodes,
-} from "./queries/schema/PR";
+import type { PrQuery } from "./queries/schema/graphql";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid } from "./util/util";
@@ -24,6 +17,14 @@ import * as OldHeaderParser from "@definitelytyped/old-header-parser";
 import * as jsonDiff from "fast-json-patch";
 import { isDeepStrictEqual } from "util";
 import { isDeclarationPath } from "@definitelytyped/utils";
+
+// Type aliases for the nested types from the generated schema
+type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
+type PR_repository_pullRequest_commits_nodes_commit_checkSuites = NonNullable<NonNullable<NonNullable<PR_repository_pullRequest["commits"]["nodes"]>[number]>["commit"]["checkSuites"]>;
+type PR_repository_pullRequest_timelineItems = PR_repository_pullRequest["timelineItems"];
+type PR_repository_pullRequest_comments_nodes = NonNullable<NonNullable<PR_repository_pullRequest["comments"]["nodes"]>[number]>;
+type PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes = NonNullable<NonNullable<PR_repository_pullRequest_commits_nodes_commit_checkSuites["nodes"]>[number]>;
+type PR_repository_pullRequest_reviews_nodes = NonNullable<NonNullable<NonNullable<PR_repository_pullRequest["reviews"]>["nodes"]>[number]>;
 
 const criticalPopularityThreshold = 5_000_000;
 const normalPopularityThreshold = 200_000;
@@ -274,7 +275,7 @@ export async function deriveStateForPR(
     pkgInfo,
     reviews,
     mainBotCommentID,
-    ...getCIResult(headCommit.checkSuites),
+    ...getCIResult(headCommit.checkSuites ?? null),
   };
 
   function botError(message: string): BotError {
@@ -348,8 +349,8 @@ function getLastMaintainerBlessing(
       if (!(item.__typename === "MovedColumnsInProjectEvent" && authorNotBot(item))) return undefined;
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
-      const columnName = item.projectColumnName as ColumnName;
-      const blessedColumnName = columnNameToBlessed[columnName];
+      const columnName = (item as { projectColumnName?: string }).projectColumnName as ColumnName | undefined;
+      const blessedColumnName = columnName && columnNameToBlessed[columnName];
       if (blessedColumnName) {
         return { date: d, column: blessedColumnName };
       }
@@ -593,7 +594,9 @@ function getReviews(prInfo: PR_repository_pullRequest) {
   const reviews: ReviewInfo[] = [];
   // Do this in reverse order so we can detect up-to-date-reviews correctly
   for (const r of noNullish(prInfo.reviews.nodes).reverse()) {
-    const [reviewer, date] = [r.author?.login, new Date(r.submittedAt)];
+    const submittedAt = r.submittedAt;
+    if (!submittedAt) continue; // Skip reviews without a submission date
+    const [reviewer, date] = [r.author?.login, new Date(submittedAt)];
     // Skip nulls
     if (!(r.commit && reviewer)) continue;
     // Skip self-reviews
