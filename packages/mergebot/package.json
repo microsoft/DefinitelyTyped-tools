@@ -39,7 +39,7 @@
     "apollo": "^2.34.0",
     "esbuild": "^0.27.2",
     "jest-file-snapshot": "^0.7.0",
-    "rimraf": "^5.0.10",
+    "rimraf": "^6.1.2",
     "seroval": "^1.5.0",
     "typescript": "^5.9.3"
   },
