@@ -27,5 +27,7 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
 
 export async function getLabels() {
   const res = await getLabelsRaw();
-  return res.filter((l): l is NonNullable<typeof l> => !!l && !l.name.startsWith("Pkg:")).sort((a, b) => a.name.localeCompare(b.name));
+  return res
+    .filter((l): l is NonNullable<typeof l> => !!l && !l.name.startsWith("Pkg:"))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }

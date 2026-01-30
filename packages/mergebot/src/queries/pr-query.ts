@@ -3,7 +3,11 @@ import { client } from "../graphql-client";
 import type { PrQuery, PrQueryVariables, PrFilesQuery, PrFilesQueryVariables } from "./schema/graphql";
 import { noNullish } from "../util/util";
 
-type PR_repository_pullRequest_files_nodes = NonNullable<NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>["files"]>["nodes"] extends (infer T)[] | null | undefined ? NonNullable<T> : never;
+type PR_repository_pullRequest_files_nodes = NonNullable<
+  NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>["files"]
+>["nodes"] extends (infer T)[] | null | undefined
+  ? NonNullable<T>
+  : never;
 
 export const fileLimit = 500;
 

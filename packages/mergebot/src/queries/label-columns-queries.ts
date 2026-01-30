@@ -1,9 +1,16 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
-import type { GetLabelsQuery, GetLabelsQueryVariables, GetProjectColumnsQuery, GetProjectColumnsQueryVariables } from "./schema/graphql";
+import type {
+  GetLabelsQuery,
+  GetLabelsQueryVariables,
+  GetProjectColumnsQuery,
+  GetProjectColumnsQueryVariables,
+} from "./schema/graphql";
 import { client } from "../graphql-client";
 import { noNullish } from "../util/util";
 
-type GetLabels_repository_labels_nodes = NonNullable<NonNullable<NonNullable<GetLabelsQuery["repository"]>["labels"]>["nodes"]>[number];
+type GetLabels_repository_labels_nodes = NonNullable<
+  NonNullable<NonNullable<GetLabelsQuery["repository"]>["labels"]>["nodes"]
+>[number];
 
 export { getLabels, getProjectColumns };
 

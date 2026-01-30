@@ -2,7 +2,10 @@ import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
 import type { GetPrForSha1Query, GetPrForSha1QueryVariables } from "./schema/graphql";
 
-type GetPRForSHA1_search_nodes_PullRequest = Extract<NonNullable<NonNullable<GetPrForSha1Query["search"]["nodes"]>[number]>, { __typename?: "PullRequest" }>;
+type GetPRForSHA1_search_nodes_PullRequest = Extract<
+  NonNullable<NonNullable<GetPrForSha1Query["search"]["nodes"]>[number]>,
+  { __typename?: "PullRequest" }
+>;
 
 export const runQueryToGetPRMetadataForSHA1 = async (
   owner: string,

@@ -23,11 +23,19 @@ export type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["reposit
 
 // Type for fixture JSON files - intersects Apollo's QueryResult with { data: PrQuery } to narrow data from TData | undefined
 export type PRQueryResponse = Awaited<ReturnType<typeof getPRInfo>> & { data: PrQuery };
-type PR_repository_pullRequest_commits_nodes_commit_checkSuites = NonNullable<NonNullable<NonNullable<PR_repository_pullRequest["commits"]["nodes"]>[number]>["commit"]["checkSuites"]>;
+type PR_repository_pullRequest_commits_nodes_commit_checkSuites = NonNullable<
+  NonNullable<NonNullable<PR_repository_pullRequest["commits"]["nodes"]>[number]>["commit"]["checkSuites"]
+>;
 type PR_repository_pullRequest_timelineItems = PR_repository_pullRequest["timelineItems"];
-type PR_repository_pullRequest_comments_nodes = NonNullable<NonNullable<PR_repository_pullRequest["comments"]["nodes"]>[number]>;
-type PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes = NonNullable<NonNullable<PR_repository_pullRequest_commits_nodes_commit_checkSuites["nodes"]>[number]>;
-type PR_repository_pullRequest_reviews_nodes = NonNullable<NonNullable<NonNullable<PR_repository_pullRequest["reviews"]>["nodes"]>[number]>;
+type PR_repository_pullRequest_comments_nodes = NonNullable<
+  NonNullable<PR_repository_pullRequest["comments"]["nodes"]>[number]
+>;
+type PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes = NonNullable<
+  NonNullable<PR_repository_pullRequest_commits_nodes_commit_checkSuites["nodes"]>[number]
+>;
+type PR_repository_pullRequest_reviews_nodes = NonNullable<
+  NonNullable<NonNullable<PR_repository_pullRequest["reviews"]>["nodes"]>[number]
+>;
 
 const criticalPopularityThreshold = 5_000_000;
 const normalPopularityThreshold = 200_000;

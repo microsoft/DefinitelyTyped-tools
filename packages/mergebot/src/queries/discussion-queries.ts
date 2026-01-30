@@ -33,24 +33,25 @@ export async function getLabelByName(name: string) {
   return { repoID: info.data?.repository?.id ?? "", label };
 }
 
-const getDiscussionCommentsQuery: TypedDocumentNode<GetDiscussionCommentsQuery, GetDiscussionCommentsQueryVariables> = gql`
-  query GetDiscussionComments($discussionNumber: Int!) {
-    repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
-      name
-      discussion(number: $discussionNumber) {
-        comments(first: 100) {
-          nodes {
-            author {
-              login
+const getDiscussionCommentsQuery: TypedDocumentNode<GetDiscussionCommentsQuery, GetDiscussionCommentsQueryVariables> =
+  gql`
+    query GetDiscussionComments($discussionNumber: Int!) {
+      repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
+        name
+        discussion(number: $discussionNumber) {
+          comments(first: 100) {
+            nodes {
+              author {
+                login
+              }
+              id
+              body
             }
-            id
-            body
           }
         }
       }
     }
-  }
-`;
+  `;
 
 export async function getCommentsForDiscussionNumber(number: number) {
   const info = await client.query({
