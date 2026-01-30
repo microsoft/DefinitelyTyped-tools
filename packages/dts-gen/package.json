@@ -21,7 +21,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.17.0"
   },
   "dependencies": {
     "dts-dom": "^3.7.0",
@@ -30,12 +30,12 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^18.19.64",
+    "@types/node": "^25.1.0",
     "@types/parse-git-config": "^3.0.4",
-    "@types/yargs": "^17.0.33",
+    "@types/yargs": "^17.0.35",
     "ecurve": "1.0.6",
     "jquery": "3.7.1",
-    "lodash": "4.17.21"
+    "lodash": "4.17.23"
   },
   "keywords": [
     "typescript"

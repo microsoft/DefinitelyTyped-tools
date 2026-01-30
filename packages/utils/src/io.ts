@@ -1,5 +1,5 @@
 import fs from "fs";
-import { Pack } from "tar";
+import { Pack, ReadEntry } from "tar";
 import tarStream from "tar-stream";
 import https, { Agent, request } from "https";
 import { resolve, sep } from "path";
@@ -264,11 +264,11 @@ export function writeTgz(inputDirectory: string, outFileName: string): Promise<v
 
 // To output this for testing:
 // `require("./dist/io").createTgz("./src", err => { throw err }).pipe(fs.createWriteStream("foo.tgz"))`
-export function createTgz(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
+export function createTgz(dir: string, onError: (error: any) => void): NodeJS.ReadableStream {
   return gzip(createTar(dir, onError));
 }
 
-function createTar(dir: string, onError: (error: Error) => void): NodeJS.ReadableStream {
+function createTar(dir: string, onError: (error: any) => void): NodeJS.ReadableStream {
   const dirSegments = resolve(dir).split(sep);
   const parentDir = dirSegments.slice(0, dirSegments.length - 1).join(sep);
   const entryToAdd = dirSegments[dirSegments.length - 1];
@@ -284,7 +284,10 @@ function createTar(dir: string, onError: (error: Error) => void): NodeJS.Readabl
  * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
  * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
  */
-function addDirectoryExecutablePermission(_: string, stat: fs.Stats): boolean {
+function addDirectoryExecutablePermission(_: string, stat: ReadEntry | fs.Stats): boolean {
+  if (stat instanceof ReadEntry) {
+    return true; // never happens?
+  }
   if (stat.isDirectory()) {
     stat.mode = addExecutePermissionsFromReadPermissions(stat.mode);
   }

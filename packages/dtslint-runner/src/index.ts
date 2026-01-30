@@ -7,7 +7,7 @@ import { runDTSLint } from "./main";
 import { assertDefined, logUncaughtErrors } from "@definitelytyped/utils";
 import { sourceBranch } from "@definitelytyped/definitions-parser";
 
-export { runDTSLint, RunDTSLintOptions };
+export { runDTSLint, type RunDTSLintOptions };
 
 if (require.main === module) {
   const args = yargs

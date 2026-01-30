@@ -22,15 +22,15 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "semver": "^7.6.3"
+    "semver": "^7.7.3"
   },
   "devDependencies": {
-    "@types/semver": "^7.5.8"
+    "@types/semver": "^7.7.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.17.0"
   }
 }
