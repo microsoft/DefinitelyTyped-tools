@@ -10,6 +10,7 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true,
         enumsAsTypes: false,
+        onlyOperationTypes: true,
         scalars: {
           URI: "string",
           DateTime: "string",
