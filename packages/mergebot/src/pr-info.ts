@@ -361,7 +361,7 @@ function getLastMaintainerBlessing(
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
       const columnName = item.projectColumnName as ColumnName;
-      const blessedColumnName = columnName && columnNameToBlessed[columnName];
+      const blessedColumnName = columnNameToBlessed[columnName];
       if (blessedColumnName) {
         return { date: d, column: blessedColumnName };
       }
