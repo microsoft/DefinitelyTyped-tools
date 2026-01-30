@@ -1,89 +1,87 @@
 import * as os from "os";
 import process from "process";
-import fs from "fs";
-import RegClient from "@qiwi/npm-registry-client";
-import { resolve as resolveUrl } from "url";
+import { publish } from "libnpmpublish";
+import npmFetch from "npm-registry-fetch";
 import { joinPaths } from "./fs";
 import { Logger } from "./logging";
-import { createTgz } from "./io";
+import { createTgz, streamToBuffer } from "./io";
 
 export const npmRegistryHostName = "registry.npmjs.org";
 export const npmRegistry = `https://${npmRegistryHostName}/`;
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
-type NeedToFixNpmRegistryClientTypings = any;
+interface PackageJson {
+  name: string;
+  version: string;
+  [key: string]: unknown;
+}
 
 export class NpmPublishClient {
-  static async create(token: string, config?: NeedToFixNpmRegistryClientTypings): Promise<NpmPublishClient> {
-    return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
+  static async create(token: string, _config?: {}): Promise<NpmPublishClient> {
+    return new NpmPublishClient(token, npmRegistry);
   }
 
   private constructor(
-    private readonly client: RegClient,
-    private readonly auth: NeedToFixNpmRegistryClientTypings,
+    private readonly token: string,
     private readonly registry: string,
   ) {}
 
-  async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
-    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"));
+  async publish(publishedDirectory: string, packageJson: PackageJson, dry: boolean, log: Logger): Promise<void> {
+    if (dry) {
+      log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
+      return;
+    }
 
-    return new Promise<void>((resolve, reject) => {
-      const body = createTgz(publishedDirectory, reject);
-      const metadata = { readme, ...packageJson };
-      if (dry) {
-        log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
-      }
-      resolve(
-        dry
-          ? undefined
-          : promisifyVoid((cb) => {
-              this.client.publish(
-                this.registry,
-                {
-                  access: "public",
-                  auth: this.auth,
-                  metadata: metadata as NeedToFixNpmRegistryClientTypings,
-                  body: body as NeedToFixNpmRegistryClientTypings,
-                },
-                cb,
-              );
-            }),
-      );
+    const tarballBuffer = await streamToBuffer(
+      createTgz(publishedDirectory, (err) => {
+        throw err;
+      }),
+    );
+
+    await publish(packageJson, tarballBuffer, {
+      registry: this.registry,
+      token: this.token,
+      access: "public",
     });
   }
 
-  tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
+  async tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
     if (dry) {
       log(`(dry) Skip tag of ${packageName}@${distTag} as ${version}`);
-      return Promise.resolve();
+      return;
     }
-    return promisifyVoid((cb) => {
-      this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
+
+    await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
+      method: "PUT",
+      registry: this.registry,
+      token: this.token,
+      body: JSON.stringify(version),
+      headers: {
+        "content-type": "application/json",
+      },
     });
   }
 
-  deprecate(packageName: string, version: string, message: string): Promise<void> {
-    const url = resolveUrl(npmRegistry, packageName);
-    const params = {
-      message,
-      version,
-      auth: this.auth,
-    };
-    return promisifyVoid((cb) => {
-      this.client.deprecate(url, params, cb);
+  async deprecate(packageName: string, version: string, message: string): Promise<void> {
+    // Fetch the current package metadata
+    const packument = (await npmFetch.json(`/${encodeURIComponent(packageName)}`, {
+      registry: this.registry,
+      token: this.token,
+    })) as { versions: Record<string, { deprecated?: string }> };
+
+    // Update the deprecated field for the specified version
+    if (!packument.versions[version]) {
+      throw new Error(`Version ${version} not found in ${packageName}`);
+    }
+    packument.versions[version].deprecated = message;
+
+    // PUT the updated packument back
+    await npmFetch(`/${encodeURIComponent(packageName)}`, {
+      method: "PUT",
+      registry: this.registry,
+      token: this.token,
+      body: packument,
     });
   }
-}
-
-function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => void): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    callsBack((error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
-    });
-  });
 }
