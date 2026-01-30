@@ -1,10 +1,8 @@
 import * as computeActions from "../compute-pr-actions";
 import { getPRInfo } from "../queries/pr-query";
-import { deriveStateForPR } from "../pr-info";
-import { ApolloQueryResult } from "@apollo/client/core";
+import { deriveStateForPR, PRQueryResponse } from "../pr-info";
 import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { join } from "path";
-import { PR } from "../queries/schema/PR";
 import { fetchFile } from "../util/fetchFile";
 import { getMonthlyDownloadCount } from "../util/npm";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
@@ -24,7 +22,7 @@ export default async function main(directory: string, overwriteInfo: boolean) {
   if (overwriteInfo || !existsSync(jsonFixturePath)) {
     writeJsonSync(jsonFixturePath, await getPRInfo(prNumber));
   }
-  const response: ApolloQueryResult<PR> = readJsonSync(jsonFixturePath);
+  const response: PRQueryResponse = readJsonSync(jsonFixturePath);
 
   const filesJSONPath = join(fixturePath, "_files.json");
   const filesFetched: { [expr: string]: string | undefined } = {};

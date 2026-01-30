@@ -1,4 +1,4 @@
-import * as schema from "@octokit/graphql-schema/schema";
+import * as schema from "@octokit/graphql-schema";
 import { CheckSuiteEvent } from "@octokit/webhooks-types";
 import { createMutation, client } from "../graphql-client";
 

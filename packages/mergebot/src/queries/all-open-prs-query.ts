@@ -1,9 +1,9 @@
 import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetAllOpenPRs, GetAllOpenPRsVariables } from "./schema/GetAllOpenPRs";
+import type { GetAllOpenPRsQuery, GetAllOpenPRsQueryVariables } from "./schema/graphql";
 import { noNullish } from "../util/util";
 
-const getAllOpenPRsQuery: TypedDocumentNode<GetAllOpenPRs, GetAllOpenPRsVariables> = gql`
+const getAllOpenPRsQuery: TypedDocumentNode<GetAllOpenPRsQuery, GetAllOpenPRsQueryVariables> = gql`
   query GetAllOpenPRs($endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
@@ -29,7 +29,7 @@ export async function getAllOpenPRs() {
       fetchPolicy: "no-cache",
       variables: { endCursor },
     });
-    const pullRequests = result.data.repository?.pullRequests;
+    const pullRequests = result.data?.repository?.pullRequests;
     prs.push(...noNullish(pullRequests?.nodes).map((pr) => pr.number));
     if (!pullRequests?.pageInfo.hasNextPage) return prs;
     endCursor = pullRequests.pageInfo.endCursor;

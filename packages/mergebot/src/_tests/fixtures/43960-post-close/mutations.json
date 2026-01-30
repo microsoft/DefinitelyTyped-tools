@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "MDExOlByb2plY3RDYXJkMzY0NDM4NTI=",

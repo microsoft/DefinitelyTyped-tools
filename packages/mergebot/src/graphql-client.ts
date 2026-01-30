@@ -1,14 +1,11 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache, MutationOptions, TypedDocumentNode } from "@apollo/client/core";
 import { print } from "graphql";
-import * as schema from "@octokit/graphql-schema/schema";
+import * as schema from "@octokit/graphql-schema";
 
-// get the values directly from the apollo config
-const apolloCfg = require("../apollo.config.js").client.service;
-
-const uri = apolloCfg.url;
+const uri = "https://api.github.com/graphql";
 const headers = {
-  ...apolloCfg.headers,
   authorization: `Bearer ${getAuthToken()}`,
+  accept: "application/vnd.github.starfox-preview+json, application/vnd.github.bane-preview+json",
 };
 
 const cache = new InMemoryCache();

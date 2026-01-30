@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "PR_kwDOAFz6BM59K3Uu",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "labelIds": [
@@ -21,7 +21,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}\n",
+    "mutation": "mutation ($input: AddProjectV2ItemByIdInput!) {\n  addProjectV2ItemById(input: $input) {\n    __typename\n    item {\n      id\n    }\n  }\n}",
     "variables": {
       "input": {
         "contentId": "PR_kwDOAFz6BM59K3Uu",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateProjectV2ItemFieldValueInput!) {\n  updateProjectV2ItemFieldValue(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "TEST",
@@ -43,7 +43,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "PR_kwDOAFz6BM59K3Uu",

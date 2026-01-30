@@ -1,6 +1,6 @@
 [
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDY0NzEwNDY2NQ==",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "labelIds": [
@@ -22,7 +22,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: DeleteProjectV2ItemInput!) {\n  deleteProjectV2Item(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "itemId": "MDExOlByb2plY3RDYXJkNDA0NTk5NzM=",
@@ -31,7 +31,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: MergePullRequestInput!) {\n  mergePullRequest(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "commitHeadline": "🤖 Merge PR #45627 [webpack] fix for MultiCompiler doesn't define Multistats for callback/handler of run method by @spamshaker",
@@ -42,7 +42,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: ClosePullRequestInput!) {\n  closePullRequest(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: ClosePullRequestInput!) {\n  closePullRequest(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "pullRequestId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2"
@@ -50,7 +50,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2",
@@ -59,7 +59,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "id": "MDEyOklzc3VlQ29tbWVudDYyMTU1OTExNA==",
@@ -68,7 +68,7 @@
     }
   },
   {
-    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}\n",
+    "mutation": "mutation ($input: AddCommentInput!) {\n  addComment(input: $input) {\n    __typename\n  }\n}",
     "variables": {
       "input": {
         "subjectId": "MDExOlB1bGxSZXF1ZXN0NDM3NTIxMTQ2",

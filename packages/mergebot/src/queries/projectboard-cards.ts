@@ -1,8 +1,10 @@
-import { ApolloQueryResult, gql, TypedDocumentNode } from "@apollo/client/core";
+import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import { GetProjectBoardCards, GetProjectBoardCardsVariables } from "./schema/GetProjectBoardCards";
+import type { GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables } from "./schema/graphql";
 
-const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCards, GetProjectBoardCardsVariables> = gql`
+type ProjectV2 = NonNullable<NonNullable<GetProjectBoardCardsQuery["repository"]>["projectV2"]>;
+
+const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables> = gql`
   query GetProjectBoardCards($cursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       projectV2(number: 1) {
@@ -39,16 +41,17 @@ interface BoardInfo {
 }
 export async function getProjectBoardCards(): Promise<BoardInfo> {
   let cursor: string | null = null;
-  let id: string;
+  let id = "";
   const columns: Map<string, CardInfo[]> = new Map();
-  do {
-    const results: ApolloQueryResult<GetProjectBoardCards> = await client.query({
+  while (true) {
+    const vars: GetProjectBoardCardsQueryVariables = { cursor };
+    const results = await client.query({
       query: getProjectBoardCardsQuery,
-      variables: { cursor },
+      variables: vars,
       fetchPolicy: "no-cache",
     });
 
-    const project = results.data.repository?.projectV2;
+    const project = results.data?.repository?.projectV2;
     if (!project || !project.items.nodes) {
       throw new Error("No project found");
     }
@@ -61,14 +64,15 @@ export async function getProjectBoardCards(): Promise<BoardInfo> {
         throw new Error("Unexpected card property type: " + card.fieldValueByName?.__typename);
       }
       const status = card.fieldValueByName.name;
-      if (status === null) {
+      if (!status) {
         throw new Error("Unexpected column: " + status);
       }
       const column = columns.get(status) || [];
       column.push({ id: card.id, updatedAt: card.updatedAt });
       columns.set(status, column);
     }
-    cursor = project.items.pageInfo.hasNextPage ? project.items.pageInfo.endCursor : null;
-  } while (cursor);
+    if (!project.items.pageInfo.hasNextPage) break;
+    cursor = project.items.pageInfo.endCursor ?? null;
+  }
   return { columns, id };
 }

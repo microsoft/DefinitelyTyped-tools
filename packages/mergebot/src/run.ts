@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as schema from "@octokit/graphql-schema/schema";
+import * as schema from "@octokit/graphql-schema";
 import yargs from "yargs";
 import { process as computeActions } from "./compute-pr-actions";
 import { getAllOpenPRs } from "./queries/all-open-prs-query";
@@ -96,7 +96,7 @@ const start = async function () {
     // Generate the info for the PR from scratch
     const info = await getPRInfo(pr);
     if (args["show-raw"]) show("Raw Query Result", info);
-    const prInfo = info.data.repository?.pullRequest;
+    const prInfo = info.data?.repository?.pullRequest;
     // If it didn't work, bail early
     if (!prInfo) {
       console.error(`  No PR with this number exists, (${JSON.stringify(info)})`);
