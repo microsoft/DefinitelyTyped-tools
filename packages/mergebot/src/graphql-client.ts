@@ -1,6 +1,6 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache, MutationOptions, TypedDocumentNode } from "@apollo/client/core";
 import { print } from "graphql";
-import * as schema from "@octokit/graphql-schema/schema";
+import * as schema from "@octokit/graphql-schema";
 
 const uri = "https://api.github.com/graphql";
 const headers = {

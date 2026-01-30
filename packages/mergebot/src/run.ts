@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as schema from "@octokit/graphql-schema/schema";
+import * as schema from "@octokit/graphql-schema";
 import yargs from "yargs";
 import { process as computeActions } from "./compute-pr-actions";
 import { getAllOpenPRs } from "./queries/all-open-prs-query";
