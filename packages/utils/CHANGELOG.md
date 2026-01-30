@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.9
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+
 ## 0.1.8
 
 ### Patch Changes
