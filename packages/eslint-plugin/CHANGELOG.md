@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.27
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+- Updated dependencies [02fa155]
+  - @definitelytyped/utils@0.1.9
+
 ## 0.1.26
 
 ### Patch Changes

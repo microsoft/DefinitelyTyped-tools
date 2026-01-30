@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.1.23
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+- Updated dependencies [02fa155]
+  - @definitelytyped/header-parser@0.2.21
+
 ## 0.1.22
 
 ### Patch Changes

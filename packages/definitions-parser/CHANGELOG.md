@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.24
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+- Updated dependencies [02fa155]
+  - @definitelytyped/typescript-versions@0.1.10
+  - @definitelytyped/header-parser@0.2.21
+  - @definitelytyped/utils@0.1.9
+
 ## 0.1.23
 
 ### Patch Changes

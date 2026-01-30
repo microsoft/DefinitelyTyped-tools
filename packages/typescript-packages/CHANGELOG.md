@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.10
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+- Updated dependencies [02fa155]
+  - @definitelytyped/typescript-versions@0.1.10
+
 ## 0.1.9
 
 ### Patch Changes

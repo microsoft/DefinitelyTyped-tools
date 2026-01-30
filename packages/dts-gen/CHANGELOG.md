@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.7
+
+### Patch Changes
+
+- 02fa155: Update dependencies, require Node 20"
+
 ## 0.10.6
 
 ### Patch Changes
