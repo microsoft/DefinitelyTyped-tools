@@ -360,7 +360,7 @@ function getLastMaintainerBlessing(
       if (!(item.__typename === "MovedColumnsInProjectEvent" && authorNotBot(item))) return undefined;
       const d = new Date(item.createdAt);
       if (d <= after) return undefined;
-      const columnName = (item as { projectColumnName?: string }).projectColumnName as ColumnName | undefined;
+      const columnName = item.projectColumnName as ColumnName;
       const blessedColumnName = columnName && columnNameToBlessed[columnName];
       if (blessedColumnName) {
         return { date: d, column: blessedColumnName };

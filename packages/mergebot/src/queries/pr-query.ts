@@ -83,6 +83,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
                 login
               }
               createdAt
+              projectColumnName
             }
             ... on HeadRefForcePushedEvent {
               actor {
