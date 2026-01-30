@@ -45,6 +45,7 @@
       ]
     },
     "ignoredBuiltDependencies": [
+      "@parcel/watcher",
       "core-js",
       "core-js-pure",
       "unrs-resolver",
