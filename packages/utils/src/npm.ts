@@ -1,5 +1,6 @@
 import * as os from "os";
 import process from "process";
+import fs from "fs";
 import { publish } from "libnpmpublish";
 import npmFetch from "npm-registry-fetch";
 import { joinPaths } from "./fs";
@@ -37,13 +38,15 @@ export class NpmPublishClient {
       return;
     }
 
+    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"), "utf-8");
     const tarballBuffer = await streamToBuffer(
       createTgz(publishedDirectory, (err) => {
         throw err;
       }),
     );
 
-    await publish(packageJson as { name: string; version: string }, tarballBuffer, {
+    const manifest = { ...packageJson, readme } as unknown as { name: string; version: string };
+    await publish(manifest, tarballBuffer, {
       registry: this.registry,
       token: this.token,
       access: "public",
