@@ -11,14 +11,19 @@ export const npmRegistry = `https://${npmRegistryHostName}/`;
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
+export interface NpmPublishClientConfig {
+  defaultTag?: string;
+}
+
 export class NpmPublishClient {
-  static async create(token: string, _config?: {}): Promise<NpmPublishClient> {
-    return new NpmPublishClient(token, npmRegistry);
+  static async create(token: string, config: NpmPublishClientConfig = {}): Promise<NpmPublishClient> {
+    return new NpmPublishClient(token, npmRegistry, config.defaultTag);
   }
 
   private constructor(
     private readonly token: string,
     private readonly registry: string,
+    private readonly defaultTag: string | undefined,
   ) {}
 
   async publish(
@@ -42,6 +47,7 @@ export class NpmPublishClient {
       registry: this.registry,
       token: this.token,
       access: "public",
+      tag: this.defaultTag,
     });
   }
 
