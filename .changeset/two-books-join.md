@@ -1,4 +1,5 @@
 ---
+"@definitelytyped/definitions-parser": patch
 "@definitelytyped/utils": patch
 ---
 
