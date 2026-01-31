@@ -82,14 +82,17 @@ async function getPackageJson(dtName: string, packageName: string): Promise<{}> 
 
   let authorName = "My Self";
   try {
-    authorName = execFileSync(which.sync("git"), ["config", "--global", "user.name"], { encoding: "utf-8" }).trim() || authorName;
+    authorName =
+      execFileSync(which.sync("git"), ["config", "--global", "user.name"], { encoding: "utf-8" }).trim() || authorName;
   } catch (e: any) {
     console.warn(`Warning: Could not retrieve author name: ${e.message}`);
   }
 
   let authorUserName = "me";
   try {
-    const remoteUrl = execFileSync(which.sync("git"), ["config", "--get", "remote.origin.url"], { encoding: "utf-8" }).trim();
+    const remoteUrl = execFileSync(which.sync("git"), ["config", "--get", "remote.origin.url"], {
+      encoding: "utf-8",
+    }).trim();
     // Handle HTTPS URLs like https://github.com/user/repo.git
     const httpsMatch = remoteUrl.match(/github\.com\/([^/]+)/);
     // Handle SSH URLs like git@github.com:user/repo.git
