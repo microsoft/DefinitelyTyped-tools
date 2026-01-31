@@ -21,7 +21,12 @@ export class NpmPublishClient {
     private readonly registry: string,
   ) {}
 
-  async publish(publishedDirectory: string, packageJson: Record<string, unknown>, dry: boolean, log: Logger): Promise<void> {
+  async publish(
+    publishedDirectory: string,
+    packageJson: Record<string, unknown>,
+    dry: boolean,
+    log: Logger,
+  ): Promise<void> {
     if (dry) {
       log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
       return;

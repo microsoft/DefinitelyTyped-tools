@@ -35,7 +35,7 @@ export interface ChangedPackages {
 }
 
 export async function readChangedPackages(allPackages: AllPackages): Promise<ChangedPackages> {
-  const json = await readDataFile("calculate-versions", versionsFilename) as unknown as ChangedPackagesJson;
+  const json = (await readDataFile("calculate-versions", versionsFilename)) as unknown as ChangedPackagesJson;
   return {
     changedTypings: await Promise.all(
       json.changedTypings.map(async ({ id, version, latestVersion }) => ({

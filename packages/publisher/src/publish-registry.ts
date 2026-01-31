@@ -211,7 +211,11 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
   }
 }
 
-function generatePackageJson(name: string, version: string, typesPublisherContentHash: string): Record<string, unknown> {
+function generatePackageJson(
+  name: string,
+  version: string,
+  typesPublisherContentHash: string,
+): Record<string, unknown> {
   const json = {
     name,
     version,
