@@ -7,9 +7,6 @@ import { joinPaths } from "./fs";
 import { Logger } from "./logging";
 import { createTgz, streamToBuffer } from "./io";
 
-export const npmRegistryHostName = "registry.npmjs.org";
-export const npmRegistry = `https://${npmRegistryHostName}/`;
-
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
 export interface NpmPublishClientConfig {
@@ -18,12 +15,11 @@ export interface NpmPublishClientConfig {
 
 export class NpmPublishClient {
   static async create(token: string, config: NpmPublishClientConfig = {}): Promise<NpmPublishClient> {
-    return new NpmPublishClient(token, npmRegistry, config.defaultTag);
+    return new NpmPublishClient(token, config.defaultTag);
   }
 
   private constructor(
     private readonly token: string,
-    private readonly registry: string,
     private readonly defaultTag: string | undefined,
   ) {}
 
@@ -34,7 +30,7 @@ export class NpmPublishClient {
     log: Logger,
   ): Promise<void> {
     if (dry) {
-      log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
+      log(`(dry) Skip publish of ${publishedDirectory}`);
       return;
     }
 
@@ -47,7 +43,6 @@ export class NpmPublishClient {
 
     const manifest = { ...packageJson, readme } as unknown as { name: string; version: string };
     await publish(manifest, tarballBuffer, {
-      registry: this.registry,
       token: this.token,
       access: "public",
       tag: this.defaultTag,
@@ -62,7 +57,6 @@ export class NpmPublishClient {
 
     await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
       method: "PUT",
-      registry: this.registry,
       token: this.token,
       body: JSON.stringify(version),
       headers: {
