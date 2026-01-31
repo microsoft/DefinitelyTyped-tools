@@ -30,7 +30,7 @@ export function identity<T>(t: T): T {
   return t;
 }
 
-export function isObject(value: unknown): value is object {
+export function isObject(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object";
 }
 

@@ -95,7 +95,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
   }
 }
 
-async function generate(registry: string, packageJson: {}): Promise<void> {
+async function generate(registry: string, packageJson: Record<string, unknown>): Promise<void> {
   await fs.promises.rm(registryOutputPath, { recursive: true, force: true });
   await fs.promises.mkdir(registryOutputPath, { recursive: true });
   await writeOutputJson("package.json", packageJson);
@@ -118,7 +118,7 @@ async function generate(registry: string, packageJson: {}): Promise<void> {
 async function publish(
   client: NpmPublishClient,
   packageName: string,
-  packageJson: {},
+  packageJson: Record<string, unknown>,
   version: string,
   dry: boolean,
   log: Logger,
@@ -211,7 +211,7 @@ function assertJsonNewer(newer: { [s: string]: any }, older: { [s: string]: any 
   }
 }
 
-function generatePackageJson(name: string, version: string, typesPublisherContentHash: string): object {
+function generatePackageJson(name: string, version: string, typesPublisherContentHash: string): Record<string, unknown> {
   const json = {
     name,
     version,

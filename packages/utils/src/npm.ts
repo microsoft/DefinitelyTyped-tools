@@ -11,12 +11,6 @@ export const npmRegistry = `https://${npmRegistryHostName}/`;
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
-interface PackageJson {
-  name: string;
-  version: string;
-  [key: string]: unknown;
-}
-
 export class NpmPublishClient {
   static async create(token: string, _config?: {}): Promise<NpmPublishClient> {
     return new NpmPublishClient(token, npmRegistry);
@@ -27,7 +21,7 @@ export class NpmPublishClient {
     private readonly registry: string,
   ) {}
 
-  async publish(publishedDirectory: string, packageJson: PackageJson, dry: boolean, log: Logger): Promise<void> {
+  async publish(publishedDirectory: string, packageJson: Record<string, unknown>, dry: boolean, log: Logger): Promise<void> {
     if (dry) {
       log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
       return;
@@ -39,7 +33,7 @@ export class NpmPublishClient {
       }),
     );
 
-    await publish(packageJson, tarballBuffer, {
+    await publish(packageJson as { name: string; version: string }, tarballBuffer, {
       registry: this.registry,
       token: this.token,
       access: "public",
