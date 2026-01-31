@@ -70,26 +70,4 @@ export class NpmPublishClient {
       },
     });
   }
-
-  async deprecate(packageName: string, version: string, message: string): Promise<void> {
-    // Fetch the current package metadata
-    const packument = (await npmFetch.json(`/${encodeURIComponent(packageName)}`, {
-      registry: this.registry,
-      token: this.token,
-    })) as { versions: Record<string, { deprecated?: string }> };
-
-    // Update the deprecated field for the specified version
-    if (!packument.versions[version]) {
-      throw new Error(`Version ${version} not found in ${packageName}`);
-    }
-    packument.versions[version].deprecated = message;
-
-    // PUT the updated packument back
-    await npmFetch(`/${encodeURIComponent(packageName)}`, {
-      method: "PUT",
-      registry: this.registry,
-      token: this.token,
-      body: packument,
-    });
-  }
 }
