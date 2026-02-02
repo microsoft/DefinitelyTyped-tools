@@ -43,9 +43,9 @@ export class NpmPublishClient {
 
     const manifest = { ...packageJson, readme } as unknown as { name: string; version: string };
     await publish(manifest, tarballBuffer, {
-      token: this.token,
+      forceAuth: { token: this.token },
       access: "public",
-      tag: this.defaultTag,
+      defaultTag: this.defaultTag,
     });
   }
 
@@ -57,7 +57,7 @@ export class NpmPublishClient {
 
     await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
       method: "PUT",
-      token: this.token,
+      forceAuth: { token: this.token },
       body: JSON.stringify(version),
       headers: {
         "content-type": "application/json",
