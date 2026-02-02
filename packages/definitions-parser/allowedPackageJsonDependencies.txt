@@ -582,6 +582,7 @@ ajv
 algoliasearch
 algoliasearch-helper
 analytics
+antd
 antlr4
 anydb-sql
 anymatch
