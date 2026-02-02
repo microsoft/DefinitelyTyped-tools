@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.25
+
+### Patch Changes
+
+- c80c8da: Switch back to official npm libs
+- Updated dependencies [7b1302d]
+- Updated dependencies [c80c8da]
+  - @definitelytyped/utils@0.1.10
+  - @definitelytyped/header-parser@0.2.22
+
 ## 0.1.24
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.8
+
+### Patch Changes
+
+- 589f363: Use git binary instead of parse-git-config
+
 ## 0.10.7
 
 ### Patch Changes
