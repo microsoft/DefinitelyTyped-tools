@@ -2,7 +2,7 @@ import fs from "fs";
 import { writeJson, joinPaths, readFileAndWarn } from "@definitelytyped/utils";
 import { dataDirPath } from "./lib/settings";
 
-export function readDataFile(generatedBy: string, fileName: string): Promise<object> {
+export function readDataFile(generatedBy: string, fileName: string): Promise<Record<string, unknown>> {
   return readFileAndWarn(generatedBy, dataFilePath(fileName));
 }
 

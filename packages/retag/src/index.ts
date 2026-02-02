@@ -49,7 +49,7 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
   const dt = await getDefinitelyTyped(options, log);
   const token = process.env.NPM_TOKEN as string;
 
-  const publishClient = await NpmPublishClient.create(token, {});
+  const publishClient = await NpmPublishClient.create(token);
   if (name) {
     const pkg = await AllPackages.readSingle(dt, name);
     const version = await getLatestTypingVersion(pkg);

@@ -77,8 +77,7 @@
     },
     "packages/utils": {
       "entry": ["src/index.ts", "src/types/*.ts"],
-      "project": "**/*.ts",
-      "ignoreDependencies": ["@qiwi/npm-types"]
+      "project": "**/*.ts"
     },
     "packages/mergebot": {
       "entry": ["src/functions/index.ts", "src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts", "src/scripts/updateJSONFixtures.ts"],
