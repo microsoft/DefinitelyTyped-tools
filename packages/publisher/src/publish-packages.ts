@@ -46,7 +46,7 @@ export default async function publishPackages(
     log("=== Publishing packages ===");
   }
 
-  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TYPES_TOKEN), undefined);
+  const client = await NpmPublishClient.create(await getSecret(Secret.NPM_TYPES_TOKEN));
 
   for (const cp of changedPackages.changedTypings) {
     log(`Publishing ${cp.pkg.desc}...`);

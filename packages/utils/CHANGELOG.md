@@ -1,5 +1,12 @@
 # @definitelytyped/utils
 
+## 0.1.10
+
+### Patch Changes
+
+- 7b1302d: Correct npm options
+- c80c8da: Switch back to official npm libs
+
 ## 0.1.9
 
 ### Patch Changes

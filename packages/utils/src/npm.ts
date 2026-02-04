@@ -1,89 +1,67 @@
 import * as os from "os";
 import process from "process";
 import fs from "fs";
-import RegClient from "@qiwi/npm-registry-client";
-import { resolve as resolveUrl } from "url";
+import { publish } from "libnpmpublish";
+import npmFetch from "npm-registry-fetch";
 import { joinPaths } from "./fs";
 import { Logger } from "./logging";
-import { createTgz } from "./io";
-
-export const npmRegistryHostName = "registry.npmjs.org";
-export const npmRegistry = `https://${npmRegistryHostName}/`;
+import { createTgz, streamToBuffer } from "./io";
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
-type NeedToFixNpmRegistryClientTypings = any;
+export interface NpmPublishClientConfig {
+  defaultTag?: string;
+}
 
 export class NpmPublishClient {
-  static async create(token: string, config?: NeedToFixNpmRegistryClientTypings): Promise<NpmPublishClient> {
-    return new NpmPublishClient(new RegClient(config), { token }, npmRegistry);
+  static async create(token: string, config: NpmPublishClientConfig = {}): Promise<NpmPublishClient> {
+    return new NpmPublishClient(token, config.defaultTag);
   }
 
   private constructor(
-    private readonly client: RegClient,
-    private readonly auth: NeedToFixNpmRegistryClientTypings,
-    private readonly registry: string,
+    private readonly token: string,
+    private readonly defaultTag: string | undefined,
   ) {}
 
-  async publish(publishedDirectory: string, packageJson: {}, dry: boolean, log: Logger): Promise<void> {
-    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"));
+  async publish(
+    publishedDirectory: string,
+    packageJson: Record<string, unknown>,
+    dry: boolean,
+    log: Logger,
+  ): Promise<void> {
+    if (dry) {
+      log(`(dry) Skip publish of ${publishedDirectory}`);
+      return;
+    }
 
-    return new Promise<void>((resolve, reject) => {
-      const body = createTgz(publishedDirectory, reject);
-      const metadata = { readme, ...packageJson };
-      if (dry) {
-        log(`(dry) Skip publish of ${publishedDirectory} to ${this.registry}`);
-      }
-      resolve(
-        dry
-          ? undefined
-          : promisifyVoid((cb) => {
-              this.client.publish(
-                this.registry,
-                {
-                  access: "public",
-                  auth: this.auth,
-                  metadata: metadata as NeedToFixNpmRegistryClientTypings,
-                  body: body as NeedToFixNpmRegistryClientTypings,
-                },
-                cb,
-              );
-            }),
-      );
+    const readme = await fs.promises.readFile(joinPaths(publishedDirectory, "README.md"), "utf-8");
+    const tarballBuffer = await streamToBuffer(
+      createTgz(publishedDirectory, (err) => {
+        throw err;
+      }),
+    );
+
+    const manifest = { ...packageJson, readme } as unknown as { name: string; version: string };
+    await publish(manifest, tarballBuffer, {
+      forceAuth: { token: this.token },
+      access: "public",
+      defaultTag: this.defaultTag,
     });
   }
 
-  tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
+  async tag(packageName: string, version: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
     if (dry) {
       log(`(dry) Skip tag of ${packageName}@${distTag} as ${version}`);
-      return Promise.resolve();
+      return;
     }
-    return promisifyVoid((cb) => {
-      this.client.distTags.add(this.registry, { package: packageName, version, distTag, auth: this.auth }, cb);
+
+    await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
+      method: "PUT",
+      forceAuth: { token: this.token },
+      body: JSON.stringify(version),
+      headers: {
+        "content-type": "application/json",
+      },
     });
   }
-
-  deprecate(packageName: string, version: string, message: string): Promise<void> {
-    const url = resolveUrl(npmRegistry, packageName);
-    const params = {
-      message,
-      version,
-      auth: this.auth,
-    };
-    return promisifyVoid((cb) => {
-      this.client.deprecate(url, params, cb);
-    });
-  }
-}
-
-function promisifyVoid(callsBack: (cb: (error: Error | undefined) => void) => void): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    callsBack((error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
-    });
-  });
 }

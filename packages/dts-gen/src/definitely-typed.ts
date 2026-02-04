@@ -1,10 +1,9 @@
+import { execFileSync } from "child_process";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { STATUS_CODES } from "http";
 import { get } from "https";
-import { homedir } from "os";
-import parseGitConfig = require("parse-git-config");
 import { join as joinPaths } from "path";
-import { parse as parseUrl } from "url";
+import which = require("which");
 import { getDTName } from "./names";
 
 export default function writeDefinitelyTypedPackage(
@@ -83,25 +82,22 @@ async function getPackageJson(dtName: string, packageName: string): Promise<{}> 
 
   let authorName = "My Self";
   try {
-    const globalGitConfig = parseGitConfig.sync({ cwd: homedir(), path: ".gitconfig" });
-    if (globalGitConfig.user && globalGitConfig.user.name) {
-      authorName = globalGitConfig.user.name;
-    }
+    authorName =
+      execFileSync(which.sync("git"), ["config", "--global", "user.name"], { encoding: "utf-8" }).trim() || authorName;
   } catch (e: any) {
     console.warn(`Warning: Could not retrieve author name: ${e.message}`);
   }
 
   let authorUserName = "me";
   try {
-    const repoGitConfig = parseGitConfig.sync({ path: joinPaths(".git", "config") });
-    if (repoGitConfig['remote "origin"'] && repoGitConfig['remote "origin"'].url) {
-      const url = parseUrl(repoGitConfig['remote "origin"'].url);
-      if (url.hostname === "github.com" && url.pathname) {
-        authorUserName = url.pathname.split("/")[1] || authorUserName;
-      } else if (url.pathname?.startsWith("git@github.com")) {
-        authorUserName = url.pathname.split(":")?.[1].split("/")?.[0] || authorUserName;
-      }
-    }
+    const remoteUrl = execFileSync(which.sync("git"), ["config", "--get", "remote.origin.url"], {
+      encoding: "utf-8",
+    }).trim();
+    // Handle HTTPS URLs like https://github.com/user/repo.git
+    const httpsMatch = remoteUrl.match(/github\.com\/([^/]+)/);
+    // Handle SSH URLs like git@github.com:user/repo.git
+    const sshMatch = remoteUrl.match(/github\.com:([^/]+)/);
+    authorUserName = httpsMatch?.[1] || sshMatch?.[1] || authorUserName;
   } catch (e: any) {
     console.warn(`Warning: Could not retrieve author's user name: ${e.message}`);
   }
