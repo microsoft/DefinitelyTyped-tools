@@ -1933,8 +1933,8 @@ packages:
     resolution: {integrity: sha512-mNe0Iigql08YupSOGv197YdHpPPr+EzDZmfCgMc7RPNaZTw5aLN01nBl6CHJOh3BGtnMIj83EeN4butBchc8Ag==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@sinclair/typebox@0.27.8':
-    resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
+  '@sinclair/typebox@0.27.10':
+    resolution: {integrity: sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA==}
 
   '@sinclair/typebox@0.34.48':
     resolution: {integrity: sha512-kKJTNuK3AQOrgjjotVxMrCn1sUJwM76wMszfq1kdU4uYVJjvEWuFQ6HgvLt4Xz3fSmZlTOxJ/Ie13KnIcWQXFA==}
@@ -6438,7 +6438,7 @@ snapshots:
 
   '@jest/schemas@29.6.3':
     dependencies:
-      '@sinclair/typebox': 0.27.8
+      '@sinclair/typebox': 0.27.10
 
   '@jest/schemas@30.0.5':
     dependencies:
@@ -6861,7 +6861,7 @@ snapshots:
       '@sigstore/core': 3.1.0
       '@sigstore/protobuf-specs': 0.5.0
 
-  '@sinclair/typebox@0.27.8': {}
+  '@sinclair/typebox@0.27.10': {}
 
   '@sinclair/typebox@0.34.48': {}
 
