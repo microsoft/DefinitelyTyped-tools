@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.11
+
+### Patch Changes
+
+- 670f4a7: Remove unused type param from misc functions
+
 ## 0.1.10
 
 ### Patch Changes
