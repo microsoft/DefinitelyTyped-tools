@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { Minimatch } from "minimatch";
 
-export function tryParseJson<T>(text: string): unknown;
+export function tryParseJson(text: string): unknown;
 export function tryParseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T): T | undefined;
 export function tryParseJson<T>(text: string, predicate?: (parsed: unknown) => parsed is T) {
   try {
@@ -11,7 +11,7 @@ export function tryParseJson<T>(text: string, predicate?: (parsed: unknown) => p
   }
 }
 
-export function parseJson<T>(text: string): unknown;
+export function parseJson(text: string): unknown;
 export function parseJson<T>(text: string, predicate?: (parsed: unknown) => parsed is T): T;
 export function parseJson<T>(text: string, predicate: (parsed: unknown) => parsed is T = (_): _ is T => true) {
   let parsed: unknown;

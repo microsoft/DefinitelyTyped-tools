@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '18.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  NODE_VERSION: '20.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
   RESOURCE_GROUP_NAME: dtmergebot3
   FUNCTION_APP_NAME: dtmergebot3
   STORAGE_ACCOUNT_NAME: dtmergebot3b1b7
