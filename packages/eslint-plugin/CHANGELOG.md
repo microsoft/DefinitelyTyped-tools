@@ -1,5 +1,12 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.30
+
+### Patch Changes
+
+- Updated dependencies [f1dee01]
+  - @definitelytyped/utils@0.1.12
+
 ## 0.1.29
 
 ### Patch Changes
