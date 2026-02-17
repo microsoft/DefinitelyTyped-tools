@@ -15,12 +15,12 @@ export interface NpmPublishClientConfig {
 
 export class NpmPublishClient {
   static async create(token: string, config: NpmPublishClientConfig = {}): Promise<NpmPublishClient> {
-    return new NpmPublishClient(token, config.defaultTag);
+    return new NpmPublishClient(token, config.defaultTag ?? "latest");
   }
 
   private constructor(
     private readonly token: string,
-    private readonly defaultTag: string | undefined,
+    private readonly defaultTag: string,
   ) {}
 
   async publish(
