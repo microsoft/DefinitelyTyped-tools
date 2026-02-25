@@ -1,13 +1,30 @@
-No errors
+types/no-type-only-packages-namespace/index.d.ts
+  2:14  error  'stringToBytes' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  3:14  error  'bytesToString' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  5:15  error  'UTF8' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u           @typescript-eslint/no-unused-vars
+  6:18  error  'stringToBytes' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  7:18  error  'bytesToString' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+
+✖ 5 problems (5 errors, 0 warnings)
 
 ==== types/no-type-only-packages-namespace/index.d.ts ====
 
     export namespace convertString {
         function stringToBytes(str: string): number[];
+                 ~~~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'stringToBytes' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
         function bytesToString(bytes: number[]): string;
+                 ~~~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'bytesToString' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
         namespace UTF8 {
+                  ~~~~
+!!! @typescript-eslint/no-unused-vars: 'UTF8' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
             function stringToBytes(str: string): number[];
+                     ~~~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'stringToBytes' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
             function bytesToString(bytes: number[]): string;
+                     ~~~~~~~~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'bytesToString' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
         }
     }
