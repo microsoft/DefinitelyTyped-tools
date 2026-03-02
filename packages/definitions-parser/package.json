@@ -22,10 +22,10 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@types/node": "^25.1.0",
+    "@types/node": "^25.3.3",
     "@types/semver": "^7.7.1",
-    "pacote": "^21.1.0",
-    "semver": "^7.7.3"
+    "pacote": "^21.4.0",
+    "semver": "^7.7.4"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",

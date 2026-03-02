@@ -26,11 +26,11 @@
   "dependencies": {
     "dts-dom": "^3.7.0",
     "typescript": "^5.9.3",
-    "which": "^6.0.0",
+    "which": "^6.0.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^25.1.0",
+    "@types/node": "^25.3.3",
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.35",
     "ecurve": "1.0.6",

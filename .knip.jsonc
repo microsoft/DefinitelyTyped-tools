@@ -5,20 +5,16 @@
       "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {
-      "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/dts-critic": {
-      "entry": ["develop.ts", "dt.ts", "index.ts"],
       "project": "**/*.ts"
     },
     "packages/dts-gen": {
-      "entry": ["src/index.ts", "src/run.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": ["ecurve", "jquery", "lodash"]
     },
     "packages/dtslint": {
-      "entry": ["src/index.ts", "src/updateConfig.ts", "src/rules/*.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": [
         "@typescript-eslint/eslint-plugin",
@@ -29,20 +25,15 @@
       ]
     },
     "packages/dtslint-runner": {
-      "entry": ["src/index.ts", "src/post-results.ts"],
-      "project": "**/*.ts",
-      "ignoreDependencies": [
-        "@definitelytyped/dtslint"
-      ]
+      "entry": ["src/post-results.ts"],
+      "project": "**/*.ts"
     },
     "packages/eslint-plugin": {
-      "entry": "src/index.ts",
       "project": "**/*.ts",
       "ignoreDependencies": ["@definitelytyped/eslint-plugin"],
       "ignore": ["**/suggestions.ts"]
     },
     "packages/header-parser": {
-      "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/publisher": {
@@ -52,39 +43,32 @@
         "src/full.ts",
         "src/generate-packages.ts",
         "src/get-definitely-typed.ts",
-        "src/index.ts",
         "src/main.ts",
         "src/publish-packages.ts",
         "src/publish-registry.ts",
-        "src/run.ts",
-        "src/tester/test.ts",
-        "src/validate.ts"
+        "src/run.ts"
       ],
       "project": "**/*.ts"
     },
     "packages/retag": {
-      "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/typescript-packages": {
-      "entry": "src/index.ts",
       "project": "**/*.ts",
       "ignoreDependencies": ["^typescript-.*"]
     },
     "packages/typescript-versions": {
-      "entry": "src/index.ts",
       "project": "**/*.ts"
     },
     "packages/utils": {
-      "entry": ["src/index.ts", "src/types/*.ts"],
       "project": "**/*.ts"
     },
     "packages/mergebot": {
-      "entry": ["src/functions/index.ts", "src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts", "src/scripts/updateJSONFixtures.ts"],
+      "entry": ["src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts"],
       "project": "**/*.ts",
       "ignore": ["src/queries/schema/*.ts"]
     }
   },
-  "ignore": ["**/dist/**", "**/fixtures/**", "**/testsource/**", "**/dtslint/test/*/**", "**/*.d.ts"],
+  "ignore": ["**/fixtures/**", "**/testsource/**", "**/*.d.ts"],
   "ignoreExportsUsedInFile": true
 }
