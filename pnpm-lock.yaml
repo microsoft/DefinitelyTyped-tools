@@ -188,9 +188,6 @@ importers:
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
-      '@types/strip-json-comments':
-        specifier: ^3.0.0
-        version: 3.0.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1948,10 +1945,6 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
-
-  '@types/strip-json-comments@3.0.0':
-    resolution: {integrity: sha512-+vSlZeCCGm/1Q3WwBJDUSGHvADTQjRl4Fve0AG9H+A4+xgJ7yAkWKoc4g7I9UoVqtwCzjv2g/GZn4xipokMYyQ==}
-    deprecated: This is a stub types definition. strip-json-comments provides its own type definitions, so you do not need this installed.
 
   '@types/tar-stream@3.1.4':
     resolution: {integrity: sha512-921gW0+g29mCJX0fRvqeHzBlE/XclDaAG0Ousy1LCghsOhvaKacDeRGEVzQP9IPfKn8Vysy7FEXAIxycpc/CMg==}
@@ -6846,10 +6839,6 @@ snapshots:
       '@types/node': 25.3.3
 
   '@types/stack-utils@2.0.3': {}
-
-  '@types/strip-json-comments@3.0.0':
-    dependencies:
-      strip-json-comments: 3.1.1
 
   '@types/tar-stream@3.1.4':
     dependencies:
