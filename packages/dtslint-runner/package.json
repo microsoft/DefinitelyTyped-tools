@@ -30,7 +30,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "glob": "^13.0.0"
+    "glob": "^13.0.6"
   },
   "engines": {
     "node": ">=20.17.0"

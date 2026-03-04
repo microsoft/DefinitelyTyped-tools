@@ -11,8 +11,8 @@
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "longjohn": "^0.2.12",
-    "pacote": "^21.1.0",
-    "semver": "^7.7.3",
+    "pacote": "^21.4.0",
+    "semver": "^7.7.4",
     "typescript": "^5.9.3",
     "yargs": "^17.7.2"
   },
