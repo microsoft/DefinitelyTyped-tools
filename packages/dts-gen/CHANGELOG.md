@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.9
+
+### Patch Changes
+
+- 6e382a5: Update dependencies
+
 ## 0.10.8
 
 ### Patch Changes
