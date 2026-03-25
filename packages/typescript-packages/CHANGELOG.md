@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.11
+
+### Patch Changes
+
+- 9e3596c: Mark 6.0 as supported, drop 5.2
+- Updated dependencies [9e3596c]
+  - @definitelytyped/typescript-versions@0.1.11
+
 ## 0.1.10
 
 ### Patch Changes
