@@ -460,7 +460,7 @@ importers:
         version: typescript@5.9.3
       typescript-6.0:
         specifier: npm:typescript@~6.0.0-0
-        version: typescript@6.0.0-dev.20260302
+        version: typescript@6.0.2
 
   packages/typescript-versions: {}
 
@@ -4777,8 +4777,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@6.0.0-dev.20260302:
-    resolution: {integrity: sha512-f1OyfRwerbx6t8dQdNRa3YLgPqAbmE3ugnqDvf7dJBq40ZSTN9NpibhfTcGuUBP0kB/o0MHFOlxv2Cznguk65Q==}
+  typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -10105,7 +10105,7 @@ snapshots:
 
   typescript@5.9.3: {}
 
-  typescript@6.0.0-dev.20260302: {}
+  typescript@6.0.2: {}
 
   ua-parser-js@1.0.41: {}
 
