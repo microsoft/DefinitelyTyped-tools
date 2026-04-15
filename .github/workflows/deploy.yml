@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: pnpm/action-setup@08c4be7e2e672a47d11bd04269e27e5f3e8529cb # v6.0.0
 
       - name: Install and test
         run: |
@@ -47,7 +47,7 @@ jobs:
         run: zip -r ${{ github.workspace }}/${{ env.FUNCTION_ZIP_NAME }} dist host.json package.json
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: node-app
           path: ${{ env.FUNCTION_ZIP_NAME }}
