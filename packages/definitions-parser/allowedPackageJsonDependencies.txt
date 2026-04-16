@@ -562,6 +562,7 @@
 @vue/test-utils
 @webgpu/types
 @wordpress/api-fetch
+@wordpress/blocks
 @wordpress/components
 @wordpress/core-data
 @wordpress/data
