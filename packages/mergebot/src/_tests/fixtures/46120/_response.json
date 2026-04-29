@@ -1514,7 +1514,8 @@
               "__typename": "PullRequestReview"
             }
           ],
-          "__typename": "PullRequestReviewConnection"
+          "__typename": "PullRequestReviewConnection",
+          "totalCount": 44
         },
         "commits": {
           "totalCount": 20,

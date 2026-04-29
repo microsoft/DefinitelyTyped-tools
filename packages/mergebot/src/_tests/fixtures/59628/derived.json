@@ -15,6 +15,7 @@
   "tooManyFiles": false,
   "hugeChange": false,
   "tooManyCommits": false,
+  "tooManyReviews": false,
   "popularityLevel": "Popular",
   "pkgInfo": [
     {

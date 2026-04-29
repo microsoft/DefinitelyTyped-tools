@@ -115,7 +115,11 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
     tooManyOwners ||
     // Fail-closed: if the PR has more commits than we can fetch (>100), we cannot trust
     // owner/config comparisons against any computed merge-base, so always require a maintainer.
-    info.tooManyCommits;
+    info.tooManyCommits ||
+    // Fail-closed: if the PR has more reviews than we can fetch (>100), the per-reviewer
+    // dedup in getReviews can be tricked by review-spam into preferring a stale APPROVED
+    // over a newer CHANGES_REQUESTED, so always require a maintainer.
+    info.tooManyReviews;
   const blessable = !(hasNewPackages || possiblyEditsInfra || noOtherOwners);
   const blessed = blessable && isBlessed();
   const approvedReviews = info.reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];

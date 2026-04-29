@@ -97,6 +97,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
         }
 
         reviews(last: 100) {
+          totalCount
           nodes {
             author {
               login

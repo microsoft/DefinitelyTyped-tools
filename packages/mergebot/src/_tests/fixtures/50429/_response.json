@@ -55,7 +55,8 @@
         },
         "reviews": {
           "__typename": "PullRequestReviewConnection",
-          "nodes": []
+          "nodes": [],
+          "totalCount": 0
         },
         "commits": {
           "__typename": "PullRequestCommitConnection",

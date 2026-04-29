@@ -131,7 +131,8 @@
               }
             }
           ],
-          "__typename": "PullRequestReviewConnection"
+          "__typename": "PullRequestReviewConnection",
+          "totalCount": 2
         },
         "commits": {
           "totalCount": 2,

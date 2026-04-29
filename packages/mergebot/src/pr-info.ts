@@ -169,6 +169,14 @@ export interface PrInfo {
    */
   readonly tooManyCommits: boolean;
 
+  /*
+   * True when the PR has more reviews than `reviews` can return (>100). Used as a
+   * fail-closed signal: an attacker could otherwise spam reviews to push a CHANGES_REQUESTED
+   * out of the window while an older APPROVED for the same reviewer survives, fooling the
+   * per-reviewer dedup in `getReviews` into treating the PR as approved.
+   */
+  readonly tooManyReviews: boolean;
+
   readonly popularityLevel: PopularityLevel;
 
   readonly pkgInfo: readonly PackageInfo[];
@@ -218,6 +226,10 @@ export async function deriveStateForPR(
   // commitIds is `commits(last: 100)`; if there are more commits than that, we cannot reason
   // safely about the PR's history and force a maintainer review downstream.
   const tooManyCommits = (prInfo.commitIds.totalCount ?? 0) > (prInfo.commitIds.nodes?.length ?? 0);
+  // reviews is `reviews(last: 100)`; if there are more, the per-reviewer dedup in getReviews
+  // can be tricked by review-spam into seeing a stale APPROVED instead of a newer
+  // CHANGES_REQUESTED for the same reviewer.
+  const tooManyReviews = (prInfo.reviews?.totalCount ?? 0) > (prInfo.reviews?.nodes?.length ?? 0);
 
   const author = prInfo.author.login;
   const isFirstContribution = prInfo.authorAssociation === "FIRST_TIME_CONTRIBUTOR";
@@ -289,6 +301,7 @@ export async function deriveStateForPR(
     tooManyFiles,
     hugeChange,
     tooManyCommits,
+    tooManyReviews,
     popularityLevel,
     pkgInfo,
     reviews,
