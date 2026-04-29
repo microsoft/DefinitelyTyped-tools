@@ -107,7 +107,15 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   const hasNewPackages = newPackages.length > 0;
   const hasEditedPackages = packages.length > newPackages.length;
   const requireMaintainer =
-    possiblyEditsInfra || checkConfig || hasMultiplePackages || isUntested || hasNewPackages || tooManyOwners;
+    possiblyEditsInfra ||
+    checkConfig ||
+    hasMultiplePackages ||
+    isUntested ||
+    hasNewPackages ||
+    tooManyOwners ||
+    // Fail-closed: if the PR has more commits than we can fetch (>100), we cannot trust
+    // owner/config comparisons against any computed merge-base, so always require a maintainer.
+    info.tooManyCommits;
   const blessable = !(hasNewPackages || possiblyEditsInfra || noOtherOwners);
   const blessed = blessable && isBlessed();
   const approvedReviews = info.reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];

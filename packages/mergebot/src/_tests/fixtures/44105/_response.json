@@ -45,7 +45,9 @@
         "state": "CLOSED",
         "headRefOid": "77ac4d3554fe492d2ac23bf993d218ad4cd58873",
         "changedFiles": 2,
-        "commitIds": {},
+        "commitIds": {
+          "totalCount": 0
+        },
         "timelineItems": {
           "nodes": [
             {
@@ -444,7 +446,8 @@
             }
           ],
           "__typename": "ProjectV2ItemConnection"
-        }
+        },
+        "baseRefOid": "master"
       },
       "__typename": "Repository"
     }

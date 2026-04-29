@@ -13,6 +13,7 @@
   "isFirstContribution": false,
   "tooManyFiles": false,
   "hugeChange": false,
+  "tooManyCommits": false,
   "popularityLevel": "Popular",
   "pkgInfo": [
     {

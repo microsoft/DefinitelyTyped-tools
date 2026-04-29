@@ -25,7 +25,9 @@
           "__typename": "LabelConnection"
         },
         "changedFiles": 4,
-        "commitIds": {},
+        "commitIds": {
+          "totalCount": 0
+        },
         "isDraft": false,
         "mergeable": "MERGEABLE",
         "number": 52579,
@@ -225,7 +227,8 @@
             }
           ],
           "__typename": "ProjectV2ItemConnection"
-        }
+        },
+        "baseRefOid": "master"
       },
       "__typename": "Repository"
     }

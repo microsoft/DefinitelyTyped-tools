@@ -36,7 +36,9 @@
         "state": "OPEN",
         "headRefOid": "8454d0853c273f9a20b08bd68cfd5c6b4f70c018",
         "changedFiles": 7,
-        "commitIds": {},
+        "commitIds": {
+          "totalCount": 0
+        },
         "timelineItems": {
           "__typename": "PullRequestTimelineItemsConnection",
           "nodes": [
@@ -268,7 +270,8 @@
             }
           ],
           "__typename": "ProjectV2ItemConnection"
-        }
+        },
+        "baseRefOid": "master"
       }
     }
   },

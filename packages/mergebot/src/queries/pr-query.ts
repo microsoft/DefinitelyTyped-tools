@@ -45,11 +45,13 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
         number
         state
         headRefOid
+        baseRefOid
         changedFiles
         additions
         deletions
 
         commitIds: commits(last: 100) {
+          totalCount
           nodes {
             commit {
               oid

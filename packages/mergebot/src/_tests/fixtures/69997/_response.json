@@ -115,7 +115,8 @@
               "__typename": "PullRequestCommit"
             }
           ],
-          "__typename": "PullRequestCommitConnection"
+          "__typename": "PullRequestCommitConnection",
+          "totalCount": 4
         },
         "timelineItems": {
           "nodes": [
@@ -1353,7 +1354,8 @@
           ],
           "__typename": "ProjectV2ItemConnection"
         },
-        "__typename": "PullRequest"
+        "__typename": "PullRequest",
+        "baseRefOid": "85343a692d8add5c4c280280a80bcbd65f418906"
       },
       "__typename": "Repository"
     }

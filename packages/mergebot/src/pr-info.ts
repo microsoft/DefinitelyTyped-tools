@@ -162,6 +162,13 @@ export interface PrInfo {
    */
   readonly hugeChange: boolean;
 
+  /*
+   * True when the PR has more commits than `commitIds` can return (>100). Used as a
+   * fail-closed signal: such a PR is force-routed to a maintainer because its merge-base
+   * cannot be derived from PR commit ancestry.
+   */
+  readonly tooManyCommits: boolean;
+
   readonly popularityLevel: PopularityLevel;
 
   readonly pkgInfo: readonly PackageInfo[];
@@ -177,22 +184,16 @@ export type BotResult = PrInfo | BotError | BotEnsureRemovedFromProject;
 function getHeadCommit(pr: PR_repository_pullRequest) {
   return pr.commits.nodes?.find((c) => c?.commit.oid === pr.headRefOid)?.commit;
 }
-function getBaseId(pr: PR_repository_pullRequest): string | undefined {
-  // Finds a revision to compare config files against (similar to git merge-base, but simple (linear
-  // history on master, assume sane merges at most): finds the most recent sha1 that is not part of
-  // the PR -- not too reliable, but better than always using "master").
-  const nodes = pr.commitIds.nodes;
-  if (!nodes) return;
-  const prCommits = noNullish(nodes.map((node) => node?.commit.oid));
-  if (!prCommits.length) return;
-  for (const node of nodes.slice(0).reverse()) {
-    const parents = node?.commit.parents.nodes;
-    if (!parents) continue;
-    for (const parent of parents) {
-      if (parent?.oid && !prCommits.includes(parent.oid)) return parent.oid;
-    }
-  }
-  return;
+/**
+ * Returns the trusted base commit for the PR: the tip of the PR's base branch (typically master).
+ *
+ * IMPORTANT: do not derive this from the PR's own commit ancestry (e.g. by walking commit parents
+ * looking for an OID outside the PR). Such a derivation can be controlled by an attacker who pushes
+ * more than `commits(last: N)` linear commits, which would cause the bot to pick one of the PR
+ * author's own commits as the "base" and read attacker-controlled package.json/owners from it.
+ */
+function getTrustedBase(pr: PR_repository_pullRequest): string {
+  return pr.baseRefOid || "master";
 }
 
 // The GQL response => Useful data for us
@@ -211,7 +212,12 @@ export async function deriveStateForPR(
   const headCommit = getHeadCommit(prInfo);
   // eslint-disable-next-line eqeqeq
   if (headCommit == null) return botError("No head commit found");
-  const baseId = getBaseId(prInfo) || "master";
+  // Always compare against the actual base branch tip, never against an OID derived from PR
+  // commit ancestry (which an attacker can influence by pushing >100 commits).
+  const baseId = getTrustedBase(prInfo);
+  // commitIds is `commits(last: 100)`; if there are more commits than that, we cannot reason
+  // safely about the PR's history and force a maintainer review downstream.
+  const tooManyCommits = (prInfo.commitIds.totalCount ?? 0) > (prInfo.commitIds.nodes?.length ?? 0);
 
   const author = prInfo.author.login;
   const isFirstContribution = prInfo.authorAssociation === "FIRST_TIME_CONTRIBUTOR";
@@ -282,6 +288,7 @@ export async function deriveStateForPR(
     isFirstContribution,
     tooManyFiles,
     hugeChange,
+    tooManyCommits,
     popularityLevel,
     pkgInfo,
     reviews,
