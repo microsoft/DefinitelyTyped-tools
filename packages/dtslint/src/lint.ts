@@ -112,23 +112,35 @@ function getEslintOptions(
     ],
   };
 
+  // Always disable cascading .eslintrc.* discovery. Contributor-authored config files in
+  // types/<pkg>/ would otherwise be loaded by ESLint 8's legacy eslintrc engine, which
+  // resolves `extends` and `parser` (including in `overrides[]`) via
+  // createRequire(configFilePath).resolve(value) and require()s the result. Since dtslint has
+  // no file-extension allowlist, a contributor could ship a `.cjs` payload alongside
+  // `.eslintrc.json` and obtain arbitrary code execution in the lint process.
+  const baseOverrideConfig = {
+    plugins: ["@definitelytyped", "@typescript-eslint", "jsdoc"],
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+      project: true,
+      warnOnUnsupportedTypeScriptVersion: false,
+    },
+    ...overrideConfig,
+  };
+
   if (expectOnly) {
     return {
       useEslintrc: false,
-      overrideConfig: {
-        plugins: ["@definitelytyped", "@typescript-eslint", "jsdoc"],
-        parser: "@typescript-eslint/parser",
-        parserOptions: {
-          project: true,
-          warnOnUnsupportedTypeScriptVersion: false,
-        },
-        ...overrideConfig,
-      },
+      overrideConfig: baseOverrideConfig,
     };
   }
 
   return {
-    overrideConfig,
+    useEslintrc: false,
+    overrideConfig: {
+      ...baseOverrideConfig,
+      extends: ["plugin:@definitelytyped/all"],
+    },
   };
 }
 
