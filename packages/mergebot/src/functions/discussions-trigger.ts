@@ -55,16 +55,16 @@ const couldNotFindMessage = txt`
 `;
 
 const errorsGettingOwners = (str: string) => txt`
-  |Hi, we could not find [${str}] in DefinitelyTyped, is there possibly a typo? 
+  |Hi, we could not find [\`${str}\`] in DefinitelyTyped, is there possibly a typo? 
 `;
 
 const couldNotFindOwners = (str: string) => txt`
-  |Hi, we had an issue getting the owners for [${str}] - first check if you have a typeo, otherwise please raise an issue on 
+  |Hi, we had an issue getting the owners for [\`${str}\`] - first check if you have a typeo, otherwise please raise an issue on 
   |microsoft/DefinitelyTyped-tools if the module exists on DT but this bot could not find information for it.
 `;
 
 const gotAReferenceMessage = (module: string, owners: string[]) => txt`
-  |Thanks for the discussion about "${module}", some useful links for everyone:
+  |Thanks for the discussion about "\`${module}\`", some useful links for everyone:
   | 
   | - [npm](https://www.npmjs.com/package/${module})
   | - [DT](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/${module})
@@ -87,8 +87,11 @@ async function pingAuthorsAndSetUpDiscussion(discussion: Discussion) {
     } else {
       const message = gotAReferenceMessage(aboutNPMRef, owners);
       await updateOrCreateMainComment(discussion, message);
+      // Only create a label once we've confirmed the package actually exists on DT --
+      // otherwise an unprivileged user could make typescript-bot create arbitrarily-named
+      // repository labels by editing the discussion title.
+      await addLabel(discussion, "Pkg: " + aboutNPMRef, `Discussions related to ${aboutNPMRef}`);
     }
-    await addLabel(discussion, "Pkg: " + aboutNPMRef, `Discussions related to ${aboutNPMRef}`);
   }
   return { status: 200, body: "OK" };
 }
