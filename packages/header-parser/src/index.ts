@@ -508,13 +508,23 @@ function checkDependencyVersions(
       errors.push(
         `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} should be a string.`,
       );
-    } else if (version !== "workspace:." && semver.validRange(version) === null) {
+    } else if (version !== "workspace:." && !isValidRegistrySpec(version)) {
       errors.push(
         `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} (${JSON.stringify(
           version,
-        )}) must be a valid semver range or "workspace:.".`,
+        )}) must be a valid semver range, dist-tag, or "workspace:.".`,
       );
     }
   }
   return errors;
+}
+
+// A registry dependency spec must be a valid semver range/version, or a dist-tag matching
+// this strict allowlist.
+const distTagRegex = /^[A-Za-z][A-Za-z0-9_-]*$/;
+function isValidRegistrySpec(spec: string): boolean {
+  const trimmed = spec.trim();
+  if (trimmed === "") return false;
+  if (semver.validRange(trimmed) !== null) return true;
+  return distTagRegex.test(trimmed);
 }
