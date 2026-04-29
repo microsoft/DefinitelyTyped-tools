@@ -1,5 +1,11 @@
 # @definitelytyped/header-parser
 
+## 0.2.27
+
+### Patch Changes
+
+- 5a84e6f: Reject non-ranges in package dependencies
+
 ## 0.2.26
 
 ### Patch Changes
