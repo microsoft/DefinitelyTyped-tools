@@ -91,7 +91,8 @@
               "__typename": "PullRequestCommit"
             }
           ],
-          "__typename": "PullRequestCommitConnection"
+          "__typename": "PullRequestCommitConnection",
+          "totalCount": 3
         },
         "timelineItems": {
           "nodes": [
@@ -113,7 +114,8 @@
         },
         "reviews": {
           "nodes": [],
-          "__typename": "PullRequestReviewConnection"
+          "__typename": "PullRequestReviewConnection",
+          "totalCount": 0
         },
         "commits": {
           "totalCount": 3,
@@ -2405,7 +2407,8 @@
             }
           ],
           "__typename": "ProjectV2ItemConnection"
-        }
+        },
+        "baseRefOid": "aae31da572363bed190729b826be689a2423aac5"
       },
       "__typename": "Repository"
     }

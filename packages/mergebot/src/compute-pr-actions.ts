@@ -107,7 +107,19 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
   const hasNewPackages = newPackages.length > 0;
   const hasEditedPackages = packages.length > newPackages.length;
   const requireMaintainer =
-    possiblyEditsInfra || checkConfig || hasMultiplePackages || isUntested || hasNewPackages || tooManyOwners;
+    possiblyEditsInfra ||
+    checkConfig ||
+    hasMultiplePackages ||
+    isUntested ||
+    hasNewPackages ||
+    tooManyOwners ||
+    // Fail-closed: if the PR has more commits than we can fetch (>100), we cannot trust
+    // owner/config comparisons against any computed merge-base, so always require a maintainer.
+    info.tooManyCommits ||
+    // Fail-closed: if the PR has more reviews than we can fetch (>100), the per-reviewer
+    // dedup in getReviews can be tricked by review-spam into preferring a stale APPROVED
+    // over a newer CHANGES_REQUESTED, so always require a maintainer.
+    info.tooManyReviews;
   const blessable = !(hasNewPackages || possiblyEditsInfra || noOtherOwners);
   const blessed = blessable && isBlessed();
   const approvedReviews = info.reviews.filter((r) => r.type === "approved") as ExtendedPrInfo["approvedReviews"];
@@ -501,8 +513,12 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
 
   const announceList = (what: string, xs: readonly string[]) => `${xs.length} ${what}${xs.length !== 1 ? "s" : ""}`;
   const usersToString = (users: string[]) => users.map((u) => (info.isAuthor(u) ? "✎" : "") + "@" + u).join(", ");
+  // Strip characters that would escape an inline-code span or inject Markdown structure
+  // (links, headers, lists, etc.) when an attacker-controlled value is interpolated into the
+  // welcome comment.
+  const mdSafe = (s: string) => s.replace(/[`\[\]()\r\n]/g, "");
   const reviewLink = (f: FileInfo) =>
-    `[\`${f.path.replace(/^types\/(.*\/)/, "$1")}\`](${urls.review(
+    `[\`${mdSafe(f.path.replace(/^types\/(.*\/)/, "$1"))}\`](${urls.review(
       info.pr_number,
     )}/${info.headCommitOid}#diff-${sha256(f.path)})`;
 
@@ -523,7 +539,9 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
   for (const p of info.pkgInfo) {
     if (p.name === null) continue;
     const kind = p.kind === "add" ? " (*new!*)" : p.kind === "delete" ? " (*probably deleted!*)" : "";
-    const urlPart = p.name.replace(/^(.*?)__(.)/, "@$1/$2");
+    // p.name is validated to /^[a-z0-9][a-z0-9._-]*$/ in categorizeFile, so it is safe to
+    // interpolate directly into Markdown and URLs without further escaping.
+    const urlPart = encodeURI(p.name.replace(/^(.*?)__(.)/, "@$1/$2"));
     const authorIsOwner = !p.owners.some(info.isAuthor) ? [] : [`(author is owner)`];
     display(
       [

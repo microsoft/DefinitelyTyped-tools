@@ -98,6 +98,13 @@ export function validatePackageJson(
       `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``,
     );
   }
+  // dependency version ranges
+  for (const depsKey of ["dependencies", "peerDependencies", "devDependencies"] as const) {
+    const deps = packageJson[depsKey];
+    if (deps && typeof deps === "object" && !Array.isArray(deps)) {
+      errors.push(...checkDependencyVersions(typesDirectoryName, depsKey, deps as Record<string, unknown>));
+    }
+  }
   // typesVersions
   if (needsTypesVersions) {
     assert.strictEqual(
@@ -475,10 +482,6 @@ export function checkPackageJsonDependencies(
 Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
       errors.push(`In ${path}: ${msg}`);
     }
-    const version = (dependencies as { [key: string]: unknown })[dependencyName];
-    if (typeof version !== "string") {
-      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
-    }
   }
   if (devDependencySelfName) {
     const selfDependency = (dependencies as { [key: string]: string | undefined })[devDependencySelfName];
@@ -491,4 +494,37 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
     }
   }
   return errors;
+}
+
+function checkDependencyVersions(
+  typesDirectoryName: string,
+  depsKey: "dependencies" | "peerDependencies" | "devDependencies",
+  dependencies: Record<string, unknown>,
+): string[] {
+  const errors: string[] = [];
+  for (const dependencyName of Object.keys(dependencies)) {
+    const version = dependencies[dependencyName];
+    if (typeof version !== "string") {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} should be a string.`,
+      );
+    } else if (version !== "workspace:." && !isValidRegistrySpec(version)) {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} (${JSON.stringify(
+          version,
+        )}) must be a valid semver range, dist-tag, or "workspace:.".`,
+      );
+    }
+  }
+  return errors;
+}
+
+// A registry dependency spec must be a valid semver range/version, or a dist-tag matching
+// this strict allowlist.
+const distTagRegex = /^[A-Za-z][A-Za-z0-9_-]*$/;
+function isValidRegistrySpec(spec: string): boolean {
+  const trimmed = spec.trim();
+  if (trimmed === "") return false;
+  if (semver.validRange(trimmed) !== null) return true;
+  return distTagRegex.test(trimmed);
 }

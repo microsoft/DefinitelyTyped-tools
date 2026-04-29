@@ -162,6 +162,21 @@ export interface PrInfo {
    */
   readonly hugeChange: boolean;
 
+  /*
+   * True when the PR has more commits than `commitIds` can return (>100). Used as a
+   * fail-closed signal: such a PR is force-routed to a maintainer because its merge-base
+   * cannot be derived from PR commit ancestry.
+   */
+  readonly tooManyCommits: boolean;
+
+  /*
+   * True when the PR has more reviews than `reviews` can return (>100). Used as a
+   * fail-closed signal: an attacker could otherwise spam reviews to push a CHANGES_REQUESTED
+   * out of the window while an older APPROVED for the same reviewer survives, fooling the
+   * per-reviewer dedup in `getReviews` into treating the PR as approved.
+   */
+  readonly tooManyReviews: boolean;
+
   readonly popularityLevel: PopularityLevel;
 
   readonly pkgInfo: readonly PackageInfo[];
@@ -177,22 +192,16 @@ export type BotResult = PrInfo | BotError | BotEnsureRemovedFromProject;
 function getHeadCommit(pr: PR_repository_pullRequest) {
   return pr.commits.nodes?.find((c) => c?.commit.oid === pr.headRefOid)?.commit;
 }
-function getBaseId(pr: PR_repository_pullRequest): string | undefined {
-  // Finds a revision to compare config files against (similar to git merge-base, but simple (linear
-  // history on master, assume sane merges at most): finds the most recent sha1 that is not part of
-  // the PR -- not too reliable, but better than always using "master").
-  const nodes = pr.commitIds.nodes;
-  if (!nodes) return;
-  const prCommits = noNullish(nodes.map((node) => node?.commit.oid));
-  if (!prCommits.length) return;
-  for (const node of nodes.slice(0).reverse()) {
-    const parents = node?.commit.parents.nodes;
-    if (!parents) continue;
-    for (const parent of parents) {
-      if (parent?.oid && !prCommits.includes(parent.oid)) return parent.oid;
-    }
-  }
-  return;
+/**
+ * Returns the trusted base commit for the PR: the tip of the PR's base branch (typically master).
+ *
+ * IMPORTANT: do not derive this from the PR's own commit ancestry (e.g. by walking commit parents
+ * looking for an OID outside the PR). Such a derivation can be controlled by an attacker who pushes
+ * more than `commits(last: N)` linear commits, which would cause the bot to pick one of the PR
+ * author's own commits as the "base" and read attacker-controlled package.json/owners from it.
+ */
+function getTrustedBase(pr: PR_repository_pullRequest): string {
+  return pr.baseRefOid || "master";
 }
 
 // The GQL response => Useful data for us
@@ -211,7 +220,16 @@ export async function deriveStateForPR(
   const headCommit = getHeadCommit(prInfo);
   // eslint-disable-next-line eqeqeq
   if (headCommit == null) return botError("No head commit found");
-  const baseId = getBaseId(prInfo) || "master";
+  // Always compare against the actual base branch tip, never against an OID derived from PR
+  // commit ancestry (which an attacker can influence by pushing >100 commits).
+  const baseId = getTrustedBase(prInfo);
+  // commitIds is `commits(last: 100)`; if there are more commits than that, we cannot reason
+  // safely about the PR's history and force a maintainer review downstream.
+  const tooManyCommits = (prInfo.commitIds.totalCount ?? 0) > (prInfo.commitIds.nodes?.length ?? 0);
+  // reviews is `reviews(last: 100)`; if there are more, the per-reviewer dedup in getReviews
+  // can be tricked by review-spam into seeing a stale APPROVED instead of a newer
+  // CHANGES_REQUESTED for the same reviewer.
+  const tooManyReviews = (prInfo.reviews?.totalCount ?? 0) > (prInfo.reviews?.nodes?.length ?? 0);
 
   const author = prInfo.author.login;
   const isFirstContribution = prInfo.authorAssociation === "FIRST_TIME_CONTRIBUTOR";
@@ -282,6 +300,8 @@ export async function deriveStateForPR(
     isFirstContribution,
     tooManyFiles,
     hugeChange,
+    tooManyCommits,
+    tooManyReviews,
     popularityLevel,
     pkgInfo,
     reviews,
@@ -425,6 +445,9 @@ async function categorizeFile(
 ): Promise<[string | null, FileInfo]> {
   const pkg = /^types\/(.*?)\/.*$/.exec(path)?.[1];
   if (!pkg) return [null, { path, kind: "infrastructure" }];
+  // Treat unrecognized directory names as infrastructure rather than trusting the string in
+  // downstream comment/label/URL construction.
+  if (!isValidPackageDirectoryName(pkg)) return [null, { path, kind: "infrastructure" }];
 
   if (isDeclarationPath(path)) return [pkg, { path, kind: "definition" }];
   if (/\.(?:[cm]?ts|tsx)$/.test(path)) return [pkg, { path, kind: "test" }];
@@ -559,9 +582,14 @@ function makeChecker(
     const newDiff = diffFromExpected(contents);
     if (typeof newDiff === "string") return newDiff;
     if (newDiff.length === 0) return undefined;
+    // d.path segments come from contributor-controlled JSON object keys (e.g. dependency
+    // names, tsconfig compilerOption keys), which may legally contain backticks, brackets,
+    // parens, and embedded newlines. RFC-6901 only escapes `/` and `~`, so without further
+    // sanitization a crafted key can break out of the inline-code span this string is
+    // embedded in by createWelcomeComment and inject Markdown into a @typescript-bot comment.
     const diffDescription = newDiff.every((d) => /^\/[0-9]+($|\/)/.test(d.path))
       ? ""
-      : ` (check: ${newDiff.map((d) => `\`${d.path.slice(1).replace(/\//g, ".")}\``).join(", ")})`;
+      : ` (check: ${newDiff.map((d) => `\`${mdSafePath(d.path.slice(1).replace(/\//g, "."))}\``).join(", ")})`;
     if (!oldText) return `not ${theExpectedForm}${diffDescription}`;
     const oldDiff = diffFromExpected(oldText);
     if (typeof oldDiff === "string") return oldDiff;
@@ -734,8 +762,30 @@ export async function getOwnersOfPackage(
     } catch (e) {
       if (e instanceof Error) return new Error(`error parsing owners: ${e.message}`);
     }
-    return noNullish(parsed!.contributors.map((c) => c.githubUsername));
+    return noNullish(parsed!.contributors.map((c) => c.githubUsername)).filter(isValidGithubUsername);
   }
 
-  return noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername));
+  return noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername)).filter(isValidGithubUsername);
+}
+
+// GitHub usernames: alphanumeric or single hyphens (plus underscores for Enterprise Managed
+// Users). Validating here prevents an untrusted PR-head package.json from injecting Markdown
+// (links, headers, newlines, etc.) into bot comment bodies under @typescript-bot's identity.
+function isValidGithubUsername(name: unknown): name is string {
+  return typeof name === "string" && /^[A-Za-z0-9_-]+$/.test(name);
+}
+
+// DefinitelyTyped package directory names: lowercase letters, digits, dots, hyphens, and the
+// `__` scope-mangle separator (e.g. `react-native`, `gapi.client.youtube-v3`, `google__maps`).
+// Validating here prevents an attacker-crafted path like `types/foo](evil)/index.d.ts` from
+// injecting Markdown when the directory name is interpolated into bot comment bodies.
+function isValidPackageDirectoryName(name: string): boolean {
+  return /^[a-z0-9][a-z0-9._-]*$/.test(name);
+}
+
+// Strip characters that would escape the inline-code span or inject Markdown structure when a
+// JSON-pointer-derived path (with attacker-controlled key segments) is interpolated into the
+// welcome comment via `file.suspect`.
+function mdSafePath(s: string): string {
+  return s.replace(/[`\[\]()\r\n]/g, "");
 }

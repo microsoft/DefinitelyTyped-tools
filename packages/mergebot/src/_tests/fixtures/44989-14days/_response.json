@@ -42,7 +42,9 @@
         "state": "OPEN",
         "headRefOid": "9ca60862ea56c9ff8d6b0f26c28b7e0bdaef4b34",
         "changedFiles": 2,
-        "commitIds": {},
+        "commitIds": {
+          "totalCount": 0
+        },
         "timelineItems": {
           "nodes": [
             {
@@ -147,7 +149,8 @@
               "__typename": "PullRequestReview"
             }
           ],
-          "__typename": "PullRequestReviewConnection"
+          "__typename": "PullRequestReviewConnection",
+          "totalCount": 2
         },
         "commits": {
           "totalCount": 3,
@@ -438,7 +441,8 @@
             }
           ],
           "__typename": "ProjectV2ItemConnection"
-        }
+        },
+        "baseRefOid": "master"
       },
       "__typename": "Repository"
     }

@@ -99,6 +99,75 @@ describe("validatePackageJson", () => {
   it("works with old-version packages", () => {
     expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.9999" }, []))).toBeFalsy();
   });
+  it("requires dependency versions to be valid semver ranges, dist-tags, or 'workspace:.'", () => {
+    expect(
+      validatePackageJson(
+        "hapi",
+        { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: "not a range" } },
+        [],
+      ),
+    ).toEqual([
+      `hapi's package.json has bad "dependencies": version for joi ("not a range") must be a valid semver range, dist-tag, or "workspace:.".`,
+    ]);
+  });
+  it.each([
+    ["file:./local.tgz"],
+    ["./local.tgz"],
+    ["local.tgz"],
+    ["foo.tar.gz"],
+    ["git+https://example.com/x.git"],
+    ["git+ssh://git@example.com:x/y.git"],
+    ["git@example.com:x/y.git"],
+    ["https://example.com/x.tgz"],
+    ["http://example.com/x.tgz"],
+    ["user/repo"],
+    ["user/repo#branch"],
+    ["npm:other@^1"],
+    ["~/local"],
+    ["../local"],
+  ])("rejects non-registry dependency spec %p", (bad) => {
+    const result = validatePackageJson(
+      "hapi",
+      { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: bad } },
+      [],
+    );
+    expect(Array.isArray(result)).toBe(true);
+    expect(result as string[]).toContainEqual(
+      `hapi's package.json has bad "dependencies": version for joi (${JSON.stringify(
+        bad,
+      )}) must be a valid semver range, dist-tag, or "workspace:.".`,
+    );
+  });
+  it.each([["latest"], ["next"], ["beta"], ["rc"], ["canary"], ["experimental"], ["nightly"]])(
+    "allows dist-tag %p as a dependency version",
+    (tag) => {
+      expect(
+        Array.isArray(
+          validatePackageJson(
+            "hapi",
+            { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: tag } },
+            [],
+          ),
+        ),
+      ).toBeFalsy();
+    },
+  );
+  it("allows 'workspace:.' as a dependency version", () => {
+    expect(
+      Array.isArray(
+        validatePackageJson(
+          "hapi",
+          { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: "workspace:." } },
+          [],
+        ),
+      ),
+    ).toBeFalsy();
+  });
+  it("requires dependency versions to be strings", () => {
+    expect(validatePackageJson("hapi", { ...pkgJson, peerDependencies: { foo: 5 } }, [])).toEqual([
+      `hapi's package.json has bad "peerDependencies": version for foo should be a string.`,
+    ]);
+  });
 });
 
 describe("makeTypesVersionsForPackageJson", () => {

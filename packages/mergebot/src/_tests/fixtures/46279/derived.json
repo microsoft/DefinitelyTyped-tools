@@ -12,6 +12,8 @@
   "isFirstContribution": false,
   "tooManyFiles": false,
   "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
   "popularityLevel": "Well-liked by everyone",
   "pkgInfo": [
     {

@@ -25,4 +25,18 @@ describe(extractNPMReference, () => {
   test.concurrent.each(eventActions)("(%s, %s) is %s", async (title, result) => {
     expect(extractNPMReference({ title })).toEqual(result);
   });
+
+  const invalid = [
+    "[Pkg: foo] inject", // space disallowed
+    "[node @attacker] hi", // space + invalid char
+    "[FOO] uppercase not allowed in npm names",
+    "[../etc/passwd] traversal",
+    "[]", // empty
+    "[ leading-space]",
+    "[trailing-space ]",
+    "[has\nnewline]",
+  ];
+  test.concurrent.each(invalid)("rejects invalid title %p", async (title) => {
+    expect(extractNPMReference({ title })).toBeUndefined();
+  });
 });
