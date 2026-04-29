@@ -122,13 +122,9 @@ describe("validatePackageJson", () => {
     ).toBeFalsy();
   });
   it("requires dependency versions to be strings", () => {
-    expect(
-      validatePackageJson(
-        "hapi",
-        { ...pkgJson, peerDependencies: { foo: 5 } },
-        [],
-      ),
-    ).toEqual([`hapi's package.json has bad "peerDependencies": version for foo should be a string.`]);
+    expect(validatePackageJson("hapi", { ...pkgJson, peerDependencies: { foo: 5 } }, [])).toEqual([
+      `hapi's package.json has bad "peerDependencies": version for foo should be a string.`,
+    ]);
   });
 });
 
