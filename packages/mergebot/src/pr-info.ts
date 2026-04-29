@@ -445,6 +445,9 @@ async function categorizeFile(
 ): Promise<[string | null, FileInfo]> {
   const pkg = /^types\/(.*?)\/.*$/.exec(path)?.[1];
   if (!pkg) return [null, { path, kind: "infrastructure" }];
+  // Treat unrecognized directory names as infrastructure rather than trusting the string in
+  // downstream comment/label/URL construction.
+  if (!isValidPackageDirectoryName(pkg)) return [null, { path, kind: "infrastructure" }];
 
   if (isDeclarationPath(path)) return [pkg, { path, kind: "definition" }];
   if (/\.(?:[cm]?ts|tsx)$/.test(path)) return [pkg, { path, kind: "test" }];
@@ -754,8 +757,23 @@ export async function getOwnersOfPackage(
     } catch (e) {
       if (e instanceof Error) return new Error(`error parsing owners: ${e.message}`);
     }
-    return noNullish(parsed!.contributors.map((c) => c.githubUsername));
+    return noNullish(parsed!.contributors.map((c) => c.githubUsername)).filter(isValidGithubUsername);
   }
 
-  return noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername));
+  return noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername)).filter(isValidGithubUsername);
+}
+
+// GitHub usernames: alphanumeric or single hyphens (plus underscores for Enterprise Managed
+// Users). Validating here prevents an untrusted PR-head package.json from injecting Markdown
+// (links, headers, newlines, etc.) into bot comment bodies under @typescript-bot's identity.
+function isValidGithubUsername(name: unknown): name is string {
+  return typeof name === "string" && /^[A-Za-z0-9_-]+$/.test(name);
+}
+
+// DefinitelyTyped package directory names: lowercase letters, digits, dots, hyphens, and the
+// `__` scope-mangle separator (e.g. `react-native`, `gapi.client.youtube-v3`, `google__maps`).
+// Validating here prevents an attacker-crafted path like `types/foo](evil)/index.d.ts` from
+// injecting Markdown when the directory name is interpolated into bot comment bodies.
+function isValidPackageDirectoryName(name: string): boolean {
+  return /^[a-z0-9][a-z0-9._-]*$/.test(name);
 }
