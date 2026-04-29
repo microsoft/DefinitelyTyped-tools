@@ -2,7 +2,7 @@
 
 import { getTypesVersions } from "@definitelytyped/header-parser";
 import { AllTypeScriptVersion, TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { deepEquals, readJson } from "@definitelytyped/utils";
+import { deepEquals, mangleScopedPackage, readJson } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname, join as joinPaths, resolve } from "path";
 import {
@@ -12,7 +12,7 @@ import {
   runAreTheTypesWrong,
 } from "./checks";
 import { TsVersion, lint } from "./lint";
-import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
+import { findDTRootAndPackageNameFrom, getCompilerOptions, packageDirectoryNameWithVersionFromPath } from "./util";
 import assert = require("assert");
 
 async function main(): Promise<void> {
@@ -74,13 +74,7 @@ async function main(): Promise<void> {
           process.exit(1);
         }
 
-        const path =
-          arg.indexOf("@") === 0 && arg.indexOf("/") !== -1
-            ? // we have a scoped module, e.g. @bla/foo
-              // which should be converted to   bla__foo
-              arg.slice(1).replace("/", "__")
-            : arg;
-        dirPath = joinPaths(dirPath, path);
+        dirPath = joinPaths(dirPath, mangleScopedPackage(arg));
       }
     }
   }
@@ -157,16 +151,8 @@ async function runTests(
   npmChecks: boolean | "only",
   tsLocal: string | undefined,
 ): Promise<string> {
-  // Assert that we're really on DefinitelyTyped.
-  const dtRoot = findDTRoot(dirPath);
-  const packageName = packageNameFromPath(dirPath);
+  const { dtRoot } = await findDTRootAndPackageNameFrom(dirPath);
   const packageDirectoryNameWithVersion = packageDirectoryNameWithVersionFromPath(dirPath);
-  assertPathIsInDefinitelyTyped(dirPath, dtRoot);
-  assertPathIsNotBanned(packageName);
-  assertPackageIsNotDeprecated(
-    packageName,
-    await fs.promises.readFile(joinPaths(dtRoot, "notNeededPackages.json"), "utf-8"),
-  );
 
   const typesVersions = getTypesVersions(dirPath);
   const packageJson = checkPackageJson(dirPath, typesVersions);
@@ -304,58 +290,6 @@ async function testTypesVersion(
     errors.push(err);
   }
   return { errors };
-}
-
-function findDTRoot(dirPath: string) {
-  let path = dirPath;
-  while (basename(path) !== "types" && dirname(path) !== "." && dirname(path) !== "/") {
-    path = dirname(path);
-  }
-  return dirname(path);
-}
-
-function assertPathIsInDefinitelyTyped(dirPath: string, dtRoot: string): void {
-  // TODO: It's not clear whether this assertion makes sense, and it's broken on Azure Pipelines (perhaps because DT isn't cloned into DefinitelyTyped)
-  // Re-enable it later if it makes sense.
-  // if (basename(dtRoot) !== "DefinitelyTyped")) {
-  if (!fs.existsSync(joinPaths(dtRoot, "types"))) {
-    throw new Error(
-      "Since this type definition includes a header (a comment starting with `// Type definitions for`), " +
-        "assumed this was a DefinitelyTyped package.\n" +
-        "But it is not in a `DefinitelyTyped/types/xxx` directory: " +
-        dirPath,
-    );
-  }
-}
-
-/**
- * Starting at some point in time, npm has banned all new packages whose names
- * contain the word `download`. However, some older packages exist that still
- * contain this name.
- * @NOTE for contributors: The list of literal exceptions below should ONLY be
- * extended with packages for which there already exists a corresponding type
- * definition package in the `@types` scope. More information:
- * https://github.com/microsoft/DefinitelyTyped-tools/pull/381.
- */
-function assertPathIsNotBanned(packageName: string) {
-  if (
-    /(^|\W)download($|\W)/.test(packageName) &&
-    packageName !== "download" &&
-    packageName !== "downloadjs" &&
-    packageName !== "s3-download-stream"
-  ) {
-    // Since npm won't release their banned-words list, we'll have to manually add to this list.
-    throw new Error(`${packageName}: Contains the word 'download', which is banned by npm.`);
-  }
-}
-
-export function assertPackageIsNotDeprecated(packageName: string, notNeededPackages: string) {
-  const unneeded = JSON.parse(notNeededPackages).packages;
-  if (Object.keys(unneeded).includes(packageName)) {
-    throw new Error(`${packageName}: notNeededPackages.json has an entry for ${packageName}.
-That means ${packageName} ships its own types, and @types/${packageName} was deprecated and removed from Definitely Typed.
-If you want to re-add @types/${packageName}, please remove its entry from notNeededPackages.json.`);
-  }
 }
 
 if (require.main === module) {
