@@ -582,9 +582,14 @@ function makeChecker(
     const newDiff = diffFromExpected(contents);
     if (typeof newDiff === "string") return newDiff;
     if (newDiff.length === 0) return undefined;
+    // d.path segments come from contributor-controlled JSON object keys (e.g. dependency
+    // names, tsconfig compilerOption keys), which may legally contain backticks, brackets,
+    // parens, and embedded newlines. RFC-6901 only escapes `/` and `~`, so without further
+    // sanitization a crafted key can break out of the inline-code span this string is
+    // embedded in by createWelcomeComment and inject Markdown into a @typescript-bot comment.
     const diffDescription = newDiff.every((d) => /^\/[0-9]+($|\/)/.test(d.path))
       ? ""
-      : ` (check: ${newDiff.map((d) => `\`${d.path.slice(1).replace(/\//g, ".")}\``).join(", ")})`;
+      : ` (check: ${newDiff.map((d) => `\`${mdSafePath(d.path.slice(1).replace(/\//g, "."))}\``).join(", ")})`;
     if (!oldText) return `not ${theExpectedForm}${diffDescription}`;
     const oldDiff = diffFromExpected(oldText);
     if (typeof oldDiff === "string") return oldDiff;
@@ -776,4 +781,11 @@ function isValidGithubUsername(name: unknown): name is string {
 // injecting Markdown when the directory name is interpolated into bot comment bodies.
 function isValidPackageDirectoryName(name: string): boolean {
   return /^[a-z0-9][a-z0-9._-]*$/.test(name);
+}
+
+// Strip characters that would escape the inline-code span or inject Markdown structure when a
+// JSON-pointer-derived path (with attacker-controlled key segments) is interpolated into the
+// welcome comment via `file.suspect`.
+function mdSafePath(s: string): string {
+  return s.replace(/[`\[\]()\r\n]/g, "");
 }
