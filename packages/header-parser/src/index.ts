@@ -98,6 +98,13 @@ export function validatePackageJson(
       `${typesDirectoryName}'s package.json has bad "devDependencies": must include \`"@types/${typesDirectoryName}": "workspace:."\``,
     );
   }
+  // dependency version ranges
+  for (const depsKey of ["dependencies", "peerDependencies", "devDependencies"] as const) {
+    const deps = packageJson[depsKey];
+    if (deps && typeof deps === "object" && !Array.isArray(deps)) {
+      errors.push(...checkDependencyVersions(typesDirectoryName, depsKey, deps as Record<string, unknown>));
+    }
+  }
   // typesVersions
   if (needsTypesVersions) {
     assert.strictEqual(
@@ -475,10 +482,6 @@ export function checkPackageJsonDependencies(
 Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`packages/definitions-parser/allowedPackageJsonDependencies.txt\`.`;
       errors.push(`In ${path}: ${msg}`);
     }
-    const version = (dependencies as { [key: string]: unknown })[dependencyName];
-    if (typeof version !== "string") {
-      errors.push(`In ${path}: Dependency version for ${dependencyName} should be a string.`);
-    }
   }
   if (devDependencySelfName) {
     const selfDependency = (dependencies as { [key: string]: string | undefined })[devDependencySelfName];
@@ -487,6 +490,29 @@ Please make a pull request to microsoft/DefinitelyTyped-tools adding it to \`pac
         `In ${path}: devDependencies must contain a self-reference to the current package like  ${JSON.stringify(
           devDependencySelfName,
         )}: "workspace:."`,
+      );
+    }
+  }
+  return errors;
+}
+
+function checkDependencyVersions(
+  typesDirectoryName: string,
+  depsKey: "dependencies" | "peerDependencies" | "devDependencies",
+  dependencies: Record<string, unknown>,
+): string[] {
+  const errors: string[] = [];
+  for (const dependencyName of Object.keys(dependencies)) {
+    const version = dependencies[dependencyName];
+    if (typeof version !== "string") {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} should be a string.`,
+      );
+    } else if (version !== "workspace:." && semver.validRange(version) === null) {
+      errors.push(
+        `${typesDirectoryName}'s package.json has bad "${depsKey}": version for ${dependencyName} (${JSON.stringify(
+          version,
+        )}) must be a valid semver range or "workspace:.".`,
       );
     }
   }

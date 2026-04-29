@@ -99,6 +99,37 @@ describe("validatePackageJson", () => {
   it("works with old-version packages", () => {
     expect(Array.isArray(validatePackageJson("hapi", { ...pkgJson, version: "16.6.9999" }, []))).toBeFalsy();
   });
+  it("requires dependency versions to be valid semver ranges or 'workspace:.'", () => {
+    expect(
+      validatePackageJson(
+        "hapi",
+        { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: "not-a-range" } },
+        [],
+      ),
+    ).toEqual([
+      `hapi's package.json has bad "dependencies": version for joi ("not-a-range") must be a valid semver range or "workspace:.".`,
+    ]);
+  });
+  it("allows 'workspace:.' as a dependency version", () => {
+    expect(
+      Array.isArray(
+        validatePackageJson(
+          "hapi",
+          { ...pkgJson, dependencies: { ...(pkgJson.dependencies as object), joi: "workspace:." } },
+          [],
+        ),
+      ),
+    ).toBeFalsy();
+  });
+  it("requires dependency versions to be strings", () => {
+    expect(
+      validatePackageJson(
+        "hapi",
+        { ...pkgJson, peerDependencies: { foo: 5 } },
+        [],
+      ),
+    ).toEqual([`hapi's package.json has bad "peerDependencies": version for foo should be a string.`]);
+  });
 });
 
 describe("makeTypesVersionsForPackageJson", () => {
