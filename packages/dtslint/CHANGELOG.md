@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.42
+
+### Patch Changes
+
+- ea51164: Revert eslintrc loading change
+
 ## 0.2.41
 
 ### Patch Changes
