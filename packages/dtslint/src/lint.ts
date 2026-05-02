@@ -136,31 +136,36 @@ export function isExternalDependency(file: TsType.SourceFile, dirPath: string, p
   return !startsWithDirectory(file.fileName, dirPath) || program.isSourceFileFromExternalLibrary(file);
 }
 
-function normalizePath(file: string) {
+/** @internal */
+export function normalizePath(file: string) {
   // replaces '\' with '/' and forces all DOS drive letters to be upper-case
   return normalize(file)
     .replace(/\\/g, "/")
     .replace(/^[a-z](?=:)/, (c) => c.toUpperCase());
 }
 
-function isTypesVersionPath(fileName: string, dirPath: string) {
+/** @internal */
+export function isTypesVersionPath(fileName: string, dirPath: string) {
   const normalFileName = normalizePath(fileName);
   const normalDirPath = normalizePath(dirPath);
   const subdirPath = withoutStart(normalFileName, normalDirPath);
   return subdirPath && /^\/ts\d+\.\d/.test(subdirPath);
 }
 
-function startsWithDirectory(filePath: string, dirPath: string): boolean {
+/** @internal */
+export function startsWithDirectory(filePath: string, dirPath: string): boolean {
   const normalFilePath = normalizePath(filePath);
   const normalDirPath = normalizePath(dirPath).replace(/\/$/, "");
   return normalFilePath.startsWith(normalDirPath + "/") || normalFilePath.startsWith(normalDirPath + "\\");
 }
 
-interface Err {
+/** @internal */
+export interface Err {
   pos: number;
   message: string;
 }
-function testNoLintDisables(text: string): Err | undefined {
+/** @internal */
+export function testNoLintDisables(text: string): Err | undefined {
   const disabler = "eslint-disable";
   let lastIndex = 0;
   while (true) {
@@ -182,7 +187,8 @@ function testNoLintDisables(text: string): Err | undefined {
   }
 }
 
-function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {
+/** @internal */
+export function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion[] {
   if (minVersion === "local") {
     assert(maxVersion === "local");
     return ["local"];
