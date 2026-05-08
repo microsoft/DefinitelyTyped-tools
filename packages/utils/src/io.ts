@@ -272,7 +272,7 @@ function createTar(dir: string, onError: (error: any) => void): NodeJS.ReadableS
   const dirSegments = resolve(dir).split(sep);
   const parentDir = dirSegments.slice(0, dirSegments.length - 1).join(sep);
   const entryToAdd = dirSegments[dirSegments.length - 1];
-  const packer = new Pack({ cwd: parentDir, filter: addDirectoryExecutablePermission });
+  const packer = new Pack({ cwd: parentDir, filter: tarFilter });
   packer.on("error", onError);
   const stream = packer.add(entryToAdd);
   packer.end();
@@ -280,14 +280,17 @@ function createTar(dir: string, onError: (error: any) => void): NodeJS.ReadableS
   return stream as unknown as NodeJS.ReadableStream;
 }
 
-/**
- * Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
- * https://github.com/npm/node-tar/issues/7#issuecomment-17572926
- */
-function addDirectoryExecutablePermission(_: string, stat: ReadEntry | fs.Stats): boolean {
+const nodeModulesPattern = /(?:^|[\\/])node_modules(?:[\\/]|$)/;
+
+function tarFilter(path: string, stat: ReadEntry | fs.Stats): boolean {
   if (stat instanceof ReadEntry) {
     return true; // never happens?
   }
+  if (nodeModulesPattern.test(path)) {
+    return false;
+  }
+  // Work around a bug where directories bundled on Windows do not have executable permission when extracted on Linux.
+  // https://github.com/npm/node-tar/issues/7#issuecomment-17572926
   if (stat.isDirectory()) {
     stat.mode = addExecutePermissionsFromReadPermissions(stat.mode);
   }
