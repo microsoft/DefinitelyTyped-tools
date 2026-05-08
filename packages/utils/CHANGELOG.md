@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.14
+
+### Patch Changes
+
+- d8b5fe0: Exclude node_modules from tarballs created by createTgz.
+
 ## 0.1.13
 
 ### Patch Changes
