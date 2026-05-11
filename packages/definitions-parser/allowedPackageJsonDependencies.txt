@@ -1,3 +1,8 @@
+@actions/core
+@actions/exec
+@actions/github
+@actions/glob
+@actions/io
 @adobe/ccweb-add-on-sdk-types
 @apollo/client
 @aws-sdk/client-dynamodb
