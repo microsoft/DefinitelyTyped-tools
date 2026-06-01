@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.44
+
+### Patch Changes
+
+- 71f2657: Update arethetypeswrong to 0.18.3
+
 ## 0.2.43
 
 ### Patch Changes
