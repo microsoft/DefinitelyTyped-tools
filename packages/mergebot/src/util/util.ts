@@ -42,15 +42,24 @@ export function sameUser(u1: string, u2: string) {
   return u1.toLowerCase() === u2.toLowerCase();
 }
 
-const knownBots = new Set(["typescript-bot", "copilot-pull-request-reviewer"]);
+const typeScriptBotLogins = new Set(["typescript-bot", "typescript-automation[bot]"]);
+const knownBots = new Set([...typeScriptBotLogins, "copilot-pull-request-reviewer"]);
+
+export function isTypeScriptBot(login: string | null | undefined) {
+  return !!login && typeScriptBotLogins.has(login.toLowerCase());
+}
+
+function isKnownBot(login: string | null | undefined) {
+  return !!login && knownBots.has(login.toLowerCase());
+}
 
 export function authorNotBot(
   node: { login: string } | { author?: { login: string } | null } | { actor?: { login: string } | null },
 ): boolean {
   return (
-    ("author" in node && !knownBots.has(node.author!.login)) ||
-    ("actor" in node && !knownBots.has(node.actor!.login)) ||
-    ("login" in node && !knownBots.has(node.login))
+    ("author" in node && !isKnownBot(node.author!.login)) ||
+    ("actor" in node && !isKnownBot(node.actor!.login)) ||
+    ("login" in node && !isKnownBot(node.login))
   );
 }
 

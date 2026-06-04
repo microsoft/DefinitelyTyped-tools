@@ -5,10 +5,10 @@ import type { PrQuery } from "./queries/schema/graphql";
 import { Actions } from "./compute-pr-actions";
 import { createMutation, client } from "./graphql-client";
 import { getProjectBoardColumns, getLabels } from "./util/cachedQueries";
-import { noNullish, flatten } from "./util/util";
+import { noNullish, flatten, isTypeScriptBot } from "./util/util";
 import { tagsToDeleteIfNotPosted } from "./comments";
 import * as comment from "./util/comment";
-import { request } from "https";
+import { getGitHubAuthToken } from "./github-auth";
 import { assertDefined } from "@definitelytyped/utils";
 
 type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
@@ -153,7 +153,7 @@ interface ParsedComment {
 function getBotComments(pr: PR_repository_pullRequest): ParsedComment[] {
   return noNullish(
     (pr.comments.nodes ?? [])
-      .filter((comment) => comment?.author?.login === "typescript-bot")
+      .filter((comment) => isTypeScriptBot(comment?.author?.login))
       .map((c) => {
         const { id, body } = c!,
           parsed = comment.parse(body);
@@ -236,22 +236,19 @@ interface RestMutation {
   op: string;
 }
 
-function doRestCall(call: RestMutation): Promise<void> {
+async function doRestCall(call: RestMutation): Promise<void> {
+  const token = await getGitHubAuthToken();
   const url = `https://api.github.com/repos/DefinitelyTyped/DefinitelyTyped/${call.op}`;
-  const headers = {
-    accept: "application/vnd.github.v3+json",
-    authorization: `token ${process.env.BOT_AUTH_TOKEN}`,
-    "user-agent": "mergebot",
-  };
-  return new Promise((resolve, reject) => {
-    const req = request(url, { method: call.method, headers }, (reply) => {
-      const bad = !reply.statusCode || reply.statusCode < 200 || reply.statusCode >= 300;
-      if (bad) return reject(`doRestCall failed with a status of ${reply.statusCode}`);
-      return resolve();
-    });
-    req.on("error", reject);
-    req.end();
+  const response = await fetch(url, {
+    method: call.method,
+    headers: {
+      accept: "application/vnd.github.v3+json",
+      authorization: `token ${token}`,
+    },
   });
+  if (!response.ok) {
+    throw new Error(`doRestCall failed with a status of ${response.status}`);
+  }
 }
 
 function getMutationsForReRunningCI(actions: Actions) {

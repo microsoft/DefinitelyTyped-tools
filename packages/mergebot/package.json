@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@apollo/client": "^4.1.6",
+    "@azure/identity": "^4.13.0",
+    "@azure/keyvault-keys": "^4.10.0",
     "@azure/functions": "^4.11.2",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
     "@definitelytyped/utils": "workspace:*",

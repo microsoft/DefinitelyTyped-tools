@@ -42,7 +42,7 @@ There is an Azure function in `PR-Trigger` that receives webhooks; this function
 
 You _probably_ don't need to do this. Use test to validate any change inside the src dir against integration tests.
 
-However, you need to have a GitHub API access key in either: `DT_BOT_AUTH_TOKEN`, `BOT_AUTH_TOKEN` or `AUTH_TOKEN`.
+However, you need to have a GitHub API access key in either: `DT_BOT_AUTH_TOKEN`, `BOT_AUTH_TOKEN` or `AUTH_TOKEN`. These token env vars are for local development; production uses GitHub App tokens minted through Azure Key Vault with `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_KEY_VAULT_KEY_ID`.
 Ask Ryan for the bot's auth token (TypeScript team members: Look in the team OneNote).
 Don't run the bot under your own auth token as this will generate a bunch of spam from duplicate comments.
 

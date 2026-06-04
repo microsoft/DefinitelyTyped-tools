@@ -9,7 +9,7 @@ import {
 import type { PrQuery } from "./queries/schema/graphql";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
-import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid } from "./util/util";
+import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid, isTypeScriptBot } from "./util/util";
 import { fileLimit, getPRInfo } from "./queries/pr-query";
 import * as comment from "./util/comment";
 import * as urls from "./urls";
@@ -606,7 +606,7 @@ function getMergeOfferDate(comments: PR_repository_pullRequest_comments_nodes[],
   const offer = latestComment(
     comments.filter(
       (c) =>
-        sameUser("typescript-bot", c.author?.login || "-") &&
+        isTypeScriptBot(c.author?.login) &&
         comment.parse(c.body)?.tag === "merge-offer" &&
         c.body.includes(`(at ${abbrOid(headOid)})`),
     ),
@@ -664,7 +664,7 @@ function isMaintainerComment(
 ) {
   return (
     (comment.authorAssociation === "MEMBER" || comment.authorAssociation === "OWNER") &&
-    !sameUser("typescript-bot", comment.author?.login || "-")
+    !isTypeScriptBot(comment.author?.login)
   );
 }
 
