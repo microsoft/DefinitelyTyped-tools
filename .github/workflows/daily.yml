@@ -5,9 +5,16 @@ on:
   schedule:
     - cron: '37 */6 * * *'
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: azure
+      deployment: false
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -17,8 +24,12 @@ jobs:
       - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
       - run: pnpm install
       - run: pnpm run build
-
-      # Go through all open PRs and run the bot over them
+      - uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - run: node packages/mergebot/dist/run.js
         env:
-          BOT_AUTH_TOKEN: ${{ secrets.TYPESCRIPT_BOT_TOKEN }}
+          GITHUB_APP_CLIENT_ID: ${{ vars.TYPESCRIPT_AUTOMATION_GITHUB_APP_CLIENT_ID }}
+          GITHUB_APP_KEY_VAULT_KEY_ID: ${{ vars.TYPESCRIPT_AUTOMATION_GITHUB_APP_KEY_ID }}

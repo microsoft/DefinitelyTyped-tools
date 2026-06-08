@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { getPRInfo } from "../queries/pr-query";
+import { isTypeScriptBot } from "../util/util";
 const headers = {
   "Content-Type": "text/json",
   "Access-Control-Allow-Methods": "GET",
@@ -23,7 +24,7 @@ export async function httpTrigger(request: HttpRequest, context: InvocationConte
   if (!prInfo) return notFound("No PR metadata");
 
   const welcomeComment = prInfo.comments.nodes!.find(
-    (c) => c && c.author?.login === "typescript-bot" && c.body.endsWith("<!--typescript_bot_welcome-->"),
+    (c) => c && isTypeScriptBot(c.author?.login) && c.body.endsWith("<!--typescript_bot_welcome-->"),
   );
   if (!welcomeComment || !welcomeComment.body || !welcomeComment.body.includes("```json"))
     return notFound("PR comment with JSON not found");

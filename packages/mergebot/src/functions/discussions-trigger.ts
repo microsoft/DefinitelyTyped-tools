@@ -6,7 +6,7 @@ import { createMutation, client } from "../graphql-client";
 import { getLabelByName, getCommentsForDiscussionNumber } from "../queries/discussion-queries";
 import { reply } from "../util/reply";
 import { httpLog, shouldRunRequest } from "../util/verify";
-import { txt } from "../util/util";
+import { isTypeScriptBot, txt } from "../util/util";
 import { getOwnersOfPackage } from "../pr-info";
 import { fetchFile } from "../util/fetchFile";
 
@@ -88,7 +88,7 @@ async function pingAuthorsAndSetUpDiscussion(discussion: Discussion) {
       const message = gotAReferenceMessage(aboutNPMRef, owners);
       await updateOrCreateMainComment(discussion, message);
       // Only create a label once we've confirmed the package actually exists on DT --
-      // otherwise an unprivileged user could make typescript-bot create arbitrarily-named
+      // otherwise an unprivileged user could make the TypeScript bot create arbitrarily-named
       // repository labels by editing the discussion title.
       await addLabel(discussion, "Pkg: " + aboutNPMRef, `Discussions related to ${aboutNPMRef}`);
     }
@@ -115,7 +115,7 @@ async function updateDiscordWithRequest(discussion: Discussion) {
 
 async function updateOrCreateMainComment(discussion: Discussion, message: string) {
   const discussionComments = await getCommentsForDiscussionNumber(discussion.number);
-  const previousComment = discussionComments.find((c) => c?.author?.login === "typescript-bot");
+  const previousComment = discussionComments.find((c) => isTypeScriptBot(c?.author?.login));
   if (previousComment) {
     await client.mutate(
       createMutation<any>("updateDiscussionComment" as any, { body: message, commentId: previousComment.id }),

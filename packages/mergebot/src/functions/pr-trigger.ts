@@ -17,6 +17,7 @@ import type {
   PullRequestReviewEvent,
 } from "@octokit/webhooks-types";
 import { runQueryToGetPRForCardId } from "../queries/card-id-to-pr-query";
+import { isTypeScriptBot } from "../util/util";
 
 app.http("PR-Trigger", { methods: ["GET", "POST"], authLevel: "anonymous", handler: httpTrigger });
 const eventNames = [
@@ -81,8 +82,8 @@ async function httpTrigger(req: HttpRequest, context: InvocationContext) {
 const handleTrigger = async (context: InvocationContext, event: PrEvent) => {
   const fullName = event.name + "." + event.payload.action;
   context.log(`Handling event: ${fullName}`);
-  if (event.payload.sender.login === "typescript-bot" && fullName !== "check_suite.completed")
-    return reply(context, 200, "Skipped webhook because it was triggered by typescript-bot");
+  if (isTypeScriptBot(event.payload.sender.login) && fullName !== "check_suite.completed")
+    return reply(context, 200, "Skipped webhook because it was triggered by the TypeScript bot");
 
   // Allow the bot to run side-effects that are not the 'core' function
   // of the review cycle, but are related to keeping DT running smoothly
