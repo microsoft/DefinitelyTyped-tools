@@ -1,0 +1,67 @@
+{
+  "type": "info",
+  "now": "2026-06-09T17:22:31.814Z",
+  "pr_number": 75014,
+  "author": "yusuke-oba1",
+  "headCommitOid": "ed4473032f08df609bbfd2a0ee8a4a78f74393c2",
+  "mergeBaseOid": "c6fb7d2e0e833931ac92da131709d2c6178ce3d8",
+  "lastPushDate": "2026-05-18T01:00:25.000Z",
+  "lastActivityDate": "2026-06-09T15:32:02.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "safie-sdk",
+      "kind": "add",
+      "files": [
+        {
+          "path": "types/safie-sdk/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/safie-sdk/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/safie-sdk/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/safie-sdk/safie-sdk-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/safie-sdk/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [],
+      "addedOwners": [
+        "SafieDev"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "gabritto",
+      "date": "2026-06-09T15:32:02.000Z",
+      "isMaintainer": true
+    },
+    {
+      "type": "stale",
+      "reviewer": "RyanCavanaugh",
+      "date": "2026-06-05T17:58:45.000Z",
+      "abbrOid": "84d893e"
+    }
+  ],
+  "mainBotCommentID": 4473279812,
+  "ciResult": "pass"
+}

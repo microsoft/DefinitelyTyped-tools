@@ -167,21 +167,41 @@ function getMutationsForComments(actions: Actions, prId: string, botComments: Pa
     actions.responseComments.map((wantedComment) => {
       if ((wantedComment.tag === "welcome") !== onlyWelcome) return [];
       const sameTagComments = botComments.filter((comment) => comment.tag === wantedComment.tag);
-      return sameTagComments.length === 0
-        ? [
-            createMutation<schema.AddCommentInput>("addComment", {
-              subjectId: prId,
+      if (sameTagComments.length === 0) {
+        return [
+          createMutation<schema.AddCommentInput>("addComment", {
+            subjectId: prId,
+            body: comment.make(wantedComment),
+          }),
+        ];
+      }
+      // The "welcome" comment is the single live overview/state comment that the bot keeps updated.
+      // If duplicates exist (e.g. because a previous bug caused the bot to not recognize its own
+      // comments and post new ones), keep the first and delete the rest. Other comment types (e.g.
+      // pings) are left alone.
+      if (wantedComment.tag === "welcome") {
+        const keep = sameTagComments[0]!;
+        const duplicates = sameTagComments.slice(1);
+        return [
+          keep.status === wantedComment.status
+            ? null // Comment is up-to-date; skip
+            : createMutation<schema.UpdateIssueCommentInput>("updateIssueComment", {
+                id: keep.id,
+                body: comment.make(wantedComment),
+              }),
+          ...duplicates.map((duplicate) =>
+            createMutation<schema.DeleteIssueCommentInput>("deleteIssueComment", { id: duplicate.id }),
+          ),
+        ];
+      }
+      return sameTagComments.map((actualComment) =>
+        actualComment.status === wantedComment.status
+          ? null // Comment is up-to-date; skip
+          : createMutation<schema.UpdateIssueCommentInput>("updateIssueComment", {
+              id: actualComment.id,
               body: comment.make(wantedComment),
             }),
-          ]
-        : sameTagComments.map((actualComment) =>
-            actualComment.status === wantedComment.status
-              ? null // Comment is up-to-date; skip
-              : createMutation<schema.UpdateIssueCommentInput>("updateIssueComment", {
-                  id: actualComment.id,
-                  body: comment.make(wantedComment),
-                }),
-          );
+      );
     }),
   );
 }

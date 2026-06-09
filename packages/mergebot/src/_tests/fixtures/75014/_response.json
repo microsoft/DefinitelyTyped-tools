@@ -1,0 +1,349 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM7ceHRM",
+        "title": "[safie-sdk] Add type definitions",
+        "createdAt": "2026-05-18T01:00:25Z",
+        "author": {
+          "login": "yusuke-oba1",
+          "__typename": "User"
+        },
+        "authorAssociation": "NONE",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Other Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "New Definition",
+              "__typename": "Label"
+            },
+            {
+              "name": "Unreviewed",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 75014,
+        "state": "OPEN",
+        "headRefOid": "ed4473032f08df609bbfd2a0ee8a4a78f74393c2",
+        "baseRefOid": "c6fb7d2e0e833931ac92da131709d2c6178ce3d8",
+        "changedFiles": 5,
+        "additions": 1525,
+        "deletions": 0,
+        "commitIds": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "23fcb374983281cf0900a967493733d932d7318b",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "2266eb2a0857dabc525d50a13801a0473d7a7338",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "84d893eab091fe78c932364875074403655adcbc",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "23fcb374983281cf0900a967493733d932d7318b",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "ed4473032f08df609bbfd2a0ee8a4a78f74393c2",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "84d893eab091fe78c932364875074403655adcbc",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "author": {
+                "login": "RyanCavanaugh",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "84d893eab091fe78c932364875074403655adcbc",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "CHANGES_REQUESTED",
+              "submittedAt": "2026-06-05T17:58:45Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75014#pullrequestreview-4438476440",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "gabritto",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "ed4473032f08df609bbfd2a0ee8a4a78f74393c2",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "APPROVED",
+              "submittedAt": "2026-06-09T15:32:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75014#pullrequestreview-4460141418",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 72923031230,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/ed4473032f08df609bbfd2a0ee8a4a78f74393c2/checks?check_suite_id=72923031230",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/ed4473032f08df609bbfd2a0ee8a4a78f74393c2/checks?check_suite_id=72923031230",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-06-08T14:53:09Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-06-08T14:52:54Z",
+                "committedDate": "2026-06-08T14:52:54Z",
+                "pushedDate": null,
+                "oid": "ed4473032f08df609bbfd2a0ee8a4a78f74393c2",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 6,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABCqDVRA",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4473279812,
+              "body": "@yusuke-oba1 Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `safie-sdk` (*new!*) — [on npm](https://www.npmjs.com/package/safie-sdk), [on unpkg](https://unpkg.com/browse/safie-sdk@latest/)\n  - 1 added owner: @SafieDev\n\n## Code Reviews\n\nThis PR adds a new definition, so it needs to be reviewed by a DT maintainer before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75014&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Only a DT maintainer can approve changes when there are new packages added\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 22 days — it is *still* unreviewed!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-05-18T01:01:05Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABCqDWiw",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4473280139,
+              "body": "🔔 @yusuke-oba1 — there are no owners, but it would still be good if you find someone to [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75014/files) in the next few days, otherwise a maintainer will look at it. (And if you do find someone, maybe even recruit them to be a second owner to make future changes easier...)\n<!--typescript_bot_pinging-reviewers-others-->",
+              "createdAt": "2026-05-18T01:01:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABEGAMsg",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4569697458,
+              "body": "Re-ping @«anyone?»:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2026-05-18-->",
+              "createdAt": "2026-05-29T01:29:57Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABE8_nHQ",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4627359517,
+              "body": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @yusuke-oba1.\n\n(Ping @«anyone?».)\n<!--typescript_bot_Unreviewed:done-->",
+              "createdAt": "2026-06-05T01:31:28Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFDdjCQ",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4634141449,
+              "body": "@yusuke-oba1 One or more reviewers has requested changes. Please address their comments. I'll be back once they sign off or you've pushed new commits. Thank you!\n<!--typescript_bot_reviewer-complaint-84d893e-->",
+              "createdAt": "2026-06-05T17:59:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFS34JA",
+              "author": {
+                "login": "typescript-bot",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 4650301476,
+              "body": "@RyanCavanaugh Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-fbf110-84d893e-->",
+              "createdAt": "2026-06-08T14:59:07Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "path": "types/safie-sdk/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/safie-sdk/index.d.ts",
+              "additions": 1184,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/safie-sdk/package.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/safie-sdk/safie-sdk-tests.ts",
+              "additions": 297,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/safie-sdk/tsconfig.json",
+              "additions": 20,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "NQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}

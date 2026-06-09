@@ -42,7 +42,12 @@ export function sameUser(u1: string, u2: string) {
   return u1.toLowerCase() === u2.toLowerCase();
 }
 
-const typeScriptBotLogins = new Set(["typescript-bot", "typescript-automation[bot]"]);
+// GitHub reports the app bot's login differently depending on the API: the GraphQL
+// `author.login`/`actor.login` of a comment, review, or event made by the app is
+// `typescript-automation` (no suffix), while REST webhook `sender.login` payloads use
+// `typescript-automation[bot]`. Include both so the bot recognizes its own activity in
+// either context (and keep the legacy `typescript-bot` user for historical PRs).
+const typeScriptBotLogins = new Set(["typescript-bot", "typescript-automation", "typescript-automation[bot]"]);
 const knownBots = new Set([...typeScriptBotLogins, "copilot-pull-request-reviewer"]);
 
 export function isTypeScriptBot(login: string | null | undefined) {

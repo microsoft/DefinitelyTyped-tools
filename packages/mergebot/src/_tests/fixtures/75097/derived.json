@@ -1,0 +1,52 @@
+{
+  "type": "info",
+  "now": "2026-06-09T17:21:26.238Z",
+  "pr_number": 75097,
+  "author": "brandonbothell",
+  "headCommitOid": "4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce",
+  "mergeBaseOid": "c441c5b5d837b2f3dfdf95b0afcd1f05baf40b98",
+  "lastPushDate": "2026-06-09T08:53:58.000Z",
+  "lastActivityDate": "2026-06-09T16:12:51.000Z",
+  "mergeOfferDate": "2026-06-09T16:54:12.000Z",
+  "mergeRequestDate": "2026-06-09T16:08:26.000Z",
+  "mergeRequestUser": "brandonbothell",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "discord-rpc",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/discord-rpc/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "dylhack",
+        "k3rn31p4nic",
+        "HanchaiN"
+      ],
+      "addedOwners": [
+        "brandonbothell"
+      ],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "dylhack",
+      "date": "2026-06-09T14:59:48.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 4658093747,
+  "ciResult": "pass"
+}
