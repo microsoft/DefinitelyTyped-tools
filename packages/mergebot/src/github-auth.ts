@@ -66,7 +66,7 @@ export async function getGitHubAuthToken() {
 
   const defaultPermissions: Record<string, PermissionLevel> = {
     checks: "write",
-    contents: "read",
+    contents: "write",
     discussions: "write",
     issues: "write",
     members: "read",
