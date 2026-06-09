@@ -31,9 +31,5 @@
         }
       }
     }
-  },
-  {
-    "method": "POST",
-    "op": "actions/runs/7891011/approve"
   }
 ]

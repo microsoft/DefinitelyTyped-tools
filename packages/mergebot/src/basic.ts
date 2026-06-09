@@ -70,6 +70,8 @@ export function getMaxApproverKind(...kinds: ApproverKind[]): ApproverKind {
   return approverKindOrder[kinds.reduce((max, kind) => Math.max(max, approverKindOrder.indexOf(kind)), 0)]!;
 }
 
+export const approveFirstTimeContributorCI = false;
+
 // https://github.com/orgs/DefinitelyTyped/projects/1
 export const projectBoardNumber = 1;
 

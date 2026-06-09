@@ -1,4 +1,11 @@
-import { ColumnName, LabelName, StalenessKind, ApproverKind, getMaxApproverKind } from "./basic";
+import {
+  ColumnName,
+  LabelName,
+  StalenessKind,
+  ApproverKind,
+  getMaxApproverKind,
+  approveFirstTimeContributorCI,
+} from "./basic";
 import * as Comments from "./comments";
 import * as emoji from "./emoji";
 import * as urls from "./urls";
@@ -363,8 +370,8 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
   // CI is running; default column is Waiting for Reviewers
   else if (info.ciResult === "unknown") {
     actions.projectColumn = "Waiting for Code Reviews";
-    if (info.blockedCI)
-      // => we should approve the tests (by rerunning)
+    if (info.blockedCI && approveFirstTimeContributorCI)
+      // => we should approve the tests (by approving the workflow run)
       actions.reRunActionsWorkflowRunIDs = info.reRunWorkflowRunIDs || undefined;
   }
   // CI is missing

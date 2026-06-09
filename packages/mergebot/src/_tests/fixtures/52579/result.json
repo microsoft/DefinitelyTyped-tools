@@ -16,8 +16,5 @@
   ],
   "shouldClose": false,
   "shouldMerge": false,
-  "shouldUpdateLabels": true,
-  "reRunActionsWorkflowRunIDs": [
-    7891011
-  ]
+  "shouldUpdateLabels": true
 }
