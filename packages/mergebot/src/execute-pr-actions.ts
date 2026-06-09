@@ -243,13 +243,11 @@ async function getLabelIdByName(name: string): Promise<string> {
   return res;
 }
 
-// *** HACK ***
-// A GQL mutation of `rerequestCheckSuite` throws an error that it's only
-// allowed from a GH app, but a `rerequest` rest call works fine.  So do a rest
-// call for now, and hopefully GH will have a better way of handling these
-// first-time contributors.  This whole mess should then turn to a GQL mutation,
-// or better, be removed if there's some repo settings to allow test builds
-// based on paths or something similar.
+// For first-time contributors, GitHub Actions leaves workflow runs in an
+// `action_required` state until someone with write access approves them. The
+// GitHub App can't `rerequest` the GitHub Actions check suite (apps may only
+// rerequest check suites they own), so approve the workflow run instead, which
+// is the purpose-built endpoint for this case and triggers CI to run.
 
 interface RestMutation {
   method: string;
@@ -272,8 +270,8 @@ async function doRestCall(call: RestMutation): Promise<void> {
 }
 
 function getMutationsForReRunningCI(actions: Actions) {
-  return (actions.reRunActionsCheckSuiteIDs || []).map((id) => ({
+  return (actions.reRunActionsWorkflowRunIDs || []).map((id) => ({
     method: "POST",
-    op: `check-suites/${id}/rerequest`,
+    op: `actions/runs/${id}/approve`,
   }));
 }

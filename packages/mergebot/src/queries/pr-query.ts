@@ -141,6 +141,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
                   }
                   createdAt
                   workflowRun {
+                    databaseId
                     file {
                       path
                     }

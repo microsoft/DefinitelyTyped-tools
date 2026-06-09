@@ -15,7 +15,7 @@ export interface Actions {
   shouldClose: boolean;
   shouldMerge: boolean;
   shouldUpdateLabels: boolean;
-  reRunActionsCheckSuiteIDs?: number[];
+  reRunActionsWorkflowRunIDs?: number[];
 }
 
 function createDefaultActions(): Actions {
@@ -365,7 +365,7 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
     actions.projectColumn = "Waiting for Code Reviews";
     if (info.blockedCI)
       // => we should approve the tests (by rerunning)
-      actions.reRunActionsCheckSuiteIDs = info.reRunCheckSuiteIDs || undefined;
+      actions.reRunActionsWorkflowRunIDs = info.reRunWorkflowRunIDs || undefined;
   }
   // CI is missing
   else if (info.ciResult === "missing") {

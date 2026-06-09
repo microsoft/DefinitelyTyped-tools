@@ -92,6 +92,14 @@
                         "nodes": [],
                         "__typename": "CheckRunConnection"
                       },
+                      "workflowRun": {
+                        "databaseId": 7891011,
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
                       "__typename": "CheckSuite"
                     },
                     {

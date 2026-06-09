@@ -116,9 +116,9 @@ export interface PrInfo {
   readonly ciUrl?: string;
 
   /**
-   * An ID for a check suite that could need re-running
+   * IDs for workflow runs that need approving to run (e.g. for first-time contributors)
    */
-  readonly reRunCheckSuiteIDs?: number[];
+  readonly reRunWorkflowRunIDs?: number[];
 
   /**
    * True if the PR has a merge conflict
@@ -667,15 +667,15 @@ function isMaintainerComment(
 function getCIResult(checkSuites: PR_repository_pullRequest_commits_nodes_commit_checkSuites | null): {
   ciResult: CIResult;
   ciUrl?: string;
-  reRunCheckSuiteIDs?: number[];
+  reRunWorkflowRunIDs?: number[];
 } {
   const ghActionsChecks = checkSuites?.nodes?.filter((check) => check?.app?.name.includes("GitHub Actions"));
 
   // Freakin' crypto miners ruined GitHub Actions, and now we need to manually confirm new folks can run CI
   const actionRequiredIDs = noNullish(
-    ghActionsChecks?.map((check) => (check?.conclusion === "ACTION_REQUIRED" ? check.databaseId : null)),
+    ghActionsChecks?.map((check) => (check?.conclusion === "ACTION_REQUIRED" ? check.workflowRun?.databaseId : null)),
   );
-  if (actionRequiredIDs.length > 0) return { ciResult: "action_required", reRunCheckSuiteIDs: actionRequiredIDs };
+  if (actionRequiredIDs.length > 0) return { ciResult: "action_required", reRunWorkflowRunIDs: actionRequiredIDs };
 
   const latestChecks = [];
   const checksByWorkflowPath = new Map<string, PR_repository_pullRequest_commits_nodes_commit_checkSuites_nodes>();

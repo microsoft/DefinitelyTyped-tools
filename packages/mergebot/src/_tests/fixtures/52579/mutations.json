@@ -34,6 +34,6 @@
   },
   {
     "method": "POST",
-    "op": "check-suites/123456/rerequest"
+    "op": "actions/runs/7891011/approve"
   }
 ]

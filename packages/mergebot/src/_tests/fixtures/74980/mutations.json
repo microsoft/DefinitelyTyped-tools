@@ -63,6 +63,6 @@
   },
   {
     "method": "POST",
-    "op": "check-suites/68415365071/rerequest"
+    "op": "actions/runs/25672723099/approve"
   }
 ]

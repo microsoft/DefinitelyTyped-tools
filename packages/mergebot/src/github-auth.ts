@@ -66,6 +66,7 @@ export async function getGitHubAuthToken() {
   return getGitHubAuth().getToken({
     repositories: [process.env.GITHUB_APP_INSTALLATION_REPO || "DefinitelyTyped"],
     permissions: permissions() ?? {
+      actions: "write",
       checks: "write",
       contents: "read",
       discussions: "write",
