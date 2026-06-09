@@ -561,14 +561,10 @@ function makeChecker(
 ) {
   const diffFromExpected = (text: string) => {
     let data: any;
-    if (options?.parse) {
-      data = options.parse(text);
-    } else {
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        return "couldn't parse json";
-      }
+    try {
+      data = options?.parse ? options.parse(text) : JSON.parse(text);
+    } catch (e) {
+      return "couldn't parse json";
     }
     options?.ignore?.(data);
     try {
