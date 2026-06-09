@@ -16,8 +16,5 @@
   ],
   "shouldClose": false,
   "shouldMerge": false,
-  "shouldUpdateLabels": true,
-  "reRunActionsCheckSuiteIDs": [
-    123456
-  ]
+  "shouldUpdateLabels": true
 }

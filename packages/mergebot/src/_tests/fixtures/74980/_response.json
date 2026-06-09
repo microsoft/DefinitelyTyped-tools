@@ -82,6 +82,7 @@
                       },
                       "createdAt": "2026-05-11T13:20:11Z",
                       "workflowRun": {
+                        "databaseId": 25672723099,
                         "file": {
                           "path": ".github/workflows/CI.yml",
                           "__typename": "WorkflowRunFile"

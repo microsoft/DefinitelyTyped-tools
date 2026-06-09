@@ -56,7 +56,7 @@
   ],
   "reviews": [],
   "ciResult": "action_required",
-  "reRunCheckSuiteIDs": [
-    123456
+  "reRunWorkflowRunIDs": [
+    7891011
   ]
 }

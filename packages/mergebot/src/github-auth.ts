@@ -1,6 +1,7 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import { CryptographyClient } from "@azure/keyvault-keys";
 import { createGitHubAppAuth } from "./util/github-app-auth";
+import { approveFirstTimeContributorCI } from "./basic";
 
 type PermissionLevel = "read" | "write" | "admin";
 type GitHubAppAuth = ReturnType<typeof createGitHubAppAuth>;
@@ -63,16 +64,22 @@ export async function getGitHubAuthToken() {
     return token.trim();
   }
 
+  const defaultPermissions: Record<string, PermissionLevel> = {
+    checks: "write",
+    contents: "write",
+    discussions: "write",
+    issues: "write",
+    members: "read",
+    organization_projects: "write",
+    pull_requests: "write",
+  };
+  // Approving first-time contributors' blocked workflow runs needs the actions permission.
+  if (approveFirstTimeContributorCI) {
+    defaultPermissions.actions = "write";
+  }
+
   return getGitHubAuth().getToken({
     repositories: [process.env.GITHUB_APP_INSTALLATION_REPO || "DefinitelyTyped"],
-    permissions: permissions() ?? {
-      checks: "write",
-      contents: "read",
-      discussions: "write",
-      issues: "write",
-      members: "read",
-      organization_projects: "write",
-      pull_requests: "write",
-    },
+    permissions: permissions() ?? defaultPermissions,
   });
 }

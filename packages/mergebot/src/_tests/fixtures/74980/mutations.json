@@ -60,9 +60,5 @@
         "body": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @justinkrn68-droid.\n\n(Ping @lhecker.)\n<!--typescript_bot_Unreviewed:done-->"
       }
     }
-  },
-  {
-    "method": "POST",
-    "op": "check-suites/68415365071/rerequest"
   }
 ]

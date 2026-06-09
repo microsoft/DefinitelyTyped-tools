@@ -31,9 +31,5 @@
         }
       }
     }
-  },
-  {
-    "method": "POST",
-    "op": "check-suites/123456/rerequest"
   }
 ]
