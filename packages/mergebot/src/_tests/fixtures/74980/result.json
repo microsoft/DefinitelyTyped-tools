@@ -1,0 +1,28 @@
+{
+  "projectColumn": "Needs Maintainer Action",
+  "labels": [
+    "Critical package",
+    "Check Config",
+    "Unreviewed"
+  ],
+  "responseComments": [
+    {
+      "tag": "welcome",
+      "status": "@justinkrn68-droid Thank you for submitting this PR! I see this is your first time submitting to DefinitelyTyped 👋 — I'm the local bot who will help you through the process of getting things through.\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `bluebird` — [on npm](https://www.npmjs.com/package/bluebird), [on unpkg](https://unpkg.com/browse/bluebird@latest/)\n  - Config files to check:\n    - [`bluebird/package.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/74980/files/c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864#diff-a7758061c91486db4772fdf646baf1596c98b99a50204a6b3185b4a7e021fb9f): couldn't parse json\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=74980&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 A DT maintainer needs to approve changes that affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 29 days — it is *still* unreviewed!\n\n----------------------\n... diagnostics scrubbed ..."
+    },
+    {
+      "tag": "pinging-reviewers",
+      "status": "🔔 @lhecker — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/74980/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
+    },
+    {
+      "tag": "Unreviewed:done",
+      "status": "It has been more than two weeks and this PR still has no reviews.\n\nI'll bump it to the DT maintainer queue. Thank you for your patience, @justinkrn68-droid.\n\n(Ping @lhecker.)"
+    }
+  ],
+  "shouldClose": false,
+  "shouldMerge": false,
+  "shouldUpdateLabels": true,
+  "reRunActionsCheckSuiteIDs": [
+    68415365071
+  ]
+}

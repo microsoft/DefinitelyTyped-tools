@@ -1,0 +1,4 @@
+{
+  "c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864:types/bluebird/package.json": "{\n    \"private\": true,\n    \"name\": \"@types/bluebird\",\n    \"version\": \"3.5.9999\",\n    \"projects\": [\n        \"https://github.com/petkaantonov/bluebird\"\n    ],\n    \"devDependencies\": {\n        \"@types/bluebird\": \"workspace:.\"hjhbjkbkvhjc\n    },\n    \"owners\": xe[\n        {\n            \"name\": \"Leonard Hecker\",\n            \"githubUsername\": \"lhecker\"\n        }\n    ]\n}\n",
+  "84efd8820459db1cdaad122f2347683b7db023ee:types/bluebird/package.json": "{\n    \"private\": true,\n    \"name\": \"@types/bluebird\",\n    \"version\": \"3.5.9999\",\n    \"projects\": [\n        \"https://github.com/petkaantonov/bluebird\"\n    ],\n    \"devDependencies\": {\n        \"@types/bluebird\": \"workspace:.\"\n    },\n    \"owners\": [\n        {\n            \"name\": \"Leonard Hecker\",\n            \"githubUsername\": \"lhecker\"\n        }\n    ]\n}\n"
+}
