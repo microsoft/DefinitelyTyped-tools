@@ -70,6 +70,7 @@ export async function getGitHubAuthToken() {
       contents: "read",
       discussions: "write",
       issues: "write",
+      members: "read",
       organization_projects: "write",
       pull_requests: "write",
     },

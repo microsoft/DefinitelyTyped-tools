@@ -1,0 +1,613 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM7kS7xO",
+        "title": "[discord-rpc] Add myself back",
+        "createdAt": "2026-06-09T08:53:58Z",
+        "author": {
+          "login": "brandonbothell",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Self Merge",
+              "__typename": "Label"
+            },
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 75097,
+        "state": "OPEN",
+        "headRefOid": "4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce",
+        "baseRefOid": "c441c5b5d837b2f3dfdf95b0afcd1f05baf40b98",
+        "changedFiles": 1,
+        "additions": 4,
+        "deletions": 0,
+        "commitIds": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "c441c5b5d837b2f3dfdf95b0afcd1f05baf40b98",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "author": {
+                "login": "dylhack",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2026-06-09T14:59:48Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75097#pullrequestreview-4459865072",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 73067100919,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce/checks?check_suite_id=73067100919",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce/checks?check_suite_id=73067100919",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-06-09T08:54:05Z",
+                      "workflowRun": {
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-06-09T08:36:03Z",
+                "committedDate": "2026-06-09T08:36:03Z",
+                "pushedDate": null,
+                "oid": "4e58a58cbb6be4fd709a19bef50e7cbbc66c6cce",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 26,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFaTesw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4658093747,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * 🕐 Continuous integration tests are still running\n * 🕐 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T08:54:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFaTgFQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4658094101,
+              "body": "🔔 @dylhack @k3rn31p4nic @HanchaiN — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75097/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-06-09T08:54:40Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFaWfUw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4658143059,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T09:00:25Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFaWf1g",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4658143190,
+              "body": "🔔 @dylhack @k3rn31p4nic @HanchaiN — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75097/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-06-09T09:00:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFcZ62Q",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4660296409,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T13:35:23Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFcZ7gQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4660296577,
+              "body": "🔔 @dylhack @k3rn31p4nic @HanchaiN — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75097/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-06-09T13:35:24Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdKI9g",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661086454,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T15:00:29Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdKLFA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661086996,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T15:00:33Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdrYpw",
+              "author": {
+                "login": "brandonbothell",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 4661631143,
+              "body": "Ready to merge",
+              "createdAt": "2026-06-09T16:03:37Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdrrBA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661635844,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T16:04:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdrreg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661635962,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T16:04:12Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdrr5w",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661636071,
+              "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->",
+              "createdAt": "2026-06-09T16:04:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdtvQQ",
+              "author": {
+                "login": "brandonbothell",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 4661669697,
+              "body": "Ready to merge",
+              "createdAt": "2026-06-09T16:08:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFduAfA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661674108,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T16:08:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFduA7A",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661674220,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T16:09:00Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFduBSg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661674314,
+              "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->",
+              "createdAt": "2026-06-09T16:09:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdv1JQ",
+              "author": {
+                "login": "brandonbothell",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 4661703973,
+              "body": "@jakebailey I'm not sure, but I think the bot is supposed to be editing the initial message instead of sending new ones, correct? Also, I can't merge this PR myself since the bot can't tell that it's ready to merge, if you or someone would take a look at it for me (just updated owners) that would be much appreciated.\r\n\r\nSome highly unintended behavior is afoot, it doesn't seem to be editing comments at all and instead just posts a new one  very time. Reference: #75096 ",
+              "createdAt": "2026-06-09T16:12:51Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdwGNw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661708343,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T16:13:25Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdwGlg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661708438,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T16:13:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdwG-w",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661708539,
+              "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->",
+              "createdAt": "2026-06-09T16:13:26Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdxekw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661730963,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T16:16:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdxe6A",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661731048,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T16:16:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFdxfSg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4661731146,
+              "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->",
+              "createdAt": "2026-06-09T16:16:19Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFeCnHw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4662011679,
+              "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-09T16:54:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFeCnjQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4662011789,
+              "body": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)\n<!--typescript_bot_merge-offer-->",
+              "createdAt": "2026-06-09T16:54:12Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABFeCn7w",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4662011887,
+              "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-???) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->",
+              "createdAt": "2026-06-09T16:54:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "path": "types/discord-rpc/package.json",
+              "additions": 4,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgvKG9I",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Waiting for Author to Merge",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2026-06-09T16:53:41Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}

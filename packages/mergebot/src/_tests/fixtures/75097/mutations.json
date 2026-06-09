@@ -1,0 +1,120 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFaTesw",
+        "body": "@brandonbothell Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `discord-rpc` — [on npm](https://www.npmjs.com/package/discord-rpc), [on unpkg](https://unpkg.com/browse/discord-rpc@latest/)\n  - owner-approval: @dylhack\n  - 1 added owner: ✎@brandonbothell\n\n## Code Reviews\n\nBecause you edited one package and there were no type definition changes, I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75097&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * ✅ Most recent commit is approved by type definition owners, DT maintainers or others\n\nAll of the items on the list are green. **To merge, you need to post a comment including the string \"Ready to merge\"** to bring in your changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFaWfUw"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFcZ62Q"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdKI9g"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdrrBA"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFduAfA"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdwGNw"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdxekw"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: DeleteIssueCommentInput!) {\n  deleteIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFeCnHw"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdrr5w",
+        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFduBSg",
+        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdwG-w",
+        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFdxfSg",
+        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABFeCn7w",
+        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
+      }
+    }
+  }
+]
