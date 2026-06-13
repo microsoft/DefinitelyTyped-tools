@@ -1,0 +1,186 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM7l36mp",
+        "title": "Add types for @npmcli/config/lib/definitions",
+        "createdAt": "2026-06-12T18:10:31Z",
+        "author": {
+          "login": "MattIPv4",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Where is GH Actions?",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 75112,
+        "state": "OPEN",
+        "headRefOid": "48de9998d2b6ee226235ecd29e4d4e7ea5b57bc4",
+        "baseRefOid": "1096f8189e52f26bbb77c1325cf9c2867d54fbc5",
+        "changedFiles": 2,
+        "additions": 29,
+        "deletions": 0,
+        "commitIds": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "48de9998d2b6ee226235ecd29e4d4e7ea5b57bc4",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "1096f8189e52f26bbb77c1325cf9c2867d54fbc5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "MattIPv4",
+                "__typename": "User"
+              },
+              "createdAt": "2026-06-12T18:20:11Z",
+              "__typename": "HeadRefForcePushedEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-06-12T18:06:28Z",
+                "committedDate": "2026-06-12T18:20:05Z",
+                "pushedDate": null,
+                "oid": "48de9998d2b6ee226235ecd29e4d4e7ea5b57bc4",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABF8jQRA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4694003780,
+              "body": "@MattIPv4 Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `npmcli__config` \u2014 [on npm](https://www.npmjs.com/package/@npmcli/config), [on unpkg](https://unpkg.com/browse/@npmcli/config@latest/)\n\n## Code Reviews\n\nBecause you edited one package and updated the tests (\ud83d\udc4f), I can help you merge this PR once someone else signs off on it.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75112&install-plugin=playground-dt-review).\n\n## Status\n\n * \u2705 No merge conflicts\n * \u2753 Continuous integration tests have gone missing\n * \ud83d\udd50 Most recent commit is approved by type definition owners, DT maintainers or others\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-06-12T18:11:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABF8jQ3g",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 4694003934,
+              "body": "\ud83d\udd14 @forivall \u2014 please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75112/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-06-12T18:11:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/npmcli__config/lib/definitions/index.d.ts",
+              "additions": 12,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/npmcli__config/npmcli__config-tests.ts",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mg",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzgvk33k",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Other",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2026-06-12T18:20:49Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}

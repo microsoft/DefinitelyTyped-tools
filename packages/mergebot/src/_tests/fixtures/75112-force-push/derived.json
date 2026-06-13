@@ -1,0 +1,42 @@
+{
+  "type": "info",
+  "now": "2026-06-12T18:20:15.000Z",
+  "pr_number": 75112,
+  "author": "MattIPv4",
+  "headCommitOid": "48de9998d2b6ee226235ecd29e4d4e7ea5b57bc4",
+  "mergeBaseOid": "1096f8189e52f26bbb77c1325cf9c2867d54fbc5",
+  "lastPushDate": "2026-06-12T18:20:11.000Z",
+  "lastActivityDate": "2026-06-12T18:20:11.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "npmcli__config",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/npmcli__config/lib/definitions/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/npmcli__config/npmcli__config-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "forivall"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 4694003780,
+  "ciResult": "missing"
+}
