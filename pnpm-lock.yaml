@@ -440,15 +440,6 @@ importers:
       '@definitelytyped/typescript-versions':
         specifier: workspace:*
         version: link:../typescript-versions
-      typescript-5.3:
-        specifier: npm:typescript@~5.3.0-0
-        version: typescript@5.3.3
-      typescript-5.4:
-        specifier: npm:typescript@~5.4.0-0
-        version: typescript@5.4.5
-      typescript-5.5:
-        specifier: npm:typescript@~5.5.0-0
-        version: typescript@5.5.4
       typescript-5.6:
         specifier: npm:typescript@~5.6.0-0
         version: typescript@5.6.3
@@ -4914,11 +4905,6 @@ packages:
   typed-array-length@1.0.7:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
-
-  typescript@5.3.3:
-    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
 
   typescript@5.4.5:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
@@ -10542,8 +10528,6 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
-
-  typescript@5.3.3: {}
 
   typescript@5.4.5: {}
 

@@ -41,7 +41,7 @@ export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVers
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
-  export const shipped = ["5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", "6.0"] as const;
+  export const shipped = ["5.6", "5.7", "5.8", "5.9", "6.0"] as const;
   /** Add to this list when a version is available as typescript@next */
   export const supported = [...shipped] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
@@ -79,6 +79,9 @@ export namespace TypeScriptVersion {
     "5.0",
     "5.1",
     "5.2",
+    "5.3",
+    "5.4",
+    "5.5",
   ] as const;
   export const all: readonly AllTypeScriptVersion[] = [...unsupported, ...supported];
   export const lowest = supported[0];
