@@ -1,5 +1,13 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.12
+
+### Patch Changes
+
+- bb039b2: Drop TS 5.3, 5.4, and 5.5
+- Updated dependencies [bb039b2]
+  - @definitelytyped/typescript-versions@0.1.12
+
 ## 0.1.11
 
 ### Patch Changes
