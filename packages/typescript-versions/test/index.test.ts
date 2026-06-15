@@ -51,14 +51,7 @@ describe("range", () => {
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual([
-      "ts5.6",
-      "ts5.7",
-      "ts5.8",
-      "ts5.9",
-      "ts6.0",
-      "latest",
-    ]);
+    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual(["ts5.6", "ts5.7", "ts5.8", "ts5.9", "ts6.0", "latest"]);
   });
   it("allows 5.6 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual(
