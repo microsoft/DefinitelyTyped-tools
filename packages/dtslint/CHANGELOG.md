@@ -1,5 +1,14 @@
 # @definitelytyped/dtslint
 
+## 0.2.45
+
+### Patch Changes
+
+- Updated dependencies [bb039b2]
+  - @definitelytyped/typescript-packages@0.1.12
+  - @definitelytyped/typescript-versions@0.1.12
+  - @definitelytyped/header-parser@0.2.29
+
 ## 0.2.44
 
 ### Patch Changes
