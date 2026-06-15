@@ -235,13 +235,16 @@ export async function deriveStateForPR(
   const isFirstContribution = prInfo.authorAssociation === "FIRST_TIME_CONTRIBUTOR";
 
   const createdDate = new Date(prInfo.createdAt);
-  // apparently `headCommit.pushedDate` can be null in some cases (see #48708), use the PR creation time for that
+  const lastForcePushDate = getLastForcePushDate(prInfo.timelineItems);
+  // `headCommit.pushedDate` is deprecated and now always null, so fall back to the last force-push
+  // event date (a reliable server timestamp) when present, otherwise the PR creation time.
   // (it would be bad to use `committedDate`/`authoredDate`, since these can be set to arbitrary values)
-  const lastPushDate = new Date(headCommit.pushedDate || prInfo.createdAt);
+  const lastPushDate = headCommit.pushedDate
+    ? new Date(headCommit.pushedDate)
+    : (lastForcePushDate ?? new Date(prInfo.createdAt));
   const lastCommentDate = getLastCommentishActivityDate(prInfo);
   const blessing = getLastMaintainerBlessing(lastPushDate, prInfo);
   const reopenedDate = getReopenedDate(prInfo.timelineItems);
-  const lastForcePushDate = getLastForcePushDate(prInfo.timelineItems);
   // we should generally have all files (except for draft PRs)
   const fileCount = prInfo.changedFiles;
   // we fetch all files so this shouldn't happen, but GH has a limit of 3k files even with
