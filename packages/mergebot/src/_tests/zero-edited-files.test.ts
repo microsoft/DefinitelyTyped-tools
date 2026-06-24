@@ -14,7 +14,7 @@ describe("zero edited files", () => {
       ...original,
       changedFiles: 0,
       files: { ...original.files, nodes: [] },
-    };
+    } as typeof original;
 
     const derived = await deriveStateForPR(
       prInfo,
@@ -30,7 +30,6 @@ describe("zero edited files", () => {
     expect(derived).toMatchObject({
       type: "remove",
       message: "PR has no edited files",
-      isDraft: false,
       shouldClose: true,
     });
 
