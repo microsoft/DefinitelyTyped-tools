@@ -319,7 +319,8 @@ export async function deriveStateForPR(
   }
 
   function botEnsureRemovedFromProject(message: string, shouldClose = false): BotEnsureRemovedFromProject {
-    return { type: "remove", now, message, isDraft: prInfo.isDraft, shouldClose };
+    const base: BotEnsureRemovedFromProject = { type: "remove", now, message, isDraft: prInfo.isDraft };
+    return shouldClose ? { ...base, shouldClose: true } : base;
   }
 }
 
