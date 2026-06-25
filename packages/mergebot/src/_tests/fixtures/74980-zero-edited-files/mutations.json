@@ -1,0 +1,10 @@
+[
+  {
+    "mutation": "mutation ($input: ClosePullRequestInput!) {\n  closePullRequest(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "pullRequestId": "PR_kwDOAFz6BM7aQ8jd"
+      }
+    }
+  }
+]
