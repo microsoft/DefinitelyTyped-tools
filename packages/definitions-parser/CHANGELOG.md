@@ -1,5 +1,11 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.33
+
+### Patch Changes
+
+- 86d36f4: Don't use TS7
+
 ## 0.1.32
 
 ### Patch Changes
