@@ -1,5 +1,11 @@
 # @definitelytyped/dts-critic
 
+## 0.1.32
+
+### Patch Changes
+
+- 86d36f4: Don't use TS7
+
 ## 0.1.31
 
 ### Patch Changes

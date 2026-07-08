@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.46
+
+### Patch Changes
+
+- 86d36f4: Don't use TS7
+
 ## 0.2.45
 
 ### Patch Changes
