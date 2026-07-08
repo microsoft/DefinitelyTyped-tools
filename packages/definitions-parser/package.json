@@ -32,7 +32,7 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "typescript": "*"
+    "typescript": "<7"
   },
   "publishConfig": {
     "access": "public"
