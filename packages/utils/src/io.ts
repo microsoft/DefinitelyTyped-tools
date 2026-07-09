@@ -314,6 +314,11 @@ function getUrlContentsAsString(url: string): Promise<string> {
         let data = "";
         res.on("data", (d) => (data += d));
         res.on("end", () => {
+          const statusCode = res.statusCode ?? 0;
+          if (statusCode < 200 || statusCode >= 300) {
+            reject(new Error(`Request to ${url} failed with status code ${statusCode}: ${data}`));
+            return;
+          }
           resolve(data);
         });
       })
