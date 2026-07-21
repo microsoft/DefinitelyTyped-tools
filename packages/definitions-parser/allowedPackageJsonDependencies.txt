@@ -29,6 +29,7 @@
 @emotion/serialize
 @emotion/styled
 @floating-ui/react
+@gimloader/types
 @glimmer/component
 @glimmer/manager
 @glimmer/runtime
