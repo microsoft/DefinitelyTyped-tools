@@ -12,11 +12,7 @@ describe("all", () => {
     for (const version of TypeScriptVersion.all.slice(1)) {
       const [prevMajor, prevMinor] = prev.split(".").map(Number);
       const [major, minor] = version.split(".").map(Number);
-      expect(
-        (major === prevMajor && minor === prevMinor + 1) ||
-          (major === prevMajor + 1 && prevMinor === 9 && minor === 0) ||
-          (prev === "6.0" && version === "7.1"),
-      ).toBeTruthy();
+      expect((major === prevMajor && minor === prevMinor + 1) || (major === prevMajor + 1 && minor === 0)).toBeTruthy();
       prev = version;
     }
   });
@@ -48,7 +44,7 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("5.6")).toEqual(["5.6", "5.7", "5.8", "5.9", "6.0", "7.1"]);
+    expect(TypeScriptVersion.range("5.6")).toEqual(["5.6", "5.7", "5.8", "5.9", "6.0", "7.0", "7.1"]);
   });
   it("includes 5.6 onwards", () => {
     expect(TypeScriptVersion.range("5.6")).toEqual(TypeScriptVersion.supported);
@@ -63,6 +59,7 @@ describe("tagsToUpdate", () => {
       "ts5.8",
       "ts5.9",
       "ts6.0",
+      "ts7.0",
       "ts7.1",
       "latest",
     ]);

@@ -61,7 +61,7 @@ interface Program {
 interface Project {
   readonly program: Program;
   readonly checker: {
-    getTypeAtLocation(node: Node): unknown;
+    getTypeAtLocation(node: Node): unknown | undefined;
     typeToString(type: unknown, enclosingDeclaration: undefined, flags: number): string;
   };
 }
@@ -246,7 +246,10 @@ function getExpectTypeFailures(
       if (expected !== undefined) {
         const target = getNodeForExpectType(node, astModule);
         const type = project.checker.getTypeAtLocation(target);
-        const actual = project.checker.typeToString(type, undefined, apiModule.NodeBuilderFlags.NoTruncation);
+        const actual =
+          type === undefined
+            ? ""
+            : project.checker.typeToString(type, undefined, apiModule.NodeBuilderFlags.NoTruncation);
         if (!typeStringsMatch(expected, actual)) {
           failures.push({
             fileName,
