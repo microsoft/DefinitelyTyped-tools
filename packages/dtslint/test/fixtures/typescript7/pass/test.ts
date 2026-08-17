@@ -6,3 +6,6 @@ literal();
 
 declare const external: ExternalType;
 external;
+
+declare const object: { b: string; a: number };
+object; // $ExpectType { a: number; b: string; }
