@@ -45,13 +45,13 @@ interface Diagnostic {
 }
 
 interface Program {
+  getCompilerOptions(): { readonly declaration?: boolean; readonly composite?: boolean };
   getSourceFile(fileName: string): SourceFile | undefined;
   getSourceFileNames(): readonly string[];
   getSourceFileMetadata(fileName: string): { isDefaultLibrary: boolean; isFromExternalLibrary: boolean } | undefined;
-  getSyntacticDiagnostics(): readonly Diagnostic[];
-  getBindDiagnostics(): readonly Diagnostic[];
-  getSemanticDiagnostics(): readonly Diagnostic[];
-  getDeclarationDiagnostics(): readonly Diagnostic[];
+  getSyntacticDiagnostics(fileName?: string): readonly Diagnostic[];
+  getSemanticDiagnostics(fileName?: string): readonly Diagnostic[];
+  getDeclarationDiagnostics(fileName?: string): readonly Diagnostic[];
   getProgramDiagnostics(): readonly Diagnostic[];
   getGlobalDiagnostics(): readonly Diagnostic[];
   getConfigFileParsingDiagnostics(): readonly Diagnostic[];
@@ -121,7 +121,7 @@ export async function lintTypeScript7(
           });
           continue;
         }
-        failures.push(...getDiagnosticFailures(project, version));
+        failures.push(...getDiagnosticFailures(project, dirPath, version, isLatest));
         failures.push(...getExpectTypeFailures(project, apiModule, astModule, dirPath, version, isLatest));
       }
     } finally {
@@ -147,16 +147,37 @@ function findTypeScript7Server(tsLocal: string): string {
   throw new Error(`Could not find a TypeScript 7 tsserver/tsgo executable in ${tsLocal}.`);
 }
 
-function getDiagnosticFailures(project: Project, version: TsVersion): Failure[] {
+function getDiagnosticFailures(project: Project, dirPath: string, version: TsVersion, isLatest: boolean): Failure[] {
   const diagnostics = [
     ...project.program.getConfigFileParsingDiagnostics(),
     ...project.program.getProgramDiagnostics(),
     ...project.program.getGlobalDiagnostics(),
-    ...project.program.getSyntacticDiagnostics(),
-    ...project.program.getBindDiagnostics(),
-    ...project.program.getSemanticDiagnostics(),
-    ...project.program.getDeclarationDiagnostics(),
   ];
+  const compilerOptions = project.program.getCompilerOptions();
+  const checkDeclarationDiagnostics = compilerOptions.declaration || compilerOptions.composite;
+
+  // TODO: Keep this aligned with the legacy expect rule's getPreEmitDiagnostics(program, sourceFile) calls.
+  // dtslint historically reports diagnostics only for files it lints, suppressing errors inside dependencies.
+  for (const fileName of project.program.getSourceFileNames()) {
+    const sourceFile = project.program.getSourceFile(fileName);
+    const metadata = project.program.getSourceFileMetadata(fileName);
+    if (
+      !sourceFile ||
+      metadata?.isDefaultLibrary ||
+      metadata?.isFromExternalLibrary ||
+      !startsWithDirectory(fileName, dirPath) ||
+      (isLatest && isTypesVersionPath(fileName, dirPath))
+    ) {
+      continue;
+    }
+    diagnostics.push(
+      ...project.program.getSyntacticDiagnostics(fileName),
+      ...project.program.getSemanticDiagnostics(fileName),
+    );
+    if (checkDeclarationDiagnostics) {
+      diagnostics.push(...project.program.getDeclarationDiagnostics(fileName));
+    }
+  }
   const failures = new Map<string, Failure>();
 
   for (const diagnostic of diagnostics) {
