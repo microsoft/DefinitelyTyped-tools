@@ -317,6 +317,10 @@ function normalizedTypeToString(type: string): string {
         .map(([item]) => item);
       return ts.factory.updateUnionTypeNode(node, ts.factory.createNodeArray(types));
     }
+    if (ts.isTypeLiteralNode(node)) {
+      const members = [...node.members].sort((a, b) => print(a).localeCompare(print(b)));
+      return ts.factory.updateTypeLiteralNode(node, ts.factory.createNodeArray(members));
+    }
     if (
       ts.isTypeOperatorNode(node) &&
       node.operator === ts.SyntaxKind.ReadonlyKeyword &&
