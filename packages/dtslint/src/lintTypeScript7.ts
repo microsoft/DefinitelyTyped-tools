@@ -3,7 +3,6 @@ import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import fs from "fs";
 import path from "path";
 import semver from "semver";
-import { pathToFileURL } from "url";
 import * as ts from "typescript";
 import type { TsVersion } from "./lint";
 
@@ -104,10 +103,8 @@ export async function lintTypeScript7(
   tsLocal: string | undefined,
 ): Promise<string | undefined> {
   const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
-  const [apiModule, astModule] = await Promise.all([
-    importModule<TypeScript7Api>(typeScriptPackages.resolve(clientVersion, "unstable/sync")),
-    importModule<TypeScript7Ast>(typeScriptPackages.resolve(clientVersion, "unstable/ast")),
-  ]);
+  const apiModule = require(typeScriptPackages.resolve(clientVersion, "unstable/sync")) as TypeScript7Api;
+  const astModule = require(typeScriptPackages.resolve(clientVersion, "unstable/ast")) as TypeScript7Ast;
   const tsserverPath = version === "local" ? findTypeScript7Server(tsLocal!) : undefined;
   const api = new apiModule.API({ cwd: dirPath, tsserverPath });
   const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
@@ -135,10 +132,6 @@ export async function lintTypeScript7(
   }
 
   return formatFailures(failures);
-}
-
-async function importModule<T>(fileName: string): Promise<T> {
-  return (await import(pathToFileURL(fileName).href)) as T;
 }
 
 function findTypeScript7Server(tsLocal: string): string {

@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/dtslint"
+    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
     "@arethetypeswrong/cli": "0.18.3",
