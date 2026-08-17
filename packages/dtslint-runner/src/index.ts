@@ -59,7 +59,6 @@ if (require.main === module) {
         group: "dtslint options",
         description: "Run dtslint only with typescript@next instead of all supported TypeScript versions.",
         type: "boolean",
-        alias: "next",
         conflicts: "localTypeScriptPath",
       },
       expectOnly: {
