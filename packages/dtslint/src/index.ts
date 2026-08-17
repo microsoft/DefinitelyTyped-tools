@@ -60,7 +60,6 @@ async function main(): Promise<void> {
         onlyNpmChecks = true;
         break;
       case "--onlyTestTsNext":
-      case "--next":
         onlyTestTsNext = true;
         break;
       // Only for use by types-publisher.
@@ -93,7 +92,7 @@ async function main(): Promise<void> {
     throw new Error("Cannot use --onlyNpmChecks and --skipNpmChecks together.");
   }
   if (onlyTestTsNext && tsLocal) {
-    throw new Error("Cannot use --next/--onlyTestTsNext and --localTs together.");
+    throw new Error("Cannot use --onlyTestTsNext and --localTs together.");
   }
   if (lookingForTsLocal) {
     throw new Error("Path for --localTs was not provided.");
@@ -114,13 +113,12 @@ async function main(): Promise<void> {
 
 function usage(): void {
   console.error(
-    "Usage: dtslint [--version] [--next|--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks] [--onlyNpmChecks]",
+    "Usage: dtslint [--version] [--onlyTestTsNext] [--expectOnly] [--localTs path] [--skipNpmChecks] [--onlyNpmChecks]",
   );
   console.error("Args:");
   console.error("  --version        Print version and exit.");
   console.error("  --expectOnly     Run only the ExpectType lint rule.");
   console.error("  --onlyTestTsNext Only run with `typescript@next`, not with the minimum version.");
-  console.error("  --next           Alias for --onlyTestTsNext.");
   console.error("  --localTs path   Run with *path* as the latest version of TS.");
   console.error("  --skipNpmChecks  Don't query npm - skips name/version checks and @arethetypeswrong/cli.");
   console.error("  --onlyNpmChecks  Only run the npm checks (name/version checks and @arethetypeswrong/cli).");
