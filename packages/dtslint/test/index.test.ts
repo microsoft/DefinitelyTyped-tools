@@ -168,6 +168,21 @@ describe("dtslint", () => {
           });
         }
 
+        it("runs ordinary ESLint rules during TypeScript 7-only testing", async () => {
+          const result = await lint(
+            path.join(__dirname, "typescript7-eslint"),
+            ["tsconfig.json"],
+            "7.0",
+            "7.0",
+            true,
+            false,
+            undefined,
+          );
+
+          expect(result).toContain("no-var");
+          expect(result).toContain("@typescript-eslint/naming-convention");
+        });
+
         it("can use a local TypeScript 7 server executable", async () => {
           const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
           const packageRoot = path.resolve(apiPath, "../../../../");
