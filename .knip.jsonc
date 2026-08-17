@@ -16,7 +16,6 @@
     },
     "packages/dtslint": {
       "project": "**/*.ts",
-      "ignore": ["test/typescript7-eslint/**"],
       "ignoreDependencies": [
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
