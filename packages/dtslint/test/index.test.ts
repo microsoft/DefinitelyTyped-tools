@@ -1,10 +1,33 @@
 /// <reference types="jest" />
 import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
-import { lint } from "../src/lint";
-import { lintTypeScript7 } from "../src/lintTypeScript7";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
+import { execFile } from "child_process";
 import path from "path";
+import { promisify } from "util";
+
+const execFileAsync = promisify(execFile);
+
+async function runBuilt<T>(moduleName: string, exportName: string, args: readonly unknown[]): Promise<T | undefined> {
+  const modulePath = path.resolve(__dirname, `../dist/${moduleName}.js`);
+  const script = `
+const fn = require(process.argv[1])[process.argv[2]];
+Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
+  result => process.stdout.write(JSON.stringify({ result })),
+  error => {
+    console.error(error?.stack ?? error);
+    process.exitCode = 1;
+  },
+);`;
+  const { stdout } = await execFileAsync(process.execPath, [
+    "-e",
+    script,
+    modulePath,
+    exportName,
+    JSON.stringify(args),
+  ]);
+  return (JSON.parse(stdout) as { result?: T }).result;
+}
 
 describe("dtslint", () => {
   const base: CompilerOptionsRaw = {
@@ -149,13 +172,13 @@ describe("dtslint", () => {
 
         for (const version of ["7.0", "7.1"] as const) {
           it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
-            const result = await lintTypeScript7(
+            const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7", [
               path.join(fixtures, "fail"),
               ["tsconfig.json"],
               version,
               true,
-              undefined,
-            );
+              null,
+            ]);
 
             expect(result).toContain("compile error TS2322");
             expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
@@ -163,21 +186,29 @@ describe("dtslint", () => {
 
           it(`passes matching TypeScript ${version} ExpectType assertions without invoking ESLint`, async () => {
             await expect(
-              lint(path.join(fixtures, "pass"), ["tsconfig.json"], version, version, true, true, undefined),
+              runBuilt("lint", "lint", [
+                path.join(fixtures, "pass"),
+                ["tsconfig.json"],
+                version,
+                version,
+                true,
+                true,
+                null,
+              ]),
             ).resolves.toBeUndefined();
           });
         }
 
         it("runs ordinary ESLint rules during TypeScript 7-only testing", async () => {
-          const result = await lint(
+          const result = await runBuilt<string>("lint", "lint", [
             path.join(__dirname, "typescript7-eslint"),
             ["tsconfig.json"],
             "7.0",
             "7.0",
             true,
             false,
-            undefined,
-          );
+            null,
+          ]);
 
           expect(result).toContain("no-var");
           expect(result).toContain("@typescript-eslint/naming-convention");
@@ -195,7 +226,15 @@ describe("dtslint", () => {
           );
 
           await expect(
-            lint(path.join(fixtures, "pass"), ["tsconfig.json"], "local", "local", true, true, executable),
+            runBuilt("lint", "lint", [
+              path.join(fixtures, "pass"),
+              ["tsconfig.json"],
+              "local",
+              "local",
+              true,
+              true,
+              executable,
+            ]),
           ).resolves.toBeUndefined();
         });
       });
