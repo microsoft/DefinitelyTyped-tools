@@ -42,7 +42,7 @@ export async function lint(
   }
 
   const outputs: string[] = [];
-  if (legacyVersions.length) {
+  if (!expectOnly || legacyVersions.length) {
     const options = getEslintOptions(expectOnly, legacyVersions, tsLocal);
     const eslint = new ESLint(options);
     const formatter = await eslint.loadFormatter("stylish");
@@ -128,8 +128,8 @@ function getEslintOptions(
       {
         files: allFiles,
         rules: {
-          // This prevents anyone from disabling this rule.
-          "@definitelytyped/expect": ["error"],
+          // This prevents anyone from disabling this rule when it is responsible for ExpectType.
+          "@definitelytyped/expect": versions.length ? ["error"] : "off",
         },
       },
     ],
