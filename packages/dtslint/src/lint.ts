@@ -1,15 +1,18 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { withoutStart } from "@definitelytyped/utils";
+import fs from "fs";
 import assert = require("assert");
 import { join as joinPaths, normalize, resolve } from "path";
 import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
+import { lintTypeScript7 } from "./lintTypeScript7";
 import { typeScriptPath } from "./typescript-installer";
 
 export async function lint(
   dirPath: string,
+  tsconfigs: readonly string[],
   minVersion: TsVersion,
   maxVersion: TsVersion,
   isLatest: boolean,
@@ -31,17 +34,38 @@ export async function lint(
     return files;
   }
 
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
-  const eslint = new ESLint(options);
-  const formatter = await eslint.loadFormatter("stylish");
-  const results = await eslint.lintFiles(files);
-  const output = formatter.format(results);
-  for (const estreePath of estrees) {
-    if (!estreePath) continue;
-    const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
-    estree.clearCaches();
+  const versions = range(minVersion, maxVersion);
+  const legacyVersions: TsVersion[] = [];
+  const typeScript7Versions: TsVersion[] = [];
+  for (const version of versions) {
+    (isTypeScript7(version, tsLocal) ? typeScript7Versions : legacyVersions).push(version);
   }
-  return output;
+
+  const outputs: string[] = [];
+  if (legacyVersions.length) {
+    const options = getEslintOptions(expectOnly, legacyVersions, tsLocal);
+    const eslint = new ESLint(options);
+    const formatter = await eslint.loadFormatter("stylish");
+    const results = await eslint.lintFiles(files);
+    const output = await formatter.format(results);
+    if (output) {
+      outputs.push(output);
+    }
+    for (const estreePath of estrees) {
+      if (!estreePath) continue;
+      const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
+      estree.clearCaches();
+    }
+  }
+
+  for (const version of typeScript7Versions) {
+    const output = await lintTypeScript7(dirPath, tsconfigs, version, isLatest, tsLocal);
+    if (output) {
+      outputs.push(output);
+    }
+  }
+
+  return outputs.join("\n") || undefined;
 }
 
 function getSourceFiles(dirPath: string, isLatest: boolean) {
@@ -84,11 +108,10 @@ function tryResolve(path: string, options?: { paths?: string[] | undefined }): s
 
 function getEslintOptions(
   expectOnly: boolean,
-  minVersion: TsVersion,
-  maxVersion: TsVersion,
+  versions: readonly TsVersion[],
   tsLocal: string | undefined,
 ): ESLint.Options {
-  const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
+  const versionsToTest = versions.map((versionName) => ({
     versionName,
     path: typeScriptPath(versionName, tsLocal),
   }));
@@ -196,7 +219,7 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
   const minIdx = TypeScriptVersion.supported.indexOf(minVersion);
   assert(minIdx >= 0);
   if (maxVersion === TypeScriptVersion.latest) {
-    return [...TypeScriptVersion.supported.slice(minIdx), TypeScriptVersion.latest];
+    return TypeScriptVersion.supported.slice(minIdx);
   }
   const maxIdx = TypeScriptVersion.supported.indexOf(maxVersion as TypeScriptVersion);
   assert(maxIdx >= minIdx);
@@ -204,3 +227,24 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
 }
 
 export type TsVersion = TypeScriptVersion | "local";
+
+function isTypeScript7(version: TsVersion, tsLocal: string | undefined): boolean {
+  if (version !== "local") {
+    return parseFloat(version) >= 7;
+  }
+
+  assert(tsLocal);
+  if (fs.existsSync(tsLocal) && fs.statSync(tsLocal).isFile()) {
+    return !tsLocal.endsWith("typescript.js");
+  }
+  if (["tsserver", "tsserver.exe", "tsgo", "tsgo.exe"].some((name) => fs.existsSync(joinPaths(tsLocal, name)))) {
+    return true;
+  }
+  if (fs.existsSync(joinPaths(tsLocal, "typescript.js"))) {
+    return false;
+  }
+  throw new Error(
+    `Could not detect the TypeScript build at ${tsLocal}. Expected typescript.js for TypeScript 6 or ` +
+      "a tsserver/tsgo executable for TypeScript 7.",
+  );
+}

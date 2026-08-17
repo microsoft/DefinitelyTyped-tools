@@ -43,7 +43,7 @@ export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
   export const shipped = ["5.6", "5.7", "5.8", "5.9", "6.0"] as const;
   /** Add to this list when a version is available as typescript@next */
-  export const supported = [...shipped] as const;
+  export const supported = [...shipped, "7.1"] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported = [
     "2.0",
