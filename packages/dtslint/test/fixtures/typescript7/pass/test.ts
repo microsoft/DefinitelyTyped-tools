@@ -9,3 +9,9 @@ external;
 
 declare const object: { b: string; a: number };
 object; // $ExpectType { a: number; b: string; }
+
+// @ts-expect-error >=7.0
+const expectedError: string = 1;
+
+// @ts-expect-error <7.0
+const noErrorOutsideRange: string = "";
