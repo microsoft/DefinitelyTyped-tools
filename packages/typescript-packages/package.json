@@ -26,6 +26,7 @@
     "typescript-5.7": "npm:typescript@~5.7.0-0",
     "typescript-5.8": "npm:typescript@~5.8.0-0",
     "typescript-5.9": "npm:typescript@~5.9.0-0",
-    "typescript-6.0": "npm:typescript@~6.0.0-0"
+    "typescript-6.0": "npm:typescript@~6.0.0-0",
+    "typescript-7.1": "npm:typescript@~7.1.0-0"
   }
 }

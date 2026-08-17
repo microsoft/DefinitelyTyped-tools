@@ -182,6 +182,16 @@ Use your locally installed version of TypeScript.
 ```sh
 dtslint --localTs node_modules/typescript/lib types
 ```
+
+For a locally built TypeScript 7, pass the build output directory containing the `tsserver` or `tsgo` executable.
+
+- `--next` / `--onlyTestTsNext`
+
+Test only with `typescript@next`.
+
+TypeScript 7 is checked through its unstable out-of-process API. Compiler diagnostics and `$ExpectType` assertions
+are supported; other ESLint-based dtslint rules are skipped for TypeScript 7.
+
 - `--expectOnly`
 
 Disable all the lint rules except the one that checks for type correctness.

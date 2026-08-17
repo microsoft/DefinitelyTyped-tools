@@ -9,6 +9,6 @@
       { "path": ".." },
       { "path": "../../utils" }
     ],
-    "exclude": ["expect"]
+      "exclude": ["expect", "fixtures"]
   }
   

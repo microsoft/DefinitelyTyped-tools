@@ -9,7 +9,7 @@
     "lint": "eslint . --report-unused-disable-directives --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "format:check": "prettier --check 'packages/**/*.ts'",
-    "test": "jest",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/index.js",
     "ci:publish": "pnpm changeset tag && pnpm publish -r"

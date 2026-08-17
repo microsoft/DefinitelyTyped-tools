@@ -1,6 +1,10 @@
 /// <reference types="jest" />
 import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
+import { lint } from "../src/lint";
+import { lintTypeScript7 } from "../src/lintTypeScript7";
+import * as typeScriptPackages from "@definitelytyped/typescript-packages";
+import path from "path";
 
 describe("dtslint", () => {
   const base: CompilerOptionsRaw = {
@@ -138,6 +142,39 @@ describe("dtslint", () => {
           `"files" list must include "index.d.ts".`,
           // `"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.`,
         ]);
+      });
+
+      describe("TypeScript 7", () => {
+        const fixtures = path.join(__dirname, "fixtures", "typescript7");
+
+        it("checks compiler diagnostics and ExpectType through the IPC API", async () => {
+          const result = await lintTypeScript7(path.join(fixtures, "fail"), ["tsconfig.json"], "7.1", true, undefined);
+
+          expect(result).toContain("compile error TS2322");
+          expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
+        });
+
+        it("passes matching ExpectType assertions without invoking ESLint", async () => {
+          await expect(
+            lint(path.join(fixtures, "pass"), ["tsconfig.json"], "7.1", "7.1", true, true, undefined),
+          ).resolves.toBeUndefined();
+        });
+
+        it("can use a local TypeScript 7 server executable", async () => {
+          const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
+          const packageRoot = path.resolve(apiPath, "../../../../");
+          const executable = path.join(
+            path.dirname(packageRoot),
+            "@typescript",
+            `typescript-${process.platform}-${process.arch}`,
+            "lib",
+            process.platform === "win32" ? "tsc.exe" : "tsc",
+          );
+
+          await expect(
+            lint(path.join(fixtures, "pass"), ["tsconfig.json"], "local", "local", true, true, executable),
+          ).resolves.toBeUndefined();
+        });
       });
     });
     describe("assertPackageIsNotDeprecated", () => {
