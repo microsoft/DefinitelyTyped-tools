@@ -147,18 +147,26 @@ describe("dtslint", () => {
       describe("TypeScript 7", () => {
         const fixtures = path.join(__dirname, "fixtures", "typescript7");
 
-        it("checks compiler diagnostics and ExpectType through the IPC API", async () => {
-          const result = await lintTypeScript7(path.join(fixtures, "fail"), ["tsconfig.json"], "7.1", true, undefined);
+        for (const version of ["7.0", "7.1"] as const) {
+          it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
+            const result = await lintTypeScript7(
+              path.join(fixtures, "fail"),
+              ["tsconfig.json"],
+              version,
+              true,
+              undefined,
+            );
 
-          expect(result).toContain("compile error TS2322");
-          expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
-        });
+            expect(result).toContain("compile error TS2322");
+            expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
+          });
 
-        it("passes matching ExpectType assertions without invoking ESLint", async () => {
-          await expect(
-            lint(path.join(fixtures, "pass"), ["tsconfig.json"], "7.1", "7.1", true, true, undefined),
-          ).resolves.toBeUndefined();
-        });
+          it(`passes matching TypeScript ${version} ExpectType assertions without invoking ESLint`, async () => {
+            await expect(
+              lint(path.join(fixtures, "pass"), ["tsconfig.json"], version, version, true, true, undefined),
+            ).resolves.toBeUndefined();
+          });
+        }
 
         it("can use a local TypeScript 7 server executable", async () => {
           const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");

@@ -26,9 +26,11 @@ describe("resolve", () => {
       expect(typeof ts.versionMajorMinor).toBe("string");
       if (version === "7.1") {
         expect(ts.version).toMatch(/^7\.1\./);
-        expect(resolve(version, "unstable/sync")).toMatch(/api[\\/]sync[\\/]api\.js$/);
       } else {
         expect(ts.versionMajorMinor).toBe(version);
+      }
+      if (version.startsWith("7.")) {
+        expect(resolve(version, "unstable/sync")).toMatch(/api[\\/]sync[\\/]api\.js$/);
       }
     }
   });
