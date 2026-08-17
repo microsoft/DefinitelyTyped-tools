@@ -6,7 +6,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "lint": "eslint . --report-unused-disable-directives --ext .ts --ignore-pattern 'packages/dtslint/test/typescript7-eslint/**'",
+    "lint": "eslint . --report-unused-disable-directives --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "format:check": "prettier --check 'packages/**/*.ts'",
     "test": "jest",

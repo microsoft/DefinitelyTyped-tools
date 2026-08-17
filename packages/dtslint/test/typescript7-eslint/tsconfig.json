@@ -5,5 +5,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "files": ["index.d.ts", "test.ts"]
+  "files": ["index.d.ts", "test.cts"]
 }
