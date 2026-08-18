@@ -2,7 +2,7 @@ import * as semver from "semver";
 
 // Based on TypeScript's scanner.ts.
 const expectErrorSingleLine = /^\/\/\/?\s*@ts-expect-error\s+(.*)/;
-const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*)/;
+const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*?)\s*(?:\*\/)?$/;
 
 export function isVersionedExpectErrorOutsideRange(text: string, version: string): boolean {
   const match = text.match(expectErrorSingleLine) || text.match(expectErrorMultiLine);
