@@ -1,11 +1,11 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
-import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import * as ts from "typescript";
 import type { TsVersion } from "./lint";
+import { resolveLocalTypeScript } from "./typescript-installer";
 
 interface Node {
   readonly kind: number;
@@ -109,8 +109,12 @@ export async function lintTypeScript7Versions(
     const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
     const apiModule = require(typeScriptPackages.resolve(clientVersion, "unstable/sync")) as TypeScript7Api;
     const astModule = require(typeScriptPackages.resolve(clientVersion, "unstable/ast")) as TypeScript7Ast;
-    const tsserverPath = version === "local" ? findTypeScript7Server(tsLocal!) : undefined;
-    const rangeVersion = tsserverPath ? getTypeScript7ServerVersion(tsserverPath) : version;
+    const localTypeScript = version === "local" ? resolveLocalTypeScript(tsLocal!) : undefined;
+    if (localTypeScript?.kind === "legacy") {
+      throw new Error(`Expected a TypeScript 7 native executable at ${tsLocal}.`);
+    }
+    const tsserverPath = localTypeScript?.executablePath;
+    const rangeVersion = localTypeScript?.version ?? version;
     const api = new apiModule.API({ cwd: dirPath, tsserverPath });
     const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
     const matchedFiles = new Set<string>();
@@ -170,28 +174,6 @@ function formatRuns(runs: ReadonlySet<string>, reportTsconfigName: boolean): str
     .sort()
     .map((run) => (reportTsconfigName ? run : run.split(" ")[0]))
     .join(", ");
-}
-
-function findTypeScript7Server(tsLocal: string): string {
-  if (fs.statSync(tsLocal).isFile()) {
-    return tsLocal;
-  }
-  for (const name of ["tsserver", "tsserver.exe", "tsgo", "tsgo.exe"]) {
-    const candidate = path.join(tsLocal, name);
-    if (fs.existsSync(candidate)) {
-      return candidate;
-    }
-  }
-  throw new Error(`Could not find a TypeScript 7 tsserver/tsgo executable in ${tsLocal}.`);
-}
-
-function getTypeScript7ServerVersion(tsserverPath: string): string {
-  const output = execFileSync(tsserverPath, ["--version"], { encoding: "utf8" });
-  const match = /^Version\s+(\d+\.\d+)/m.exec(output);
-  if (!match) {
-    throw new Error(`Could not determine the TypeScript version from ${tsserverPath}.`);
-  }
-  return match[1];
 }
 
 function getDiagnosticFailures(project: Project, dirPath: string, version: string, isLatest: boolean): Failure[] {
