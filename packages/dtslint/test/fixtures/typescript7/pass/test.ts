@@ -10,6 +10,13 @@ external;
 declare const object: { b: string; a: number };
 object; // $ExpectType { a: number; b: string; }
 
+declare const overloaded: {
+  (value: string): string;
+  (value: number): number;
+};
+// $ExpectType { (value: string): string; (value: number): number; } || { (value: number): number; (value: string): string; }
+overloaded;
+
 // @ts-expect-error >=7.0
 const expectedError: string = 1;
 
