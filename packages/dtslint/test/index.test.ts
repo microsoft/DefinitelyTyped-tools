@@ -3,7 +3,9 @@ import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { execFile } from "child_process";
+import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 import { promisify } from "util";
 
 const execFileAsync = promisify(execFile);
@@ -269,16 +271,19 @@ describe("dtslint", () => {
           expect(result).toContain("@typescript-eslint/naming-convention");
         }, 30_000);
 
-        it("can use a local TypeScript 7 server executable", async () => {
+        it("can discover a local TypeScript 7 executable from its directory", async () => {
           const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
           const packageRoot = path.resolve(apiPath, "../../../../");
-          const executable = path.join(
-            path.dirname(packageRoot),
-            "@typescript",
-            `typescript-${process.platform}-${process.arch}`,
-            "lib",
-            process.platform === "win32" ? "tsc.exe" : "tsc",
-          );
+          const packageJson = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8")) as {
+            imports: { "#getExePath": string };
+          };
+          const resolverUrl = pathToFileURL(path.resolve(packageRoot, packageJson.imports["#getExePath"])).href;
+          const { stdout: executable } = await execFileAsync(process.execPath, [
+            "--input-type=module",
+            "--eval",
+            `import getExePath from ${JSON.stringify(resolverUrl)}; process.stdout.write(getExePath());`,
+          ]);
+          const executableDirectory = path.dirname(executable);
 
           await expect(
             runBuilt("lint", "lint", [
@@ -288,7 +293,7 @@ describe("dtslint", () => {
               "local",
               true,
               true,
-              executable,
+              executableDirectory,
             ]),
           ).resolves.toBeUndefined();
 
@@ -297,7 +302,7 @@ describe("dtslint", () => {
             ["tsconfig.json"],
             ["local"],
             true,
-            executable,
+            executableDirectory,
           ]);
           expect(result).toContain("TypeScript@local compile error TS2578");
         });

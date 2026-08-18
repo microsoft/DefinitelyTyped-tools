@@ -1,6 +1,5 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { withoutStart } from "@definitelytyped/utils";
-import fs from "fs";
 import assert = require("assert");
 import { join as joinPaths, normalize, resolve } from "path";
 import { ESLint } from "eslint";
@@ -8,7 +7,7 @@ import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
 import { lintTypeScript7Versions } from "./lintTypeScript7";
-import { typeScriptPath } from "./typescript-installer";
+import { resolveLocalTypeScript, typeScriptPath } from "./typescript-installer";
 
 export async function lint(
   dirPath: string,
@@ -234,17 +233,5 @@ function isTypeScript7(version: TsVersion, tsLocal: string | undefined): boolean
   }
 
   assert(tsLocal);
-  if (fs.existsSync(tsLocal) && fs.statSync(tsLocal).isFile()) {
-    return !tsLocal.endsWith("typescript.js");
-  }
-  if (["tsserver", "tsserver.exe", "tsgo", "tsgo.exe"].some((name) => fs.existsSync(joinPaths(tsLocal, name)))) {
-    return true;
-  }
-  if (fs.existsSync(joinPaths(tsLocal, "typescript.js"))) {
-    return false;
-  }
-  throw new Error(
-    `Could not detect the TypeScript build at ${tsLocal}. Expected typescript.js for TypeScript 6 or ` +
-      "a tsserver/tsgo executable for TypeScript 7.",
-  );
+  return resolveLocalTypeScript(tsLocal).kind === "native";
 }
