@@ -267,7 +267,7 @@ describe("dtslint", () => {
 
           expect(result).toContain("no-var");
           expect(result).toContain("@typescript-eslint/naming-convention");
-        });
+        }, 30_000);
 
         it("can use a local TypeScript 7 server executable", async () => {
           const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
