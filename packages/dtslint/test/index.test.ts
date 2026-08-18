@@ -182,6 +182,12 @@ describe("dtslint", () => {
 
             expect(result).toContain("compile error TS2322");
             expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
+            expect(result).toContain(
+              "expected type to be:\n  { (value: number): number; (value: string): string; }\ngot:",
+            );
+            expect(result).toContain(
+              "expected type to be:\n  { method(value: number): number; method(value: string): string; }\ngot:",
+            );
           });
 
           it(`passes matching TypeScript ${version} ExpectType assertions without invoking ESLint`, async () => {
@@ -198,6 +204,23 @@ describe("dtslint", () => {
             ).resolves.toBeUndefined();
           });
         }
+
+        it("reports and deduplicates TypeScript 7 failures across tsconfigs", async () => {
+          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json", "tsconfig.alternate.json"],
+            "7.0",
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json compile error TS2322");
+          expect(result).toContain(
+            "TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json expected type to be:\n  2\ngot:\n  1",
+          );
+          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
+          expect(result?.match(/expected type to be:\n  2\ngot:\n  1/g)).toHaveLength(1);
+        });
 
         it("runs ordinary ESLint rules during TypeScript 7-only testing", async () => {
           const result = await runBuilt<string>("lint", "lint", [

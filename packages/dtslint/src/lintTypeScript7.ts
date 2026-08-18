@@ -108,21 +108,22 @@ export async function lintTypeScript7(
   const tsserverPath = version === "local" ? findTypeScript7Server(tsLocal!) : undefined;
   const api = new apiModule.API({ cwd: dirPath, tsserverPath });
   const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
-  const failures: Failure[] = [];
+  const reportTsconfigName = tsconfigs.length !== 1 || tsconfigs[0] !== "tsconfig.json";
+  const failures = new Map<string, { failure: Failure; runs: Set<string> }>();
 
   try {
     const snapshot = api.updateSnapshot({ openProjects: configPaths });
     try {
-      for (const configPath of configPaths) {
+      for (let i = 0; i < configPaths.length; i++) {
+        const configPath = configPaths[i];
+        const run = `${version} ${tsconfigs[i]}`;
         const project = snapshot.getProject(configPath);
         if (!project) {
-          failures.push({
-            message: `TypeScript@${version} could not open ${configPath}.`,
-          });
+          addFailures([{ message: `could not open ${configPath}.` }], run);
           continue;
         }
-        failures.push(...getDiagnosticFailures(project, dirPath, version, isLatest));
-        failures.push(...getExpectTypeFailures(project, apiModule, astModule, dirPath, version, isLatest));
+        addFailures(getDiagnosticFailures(project, dirPath, version, isLatest), run);
+        addFailures(getExpectTypeFailures(project, apiModule, astModule, dirPath, isLatest), run);
       }
     } finally {
       snapshot.dispose();
@@ -131,7 +132,30 @@ export async function lintTypeScript7(
     api.close();
   }
 
-  return formatFailures(failures);
+  return formatFailures(
+    [...failures.values()].map(({ failure, runs }) => ({
+      ...failure,
+      message: `TypeScript@${formatRuns(runs, reportTsconfigName)} ${failure.message}`,
+    })),
+  );
+
+  function addFailures(newFailures: readonly Failure[], run: string): void {
+    for (const failure of newFailures) {
+      const key = JSON.stringify(failure);
+      let existing = failures.get(key);
+      if (!existing) {
+        failures.set(key, (existing = { failure, runs: new Set() }));
+      }
+      existing.runs.add(run);
+    }
+  }
+}
+
+function formatRuns(runs: ReadonlySet<string>, reportTsconfigName: boolean): string {
+  return [...runs]
+    .sort()
+    .map((run) => (reportTsconfigName ? run : run.split(" ")[0]))
+    .join(", ");
 }
 
 function findTypeScript7Server(tsLocal: string): string {
@@ -188,7 +212,7 @@ function getDiagnosticFailures(project: Project, dirPath: string, version: TsVer
       fileName: diagnostic.fileName,
       start: diagnostic.pos >= 0 ? diagnostic.pos : undefined,
       end: diagnostic.end >= 0 ? diagnostic.end : undefined,
-      message: `TypeScript@${version} compile error TS${diagnostic.code}:\n${flattenDiagnostic(diagnostic)}`,
+      message: `compile error TS${diagnostic.code}:\n${flattenDiagnostic(diagnostic)}`,
     };
     failures.set(JSON.stringify(failure), failure);
   }
@@ -227,7 +251,6 @@ function getExpectTypeFailures(
   apiModule: TypeScript7Api,
   astModule: TypeScript7Ast,
   dirPath: string,
-  version: TsVersion,
   isLatest: boolean,
 ): Failure[] {
   const failures: Failure[] = [];
@@ -269,7 +292,7 @@ function getExpectTypeFailures(
             fileName,
             start: node.getStart(sourceFile),
             end: node.getEnd(),
-            message: `TypeScript@${version} expected type to be:\n  ${expected}\ngot:\n  ${actual}`,
+            message: `expected type to be:\n  ${expected}\ngot:\n  ${actual}`,
           });
         }
         typeAssertions.delete(line);
@@ -317,7 +340,7 @@ function normalizedTypeToString(type: string): string {
         .map(([item]) => item);
       return ts.factory.updateUnionTypeNode(node, ts.factory.createNodeArray(types));
     }
-    if (ts.isTypeLiteralNode(node)) {
+    if (ts.isTypeLiteralNode(node) && node.members.every(ts.isPropertySignature)) {
       const members = [...node.members].sort((a, b) => print(a).localeCompare(print(b)));
       return ts.factory.updateTypeLiteralNode(node, ts.factory.createNodeArray(members));
     }
