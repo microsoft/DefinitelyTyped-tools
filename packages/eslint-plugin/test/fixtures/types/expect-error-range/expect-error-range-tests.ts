@@ -40,4 +40,3 @@ const elem = ["value", undefined].filter(x => x != null)[0];
     // @ts-expect-error >=5.5
     const test2: undefined extends typeof elem ? typeof elem : never = elem;
 }
-

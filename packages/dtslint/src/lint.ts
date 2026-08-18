@@ -7,7 +7,7 @@ import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
-import { lintTypeScript7 } from "./lintTypeScript7";
+import { lintTypeScript7Versions } from "./lintTypeScript7";
 import { typeScriptPath } from "./typescript-installer";
 
 export async function lint(
@@ -58,8 +58,8 @@ export async function lint(
     }
   }
 
-  for (const version of typeScript7Versions) {
-    const output = await lintTypeScript7(dirPath, tsconfigs, version, isLatest, tsLocal);
+  if (typeScript7Versions.length) {
+    const output = await lintTypeScript7Versions(dirPath, tsconfigs, typeScript7Versions, isLatest, tsLocal, files);
     if (output) {
       outputs.push(output);
     }

@@ -172,15 +172,17 @@ describe("dtslint", () => {
 
         for (const version of ["7.0", "7.1"] as const) {
           it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
-            const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7", [
+            const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
               path.join(fixtures, "fail"),
               ["tsconfig.json"],
-              version,
+              [version],
               true,
               null,
             ]);
 
             expect(result).toContain("compile error TS2322");
+            expect(result).toContain("compile error TS2578");
+            expect(result?.match(/compile error TS2578/g)).toHaveLength(version === "7.0" ? 1 : 2);
             expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
             expect(result).toContain(
               "expected type to be:\n  { (value: number): number; (value: string): string; }\ngot:",
@@ -206,10 +208,10 @@ describe("dtslint", () => {
         }
 
         it("reports and deduplicates TypeScript 7 failures across tsconfigs", async () => {
-          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7", [
+          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
             path.join(fixtures, "fail"),
             ["tsconfig.json", "tsconfig.alternate.json"],
-            "7.0",
+            ["7.0"],
             true,
             null,
           ]);
@@ -220,6 +222,36 @@ describe("dtslint", () => {
           );
           expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
           expect(result?.match(/expected type to be:\n  2\ngot:\n  1/g)).toHaveLength(1);
+        });
+
+        it("reports and deduplicates TypeScript 7 failures across versions", async () => {
+          const result = await runBuilt<string>("lint", "lint", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json"],
+            "7.0",
+            "7.1",
+            true,
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("TypeScript@7.0, 7.1 compile error TS2322");
+          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
+        });
+
+        it("reports files excluded from every alternate tsconfig", async () => {
+          const result = await runBuilt<string>("lint", "lint", [
+            path.join(fixtures, "partial"),
+            ["tsconfig.alternate.json"],
+            "7.0",
+            "7.0",
+            true,
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("excluded.ts:1:1");
+          expect(result).toContain("TypeScript@7.0 could not find a tsconfig that includes this file.");
         });
 
         it("runs ordinary ESLint rules during TypeScript 7-only testing", async () => {
@@ -259,6 +291,15 @@ describe("dtslint", () => {
               executable,
             ]),
           ).resolves.toBeUndefined();
+
+          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json"],
+            ["local"],
+            true,
+            executable,
+          ]);
+          expect(result).toContain("TypeScript@local compile error TS2578");
         });
       });
     });
