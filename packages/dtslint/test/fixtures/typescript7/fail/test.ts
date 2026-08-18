@@ -5,6 +5,12 @@ literal();
 
 const bad: string = 1;
 
+// @ts-expect-error >=7.0
+const unusedInTypeScript7: string = "";
+
+// @ts-expect-error >=7.1
+const unusedInTypeScript71: string = "";
+
 declare const overloaded: {
   (value: string): string;
   (value: number): number;

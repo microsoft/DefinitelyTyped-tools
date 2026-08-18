@@ -237,9 +237,6 @@ importers:
       eslint-plugin-jsdoc:
         specifier: ^44.0.0
         version: 44.2.7(eslint@8.57.1)
-      semver:
-        specifier: ^7.7.4
-        version: 7.7.4
     devDependencies:
       '@definitelytyped/eslint-plugin':
         specifier: 'link:'
@@ -247,9 +244,6 @@ importers:
       '@types/eslint':
         specifier: ^8.56.12
         version: 8.56.12
-      '@types/semver':
-        specifier: ^7.7.1
-        version: 7.7.1
       glob:
         specifier: ^13.0.6
         version: 13.0.6
@@ -484,6 +478,9 @@ importers:
       npm-registry-fetch:
         specifier: ^19.1.1
         version: 19.1.1
+      semver:
+        specifier: ^7.7.4
+        version: 7.7.4
       tar:
         specifier: ^7.5.9
         version: 7.5.9
@@ -503,6 +500,9 @@ importers:
       '@types/npm-registry-fetch':
         specifier: ^8.0.9
         version: 8.0.9
+      '@types/semver':
+        specifier: ^7.7.1
+        version: 7.7.1
       '@types/tar-stream':
         specifier: ^3.1.4
         version: 3.1.4

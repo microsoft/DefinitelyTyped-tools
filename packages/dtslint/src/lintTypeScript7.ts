@@ -1,8 +1,9 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
+import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
+import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import semver from "semver";
 import * as ts from "typescript";
 import type { TsVersion } from "./lint";
 
@@ -92,44 +93,57 @@ interface Failure {
 }
 
 const expectTypeToken = "$ExpectType";
-const expectErrorSingleLine = /^\/\/\/?\s*@ts-expect-error\s+(.*)/;
-const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*)/;
 
-export async function lintTypeScript7(
+export async function lintTypeScript7Versions(
   dirPath: string,
   tsconfigs: readonly string[],
-  version: TsVersion,
+  versions: readonly TsVersion[],
   isLatest: boolean,
   tsLocal: string | undefined,
+  sourceFiles?: readonly string[],
 ): Promise<string | undefined> {
-  const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
-  const apiModule = require(typeScriptPackages.resolve(clientVersion, "unstable/sync")) as TypeScript7Api;
-  const astModule = require(typeScriptPackages.resolve(clientVersion, "unstable/ast")) as TypeScript7Ast;
-  const tsserverPath = version === "local" ? findTypeScript7Server(tsLocal!) : undefined;
-  const api = new apiModule.API({ cwd: dirPath, tsserverPath });
-  const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
   const reportTsconfigName = tsconfigs.length !== 1 || tsconfigs[0] !== "tsconfig.json";
   const failures = new Map<string, { failure: Failure; runs: Set<string> }>();
 
-  try {
-    const snapshot = api.updateSnapshot({ openProjects: configPaths });
+  for (const version of versions) {
+    const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
+    const apiModule = require(typeScriptPackages.resolve(clientVersion, "unstable/sync")) as TypeScript7Api;
+    const astModule = require(typeScriptPackages.resolve(clientVersion, "unstable/ast")) as TypeScript7Ast;
+    const tsserverPath = version === "local" ? findTypeScript7Server(tsLocal!) : undefined;
+    const rangeVersion = tsserverPath ? getTypeScript7ServerVersion(tsserverPath) : version;
+    const api = new apiModule.API({ cwd: dirPath, tsserverPath });
+    const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
+    const matchedFiles = new Set<string>();
+
     try {
-      for (let i = 0; i < configPaths.length; i++) {
-        const configPath = configPaths[i];
-        const run = `${version} ${tsconfigs[i]}`;
-        const project = snapshot.getProject(configPath);
-        if (!project) {
-          addFailures([{ message: `could not open ${configPath}.` }], run);
-          continue;
+      const snapshot = api.updateSnapshot({ openProjects: configPaths });
+      try {
+        for (let i = 0; i < configPaths.length; i++) {
+          const configPath = configPaths[i];
+          const run = `${version} ${tsconfigs[i]}`;
+          const project = snapshot.getProject(configPath);
+          if (!project) {
+            addFailures([{ message: `could not open ${configPath}.` }], run);
+            continue;
+          }
+          for (const fileName of project.program.getSourceFileNames()) {
+            matchedFiles.add(normalizePath(fileName));
+          }
+          addFailures(getDiagnosticFailures(project, dirPath, rangeVersion, isLatest), run);
+          addFailures(getExpectTypeFailures(project, apiModule, astModule, dirPath, isLatest), run);
         }
-        addFailures(getDiagnosticFailures(project, dirPath, version, isLatest), run);
-        addFailures(getExpectTypeFailures(project, apiModule, astModule, dirPath, isLatest), run);
+      } finally {
+        snapshot.dispose();
       }
     } finally {
-      snapshot.dispose();
+      api.close();
     }
-  } finally {
-    api.close();
+
+    for (const fileName of sourceFiles ?? []) {
+      if (!matchedFiles.has(normalizePath(fileName))) {
+        addFailures([{ fileName, start: 0, message: "could not find a tsconfig that includes this file." }], version);
+      }
+    }
   }
 
   return formatFailures(
@@ -171,7 +185,16 @@ function findTypeScript7Server(tsLocal: string): string {
   throw new Error(`Could not find a TypeScript 7 tsserver/tsgo executable in ${tsLocal}.`);
 }
 
-function getDiagnosticFailures(project: Project, dirPath: string, version: TsVersion, isLatest: boolean): Failure[] {
+function getTypeScript7ServerVersion(tsserverPath: string): string {
+  const output = execFileSync(tsserverPath, ["--version"], { encoding: "utf8" });
+  const match = /^Version\s+(\d+\.\d+)/m.exec(output);
+  if (!match) {
+    throw new Error(`Could not determine the TypeScript version from ${tsserverPath}.`);
+  }
+  return match[1];
+}
+
+function getDiagnosticFailures(project: Project, dirPath: string, version: string, isLatest: boolean): Failure[] {
   const diagnostics = [
     ...project.program.getConfigFileParsingDiagnostics(),
     ...project.program.getProgramDiagnostics(),
@@ -205,7 +228,7 @@ function getDiagnosticFailures(project: Project, dirPath: string, version: TsVer
   const failures = new Map<string, Failure>();
 
   for (const diagnostic of diagnostics) {
-    if (diagnostic.code === 2578 && isVersionedExpectErrorOutsideRange(diagnostic, project, version)) {
+    if (diagnostic.code === 2578 && isDiagnosticOutsideExpectErrorRange(diagnostic, project, version)) {
       continue;
     }
     const failure = {
@@ -219,7 +242,7 @@ function getDiagnosticFailures(project: Project, dirPath: string, version: TsVer
   return [...failures.values()];
 }
 
-function isVersionedExpectErrorOutsideRange(diagnostic: Diagnostic, project: Project, version: TsVersion): boolean {
+function isDiagnosticOutsideExpectErrorRange(diagnostic: Diagnostic, project: Project, version: string): boolean {
   if (!diagnostic.fileName || diagnostic.pos < 0 || diagnostic.end < diagnostic.pos) {
     return false;
   }
@@ -228,15 +251,7 @@ function isVersionedExpectErrorOutsideRange(diagnostic: Diagnostic, project: Pro
     return false;
   }
   const text = sourceFile.text.slice(diagnostic.pos, diagnostic.end);
-  const match = text.match(expectErrorSingleLine) || text.match(expectErrorMultiLine);
-  if (!match) {
-    return false;
-  }
-  try {
-    return !semver.satisfies(version, match[1].trim(), { loose: true });
-  } catch {
-    return false;
-  }
+  return isVersionedExpectErrorOutsideRange(text, version);
 }
 
 function flattenDiagnostic(diagnostic: Diagnostic): string {
