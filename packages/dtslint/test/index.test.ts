@@ -3,9 +3,7 @@ import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { execFile } from "child_process";
-import fs from "fs";
 import path from "path";
-import { pathToFileURL } from "url";
 import { promisify } from "util";
 
 const execFileAsync = promisify(execFile);
@@ -271,18 +269,8 @@ describe("dtslint", () => {
           expect(result).toContain("@typescript-eslint/naming-convention");
         }, 30_000);
 
-        it("can use a local TypeScript 7 executable", async () => {
-          const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
-          const packageRoot = path.resolve(apiPath, "../../../../");
-          const packageJson = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8")) as {
-            imports: { "#getExePath": string };
-          };
-          const resolverUrl = pathToFileURL(path.resolve(packageRoot, packageJson.imports["#getExePath"])).href;
-          const { stdout: executable } = await execFileAsync(process.execPath, [
-            "--input-type=module",
-            "--eval",
-            `import getExePath from ${JSON.stringify(resolverUrl)}; process.stdout.write(getExePath());`,
-          ]);
+        it("can use a local TypeScript 7 package", async () => {
+          const packageRoot = path.dirname(typeScriptPackages.resolve("7.0", "package.json"));
 
           await expect(
             runBuilt("lint", "lint", [
@@ -292,7 +280,7 @@ describe("dtslint", () => {
               "local",
               true,
               true,
-              executable,
+              packageRoot,
             ]),
           ).resolves.toBeUndefined();
 
@@ -301,9 +289,10 @@ describe("dtslint", () => {
             ["tsconfig.json"],
             ["local"],
             true,
-            executable,
+            packageRoot,
           ]);
           expect(result).toContain("TypeScript@local compile error TS2578");
+          expect(result?.match(/compile error TS2578/g)).toHaveLength(1);
         });
       });
     });

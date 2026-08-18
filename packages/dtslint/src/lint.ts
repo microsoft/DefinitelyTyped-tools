@@ -233,5 +233,5 @@ function isTypeScript7(version: TsVersion, tsLocal: string | undefined): boolean
   }
 
   assert(tsLocal);
-  return resolveLocalTypeScript(tsLocal).kind === "native";
+  return resolveLocalTypeScript(tsLocal).kind === "typescript7";
 }

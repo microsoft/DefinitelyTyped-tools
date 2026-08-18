@@ -73,7 +73,7 @@ interface Snapshot {
 
 interface TypeScript7Api {
   readonly NodeBuilderFlags: { readonly NoTruncation: number };
-  readonly API: new (options: { cwd: string; tsserverPath?: string }) => {
+  readonly API: new (options: { cwd: string }) => {
     updateSnapshot(options: { openProjects: readonly string[] }): Snapshot;
     close(): void;
   };
@@ -106,16 +106,17 @@ export async function lintTypeScript7Versions(
   const failures = new Map<string, { failure: Failure; runs: Set<string> }>();
 
   for (const version of versions) {
-    const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
-    const apiModule = require(typeScriptPackages.resolve(clientVersion, "unstable/sync")) as TypeScript7Api;
-    const astModule = require(typeScriptPackages.resolve(clientVersion, "unstable/ast")) as TypeScript7Ast;
     const localTypeScript = version === "local" ? resolveLocalTypeScript(tsLocal!) : undefined;
     if (localTypeScript?.kind === "legacy") {
-      throw new Error(`Expected a TypeScript 7 native executable at ${tsLocal}.`);
+      throw new Error(`Expected a TypeScript 7 package at ${tsLocal}.`);
     }
-    const tsserverPath = localTypeScript?.executablePath;
+    const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
+    const apiPath = localTypeScript?.apiPath ?? typeScriptPackages.resolve(clientVersion, "unstable/sync");
+    const astPath = localTypeScript?.astPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast");
+    const apiModule = require(apiPath) as TypeScript7Api;
+    const astModule = require(astPath) as TypeScript7Ast;
     const rangeVersion = localTypeScript?.version ?? version;
-    const api = new apiModule.API({ cwd: dirPath, tsserverPath });
+    const api = new apiModule.API({ cwd: dirPath });
     const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
     const matchedFiles = new Set<string>();
 
