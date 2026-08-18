@@ -45,36 +45,10 @@ export function resolveLocalTypeScript(tsLocal: string): LocalTypeScript {
   if (fs.existsSync(compilerPath) && fs.statSync(compilerPath).isFile()) {
     return { kind: "legacy", compilerPath };
   }
-
-  const nativeExecutables = fs
-    .readdirSync(tsLocal)
-    .map((name) => path.join(tsLocal, name))
-    .filter(isExecutableFile)
-    .flatMap((executablePath) => {
-      const version = tryGetNativeTypeScriptVersion(executablePath);
-      return version ? [{ kind: "native" as const, executablePath, version }] : [];
-    });
-
-  if (nativeExecutables.length === 1) {
-    return nativeExecutables[0];
-  }
-  if (nativeExecutables.length > 1) {
-    throw new Error(`Found multiple TypeScript native executables in ${tsLocal}. Pass the intended executable path.`);
-  }
-  throw new Error(`Could not find a TypeScript compiler library or native executable in ${tsLocal}.`);
-}
-
-function isExecutableFile(filePath: string): boolean {
-  let stat: fs.Stats;
-  try {
-    stat = fs.statSync(filePath);
-  } catch {
-    return false;
-  }
-  if (!stat.isFile()) {
-    return false;
-  }
-  return process.platform === "win32" ? path.extname(filePath).toLowerCase() === ".exe" : (stat.mode & 0o111) !== 0;
+  throw new Error(
+    `The directory at ${tsLocal} does not contain typescript.js. ` +
+      "Pass the TypeScript 7 native executable path directly.",
+  );
 }
 
 function tryGetNativeTypeScriptVersion(executablePath: string): string | undefined {

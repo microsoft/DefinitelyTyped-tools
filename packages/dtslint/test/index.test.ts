@@ -271,7 +271,7 @@ describe("dtslint", () => {
           expect(result).toContain("@typescript-eslint/naming-convention");
         }, 30_000);
 
-        it("can discover a local TypeScript 7 executable from its directory", async () => {
+        it("can use a local TypeScript 7 executable", async () => {
           const apiPath = typeScriptPackages.resolve("7.1", "unstable/sync");
           const packageRoot = path.resolve(apiPath, "../../../../");
           const packageJson = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8")) as {
@@ -283,7 +283,6 @@ describe("dtslint", () => {
             "--eval",
             `import getExePath from ${JSON.stringify(resolverUrl)}; process.stdout.write(getExePath());`,
           ]);
-          const executableDirectory = path.dirname(executable);
 
           await expect(
             runBuilt("lint", "lint", [
@@ -293,7 +292,7 @@ describe("dtslint", () => {
               "local",
               true,
               true,
-              executableDirectory,
+              executable,
             ]),
           ).resolves.toBeUndefined();
 
@@ -302,7 +301,7 @@ describe("dtslint", () => {
             ["tsconfig.json"],
             ["local"],
             true,
-            executableDirectory,
+            executable,
           ]);
           expect(result).toContain("TypeScript@local compile error TS2578");
         });
