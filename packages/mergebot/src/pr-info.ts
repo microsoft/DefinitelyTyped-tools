@@ -53,6 +53,7 @@ interface BotEnsureRemovedFromProject {
   readonly now: Date;
   readonly message: string;
   readonly isDraft: boolean;
+  readonly shouldClose?: boolean;
 }
 
 export interface PackageInfo {
@@ -216,6 +217,7 @@ export async function deriveStateForPR(
 
   if (prInfo.isDraft) return botEnsureRemovedFromProject("PR is a draft");
   if (prInfo.state !== "OPEN") return botEnsureRemovedFromProject("PR is not active");
+  if (prInfo.changedFiles === 0) return botEnsureRemovedFromProject("PR has no edited files", true);
 
   const headCommit = getHeadCommit(prInfo);
   // eslint-disable-next-line eqeqeq
@@ -316,8 +318,9 @@ export async function deriveStateForPR(
     return { type: "error", now, message, author: prInfo.author?.login };
   }
 
-  function botEnsureRemovedFromProject(message: string): BotEnsureRemovedFromProject {
-    return { type: "remove", now, message, isDraft: prInfo.isDraft };
+  function botEnsureRemovedFromProject(message: string, shouldClose = false): BotEnsureRemovedFromProject {
+    const base: BotEnsureRemovedFromProject = { type: "remove", now, message, isDraft: prInfo.isDraft };
+    return shouldClose ? { ...base, shouldClose: true } : base;
   }
 }
 
