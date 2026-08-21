@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext"
+  },
+  "files": ["index.d.ts", "included.ts", "excluded.ts"]
+}

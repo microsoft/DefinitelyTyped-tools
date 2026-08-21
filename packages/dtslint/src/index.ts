@@ -91,6 +91,9 @@ async function main(): Promise<void> {
   if (onlyNpmChecks && skipNpmChecks) {
     throw new Error("Cannot use --onlyNpmChecks and --skipNpmChecks together.");
   }
+  if (onlyTestTsNext && tsLocal) {
+    throw new Error("Cannot use --onlyTestTsNext and --localTs together.");
+  }
   if (lookingForTsLocal) {
     throw new Error("Path for --localTs was not provided.");
   }
@@ -299,7 +302,7 @@ async function testTypesVersion(
     }
   }
 
-  const err = await lint(dirPath, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
+  const err = await lint(dirPath, tsconfigs, lowVersion, hiVersion, isLatest, expectOnly, tsLocal);
   if (err) {
     errors.push(err);
   }
