@@ -9,7 +9,7 @@ export type TsVersion = TypeScriptVersion | "local";
 export type LocalTypeScript =
   | { readonly kind: "legacy"; readonly compilerPath: string }
   | {
-      readonly kind: "typescript7";
+      readonly kind: "corsa";
       readonly apiPath: string;
       readonly astPath: string;
       readonly version: string;
@@ -68,24 +68,24 @@ export function resolveLocalTypeScript(tsLocal: string): LocalTypeScript {
       readonly version?: unknown;
       readonly versionMajorMinor?: unknown;
     };
-    const version = isTypeScript7Version(versionModule.version)
-      ? versionModule.version
-      : versionModule.versionMajorMinor;
-    if (!isTypeScript7Version(version)) {
+    const version = isCorsaVersion(versionModule.version) ? versionModule.version : versionModule.versionMajorMinor;
+    if (!isCorsaVersion(version)) {
       throw new Error(`The package reports an unsupported TypeScript version: ${String(version)}.`);
     }
     return {
-      kind: "typescript7",
+      kind: "corsa",
       apiPath: localRequire.resolve(`${packageJson.name}/unstable/sync`),
       astPath: localRequire.resolve(`${packageJson.name}/unstable/ast`),
       version,
     };
   } catch (error) {
-    throw new Error(`The package at ${tsLocal} is not a usable TypeScript 7 package.`, { cause: error });
+    throw new Error(`The package at ${tsLocal} does not expose usable unstable/sync and unstable/ast entrypoints.`, {
+      cause: error,
+    });
   }
 }
 
-function isTypeScript7Version(version: unknown): version is string {
+function isCorsaVersion(version: unknown): version is string {
   if (typeof version !== "string") {
     return false;
   }

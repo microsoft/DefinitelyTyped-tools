@@ -71,7 +71,7 @@ interface Snapshot {
   dispose(): void;
 }
 
-interface TypeScript7Api {
+interface CorsaApi {
   readonly NodeBuilderFlags: { readonly NoTruncation: number };
   readonly API: new (options: { cwd: string }) => {
     updateSnapshot(options: { openProjects: readonly string[] }): Snapshot;
@@ -79,7 +79,7 @@ interface TypeScript7Api {
   };
 }
 
-interface TypeScript7Ast {
+interface CorsaAst {
   readonly SyntaxKind: { readonly EndOfFileToken: number };
   isExpressionStatement(node: Node): node is ExpressionStatement;
   isVariableStatement(node: Node): node is VariableStatement;
@@ -94,7 +94,7 @@ interface Failure {
 
 const expectTypeToken = "$ExpectType";
 
-export async function lintTypeScript7Versions(
+export async function lintCorsaVersions(
   dirPath: string,
   tsconfigs: readonly string[],
   versions: readonly TsVersion[],
@@ -108,13 +108,13 @@ export async function lintTypeScript7Versions(
   for (const version of versions) {
     const localTypeScript = version === "local" ? resolveLocalTypeScript(tsLocal!) : undefined;
     if (localTypeScript?.kind === "legacy") {
-      throw new Error(`Expected a TypeScript 7 package at ${tsLocal}.`);
+      throw new Error(`Expected a TypeScript package exposing unstable/sync and unstable/ast at ${tsLocal}.`);
     }
     const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
     const apiPath = localTypeScript?.apiPath ?? typeScriptPackages.resolve(clientVersion, "unstable/sync");
     const astPath = localTypeScript?.astPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast");
-    const apiModule = require(apiPath) as TypeScript7Api;
-    const astModule = require(astPath) as TypeScript7Ast;
+    const apiModule = require(apiPath) as CorsaApi;
+    const astModule = require(astPath) as CorsaAst;
     const rangeVersion = localTypeScript?.version ?? version;
     const api = new apiModule.API({ cwd: dirPath });
     const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
@@ -246,8 +246,8 @@ function flattenDiagnostic(diagnostic: Diagnostic): string {
 
 function getExpectTypeFailures(
   project: Project,
-  apiModule: TypeScript7Api,
-  astModule: TypeScript7Ast,
+  apiModule: CorsaApi,
+  astModule: CorsaAst,
   dirPath: string,
   isLatest: boolean,
 ): Failure[] {
@@ -362,7 +362,7 @@ function skipTypeParentheses(node: ts.TypeNode): ts.TypeNode {
   return node;
 }
 
-function getNodeForExpectType(node: Node, astModule: TypeScript7Ast): Node {
+function getNodeForExpectType(node: Node, astModule: CorsaAst): Node {
   if (astModule.isExpressionStatement(node)) {
     return node.expression;
   }
