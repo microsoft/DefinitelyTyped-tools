@@ -167,12 +167,12 @@ describe("dtslint", () => {
         ]);
       });
 
-      describe("TypeScript 7", () => {
-        const fixtures = path.join(__dirname, "fixtures", "typescript7");
+      describe("Corsa", () => {
+        const fixtures = path.join(__dirname, "fixtures", "corsa");
 
         for (const version of ["7.0", "7.1"] as const) {
           it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
-            const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
+            const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
               path.join(fixtures, "fail"),
               ["tsconfig.json"],
               [version],
@@ -207,8 +207,8 @@ describe("dtslint", () => {
           });
         }
 
-        it("reports and deduplicates TypeScript 7 failures across tsconfigs", async () => {
-          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
+        it("reports and deduplicates Corsa failures across tsconfigs", async () => {
+          const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
             path.join(fixtures, "fail"),
             ["tsconfig.json", "tsconfig.alternate.json"],
             ["7.0"],
@@ -224,7 +224,7 @@ describe("dtslint", () => {
           expect(result?.match(/expected type to be:\n  2\ngot:\n  1/g)).toHaveLength(1);
         });
 
-        it("reports and deduplicates TypeScript 7 failures across versions", async () => {
+        it("reports and deduplicates Corsa failures across versions", async () => {
           const result = await runBuilt<string>("lint", "lint", [
             path.join(fixtures, "fail"),
             ["tsconfig.json"],
@@ -254,9 +254,9 @@ describe("dtslint", () => {
           expect(result).toContain("TypeScript@7.0 could not find a tsconfig that includes this file.");
         });
 
-        it("runs ordinary ESLint rules during TypeScript 7-only testing", async () => {
+        it("runs ordinary ESLint rules during Corsa-only testing", async () => {
           const result = await runBuilt<string>("lint", "lint", [
-            path.join(__dirname, "typescript7-eslint"),
+            path.join(__dirname, "corsa-eslint"),
             ["tsconfig.json"],
             "7.0",
             "7.0",
@@ -269,7 +269,7 @@ describe("dtslint", () => {
           expect(result).toContain("@typescript-eslint/naming-convention");
         }, 30_000);
 
-        it("can use a local TypeScript 7 package", async () => {
+        it("can use a local Corsa package", async () => {
           const packageRoot = path.dirname(typeScriptPackages.resolve("7.0", "package.json"));
 
           await expect(
@@ -284,7 +284,7 @@ describe("dtslint", () => {
             ]),
           ).resolves.toBeUndefined();
 
-          const result = await runBuilt<string>("lintTypeScript7", "lintTypeScript7Versions", [
+          const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
             path.join(fixtures, "fail"),
             ["tsconfig.json"],
             ["local"],

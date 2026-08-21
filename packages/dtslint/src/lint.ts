@@ -6,7 +6,7 @@ import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
-import { lintTypeScript7Versions } from "./lintTypeScript7";
+import { lintCorsaVersions } from "./lintCorsa";
 import { resolveLocalTypeScript, typeScriptPath } from "./typescript-installer";
 
 export async function lint(
@@ -35,9 +35,9 @@ export async function lint(
 
   const versions = range(minVersion, maxVersion);
   const legacyVersions: TsVersion[] = [];
-  const typeScript7Versions: TsVersion[] = [];
+  const corsaVersions: TsVersion[] = [];
   for (const version of versions) {
-    (isTypeScript7(version, tsLocal) ? typeScript7Versions : legacyVersions).push(version);
+    (usesCorsa(version, tsLocal) ? corsaVersions : legacyVersions).push(version);
   }
 
   const outputs: string[] = [];
@@ -57,8 +57,8 @@ export async function lint(
     }
   }
 
-  if (typeScript7Versions.length) {
-    const output = await lintTypeScript7Versions(dirPath, tsconfigs, typeScript7Versions, isLatest, tsLocal, files);
+  if (corsaVersions.length) {
+    const output = await lintCorsaVersions(dirPath, tsconfigs, corsaVersions, isLatest, tsLocal, files);
     if (output) {
       outputs.push(output);
     }
@@ -227,11 +227,11 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
 
 export type TsVersion = TypeScriptVersion | "local";
 
-function isTypeScript7(version: TsVersion, tsLocal: string | undefined): boolean {
+function usesCorsa(version: TsVersion, tsLocal: string | undefined): boolean {
   if (version !== "local") {
     return parseFloat(version) >= 7;
   }
 
   assert(tsLocal);
-  return resolveLocalTypeScript(tsLocal).kind === "typescript7";
+  return resolveLocalTypeScript(tsLocal).kind === "corsa";
 }
