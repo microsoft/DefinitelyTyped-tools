@@ -293,7 +293,7 @@ describe("dtslint", () => {
           ]);
           expect(result).toContain("TypeScript@local compile error TS2578");
           expect(result?.match(/compile error TS2578/g)).toHaveLength(1);
-        });
+        }, 30_000);
       });
     });
     describe("assertPackageIsNotDeprecated", () => {

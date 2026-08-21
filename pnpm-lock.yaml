@@ -191,6 +191,9 @@ importers:
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
+      typescript-7.1:
+        specifier: npm:typescript@~7.1.0-0
+        version: typescript@7.1.0-dev.20260817.1
 
   packages/dtslint-runner:
     dependencies:

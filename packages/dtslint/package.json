@@ -41,7 +41,8 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.56.12",
-    "@types/semver": "^7.7.1"
+    "@types/semver": "^7.7.1",
+    "typescript-7.1": "npm:typescript@~7.1.0-0"
   },
   "engines": {
     "node": ">=20.17.0"
