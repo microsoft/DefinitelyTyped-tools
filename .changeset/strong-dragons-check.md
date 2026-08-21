@@ -4,5 +4,5 @@
 "@definitelytyped/typescript-versions": patch
 ---
 
-Add TypeScript 7.0 and 7.1 support using TypeScript's unstable out-of-process API for compiler diagnostics and
-`$ExpectType` assertions, including local TypeScript 7 builds.
+Add TypeScript 7.0 and 7.1 support through the Corsa compiler API, including compiler diagnostics, `$ExpectType`
+assertions, multi-project failure reporting, and local TypeScript packages.
