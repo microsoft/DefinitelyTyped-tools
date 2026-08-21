@@ -1,11 +1,15 @@
 types/no-import-of-dev-dependencies/index.d.ts
-  1:1  error  Packages should contain value components, not just types                          @definitelytyped/no-type-only-packages
-  1:1  error  Do not use a triple slash reference for other, use `import` style instead         @typescript-eslint/triple-slash-reference
-  1:1  error  Do not use a triple slash reference for other, use `import` style instead         @typescript-eslint/triple-slash-reference
-  4:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
-  7:1  error  Declaration file should not use a global import of itself. Use a relative import  @definitelytyped/no-self-import
+  1:1  error  Packages should contain value components, not just types                            @definitelytyped/no-type-only-packages
+  1:1  error  Do not use a triple slash reference for other, use `import` style instead           @typescript-eslint/triple-slash-reference
+  1:1  error  Do not use a triple slash reference for other, use `import` style instead           @typescript-eslint/triple-slash-reference
+  3:8  error  'other' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u   @typescript-eslint/no-unused-vars
+  4:1  error  Declaration file should not use a global import of itself. Use a relative import    @definitelytyped/no-self-import
+  4:8  error  'self' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u    @typescript-eslint/no-unused-vars
+  6:8  error  'other2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u  @typescript-eslint/no-unused-vars
+  7:1  error  Declaration file should not use a global import of itself. Use a relative import    @definitelytyped/no-self-import
+  7:8  error  'self2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u   @typescript-eslint/no-unused-vars
 
-✖ 5 problems (5 errors, 0 warnings)
+✖ 9 problems (9 errors, 0 warnings)
 
 ==== types/no-import-of-dev-dependencies/index.d.ts ====
 
@@ -18,11 +22,19 @@ types/no-import-of-dev-dependencies/index.d.ts
 !!! @typescript-eslint/triple-slash-reference: Do not use a triple slash reference for other, use `import` style instead.
     
     import other from "other";
+           ~~~~~
+!!! @typescript-eslint/no-unused-vars: 'other' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import self from "no-import-of-dev-dependencies";
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
+           ~~~~
+!!! @typescript-eslint/no-unused-vars: 'self' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     
     import other2 = require("other");
+           ~~~~~~
+!!! @typescript-eslint/no-unused-vars: 'other2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
     import self2 = require("no-import-of-dev-dependencies");
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! @definitelytyped/no-self-import: Declaration file should not use a global import of itself. Use a relative import.
+           ~~~~~
+!!! @typescript-eslint/no-unused-vars: 'self2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
