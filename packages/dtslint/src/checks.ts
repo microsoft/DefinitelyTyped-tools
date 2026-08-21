@@ -262,7 +262,10 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
       errors.push(
         `Package ${packageJson.name} is marked as non-npm, but ${packageName} exists on npm. ` +
           `If these types are being added to DefinitelyTyped for the first time, please choose ` +
-          `a different name that does not conflict with an existing npm package.`,
+          `a different name that does not conflict with an existing npm package. If this is an ` +
+          `existing conflict, mark these types as \`"nonNpm": "conflict"\`. See `+
+          `https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/README.md#naming for ` +
+          `for more information.,
       );
     } else if (!packageJson.nonNpm) {
       if (!satisfies(packageVersion, typesPackageVersion)) {
@@ -279,7 +282,8 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
             `If these types are for the existing npm package ${packageName}, change the ${packageDirectoryNameWithVersion}/package.json ` +
             `major and minor version to match an existing version of the npm package. If these types are unrelated to ` +
             `the npm package ${packageName}, add \`"nonNpm": true\` to the package.json and choose a different name ` +
-            `that does not conflict with an existing npm package.`,
+            `that does not conflict with an existing npm package. See https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/README.md#naming ` +
+            `for more information.`,
         );
       } else {
         try {
@@ -295,7 +299,7 @@ export async function checkNpmVersionAndGetMatchingImplementationPackage(
   } else if (packageJson.nonNpm === "conflict") {
     errors.push(
       `Package ${packageJson.name} is marked as \`"nonNpm": "conflict"\`, but no conflicting package name was ` +
-        `found on npm. These non-npm types can be makred as \`"nonNpm": true\` instead.`,
+        `found on npm. These non-npm types can be marked as \`"nonNpm": true\` instead.`,
     );
   } else if (!packageJson.nonNpm) {
     errors.push(
