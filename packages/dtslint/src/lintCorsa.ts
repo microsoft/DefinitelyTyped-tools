@@ -4,86 +4,13 @@ import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
 import fs from "fs";
 import path from "path";
 import * as ts from "typescript";
+import type { Diagnostic, Project } from "typescript-7.1/unstable/sync";
+import type { Node, SourceFile } from "typescript-7.1/unstable/ast";
 import type { TsVersion } from "./lint";
 import { resolveLocalTypeScript } from "./typescript-installer";
 
-interface Node {
-  readonly kind: number;
-  readonly parent: Node;
-  forEachChild(visitor: (node: Node) => void): void;
-  getStart(sourceFile?: SourceFile): number;
-  getEnd(): number;
-}
-
-interface ExpressionStatement extends Node {
-  readonly expression: Node;
-}
-
-interface VariableStatement extends Node {
-  readonly declarationList: {
-    readonly declarations: readonly {
-      readonly initializer?: Node;
-    }[];
-  };
-}
-
-interface SourceFile extends Node {
-  readonly fileName: string;
-  readonly text: string;
-  readonly isDeclarationFile: boolean;
-  getLineStarts(): readonly number[];
-  getLineAndCharacterOfPosition(position: number): { line: number; character: number };
-  getPositionOfLineAndCharacter(line: number, character: number): number;
-}
-
-interface Diagnostic {
-  readonly fileName?: string;
-  readonly pos: number;
-  readonly end: number;
-  readonly code: number;
-  readonly text: string;
-  readonly messageChain?: readonly Diagnostic[];
-}
-
-interface Program {
-  getCompilerOptions(): { readonly declaration?: boolean; readonly composite?: boolean };
-  getSourceFile(fileName: string): SourceFile | undefined;
-  getSourceFileNames(): readonly string[];
-  getSourceFileMetadata(fileName: string): { isDefaultLibrary: boolean; isFromExternalLibrary: boolean } | undefined;
-  getSyntacticDiagnostics(fileName?: string): readonly Diagnostic[];
-  getSemanticDiagnostics(fileName?: string): readonly Diagnostic[];
-  getDeclarationDiagnostics(fileName?: string): readonly Diagnostic[];
-  getProgramDiagnostics(): readonly Diagnostic[];
-  getGlobalDiagnostics(): readonly Diagnostic[];
-  getConfigFileParsingDiagnostics(): readonly Diagnostic[];
-}
-
-interface Project {
-  readonly program: Program;
-  readonly checker: {
-    getTypeAtLocation(node: Node): unknown | undefined;
-    typeToString(type: unknown, enclosingDeclaration: undefined, flags: number): string;
-  };
-}
-
-interface Snapshot {
-  getProject(configFileName: string): Project | undefined;
-  dispose(): void;
-}
-
-interface CorsaApi {
-  readonly NodeBuilderFlags: { readonly NoTruncation: number };
-  readonly API: new (options: { cwd: string }) => {
-    updateSnapshot(options: { openProjects: readonly string[] }): Snapshot;
-    close(): void;
-  };
-}
-
-interface CorsaAst {
-  readonly SyntaxKind: { readonly EndOfFileToken: number };
-  isExpressionStatement(node: Node): node is ExpressionStatement;
-  isVariableStatement(node: Node): node is VariableStatement;
-}
+type CorsaApi = typeof import("typescript-7.1/unstable/sync");
+type CorsaAst = typeof import("typescript-7.1/unstable/ast");
 
 interface Failure {
   readonly fileName?: string;
@@ -273,7 +200,7 @@ function getExpectTypeFailures(
     }
 
     sourceFile.forEachChild(function visit(node) {
-      if (node.kind === astModule.SyntaxKind.EndOfFileToken) {
+      if (node.kind === astModule.SyntaxKind.EndOfFile) {
         return;
       }
       const line = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line;
