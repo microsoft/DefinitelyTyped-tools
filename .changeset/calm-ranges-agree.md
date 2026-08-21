@@ -4,5 +4,5 @@
 "@definitelytyped/utils": patch
 ---
 
-Share versioned `@ts-expect-error` range handling, correctly evaluate shorthand and local TypeScript versions, aggregate
-TypeScript 7 failures across versions, and report files excluded from every configured project.
+Support version ranges on `@ts-expect-error` directives consistently across dtslint and its ESLint plugin, including
+shorthand and local TypeScript versions.
