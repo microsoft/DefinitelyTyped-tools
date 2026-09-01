@@ -204,6 +204,23 @@ function getTrustedBase(pr: PR_repository_pullRequest): string {
   return pr.baseRefOid || "master";
 }
 
+function getTrustedMergeCommit(pr: PR_repository_pullRequest): string | Error {
+  const mergeCommit = pr.potentialMergeCommit;
+  if (!mergeCommit) return new Error("No potential merge commit found");
+
+  const parents = noNullish(mergeCommit.parents.nodes?.map((parent) => parent?.oid));
+  if (
+    mergeCommit.parents.totalCount !== 2 ||
+    parents.length !== 2 ||
+    !parents.includes(pr.baseRefOid) ||
+    !parents.includes(pr.headRefOid)
+  ) {
+    return new Error("Potential merge commit does not match the pull request base and head");
+  }
+
+  return mergeCommit.oid;
+}
+
 // The GQL response => Useful data for us
 export async function deriveStateForPR(
   prInfo: PR_repository_pullRequest,
@@ -223,6 +240,8 @@ export async function deriveStateForPR(
   // Always compare against the actual base branch tip, never against an OID derived from PR
   // commit ancestry (which an attacker can influence by pushing >100 commits).
   const baseId = getTrustedBase(prInfo);
+  const mergeId = getTrustedMergeCommit(prInfo);
+  if (mergeId instanceof Error) return botError(mergeId.message);
   // commitIds is `commits(last: 100)`; if there are more commits than that, we cannot reason
   // safely about the PR's history and force a maintainer review downstream.
   const tooManyCommits = (prInfo.commitIds.totalCount ?? 0) > (prInfo.commitIds.nodes?.length ?? 0);
@@ -261,7 +280,7 @@ export async function deriveStateForPR(
     .map((f) => f.path)
     .sort();
   if (paths.length > fileLimit) paths.length = fileLimit; // redundant, but just in case
-  const pkgInfoEtc = await getPackageInfosEtc(paths, prInfo.headRefOid, baseId, fetchFile, async (name) =>
+  const pkgInfoEtc = await getPackageInfosEtc(paths, mergeId, baseId, fetchFile, async (name) =>
     getDownloads(name, lastPushDate),
   );
   if (pkgInfoEtc instanceof Error) return botError(pkgInfoEtc.message);

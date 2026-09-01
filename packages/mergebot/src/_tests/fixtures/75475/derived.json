@@ -1,6 +1,6 @@
 {
   "type": "info",
-  "now": "2026-09-01T18:45:54.506Z",
+  "now": "2026-09-01T18:46:48.035Z",
   "pr_number": 75475,
   "author": "dgp1130",
   "headCommitOid": "4a708f0ad529dfbe67caec58197135d27b223f53",
@@ -45,21 +45,8 @@
         "fregante",
         "erwanjugand"
       ],
-      "addedOwners": [
-        "couven92",
-        "rreverser",
-        "tregagnon",
-        "pokutuna"
-      ],
-      "deletedOwners": [
-        "JasonXian",
-        "usertim",
-        "idan315",
-        "nicolas377",
-        "idosal",
-        "fregante",
-        "erwanjugand"
-      ],
+      "addedOwners": [],
+      "deletedOwners": [],
       "popularityLevel": "Critical"
     }
   ],
