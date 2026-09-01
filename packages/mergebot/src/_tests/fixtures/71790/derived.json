@@ -32,6 +32,7 @@
     },
     {
       "name": "hapi__catbox-memory",
+      "version": "4.1",
       "kind": "delete",
       "files": [
         {

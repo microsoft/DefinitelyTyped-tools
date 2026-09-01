@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "express",
+      "version": "5.0",
       "kind": "edit",
       "files": [
         {

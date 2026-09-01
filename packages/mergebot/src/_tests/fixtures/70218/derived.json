@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "fast-decode-uri-component",
+      "version": "0.1",
       "kind": "add",
       "files": [
         {

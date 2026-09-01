@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "express-serve-static-core",
+      "version": "4.17",
       "kind": "edit",
       "files": [
         {

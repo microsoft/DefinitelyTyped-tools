@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "readable-stream",
+      "version": "4.0",
       "kind": "edit",
       "files": [
         {

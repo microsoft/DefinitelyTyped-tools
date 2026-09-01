@@ -57,6 +57,7 @@ interface BotEnsureRemovedFromProject {
 
 export interface PackageInfo {
   name: string | null; // null => not in a package (= infra files)
+  version?: string;
   kind: "edit" | "add" | "delete";
   files: FileInfo[];
   owners: string[]; // existing owners on master
@@ -409,15 +410,17 @@ async function getPackageInfosEtc(
   const result: PackageInfo[] = [];
   let maxDownloads = 0;
   for (const [name, files] of infos) {
-    const oldOwners = !name ? null : await getOwnersOfPackage(name, baseId, fetchFile);
-    if (oldOwners instanceof Error) return oldOwners;
-    const newOwners0 = !name ? null : await getOwnersOfPackage(name, headId, fetchFile);
+    const oldMetadata = !name ? null : await getPackageMetadata(name, baseId, fetchFile);
+    if (oldMetadata instanceof Error) return oldMetadata;
+    const newMetadata0 = !name ? null : await getPackageMetadata(name, headId, fetchFile);
     // A header error is still an add/edit whereas a missing file is
-    // delete, hence newOwners0 here
-    const kind = !name ? "edit" : !oldOwners ? "add" : !newOwners0 ? "delete" : "edit";
+    // delete, hence newMetadata0 here
+    const kind = !name ? "edit" : !oldMetadata ? "add" : !newMetadata0 ? "delete" : "edit";
     // treats a header error as a missing file, the CI will fail anyway
     // (maybe add a way to pass the error in the info so people don't need to read the CI?)
-    const newOwners = newOwners0 instanceof Error ? null : newOwners0;
+    const newMetadata = newMetadata0 instanceof Error ? null : newMetadata0;
+    const newOwners = newMetadata?.owners ?? null;
+    const oldOwners = oldMetadata?.owners ?? null;
     const owners = oldOwners || [];
     const addedOwners =
       newOwners === null ? [] : oldOwners === null ? newOwners : newOwners.filter((o) => !oldOwners.includes(o));
@@ -435,7 +438,18 @@ async function getPackageInfosEtc(
           files[0]?.path === "attw.json" &&
           (await isAllowedAttwEdit(headId, baseId, fetchFile))
         : undefined;
-    result.push({ name, kind, files, owners, addedOwners, deletedOwners, popularityLevel, isSafeInfrastructureEdit });
+    const version = newMetadata?.version ?? oldMetadata?.version;
+    result.push({
+      name,
+      ...(version ? { version } : {}),
+      kind,
+      files,
+      owners,
+      addedOwners,
+      deletedOwners,
+      popularityLevel,
+      isSafeInfrastructureEdit,
+    });
   }
   return { pkgInfo: result, popularityLevel: downloadsToPopularityLevel(maxDownloads) };
 }
@@ -739,6 +753,20 @@ export async function getOwnersOfPackage(
   oid: string,
   fetchFile: typeof defaultFetchFile,
 ): Promise<string[] | null | Error> {
+  const metadata = await getPackageMetadata(packageName, oid, fetchFile);
+  return metadata instanceof Error ? metadata : (metadata?.owners ?? null);
+}
+
+interface PackageMetadata {
+  owners: string[];
+  version?: string;
+}
+
+async function getPackageMetadata(
+  packageName: string,
+  oid: string,
+  fetchFile: typeof defaultFetchFile,
+): Promise<PackageMetadata | null | Error> {
   const packageJson = `${oid}:types/${packageName}/package.json`;
   const packageJsonContent = await fetchFile(packageJson, 10240); // grab at most 10k
   let packageJsonObj;
@@ -749,6 +777,8 @@ export async function getOwnersOfPackage(
       if (e instanceof Error) return new Error(`error parsing owners from package.json: ${e.message}`);
     }
   }
+  const version =
+    typeof packageJsonObj?.version === "string" ? /^(\d+\.\d+)\.9999$/.exec(packageJsonObj.version)?.[1] : undefined;
 
   if (!packageJsonObj || !(packageJsonObj.name && packageJsonObj.version && packageJsonObj.owners)) {
     // If we see that we're not in a post-pnpm world, try to get the owners from the index.d.ts.
@@ -761,10 +791,16 @@ export async function getOwnersOfPackage(
     } catch (e) {
       if (e instanceof Error) return new Error(`error parsing owners: ${e.message}`);
     }
-    return noNullish(parsed!.contributors.map((c) => c.githubUsername)).filter(isValidGithubUsername);
+    return {
+      owners: noNullish(parsed!.contributors.map((c) => c.githubUsername)).filter(isValidGithubUsername),
+      ...(version ? { version } : {}),
+    };
   }
 
-  return noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername)).filter(isValidGithubUsername);
+  return {
+    owners: noNullish(packageJsonObj.owners?.map((c: any) => c?.githubUsername)).filter(isValidGithubUsername),
+    ...(version ? { version } : {}),
+  };
 }
 
 // GitHub usernames: alphanumeric or single hyphens (plus underscores for Enterprise Managed

@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "relationship.js",
+      "version": "1.2",
       "kind": "edit",
       "files": [
         {

@@ -18,6 +18,7 @@
   "pkgInfo": [
     {
       "name": "chrome",
+      "version": "0.0",
       "kind": "edit",
       "files": [
         {

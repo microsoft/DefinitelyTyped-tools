@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "ansicolors",
+      "version": "0.0",
       "kind": "edit",
       "files": [
         {
@@ -33,6 +34,7 @@
     },
     {
       "name": "cardinal",
+      "version": "2.1",
       "kind": "add",
       "files": [
         {
@@ -98,6 +100,7 @@
     },
     {
       "name": "marked-terminal",
+      "version": "6.0",
       "kind": "edit",
       "files": [
         {

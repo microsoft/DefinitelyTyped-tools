@@ -552,7 +552,7 @@ function createWelcomeComment(info: ExtendedPrInfo, post: (c: Comments.Comment) 
     const authorIsOwner = !p.owners.some(info.isAuthor) ? [] : [`(author is owner)`];
     display(
       [
-        `* \`${p.name}\`${kind} —`,
+        `* \`${p.name}\`${p.version ? ` (${p.version})` : ""}${kind} —`,
         `[on npm](https://www.npmjs.com/package/${urlPart}),`,
         `[on unpkg](https://unpkg.com/browse/${urlPart}@latest/)`,
         ...authorIsOwner,
