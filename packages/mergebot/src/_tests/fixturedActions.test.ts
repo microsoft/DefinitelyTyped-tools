@@ -37,7 +37,7 @@ async function testFixture(dir: string) {
 
   // Fixtures recorded before potentialMergeCommit was queried use the head tree.
   const prInfoWithMergeCommit =
-    prInfo.potentialMergeCommit === undefined
+    prInfo.potentialMergeCommit === undefined && prInfo.mergeable !== "CONFLICTING"
       ? {
           ...prInfo,
           potentialMergeCommit: {

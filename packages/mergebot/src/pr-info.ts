@@ -240,7 +240,9 @@ export async function deriveStateForPR(
   // Always compare against the actual base branch tip, never against an OID derived from PR
   // commit ancestry (which an attacker can influence by pushing >100 commits).
   const baseId = getTrustedBase(prInfo);
-  const mergeId = getTrustedMergeCommit(prInfo);
+  // GitHub cannot generate a test merge commit for a conflicting PR. Use the trusted base
+  // tree as a placeholder until the author resolves the conflict and merging becomes possible.
+  const mergeId = prInfo.mergeable === "CONFLICTING" ? baseId : getTrustedMergeCommit(prInfo);
   if (mergeId instanceof Error) return botError(mergeId.message);
   // commitIds is `commits(last: 100)`; if there are more commits than that, we cannot reason
   // safely about the PR's history and force a maintainer review downstream.
