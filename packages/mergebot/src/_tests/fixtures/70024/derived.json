@@ -19,6 +19,7 @@
   "pkgInfo": [
     {
       "name": "ws",
+      "version": "8.5",
       "kind": "edit",
       "files": [
         {

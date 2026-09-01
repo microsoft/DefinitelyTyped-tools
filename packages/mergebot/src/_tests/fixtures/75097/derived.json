@@ -20,6 +20,7 @@
   "pkgInfo": [
     {
       "name": "discord-rpc",
+      "version": "4.0",
       "kind": "edit",
       "files": [
         {

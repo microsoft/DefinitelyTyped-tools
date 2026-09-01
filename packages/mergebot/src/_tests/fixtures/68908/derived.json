@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "node",
+      "version": "20.11",
       "kind": "edit",
       "files": [
         {

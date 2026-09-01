@@ -18,6 +18,7 @@
   "pkgInfo": [
     {
       "name": "three",
+      "version": "0.167",
       "kind": "edit",
       "files": [
         {

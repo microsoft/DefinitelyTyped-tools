@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "safie-sdk",
+      "version": "1.8",
       "kind": "add",
       "files": [
         {

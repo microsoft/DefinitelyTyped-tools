@@ -33,6 +33,7 @@
     },
     {
       "name": "polygon-lookup",
+      "version": "2.6",
       "kind": "edit",
       "files": [
         {
@@ -49,6 +50,7 @@
     },
     {
       "name": "rbush",
+      "version": "3.0",
       "kind": "edit",
       "files": [
         {
@@ -66,6 +68,7 @@
     },
     {
       "name": "which-polygon",
+      "version": "2.2",
       "kind": "edit",
       "files": [
         {

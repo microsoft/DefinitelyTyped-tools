@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "bluebird",
+      "version": "3.5",
       "kind": "edit",
       "files": [
         {

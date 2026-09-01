@@ -20,6 +20,7 @@
   "pkgInfo": [
     {
       "name": "uswds__uswds",
+      "version": "3.11",
       "kind": "edit",
       "files": [
         {

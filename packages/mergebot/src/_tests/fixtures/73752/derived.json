@@ -17,6 +17,7 @@
   "pkgInfo": [
     {
       "name": "webxr",
+      "version": "0.5",
       "kind": "edit",
       "files": [
         {
