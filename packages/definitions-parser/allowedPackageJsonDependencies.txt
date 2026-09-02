@@ -900,6 +900,7 @@ utility-types
 vega-typings
 vfile-message
 victory
+viewport-mercator-project
 vite
 vscode-languageserver-types
 vue
