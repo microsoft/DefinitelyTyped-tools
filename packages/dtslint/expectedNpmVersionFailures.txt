@@ -49,7 +49,6 @@ calq
 cannon
 canvasjs
 carbon__layout
-carbon__motion
 carbon__themes
 carbon__type
 chartjs-plugin-doughnutlabel-rebourne
@@ -62,7 +61,6 @@ color/v0
 com.wikitude.phonegap.wikitudeplugin
 compose-function
 connect-flash
-content-type
 contextjs
 cordova-plugin-background-mode
 cordova-plugin-email-composer
@@ -113,7 +111,6 @@ fast-levenshtein
 favico.js
 featherlight
 ffi
-ffmpeg
 ffmpeg__libav-core
 fibjs
 figma
@@ -126,7 +123,6 @@ flowjs
 fm-websync
 foundation
 ftdomdelegate
-generic-functions
 gensync
 gently
 git
@@ -178,7 +174,6 @@ jquery-deparam
 jquery-fullscreen
 jquery-jcrop
 jquery.are-you-sure
-jquery.fancytree
 jquery.finger
 jquery.fullscreen
 jquery.highlight-bartaz
