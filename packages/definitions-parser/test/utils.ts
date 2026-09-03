@@ -1,4 +1,4 @@
-import { License } from "@definitelytyped/header-parser";
+import { Header, License } from "@definitelytyped/header-parser";
 import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../src/packages";
 import { atTypesSlash } from "@definitelytyped/utils";
 
@@ -13,6 +13,7 @@ export function createTypingsVersionRaw(
   dependencies: { readonly [name: string]: string },
   devDependencies: { readonly [name: string]: string },
   peerDependencies?: { readonly [name: string]: string },
+  headerOverrides: Partial<Header> = {},
 ): TypingsVersionsRaw {
   return {
     "1.0": {
@@ -25,6 +26,7 @@ export function createTypingsVersionRaw(
         nonNpm: false,
         projects: ["zombo.com"],
         tsconfigs: ["tsconfig.json"],
+        ...headerOverrides,
       },
       typesVersions: [],
       license: License.MIT,
