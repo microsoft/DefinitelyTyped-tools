@@ -1,0 +1,246 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM8AAAABBycrvQ",
+        "title": "chrome: Add global `browser` alias",
+        "createdAt": "2026-09-01T18:13:36Z",
+        "author": {
+          "login": "dgp1130",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Critical package",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits Owners",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 75475,
+        "state": "OPEN",
+        "headRefOid": "4a708f0ad529dfbe67caec58197135d27b223f53",
+        "baseRefOid": "eded8b3161a48a130df54daefb1005b3807314b0",
+        "potentialMergeCommit": {
+          "oid": "b9c31f6adfcb83f41dac2e1a3a628801f2e775eb",
+          "parents": {
+            "totalCount": 2,
+            "nodes": [
+              {
+                "oid": "eded8b3161a48a130df54daefb1005b3807314b0",
+                "__typename": "Commit"
+              },
+              {
+                "oid": "4a708f0ad529dfbe67caec58197135d27b223f53",
+                "__typename": "Commit"
+              }
+            ],
+            "__typename": "CommitConnection"
+          },
+          "__typename": "Commit"
+        },
+        "changedFiles": 2,
+        "additions": 8,
+        "deletions": 0,
+        "commitIds": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "4a708f0ad529dfbe67caec58197135d27b223f53",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "5af8fdf21579b2afcb42b447b2def9b5dcc8c540",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 90895116570,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/4a708f0ad529dfbe67caec58197135d27b223f53/checks?check_suite_id=90895116570",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/4a708f0ad529dfbe67caec58197135d27b223f53/checks?check_suite_id=90895116570",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-09-01T18:13:42Z",
+                      "workflowRun": {
+                        "databaseId": 33542389231,
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-09-01T17:35:31Z",
+                "committedDate": "2026-09-01T18:05:38Z",
+                "pushedDate": null,
+                "oid": "4a708f0ad529dfbe67caec58197135d27b223f53",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABR7oZYA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5498345824,
+              "body": "@dgp1130 Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `chrome` — [on npm](https://www.npmjs.com/package/chrome), [on unpkg](https://unpkg.com/browse/chrome@latest/)\n  - 4 added owners: @couven92, @rreverser, @tregagnon, @pokutuna\n  - 7 removed owners: @JasonXian, @usertim, @idan315, @nicolas377, @idosal, @fregante, @erwanjugand\n\n## Code Reviews\n\nBecause this is a widely-used package, a DT maintainer will need to review it before it can be merged.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75475&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 Most recent commit is approved by a DT maintainer\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-09-01T18:14:14Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABR7obgQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5498346369,
+              "body": "🔔 @matthewkimber @otiai10 @sreimer15 @MatCarlson @ekinsol @echoabstract @spasma @bdbai @JasonXian @usertim @idan315 @nicolas377 @idosal @fregante @erwanjugand — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75475/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-09-01T18:14:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABR7sgwQ",
+              "author": {
+                "login": "DangerBotOSS",
+                "__typename": "User"
+              },
+              "authorAssociation": "NONE",
+              "databaseId": 5498413249,
+              "body": "\n<!--\n  0 failure: \n  0 warning: \n  \n  1 markdown notices\n  DangerID: danger-id-Danger;\n-->\n\n\n\n## Formatting\n\nThe following files are not formatted:\n1. types/chrome/test/index.ts\n\nConsider running `pnpm dprint fmt` on these files to make review easier.\n<p align=\"right\">\n  Generated by :no_entry_sign: <a href=\"https://danger.systems/js\">dangerJS</a> against 4a708f0ad529dfbe67caec58197135d27b223f53\n</p>\n",
+              "createdAt": "2026-09-01T18:20:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "path": "types/chrome/index.d.ts",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/chrome/test/index.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mg",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzg48-iw",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Needs Maintainer Review",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2026-09-01T18:20:43Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}
