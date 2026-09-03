@@ -180,6 +180,42 @@ describe(TypingsData, () => {
     expect(data.isNotNeeded()).toBe(false);
   });
 
+  it("includes nested package.json files in getFiles()", () => {
+    const dt = createMockDT();
+    const packageDir = dt.pkgDir("with-nested-package-json");
+    
+    // Set up main package files
+    packageDir
+      .set(
+        "package.json",
+        JSON.stringify({
+          name: "@types/with-nested-package-json",
+        }),
+      )
+      .set("index.d.ts", "declare const x: number;")
+      .set("tsconfig.json", `{ "files": ["index.d.ts"] }`);
+    
+    // Add nested package.json files in subdirectories
+    packageDir.subdir("src").set("package.json", JSON.stringify({ type: "module" }));
+    packageDir.subdir("src").set("index.d.ts", "export const srcVar: string;");
+    packageDir.subdir("lib").set("package.json", JSON.stringify({ type: "commonjs" })); 
+    packageDir.subdir("lib").set("index.d.ts", "export const libVar: number;");
+
+    const versions = createTypingsVersionRaw("with-nested-package-json", {}, {});
+    const data = new TypingsData(dt.fs, versions["1.0"], true);
+    
+    const files = data.getFiles();
+    
+    // Should include both declaration files and nested package.json files
+    expect(files).toContain("index.d.ts");
+    expect(files).toContain("src/index.d.ts");
+    expect(files).toContain("lib/index.d.ts");
+    expect(files).toContain("src/package.json");
+    expect(files).toContain("lib/package.json");
+    // Should NOT include the root package.json as it's handled specially
+    expect(files).not.toContain("package.json");
+  });
+
   describe("desc", () => {
     it("returns the name if latest version", () => {
       expect(data.desc).toBe("@types/known");
