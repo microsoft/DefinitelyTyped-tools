@@ -637,7 +637,14 @@ function getMergeRequest(comments: PR_repository_pullRequest_comments_nodes[], u
   );
   if (!request) return request;
   const date = new Date(request.createdAt);
-  return date > sinceDate ? { date, user: request.author!.login } : undefined;
+  if (date <= sinceDate) return undefined;
+
+  // A rejected request is consumed; otherwise every later update posts another rejection.
+  const hasWaitResponse = comments.some((c) => {
+    if (!isTypeScriptBot(c.author?.login) || new Date(c.createdAt) <= date) return false;
+    return comment.parse(c.body)?.tag.startsWith("wait-for-merge-offer-");
+  });
+  return hasWaitResponse ? undefined : { date, user: request.author!.login };
 }
 
 function getReviews(prInfo: PR_repository_pullRequest) {

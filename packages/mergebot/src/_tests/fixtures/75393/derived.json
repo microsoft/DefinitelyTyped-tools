@@ -1,0 +1,62 @@
+{
+  "type": "info",
+  "now": "2026-09-03T20:51:24.566Z",
+  "pr_number": 75393,
+  "author": "sharpchen",
+  "headCommitOid": "68eadaf30095e64f464c14185d4fe529efa1f6d8",
+  "mergeBaseOid": "df17ec34853e80dac955a0c2649cec989d90b2b5",
+  "lastPushDate": "2026-08-21T11:24:31.000Z",
+  "lastActivityDate": "2026-09-03T20:40:59.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": true,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "mpv-script",
+      "version": "0.32",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/mpv-script/.eslintrc.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-eslintrcjson) (check: `rules`)"
+        },
+        {
+          "path": "types/mpv-script/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/mpv-script/mpv-script-tests.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "mrxdst",
+        "sharpchen"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "stale",
+      "reviewer": "jakebailey",
+      "date": "2026-09-03T16:35:54.000Z",
+      "abbrOid": "81682e1"
+    },
+    {
+      "type": "stale",
+      "reviewer": "mrxdst",
+      "date": "2026-09-01T14:12:52.000Z",
+      "abbrOid": "81682e1"
+    }
+  ],
+  "mainBotCommentID": 5307918558,
+  "ciResult": "unknown"
+}

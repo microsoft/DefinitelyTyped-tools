@@ -13,10 +13,6 @@
     {
       "tag": "merge-offer",
       "status": "@brandonbothell: Everything looks good here. I am ready to merge this PR (at 4e58a58) on your behalf whenever you think it's ready.\n\nIf you'd like that to happen, please post a comment saying:\n\n> Ready to merge\n\nand I'll merge this PR almost instantly. Thanks for helping out! :heart:\n\n(@dylhack, @k3rn31p4nic, @HanchaiN: you can do this too.)"
-    },
-    {
-      "tag": "wait-for-merge-offer-4e58a58",
-      "status": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!"
     }
   ],
   "shouldClose": false,

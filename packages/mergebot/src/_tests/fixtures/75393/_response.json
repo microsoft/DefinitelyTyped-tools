@@ -1,0 +1,840 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM7_udI5",
+        "title": "mpv-script: type inference for property functions",
+        "createdAt": "2026-08-16T14:26:33Z",
+        "author": {
+          "login": "sharpchen",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [
+            {
+              "name": "Author is Owner",
+              "__typename": "Label"
+            },
+            {
+              "name": "Where is GH Actions?",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Unreviewed",
+              "__typename": "Label"
+            },
+            {
+              "name": "Huge Change",
+              "__typename": "Label"
+            }
+          ],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 75393,
+        "state": "OPEN",
+        "headRefOid": "68eadaf30095e64f464c14185d4fe529efa1f6d8",
+        "baseRefOid": "df17ec34853e80dac955a0c2649cec989d90b2b5",
+        "changedFiles": 3,
+        "additions": 6569,
+        "deletions": 469,
+        "commitIds": {
+          "totalCount": 12,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "1e9855ce22722c2858b7b6aa446cbe74536ce767",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "662b3ccba8a92d1aa247d1e5b8ab79203f39e121",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "0586f3dbe005fc6d0110cbd1192312320cd8dbdf",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "1e9855ce22722c2858b7b6aa446cbe74536ce767",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "373f7cdb566f8978168cd77cd6d3e0c5d6565f60",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "0586f3dbe005fc6d0110cbd1192312320cd8dbdf",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "79e4bd7fa3b19800e1fa3bf05d586cf67f65da29",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "373f7cdb566f8978168cd77cd6d3e0c5d6565f60",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "836bc0a63c1e312e99ac4d1b9f07a3555fa8b86a",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "79e4bd7fa3b19800e1fa3bf05d586cf67f65da29",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "899e13e1a17691497fbec9986b0330381aa34ab5",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "836bc0a63c1e312e99ac4d1b9f07a3555fa8b86a",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "5a21b1ef887fdfe780481fc7eeb5d03af27469fe",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "899e13e1a17691497fbec9986b0330381aa34ab5",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "eafe54dbe3233e3c70ae7b86a1198ba394ef41ee",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "5a21b1ef887fdfe780481fc7eeb5d03af27469fe",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "7bc61e469f07219970867ba572094ab621f1317e",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "eafe54dbe3233e3c70ae7b86a1198ba394ef41ee",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "0e12c674d4ee4c45313580413494f343fdb69b6a",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "7bc61e469f07219970867ba572094ab621f1317e",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "0e12c674d4ee4c45313580413494f343fdb69b6a",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "68eadaf30095e64f464c14185d4fe529efa1f6d8",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [
+            {
+              "actor": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "createdAt": "2026-08-18T10:09:28Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "createdAt": "2026-08-18T13:54:26Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "actor": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "createdAt": "2026-08-21T11:24:31Z",
+              "__typename": "HeadRefForcePushedEvent"
+            },
+            {
+              "createdAt": "2026-08-25T17:58:54Z",
+              "__typename": "ReadyForReviewEvent"
+            }
+          ],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 10,
+          "nodes": [
+            {
+              "author": {
+                "login": "mrxdst",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "1e9855ce22722c2858b7b6aa446cbe74536ce767",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2026-08-16T17:28:14Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-4946776143",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "mrxdst",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "7bc61e469f07219970867ba572094ab621f1317e",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2026-08-26T07:29:02Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5027788890",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "mrxdst",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2026-09-01T14:12:52Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5079121150",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-01T18:32:53Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-01T18:32:53Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5081634565",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "sharpchen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-01T18:50:16Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-01T18:50:16Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5081809713",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-03T04:40:55Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-03T04:40:55Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5097806342",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "copilot-pull-request-reviewer",
+                "__typename": "Bot"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-03T16:24:08Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5104302590",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-03T16:35:54Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-03T16:35:53Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5104410625",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "jakebailey",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-03T16:35:55Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "MEMBER",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-03T16:35:54Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5104410876",
+              "__typename": "PullRequestReview"
+            },
+            {
+              "author": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "81682e114b7effff8ec29531104370df81cfa976",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "sharpchen",
+                      "__typename": "User"
+                    },
+                    "createdAt": "2026-09-03T20:40:59Z",
+                    "__typename": "PullRequestReviewComment"
+                  }
+                ],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "COMMENTED",
+              "submittedAt": "2026-09-03T20:40:59Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393#pullrequestreview-5106619167",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 12,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 91617129567,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": null,
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/68eadaf30095e64f464c14185d4fe529efa1f6d8/checks?check_suite_id=91617129567",
+                      "status": "IN_PROGRESS",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/68eadaf30095e64f464c14185d4fe529efa1f6d8/checks?check_suite_id=91617129567",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-09-03T20:48:36Z",
+                      "workflowRun": {
+                        "databaseId": 33804410651,
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-09-03T20:46:21Z",
+                "committedDate": "2026-09-03T20:46:21Z",
+                "pushedDate": null,
+                "oid": "68eadaf30095e64f464c14185d4fe529efa1f6d8",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 12,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABPGBo3g",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5307918558,
+              "body": "@sharpchen Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 1 package in this PR\n\n* `mpv-script` (0.32) — [on npm](https://www.npmjs.com/package/mpv-script), [on unpkg](https://unpkg.com/browse/mpv-script@latest/) (author is owner)\n  - Config files to check:\n    - [`mpv-script/.eslintrc.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393/files/68eadaf30095e64f464c14185d4fe529efa1f6d8#diff-b473e8f64e50ac8160cf1d14697f0d930f1f427b0a10a0dc693dce4c7cfaada2): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-linter-eslintrcjson) (check: `rules`)\n\n## Code Reviews\n\nBecause this PR edits the configuration file, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=75393&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ❓ Continuous integration tests have gone missing\n * 🕐 A DT maintainer needs to approve changes that affect module config files\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 13 days — please try to get reviewers!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-08-16T14:27:11Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABPGBpdA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5307918708,
+              "body": "🔔 @mrxdst — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-08-16T14:27:13Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABPKhEIg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5312627746,
+              "body": "@mrxdst Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-c37530-1e9855c-->",
+              "createdAt": "2026-08-17T06:29:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABQAa31Q",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5369149397,
+              "body": "@sharpchen The CI build failed! Please [review the logs for more information](https://github.com/DefinitelyTyped/DefinitelyTyped/commit/14f024abf860f42480a71582e9677f2ebc5b43dd/checks?check_suite_id=88035381289).\n\nOnce you've pushed the fixes, the build will automatically re-run. Thanks!\n\n**Note: builds that are failing do not end up on the list of PRs for the DT maintainers to review.**\n<!--typescript_bot_gh-actions-complaint-14f024a-->",
+              "createdAt": "2026-08-21T11:18:18Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABQ06lpQ",
+              "author": {
+                "login": "sharpchen",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5424194981,
+              "body": "Ready to merge",
+              "createdAt": "2026-08-26T10:46:34Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABQ06-rg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5424201390,
+              "body": ":passport_control: Hi @sharpchen,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-5307918558) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-7bc61e4-->",
+              "createdAt": "2026-08-26T10:47:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABRhMXCQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5470623497,
+              "body": ":passport_control: Hi @sharpchen,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-5307918558) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-0e12c67-->",
+              "createdAt": "2026-08-30T18:56:17Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABRhOC3w",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5470651103,
+              "body": "@mrxdst Thank you for reviewing this PR! The author has pushed new commits since your last review. Could you take another look and submit a fresh review?\n<!--typescript_bot_stale-ping-c37530-7bc61e4-->",
+              "createdAt": "2026-08-30T19:02:08Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABRhvdHg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5471198494,
+              "body": ":passport_control: Hi @sharpchen,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-5307918558) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-81682e1-->",
+              "createdAt": "2026-08-30T20:54:15Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABR3szHg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5494223646,
+              "body": "Re-ping @mrxdst:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2026-08-21-->",
+              "createdAt": "2026-09-01T12:52:01Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABSYxTzQ",
+              "author": {
+                "login": "jakebailey",
+                "__typename": "User"
+              },
+              "authorAssociation": "MEMBER",
+              "databaseId": 5528900557,
+              "body": "This models current mpv APIs but still claims version 0.32.",
+              "createdAt": "2026-09-03T16:36:02Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABSbqSwg",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 5531931330,
+              "body": ":passport_control: Hi @sharpchen,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-5307918558) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-68eadaf-->",
+              "createdAt": "2026-09-03T20:47:46Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 3,
+          "nodes": [
+            {
+              "path": "types/mpv-script/.eslintrc.json",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/mpv-script/index.d.ts",
+              "additions": 6447,
+              "deletions": 454,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/mpv-script/mpv-script-tests.ts",
+              "additions": 117,
+              "deletions": 15,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Mw",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOADeBNM4AkH1qzg2ufW4",
+              "project": {
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1,
+                "__typename": "ProjectV2"
+              },
+              "fieldValueByName": {
+                "name": "Other",
+                "field": {
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM",
+                  "__typename": "ProjectV2SingleSelectField"
+                },
+                "__typename": "ProjectV2ItemFieldSingleSelectValue"
+              },
+              "updatedAt": "2026-09-03T20:47:50Z",
+              "__typename": "ProjectV2Item"
+            }
+          ],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}
