@@ -16,10 +16,6 @@
       "status": "🔔 @mrxdst — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/75393/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on."
     },
     {
-      "tag": "wait-for-merge-offer-68eadaf",
-      "status": ":passport_control: Hi @sharpchen,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-5307918558) are green. I will let you know once that happens.\n\nThanks, and happy typing!"
-    },
-    {
       "tag": "Unreviewed:nearly:2026-08-21",
       "status": "Re-ping @mrxdst:\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!"
     }

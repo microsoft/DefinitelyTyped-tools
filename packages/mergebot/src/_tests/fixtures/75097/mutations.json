@@ -71,50 +71,5 @@
         "id": "IC_kwDOAFz6BM8AAAABFeCnHw"
       }
     }
-  },
-  {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
-    "variables": {
-      "input": {
-        "id": "IC_kwDOAFz6BM8AAAABFdrr5w",
-        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
-      }
-    }
-  },
-  {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
-    "variables": {
-      "input": {
-        "id": "IC_kwDOAFz6BM8AAAABFduBSg",
-        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
-      }
-    }
-  },
-  {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
-    "variables": {
-      "input": {
-        "id": "IC_kwDOAFz6BM8AAAABFdwG-w",
-        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
-      }
-    }
-  },
-  {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
-    "variables": {
-      "input": {
-        "id": "IC_kwDOAFz6BM8AAAABFdxfSg",
-        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
-      }
-    }
-  },
-  {
-    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
-    "variables": {
-      "input": {
-        "id": "IC_kwDOAFz6BM8AAAABFeCn7w",
-        "body": ":passport_control: Hi @brandonbothell,\n\nI can't [accept a pull request](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-make-a-pull-request) until all of the checks in the \"Status\" section of [this comment](#issuecomment-4658093747) are green. I will let you know once that happens.\n\nThanks, and happy typing!\n<!--typescript_bot_wait-for-merge-offer-4e58a58-->"
-      }
-    }
   }
 ]
