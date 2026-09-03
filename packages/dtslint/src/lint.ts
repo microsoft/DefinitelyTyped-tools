@@ -6,10 +6,12 @@ import { ESLint } from "eslint";
 import * as TsType from "typescript";
 
 import { createProgram } from "./createProgram";
-import { typeScriptPath } from "./typescript-installer";
+import { lintCorsaVersions } from "./lintCorsa";
+import { resolveLocalTypeScript, typeScriptPath } from "./typescript-installer";
 
 export async function lint(
   dirPath: string,
+  tsconfigs: readonly string[],
   minVersion: TsVersion,
   maxVersion: TsVersion,
   isLatest: boolean,
@@ -31,17 +33,38 @@ export async function lint(
     return files;
   }
 
-  const options = getEslintOptions(expectOnly, minVersion, maxVersion, tsLocal);
-  const eslint = new ESLint(options);
-  const formatter = await eslint.loadFormatter("stylish");
-  const results = await eslint.lintFiles(files);
-  const output = formatter.format(results);
-  for (const estreePath of estrees) {
-    if (!estreePath) continue;
-    const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
-    estree.clearCaches();
+  const versions = range(minVersion, maxVersion);
+  const legacyVersions: TsVersion[] = [];
+  const corsaVersions: TsVersion[] = [];
+  for (const version of versions) {
+    (usesCorsa(version, tsLocal) ? corsaVersions : legacyVersions).push(version);
   }
-  return output;
+
+  const outputs: string[] = [];
+  if (!expectOnly || legacyVersions.length) {
+    const options = getEslintOptions(expectOnly, legacyVersions, tsLocal);
+    const eslint = new ESLint(options);
+    const formatter = await eslint.loadFormatter("stylish");
+    const results = await eslint.lintFiles(files);
+    const output = await formatter.format(results);
+    if (output) {
+      outputs.push(output);
+    }
+    for (const estreePath of estrees) {
+      if (!estreePath) continue;
+      const estree = require(estreePath) as typeof import("@typescript-eslint/typescript-estree");
+      estree.clearCaches();
+    }
+  }
+
+  if (corsaVersions.length) {
+    const output = await lintCorsaVersions(dirPath, tsconfigs, corsaVersions, isLatest, tsLocal, files);
+    if (output) {
+      outputs.push(output);
+    }
+  }
+
+  return outputs.join("\n") || undefined;
 }
 
 function getSourceFiles(dirPath: string, isLatest: boolean) {
@@ -84,11 +107,10 @@ function tryResolve(path: string, options?: { paths?: string[] | undefined }): s
 
 function getEslintOptions(
   expectOnly: boolean,
-  minVersion: TsVersion,
-  maxVersion: TsVersion,
+  versions: readonly TsVersion[],
   tsLocal: string | undefined,
 ): ESLint.Options {
-  const versionsToTest = range(minVersion, maxVersion).map((versionName) => ({
+  const versionsToTest = versions.map((versionName) => ({
     versionName,
     path: typeScriptPath(versionName, tsLocal),
   }));
@@ -105,8 +127,8 @@ function getEslintOptions(
       {
         files: allFiles,
         rules: {
-          // This prevents anyone from disabling this rule.
-          "@definitelytyped/expect": ["error"],
+          // This prevents anyone from disabling this rule when it is responsible for ExpectType.
+          "@definitelytyped/expect": versions.length ? ["error"] : "off",
         },
       },
     ],
@@ -196,7 +218,7 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
   const minIdx = TypeScriptVersion.supported.indexOf(minVersion);
   assert(minIdx >= 0);
   if (maxVersion === TypeScriptVersion.latest) {
-    return [...TypeScriptVersion.supported.slice(minIdx), TypeScriptVersion.latest];
+    return TypeScriptVersion.supported.slice(minIdx);
   }
   const maxIdx = TypeScriptVersion.supported.indexOf(maxVersion as TypeScriptVersion);
   assert(maxIdx >= minIdx);
@@ -204,3 +226,12 @@ function range(minVersion: TsVersion, maxVersion: TsVersion): readonly TsVersion
 }
 
 export type TsVersion = TypeScriptVersion | "local";
+
+function usesCorsa(version: TsVersion, tsLocal: string | undefined): boolean {
+  if (version !== "local") {
+    return parseFloat(version) >= 7;
+  }
+
+  assert(tsLocal);
+  return resolveLocalTypeScript(tsLocal).kind === "corsa";
+}
