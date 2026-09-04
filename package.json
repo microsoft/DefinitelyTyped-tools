@@ -2,7 +2,7 @@
   "name": "definitelytyped-tools",
   "private": true,
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.11 || ^24 || >=26"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -12,10 +12,10 @@
     "test": "jest",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/index.js",
-    "ci:publish": "pnpm changeset tag && pnpm publish -r"
+    "ci:publish": "pnpm changeset git-tag && pnpm publish -r"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
+    "@changesets/cli": "^3.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.3",
     "@types/yargs": "^17.0.35",
