@@ -180,6 +180,42 @@ describe(TypingsData, () => {
     expect(data.isNotNeeded()).toBe(false);
   });
 
+  describe("project", () => {
+    it("returns the name of the only project", () => {
+      expect(data.projectName).toBe("zombo.com");
+    });
+
+    it("returns multiple project names as a comma-separated string", () => {
+      const versions = createTypingsVersionRaw(
+        "known",
+        {},
+        {},
+        {},
+        {
+          projects: ["zombo.com", "zombo.org"],
+        },
+      );
+      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
+
+      expect(data.projectName).toBe("zombo.com, zombo.org");
+    });
+
+    it("returns undefined if no project is set", () => {
+      const versions = createTypingsVersionRaw(
+        "known",
+        {},
+        {},
+        {},
+        {
+          projects: [],
+        },
+      );
+      data = new TypingsData(createMockDT().fs, versions["1.0"], false);
+
+      expect(data.projectName).toBeUndefined();
+    });
+  });
+
   describe("desc", () => {
     it("returns the name if latest version", () => {
       expect(data.desc).toBe("@types/known");
