@@ -1,4 +1,5 @@
 import { NpmPublishClient, readFileAndWarn } from "@definitelytyped/utils";
+import { updateLatestTag } from "@definitelytyped/retag";
 import { publishTypingsPackage } from "../src/lib/package-publisher";
 import { ChangedTyping } from "../src/lib/versions";
 
@@ -34,6 +35,7 @@ describe("publishTypingsPackage", () => {
   const client = { publish, untag } as unknown as NpmPublishClient;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     jest.mocked(readFileAndWarn).mockResolvedValue(packageJson);
     publish.mockReset();
     untag.mockReset();
@@ -52,5 +54,16 @@ describe("publishTypingsPackage", () => {
     expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, false, log, "old-version");
     expect(untag).toHaveBeenCalledWith("@types/example", "old-version", false, log);
     expect(publish.mock.invocationCallOrder[0]).toBeLessThan(untag.mock.invocationCallOrder[0]);
+    expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
+  });
+
+  it("continues if removing the temporary tag fails", async () => {
+    untag.mockRejectedValueOnce(new Error("registry unavailable"));
+
+    await expect(publishTypingsPackage(client, changedTyping(false), false, log)).resolves.toBeUndefined();
+    expect(log).toHaveBeenCalledWith(
+      "Failed to remove temporary tag for @types/example: Error: registry unavailable",
+    );
+    expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
   });
 });

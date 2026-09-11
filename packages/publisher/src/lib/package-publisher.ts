@@ -20,9 +20,7 @@ export async function publishTypingsPackage(
   }
   assert((latestVersion === undefined) === pkg.isLatest);
   if (latestVersion !== undefined) {
-    // If this is an older version of the package, we still update tags for the *latest*.
-    // NPM will update "latest" even if we are publishing an older version of a package (https://github.com/npm/npm/issues/6778),
-    // so we must undo that by re-tagging latest.
+    // Ensure the latest tag is correct even though older versions are published under a temporary tag.
     await updateLatestTag(pkg.name, latestVersion, client, log, dry);
   }
 }
@@ -44,6 +42,10 @@ async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dr
     await client.publish(packageDir, packageJson, dry, log);
   } else {
     await client.publish(packageDir, packageJson, dry, log, temporaryTag);
-    await client.untag(pkg.name, temporaryTag, dry, log);
+    try {
+      await client.untag(pkg.name, temporaryTag, dry, log);
+    } catch (error) {
+      log(`Failed to remove temporary tag for ${pkg.name}: ${error}`);
+    }
   }
 }
