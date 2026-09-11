@@ -39,9 +39,9 @@ async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dr
   const packageDir = outputDirectory(pkg);
   const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
   if (pkg.isLatest) {
-    await client.publish(packageDir, packageJson, dry, log);
+    await client.publish(packageDir, packageJson, "latest", dry, log);
   } else {
-    await client.publish(packageDir, packageJson, dry, log, temporaryTag);
+    await client.publish(packageDir, packageJson, temporaryTag, dry, log);
     try {
       await client.untag(pkg.name, temporaryTag, dry, log);
     } catch (error) {

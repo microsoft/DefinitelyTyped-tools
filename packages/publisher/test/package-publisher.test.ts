@@ -44,14 +44,14 @@ describe("publishTypingsPackage", () => {
   it("publishes the current version with the default tag", async () => {
     await publishTypingsPackage(client, changedTyping(true), false, log);
 
-    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, false, log);
+    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, "latest", false, log);
     expect(untag).not.toHaveBeenCalled();
   });
 
   it("publishes an old version without changing latest", async () => {
     await publishTypingsPackage(client, changedTyping(false), false, log);
 
-    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, false, log, "old-version");
+    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, "old-version", false, log);
     expect(untag).toHaveBeenCalledWith("@types/example", "old-version", false, log);
     expect(publish.mock.invocationCallOrder[0]).toBeLessThan(untag.mock.invocationCallOrder[0]);
     expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
