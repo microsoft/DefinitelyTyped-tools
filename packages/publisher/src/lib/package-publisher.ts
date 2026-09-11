@@ -5,6 +5,8 @@ import { updateTypeScriptVersionTags, updateLatestTag } from "@definitelytyped/r
 import { ChangedTyping } from "./versions";
 import { outputDirectory } from "../util/util";
 
+const temporaryTag = "old-version";
+
 export async function publishTypingsPackage(
   client: NpmPublishClient,
   changedTyping: ChangedTyping,
@@ -38,5 +40,10 @@ export async function publishNotNeededPackage(
 async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean): Promise<void> {
   const packageDir = outputDirectory(pkg);
   const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
-  await client.publish(packageDir, packageJson, dry, log);
+  if (pkg.isLatest) {
+    await client.publish(packageDir, packageJson, dry, log);
+  } else {
+    await client.publish(packageDir, packageJson, dry, log, temporaryTag);
+    await client.untag(pkg.name, temporaryTag, dry, log);
+  }
 }

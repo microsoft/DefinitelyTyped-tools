@@ -28,6 +28,7 @@ export class NpmPublishClient {
     packageJson: Record<string, unknown>,
     dry: boolean,
     log: Logger,
+    defaultTag = this.defaultTag,
   ): Promise<void> {
     if (dry) {
       log(`(dry) Skip publish of ${publishedDirectory}`);
@@ -45,7 +46,7 @@ export class NpmPublishClient {
     await publish(manifest, tarballBuffer, {
       forceAuth: { token: this.token },
       access: "public",
-      defaultTag: this.defaultTag,
+      defaultTag,
     });
   }
 
@@ -62,6 +63,18 @@ export class NpmPublishClient {
       headers: {
         "content-type": "application/json",
       },
+    });
+  }
+
+  async untag(packageName: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
+    if (dry) {
+      log(`(dry) Skip removing tag ${packageName}@${distTag}`);
+      return;
+    }
+
+    await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
+      method: "DELETE",
+      forceAuth: { token: this.token },
     });
   }
 }
