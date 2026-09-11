@@ -61,9 +61,7 @@ describe("publishTypingsPackage", () => {
     untag.mockRejectedValueOnce(new Error("registry unavailable"));
 
     await expect(publishTypingsPackage(client, changedTyping(false), false, log)).resolves.toBeUndefined();
-    expect(log).toHaveBeenCalledWith(
-      "Failed to remove temporary tag for @types/example: Error: registry unavailable",
-    );
+    expect(log).toHaveBeenCalledWith("Failed to remove temporary tag for @types/example: Error: registry unavailable");
     expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
   });
 });

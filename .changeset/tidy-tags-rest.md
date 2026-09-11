@@ -1,5 +1,4 @@
 ---
-"@definitelytyped/publisher": patch
 "@definitelytyped/utils": patch
 ---
 
