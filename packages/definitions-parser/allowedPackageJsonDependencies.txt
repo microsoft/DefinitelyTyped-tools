@@ -785,6 +785,7 @@ parchment
 parse5
 parse-url
 path-to-regexp
+pbf
 pdfjs-dist
 pg-protocol
 pg-types
