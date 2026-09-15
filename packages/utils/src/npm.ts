@@ -9,23 +9,17 @@ import { createTgz, streamToBuffer } from "./io";
 
 export const cacheDir = joinPaths(process.env.GITHUB_ACTIONS ? joinPaths(__dirname, "../../..") : os.tmpdir(), "cache");
 
-export interface NpmPublishClientConfig {
-  defaultTag?: string;
-}
-
 export class NpmPublishClient {
-  static async create(token: string, config: NpmPublishClientConfig = {}): Promise<NpmPublishClient> {
-    return new NpmPublishClient(token, config.defaultTag ?? "latest");
+  static async create(token: string): Promise<NpmPublishClient> {
+    return new NpmPublishClient(token);
   }
 
-  private constructor(
-    private readonly token: string,
-    private readonly defaultTag: string,
-  ) {}
+  private constructor(private readonly token: string) {}
 
   async publish(
     publishedDirectory: string,
     packageJson: Record<string, unknown>,
+    tag: string,
     dry: boolean,
     log: Logger,
   ): Promise<void> {
@@ -45,7 +39,7 @@ export class NpmPublishClient {
     await publish(manifest, tarballBuffer, {
       forceAuth: { token: this.token },
       access: "public",
-      defaultTag: this.defaultTag,
+      defaultTag: tag,
     });
   }
 
@@ -62,6 +56,18 @@ export class NpmPublishClient {
       headers: {
         "content-type": "application/json",
       },
+    });
+  }
+
+  async untag(packageName: string, distTag: string, dry: boolean, log: Logger): Promise<void> {
+    if (dry) {
+      log(`(dry) Skip removing tag ${packageName}@${distTag}`);
+      return;
+    }
+
+    await npmFetch(`/-/package/${encodeURIComponent(packageName)}/dist-tags/${encodeURIComponent(distTag)}`, {
+      method: "DELETE",
+      forceAuth: { token: this.token },
     });
   }
 }
