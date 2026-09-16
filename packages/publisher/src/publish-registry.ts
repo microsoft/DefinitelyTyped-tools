@@ -76,7 +76,7 @@ export default async function publishRegistry(dt: FS, allPackages: AllPackages, 
 
     const token = process.env.NPM_TOKEN!;
 
-    const publishClient = () => NpmPublishClient.create(token, { defaultTag: "next" });
+    const publishClient = () => NpmPublishClient.create(token);
     if (maxVersion !== latestVersion) {
       // There was an error in the last publish and types-registry wasn't validated.
       // This may have just been due to a timeout, so test if types-registry@next is a subset of the one we're about to publish.
@@ -123,7 +123,7 @@ async function publish(
   dry: boolean,
   log: Logger,
 ): Promise<void> {
-  await client.publish(registryOutputPath, packageJson, dry, log);
+  await client.publish(registryOutputPath, packageJson, "next", dry, log);
   // Sleep for 60 seconds to let NPM update.
   if (dry) {
     log("(dry) Skipping 60 second sleep...");
