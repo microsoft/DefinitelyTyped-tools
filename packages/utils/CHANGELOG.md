@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.16
+
+### Patch Changes
+
+- 2e05fe5: Publish old package versions without changing the latest tag
+
 ## 0.1.15
 
 ### Patch Changes
