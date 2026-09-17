@@ -58,8 +58,6 @@ run_dtslint() {
     popd >/dev/null
 }
 
-git config --global core.longpaths true
-
 pushd "$TYPESCRIPT_PATH" >/dev/null
 build_typescript
 popd >/dev/null
