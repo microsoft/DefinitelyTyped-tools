@@ -29,23 +29,10 @@ verify_sha merge "$actual_merge_sha" "$EXPECTED_MERGE_SHA"
 verify_sha base "$actual_base_sha" "$EXPECTED_BASE_SHA"
 verify_sha head "$actual_head_sha" "$EXPECTED_HEAD_SHA"
 
-install_typescript() {
-    if [[ -f package-lock.json ]]; then
-        npm ci
-    else
-        npm install
-    fi
-}
-
 build_typescript() {
-    if [[ -d tsc ]]; then
-        npm run build
-        npx hereby build:api
-        local_typescript_path="$TYPESCRIPT_PATH/packages/typescript"
-    else
-        npm run build:compiler
-        local_typescript_path="$TYPESCRIPT_PATH/built/local"
-    fi
+    npm ci
+    npm run build
+    npx hereby build:api
 }
 
 run_dtslint() {
@@ -74,9 +61,9 @@ run_dtslint() {
 git config --global core.longpaths true
 
 pushd "$TYPESCRIPT_PATH" >/dev/null
-install_typescript
 build_typescript
 popd >/dev/null
+local_typescript_path="$TYPESCRIPT_PATH/packages/typescript"
 
 dt_path="$PIPELINE_WORKSPACE/DefinitelyTyped"
 git clone --filter=blob:none https://github.com/DefinitelyTyped/DefinitelyTyped.git "$dt_path"
@@ -91,9 +78,9 @@ run_dtslint \
     "$PIPELINE_WORKSPACE/pr" \
     "$PIPELINE_WORKSPACE/pr/prFailures${SHARD_ID}.json"
 
-git -C "$TYPESCRIPT_PATH" switch --detach HEAD^1
+git -C "$TYPESCRIPT_PATH" clean -xdf
+git -C "$TYPESCRIPT_PATH" switch --detach "$EXPECTED_BASE_SHA"
 pushd "$TYPESCRIPT_PATH" >/dev/null
-install_typescript
 build_typescript
 popd >/dev/null
 
