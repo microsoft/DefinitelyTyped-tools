@@ -1,0 +1,199 @@
+trigger: none
+pr: none
+
+parameters:
+  - name: DT_SHA
+    type: string
+  - name: distinct_id
+    type: string
+  - name: expected_base_sha
+    type: string
+  - name: expected_head_sha
+    type: string
+  - name: expected_merge_sha
+    type: string
+  - name: requesting_user
+    type: string
+  - name: source_issue
+    type: string
+  - name: status_comment
+    type: string
+
+resources:
+  repositories:
+    - repository: TypeScript
+      type: github
+      endpoint: Microsoft
+      name: microsoft/TypeScript
+      ref: refs/heads/main
+
+variables:
+  - name: CI
+    value: true
+  - name: skipComponentGovernanceDetection
+    value: true
+  - name: TYPESCRIPT_AUTOMATION_GITHUB_APP_CLIENT_ID
+    value: Iv23li4GolzJSEp1mzHI
+  - name: TYPESCRIPT_AUTOMATION_GITHUB_APP_KEY_ID
+    value: https://jststeam-passwords.vault.azure.net/keys/typescript-automation
+
+jobs:
+  - job: RunDtslint
+    displayName: Run dtslint
+    timeoutInMinutes: 300
+    pool:
+      name: TypeScript-1ES-Large
+      demands:
+        - ImageOverride -equals azure-linux-3
+    workspace:
+      clean: all
+    strategy:
+      parallel: 16
+    steps:
+      - checkout: self
+        path: s/DefinitelyTyped-tools
+        fetchTags: false
+        clean: true
+        persistCredentials: false
+        retryCountOnTaskFailure: 3
+
+      - checkout: TypeScript
+        fetchDepth: 2
+        path: s/TypeScript
+        fetchTags: false
+        clean: true
+        persistCredentials: false
+        retryCountOnTaskFailure: 3
+
+      - task: NodeTool@0
+        displayName: Use Node 22.x
+        inputs:
+          versionSpec: 22.x
+
+      - task: GoTool@0
+        displayName: Use Go 1.27
+        inputs:
+          version: "1.27"
+          goDownloadUrl: https://aka.ms/golang/release/latest
+
+      - bash: bash .azure-pipelines/scripts/run-typescript-pr-dt.sh
+        displayName: Run TypeScript PR DT comparison
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+        env:
+          DT_SHA: ${{ parameters.DT_SHA }}
+          EXPECTED_BASE_SHA: ${{ parameters.expected_base_sha }}
+          EXPECTED_HEAD_SHA: ${{ parameters.expected_head_sha }}
+          EXPECTED_MERGE_SHA: ${{ parameters.expected_merge_sha }}
+          SHARD_COUNT: $(System.TotalJobsInPhase)
+          SHARD_ID: $(System.JobPositionInPhase)
+          PIPELINE_WORKSPACE: $(Pipeline.Workspace)
+          TYPESCRIPT_PATH: $(Pipeline.Workspace)/s/TypeScript
+
+      - publish: $(Pipeline.Workspace)/pr/prFailures$(System.JobPositionInPhase).json
+        displayName: Publish PR failures
+        artifact: prFailures$(System.JobPositionInPhase)
+
+      - publish: $(Pipeline.Workspace)/main/mainFailures$(System.JobPositionInPhase).json
+        displayName: Publish main failures
+        artifact: mainFailures$(System.JobPositionInPhase)
+
+  - job: PostResults
+    displayName: Post results
+    dependsOn: RunDtslint
+    condition: in(dependencies.RunDtslint.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Canceled')
+    pool:
+      name: TypeScript-1ES-Deploys
+      demands:
+        - ImageOverride -equals azure-linux-3
+    variables:
+      runResult: $[ dependencies.RunDtslint.result ]
+    steps:
+      - checkout: self
+        path: s/DefinitelyTyped-tools
+        persistCredentials: false
+
+      - task: DownloadPipelineArtifact@2
+        displayName: Download main failures
+        condition: eq(variables['runResult'], 'Succeeded')
+        inputs:
+          source: current
+          patterns: '**/mainFailures*'
+          path: $(Pipeline.Workspace)/mainFailures
+
+      - task: DownloadPipelineArtifact@2
+        displayName: Download PR failures
+        condition: eq(variables['runResult'], 'Succeeded')
+        inputs:
+          source: current
+          patterns: '**/prFailures*'
+          path: $(Pipeline.Workspace)/prFailures
+
+      - task: NodeTool@0
+        displayName: Use Node 22.x
+        inputs:
+          versionSpec: 22.x
+
+      - bash: |
+          set -euo pipefail
+          npm install --global "$(jq -r '.packageManager' package.json)"
+          pnpm install --frozen-lockfile
+          pnpm build
+        displayName: Build DefinitelyTyped tools
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+
+      - task: AzureCLI@2
+        displayName: Create GitHub token
+        inputs:
+          azureSubscription: TypeScript Public CI
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            curl -fsSL https://raw.githubusercontent.com/microsoft/create-github-app-token-via-key-vault/5ba0d436e9c3cac52feff4d1f2f66f9698ce4a2d/dist/cli.cjs -o /tmp/create-github-app-token.cjs
+            node /tmp/create-github-app-token.cjs
+        env:
+          APP_CLIENT_ID: $(TYPESCRIPT_AUTOMATION_GITHUB_APP_CLIENT_ID)
+          AZURE_TOKEN_VARIABLE: GH_TOKEN
+          KEY_ID: $(TYPESCRIPT_AUTOMATION_GITHUB_APP_KEY_ID)
+          OUTPUT: azure-pipelines
+          OWNER: microsoft
+          PERMISSIONS: contents:read,issues:write,pull_requests:write
+          REPOSITORIES: TypeScript
+
+      - bash: |
+          set -euo pipefail
+          status=fail
+          args=(
+            "$GH_TOKEN"
+            "$BUILD_BUILDID"
+            "$STATUS_COMMENT"
+            "$REQUESTING_USER"
+            "$SOURCE_ISSUE"
+            "$DISTINCT_ID"
+          )
+          if [[ "$RUN_RESULT" == "Succeeded" ]]; then
+            status=ok
+            args+=(
+              "$status"
+              "$(Pipeline.Workspace)/mainFailures"
+              "$(Pipeline.Workspace)/prFailures"
+            )
+          else
+            args+=("$status")
+          fi
+          node packages/dtslint-runner/dist/post-results.js "${args[@]}"
+        displayName: Post DT results
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+        env:
+          DISTINCT_ID: ${{ parameters.distinct_id }}
+          GH_TOKEN: $(GH_TOKEN)
+          REQUESTING_USER: ${{ parameters.requesting_user }}
+          RUN_RESULT: $(runResult)
+          SOURCE_ISSUE: ${{ parameters.source_issue }}
+          STATUS_COMMENT: ${{ parameters.status_comment }}
+
+      - bash: node /tmp/create-github-app-token.cjs
+        displayName: Revoke GitHub token
+        condition: always()
+        continueOnError: true
+        env:
+          REVOKE_TOKEN: $(GH_TOKEN)

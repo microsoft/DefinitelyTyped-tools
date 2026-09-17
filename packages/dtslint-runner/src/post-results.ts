@@ -17,9 +17,17 @@ async function main() {
   if (!status) throw new Error("Seventh argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
-  const checkLogsMessage = `\n\n[You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${buildId}&_a=summary).`;
+  let checkLogsMessage = "";
 
   try {
+    const collectionUri = process.env.SYSTEM_COLLECTIONURI;
+    const teamProject = process.env.SYSTEM_TEAMPROJECT;
+    if (!collectionUri) throw new Error("SYSTEM_COLLECTIONURI must be set.");
+    if (!teamProject) throw new Error("SYSTEM_TEAMPROJECT must be set.");
+    const buildPath = `${encodeURIComponent(teamProject)}/_build/results?buildId=${encodeURIComponent(buildId)}`;
+    const buildUrl = new URL(buildPath, collectionUri);
+    checkLogsMessage = `\n\n[You can check the log here](${buildUrl}).`;
+
     let newComment;
     let emoji = "✅";
     if (status === "fail") {
@@ -49,8 +57,14 @@ async function main() {
         emoji = "👀";
         newComment += `\n\nThere were interesting changes:`;
         if (newComment.length + diffComment.length + checkLogsMessage.length > 65535) {
-          // hardlink directly into the output of this script
-          const detailedLogUrl = `https://typescript.visualstudio.com/TypeScript/_build/results?buildId=${buildId}&view=logs&j=275f1d19-1bd8-5591-b06b-07d489ea915a&t=40b1ee41-44d6-5bba-aa04-4b76a5c732e5`;
+          const jobId = process.env.SYSTEM_JOBID;
+          const taskId = process.env.SYSTEM_TASKINSTANCEID;
+          if (!jobId) throw new Error("SYSTEM_JOBID must be set.");
+          if (!taskId) throw new Error("SYSTEM_TASKINSTANCEID must be set.");
+          const detailedLogUrl = new URL(
+            `${buildPath}&view=logs&j=${encodeURIComponent(jobId)}&t=${encodeURIComponent(taskId)}`,
+            collectionUri,
+          );
           newComment += `\n\nChanges are too big to display here, please check [the log](${detailedLogUrl}).`;
           console.log("There were interesting changes:\n");
           console.log(diffComment);
