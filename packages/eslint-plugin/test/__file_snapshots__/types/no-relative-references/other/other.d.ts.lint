@@ -2,11 +2,14 @@ types/no-relative-references/other/other.d.ts
   1:22  error  The reference "../../foo/index.d.ts" resolves outside of the package. Use a global reference to reference other packages     @definitelytyped/no-bad-reference
   2:22  error  The reference "../v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages         @definitelytyped/no-bad-reference
   3:22  error  The reference "../../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages  @definitelytyped/no-bad-reference
+  5:13  error  'foo' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u                                              @typescript-eslint/no-unused-vars
   5:22  error  The import "../../foo" resolves outside of the package. Use a bare import to reference other packages                        @definitelytyped/no-bad-reference
+  6:13  error  'foo2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u                                             @typescript-eslint/no-unused-vars
   6:23  error  The import "../v1" resolves outside of the package. Use a bare import to reference other packages                            @definitelytyped/no-bad-reference
+  7:13  error  'foo3' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u                                             @typescript-eslint/no-unused-vars
   7:23  error  The import "../../foo/v1" resolves outside of the package. Use a bare import to reference other packages                     @definitelytyped/no-bad-reference
 
-✖ 6 problems (6 errors, 0 warnings)
+✖ 9 problems (9 errors, 0 warnings)
 
 ==== types/no-relative-references/other/other.d.ts ====
 
@@ -21,11 +24,17 @@ types/no-relative-references/other/other.d.ts
 !!! @definitelytyped/no-bad-reference: The reference "../../foo/v1/index.d.ts" resolves outside of the package. Use a global reference to reference other packages.
     
     import * as foo from "../../foo";
+                ~~~
+!!! @typescript-eslint/no-unused-vars: 'foo' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
                          ~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "../../foo" resolves outside of the package. Use a bare import to reference other packages.
     import * as foo2 from "../v1";
+                ~~~~
+!!! @typescript-eslint/no-unused-vars: 'foo2' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
                           ~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "../v1" resolves outside of the package. Use a bare import to reference other packages.
     import * as foo3 from "../../foo/v1";
+                ~~~~
+!!! @typescript-eslint/no-unused-vars: 'foo3' is defined but never used. Allowed unused vars must match /^(_+$|_[^_])/u.
                           ~~~~~~~~~~~~~~
 !!! @definitelytyped/no-bad-reference: The import "../../foo/v1" resolves outside of the package. Use a bare import to reference other packages.
