@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
-import { assertPackageIsNotDeprecated } from "../src/index";
+import { assertPackageIsNotDeprecated } from "../src/util";
 
 describe("dtslint", () => {
   const base: CompilerOptionsRaw = {
