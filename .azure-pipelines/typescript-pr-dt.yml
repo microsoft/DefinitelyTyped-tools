@@ -2,8 +2,6 @@ trigger: none
 pr: none
 
 parameters:
-  - name: DT_SHA
-    type: string
   - name: distinct_id
     type: string
   - name: expected_base_sha
@@ -26,6 +24,11 @@ resources:
       endpoint: Microsoft
       name: microsoft/TypeScript
       ref: refs/heads/main
+    - repository: DefinitelyTyped
+      type: github
+      endpoint: Microsoft
+      name: DefinitelyTyped/DefinitelyTyped
+      ref: refs/heads/master
 
 variables:
   - name: CI
@@ -65,6 +68,15 @@ jobs:
         persistCredentials: false
         retryCountOnTaskFailure: 3
 
+      - checkout: DefinitelyTyped
+        fetchDepth: 1
+        fetchFilter: blob:none
+        path: s/DefinitelyTyped
+        fetchTags: false
+        clean: true
+        persistCredentials: false
+        retryCountOnTaskFailure: 3
+
       - task: NodeTool@0
         displayName: Use Node 22.x
         inputs:
@@ -80,14 +92,11 @@ jobs:
         displayName: Run TypeScript PR DT comparison
         workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
         env:
-          DT_SHA: ${{ parameters.DT_SHA }}
           EXPECTED_BASE_SHA: ${{ parameters.expected_base_sha }}
           EXPECTED_HEAD_SHA: ${{ parameters.expected_head_sha }}
           EXPECTED_MERGE_SHA: ${{ parameters.expected_merge_sha }}
           SHARD_COUNT: $(System.TotalJobsInPhase)
           SHARD_ID: $(System.JobPositionInPhase)
-          PIPELINE_WORKSPACE: $(Pipeline.Workspace)
-          TYPESCRIPT_PATH: $(Pipeline.Workspace)/s/TypeScript
 
       - publish: $(Pipeline.Workspace)/pr/prFailures$(System.JobPositionInPhase).json
         displayName: Publish PR failures
