@@ -208,10 +208,15 @@ function getExpectTypeFailures(
       if (expected !== undefined) {
         const target = getNodeForExpectType(node, astModule);
         const type = project.checker.getTypeAtLocation(target);
+        const noTruncation = apiModule.TypeFormatFlags?.NoTruncation ?? apiModule.NodeBuilderFlags.NoTruncation;
         const actual =
           type === undefined
             ? ""
-            : project.checker.typeToString(type, undefined, apiModule.NodeBuilderFlags.NoTruncation);
+            : project.checker.typeToString(
+                type,
+                undefined,
+                noTruncation as Parameters<Project["checker"]["typeToString"]>[2],
+              );
         if (!typeStringsMatch(expected, actual)) {
           failures.push({
             fileName,
@@ -265,7 +270,10 @@ function normalizedTypeToString(type: string): string {
         .map(([item]) => item);
       return ts.factory.updateUnionTypeNode(node, ts.factory.createNodeArray(types));
     }
-    if (ts.isTypeLiteralNode(node) && node.members.every(ts.isPropertySignature)) {
+    if (
+      ts.isTypeLiteralNode(node) &&
+      node.members.every((member) => ts.isPropertySignature(member) || ts.isIndexSignatureDeclaration(member))
+    ) {
       const members = [...node.members].sort((a, b) => print(a).localeCompare(print(b)));
       return ts.factory.updateTypeLiteralNode(node, ts.factory.createNodeArray(members));
     }
