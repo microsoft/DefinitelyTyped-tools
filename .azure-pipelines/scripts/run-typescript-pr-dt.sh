@@ -8,11 +8,11 @@ set -euo pipefail
 : "${PIPELINE_WORKSPACE:?}"
 : "${SHARD_COUNT:?}"
 : "${SHARD_ID:?}"
-: "${TYPESCRIPT_PATH:?}"
 
-actual_merge_sha=$(git -C "$TYPESCRIPT_PATH" rev-parse HEAD)
-actual_base_sha=$(git -C "$TYPESCRIPT_PATH" rev-parse HEAD^1)
-actual_head_sha=$(git -C "$TYPESCRIPT_PATH" rev-parse HEAD^2)
+typescript_path="$PIPELINE_WORKSPACE/s/TypeScript"
+actual_merge_sha=$(git -C "$typescript_path" rev-parse HEAD)
+actual_base_sha=$(git -C "$typescript_path" rev-parse HEAD^1)
+actual_head_sha=$(git -C "$typescript_path" rev-parse HEAD^2)
 
 verify_sha() {
     local label=$1
@@ -57,10 +57,10 @@ run_dtslint() {
     popd >/dev/null
 }
 
-pushd "$TYPESCRIPT_PATH" >/dev/null
+pushd "$typescript_path" >/dev/null
 build_typescript
 popd >/dev/null
-local_typescript_path="$TYPESCRIPT_PATH/packages/typescript"
+local_typescript_path="$typescript_path/packages/typescript"
 
 dt_path="$PIPELINE_WORKSPACE/s/DefinitelyTyped"
 pushd "$dt_path" >/dev/null
@@ -73,9 +73,9 @@ run_dtslint \
     "$PIPELINE_WORKSPACE/pr" \
     "$PIPELINE_WORKSPACE/pr/prFailures${SHARD_ID}.json"
 
-git -C "$TYPESCRIPT_PATH" clean -xdf
-git -C "$TYPESCRIPT_PATH" switch --detach "$EXPECTED_BASE_SHA"
-pushd "$TYPESCRIPT_PATH" >/dev/null
+git -C "$typescript_path" clean -xdf
+git -C "$typescript_path" switch --detach "$EXPECTED_BASE_SHA"
+pushd "$typescript_path" >/dev/null
 build_typescript
 popd >/dev/null
 

@@ -98,7 +98,6 @@ jobs:
           SHARD_COUNT: $(System.TotalJobsInPhase)
           SHARD_ID: $(System.JobPositionInPhase)
           PIPELINE_WORKSPACE: $(Pipeline.Workspace)
-          TYPESCRIPT_PATH: $(Pipeline.Workspace)/s/TypeScript
 
       - publish: $(Pipeline.Workspace)/pr/prFailures$(System.JobPositionInPhase).json
         displayName: Publish PR failures
