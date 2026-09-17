@@ -1,0 +1,56 @@
+{
+  "type": "info",
+  "now": "2026-09-01T18:46:48.035Z",
+  "pr_number": 75475,
+  "author": "dgp1130",
+  "headCommitOid": "4a708f0ad529dfbe67caec58197135d27b223f53",
+  "mergeBaseOid": "eded8b3161a48a130df54daefb1005b3807314b0",
+  "lastPushDate": "2026-09-01T18:13:36.000Z",
+  "lastActivityDate": "2026-09-01T18:20:01.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Critical",
+  "pkgInfo": [
+    {
+      "name": "chrome",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/chrome/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/chrome/test/index.ts",
+          "kind": "test"
+        }
+      ],
+      "owners": [
+        "matthewkimber",
+        "otiai10",
+        "sreimer15",
+        "MatCarlson",
+        "ekinsol",
+        "echoabstract",
+        "spasma",
+        "bdbai",
+        "JasonXian",
+        "usertim",
+        "idan315",
+        "nicolas377",
+        "idosal",
+        "fregante",
+        "erwanjugand"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Critical"
+    }
+  ],
+  "reviews": [],
+  "mainBotCommentID": 5498345824,
+  "ciResult": "pass"
+}
