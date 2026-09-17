@@ -97,7 +97,6 @@ jobs:
           EXPECTED_MERGE_SHA: ${{ parameters.expected_merge_sha }}
           SHARD_COUNT: $(System.TotalJobsInPhase)
           SHARD_ID: $(System.JobPositionInPhase)
-          PIPELINE_WORKSPACE: $(Pipeline.Workspace)
 
       - publish: $(Pipeline.Workspace)/pr/prFailures$(System.JobPositionInPhase).json
         displayName: Publish PR failures
