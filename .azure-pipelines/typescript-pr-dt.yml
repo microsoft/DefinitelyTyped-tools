@@ -70,6 +70,12 @@ jobs:
         inputs:
           versionSpec: 22.x
 
+      - task: GoTool@0
+        displayName: Use Go 1.27
+        inputs:
+          version: "1.27"
+          goDownloadUrl: https://aka.ms/golang/release/latest
+
       - bash: bash .azure-pipelines/scripts/run-typescript-pr-dt.sh
         displayName: Run TypeScript PR DT comparison
         workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
@@ -80,7 +86,6 @@ jobs:
           EXPECTED_MERGE_SHA: ${{ parameters.expected_merge_sha }}
           SHARD_COUNT: $(System.TotalJobsInPhase)
           SHARD_ID: $(System.JobPositionInPhase)
-          AGENT_BUILD_DIRECTORY: $(Agent.BuildDirectory)
           PIPELINE_WORKSPACE: $(Pipeline.Workspace)
           TYPESCRIPT_PATH: $(Pipeline.Workspace)/s/TypeScript
 

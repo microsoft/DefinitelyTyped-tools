@@ -6,7 +6,6 @@ set -euo pipefail
 : "${EXPECTED_BASE_SHA:?}"
 : "${EXPECTED_HEAD_SHA:?}"
 : "${EXPECTED_MERGE_SHA:?}"
-: "${AGENT_BUILD_DIRECTORY:?}"
 : "${PIPELINE_WORKSPACE:?}"
 : "${SHARD_COUNT:?}"
 : "${SHARD_ID:?}"
@@ -36,22 +35,6 @@ install_typescript() {
     else
         npm install
     fi
-}
-
-install_go() {
-    if [[ ! -d tsc ]]; then
-        return
-    fi
-
-    local version
-    version=$(sed -n 's/^go \([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' tsc/go.mod)
-    local archive
-    archive="$(mktemp)"
-    curl -fsSL "https://aka.ms/golang/release/latest/go${version}.linux-amd64.tar.gz" -o "$archive"
-    tar -C "$AGENT_BUILD_DIRECTORY" -xzf "$archive"
-    rm -f "$archive"
-    echo "##vso[task.prependpath]$AGENT_BUILD_DIRECTORY/go/bin"
-    export PATH="$AGENT_BUILD_DIRECTORY/go/bin:$PATH"
 }
 
 build_typescript() {
@@ -92,7 +75,6 @@ git config --global core.longpaths true
 
 pushd "$TYPESCRIPT_PATH" >/dev/null
 install_typescript
-install_go
 build_typescript
 popd >/dev/null
 
