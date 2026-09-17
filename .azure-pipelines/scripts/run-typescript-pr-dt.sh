@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-: "${DT_SHA:?}"
 : "${EXPECTED_BASE_SHA:?}"
 : "${EXPECTED_HEAD_SHA:?}"
 : "${EXPECTED_MERGE_SHA:?}"
@@ -63,9 +62,7 @@ build_typescript
 popd >/dev/null
 local_typescript_path="$TYPESCRIPT_PATH/packages/typescript"
 
-dt_path="$PIPELINE_WORKSPACE/DefinitelyTyped"
-git clone --filter=blob:none https://github.com/DefinitelyTyped/DefinitelyTyped.git "$dt_path"
-git -C "$dt_path" switch --detach "$DT_SHA"
+dt_path="$PIPELINE_WORKSPACE/s/DefinitelyTyped"
 pushd "$dt_path" >/dev/null
 npm install --global "$(jq -r '.packageManager' package.json)"
 pnpm install
