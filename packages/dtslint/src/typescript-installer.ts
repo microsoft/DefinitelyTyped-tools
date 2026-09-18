@@ -12,6 +12,7 @@ export type LocalTypeScript =
       readonly kind: "corsa";
       readonly apiPath: string;
       readonly astPath: string;
+      readonly factoryPath: string;
       readonly version: string;
     };
 
@@ -76,6 +77,7 @@ export function resolveLocalTypeScript(tsLocal: string): LocalTypeScript {
       kind: "corsa",
       apiPath: localRequire.resolve(`${packageJson.name}/unstable/sync`),
       astPath: localRequire.resolve(`${packageJson.name}/unstable/ast`),
+      factoryPath: localRequire.resolve(`${packageJson.name}/unstable/ast/factory`),
       version,
     };
   } catch (error) {

@@ -1,21 +1,30 @@
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
-import fs from "fs";
 import path from "path";
-import * as ts from "typescript";
-import type { Diagnostic, Project } from "typescript-7.1/unstable/sync";
-import type { Node, SourceFile } from "typescript-7.1/unstable/ast";
+import type * as TypeScript from "typescript";
+import type { Diagnostic, Project, Snapshot } from "typescript-7.1/unstable/sync";
+import type { Node, SourceFile, TypeNode } from "typescript-7.1/unstable/ast";
 import type { TsVersion } from "./lint";
 import { resolveLocalTypeScript } from "./typescript-installer";
 
 type CorsaApi = typeof import("typescript-7.1/unstable/sync");
 type CorsaAst = typeof import("typescript-7.1/unstable/ast");
+type CorsaFactory = typeof import("typescript-7.1/unstable/ast/factory");
+type CorsaApiInstance = InstanceType<CorsaApi["API"]>;
+interface LegacyCorsaApiInstance {
+  updateSnapshot(params: { openProjects: readonly string[] }): Snapshot;
+}
+type LegacyCorsaSnapshot = Snapshot & {
+  getProject(configFileName: string): Project | undefined;
+};
 
 interface Failure {
   readonly fileName?: string;
   readonly start?: number;
   readonly end?: number;
+  readonly line?: number;
+  readonly character?: number;
   readonly message: string;
 }
 
@@ -40,20 +49,29 @@ export async function lintCorsaVersions(
     const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
     const apiPath = localTypeScript?.apiPath ?? typeScriptPackages.resolve(clientVersion, "unstable/sync");
     const astPath = localTypeScript?.astPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast");
+    const factoryPath =
+      localTypeScript?.factoryPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast/factory");
     const apiModule = require(apiPath) as CorsaApi;
     const astModule = require(astPath) as CorsaAst;
+    const factoryModule = require(factoryPath) as CorsaFactory;
     const rangeVersion = localTypeScript?.version ?? version;
     const api = new apiModule.API({ cwd: dirPath });
     const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
     const matchedFiles = new Set<string>();
 
     try {
-      const snapshot = api.updateSnapshot({ openProjects: configPaths });
+      const snapshot =
+        typeof (api as { createSnapshot?: unknown }).createSnapshot === "function"
+          ? api.createSnapshot({ openProjects: configPaths })
+          : (api as unknown as LegacyCorsaApiInstance).updateSnapshot({ openProjects: configPaths });
       try {
         for (let i = 0; i < configPaths.length; i++) {
           const configPath = configPaths[i];
           const run = `${version} ${tsconfigs[i]}`;
-          const project = snapshot.getProject(configPath);
+          const project =
+            typeof (snapshot as { getConfiguredProject?: unknown }).getConfiguredProject === "function"
+              ? snapshot.getConfiguredProject(configPath)
+              : (snapshot as LegacyCorsaSnapshot).getProject(configPath);
           if (!project) {
             addFailures([{ message: `could not open ${configPath}.` }], run);
             continue;
@@ -62,7 +80,7 @@ export async function lintCorsaVersions(
             matchedFiles.add(normalizePath(fileName));
           }
           addFailures(getDiagnosticFailures(project, dirPath, rangeVersion, isLatest), run);
-          addFailures(getExpectTypeFailures(project, apiModule, astModule, dirPath, isLatest), run);
+          addFailures(getExpectTypeFailures(api, project, apiModule, astModule, factoryModule, dirPath, isLatest), run);
         }
       } finally {
         snapshot.dispose();
@@ -73,7 +91,18 @@ export async function lintCorsaVersions(
 
     for (const fileName of sourceFiles ?? []) {
       if (!matchedFiles.has(normalizePath(fileName))) {
-        addFailures([{ fileName, start: 0, message: "could not find a tsconfig that includes this file." }], version);
+        addFailures(
+          [
+            {
+              fileName,
+              start: 0,
+              line: 0,
+              character: 0,
+              message: "could not find a tsconfig that includes this file.",
+            },
+          ],
+          version,
+        );
       }
     }
   }
@@ -145,11 +174,21 @@ function getDiagnosticFailures(project: Project, dirPath: string, version: strin
       fileName: diagnostic.fileName,
       start: diagnostic.pos >= 0 ? diagnostic.pos : undefined,
       end: diagnostic.end >= 0 ? diagnostic.end : undefined,
+      ...getDiagnosticLocation(diagnostic, project),
       message: `compile error TS${diagnostic.code}:\n${flattenDiagnostic(diagnostic)}`,
     };
     failures.set(JSON.stringify(failure), failure);
   }
   return [...failures.values()];
+}
+
+function getDiagnosticLocation(diagnostic: Diagnostic, project: Project): { line?: number; character?: number } {
+  if (!diagnostic.fileName || diagnostic.pos < 0) {
+    return {};
+  }
+  const sourceFile =
+    project.program.getSourceFile(diagnostic.fileName) ?? project.program.getConfigSourceFile(diagnostic.fileName);
+  return sourceFile?.getLineAndCharacterOfPosition(diagnostic.pos) ?? {};
 }
 
 function isDiagnosticOutsideExpectErrorRange(diagnostic: Diagnostic, project: Project, version: string): boolean {
@@ -172,9 +211,11 @@ function flattenDiagnostic(diagnostic: Diagnostic): string {
 }
 
 function getExpectTypeFailures(
+  api: CorsaApiInstance,
   project: Project,
   apiModule: CorsaApi,
   astModule: CorsaAst,
+  factoryModule: CorsaFactory,
   dirPath: string,
   isLatest: boolean,
 ): Failure[] {
@@ -217,11 +258,13 @@ function getExpectTypeFailures(
                 undefined,
                 noTruncation as Parameters<Project["checker"]["typeToString"]>[2],
               );
-        if (!typeStringsMatch(expected, actual)) {
+        if (!typeStringsMatch(expected, actual, api, astModule, factoryModule)) {
+          const start = node.getStart(sourceFile);
           failures.push({
             fileName,
-            start: node.getStart(sourceFile),
+            start,
             end: node.getEnd(),
+            ...sourceFile.getLineAndCharacterOfPosition(start),
             message: `expected type to be:\n  ${expected}\ngot:\n  ${actual}`,
           });
         }
@@ -243,25 +286,96 @@ function getExpectTypeFailures(
   return failures;
 }
 
-function typeStringsMatch(expected: string, actual: string): boolean {
+function typeStringsMatch(
+  expected: string,
+  actual: string,
+  api: CorsaApiInstance,
+  astModule: CorsaAst,
+  factoryModule: CorsaFactory,
+): boolean {
   const candidates = expected.split(/\s*\|\|\s*/).map((candidate) => candidate.trim());
   if (candidates.includes(actual)) {
     return true;
   }
-  const actualNormalized = normalizedTypeToString(actual);
-  return candidates.some((candidate) => normalizedTypeToString(candidate) === actualNormalized);
+  const createSourceFile = (api as { createSourceFile?: CorsaApiInstance["createSourceFile"] }).createSourceFile;
+  const normalize = createSourceFile
+    ? (type: string) => normalizedCorsaTypeToString(type, api, astModule, factoryModule)
+    : normalizedLegacyTypeToString;
+  const actualNormalized = normalize(actual);
+  return candidates.some((candidate) => normalize(candidate) === actualNormalized);
 }
 
-function normalizedTypeToString(type: string): string {
-  const sourceFile = ts.createSourceFile("type.ts", `declare var x: ${type};`, ts.ScriptTarget.Latest);
-  const typeNode = (sourceFile.statements[0] as ts.VariableStatement).declarationList.declarations[0].type!;
-  const printer = ts.createPrinter({});
-  const context = (ts as typeof ts & { nullTransformationContext: ts.TransformationContext }).nullTransformationContext;
+function normalizedCorsaTypeToString(
+  type: string,
+  api: CorsaApiInstance,
+  astModule: CorsaAst,
+  factoryModule: CorsaFactory,
+): string {
+  const sourceFile = api.createSourceFile("type.ts", `declare var x: ${type};`);
+  const statement = sourceFile.statements[0];
+  if (!statement || !astModule.isVariableStatement(statement)) {
+    return type;
+  }
+  const typeNode = statement.declarationList.declarations[0]?.type;
+  if (!typeNode) {
+    return type;
+  }
 
-  function print(node: ts.Node): string {
+  function print(node: Node): string {
+    return api.printer.printNode(node);
+  }
+  function visit(node: Node): Node {
+    node = astModule.visitEachChild(node, visit);
+    if (astModule.isUnionTypeNode(node)) {
+      const types = node.types
+        .map((item) => [item, print(item)] as const)
+        .sort((a, b) => a[1].localeCompare(b[1]))
+        .map(([item]) => item);
+      return factoryModule.updateUnionTypeNode(node, factoryModule.createNodeArray(types));
+    }
+    if (
+      astModule.isTypeLiteralNode(node) &&
+      node.members.every(
+        (member) => astModule.isPropertySignatureDeclaration(member) || astModule.isIndexSignatureDeclaration(member),
+      )
+    ) {
+      const members = [...node.members].sort((a, b) => print(a).localeCompare(print(b)));
+      return factoryModule.updateTypeLiteralNode(node, factoryModule.createNodeArray(members));
+    }
+    if (
+      astModule.isTypeOperatorNode(node) &&
+      node.operator === astModule.SyntaxKind.ReadonlyKeyword &&
+      astModule.isArrayTypeNode(node.type)
+    ) {
+      return factoryModule.createTypeReferenceNode(factoryModule.createIdentifier("ReadonlyArray"), [
+        skipCorsaTypeParentheses(node.type.elementType, astModule),
+      ]);
+    }
+    return node;
+  }
+
+  return print(astModule.visitNode(typeNode, visit));
+}
+
+function skipCorsaTypeParentheses(node: TypeNode, astModule: CorsaAst): TypeNode {
+  while (astModule.isParenthesizedTypeNode(node)) {
+    node = node.type;
+  }
+  return node;
+}
+
+function normalizedLegacyTypeToString(type: string): string {
+  const ts = require("typescript") as typeof TypeScript;
+  const sourceFile = ts.createSourceFile("type.ts", `declare var x: ${type};`, ts.ScriptTarget.Latest);
+  const typeNode = (sourceFile.statements[0] as TypeScript.VariableStatement).declarationList.declarations[0].type!;
+  const printer = ts.createPrinter({});
+  const context = (ts as typeof TypeScript & { nullTransformationContext: TypeScript.TransformationContext })
+    .nullTransformationContext;
+
+  function print(node: TypeScript.Node): string {
     return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
   }
-  function visit(node: ts.Node): ts.VisitResult<ts.Node> {
+  function visit(node: TypeScript.Node): TypeScript.VisitResult<TypeScript.Node> {
     node = ts.visitEachChild(node, visit, context);
     if (ts.isUnionTypeNode(node)) {
       const types = node.types
@@ -282,7 +396,7 @@ function normalizedTypeToString(type: string): string {
       node.operator === ts.SyntaxKind.ReadonlyKeyword &&
       ts.isArrayTypeNode(node.type)
     ) {
-      return ts.factory.createTypeReferenceNode("ReadonlyArray", [skipTypeParentheses(node.type.elementType)]);
+      return ts.factory.createTypeReferenceNode("ReadonlyArray", [skipTypeParentheses(node.type.elementType, ts)]);
     }
     return node;
   }
@@ -290,7 +404,7 @@ function normalizedTypeToString(type: string): string {
   return print(ts.visitNode(typeNode, visit));
 }
 
-function skipTypeParentheses(node: ts.TypeNode): ts.TypeNode {
+function skipTypeParentheses(node: TypeScript.TypeNode, ts: typeof TypeScript): TypeScript.TypeNode {
   while (ts.isParenthesizedTypeNode(node)) {
     node = node.type;
   }
@@ -360,7 +474,7 @@ function failureAtLine(sourceFile: SourceFile, line: number, message: string): F
   if (sourceFile.text[end - 1] === "\r") {
     end--;
   }
-  return { fileName: sourceFile.fileName, start, end, message };
+  return { fileName: sourceFile.fileName, start, end, line, character: 0, message };
 }
 
 function formatFailures(failures: readonly Failure[]): string | undefined {
@@ -369,13 +483,10 @@ function formatFailures(failures: readonly Failure[]): string | undefined {
   }
   return failures
     .map((failure) => {
-      if (!failure.fileName || failure.start === undefined) {
+      if (!failure.fileName || failure.line === undefined || failure.character === undefined) {
         return failure.message;
       }
-      const text = fs.readFileSync(failure.fileName, "utf8");
-      const sourceFile = ts.createSourceFile(failure.fileName, text, ts.ScriptTarget.Latest);
-      const { line, character } = sourceFile.getLineAndCharacterOfPosition(failure.start);
-      return `${failure.fileName}:${line + 1}:${character + 1}\n${failure.message}`;
+      return `${failure.fileName}:${failure.line + 1}:${failure.character + 1}\n${failure.message}`;
     })
     .join("\n\n");
 }
