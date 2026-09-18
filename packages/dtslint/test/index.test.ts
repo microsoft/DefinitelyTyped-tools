@@ -1,6 +1,33 @@
 /// <reference types="jest" />
 import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
 import { assertPackageIsNotDeprecated } from "../src/index";
+import * as typeScriptPackages from "@definitelytyped/typescript-packages";
+import { execFile } from "child_process";
+import path from "path";
+import { promisify } from "util";
+
+const execFileAsync = promisify(execFile);
+
+async function runBuilt<T>(moduleName: string, exportName: string, args: readonly unknown[]): Promise<T | undefined> {
+  const modulePath = path.resolve(__dirname, `../dist/${moduleName}.js`);
+  const script = `
+const fn = require(process.argv[1])[process.argv[2]];
+Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
+  result => process.stdout.write(JSON.stringify({ result })),
+  error => {
+    console.error(error?.stack ?? error);
+    process.exitCode = 1;
+  },
+);`;
+  const { stdout } = await execFileAsync(process.execPath, [
+    "-e",
+    script,
+    modulePath,
+    exportName,
+    JSON.stringify(args),
+  ]);
+  return (JSON.parse(stdout) as { result?: T }).result;
+}
 
 describe("dtslint", () => {
   const base: CompilerOptionsRaw = {
@@ -138,6 +165,135 @@ describe("dtslint", () => {
           `"files" list must include "index.d.ts".`,
           // `"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.`,
         ]);
+      });
+
+      describe("Corsa", () => {
+        const fixtures = path.join(__dirname, "fixtures", "corsa");
+
+        for (const version of ["7.0", "7.1"] as const) {
+          it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
+            const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
+              path.join(fixtures, "fail"),
+              ["tsconfig.json"],
+              [version],
+              true,
+              null,
+            ]);
+
+            expect(result).toContain("compile error TS2322");
+            expect(result).toContain("compile error TS2578");
+            expect(result?.match(/compile error TS2578/g)).toHaveLength(version === "7.0" ? 1 : 2);
+            expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
+            expect(result).toContain(
+              "expected type to be:\n  { (value: number): number; (value: string): string; }\ngot:",
+            );
+            expect(result).toContain(
+              "expected type to be:\n  { method(value: number): number; method(value: string): string; }\ngot:",
+            );
+          });
+
+          it(`passes matching TypeScript ${version} ExpectType assertions without invoking ESLint`, async () => {
+            await expect(
+              runBuilt("lint", "lint", [
+                path.join(fixtures, "pass"),
+                ["tsconfig.json"],
+                version,
+                version,
+                true,
+                true,
+                null,
+              ]),
+            ).resolves.toBeUndefined();
+          });
+        }
+
+        it("reports and deduplicates Corsa failures across tsconfigs", async () => {
+          const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json", "tsconfig.alternate.json"],
+            ["7.0"],
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json compile error TS2322");
+          expect(result).toContain(
+            "TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json expected type to be:\n  2\ngot:\n  1",
+          );
+          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
+          expect(result?.match(/expected type to be:\n  2\ngot:\n  1/g)).toHaveLength(1);
+        });
+
+        it("reports and deduplicates Corsa failures across versions", async () => {
+          const result = await runBuilt<string>("lint", "lint", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json"],
+            "7.0",
+            "7.1",
+            true,
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("TypeScript@7.0, 7.1 compile error TS2322");
+          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
+        });
+
+        it("reports files excluded from every alternate tsconfig", async () => {
+          const result = await runBuilt<string>("lint", "lint", [
+            path.join(fixtures, "partial"),
+            ["tsconfig.alternate.json"],
+            "7.0",
+            "7.0",
+            true,
+            true,
+            null,
+          ]);
+
+          expect(result).toContain("excluded.ts:1:1");
+          expect(result).toContain("TypeScript@7.0 could not find a tsconfig that includes this file.");
+        });
+
+        it("runs ordinary ESLint rules during Corsa-only testing", async () => {
+          const result = await runBuilt<string>("lint", "lint", [
+            path.join(__dirname, "corsa-eslint"),
+            ["tsconfig.json"],
+            "7.0",
+            "7.0",
+            true,
+            false,
+            null,
+          ]);
+
+          expect(result).toContain("no-var");
+          expect(result).toContain("@typescript-eslint/naming-convention");
+        }, 30_000);
+
+        it("can use a local Corsa package", async () => {
+          const packageRoot = path.dirname(typeScriptPackages.resolve("7.0", "package.json"));
+
+          await expect(
+            runBuilt("lint", "lint", [
+              path.join(fixtures, "pass"),
+              ["tsconfig.json"],
+              "local",
+              "local",
+              true,
+              true,
+              packageRoot,
+            ]),
+          ).resolves.toBeUndefined();
+
+          const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
+            path.join(fixtures, "fail"),
+            ["tsconfig.json"],
+            ["local"],
+            true,
+            packageRoot,
+          ]);
+          expect(result).toContain("TypeScript@local compile error TS2578");
+          expect(result?.match(/compile error TS2578/g)).toHaveLength(1);
+        }, 30_000);
       });
     });
     describe("assertPackageIsNotDeprecated", () => {

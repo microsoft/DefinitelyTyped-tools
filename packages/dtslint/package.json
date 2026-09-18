@@ -28,23 +28,21 @@
     "@definitelytyped/typescript-packages": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
-    "@typescript-eslint/types": "^8.56.1",
-    "@typescript-eslint/typescript-estree": "^8.56.1",
-    "@typescript-eslint/utils": "^8.56.1",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
+    "@typescript-eslint/types": "^8.67.0",
+    "@typescript-eslint/typescript-estree": "^8.67.0",
+    "@typescript-eslint/utils": "^8.67.0",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
     "semver": "^7.7.4",
-    "strip-json-comments": "^3.1.1"
-  },
-  "peerDependencies": {
-    "typescript": "<7"
+    "strip-json-comments": "^3.1.1",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.12",
     "@types/semver": "^7.7.1",
-    "typescript": "^5.9.3"
+    "typescript-7.1": "npm:typescript@~7.1.0-0"
   },
   "engines": {
     "node": ">=20.17.0"
