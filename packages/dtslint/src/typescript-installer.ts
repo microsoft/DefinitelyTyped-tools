@@ -10,9 +10,7 @@ export type LocalTypeScript =
   | { readonly kind: "legacy"; readonly compilerPath: string }
   | {
       readonly kind: "corsa";
-      readonly apiPath: string;
-      readonly astPath: string;
-      readonly factoryPath: string;
+      readonly resolve: (subpath: string) => string;
       readonly version: string;
     };
 
@@ -75,15 +73,11 @@ export function resolveLocalTypeScript(tsLocal: string): LocalTypeScript {
     }
     return {
       kind: "corsa",
-      apiPath: localRequire.resolve(`${packageJson.name}/unstable/sync`),
-      astPath: localRequire.resolve(`${packageJson.name}/unstable/ast`),
-      factoryPath: localRequire.resolve(`${packageJson.name}/unstable/ast/factory`),
+      resolve: (subpath) => localRequire.resolve(`${packageJson.name}/${subpath}`),
       version,
     };
   } catch (error) {
-    throw new Error(`The package at ${tsLocal} does not expose usable unstable/sync and unstable/ast entrypoints.`, {
-      cause: error,
-    });
+    throw new Error(`Could not load a usable TypeScript package at ${tsLocal}.`, { cause: error });
   }
 }
 

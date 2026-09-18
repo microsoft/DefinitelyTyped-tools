@@ -44,16 +44,14 @@ export async function lintCorsaVersions(
   for (const version of versions) {
     const localTypeScript = version === "local" ? resolveLocalTypeScript(tsLocal!) : undefined;
     if (localTypeScript?.kind === "legacy") {
-      throw new Error(`Expected a TypeScript package exposing unstable/sync and unstable/ast at ${tsLocal}.`);
+      throw new Error(`Expected a TypeScript package exposing the Corsa API at ${tsLocal}.`);
     }
     const clientVersion = version === "local" ? TypeScriptVersion.latest : version;
-    const apiPath = localTypeScript?.apiPath ?? typeScriptPackages.resolve(clientVersion, "unstable/sync");
-    const astPath = localTypeScript?.astPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast");
-    const factoryPath =
-      localTypeScript?.factoryPath ?? typeScriptPackages.resolve(clientVersion, "unstable/ast/factory");
-    const apiModule = require(apiPath) as CorsaApi;
-    const astModule = require(astPath) as CorsaAst;
-    const factoryModule = require(factoryPath) as CorsaFactory;
+    const resolve =
+      localTypeScript?.resolve ?? ((subpath: string) => typeScriptPackages.resolve(clientVersion, subpath));
+    const apiModule = loadCorsaModule<CorsaApi>(resolve, "sync");
+    const astModule = loadCorsaModule<CorsaAst>(resolve, "ast");
+    const factoryModule = loadCorsaModule<CorsaFactory>(resolve, "ast/factory");
     const rangeVersion = localTypeScript?.version ?? version;
     const api = new apiModule.API({ cwd: dirPath });
     const configPaths = tsconfigs.map((config) => path.resolve(dirPath, config));
@@ -124,6 +122,20 @@ export async function lintCorsaVersions(
       existing.runs.add(run);
     }
   }
+}
+
+function loadCorsaModule<T>(resolve: (subpath: string) => string, subpath: string): T {
+  let modulePath: string;
+  try {
+    modulePath = resolve(subpath);
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code;
+    if (code !== "ERR_PACKAGE_PATH_NOT_EXPORTED" && code !== "MODULE_NOT_FOUND") {
+      throw error;
+    }
+    modulePath = resolve(`unstable/${subpath}`);
+  }
+  return require(modulePath) as T;
 }
 
 function formatRuns(runs: ReadonlySet<string>, reportTsconfigName: boolean): string {
