@@ -58,30 +58,26 @@ export async function lintCorsaVersions(
     const matchedFiles = new Set<string>();
 
     try {
-      const snapshot =
+      using snapshot =
         typeof (api as { createSnapshot?: unknown }).createSnapshot === "function"
           ? api.createSnapshot({ openProjects: configPaths })
           : (api as unknown as LegacyCorsaApiInstance).updateSnapshot({ openProjects: configPaths });
-      try {
-        for (let i = 0; i < configPaths.length; i++) {
-          const configPath = configPaths[i];
-          const run = `${version} ${tsconfigs[i]}`;
-          const project =
-            typeof (snapshot as { getConfiguredProject?: unknown }).getConfiguredProject === "function"
-              ? snapshot.getConfiguredProject(configPath)
-              : (snapshot as LegacyCorsaSnapshot).getProject(configPath);
-          if (!project) {
-            addFailures([{ message: `could not open ${configPath}.` }], run);
-            continue;
-          }
-          for (const fileName of project.program.getSourceFileNames()) {
-            matchedFiles.add(normalizePath(fileName));
-          }
-          addFailures(getDiagnosticFailures(project, dirPath, rangeVersion, isLatest), run);
-          addFailures(getExpectTypeFailures(api, project, apiModule, astModule, factoryModule, dirPath, isLatest), run);
+      for (let i = 0; i < configPaths.length; i++) {
+        const configPath = configPaths[i];
+        const run = `${version} ${tsconfigs[i]}`;
+        const project =
+          typeof (snapshot as { getConfiguredProject?: unknown }).getConfiguredProject === "function"
+            ? snapshot.getConfiguredProject(configPath)
+            : (snapshot as LegacyCorsaSnapshot).getProject(configPath);
+        if (!project) {
+          addFailures([{ message: `could not open ${configPath}.` }], run);
+          continue;
         }
-      } finally {
-        snapshot.dispose();
+        for (const fileName of project.program.getSourceFileNames()) {
+          matchedFiles.add(normalizePath(fileName));
+        }
+        addFailures(getDiagnosticFailures(project, dirPath, rangeVersion, isLatest), run);
+        addFailures(getExpectTypeFailures(api, project, apiModule, astModule, factoryModule, dirPath, isLatest), run);
       }
     } finally {
       api.close();
@@ -323,7 +319,9 @@ function normalizedCorsaTypeToString(
   astModule: CorsaAst,
   factoryModule: CorsaFactory,
 ): string {
-  const sourceFile = api.createSourceFile("type.ts", `declare var x: ${type};`);
+  using retainedSourceFile = api.createSourceFile("type.ts", `declare var x: ${type};`);
+  const sourceFile = retainedSourceFile.sourceFile;
+
   const statement = sourceFile.statements[0];
   if (!statement || !astModule.isVariableStatement(statement)) {
     return type;
