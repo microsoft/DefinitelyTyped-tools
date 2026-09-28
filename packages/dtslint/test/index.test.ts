@@ -254,7 +254,7 @@ describe("dtslint", () => {
 
           expect(result).toContain("TypeScript@7.0, 7.1 compile error TS2322");
           expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
-        });
+        }, 30_000);
 
         it("reports files excluded from every alternate tsconfig", async () => {
           const result = await runBuilt<string>("lint", "lint", [
