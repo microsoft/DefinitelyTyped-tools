@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
-import { assertPackageIsNotDeprecated } from "../src/index";
+import { assertPackageIsNotDeprecated, getTypeScriptTestRanges } from "../src/index";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { execFile } from "child_process";
 import path from "path";
@@ -29,6 +29,22 @@ Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
   return (JSON.parse(stdout) as { result?: T }).result;
 }
 
+describe("getTypeScriptTestRanges", () => {
+  it("uses a future typesVersions directory without running its compiler", () => {
+    expect(getTypeScriptTestRanges(["6.0", "7.1"])).toEqual([
+      { low: "5.6", high: "6.0", directoryVersion: "6.0" },
+      { low: "7.0", high: "7.0", directoryVersion: "7.1" },
+    ]);
+  });
+
+  it("uses the root definition when no future directory supersedes it", () => {
+    expect(getTypeScriptTestRanges(["6.0"])).toEqual([
+      { low: "5.6", high: "6.0", directoryVersion: "6.0" },
+      { low: "7.0", high: "7.0" },
+    ]);
+  });
+});
+
 describe("dtslint", () => {
   const base: CompilerOptionsRaw = {
     module: "commonjs",
@@ -51,6 +67,7 @@ describe("dtslint", () => {
           "Unexpected compiler option completelyInvented",
         ]);
       });
+
       it("allows exactOptionalPropertyTypes: true", () => {
         expect(checkTsconfig(based({ exactOptionalPropertyTypes: true }))).toEqual([]);
       });

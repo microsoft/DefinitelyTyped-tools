@@ -15,6 +15,12 @@ import { TsVersion, lint } from "./lint";
 import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
 import assert = require("assert");
 
+// TODO: Enable once the TypeScript 7.1 API is stable enough for regular Definitely Typed runs.
+const testTypeScriptNextByDefault = false;
+const latestTypeScriptVersionToTest: TypeScriptVersion = testTypeScriptNextByDefault
+  ? TypeScriptVersion.latest
+  : TypeScriptVersion.shipped[TypeScriptVersion.shipped.length - 1];
+
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   let dirPath = process.cwd();
@@ -211,26 +217,26 @@ async function runTests(
       // associated ts3.2, ts3.5, ts3.6 directories, for
       // <=3.2, <=3.5, <=3.6 respectively; the root level is for 3.7 and above.
       // so this code needs to generate ranges [lowest-3.2, 3.3-3.5, 3.6-3.6, 3.7-latest]
-      const supportedTypesVersions = typesVersions.filter(TypeScriptVersion.isSupported);
-      if (supportedTypesVersions.length !== typesVersions.length) {
-        const unsupportedTypesVersions = typesVersions.filter((v) => !TypeScriptVersion.isSupported(v));
+      const unsupportedTypesVersions = typesVersions.filter(
+        (version) => parseFloat(version) < parseFloat(TypeScriptVersion.lowest),
+      );
+      if (unsupportedTypesVersions.length) {
         warnings.push(
           `Package ${packageName} has unsupported TypeScript versions that will not be tested: ${unsupportedTypesVersions.join(", ")}`,
         );
       }
-      const lows = [TypeScriptVersion.lowest, ...supportedTypesVersions.map(next)];
-      const his = [...supportedTypesVersions, TypeScriptVersion.latest];
-      assert.strictEqual(lows.length, his.length);
-      for (let i = 0; i < lows.length; i++) {
-        const low = maxVersion(minVersion, lows[i]);
-        const hi = his[i];
+      for (const range of getTypeScriptTestRanges(typesVersions)) {
+        const low = maxVersion(minVersion, range.low);
+        const hi = range.high;
         assert(
           parseFloat(hi) >= parseFloat(low),
-          `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ts${hi} folder.`,
+          `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ${
+            range.directoryVersion ? `ts${range.directoryVersion} folder` : "the root definition"
+          }.`,
         );
-        const isLatest = hi === TypeScriptVersion.latest;
-        const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${hi}`);
-        if (lows.length > 1) {
+        const isLatest = range.directoryVersion === undefined;
+        const versionPath = isLatest ? dirPath : joinPaths(dirPath, `ts${range.directoryVersion}`);
+        if (typesVersions.length > 0) {
           console.log("testing from", low, "to", hi, "in", versionPath);
         }
         const testTypesResult = await testTypesVersion(
@@ -274,11 +280,40 @@ function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScript
   return parseFloat(v1) >= parseFloat(v2) ? (v1 as TypeScriptVersion) : v2;
 }
 
-function next(v: TypeScriptVersion): TypeScriptVersion {
-  const index = TypeScriptVersion.supported.indexOf(v);
-  assert.notStrictEqual(index, -1);
-  assert(index < TypeScriptVersion.supported.length);
-  return TypeScriptVersion.supported[index + 1];
+export function getTypeScriptTestRanges(typesVersions: readonly AllTypeScriptVersion[]): readonly {
+  low: TypeScriptVersion;
+  high: TypeScriptVersion;
+  directoryVersion?: AllTypeScriptVersion;
+}[] {
+  const ranges: {
+    low: TypeScriptVersion;
+    high: TypeScriptVersion;
+    directoryVersion?: AllTypeScriptVersion;
+  }[] = [];
+  let low: TypeScriptVersion = TypeScriptVersion.lowest;
+
+  for (const directoryVersion of typesVersions) {
+    if (parseFloat(directoryVersion) < parseFloat(low)) {
+      continue;
+    }
+
+    const reachesLatest = parseFloat(directoryVersion) >= parseFloat(latestTypeScriptVersionToTest);
+    ranges.push({
+      low,
+      high: reachesLatest ? latestTypeScriptVersionToTest : (directoryVersion as TypeScriptVersion),
+      directoryVersion,
+    });
+    if (reachesLatest) {
+      return ranges;
+    }
+
+    const next = TypeScriptVersion.next(directoryVersion as TypeScriptVersion);
+    assert(next);
+    low = next;
+  }
+
+  ranges.push({ low, high: latestTypeScriptVersionToTest });
+  return ranges;
 }
 
 async function testTypesVersion(
