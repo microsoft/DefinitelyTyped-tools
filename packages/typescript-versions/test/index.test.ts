@@ -51,6 +51,14 @@ describe("range", () => {
   });
 });
 
+describe("compare", () => {
+  it("uses the declared version order", () => {
+    expect(TypeScriptVersion.compare("7.0", "7.1")).toBeLessThan(0);
+    expect(TypeScriptVersion.compare("7.1", "7.0")).toBeGreaterThan(0);
+    expect(TypeScriptVersion.compare("7.1", "7.1")).toBe(0);
+  });
+});
+
 describe("tagsToUpdate", () => {
   it("works", () => {
     expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual([

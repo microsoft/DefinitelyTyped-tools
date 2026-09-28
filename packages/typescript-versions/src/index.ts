@@ -92,8 +92,16 @@ export namespace TypeScriptVersion {
     return supported.indexOf(v as TypeScriptVersion) > -1;
   }
 
+  export function compare(a: AllTypeScriptVersion, b: AllTypeScriptVersion): number {
+    const aIndex = all.indexOf(a);
+    const bIndex = all.indexOf(b);
+    assert(aIndex !== -1);
+    assert(bIndex !== -1);
+    return aIndex - bIndex;
+  }
+
   export function range(min: TypeScriptVersion): readonly TypeScriptVersion[] {
-    return supported.filter((v) => v >= min);
+    return supported.filter((v) => compare(v, min) >= 0);
   }
 
   /** List of NPM tags that should be changed to point to the latest version. */

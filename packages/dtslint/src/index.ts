@@ -218,7 +218,7 @@ async function runTests(
       // <=3.2, <=3.5, <=3.6 respectively; the root level is for 3.7 and above.
       // so this code needs to generate ranges [lowest-3.2, 3.3-3.5, 3.6-3.6, 3.7-latest]
       const unsupportedTypesVersions = typesVersions.filter(
-        (version) => parseFloat(version) < parseFloat(TypeScriptVersion.lowest),
+        (version) => TypeScriptVersion.compare(version, TypeScriptVersion.lowest) < 0,
       );
       if (unsupportedTypesVersions.length) {
         warnings.push(
@@ -229,7 +229,7 @@ async function runTests(
         const low = maxVersion(minVersion, range.low);
         const hi = range.high;
         assert(
-          parseFloat(hi) >= parseFloat(low),
+          TypeScriptVersion.compare(hi, low) >= 0,
           `'"minimumTypeScriptVersion": "${minVersion}"' in package.json skips ${
             range.directoryVersion ? `ts${range.directoryVersion} folder` : "the root definition"
           }.`,
@@ -277,7 +277,7 @@ function combineErrorsAndWarnings(errors: string[], warnings: string[]): Error |
 
 function maxVersion(v1: AllTypeScriptVersion, v2: TypeScriptVersion): TypeScriptVersion {
   // Note: For v1 to be later than v2, it must be a current Typescript version. So the type assertion is safe.
-  return parseFloat(v1) >= parseFloat(v2) ? (v1 as TypeScriptVersion) : v2;
+  return TypeScriptVersion.compare(v1, v2) >= 0 ? (v1 as TypeScriptVersion) : v2;
 }
 
 export function getTypeScriptTestRanges(typesVersions: readonly AllTypeScriptVersion[]): readonly {
@@ -293,11 +293,11 @@ export function getTypeScriptTestRanges(typesVersions: readonly AllTypeScriptVer
   let low: TypeScriptVersion = TypeScriptVersion.lowest;
 
   for (const directoryVersion of typesVersions) {
-    if (parseFloat(directoryVersion) < parseFloat(low)) {
+    if (TypeScriptVersion.compare(directoryVersion, low) < 0) {
       continue;
     }
 
-    const reachesLatest = parseFloat(directoryVersion) >= parseFloat(latestTypeScriptVersionToTest);
+    const reachesLatest = TypeScriptVersion.compare(directoryVersion, latestTypeScriptVersionToTest) >= 0;
     ranges.push({
       low,
       high: reachesLatest ? latestTypeScriptVersionToTest : (directoryVersion as TypeScriptVersion),

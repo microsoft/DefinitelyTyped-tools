@@ -229,7 +229,7 @@ export type TsVersion = TypeScriptVersion | "local";
 
 function usesCorsa(version: TsVersion, tsLocal: string | undefined): boolean {
   if (version !== "local") {
-    return parseFloat(version) >= 7;
+    return TypeScriptVersion.compare(version, "7.0") >= 0;
   }
 
   assert(tsLocal);
