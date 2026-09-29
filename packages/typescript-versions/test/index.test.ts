@@ -10,7 +10,9 @@ describe("all", () => {
   it("doesn't have any holes", () => {
     let prev = TypeScriptVersion.all[0];
     for (const version of TypeScriptVersion.all.slice(1)) {
-      expect(+version * 10 - +prev * 10).toEqual(1);
+      const [prevMajor, prevMinor] = prev.split(".").map(Number);
+      const [major, minor] = version.split(".").map(Number);
+      expect((major === prevMajor && minor === prevMinor + 1) || (major === prevMajor + 1 && minor === 0)).toBeTruthy();
       prev = version;
     }
   });
@@ -42,16 +44,33 @@ describe("isTypeScriptVersion", () => {
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("5.6")).toEqual(["5.6", "5.7", "5.8", "5.9", "6.0"]);
+    expect(TypeScriptVersion.range("5.6")).toEqual(["5.6", "5.7", "5.8", "5.9", "6.0", "7.0", "7.1"]);
   });
   it("includes 5.6 onwards", () => {
     expect(TypeScriptVersion.range("5.6")).toEqual(TypeScriptVersion.supported);
   });
 });
 
+describe("compare", () => {
+  it("uses the declared version order", () => {
+    expect(TypeScriptVersion.compare("7.0", "7.1")).toBeLessThan(0);
+    expect(TypeScriptVersion.compare("7.1", "7.0")).toBeGreaterThan(0);
+    expect(TypeScriptVersion.compare("7.1", "7.1")).toBe(0);
+  });
+});
+
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual(["ts5.6", "ts5.7", "ts5.8", "ts5.9", "ts6.0", "latest"]);
+    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual([
+      "ts5.6",
+      "ts5.7",
+      "ts5.8",
+      "ts5.9",
+      "ts6.0",
+      "ts7.0",
+      "ts7.1",
+      "latest",
+    ]);
   });
   it("allows 5.6 onwards", () => {
     expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual(

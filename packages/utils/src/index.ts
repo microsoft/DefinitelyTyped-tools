@@ -1,6 +1,7 @@
 export * from "./assertions";
 export * from "./async";
 export * from "./collections";
+export * from "./expect-error-range";
 export * from "./fs";
 export * from "./io";
 export * from "./logging";

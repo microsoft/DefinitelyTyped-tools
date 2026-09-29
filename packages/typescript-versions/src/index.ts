@@ -41,9 +41,9 @@ export type AllTypeScriptVersion = UnsupportedTypeScriptVersion | TypeScriptVers
 
 export namespace TypeScriptVersion {
   /** Add to this list when a version actually ships.  */
-  export const shipped = ["5.6", "5.7", "5.8", "5.9", "6.0"] as const;
+  export const shipped = ["5.6", "5.7", "5.8", "5.9", "6.0", "7.0"] as const;
   /** Add to this list when a version is available as typescript@next */
-  export const supported = [...shipped] as const;
+  export const supported = [...shipped, "7.1"] as const;
   /** Add to this list when it will no longer be supported on Definitely Typed */
   export const unsupported = [
     "2.0",
@@ -92,8 +92,16 @@ export namespace TypeScriptVersion {
     return supported.indexOf(v as TypeScriptVersion) > -1;
   }
 
+  export function compare(a: AllTypeScriptVersion, b: AllTypeScriptVersion): number {
+    const aIndex = all.indexOf(a);
+    const bIndex = all.indexOf(b);
+    assert(aIndex !== -1);
+    assert(bIndex !== -1);
+    return aIndex - bIndex;
+  }
+
   export function range(min: TypeScriptVersion): readonly TypeScriptVersion[] {
-    return supported.filter((v) => v >= min);
+    return supported.filter((v) => compare(v, min) >= 0);
   }
 
   /** List of NPM tags that should be changed to point to the latest version. */

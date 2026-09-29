@@ -182,6 +182,13 @@ Use your locally installed version of TypeScript.
 ```sh
 dtslint --localTs node_modules/typescript/lib types
 ```
+
+For TypeScript 7, pass the TypeScript package directory after building both the native compiler and JavaScript API:
+
+```sh
+dtslint --localTs ../TypeScript/packages/typescript types
+```
+
 - `--expectOnly`
 
 Disable all the lint rules except the one that checks for type correctness.

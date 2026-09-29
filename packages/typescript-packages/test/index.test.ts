@@ -24,7 +24,14 @@ describe("resolve", () => {
     for (const version of TypeScriptVersion.supported) {
       const ts = require(resolve(version));
       expect(typeof ts.versionMajorMinor).toBe("string");
-      expect(ts.versionMajorMinor).toBe(version);
+      if (version === "7.1") {
+        expect(ts.version).toMatch(/^7\.1\./);
+      } else {
+        expect(ts.versionMajorMinor).toBe(version);
+      }
+      if (version.startsWith("7.")) {
+        expect(resolve(version, "unstable/sync")).toMatch(/api[\\/]sync[\\/]api\.js$/);
+      }
     }
   });
 });

@@ -1,9 +1,9 @@
+import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import { ReportDescriptorMessageData } from "@typescript-eslint/utils/ts-eslint";
 import fs from "fs";
 import v8 from "node:v8";
 import path from "path";
-import * as semver from "semver";
 import type * as ts from "typescript";
 import { createRule, findTypesPackage, findUp } from "../util";
 
@@ -250,10 +250,6 @@ const zeroSourceLocation: Readonly<TSESTree.SourceLocation> = {
 
 const expectTypeToken = "$ExpectType";
 
-// Based on TypeScript's scanner.ts
-const expectErrorSingleLine = /^\/\/\/?\s*@ts-expect-error\s+(.*)/;
-const expectErrorMultiLine = /^(?:\/|\*)*\s*@ts-expect-error\s+(.*)/;
-
 function walk(
   getLocFromIndex: (index: number) => Readonly<TSESTree.Position>,
   report: Reporter,
@@ -273,22 +269,9 @@ function walk(
     const diagnostics = ts.getPreEmitDiagnostics(program, sourceFile);
     for (const diagnostic of diagnostics) {
       if (diagnostic.code === 2578) {
-        // This is a ts-expect-error; parse "// @ts-expect-error <range>" and ignore when the current version is outside that range.
         const text = sourceFile.text.slice(diagnostic.start!, diagnostic.start! + diagnostic.length!);
-        const match = text.match(expectErrorSingleLine) || text.match(expectErrorMultiLine);
-        if (match) {
-          let range: semver.Range | undefined;
-          try {
-            range = new semver.Range(match[1].trim());
-          } catch {
-            // Ignore any parsing errors.
-          }
-
-          if (range) {
-            if (!semver.satisfies(versionName, range, { loose: true })) {
-              continue;
-            }
-          }
+        if (isVersionedExpectErrorOutsideRange(text, ts.versionMajorMinor)) {
+          continue;
         }
       }
 
