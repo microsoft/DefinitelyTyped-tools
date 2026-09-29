@@ -88,15 +88,93 @@ jobs:
           version: "1.27"
           goDownloadUrl: https://aka.ms/golang/release/latest
 
-      - bash: bash .azure-pipelines/scripts/run-typescript-pr-dt.sh
-        displayName: Run TypeScript PR DT comparison
-        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+      - bash: |
+          set -euo pipefail
+          verify_sha() {
+            local label=$1
+            local actual=$2
+            local expected=$3
+            if [[ "$actual" != "$expected" ]]; then
+              echo "$label SHA mismatch: expected $expected, got $actual" >&2
+              exit 1
+            fi
+          }
+          verify_sha merge "$(git rev-parse HEAD)" "$EXPECTED_MERGE_SHA"
+          verify_sha base "$(git rev-parse HEAD^1)" "$EXPECTED_BASE_SHA"
+          verify_sha head "$(git rev-parse HEAD^2)" "$EXPECTED_HEAD_SHA"
+        displayName: Verify TypeScript checkout
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
         env:
           EXPECTED_BASE_SHA: ${{ parameters.expected_base_sha }}
           EXPECTED_HEAD_SHA: ${{ parameters.expected_head_sha }}
           EXPECTED_MERGE_SHA: ${{ parameters.expected_merge_sha }}
+
+      - bash: |
+          set -euo pipefail
+          npm install --global "$(jq -r '.packageManager' package.json)"
+          pnpm install --frozen-lockfile
+        displayName: Install DefinitelyTyped tools dependencies
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+
+      - bash: pnpm build
+        displayName: Build DefinitelyTyped tools
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+
+      - bash: npm ci
+        displayName: Install PR TypeScript dependencies
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
+
+      - bash: |
+          set -euo pipefail
+          npm run build
+          npx hereby build:api
+        displayName: Build PR TypeScript
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
+
+      - bash: |
+          set -euo pipefail
+          npm install --global "$(jq -r '.packageManager' package.json)"
+          pnpm install
+        displayName: Install DefinitelyTyped dependencies
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped
+
+      - bash: bash .azure-pipelines/scripts/run-typescript-pr-dt.sh PR
+        displayName: Run dtslint with PR TypeScript
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+        env:
           SHARD_COUNT: $(System.TotalJobsInPhase)
           SHARD_ID: $(System.JobPositionInPhase)
+
+      - bash: |
+          set -euo pipefail
+          git clean -xdf
+          git switch --detach "$EXPECTED_BASE_SHA"
+        displayName: Prepare base TypeScript checkout
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
+        env:
+          EXPECTED_BASE_SHA: ${{ parameters.expected_base_sha }}
+
+      - bash: npm ci
+        displayName: Install base TypeScript dependencies
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
+
+      - bash: |
+          set -euo pipefail
+          npm run build
+          npx hereby build:api
+        displayName: Build base TypeScript
+        workingDirectory: $(Pipeline.Workspace)/s/TypeScript
+
+      - bash: bash .azure-pipelines/scripts/run-typescript-pr-dt.sh main
+        displayName: Run dtslint with base TypeScript
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+        env:
+          SHARD_COUNT: $(System.TotalJobsInPhase)
+          SHARD_ID: $(System.JobPositionInPhase)
+
+      - bash: bash .azure-pipelines/scripts/compare-typescript-pr-dt.sh
+        displayName: Compare dtslint logs
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
 
       - publish: $(Pipeline.Workspace)/pr/prFailures$(System.JobPositionInPhase).json
         displayName: Publish PR failures
