@@ -27,6 +27,7 @@
     "@definitelytyped/dtslint": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "@octokit/rest": "^20.1.2",
+    "@typescript/github-link": "^0.2.4",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

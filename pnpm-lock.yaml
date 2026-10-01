@@ -209,6 +209,9 @@ importers:
       '@octokit/rest':
         specifier: ^20.1.2
         version: 20.1.2
+      '@typescript/github-link':
+        specifier: ^0.2.4
+        version: 0.2.4
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -2129,6 +2132,10 @@ packages:
   '@typescript-eslint/visitor-keys@8.67.0':
     resolution: {integrity: sha512-fkv8dHRDqfGtTHuJeebdrQ7cX6Ad4WAS00rgHh9UGvMycF1mjBfsxry1XsLIFhWZ6Judlh6UdzK+TYlbpCXgnA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript/github-link@0.2.4':
+    resolution: {integrity: sha512-lZxvhfaa1fsLFk5N0+J5phIA/ruZmoYtWQx4xQmcRiDLkqZ+cmixvMgk2HJwvsgXuyvNfEJnpEVePM8Zj2XmZQ==}
+    hasBin: true
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -7450,6 +7457,8 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.67.0
       eslint-visitor-keys: 5.0.1
+
+  '@typescript/github-link@0.2.4': {}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true

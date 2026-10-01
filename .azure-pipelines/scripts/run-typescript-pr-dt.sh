@@ -44,3 +44,5 @@ node "$tools_path/packages/dtslint-runner/dist/index.js" \
     --writeFailures "$failures" 3>&1 1>&2 2>&3 | tee -a "$errors"
 set -o pipefail
 popd >/dev/null
+
+node "$tools_path/packages/dtslint-runner/dist/add-github-links.js" "$failures" "$dt_path"
