@@ -304,15 +304,32 @@ test("keeps both sides and balanced markup when a changed report exceeds the lim
   expect(comments[0]).toContain("&lt;new&gt;");
 });
 
-test("posts every chunk and links all parts from the status comment", async () => {
+test.each([
+  { scenario: "branch-only errors across multiple chunks", kind: "new", emoji: "👀", count: 4 },
+  { scenario: "main-only errors", kind: "fixed", emoji: "✅", count: 1 },
+  { scenario: "changed errors", kind: "changed", emoji: "👀", count: 1 },
+  { scenario: "unchanged errors", kind: "same", emoji: "✅", count: 1 },
+  { scenario: "no errors", kind: "empty", emoji: "✅", count: 1 },
+  { scenario: "infrastructure failure", kind: "fail", emoji: "❌", count: 1 },
+])("posts results and updates the status for $scenario", async ({ kind, emoji, count }) => {
   const args = process.argv;
   const env = { ...process.env };
   const consoleLog = jest.spyOn(console, "log").mockImplementation(() => {});
   const consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
   jest.useFakeTimers();
   const failures = Array.from({ length: 4 }, (_, i) => ({ path: `package-${i}`, error: "x".repeat(40000) }));
-  writeFile("results/pr/failures.json", JSON.stringify(failures));
-  mkdirSync(join(checkout, "results/main"), { recursive: true });
+  const oldError = { path: "example", error: "old error" };
+  const mainFailures = ["fixed", "changed", "same"].includes(kind) ? [oldError] : [];
+  const branchFailures =
+    kind === "new"
+      ? failures
+      : kind === "changed"
+        ? [{ path: "example", error: "new error" }]
+        : kind === "same"
+          ? [oldError]
+          : [];
+  writeFile("results/pr/failures.json", JSON.stringify(branchFailures));
+  writeFile("results/main/failures.json", JSON.stringify(mainFailures));
   process.argv = [
     "node",
     "post-results",
@@ -322,7 +339,7 @@ test("posts every chunk and links all parts from the status comment", async () =
     "tester",
     "789",
     "test-run",
-    "ok",
+    kind === "fail" ? "fail" : "ok",
     join(checkout, "results/main"),
     join(checkout, "results/pr"),
   ];
@@ -345,17 +362,24 @@ test("posts every chunk and links all parts from the status comment", async () =
     await jest.runAllTimersAsync();
     await result;
     expect(consoleError).not.toHaveBeenCalled();
-    expect(mockCreateComment).toHaveBeenCalledTimes(4);
+    expect(mockCreateComment).toHaveBeenCalledTimes(count);
     const bodies = mockCreateComment.mock.calls.map(([arg]) => arg.body as string);
     expect(bodies.every((body) => body.length <= 65535)).toBe(true);
-    expect(bodies.join("\n")).toContain("&j=job&t=task");
     const status = mockUpdateComment.mock.calls[0][0].body;
-    for (let i = 1; i <= 4; i++) {
+    expect(status).toContain(`[${emoji} Results]`);
+    for (let i = 1; i <= count; i++) {
       expect(status).toContain(`https://github.com/microsoft/TypeScript/issues/789#issuecomment-${i}`);
     }
-    expect(status).toContain("Part 4");
-    expect(consoleLog.mock.calls[0][0]).toContain("Branch only errors:");
-    expect(consoleLog.mock.calls[0][0]).not.toContain("<pre>");
+    if (kind === "new") {
+      expect(bodies.join("\n")).toContain("&j=job&t=task");
+      expect(status).toContain("Part 4");
+      expect(consoleLog.mock.calls[0][0]).toContain("Branch only errors:");
+      expect(consoleLog.mock.calls[0][0]).not.toContain("<pre>");
+    }
+    if (kind === "fixed") {
+      expect(bodies[0]).toContain("Main only errors:");
+      expect(bodies[0]).toContain(oldError.error);
+    }
   } finally {
     process.argv = args;
     process.env = env;

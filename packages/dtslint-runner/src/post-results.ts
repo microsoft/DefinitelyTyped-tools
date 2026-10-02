@@ -55,7 +55,9 @@ export async function main() {
 
       const reports = getDiffReports(mainErrors, branchErrors);
       if (reports.length) {
-        emoji = "👀";
+        if (reports.some((report) => report.branch)) {
+          emoji = "👀";
+        }
         console.log(formatDiffLog(reports));
         const jobId = process.env.SYSTEM_JOBID;
         const taskId = process.env.SYSTEM_TASKINSTANCEID;
