@@ -1,5 +1,13 @@
 # @definitelytyped/utils
 
+## 0.1.16
+
+### Patch Changes
+
+- 6661498: Add TypeScript 7.0 and 7.1 support through the Corsa compiler API, including compiler diagnostics, `$ExpectType`
+  assertions, version-ranged `@ts-expect-error` directives, multi-project failure reporting, and local TypeScript packages.
+- 2e05fe5: Publish old package versions without changing the latest tag
+
 ## 0.1.15
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.53
+
+### Patch Changes
+
+- 382d86c: Add commit-pinned DefinitelyTyped diagnostic and project links to run dt results, paginate GitHub comments, and preserve full output with explicit URLs in build logs.
+- Updated dependencies [6661498]
+- Updated dependencies [2e05fe5]
+- Updated dependencies [6661498]
+  - @definitelytyped/dtslint@0.2.48
+  - @definitelytyped/utils@0.1.16
+  - @definitelytyped/definitions-parser@0.1.35
+
 ## 0.1.52
 
 ### Patch Changes
