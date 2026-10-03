@@ -35,8 +35,28 @@ async function testFixture(dir: string) {
   const prInfo = response.data.repository?.pullRequest;
   if (!prInfo) throw new Error("Should never happen");
 
+  // Fixtures recorded before potentialMergeCommit was queried use the head tree.
+  const prInfoWithMergeCommit =
+    prInfo.potentialMergeCommit === undefined && prInfo.mergeable !== "CONFLICTING"
+      ? {
+          ...prInfo,
+          potentialMergeCommit: {
+            __typename: "Commit" as const,
+            oid: prInfo.headRefOid,
+            parents: {
+              __typename: "CommitConnection" as const,
+              totalCount: 2,
+              nodes: [
+                { __typename: "Commit" as const, oid: prInfo.baseRefOid },
+                { __typename: "Commit" as const, oid: prInfo.headRefOid },
+              ],
+            },
+          },
+        }
+      : prInfo;
+
   const derived = await deriveStateForPR(
-    prInfo,
+    prInfoWithMergeCommit,
     (expr: string) => Promise.resolve(files[expr] as string),
     (name: string, _until?: Date) => (name in downloads ? downloads[name] : 0),
     new Date(readJsonSync(derivedPath).now),
@@ -56,5 +76,42 @@ describe("Test fixtures", () => {
     if (dirent.isDirectory()) {
       it(`Fixture: ${dirent.name}`, async () => testFixture(join(fixturesFolder, dirent.name)));
     }
+  });
+});
+
+describe("Potential merge commit validation", () => {
+  const response: PRQueryResponse = readJsonSync(join(__dirname, "fixtures", "75475", "_response.json"));
+  const prInfo = response.data.repository?.pullRequest;
+  const potentialMergeCommit = prInfo?.potentialMergeCommit;
+  if (!prInfo || !potentialMergeCommit) throw new Error("Fixture must have a potential merge commit");
+
+  it("fails closed when the potential merge commit is unavailable", async () => {
+    const derived = await deriveStateForPR({ ...prInfo, potentialMergeCommit: null });
+
+    expect(derived).toMatchObject({
+      type: "error",
+      message: "No potential merge commit found",
+    });
+  });
+
+  it("fails closed when the potential merge commit has unexpected parents", async () => {
+    const derived = await deriveStateForPR({
+      ...prInfo,
+      potentialMergeCommit: {
+        ...potentialMergeCommit,
+        parents: {
+          ...potentialMergeCommit.parents,
+          nodes: [
+            { __typename: "Commit", oid: prInfo.baseRefOid },
+            { __typename: "Commit", oid: "attacker-controlled-oid" },
+          ],
+        },
+      },
+    });
+
+    expect(derived).toMatchObject({
+      type: "error",
+      message: "Potential merge commit does not match the pull request base and head",
+    });
   });
 });
