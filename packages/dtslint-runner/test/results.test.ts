@@ -166,9 +166,9 @@ test("renders all three difference categories, retaining each side's links", () 
       { path: "changed", error: "new", errorLinks: [{ start: 0, end: 3, url: branchUrl }] },
     ],
   )!;
-  expect(comment).toContain("<summary>Branch only errors:</summary>");
-  expect(comment).toContain("<summary>Main only errors:</summary>");
-  expect(comment).toContain("<summary>Errors that changed between main and the branch:</summary>");
+  expect(comment).toContain("<summary>Branch only errors: <code>new</code></summary>");
+  expect(comment).toContain("<summary>Main only errors: <code>fixed</code></summary>");
+  expect(comment).toContain("<summary>Errors that changed between main and the branch: <code>changed</code></summary>");
   expect(comment).toContain(`<pre><a href="${mainUrl}">old</a></pre>`);
   expect(comment).toContain(`<pre><a href="${branchUrl}">new</a></pre>`);
   expect(comment).toContain("<pre>old failure</pre>");
@@ -188,6 +188,7 @@ test("escapes diagnostic HTML and refuses non-DT links", () => {
       },
     ],
   )!;
+  expect(comment).toContain("<summary>Branch only errors: <code>&lt;example&gt;</code></summary>");
   expect(comment).toContain("Package: <code>&lt;example&gt;</code>");
   expect(comment).toContain("&lt;/pre&gt;&lt;script&gt;alert(&quot;oops&quot;)&lt;/script&gt;\n```\n&amp; &lt;T&gt;");
   expect(comment).not.toContain("<script>");
@@ -208,6 +209,7 @@ test("links project-level errors to the default and explicitly configured tsconf
     { path: "tsconfig.other.json", url: `${repoUrl}/blob/${commit}/types/example/v1/tsconfig.other.json` },
   ]);
   const comment = getDiffComment([], failures)!;
+  expect(comment).toContain("<summary>Branch only errors: <code>example/v1</code></summary>");
   expect(comment).toContain(`Project scope: <code><a href="${failures[0].projects![0].url}">tsconfig.json</a></code>`);
   expect(comment).toContain(`href="${failures[1].projects![1].url}"`);
 });

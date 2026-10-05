@@ -181,13 +181,14 @@ function getDiffReports(main: Errors, branch: Errors): DiffReport[] {
 }
 
 function formatReport(report: DiffReport, maxErrorLength = Infinity): string {
+  const packageName = escapeHtml((report.branch ?? report.main)!.path);
   const errors = [
     ...(report.main ? [`Main error:\n${formatProjects(report.main)}${formatError(report.main, maxErrorLength)}`] : []),
     ...(report.branch
       ? [`Branch error:\n${formatProjects(report.branch)}${formatError(report.branch, maxErrorLength)}`]
       : []),
   ];
-  return `<details>\n<summary>${report.title}</summary>\n\n${formatPackage((report.branch ?? report.main)!)}\n${errors.join("\n")}\n</details>`;
+  return `<details>\n<summary>${report.title} <code>${packageName}</code></summary>\n\n${formatPackage((report.branch ?? report.main)!)}\n${errors.join("\n")}\n</details>`;
 }
 
 export function getResultComments(main: Errors, branch: Errors, userToTag: string, logUrl: string): string[] {
