@@ -59,14 +59,16 @@ export async function addGithubLinks(failures: Failure[], definitelyTypedPath: s
     let stylishFile: string | undefined;
     for (const match of failure.error.matchAll(/^.*$/gm)) {
       const line = match[0].replace(/\r$/, "");
-      const position = /^(.+?\.(?:[cm]?tsx?|json))(?::(\d+):(\d+)|\((\d+),(\d+)\))/.exec(line);
+      const prefixLength = line.startsWith("Error: ") ? "Error: ".length : 0;
+      const position = /^(.+?\.(?:[cm]?tsx?|json))(?::(\d+):(\d+)|\((\d+),(\d+)\))/.exec(line.slice(prefixLength));
       const fileHeader = /^(.+\.(?:[cm]?tsx?|json))$/.exec(line);
       const stylishPosition = /^\s+(\d+):(\d+)\s+(?:error|warning)\b/.exec(line);
       if (position) {
         stylishFile = undefined;
         const file = resolve(packagePath, position[1]);
         addLocation(file, Number(position[2] ?? position[4]), (url) => {
-          links.push({ start: match.index, end: match.index + position[0].length, url });
+          const start = match.index + prefixLength;
+          links.push({ start, end: start + position[0].length, url });
         });
       } else if (fileHeader) {
         stylishFile = resolve(packagePath, fileHeader[1]);

@@ -303,7 +303,14 @@ function formatError(error: Failure, maxLength = Infinity): string {
   for (const location of error.errorLinks ?? []) {
     if (location.end > end) break;
     result += escapeHtml(error.error.slice(start, location.start));
-    result += link(error.error.slice(location.start, location.end), location.url);
+    const text = error.error.slice(location.start, location.end);
+    const githubPath = /^https:\/\/github\.com\/DefinitelyTyped\/DefinitelyTyped\/blob\/[^/]+\/([^#]+)(?:#L\d+)?$/.exec(
+      location.url,
+    );
+    const position = /(?::\d+:\d+|\(\d+,\d+\))$/.exec(text)?.[0] ?? "";
+    const label =
+      githubPath && /\.(?:[cm]?tsx?|json)(?::\d+:\d+|\(\d+,\d+\))?$/.test(text) ? `${githubPath[1]}${position}` : text;
+    result += link(label, location.url);
     start = location.end;
   }
   result += escapeHtml(error.error.slice(start, end));

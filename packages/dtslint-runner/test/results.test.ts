@@ -84,9 +84,13 @@ test("adds pinned package and Corsa diagnostic links without changing the raw er
   const comment = getDiffComment([], failures)!;
   expect(comment).toContain(`<code><a href="${repoUrl}/tree/${commit}/types/example">example</a></code>`);
   expect(comment).toContain(
-    `<pre><a href="${repoUrl}/blob/${commit}/types/example/example-tests.ts#L12">${file}:12:3</a>`,
+    `<pre><a href="${repoUrl}/blob/${commit}/types/example/example-tests.ts#L12">types/example/example-tests.ts:12:3</a>`,
   );
   expect(comment).toContain("Type '&lt;T&gt;' is not assignable.");
+  expect(comment).toContain(
+    `<a href="${repoUrl}/blob/${commit}/types/example/index.d.ts#L2">types/example/index.d.ts:2:1</a>`,
+  );
+  expect(comment).not.toContain(checkout);
 });
 
 test("links ESLint stylish headers and individual error lines, including CRLF", async () => {
@@ -99,6 +103,26 @@ test("links ESLint stylish headers and individual error lines, including CRLF", 
     ["2:3", `${repoUrl}/blob/${commit}/types/example/index.d.ts#L2`],
     ["4:5", `${repoUrl}/blob/${commit}/types/example/index.d.ts#L4`],
   ]);
+  const comment = getDiffComment([], failures)!;
+  expect(comment).toContain(
+    `<a href="${repoUrl}/blob/${commit}/types/example/index.d.ts">types/example/index.d.ts</a>`,
+  );
+  expect(comment).toContain(`<a href="${repoUrl}/blob/${commit}/types/example/index.d.ts#L2">2:3</a>`);
+});
+
+test("links the first diagnostic after the Error stack prefix", async () => {
+  const file = join(checkout, "types/example/index.d.ts");
+  const error = `Error: ${file}:2:6\nTypeScript@local compile error TS2300:\nDuplicate identifier.\n\n${file}:5:6\nAnother error.`;
+  const failures: Failure[] = [{ path: "example", error }];
+  await addGithubLinks(failures, checkout);
+  expect(failures[0].error).toBe(error);
+  expect(failures[0].errorLinks?.map(({ start, end, url }) => [error.slice(start, end), url])).toEqual([
+    [`${file}:2:6`, `${repoUrl}/blob/${commit}/types/example/index.d.ts#L2`],
+    [`${file}:5:6`, `${repoUrl}/blob/${commit}/types/example/index.d.ts#L5`],
+  ]);
+  expect(getDiffComment([], failures)).toContain(
+    `<pre>Error: <a href="${repoUrl}/blob/${commit}/types/example/index.d.ts#L2">types/example/index.d.ts:2:6</a>`,
+  );
 });
 
 test("resolves versioned packages, workspace dependencies, and tsc locations", async () => {
@@ -110,6 +134,13 @@ test("resolves versioned packages, workspace dependencies, and tsc locations", a
   expect(failures[0].packageUrl).toBe(`${repoUrl}/tree/${commit}/types/example/v1`);
   expect(failures[0].errorLinks?.[0].url).toBe(`${repoUrl}/blob/${commit}/types/example/v1/index.d.ts#L3`);
   expect(failures[1].errorLinks?.[0].url).toBe(`${repoUrl}/blob/${commit}/types/dependency/index.d.ts#L5`);
+  const comment = getDiffComment([], failures)!;
+  expect(comment).toContain(
+    `<a href="${repoUrl}/blob/${commit}/types/example/v1/index.d.ts#L3">types/example/v1/index.d.ts(3,4)</a>`,
+  );
+  expect(comment).toContain(
+    `<a href="${repoUrl}/blob/${commit}/types/dependency/index.d.ts#L5">types/dependency/index.d.ts:5:6</a>`,
+  );
 });
 
 test("leaves untracked, missing, installed, and external files unlinked", async () => {
@@ -279,7 +310,7 @@ test("safely truncates oversized individual reports but retains full linked outp
   const comments = getResultComments([], [failure, { path: "next", error: "still included" }], "tester", logUrl);
   expect(comments).toHaveLength(2);
   expectBalancedComments(comments);
-  expect(comments[0]).toContain(`<a href="${url}">index.d.ts:1:1</a>`);
+  expect(comments[0]).toContain(`<a href="${url}">types/example/index.d.ts:1:1</a>`);
   expect(comments[0]).toContain("&lt;&amp;&quot;😀&gt;");
   expect(comments[0]).toContain("[... truncated ...]");
   expect(comments[0]).toContain("This package report was truncated");
