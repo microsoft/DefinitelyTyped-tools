@@ -13,6 +13,12 @@ object; // $ExpectType { a: number; b: string; }
 declare const indexedObject: { [key: string]: unknown; b: string; a: number };
 indexedObject; // $ExpectType { [key: string]: unknown; a: number; b: string; }
 
+declare const quotedUnion: "b" | "a";
+quotedUnion; // $ExpectType 'a' | 'b'
+
+declare const quotedObject: { value: "x" };
+quotedObject; // $ExpectType { value: 'x' }
+
 declare const overloaded: {
   (value: string): string;
   (value: number): number;
