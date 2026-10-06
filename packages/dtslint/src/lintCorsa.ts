@@ -336,6 +336,11 @@ function normalizedCorsaTypeToString(
   }
   function visit(node: Node): Node {
     node = astModule.visitEachChild(node, visit);
+    if (astModule.isLiteralTypeNode(node) && astModule.isStringLiteral(node.literal)) {
+      return factoryModule.createLiteralTypeNode(
+        factoryModule.createStringLiteral(node.literal.text, astModule.TokenFlags.None),
+      );
+    }
     if (astModule.isUnionTypeNode(node)) {
       const types = node.types
         .map((item) => [item, print(item)] as const)
