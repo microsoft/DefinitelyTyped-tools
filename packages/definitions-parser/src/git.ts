@@ -167,21 +167,22 @@ export async function getAffectedPackagesFromDiff(
  * 2. asOfVersion must be newer than `@types/name@latest` on npm
  * 3. `name@asOfVersion` must exist on npm
  */
-export async function checkNotNeededPackage(unneeded: NotNeededPackage): Promise<string[]> {
+export async function checkNotNeededPackage(
+  unneeded: NotNeededPackage,
+  fetchManifest: (spec: string) => Promise<{ version: string }> = (spec) => pacote.manifest(spec, { cache: cacheDir }),
+): Promise<string[]> {
   const errors = [];
-  const replacementPackage = await pacote
-    .manifest(`${unneeded.libraryName}@${unneeded.version}`, { cache: cacheDir })
-    .catch((reason) => {
-      if (reason.code === "E404")
-        return `The entry for ${unneeded.name} in notNeededPackages.json has
+  const replacementPackage = await fetchManifest(`${unneeded.libraryName}@${unneeded.version}`).catch((reason) => {
+    if (reason.code === "E404")
+      return `The entry for ${unneeded.name} in notNeededPackages.json has
 "libraryName": "${unneeded.libraryName}", but there is no npm package with this name.
 Unneeded packages have to be replaced with a package on npm.`;
-      else if (reason.code === "ETARGET")
-        return `The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`;
-      else throw reason;
-    }); // eg @babel/parser
+    else if (reason.code === "ETARGET")
+      return `The specified version ${unneeded.version} of ${unneeded.libraryName} is not on npm.`;
+    else throw reason;
+  }); // eg @babel/parser
   if (typeof replacementPackage === "string") errors.push(replacementPackage);
-  const typings = await pacote.manifest(unneeded.name, { cache: cacheDir }).catch((reason) => {
+  const typings = await fetchManifest(unneeded.name).catch((reason) => {
     if (reason.code === "E404") return `Unexpected error: @types package not found for ${unneeded.name}`;
     else throw reason;
   }); // eg @types/babel__parser
