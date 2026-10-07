@@ -28,7 +28,7 @@
     "@octokit/webhooks-methods": "^6.0.0",
     "dayjs": "^1.11.23",
     "fast-json-patch": "^3.1.1",
-    "graphql": "^16.14.2",
+    "graphql": "^17.0.2",
     "prettyjson": "^1.2.5",
     "yargs": "^18.2.0"
   },
