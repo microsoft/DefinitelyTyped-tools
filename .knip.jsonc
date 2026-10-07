@@ -35,8 +35,7 @@
     "packages/eslint-plugin": {
       "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
-      "ignoreDependencies": ["@definitelytyped/eslint-plugin"],
-      "ignore": ["**/suggestions.ts"]
+      "ignoreDependencies": ["@definitelytyped/eslint-plugin"]
     },
     "packages/header-parser": {
       "entry": ["test/**/*.test.ts"],

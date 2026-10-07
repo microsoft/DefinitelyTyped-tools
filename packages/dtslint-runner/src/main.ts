@@ -2,7 +2,6 @@ import {
   execAndThrowErrors,
   joinPaths,
   runWithListeningChildProcesses,
-  suggestionsDir,
   CrashRecoveryState,
 } from "@definitelytyped/utils";
 import fs from "fs";
@@ -137,18 +136,6 @@ export async function runDTSLint({
       }
     },
   });
-
-  console.log("\n\n=== SUGGESTIONS ===\n");
-  const suggestionLines: string[] = [];
-  for (const packageName of packageNames) {
-    const pkgPath = packageName.replace("/", ""); // react/v15 -> reactv15
-    const path = joinPaths(suggestionsDir, pkgPath + ".txt");
-    if (fs.existsSync(path)) {
-      const suggestions = fs.readFileSync(path, "utf8").split("\n");
-      suggestionLines.push(`"${packageName}": [${suggestions.join(",")}]`);
-    }
-  }
-  console.log(`{${suggestionLines.join(",")}}`);
 
   if (writeFailures) {
     fs.writeFileSync(writeFailures, JSON.stringify(allFailures.map(([path, error]) => ({ path, error }))), "utf8");

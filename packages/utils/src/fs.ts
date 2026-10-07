@@ -1,12 +1,8 @@
 import assert from "assert";
 import systemPath, { posix as posixPath } from "path";
-import getCacheDir = require("cachedir");
 import { assertDefined } from "./assertions";
 import fs from "fs";
 import { readFileSync, readJsonSync } from "./io";
-
-/** The directory to read/write suggestsions from */
-export const suggestionsDir = systemPath.join(getCacheDir("dts"), "suggestions");
 
 /** Convert a path to use "/" instead of "\\" for consistency. (This affects content hash.) */
 export function normalizeSlashes(path: string): string {

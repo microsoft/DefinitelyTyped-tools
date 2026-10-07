@@ -441,9 +441,6 @@ importers:
       '@types/node':
         specifier: ^26.6.4
         version: 26.6.4
-      cachedir:
-        specifier: ^2.4.0
-        version: 2.4.0
       libnpmpublish:
         specifier: ^12.0.1
         version: 12.0.1
@@ -2475,10 +2472,6 @@ packages:
   cacache@21.0.1:
     resolution: {integrity: sha512-pTwz/uj3Jyp6WXdJ6fWhR+7LVxVs6RyroQSn7KJwHsSxXuyGSp0pcMVcwSwTpCFq1X2YG8QBe0W+vN+cr0SwzA==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-
-  cachedir@2.4.0:
-    resolution: {integrity: sha512-9EtFOZR8g22CL7BWjJ9BUx1+A/djkofnyW3aOXZORNW2kxoUpx2h+uN2cOqwPmFhnpVmxg+KW2OjOSgChTEvsQ==}
-    engines: {node: '>=6'}
 
   call-bind-apply-helpers@1.0.2:
     resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
@@ -6658,8 +6651,6 @@ snapshots:
       minipass-pipeline: 1.2.4
       p-map: 7.0.8
       ssri: 14.0.0
-
-  cachedir@2.4.0: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:
