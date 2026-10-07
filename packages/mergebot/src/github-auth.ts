@@ -9,7 +9,6 @@ type GitHubAppAuth = ReturnType<typeof createGitHubAppAuth>;
 let githubAuth: GitHubAppAuth | undefined;
 
 function explicitToken() {
-  if (process.env.JEST_WORKER_ID) return "FAKE_TOKEN";
   return process.env.BOT_AUTH_TOKEN || process.env.DT_BOT_AUTH_TOKEN || process.env.AUTH_TOKEN;
 }
 
