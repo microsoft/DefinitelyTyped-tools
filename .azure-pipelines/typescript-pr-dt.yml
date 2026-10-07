@@ -77,10 +77,11 @@ jobs:
         persistCredentials: false
         retryCountOnTaskFailure: 3
 
-      - task: NodeTool@0
+      - task: UseNode@1
         displayName: Use Node 22.x
         inputs:
-          versionSpec: 22.x
+          versionSource: spec
+          version: 22.x
 
       - task: GoTool@0
         displayName: Use Go 1.27
@@ -216,10 +217,11 @@ jobs:
           patterns: '**/prFailures*'
           path: $(Pipeline.Workspace)/prFailures
 
-      - task: NodeTool@0
+      - task: UseNode@1
         displayName: Use Node 22.x
         inputs:
-          versionSpec: 22.x
+          versionSource: spec
+          version: 22.x
 
       - bash: |
           set -euo pipefail
