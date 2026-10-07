@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import {} from "node:test";
 import { getAffectedPackagesWorker } from "../get-affected-packages";
 import { NotNeededPackage, AllPackages } from "../packages";
 import { testo, createTypingsVersionRaw } from "./utils";

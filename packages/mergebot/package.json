@@ -47,7 +47,6 @@
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "prestart": "pnpm run build",
     "prepublishOnly": "pnpm run build",
     "build": "tsc -b",
     "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node22 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",

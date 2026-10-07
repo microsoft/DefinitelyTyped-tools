@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import {} from "node:test";
 import { getDefinitelyTyped } from "../get-definitely-typed";
 import { quietLoggerWithErrors, Dir, FS, InMemoryFS } from "@definitelytyped/utils";
 import { testo } from "./utils";

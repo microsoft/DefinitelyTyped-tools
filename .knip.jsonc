@@ -2,8 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     ".": {
-      "entry": ["test-setup.cjs"],
-      "ignoreBinaries": ["only-allow"]
+      "entry": ["test-setup.cjs"]
     },
     "packages/definitions-parser": {
       "entry": ["test/**/*.test.ts"],
@@ -16,7 +15,7 @@
     "packages/dts-gen": {
       "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
-      "ignoreDependencies": ["ecurve", "jquery", "lodash"]
+      "ignoreDependencies": ["ecurve", "lodash"]
     },
     "packages/dtslint": {
       "entry": ["test/**/*.test.ts"],
@@ -76,8 +75,7 @@
     },
     "packages/mergebot": {
       "entry": ["src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts", "src/_tests/*.test.ts"],
-      "project": "**/*.ts",
-      "ignore": ["src/queries/schema/*.ts"]
+      "project": "**/*.ts"
     }
   },
   "ignore": ["**/fixtures/**", "**/testsource/**", "**/*.d.ts"],

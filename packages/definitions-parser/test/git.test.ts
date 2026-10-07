@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import {} from "node:test";
 import * as util from "util";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../git";
