@@ -8,13 +8,14 @@ import { outputDirectory } from "../util/util";
 const temporaryTag = "old-version";
 
 export async function publishTypingsPackage(
-  client: NpmPublishClient,
+  client: Pick<NpmPublishClient, "publish" | "untag" | "tag">,
   changedTyping: ChangedTyping,
   dry: boolean,
   log: Logger,
+  packageDir = outputDirectory(changedTyping.pkg),
 ): Promise<void> {
   const { pkg, version, latestVersion } = changedTyping;
-  await common(client, pkg, log, dry);
+  await common(client, pkg, log, dry, packageDir);
   if (pkg.isLatest) {
     await updateTypeScriptVersionTags(pkg, version, client, log, dry);
   }
@@ -26,7 +27,7 @@ export async function publishTypingsPackage(
 }
 
 export async function publishNotNeededPackage(
-  client: NpmPublishClient,
+  client: Pick<NpmPublishClient, "publish" | "untag">,
   pkg: NotNeededPackage,
   dry: boolean,
   log: Logger,
@@ -35,8 +36,13 @@ export async function publishNotNeededPackage(
   await common(client, pkg, log, dry);
 }
 
-async function common(client: NpmPublishClient, pkg: AnyPackage, log: Logger, dry: boolean): Promise<void> {
-  const packageDir = outputDirectory(pkg);
+async function common(
+  client: Pick<NpmPublishClient, "publish" | "untag">,
+  pkg: AnyPackage,
+  log: Logger,
+  dry: boolean,
+  packageDir = outputDirectory(pkg),
+): Promise<void> {
   const packageJson = await readFileAndWarn("generate", joinPaths(packageDir, "package.json"));
   if (pkg.isLatest) {
     await client.publish(packageDir, packageJson, "latest", dry, log);

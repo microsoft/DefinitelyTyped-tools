@@ -86,7 +86,7 @@ async function tag(dry: boolean, definitelyTypedPath: string, name?: string) {
 export async function updateTypeScriptVersionTags(
   pkg: AnyPackage,
   version: string,
-  client: NpmPublishClient,
+  client: Pick<NpmPublishClient, "tag">,
   log: Logger,
   dry: boolean,
 ): Promise<void> {
@@ -105,7 +105,7 @@ export async function updateTypeScriptVersionTags(
 export async function updateLatestTag(
   fullName: string,
   version: string,
-  client: NpmPublishClient,
+  client: Pick<NpmPublishClient, "tag">,
   log: Logger,
   dry: boolean,
 ): Promise<void> {

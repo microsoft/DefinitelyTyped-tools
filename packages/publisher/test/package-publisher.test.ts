@@ -1,67 +1,106 @@
-import { NpmPublishClient, readFileAndWarn } from "@definitelytyped/utils";
-import { updateLatestTag } from "@definitelytyped/retag";
+import type { NpmPublishClient } from "@definitelytyped/utils";
+import { DTMock, TypingsData } from "@definitelytyped/definitions-parser";
+import { License } from "@definitelytyped/header-parser";
+import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 import { publishTypingsPackage } from "../src/lib/package-publisher";
 import { ChangedTyping } from "../src/lib/versions";
-
-jest.mock("@definitelytyped/utils", () => ({
-  ...jest.requireActual("@definitelytyped/utils"),
-  readFileAndWarn: jest.fn(),
-}));
-jest.mock("@definitelytyped/retag", () => ({
-  updateLatestTag: jest.fn(),
-  updateTypeScriptVersionTags: jest.fn(),
-}));
 
 const packageJson = { name: "@types/example", version: "2.0.0" };
 const log = jest.fn();
 
 function changedTyping(isLatest: boolean): ChangedTyping {
   return {
-    pkg: {
+    pkg: new TypingsData(
+      new DTMock().fs,
+      {
+        header: {
+          name: "@types/example",
+          owners: [],
+          libraryMajorVersion: isLatest ? 2 : 1,
+          libraryMinorVersion: 0,
+          minimumTypeScriptVersion: "7.0",
+          projects: [],
+          nonNpm: false,
+          tsconfigs: ["tsconfig.json"],
+        },
+        typesVersions: [],
+        license: License.MIT,
+        olderVersionDirectories: [],
+      },
       isLatest,
-      name: "@types/example",
-      typesDirectoryName: "example",
-      major: isLatest ? 2 : 1,
-      minor: 0,
-    },
+    ),
     version: isLatest ? "2.0.0" : "1.0.1",
     latestVersion: isLatest ? undefined : "2.0.0",
-  } as ChangedTyping;
+  };
 }
 
 describe("publishTypingsPackage", () => {
-  const publish = jest.fn();
-  const untag = jest.fn();
-  const client = { publish, untag } as unknown as NpmPublishClient;
+  const publish = jest.fn<ReturnType<NpmPublishClient["publish"]>, Parameters<NpmPublishClient["publish"]>>();
+  const untag = jest.fn<ReturnType<NpmPublishClient["untag"]>, Parameters<NpmPublishClient["untag"]>>();
+  const tag = jest.fn<ReturnType<NpmPublishClient["tag"]>, Parameters<NpmPublishClient["tag"]>>();
+  const client = { publish, untag, tag };
+  let packageDir: string;
+
+  function writeManifest(version = packageJson.version) {
+    const manifest = { ...packageJson, version };
+    writeFileSync(join(packageDir, "package.json"), JSON.stringify(manifest));
+    return manifest;
+  }
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(readFileAndWarn).mockResolvedValue(packageJson);
-    publish.mockReset();
-    untag.mockReset();
+    publish.mockReset().mockResolvedValue(undefined);
+    untag.mockReset().mockResolvedValue(undefined);
+    tag.mockReset().mockResolvedValue(undefined);
+    packageDir = mkdtempSync(join(tmpdir(), "dt-package-publisher-"));
+    writeManifest();
+  });
+
+  afterEach(() => {
+    rmSync(packageDir, { recursive: true, force: true });
   });
 
   it("publishes the current version with the default tag", async () => {
-    await publishTypingsPackage(client, changedTyping(true), false, log);
+    const typing = changedTyping(true);
+    await publishTypingsPackage(client, typing, false, log, packageDir);
 
-    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, "latest", false, log);
+    expect(publish).toHaveBeenCalledWith(packageDir, packageJson, "latest", false, log);
     expect(untag).not.toHaveBeenCalled();
+    expect(tag.mock.calls).toEqual([
+      ["@types/example", "2.0.0", "ts7.0", false, log],
+      ["@types/example", "2.0.0", "ts7.1", false, log],
+      ["@types/example", "2.0.0", "latest", false, log],
+    ]);
+    expect(publish.mock.invocationCallOrder[0]).toBeLessThan(tag.mock.invocationCallOrder[0]);
   });
 
   it("publishes an old version without changing latest", async () => {
-    await publishTypingsPackage(client, changedTyping(false), false, log);
+    const manifest = writeManifest("1.0.1");
+    await publishTypingsPackage(client, changedTyping(false), false, log, packageDir);
 
-    expect(publish).toHaveBeenCalledWith(expect.any(String), packageJson, "old-version", false, log);
+    expect(publish).toHaveBeenCalledWith(packageDir, manifest, "old-version", false, log);
     expect(untag).toHaveBeenCalledWith("@types/example", "old-version", false, log);
     expect(publish.mock.invocationCallOrder[0]).toBeLessThan(untag.mock.invocationCallOrder[0]);
-    expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
+    expect(untag.mock.invocationCallOrder[0]).toBeLessThan(tag.mock.invocationCallOrder[0]);
+    expect(tag.mock.calls).toEqual([["@types/example", "2.0.0", "latest", false, log]]);
   });
 
   it("continues if removing the temporary tag fails", async () => {
     untag.mockRejectedValueOnce(new Error("registry unavailable"));
+    writeManifest("1.0.1");
 
-    await expect(publishTypingsPackage(client, changedTyping(false), false, log)).resolves.toBeUndefined();
+    await expect(publishTypingsPackage(client, changedTyping(false), false, log, packageDir)).resolves.toBeUndefined();
     expect(log).toHaveBeenCalledWith("Failed to remove temporary tag for @types/example: Error: registry unavailable");
-    expect(updateLatestTag).toHaveBeenCalledWith("@types/example", "2.0.0", client, log, false);
+    expect(tag.mock.calls).toEqual([["@types/example", "2.0.0", "latest", false, log]]);
+  });
+
+  it("does not update tags when publishing fails", async () => {
+    const error = new Error("publish failed");
+    publish.mockRejectedValueOnce(error);
+    await expect(publishTypingsPackage(client, changedTyping(false), false, log, packageDir)).rejects.toBe(error);
+    expect(untag).not.toHaveBeenCalled();
+    expect(tag).not.toHaveBeenCalled();
   });
 });
