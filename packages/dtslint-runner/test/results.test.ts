@@ -5,15 +5,21 @@ import { addGithubLinks, Failure } from "../src/add-github-links";
 import { getDiffComment, getDiffLog, getResultComments, main } from "../src/post-results";
 import { readComparison } from "../src/validate-results";
 
-const mockCreateComment = jest.fn();
-const mockGetComment = jest.fn();
-const mockUpdateComment = jest.fn();
-jest.mock("@octokit/rest", () => ({
-  Octokit: jest.fn().mockImplementation(() => ({
-    issues: { createComment: mockCreateComment },
-    rest: { issues: { getComment: mockGetComment, updateComment: mockUpdateComment } },
-  })),
-}));
+type CommentsClient = NonNullable<Parameters<typeof main>[0]>;
+const mockCreateComment = jest.fn<
+  ReturnType<CommentsClient["createComment"]>,
+  Parameters<CommentsClient["createComment"]>
+>();
+const mockGetComment = jest.fn<ReturnType<CommentsClient["getComment"]>, Parameters<CommentsClient["getComment"]>>();
+const mockUpdateComment = jest.fn<
+  ReturnType<CommentsClient["updateComment"]>,
+  Parameters<CommentsClient["updateComment"]>
+>();
+const commentsClient: CommentsClient = {
+  createComment: mockCreateComment,
+  getComment: mockGetComment,
+  updateComment: mockUpdateComment,
+};
 
 const repoUrl = "https://github.com/DefinitelyTyped/DefinitelyTyped";
 let checkout: string;
@@ -472,11 +478,11 @@ test.each([
     .mockResolvedValue({ data: { body: "Status: updated" } });
   mockUpdateComment.mockReset().mockResolvedValue({});
   try {
-    const result = main();
+    const result = main(commentsClient);
     await jest.runAllTimersAsync();
     await result;
     expect(mockCreateComment).toHaveBeenCalledTimes(count);
-    const bodies = mockCreateComment.mock.calls.map(([arg]) => arg.body as string);
+    const bodies = mockCreateComment.mock.calls.map(([arg]) => arg.body);
     if (kind === "missing" || kind === "invalid") {
       expect(consoleError).toHaveBeenCalledWith(new Error("Missing or invalid DT failure artifacts."));
       expect(bodies[0]).toContain("something went wrong when publishing results");
