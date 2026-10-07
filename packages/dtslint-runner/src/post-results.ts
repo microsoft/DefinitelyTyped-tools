@@ -181,13 +181,14 @@ function getDiffReports(main: Errors, branch: Errors): DiffReport[] {
 }
 
 function formatReport(report: DiffReport, maxErrorLength = Infinity): string {
+  const packageName = escapeHtml((report.branch ?? report.main)!.path);
   const errors = [
     ...(report.main ? [`Main error:\n${formatProjects(report.main)}${formatError(report.main, maxErrorLength)}`] : []),
     ...(report.branch
       ? [`Branch error:\n${formatProjects(report.branch)}${formatError(report.branch, maxErrorLength)}`]
       : []),
   ];
-  return `<details>\n<summary>${report.title}</summary>\n\n${formatPackage((report.branch ?? report.main)!)}\n${errors.join("\n")}\n</details>`;
+  return `<details>\n<summary>${report.title} <code>${packageName}</code></summary>\n\n${formatPackage((report.branch ?? report.main)!)}\n${errors.join("\n")}\n</details>`;
 }
 
 export function getResultComments(main: Errors, branch: Errors, userToTag: string, logUrl: string): string[] {
@@ -302,7 +303,14 @@ function formatError(error: Failure, maxLength = Infinity): string {
   for (const location of error.errorLinks ?? []) {
     if (location.end > end) break;
     result += escapeHtml(error.error.slice(start, location.start));
-    result += link(error.error.slice(location.start, location.end), location.url);
+    const text = error.error.slice(location.start, location.end);
+    const githubPath = /^https:\/\/github\.com\/DefinitelyTyped\/DefinitelyTyped\/blob\/[^/]+\/([^#]+)(?:#L\d+)?$/.exec(
+      location.url,
+    );
+    const position = /(?::\d+:\d+|\(\d+,\d+\))$/.exec(text)?.[0] ?? "";
+    const label =
+      githubPath && /\.(?:[cm]?tsx?|json)(?::\d+:\d+|\(\d+,\d+\))?$/.test(text) ? `${githubPath[1]}${position}` : text;
+    result += link(label, location.url);
     start = location.end;
   }
   result += escapeHtml(error.error.slice(start, end));

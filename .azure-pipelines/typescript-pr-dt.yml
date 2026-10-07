@@ -84,6 +84,7 @@ jobs:
 
       - task: GoTool@0
         displayName: Use Go 1.27
+        retryCountOnTaskFailure: 3
         inputs:
           version: "1.27"
           goDownloadUrl: https://aka.ms/golang/release/latest
