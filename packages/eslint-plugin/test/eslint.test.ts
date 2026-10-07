@@ -2,23 +2,24 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ESLint, Linter } from "eslint";
 import path from "path";
-import { globSync } from "glob";
 import { fixtureRoot } from "./util";
 import * as plugin from "../index";
-import fs from "fs";
+import fs, { globSync } from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
 import { stripVTControlCharacters } from "util";
 
 const snapshotDir = path.resolve("packages/eslint-plugin/test/__file_snapshots__");
 
-const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
+const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot }).map(
+  normalizeSlashes,
+);
 
 function getLintSnapshotPath(fixture: string): string {
   return path.join(snapshotDir, `${fixture}.lint`);
 }
 
 function getAllLintSnapshots() {
-  return new Set(globSync("**/*.lint", { cwd: snapshotDir, absolute: true }));
+  return new Set(globSync("**/*.lint", { cwd: snapshotDir }).map((file) => path.resolve(snapshotDir, file)));
 }
 
 function getAllExpectedLintSnapshots() {

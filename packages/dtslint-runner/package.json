@@ -30,9 +30,6 @@
     "@typescript/github-link": "^0.2.4",
     "yargs": "^18.2.0"
   },
-  "devDependencies": {
-    "glob": "^13.0.6"
-  },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26"
   }
