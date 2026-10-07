@@ -6,12 +6,12 @@ type Errors = Failure[];
 
 interface CommentsClient {
   createComment: (
-    params: Parameters<Octokit["rest"]["issues"]["createComment"]>[0],
+    params: NonNullable<Parameters<Octokit["rest"]["issues"]["createComment"]>[0]>,
   ) => Promise<{ data: { html_url: string } }>;
   getComment: (
-    params: Parameters<Octokit["rest"]["issues"]["getComment"]>[0],
+    params: NonNullable<Parameters<Octokit["rest"]["issues"]["getComment"]>[0]>,
   ) => Promise<{ data: { body?: string | null } }>;
-  updateComment: (params: Parameters<Octokit["rest"]["issues"]["updateComment"]>[0]) => Promise<unknown>;
+  updateComment: (params: NonNullable<Parameters<Octokit["rest"]["issues"]["updateComment"]>[0]>) => Promise<unknown>;
 }
 
 // Args: [auth token] [buildId] [status comment] [user to tag] [issue] [distinct id] [job status]

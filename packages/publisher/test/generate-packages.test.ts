@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import {} from "node:test";
 import {
   AllPackages,
   DTMock,
@@ -74,45 +76,45 @@ function defaultFS() {
 const now = new Date(1733775005612);
 
 testo({
-  mitLicenseText() {
+  mitLicenseText(t) {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(getLicenseFileText(typing, now)).toMatchSnapshot();
+    t.assert.snapshot(getLicenseFileText(typing, now));
   },
-  apacheLicenseText() {
+  apacheLicenseText(t) {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(getLicenseFileText(typing, now)).toMatchSnapshot();
+    t.assert.snapshot(getLicenseFileText(typing, now));
   },
-  readmeJquery() {
+  readmeJquery(t) {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
-    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
+    t.assert.snapshot(createReadme(typing, dt.pkgFS("jquery"), now));
   },
-  readmeMultipleDependencies() {
+  readmeMultipleDependencies(t) {
     const dt = defaultFS();
     const typing = new TypingsData(dt.fs, createRawPackage(License.Apache20), /*isLatest*/ true);
     typing.dependencies["@types/example"] = "*";
     typing.peerDependencies["@types/example2"] = "*";
-    expect(createReadme(typing, dt.pkgFS("jquery"), now)).toMatchSnapshot();
+    t.assert.snapshot(createReadme(typing, dt.pkgFS("jquery"), now));
   },
-  readmeContainsManyDTSFilesDoesNotAmendREADME() {
+  readmeContainsManyDTSFilesDoesNotAmendREADME(t) {
     const rawPkg = createRawPackage(License.Apache20);
     const dt = defaultFS();
     dt.pkgDir("jquery").set("other.d.ts", "");
     const typing = new TypingsData(dt.fs, rawPkg, /*isLatest*/ true);
-    expect(createReadme(typing, dt.fs, now)).toMatchSnapshot();
+    t.assert.snapshot(createReadme(typing, dt.fs, now));
   },
-  basicPackageJson() {
+  basicPackageJson(t) {
     const typing = new TypingsData(defaultFS().fs, createRawPackage(License.MIT), /*isLatest*/ true);
-    expect(createPackageJSON(typing, "1.0")).toMatchSnapshot();
+    t.assert.snapshot(createPackageJSON(typing, "1.0"));
   },
-  basicNotNeededPackageJson() {
+  basicNotNeededPackageJson(t) {
     const s = createNotNeededPackageJSON(createUnneededPackage());
-    expect(s).toMatchSnapshot();
+    t.assert.snapshot(s);
   },
-  scopedNotNeededPackageJson() {
+  scopedNotNeededPackageJson(t) {
     const scopedUnneeded = new NotNeededPackage("google-cloud__pubsub", "@google-cloud/chubdub", "0.26.0");
     const s = createNotNeededPackageJSON(scopedUnneeded);
-    expect(s).toMatchSnapshot();
+    t.assert.snapshot(s);
   },
   async versionedPackage() {
     const dt = defaultFS();
@@ -123,7 +125,7 @@ testo({
       .set("only-in-v0.d.ts", "export const x: number;");
     const allPackages = AllPackages.fromFS(dt.fs);
     const typing = await allPackages.getTypingsData({ name: "@types/jquery", version: { major: 0 } })!;
-    expect(typing.getFiles()).toContain("only-in-v0.d.ts");
-    expect(typing.getContentHash()).toBeTruthy(); // used to crash
+    assert.ok(typing.getFiles().includes("only-in-v0.d.ts"));
+    assert.ok(typing.getContentHash()); // used to crash
   },
 });

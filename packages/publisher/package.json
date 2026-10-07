@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/publisher",
+    "test": "node ../../run-tests.mjs .",
     "clean": "node --enable-source-maps dist/clean.js",
     "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
     "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",

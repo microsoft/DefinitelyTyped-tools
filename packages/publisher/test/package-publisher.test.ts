@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, it, beforeEach, afterEach, mock, Mock } from "node:test";
 import type { NpmPublishClient } from "@definitelytyped/utils";
 import { DTMock, TypingsData } from "@definitelytyped/definitions-parser";
 import { License } from "@definitelytyped/header-parser";
@@ -8,7 +10,6 @@ import { publishTypingsPackage } from "../src/lib/package-publisher";
 import { ChangedTyping } from "../src/lib/versions";
 
 const packageJson = { name: "@types/example", version: "2.0.0" };
-const log = jest.fn();
 
 function changedTyping(isLatest: boolean): ChangedTyping {
   return {
@@ -27,6 +28,8 @@ function changedTyping(isLatest: boolean): ChangedTyping {
         },
         typesVersions: [],
         license: License.MIT,
+        dependencies: {},
+        devDependencies: { "@types/example": "workspace:." },
         olderVersionDirectories: [],
       },
       isLatest,
@@ -37,10 +40,12 @@ function changedTyping(isLatest: boolean): ChangedTyping {
 }
 
 describe("publishTypingsPackage", () => {
-  const publish = jest.fn<ReturnType<NpmPublishClient["publish"]>, Parameters<NpmPublishClient["publish"]>>();
-  const untag = jest.fn<ReturnType<NpmPublishClient["untag"]>, Parameters<NpmPublishClient["untag"]>>();
-  const tag = jest.fn<ReturnType<NpmPublishClient["tag"]>, Parameters<NpmPublishClient["tag"]>>();
-  const client = { publish, untag, tag };
+  let publish: Mock<NpmPublishClient["publish"]>;
+  let untag: Mock<NpmPublishClient["untag"]>;
+  let tag: Mock<NpmPublishClient["tag"]>;
+  let log: Mock<(message: string) => void>;
+  let client: Pick<NpmPublishClient, "publish" | "untag" | "tag">;
+  let operations: string[];
   let packageDir: string;
 
   function writeManifest(version = packageJson.version) {
@@ -50,15 +55,24 @@ describe("publishTypingsPackage", () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    publish.mockReset().mockResolvedValue(undefined);
-    untag.mockReset().mockResolvedValue(undefined);
-    tag.mockReset().mockResolvedValue(undefined);
+    operations = [];
+    publish = mock.fn<NpmPublishClient["publish"]>(async () => {
+      operations.push("publish");
+    });
+    untag = mock.fn<NpmPublishClient["untag"]>(async () => {
+      operations.push("untag");
+    });
+    tag = mock.fn<NpmPublishClient["tag"]>(async (_name, _version, distTag) => {
+      operations.push(distTag);
+    });
+    log = mock.fn<(message: string) => void>();
+    client = { publish, untag, tag };
     packageDir = mkdtempSync(join(tmpdir(), "dt-package-publisher-"));
     writeManifest();
   });
 
   afterEach(() => {
+    mock.reset();
     rmSync(packageDir, { recursive: true, force: true });
   });
 
@@ -66,41 +80,70 @@ describe("publishTypingsPackage", () => {
     const typing = changedTyping(true);
     await publishTypingsPackage(client, typing, false, log, packageDir);
 
-    expect(publish).toHaveBeenCalledWith(packageDir, packageJson, "latest", false, log);
-    expect(untag).not.toHaveBeenCalled();
-    expect(tag.mock.calls).toEqual([
-      ["@types/example", "2.0.0", "ts7.0", false, log],
-      ["@types/example", "2.0.0", "ts7.1", false, log],
-      ["@types/example", "2.0.0", "latest", false, log],
-    ]);
-    expect(publish.mock.invocationCallOrder[0]).toBeLessThan(tag.mock.invocationCallOrder[0]);
+    assert.deepEqual(
+      publish.mock.calls.map((call) => call.arguments),
+      [[packageDir, packageJson, "latest", false, log]],
+    );
+    assert.equal(untag.mock.callCount(), 0);
+    assert.deepEqual(
+      tag.mock.calls.map((call) => call.arguments),
+      [
+        ["@types/example", "2.0.0", "ts7.0", false, log],
+        ["@types/example", "2.0.0", "ts7.1", false, log],
+        ["@types/example", "2.0.0", "latest", false, log],
+      ],
+    );
+    assert.deepEqual(operations, ["publish", "ts7.0", "ts7.1", "latest"]);
   });
 
   it("publishes an old version without changing latest", async () => {
     const manifest = writeManifest("1.0.1");
     await publishTypingsPackage(client, changedTyping(false), false, log, packageDir);
 
-    expect(publish).toHaveBeenCalledWith(packageDir, manifest, "old-version", false, log);
-    expect(untag).toHaveBeenCalledWith("@types/example", "old-version", false, log);
-    expect(publish.mock.invocationCallOrder[0]).toBeLessThan(untag.mock.invocationCallOrder[0]);
-    expect(untag.mock.invocationCallOrder[0]).toBeLessThan(tag.mock.invocationCallOrder[0]);
-    expect(tag.mock.calls).toEqual([["@types/example", "2.0.0", "latest", false, log]]);
+    assert.deepEqual(
+      publish.mock.calls.map((call) => call.arguments),
+      [[packageDir, manifest, "old-version", false, log]],
+    );
+    assert.deepEqual(
+      untag.mock.calls.map((call) => call.arguments),
+      [["@types/example", "old-version", false, log]],
+    );
+    assert.deepEqual(operations, ["publish", "untag", "latest"]);
+    assert.deepEqual(
+      tag.mock.calls.map((call) => call.arguments),
+      [["@types/example", "2.0.0", "latest", false, log]],
+    );
   });
 
   it("continues if removing the temporary tag fails", async () => {
-    untag.mockRejectedValueOnce(new Error("registry unavailable"));
+    untag.mock.mockImplementationOnce(async () => {
+      throw new Error("registry unavailable");
+    });
     writeManifest("1.0.1");
 
-    await expect(publishTypingsPackage(client, changedTyping(false), false, log, packageDir)).resolves.toBeUndefined();
-    expect(log).toHaveBeenCalledWith("Failed to remove temporary tag for @types/example: Error: registry unavailable");
-    expect(tag.mock.calls).toEqual([["@types/example", "2.0.0", "latest", false, log]]);
+    assert.equal(await publishTypingsPackage(client, changedTyping(false), false, log, packageDir), undefined);
+    assert.ok(
+      log.mock.calls.some(
+        (call) =>
+          call.arguments[0] === "Failed to remove temporary tag for @types/example: Error: registry unavailable",
+      ),
+    );
+    assert.deepEqual(
+      tag.mock.calls.map((call) => call.arguments),
+      [["@types/example", "2.0.0", "latest", false, log]],
+    );
   });
 
   it("does not update tags when publishing fails", async () => {
     const error = new Error("publish failed");
-    publish.mockRejectedValueOnce(error);
-    await expect(publishTypingsPackage(client, changedTyping(false), false, log, packageDir)).rejects.toBe(error);
-    expect(untag).not.toHaveBeenCalled();
-    expect(tag).not.toHaveBeenCalled();
+    publish.mock.mockImplementationOnce(async () => {
+      throw error;
+    });
+    await assert.rejects(
+      publishTypingsPackage(client, changedTyping(false), false, log, packageDir),
+      (reason) => reason === error,
+    );
+    assert.equal(untag.mock.callCount(), 0);
+    assert.equal(tag.mock.callCount(), 0);
   });
 });

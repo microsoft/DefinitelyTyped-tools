@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import path from "path";
 import { findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
 import { fixtureRoot } from "./util";
@@ -7,7 +9,7 @@ function getFixturePath(filename: string): string {
 }
 
 describe("getTypesPackageForDeclarationFile", () => {
-  test.each([
+  for (const row of [
     ["types/foo/index.d.ts", "foo"],
     ["types/foo/foo-tests.ts", undefined],
     ["types/foo/v1/index.d.ts", "foo"],
@@ -17,13 +19,16 @@ describe("getTypesPackageForDeclarationFile", () => {
     ["types/scoped__foo/v1/index.d.ts", "@scoped/foo"],
     ["types/scoped__foo/v1/scoped__foo-tests.ts", undefined],
     ["bad.d.ts", undefined],
-  ])("%s becomes %s", (input, expected) => {
-    expect(getTypesPackageForDeclarationFile(getFixturePath(input))).toEqual(expected);
-  });
+  ] as const) {
+    test(`${row[0]} becomes ${row[1]}`, () => {
+      const [input, expected] = row;
+      assert.deepEqual(getTypesPackageForDeclarationFile(getFixturePath(input)), expected);
+    });
+  }
 });
 
 describe("findTypesPackage realName", () => {
-  test.each([
+  for (const row of [
     ["types/foo/index.d.ts", "foo"],
     ["types/foo/foo-tests.ts", "foo"],
     ["types/foo/v1/index.d.ts", "foo"],
@@ -33,8 +38,11 @@ describe("findTypesPackage realName", () => {
     ["types/scoped__foo/v1/index.d.ts", "@scoped/foo"],
     ["types/scoped__foo/v1/scoped__foo-tests.ts", "@scoped/foo"],
     ["bad.d.ts", undefined],
-  ])("%s becomes %s", (input, expected) => {
-    const realName = findTypesPackage(getFixturePath(input))?.realName;
-    expect(realName).toEqual(expected);
-  });
+  ] as const) {
+    test(`${row[0]} becomes ${row[1]}`, () => {
+      const [input, expected] = row;
+      const realName = findTypesPackage(getFixturePath(input))?.realName;
+      assert.deepEqual(realName, expected);
+    });
+  }
 });

@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc -b .",
     "check-parse-results": "node --enable-source-maps dist/check-parse-results.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "node ../../run-tests.mjs ."
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"

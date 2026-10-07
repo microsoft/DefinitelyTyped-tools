@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/eslint-plugin"
+    "test": "node ../../run-tests.mjs ."
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
@@ -37,7 +37,6 @@
     "@definitelytyped/eslint-plugin": "link:",
     "@types/eslint": "^8.56.12",
     "glob": "^13.0.6",
-    "jest-file-snapshot": "^0.7.0",
     "typescript": "^6.0.3",
     "typescript-5.4": "npm:typescript@~5.4.0-0",
     "typescript-5.5": "npm:typescript@~5.5.0-0"

@@ -1,3 +1,6 @@
+import assert from "node:assert/strict";
+import { describe, it, beforeEach, afterEach, mock, Mock } from "node:test";
+import { pipeline } from "node:stream/promises";
 import path from "path";
 import fs from "fs";
 import os from "os";
@@ -8,9 +11,9 @@ import tarStream from "tar-stream";
 import { createTgz, createGitHubStringSetGetter, stringOfStream, streamOfString } from "../src/io";
 
 describe("io", () => {
-  describe(stringOfStream, () => {
+  describe(stringOfStream.name, () => {
     it("reads Node.js streams", async () => {
-      await expect(stringOfStream(streamOfString("contents"), "test")).resolves.toBe("contents");
+      assert.equal(await stringOfStream(streamOfString("contents"), "test"), "contents");
     });
 
     it("reads tar-stream entries", async () => {
@@ -28,14 +31,14 @@ describe("io", () => {
       pack.pipe(extract);
       pack.entry({ name: "test.txt" }, "contents");
       pack.finalize();
-      await expect(result).resolves.toBe("contents");
+      assert.equal(await result, "contents");
     });
   });
 
-  describe(createGitHubStringSetGetter, () => {
+  describe(createGitHubStringSetGetter.name, () => {
     const originalNodeEnv = process.env.NODE_ENV;
     let fallbackPath: string;
-    let getSpy: jest.SpyInstance;
+    let getSpy: Mock<typeof https.get>;
 
     beforeEach(() => {
       // Force the network path (skipped when NODE_ENV === "test").
@@ -46,14 +49,14 @@ describe("io", () => {
 
     afterEach(() => {
       process.env.NODE_ENV = originalNodeEnv;
-      getSpy?.mockRestore();
+      getSpy?.mock.restore();
       if (fs.existsSync(fallbackPath)) {
         fs.unlinkSync(fallbackPath);
       }
     });
 
     function mockHttpsGet(statusCode: number, body: string): void {
-      getSpy = jest.spyOn(https, "get").mockImplementation(((_url: unknown, cb: (res: unknown) => void) => {
+      getSpy = mock.method(https, "get", ((_url: unknown, cb: (res: unknown) => void) => {
         const res = new EventEmitter() as EventEmitter & { statusCode: number };
         res.statusCode = statusCode;
         process.nextTick(() => {
@@ -70,35 +73,37 @@ describe("io", () => {
       mockHttpsGet(429, "429: Too Many Requests\nrate limit exceeded");
       const getter = createGitHubStringSetGetter("some/path.txt", fallbackPath);
       const result = await getter();
-      expect(result).toEqual(new Set(["local-a", "local-b", ""]));
-      expect(result.has("429: Too Many Requests")).toBe(false);
+      assert.deepEqual(result, new Set(["local-a", "local-b", ""]));
+      assert.equal(result.has("429: Too Many Requests"), false);
     });
 
     it("uses the fetched contents when GitHub responds with 200", async () => {
       mockHttpsGet(200, "remote-a\nremote-b\n");
       const getter = createGitHubStringSetGetter("some/path.txt", fallbackPath);
       const result = await getter();
-      expect(result).toEqual(new Set(["remote-a", "remote-b", ""]));
+      assert.deepEqual(result, new Set(["remote-a", "remote-b", ""]));
     });
   });
 
-  describe(createTgz, () => {
-    it("packs a directory", (done) => {
+  describe(createTgz.name, () => {
+    it("packs a directory", async () => {
       const dir = path.join(__dirname, "data", "pack");
-      const archivePath = path.join(__dirname, "data", "pack.tgz");
-
-      createTgz(dir, (err) => {
-        throw err;
-      })
-        .pipe(fs.createWriteStream(archivePath))
-        .on("finish", async () => {
-          expect(fs.existsSync(archivePath)).toBe(true);
-          const entries: string[] = [];
-          await list({ file: archivePath, onentry: (e) => entries.push(e.path) });
-          expect(entries[0]).toBe("pack/");
-          expect(entries[1]).toBe("pack/test.txt");
-          done();
-        });
+      const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "dt-pack-"));
+      const archivePath = path.join(outputDir, "pack.tgz");
+      try {
+        await pipeline(
+          createTgz(dir, (err) => {
+            throw err;
+          }),
+          fs.createWriteStream(archivePath),
+        );
+        assert.equal(fs.existsSync(archivePath), true);
+        const entries: string[] = [];
+        await list({ file: archivePath, onentry: (e) => entries.push(e.path) });
+        assert.deepEqual(entries, ["pack/", "pack/test.txt"]);
+      } finally {
+        fs.rmSync(outputDir, { recursive: true, force: true });
+      }
     });
   });
 });

@@ -1,49 +1,51 @@
-/// <reference types="jest" />
 import path from "path";
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
+import { isDeepStrictEqual } from "node:util";
 import { findDtsName, dtToNpmName, parseExportErrorKind, checkSource, ErrorKind, ExportErrorKind } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void }) {
   describe(description, () => {
     for (const k in tests) {
-      test(k, tests[k], 10 * 1000);
+      test(k, { timeout: 10 * 1000 }, tests[k]);
     }
   });
 }
 
 suite("findDtsName", {
   absolutePath() {
-    expect(findDtsName("~/dt/types/jquery/index.d.ts")).toBe("jquery");
+    assert.equal(findDtsName("~/dt/types/jquery/index.d.ts"), "jquery");
   },
   relativePath() {
-    expect(findDtsName("jquery/index.d.ts")).toBe("jquery");
+    assert.equal(findDtsName("jquery/index.d.ts"), "jquery");
   },
   currentDirectory() {
-    expect(findDtsName("index.d.ts")).toBe(path.basename(process.cwd()));
+    assert.equal(findDtsName("index.d.ts"), path.basename(process.cwd()));
   },
   relativeCurrentDirectory() {
-    expect(findDtsName("./index.d.ts")).toBe(path.basename(process.cwd()));
+    assert.equal(findDtsName("./index.d.ts"), path.basename(process.cwd()));
   },
   emptyDirectory() {
-    expect(findDtsName("")).toBe(path.basename(process.cwd()));
+    assert.equal(findDtsName(""), path.basename(process.cwd()));
   },
 });
 suite("dtToNpmName", {
   nonScoped() {
-    expect(dtToNpmName("content-type")).toBe("content-type");
+    assert.equal(dtToNpmName("content-type"), "content-type");
   },
   scoped() {
-    expect(dtToNpmName("babel__core")).toBe("@babel/core");
+    assert.equal(dtToNpmName("babel__core"), "@babel/core");
   },
 });
 suite("parseExportErrorKind", {
   existent() {
-    expect(parseExportErrorKind("NoDefaultExport")).toBe(ErrorKind.NoDefaultExport);
+    assert.equal(parseExportErrorKind("NoDefaultExport"), ErrorKind.NoDefaultExport);
   },
   existentDifferentCase() {
-    expect(parseExportErrorKind("JspropertyNotinDTS")).toBe(ErrorKind.JsPropertyNotInDts);
+    assert.equal(parseExportErrorKind("JspropertyNotinDTS"), ErrorKind.JsPropertyNotInDts);
   },
   nonexistent() {
-    expect(parseExportErrorKind("FakeError")).toBe(undefined);
+    assert.equal(parseExportErrorKind("FakeError"), undefined);
   },
 });
 
@@ -62,52 +64,50 @@ function testsource(filename: string) {
 
 suite("checkSource", {
   noErrors() {
-    expect(checkSource("noErrors", testsource("noErrors.d.ts"), testsource("noErrors.js"), allErrors, false)).toEqual(
+    assert.deepEqual(
+      checkSource("noErrors", testsource("noErrors.d.ts"), testsource("noErrors.js"), allErrors, false),
       [],
     );
   },
   missingJsProperty() {
-    expect(
+    assert.ok(
       checkSource(
         "missingJsProperty",
         testsource("missingJsProperty.d.ts"),
         testsource("missingJsProperty.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.JsPropertyNotInDts,
           message: `The declaration doesn't match the JavaScript module 'missingJsProperty'. Reason:
 The JavaScript module exports a property named 'foo', which is missing from the declaration module.`,
-        },
-      ]),
+        }),
+      ),
     );
   },
   noMissingWebpackProperty() {
-    expect(
+    assert.equal(
       checkSource(
         "missingJsProperty",
         testsource("webpackPropertyNames.d.ts"),
         testsource("webpackPropertyNames.js"),
         allErrors,
         false,
-      ),
-    ).toHaveLength(0);
+      ).length,
+      0,
+    );
   },
   missingDtsProperty() {
-    expect(
+    assert.ok(
       checkSource(
         "missingDtsProperty",
         testsource("missingDtsProperty.d.ts"),
         testsource("missingDtsProperty.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.DtsPropertyNotInJs,
           message: `The declaration doesn't match the JavaScript module 'missingDtsProperty'. Reason:
 The declaration module exports a property named 'foo', which is missing from the JavaScript module.`,
@@ -115,22 +115,20 @@ The declaration module exports a property named 'foo', which is missing from the
             start: 65,
             length: 11,
           },
-        },
-      ]),
+        }),
+      ),
     );
   },
   missingDefaultExport() {
-    expect(
+    assert.ok(
       checkSource(
         "missingDefault",
         testsource("missingDefault.d.ts"),
         testsource("missingDefault.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.NoDefaultExport,
           message: `The declaration doesn't match the JavaScript module 'missingDefault'. Reason:
 The declaration specifies 'export default' but the JavaScript source does not mention 'default' anywhere.
@@ -141,89 +139,81 @@ To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/h
             start: 0,
             length: 33,
           },
-        },
-      ]),
+        }),
+      ),
     );
   },
   missingJsSignatureExportEquals() {
-    expect(
+    assert.ok(
       checkSource(
         "missingJsSignatureExportEquals",
         testsource("missingJsSignatureExportEquals.d.ts"),
         testsource("missingJsSignatureExportEquals.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.JsSignatureNotInDts,
           message: `The declaration doesn't match the JavaScript module 'missingJsSignatureExportEquals'. Reason:
 The JavaScript module can be called or constructed, but the declaration module cannot.`,
-        },
-      ]),
+        }),
+      ),
     );
   },
   missingJsSignatureNoExportEquals() {
-    expect(
+    assert.ok(
       checkSource(
         "missingJsSignatureNoExportEquals",
         testsource("missingJsSignatureNoExportEquals.d.ts"),
         testsource("missingJsSignatureNoExportEquals.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.JsSignatureNotInDts,
           message: `The declaration doesn't match the JavaScript module 'missingJsSignatureNoExportEquals'. Reason:
 The JavaScript module can be called or constructed, but the declaration module cannot.
 
 The most common way to resolve this error is to use 'export =' syntax.
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
-        },
-      ]),
+        }),
+      ),
     );
   },
   missingDtsSignature() {
-    expect(
+    assert.ok(
       checkSource(
         "missingDtsSignature",
         testsource("missingDtsSignature.d.ts"),
         testsource("missingDtsSignature.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.DtsSignatureNotInJs,
           message: `The declaration doesn't match the JavaScript module 'missingDtsSignature'. Reason:
 The declaration module can be called or constructed, but the JavaScript module cannot.`,
-        },
-      ]),
+        }),
+      ),
     );
   },
   missingExportEquals() {
-    expect(
+    assert.ok(
       checkSource(
         "missingExportEquals",
         testsource("missingExportEquals.d.ts"),
         testsource("missingExportEquals.js"),
         allErrors,
         false,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        {
+      ).some((error) =>
+        isDeepStrictEqual(error, {
           kind: ErrorKind.NeedsExportEquals,
           message: `The declaration doesn't match the JavaScript module 'missingExportEquals'. Reason:
 The declaration should use 'export =' syntax because the JavaScript source uses 'module.exports =' syntax and 'module.exports' can be called or constructed.
 
 To learn more about 'export =' syntax, see https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.`,
-        },
-      ]),
+        }),
+      ),
     );
   },
 });

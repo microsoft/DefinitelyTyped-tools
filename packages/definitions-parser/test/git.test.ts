@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import {} from "node:test";
 import * as util from "util";
 import { createTypingsVersionRaw, testo } from "./utils";
 import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../src/git";
@@ -65,17 +67,17 @@ function createGetAttwJson(base: string[] = [], head: string[] = []) {
 
 async function getDeletions(diffs: GitDiff[]): Promise<PackageId[]> {
   const changes = await gitChanges(diffs, createGetAttwJson());
-  expect(changes).not.toHaveProperty("error");
+  assert.ok(!Object.hasOwn(changes, "error"));
   const { deletions } = changes as { deletions: PackageId[]; additions: PackageId[] };
   return deletions;
 }
 
 testo({
   async ok() {
-    expect(await getNotNeededPackages(allPackages, await getDeletions(deleteJestDiffs))).toEqual(jestNotNeeded);
+    assert.deepEqual(await getNotNeededPackages(allPackages, await getDeletions(deleteJestDiffs)), jestNotNeeded);
   },
   async gitMovesConvertedToAddsAndDeletes() {
-    expect(await gitChanges(moveRdfJSDiffs, createGetAttwJson())).toEqual({
+    assert.deepEqual(await gitChanges(moveRdfJSDiffs, createGetAttwJson()), {
       attwChanges: [],
       additions: [
         { typesDirectoryName: "rdf-ext", version: "*" },
@@ -90,58 +92,64 @@ testo({
     });
   },
   async forgotToDeleteFiles() {
-    expect(
+    assert.deepEqual(
       await getNotNeededPackages(
         AllPackages.fromTestData({ jest: createTypingsVersionRaw("jest", {}, {}) }, jestNotNeeded),
         await getDeletions(deleteJestDiffs),
       ),
-    ).toEqual({ errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] });
+      { errors: ["Please delete all files in jest when adding it to notNeededPackages.json."] },
+    );
   },
   async tooManyDeletes() {
-    expect(
+    assert.deepEqual(
       await getNotNeededPackages(allPackages, await getDeletions([{ status: "D", file: "types/oops/oops.txt" }])),
-    ).toEqual([]);
+      [],
+    );
   },
   async deleteInOtherPackage() {
-    expect(
+    assert.deepEqual(
       await getNotNeededPackages(
         allPackages,
         await getDeletions([...deleteJestDiffs, { status: "D", file: "types/most-recent/extra-tests.ts" }]),
       ),
-    ).toEqual(jestNotNeeded);
+      jestNotNeeded,
+    );
   },
   async extraneousFile() {
-    expect(
+    assert.deepEqual(
       await getNotNeededPackages(
         allPackages,
         await getDeletions([...deleteJestDiffs, { status: "A", file: "types/oops/oooooooooooops.txt" }]),
       ),
-    ).toEqual(jestNotNeeded);
+      jestNotNeeded,
+    );
   },
   async scoped() {
-    expect(
+    assert.deepEqual(
       await getNotNeededPackages(
         AllPackages.fromTestData(typesData, [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]),
         await getDeletions([{ status: "D", file: "types/ember__object/index.d.ts" }]),
       ),
-    ).toEqual([new NotNeededPackage("ember__object", "@ember/object", "1.0.0")]);
+      [new NotNeededPackage("ember__object", "@ember/object", "1.0.0")],
+    );
   },
   async attwChanges() {
-    expect(
+    assert.deepEqual(
       await gitChanges(
         [{ status: "M", file: "attw.json" }],
         createGetAttwJson(["lodash", "jquery/v1", "react"], ["jquery/v2", "react", "new-package"]),
       ),
-    ).toEqual({
-      additions: [],
-      deletions: [],
-      attwChanges: [
-        { typesDirectoryName: "lodash", version: "*" },
-        { typesDirectoryName: "jquery", version: { major: 1, minor: undefined } },
-        { typesDirectoryName: "jquery", version: { major: 2, minor: undefined } },
-        { typesDirectoryName: "new-package", version: "*" },
-      ],
-    });
+      {
+        additions: [],
+        deletions: [],
+        attwChanges: [
+          { typesDirectoryName: "lodash", version: "*" },
+          { typesDirectoryName: "jquery", version: { major: 1, minor: undefined } },
+          { typesDirectoryName: "jquery", version: { major: 2, minor: undefined } },
+          { typesDirectoryName: "new-package", version: "*" },
+        ],
+      },
+    );
   },
   // TODO: Test npm info (and with scoped names)
   // TODO: Test with dependents, etc etc
@@ -173,52 +181,54 @@ const nonexistentTypesPackage = new NotNeededPackage("nonexistent", "jest", "100
 
 testo({
   async missingSource() {
-    return expect(await checkNotNeededPackage(nonexistentReplacementPackage, fetchManifest)).toEqual([
+    return assert.deepEqual(await checkNotNeededPackage(nonexistentReplacementPackage, fetchManifest), [
       `The entry for @types/jest in notNeededPackages.json has
 "libraryName": "nonexistent", but there is no npm package with this name.
 Unneeded packages have to be replaced with a package on npm.`,
     ]);
   },
   async missingTypings() {
-    return expect(await checkNotNeededPackage(nonexistentTypesPackage, fetchManifest)).toEqual([
+    return assert.deepEqual(await checkNotNeededPackage(nonexistentTypesPackage, fetchManifest), [
       "Unexpected error: @types package not found for @types/nonexistent",
     ]);
   },
   async deprecatedSameVersion() {
-    return expect(await checkNotNeededPackage(sameVersion, fetchManifest)).toEqual([
+    return assert.deepEqual(await checkNotNeededPackage(sameVersion, fetchManifest), [
       `The specified version 50.0.0 of jest must be newer than the version
 it is supposed to replace, 50.0.0 of @types/jest.`,
     ]);
   },
   async deprecatedOlderVersion() {
-    return expect(await checkNotNeededPackage(olderReplacement, fetchManifest)).toEqual([
+    return assert.deepEqual(await checkNotNeededPackage(olderReplacement, fetchManifest), [
       `The specified version 4.0.0 of jest must be newer than the version
 it is supposed to replace, 50.0.0 of @types/jest.`,
     ]);
   },
   async missingNpmVersion() {
-    return expect(await checkNotNeededPackage(nonexistentReplacementVersion, fetchManifest)).toEqual([
+    return assert.deepEqual(await checkNotNeededPackage(nonexistentReplacementVersion, fetchManifest), [
       "The specified version 999.0.0 of jest is not on npm.",
     ]);
   },
   async ok() {
-    expect(await checkNotNeededPackage(newerReplacement, fetchManifest)).toEqual([]);
+    assert.deepEqual(await checkNotNeededPackage(newerReplacement, fetchManifest), []);
   },
   async unexpectedReplacementError() {
     const error = new Error("Registry unavailable");
-    await expect(
+    await assert.rejects(
       checkNotNeededPackage(newerReplacement, async () => {
         throw error;
       }),
-    ).rejects.toBe(error);
+      (reason) => reason === error,
+    );
   },
   async unexpectedTypingsError() {
     const error = new Error("Registry unavailable");
-    await expect(
+    await assert.rejects(
       checkNotNeededPackage(newerReplacement, async (spec) => {
         if (spec === newerReplacement.name) throw error;
         return fetchManifest(spec);
       }),
-    ).rejects.toBe(error);
+      (reason) => reason === error,
+    );
   },
 });

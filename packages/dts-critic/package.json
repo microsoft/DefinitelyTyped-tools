@@ -18,7 +18,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b .",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/dts-critic"
+    "test": "node ../../run-tests.mjs ."
   },
   "repository": {
     "type": "git",

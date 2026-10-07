@@ -2,6 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     ".": {
+      "entry": ["run-tests.mjs", "test-setup.cjs"],
       "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {

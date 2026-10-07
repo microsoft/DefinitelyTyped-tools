@@ -1,8 +1,10 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { TypeScriptVersion } from "../src";
 
 describe("unsupported", () => {
   it("contains at least 2.9", () => {
-    expect(TypeScriptVersion.unsupported.includes("2.9")).toBeTruthy();
+    assert.ok(TypeScriptVersion.unsupported.includes("2.9"));
   });
 });
 
@@ -12,7 +14,7 @@ describe("all", () => {
     for (const version of TypeScriptVersion.all.slice(1)) {
       const [prevMajor, prevMinor] = prev.split(".").map(Number);
       const [major, minor] = version.split(".").map(Number);
-      expect((major === prevMajor && minor === prevMinor + 1) || (major === prevMajor + 1 && minor === 0)).toBeTruthy();
+      assert.ok((major === prevMajor && minor === prevMinor + 1) || (major === prevMajor + 1 && minor === 0));
       prev = version;
     }
   });
@@ -20,48 +22,48 @@ describe("all", () => {
 
 describe("isSupported", () => {
   it("works", () => {
-    expect(TypeScriptVersion.isSupported("5.9")).toBeTruthy();
+    assert.ok(TypeScriptVersion.isSupported("5.9"));
   });
   it("supports 5.6", () => {
-    expect(TypeScriptVersion.isSupported("5.6")).toBeTruthy();
+    assert.ok(TypeScriptVersion.isSupported("5.6"));
   });
   it("does not support 4.0", () => {
-    expect(!TypeScriptVersion.isSupported("4.0")).toBeTruthy();
+    assert.ok(!TypeScriptVersion.isSupported("4.0"));
   });
 });
 
 describe("isTypeScriptVersion", () => {
   it("accepts in-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("5.6")).toBeTruthy();
+    assert.ok(TypeScriptVersion.isTypeScriptVersion("5.6"));
   });
   it("rejects out-of-range", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("101.1")).toBeFalsy();
+    assert.ok(!TypeScriptVersion.isTypeScriptVersion("101.1"));
   });
   it("rejects garbage", () => {
-    expect(TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi")).toBeFalsy();
+    assert.ok(!TypeScriptVersion.isTypeScriptVersion("it'sa me, luigi"));
   });
 });
 
 describe("range", () => {
   it("works", () => {
-    expect(TypeScriptVersion.range("5.6")).toEqual(["5.6", "5.7", "5.8", "5.9", "6.0", "7.0", "7.1"]);
+    assert.deepEqual(TypeScriptVersion.range("5.6"), ["5.6", "5.7", "5.8", "5.9", "6.0", "7.0", "7.1"]);
   });
   it("includes 5.6 onwards", () => {
-    expect(TypeScriptVersion.range("5.6")).toEqual(TypeScriptVersion.supported);
+    assert.deepEqual(TypeScriptVersion.range("5.6"), TypeScriptVersion.supported);
   });
 });
 
 describe("compare", () => {
   it("uses the declared version order", () => {
-    expect(TypeScriptVersion.compare("7.0", "7.1")).toBeLessThan(0);
-    expect(TypeScriptVersion.compare("7.1", "7.0")).toBeGreaterThan(0);
-    expect(TypeScriptVersion.compare("7.1", "7.1")).toBe(0);
+    assert.ok(TypeScriptVersion.compare("7.0", "7.1") < 0);
+    assert.ok(TypeScriptVersion.compare("7.1", "7.0") > 0);
+    assert.equal(TypeScriptVersion.compare("7.1", "7.1"), 0);
   });
 });
 
 describe("tagsToUpdate", () => {
   it("works", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual([
+    assert.deepEqual(TypeScriptVersion.tagsToUpdate("5.6"), [
       "ts5.6",
       "ts5.7",
       "ts5.8",
@@ -73,7 +75,8 @@ describe("tagsToUpdate", () => {
     ]);
   });
   it("allows 5.6 onwards", () => {
-    expect(TypeScriptVersion.tagsToUpdate("5.6")).toEqual(
+    assert.deepEqual(
+      TypeScriptVersion.tagsToUpdate("5.6"),
       TypeScriptVersion.supported.map((s) => "ts" + s).concat("latest"),
     );
   });

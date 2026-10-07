@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import { createHmac } from "crypto";
 import { execFileSync } from "child_process";
 import path from "path";
@@ -26,11 +28,11 @@ describe("verifyIsFromGitHub", () => {
   }
 
   it("accepts a valid signature", async () => {
-    await expect(verifyIsFromGitHub(headersFor(body), body)).resolves.toBe(true);
+    assert.equal(await verifyIsFromGitHub(headersFor(body), body), true);
   });
 
   it("rejects a signature for a different payload", async () => {
-    await expect(verifyIsFromGitHub(headersFor(body), { action: "closed" })).resolves.toBe(false);
+    assert.equal(await verifyIsFromGitHub(headersFor(body), { action: "closed" }), false);
   });
 
   it("preserves the import-only dependency in compiled CommonJS output", () => {
@@ -44,6 +46,6 @@ describe("verifyIsFromGitHub", () => {
       ],
       { encoding: "utf8", env: { ...process.env, GITHUB_WEBHOOK_SECRET: secret } },
     );
-    expect(output.trim()).toBe("true");
+    assert.equal(output.trim(), "true");
   });
 });

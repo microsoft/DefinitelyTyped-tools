@@ -42,7 +42,6 @@
     "@types/prettyjson": "^0.0.33",
     "@types/yargs": "^17.0.35",
     "esbuild": "^0.28.2",
-    "jest-file-snapshot": "^0.7.0",
     "rimraf": "^6.1.3",
     "seroval": "^1.6.8",
     "typescript": "^6.0.3"
@@ -57,7 +56,7 @@
     "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
-    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js"
+    "test": "node ../../run-tests.mjs ."
   },
   "jest": {
     "preset": "ts-jest",

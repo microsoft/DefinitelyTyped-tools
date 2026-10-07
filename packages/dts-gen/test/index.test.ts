@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import * as tsg from "../src";
 import { execFileSync } from "child_process";
 import path from "path";
@@ -35,19 +37,19 @@ const expressions: { [s: string]: any } = {
 
 describe("Module tests", () => {
   for (const moduleName of testModuleNames) {
-    it(`Generates the same declaration for ${moduleName}`, () => {
+    it(`Generates the same declaration for ${moduleName}`, (t) => {
       const module = moduleName === "jquery" ? require("jquery/factory").jQueryFactory : require(moduleName);
       const result = tsg.generateModuleDeclarationFile(moduleName, module);
-      expect(result).toMatchSnapshot(`module-${moduleName}.d.ts`);
+      t.assert.snapshot(result);
     });
   }
 });
 
 describe("Expression tests", () => {
   for (const key of Object.keys(expressions)) {
-    it(`Generates the same declaration for ${key}`, () => {
+    it(`Generates the same declaration for ${key}`, (t) => {
       const result = tsg.generateIdentifierDeclarationFile(key!, expressions[key!]);
-      expect(result).toMatchSnapshot(`expr-${key}.d.ts`);
+      t.assert.snapshot(result);
     });
   }
 });
@@ -55,10 +57,13 @@ describe("Expression tests", () => {
 describe("CLI tests", () => {
   const cli = path.resolve(__dirname, "../dist/run.js");
 
-  it.each(["--version", "-v"])("prints its package version with %s", (flag) => {
-    const output = execFileSync(process.execPath, [cli, flag], { encoding: "utf8" });
-    expect(output.trim()).toBe(require("../package.json").version);
-  });
+  for (const row of ["--version", "-v"] as const) {
+    it(`prints its package version with ${row}`, () => {
+      const flag = row;
+      const output = execFileSync(process.execPath, [cli, flag], { encoding: "utf8" });
+      assert.equal(output.trim(), require("../package.json").version);
+    });
+  }
 
   it("parses expression, name, and output options", () => {
     const output = execFileSync(
@@ -66,7 +71,7 @@ describe("CLI tests", () => {
       [cli, "--expression", "({ value: 1 })", "--name", "sample", "--stdout"],
       { encoding: "utf8" },
     );
-    expect(output).toContain("declare const sample:");
-    expect(output).toContain("value: number;");
+    assert.ok(output.includes("declare const sample:"));
+    assert.ok(output.includes("value: number;"));
   });
 });

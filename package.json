@@ -9,7 +9,7 @@
     "lint": "eslint . --report-unused-disable-directives --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "format:check": "prettier --check 'packages/**/*.ts'",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node run-tests.mjs",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/index.js"
   },
@@ -27,6 +27,7 @@
     "knip": "^6.40.0",
     "prettier": "^3.9.9",
     "ts-jest": "^29.4.14",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   },
   "pnpm": {

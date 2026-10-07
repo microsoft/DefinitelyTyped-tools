@@ -1,14 +1,14 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { ESLint, Linter } from "eslint";
 import path from "path";
 import { globSync } from "glob";
 import { fixtureRoot } from "./util";
-import { toMatchFile } from "jest-file-snapshot";
 import * as plugin from "../src/index";
 import fs from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
 import { stripVTControlCharacters } from "util";
 
-expect.extend({ toMatchFile });
 const snapshotDir = path.join(__dirname, "__file_snapshots__");
 
 const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
@@ -28,7 +28,7 @@ function getAllExpectedLintSnapshots() {
 // Force one test per fixture so we can see when a file has no errors.
 for (const fixture of allFixtures) {
   describe(`fixture ${fixture}`, () => {
-    it("should lint", async () => {
+    it("should lint", async (t) => {
       const eslint = new ESLint({
         cwd: fixtureRoot,
         plugins: { [plugin.meta.name]: plugin },
@@ -41,9 +41,11 @@ for (const fixture of allFixtures) {
       const formatter = await eslint.loadFormatter("stylish");
       const formatted = await formatter.format(results);
       const resultText = stripVTControlCharacters(formatted).trim() || "No errors";
-      expect(resultText).not.toContain("Parsing error");
+      assert.ok(!resultText.includes("Parsing error"));
       const newOutput = formatResultsWithInlineErrors(results);
-      expect(normalizeSnapshot(resultText + "\n\n" + newOutput)).toMatchFile(getLintSnapshotPath(fixture));
+      t.assert.fileSnapshot(normalizeSnapshot(resultText + "\n\n" + newOutput), getLintSnapshotPath(fixture), {
+        serializers: [String],
+      });
     });
   });
 }
@@ -126,14 +128,13 @@ describe("lint snapshots", () => {
       return;
     }
 
-    // https://github.com/jestjs/jest/issues/8732#issuecomment-516445064
-    if (expect.getState().snapshotState._updateSnapshot === "all") {
+    if (process.execArgv.includes("--test-update-snapshots")) {
       for (const abandoned of abandonedSnapshots) {
         fs.rmSync(abandoned);
       }
       return;
     }
 
-    expect(abandonedSnapshots).toHaveLength(0);
+    assert.equal(abandonedSnapshots.length, 0);
   });
 });

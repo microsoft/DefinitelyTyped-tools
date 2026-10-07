@@ -1,59 +1,85 @@
+import assert from "node:assert/strict";
+import { describe, it, beforeEach, afterEach, mock, Mock } from "node:test";
 import { ProgressBar } from "../src/progress";
 
 describe("ProgressBar", () => {
-  let write: jest.SpyInstance;
+  let write: Mock<typeof process.stdout.write>;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    write = jest.spyOn(process.stdout, "write").mockImplementation(() => true);
+    mock.timers.enable({ apis: ["Date"], now: 1000 });
+    write = mock.method(process.stdout, "write", () => true);
   });
 
   afterEach(() => {
-    write.mockRestore();
-    jest.useRealTimers();
+    mock.reset();
+    mock.timers.reset();
   });
 
   it("renders progress and replaces the previous line", () => {
     const progress = new ProgressBar({ name: "Testing", width: 4 });
     progress.update(0.5, "first");
-    expect(write.mock.calls.map(([text]) => text).join("")).toBe("\x1b[1G\x1b[2KTesting [██  ] first\x1b[1G");
+    assert.equal(
+      write.mock.calls.map((call) => call.arguments[0]).join(""),
+      "\x1b[1G\x1b[2KTesting [██  ] first\x1b[1G",
+    );
 
-    write.mockClear();
-    jest.advanceTimersByTime(251);
+    write.mock.resetCalls();
+    mock.timers.tick(251);
     progress.update(0.25, "next");
-    expect(write.mock.calls.map(([text]) => text).join("")).toBe("\x1b[1G\x1b[2KTesting [█   ] next\x1b[1G");
+    assert.equal(
+      write.mock.calls.map((call) => call.arguments[0]).join(""),
+      "\x1b[1G\x1b[2KTesting [█   ] next\x1b[1G",
+    );
   });
 
   it("throttles updates while retaining the latest flavor text", () => {
     const progress = new ProgressBar({ name: "Testing", width: 4 });
     progress.update(0);
-    write.mockClear();
+    write.mock.resetCalls();
     progress.update(0.5, "retained");
-    expect(write).not.toHaveBeenCalled();
+    assert.equal(write.mock.callCount(), 0);
 
-    jest.advanceTimersByTime(251);
+    mock.timers.tick(251);
     progress.update(0.5);
-    expect(write.mock.calls.map(([text]) => text).join("")).toContain("Testing [██  ] retained");
+    assert.ok(
+      write.mock.calls
+        .map((call) => call.arguments[0])
+        .join("")
+        .includes("Testing [██  ] retained"),
+    );
   });
 
   it("clamps progress and finishes with a newline without closing stdout", () => {
-    const end = jest.spyOn(process.stdout, "end").mockImplementation(() => process.stdout);
+    const end = mock.method(process.stdout, "end", () => process.stdout);
     try {
       const progress = new ProgressBar({ name: "Testing", width: 4 });
       progress.update(-1);
-      expect(write.mock.calls.map(([text]) => text).join("")).toContain("Testing [    ]");
+      assert.ok(
+        write.mock.calls
+          .map((call) => call.arguments[0])
+          .join("")
+          .includes("Testing [    ]"),
+      );
 
-      write.mockClear();
-      jest.advanceTimersByTime(251);
+      write.mock.resetCalls();
+      mock.timers.tick(251);
       progress.update(2);
-      expect(write.mock.calls.map(([text]) => text).join("")).toContain("Testing [████]");
+      assert.ok(
+        write.mock.calls
+          .map((call) => call.arguments[0])
+          .join("")
+          .includes("Testing [████]"),
+      );
 
-      write.mockClear();
+      write.mock.resetCalls();
       progress.done();
-      expect(write.mock.calls.map(([text]) => text).join("")).toBe("\x1b[1G\x1b[2KTesting [████] Done!\x1b[1G\n");
-      expect(end).not.toHaveBeenCalled();
+      assert.equal(
+        write.mock.calls.map((call) => call.arguments[0]).join(""),
+        "\x1b[1G\x1b[2KTesting [████] Done!\x1b[1G\n",
+      );
+      assert.equal(end.mock.callCount(), 0);
     } finally {
-      end.mockRestore();
+      end.mock.restore();
     }
   });
 });

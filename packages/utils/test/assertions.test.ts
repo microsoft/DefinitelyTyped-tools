@@ -1,23 +1,25 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { assertDefined, deepEquals } from "../src/assertions";
 
 describe("assertions", () => {
   describe("assertDefined", () => {
     it("returns defined values", () => {
-      expect(assertDefined(0)).toBe(0);
-      expect(assertDefined(null)).toBeNull();
+      assert.equal(assertDefined(0), 0);
+      assert.equal(assertDefined(null), null);
     });
 
     it("throws for undefined values with a string message", () => {
-      expect(() => assertDefined(undefined, "Missing value")).toThrow("Missing value");
+      assert.throws(() => assertDefined(undefined, "Missing value"), /Missing value/);
     });
 
     it("preserves error messages", () => {
       const error = new Error("Missing value");
-      expect(() => assertDefined(undefined, error)).toThrow(error);
+      assert.throws(() => assertDefined(undefined, error), error);
     });
 
     it("throws for undefined values without a message", () => {
-      expect(() => assertDefined(undefined)).toThrow();
+      assert.throws(() => assertDefined(undefined));
     });
   });
 
