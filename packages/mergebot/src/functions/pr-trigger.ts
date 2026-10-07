@@ -9,13 +9,7 @@ import { runQueryToGetPRMetadataForSHA1 } from "../queries/SHA1-to-PR-query";
 import { app, HttpRequest, InvocationContext } from "@azure/functions";
 import { reply } from "../util/reply";
 import { httpLog, shouldRunRequest } from "../util/verify";
-import type {
-  CheckSuiteEvent,
-  IssueCommentEvent,
-  ProjectsV2ItemEvent,
-  PullRequestEvent,
-  PullRequestReviewEvent,
-} from "@octokit/webhooks-types";
+import type { WebhookEvent } from "../util/webhooks";
 import { runQueryToGetPRForCardId } from "../queries/card-id-to-pr-query";
 import { isTypeScriptBot } from "../util/util";
 
@@ -36,11 +30,27 @@ const eventNames = [
   "pull_request_review.submitted",
 ] as const;
 type PrEvent =
-  | { name: "check_suite"; payload: CheckSuiteEvent }
-  | { name: "issue_comment"; payload: IssueCommentEvent }
-  | { name: "projects_v2_item"; payload: ProjectsV2ItemEvent }
-  | { name: "pull_request"; payload: PullRequestEvent }
-  | { name: "pull_request_review"; payload: PullRequestReviewEvent };
+  | { name: "check_suite"; payload: WebhookEvent<"check-suite/completed"> }
+  | {
+      name: "issue_comment";
+      payload: WebhookEvent<"issue-comment/created" | "issue-comment/deleted" | "issue-comment/edited">;
+    }
+  | { name: "projects_v2_item"; payload: WebhookEvent<"projects-v2-item/edited"> }
+  | {
+      name: "pull_request";
+      payload: WebhookEvent<
+        | "pull-request/closed"
+        | "pull-request/edited"
+        | "pull-request/opened"
+        | "pull-request/ready-for-review"
+        | "pull-request/reopened"
+        | "pull-request/synchronize"
+      >;
+    }
+  | {
+      name: "pull_request_review";
+      payload: WebhookEvent<"pull-request-review/dismissed" | "pull-request-review/submitted">;
+    };
 
 class IgnoredBecause {
   constructor(public reason: string) {}
@@ -128,6 +138,7 @@ const prFromEvent = async (event: PrEvent) => {
     case "issue_comment":
       return event.payload.issue;
     case "projects_v2_item":
+      if (!event.payload.projects_v2_item.node_id) return new IgnoredBecause("Project item has no node ID");
       const pr = await runQueryToGetPRForCardId(event.payload.projects_v2_item.node_id);
       return pr
         ? { number: pr.number }
@@ -139,7 +150,7 @@ const prFromEvent = async (event: PrEvent) => {
   }
 };
 
-const prFromCheckSuiteEvent = async (payload: CheckSuiteEvent) => {
+const prFromCheckSuiteEvent = async (payload: WebhookEvent<"check-suite/completed">) => {
   // There is an `payload.check_suite.pull_requests` but it looks like
   // it's only populated for PRs in the other direction: going from DT to
   // forks (mostly by a pull bot).  See also `IgnoredBecause` below.

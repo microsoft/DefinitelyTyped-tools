@@ -1,7 +1,7 @@
 import { makeTypesVersionsForPackageJson, License } from "@definitelytyped/header-parser";
 import fs from "fs";
 import path = require("path");
-import yargs = require("yargs");
+import yargs from "yargs";
 
 import {
   AllPackages,
@@ -35,7 +35,7 @@ import { outputDirectory } from "./util/util";
 const mitLicense = fs.readFileSync(joinPaths(__dirname, "..", "LICENSE"), "utf-8");
 
 if (require.main === module) {
-  const argv = yargs.parseSync();
+  const argv = yargs(process.argv.slice(2)).parseSync();
   const tgz = !!argv.tgz;
   logUncaughtErrors(async () => {
     const log = loggerWithErrors()[0];

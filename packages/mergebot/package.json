@@ -16,48 +16,48 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "dependencies": {
-    "@apollo/client": "^4.1.6",
-    "@azure/functions": "^4.11.2",
-    "@azure/identity": "^4.13.0",
-    "@azure/keyvault-keys": "^4.10.0",
+    "@apollo/client": "^4.3.2",
+    "@azure/functions": "^4.16.5",
+    "@azure/identity": "^4.13.3",
+    "@azure/keyvault-keys": "^4.10.2",
     "@definitelytyped/old-header-parser": "npm:@definitelytyped/header-parser@0.0.178",
     "@definitelytyped/utils": "workspace:*",
-    "@octokit/webhooks-methods": "^4.1.0",
-    "dayjs": "^1.11.19",
+    "@octokit/webhooks-methods": "^6.0.0",
+    "dayjs": "^1.11.23",
     "fast-json-patch": "^3.1.1",
-    "graphql": "^16.13.0",
+    "graphql": "^16.14.2",
     "prettyjson": "^1.2.5",
-    "yargs": "^17.7.2"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.1.2",
-    "@graphql-codegen/client-preset": "^5.2.3",
+    "@graphql-codegen/cli": "^7.4.4",
+    "@graphql-codegen/client-preset": "^6.2.1",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@octokit/graphql-schema": "^15.26.1",
-    "@octokit/webhooks-types": "^7.6.1",
-    "@types/node": "^25.3.3",
+    "@octokit/openapi-webhooks-types": "^12.2.0",
+    "@types/node": "^26.6.4",
     "@types/prettyjson": "^0.0.33",
     "@types/yargs": "^17.0.35",
-    "esbuild": "^0.27.3",
+    "esbuild": "^0.28.2",
     "jest-file-snapshot": "^0.7.0",
     "rimraf": "^6.1.3",
-    "seroval": "^1.6.3",
+    "seroval": "^1.6.8",
     "typescript": "^6.0.3"
   },
   "scripts": {
     "prestart": "pnpm run build",
     "prepublishOnly": "pnpm run build",
     "build": "tsc -b",
-    "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node18 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
+    "bundle": "rimraf dist && esbuild --bundle --platform=node --format=cjs --target=node22 --external:@azure/functions-core --outfile=dist/functions/index.js src/functions/index.ts",
     "watch": "tsc --watch",
     "graphql-schema": "graphql-codegen --config codegen.ts",
     "create-fixture": "pnpm run build && node dist/commands/create-fixture.js",
     "update-test-data": "pnpm run build && node dist/commands/update-test-data.js",
     "update-all-fixtures": "pnpm run build && node dist/commands/update-all-fixtures.js",
-    "test": "jest"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js"
   },
   "jest": {
     "preset": "ts-jest",

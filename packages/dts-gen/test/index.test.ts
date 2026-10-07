@@ -1,4 +1,6 @@
 import * as tsg from "../src";
+import { execFileSync } from "child_process";
+import path from "path";
 
 const testModuleNames = ["lodash", "jquery", "yargs", "ecurve"];
 
@@ -34,7 +36,8 @@ const expressions: { [s: string]: any } = {
 describe("Module tests", () => {
   for (const moduleName of testModuleNames) {
     it(`Generates the same declaration for ${moduleName}`, () => {
-      const result = tsg.generateModuleDeclarationFile(moduleName!, require(moduleName!));
+      const module = moduleName === "jquery" ? require("jquery/factory").jQueryFactory : require(moduleName);
+      const result = tsg.generateModuleDeclarationFile(moduleName, module);
       expect(result).toMatchSnapshot(`module-${moduleName}.d.ts`);
     });
   }
@@ -47,4 +50,23 @@ describe("Expression tests", () => {
       expect(result).toMatchSnapshot(`expr-${key}.d.ts`);
     });
   }
+});
+
+describe("CLI tests", () => {
+  const cli = path.resolve(__dirname, "../dist/run.js");
+
+  it.each(["--version", "-v"])("prints its package version with %s", (flag) => {
+    const output = execFileSync(process.execPath, [cli, flag], { encoding: "utf8" });
+    expect(output.trim()).toBe(require("../package.json").version);
+  });
+
+  it("parses expression, name, and output options", () => {
+    const output = execFileSync(
+      process.execPath,
+      [cli, "--expression", "({ value: 1 })", "--name", "sample", "--stdout"],
+      { encoding: "utf8" },
+    );
+    expect(output).toContain("declare const sample:");
+    expect(output).toContain("value: number;");
+  });
 });

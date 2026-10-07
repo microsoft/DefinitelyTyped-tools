@@ -19,18 +19,18 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/eslint-plugin"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/eslint-plugin"
   },
   "dependencies": {
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/types": "^8.67.0",
-    "@typescript-eslint/utils": "^8.67.0"
+    "@typescript-eslint/types": "^8.71.1",
+    "@typescript-eslint/utils": "^8.71.1"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-jsdoc": "^44.0.0",
+    "eslint-plugin-jsdoc": "^65.1.0",
     "typescript": "<7"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "typescript-5.5": "npm:typescript@~5.5.0-0"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "license": "MIT"
 }

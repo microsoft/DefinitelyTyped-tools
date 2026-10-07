@@ -21,21 +21,21 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "dependencies": {
     "dts-dom": "^3.7.0",
     "typescript": "^6.0.3",
-    "which": "^6.0.1",
-    "yargs": "^17.7.2"
+    "which": "^7.0.0",
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.6.4",
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.35",
     "ecurve": "1.0.6",
-    "jquery": "3.7.1",
-    "lodash": "4.17.23"
+    "jquery": "4.0.0",
+    "lodash": "4.18.1"
   },
   "keywords": [
     "typescript"

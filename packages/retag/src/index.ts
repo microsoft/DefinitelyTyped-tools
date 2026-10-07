@@ -25,7 +25,7 @@ if (require.main === module) {
 }
 
 async function main() {
-  const { dry, path, name } = yargs
+  const { dry, path, name } = yargs(process.argv.slice(2))
     .options({
       dry: { type: "boolean", default: false },
       path: { type: "string", default: "../DefinitelyTyped" },

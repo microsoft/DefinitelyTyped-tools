@@ -9,8 +9,8 @@ const config: CodegenConfig = {
       preset: "client",
       config: {
         useTypeImports: true,
-        enumsAsTypes: false,
-        onlyOperationTypes: true,
+        nonOptionalTypename: true,
+        enumType: "enum",
         scalars: {
           URI: "string",
           DateTime: "string",

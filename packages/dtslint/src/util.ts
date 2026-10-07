@@ -1,7 +1,7 @@
 import { createGitHubStringSetGetter, joinPaths } from "@definitelytyped/utils";
 import fs from "fs";
 import { basename, dirname } from "path";
-import stripJsonComments = require("strip-json-comments");
+import stripJsonComments from "strip-json-comments";
 import * as ts from "typescript";
 
 export function packageNameFromPath(path: string): string {

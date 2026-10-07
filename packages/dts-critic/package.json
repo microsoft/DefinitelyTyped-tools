@@ -9,7 +9,7 @@
   "dependencies": {
     "@definitelytyped/header-parser": "workspace:*",
     "typescript": "^6.0.3",
-    "yargs": "^17.7.2"
+    "yargs": "^18.2.0"
   },
   "peerDependencies": {
     "typescript": "<7"
@@ -18,7 +18,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b .",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dts-critic"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/dts-critic"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,6 @@
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/dts-critic#readme",
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   }
 }

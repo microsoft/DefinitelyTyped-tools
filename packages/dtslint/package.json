@@ -19,33 +19,33 @@
   },
   "scripts": {
     "build": "tsc -b .",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/dtslint"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/dtslint"
   },
   "dependencies": {
-    "@arethetypeswrong/cli": "0.18.3",
-    "@arethetypeswrong/core": "0.18.3",
+    "@arethetypeswrong/cli": "0.18.5",
+    "@arethetypeswrong/core": "0.18.5",
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/typescript-packages": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^8.67.0",
-    "@typescript-eslint/parser": "^8.67.0",
-    "@typescript-eslint/types": "^8.67.0",
-    "@typescript-eslint/typescript-estree": "^8.67.0",
-    "@typescript-eslint/utils": "^8.67.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.1",
+    "@typescript-eslint/parser": "^8.71.1",
+    "@typescript-eslint/types": "^8.71.1",
+    "@typescript-eslint/typescript-estree": "^8.71.1",
+    "@typescript-eslint/utils": "^8.71.1",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
-    "semver": "^7.7.4",
-    "strip-json-comments": "^3.1.1",
+    "semver": "^7.8.5",
+    "strip-json-comments": "^5.0.3",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.12",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "typescript-7.1": "npm:typescript@~7.1.0-0"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "license": "MIT"
 }

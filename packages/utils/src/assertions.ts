@@ -4,7 +4,11 @@ export function assertDefined<T>(x: T | undefined, message?: string | Error | un
   if (x === undefined) {
     debugger;
   }
-  assert(x !== undefined, message);
+  if (typeof message === "string") {
+    assert(x !== undefined, message);
+  } else {
+    assert(x !== undefined, message);
+  }
   return x!;
 }
 

@@ -11,19 +11,19 @@
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
     "longjohn": "^0.2.12",
-    "pacote": "^21.4.0",
-    "semver": "^7.7.4",
+    "pacote": "^22.0.0",
+    "semver": "^7.8.5",
     "typescript": "^6.0.3",
-    "yargs": "^17.7.2"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "@types/yargs": "^17.0.35"
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/publisher",
     "clean": "node --enable-source-maps dist/clean.js",
     "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
     "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
@@ -47,7 +47,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/publisher#readme"
 }

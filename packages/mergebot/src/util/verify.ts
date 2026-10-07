@@ -1,4 +1,3 @@
-import { verify } from "@octokit/webhooks-methods";
 import type { InvocationContext } from "@azure/functions";
 
 export async function httpLog(context: InvocationContext, headers: Headers, body: any) {
@@ -34,6 +33,7 @@ export async function shouldRunRequest(
 }
 
 export async function verifyIsFromGitHub(headers: Headers, body: any) {
+  const { verify } = await import("@octokit/webhooks-methods");
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
 
   // For process.env.GITHUB_WEBHOOK_SECRET see

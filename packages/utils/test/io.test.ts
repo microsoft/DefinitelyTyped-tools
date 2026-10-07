@@ -4,9 +4,34 @@ import os from "os";
 import https from "https";
 import { EventEmitter } from "events";
 import { list } from "tar";
-import { createTgz, createGitHubStringSetGetter } from "../src/io";
+import tarStream from "tar-stream";
+import { createTgz, createGitHubStringSetGetter, stringOfStream, streamOfString } from "../src/io";
 
 describe("io", () => {
+  describe(stringOfStream, () => {
+    it("reads Node.js streams", async () => {
+      await expect(stringOfStream(streamOfString("contents"), "test")).resolves.toBe("contents");
+    });
+
+    it("reads tar-stream entries", async () => {
+      const pack = tarStream.pack();
+      const extract = tarStream.extract();
+      const result = new Promise<string>((resolve, reject) => {
+        extract.on("error", reject);
+        extract.on("entry", (header, stream, next) => {
+          stringOfStream(stream, header.name).then((text) => {
+            next();
+            resolve(text);
+          }, reject);
+        });
+      });
+      pack.pipe(extract);
+      pack.entry({ name: "test.txt" }, "contents");
+      pack.finalize();
+      await expect(result).resolves.toBe("contents");
+    });
+  });
+
   describe(createGitHubStringSetGetter, () => {
     const originalNodeEnv = process.env.NODE_ENV;
     let fallbackPath: string;

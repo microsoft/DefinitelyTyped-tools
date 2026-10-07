@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/header-parser"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/header-parser"
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
@@ -22,15 +22,15 @@
   "dependencies": {
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "semver": "^7.7.4"
+    "semver": "^7.8.5"
   },
   "devDependencies": {
-    "@types/semver": "^7.7.1"
+    "@types/semver": "^7.8.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   }
 }

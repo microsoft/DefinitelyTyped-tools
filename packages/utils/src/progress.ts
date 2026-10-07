@@ -1,4 +1,4 @@
-import charm = require("charm");
+import { clearLine, cursorTo } from "readline";
 
 export interface Options {
   /** Text to display in front of the progress bar. */
@@ -10,8 +10,6 @@ export interface Options {
 }
 
 export class ProgressBar {
-  private readonly console = new UpdatableConsole();
-
   private readonly name: string;
   private readonly width: number;
   private readonly updateMinTime: number;
@@ -40,40 +38,17 @@ export class ProgressBar {
 
   private doUpdate(current: number): void {
     const nCellsFilled = Math.ceil(this.width * Math.min(1, Math.max(0, current)));
-    this.console.update((c) => {
-      c.write(this.name);
-      c.write(" [");
-      c.write("█".repeat(nCellsFilled));
-      if (nCellsFilled < this.width) {
-        c.right(this.width - nCellsFilled);
-      }
-      c.write("]");
-      if (this.flavor.length) {
-        c.write(` ${this.flavor}`);
-      }
-    });
+    cursorTo(process.stdout, 0);
+    clearLine(process.stdout, 0);
+    process.stdout.write(
+      `${this.name} [${"█".repeat(nCellsFilled)}${" ".repeat(this.width - nCellsFilled)}]${this.flavor ? ` ${this.flavor}` : ""}`,
+    );
+    cursorTo(process.stdout, 0);
   }
 
   done(): void {
     this.flavor = "Done!";
     this.doUpdate(1);
-    this.console.end();
-  }
-}
-
-/** A mutable line of text on the console. */
-class UpdatableConsole {
-  private readonly charm = charm(process.stdout);
-
-  update(action: (charm: charm.CharmInstance) => void): void {
-    this.charm.push();
-    this.charm.erase("line");
-    action(this.charm);
-    this.charm.pop();
-  }
-
-  end(): void {
-    this.charm.write("\n");
-    this.charm.end();
+    process.stdout.write("\n");
   }
 }

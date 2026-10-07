@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/retag"
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --config ../../jest.config.js packages/retag"
   },
   "bugs": {
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
@@ -22,14 +22,14 @@
     "@definitelytyped/definitions-parser": "workspace:*",
     "@definitelytyped/typescript-versions": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "pacote": "^21.4.0",
-    "semver": "^7.7.4",
-    "yargs": "^17.7.2"
+    "pacote": "^22.0.0",
+    "semver": "^7.8.5",
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.6.4",
     "@types/pacote": "^11.1.8",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "@types/yargs": "^17.0.35"
   },
   "main": "dist/index.js",
@@ -40,6 +40,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   }
 }
