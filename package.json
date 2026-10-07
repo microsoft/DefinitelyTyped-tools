@@ -24,7 +24,6 @@
     "eslint-plugin-jsdoc": "^65.1.0",
     "knip": "^6.40.0",
     "prettier": "^3.9.9",
-    "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   },
   "pnpm": {

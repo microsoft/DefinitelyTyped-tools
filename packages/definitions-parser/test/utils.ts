@@ -1,6 +1,6 @@
 import { test, TestContext } from "node:test";
 import { License } from "@definitelytyped/header-parser";
-import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../src/packages";
+import { TypingsVersionsRaw, getMangledNameForScopedPackage } from "../packages";
 import { atTypesSlash } from "@definitelytyped/utils";
 
 export function testo(o: { [s: string]: (t: TestContext) => void }) {

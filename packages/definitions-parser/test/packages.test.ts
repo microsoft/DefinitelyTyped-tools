@@ -3,8 +3,8 @@ import { describe, it, beforeEach, before } from "node:test";
 import { License } from "@definitelytyped/header-parser";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
 import { Range } from "semver";
-import { getTypingInfo } from "../src/lib/definition-parser";
-import { createMockDT } from "../src/mocks";
+import { getTypingInfo } from "../lib/definition-parser";
+import { createMockDT } from "../mocks";
 import {
   AllPackages,
   NotNeededPackage,
@@ -12,7 +12,7 @@ import {
   TypingsVersions,
   getDependencyFromFile,
   getMangledNameForScopedPackage,
-} from "../src/packages";
+} from "../packages";
 import { createTypingsVersionRaw } from "./utils";
 
 describe(AllPackages.name, () => {

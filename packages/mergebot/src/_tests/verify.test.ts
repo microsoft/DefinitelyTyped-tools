@@ -36,7 +36,7 @@ describe("verifyIsFromGitHub", () => {
   });
 
   it("preserves the import-only dependency in compiled CommonJS output", () => {
-    const modulePath = path.resolve(__dirname, "../../dist/util/verify.js");
+    const modulePath = path.resolve("packages/mergebot/dist/util/verify.js");
     const headers = Object.fromEntries(headersFor(body));
     const output = execFileSync(
       process.execPath,

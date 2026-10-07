@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import plugin = require("../src/index");
+import plugin = require("../index");
 
 describe("plugin", () => {
   it("should have the expected exports", (t) => {

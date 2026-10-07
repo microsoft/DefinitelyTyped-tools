@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {} from "node:test";
-import { getAffectedPackagesWorker } from "../src/get-affected-packages";
-import { NotNeededPackage, AllPackages } from "../src/packages";
+import { getAffectedPackagesWorker } from "../get-affected-packages";
+import { NotNeededPackage, AllPackages } from "../packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData = {

@@ -4,9 +4,16 @@ const path = require("node:path");
 process.env.NODE_ENV = "test";
 process.env.BOT_AUTH_TOKEN = "FAKE_TOKEN";
 
-snapshot.setResolveSnapshotPath((testFile) =>
-  path.join(path.dirname(testFile), "__snapshots__", `${path.basename(testFile)}.snapshot`),
-);
+snapshot.setResolveSnapshotPath((testFile) => {
+  const sourceFile = path
+    .relative(__dirname, testFile)
+    .replaceAll("\\", "/")
+    .replace("/dist/test/", "/test/")
+    .replace("/dist/_tests/", "/src/_tests/")
+    .replace("/dist/", "/")
+    .replace(/\.[jt]s$/, ".ts");
+  return path.join(__dirname, path.dirname(sourceFile), "__snapshots__", `${path.basename(sourceFile)}.snapshot`);
+});
 snapshot.setDefaultSnapshotSerializers([
   (value) =>
     typeof value === "string"

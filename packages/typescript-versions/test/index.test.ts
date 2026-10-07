@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { TypeScriptVersion } from "../src";
+import { TypeScriptVersion } from "../index";
 
 describe("unsupported", () => {
   it("contains at least 2.9", () => {

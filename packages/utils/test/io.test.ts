@@ -8,7 +8,7 @@ import https from "https";
 import { EventEmitter } from "events";
 import { list } from "tar";
 import tarStream from "tar-stream";
-import { createTgz, createGitHubStringSetGetter, stringOfStream, streamOfString } from "../src/io";
+import { createTgz, createGitHubStringSetGetter, stringOfStream, streamOfString } from "../io";
 
 describe("io", () => {
   describe(stringOfStream.name, () => {
@@ -87,7 +87,7 @@ describe("io", () => {
 
   describe(createTgz.name, () => {
     it("packs a directory", async () => {
-      const dir = path.join(__dirname, "data", "pack");
+      const dir = path.resolve("packages/utils/test/data/pack");
       const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "dt-pack-"));
       const archivePath = path.join(outputDir, "pack.tgz");
       try {

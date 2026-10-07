@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { NotNeededPackage } from "@definitelytyped/definitions-parser";
-import { isAlreadyDeprecated } from "../src/calculate-versions";
+import { isAlreadyDeprecated } from "../calculate-versions";
 
 describe("isAlreadyDeprecated", () => {
   const shouldSkip = !process.env.GITHUB_ACTIONS;

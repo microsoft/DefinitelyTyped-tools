@@ -3,7 +3,9 @@
     "compilerOptions": {
       "types": ["node"],
       "composite": false,
-      "noEmit": true
+      "rootDir": ".",
+      "rootDirs": ["..", "../src"],
+      "outDir": "../dist/test"
     },
     "references": [
       { "path": ".." },

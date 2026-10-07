@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import {} from "node:test";
 import * as util from "util";
 import { createTypingsVersionRaw, testo } from "./utils";
-import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../src/git";
-import { NotNeededPackage, AllPackages, PackageId } from "../src/packages";
+import { GitDiff, getNotNeededPackages, checkNotNeededPackage, gitChanges } from "../git";
+import { NotNeededPackage, AllPackages, PackageId } from "../packages";
 
 const typesData = {
   jquery: createTypingsVersionRaw("jquery", {}, {}),

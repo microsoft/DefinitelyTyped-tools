@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it, test, TestContext } from "node:test";
 import { readdirSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 import { Actions, process } from "../compute-pr-actions";
 import { projectBoardNumber } from "../basic";
 import { deriveStateForPR, PRQueryResponse } from "../pr-info";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
-import * as cachedQueries from "./cachedQueries";
+import * as cachedQueries from "../../src/_tests/cachedQueries";
 import { executePrActions } from "../execute-pr-actions";
 
 const queries = {
@@ -53,7 +53,7 @@ async function testFixture(dir: string, t: TestContext) {
 }
 
 describe("Test fixtures", () => {
-  const fixturesFolder = join(__dirname, "fixtures");
+  const fixturesFolder = resolve("packages/mergebot/src/_tests/fixtures");
   readdirSync(fixturesFolder, { withFileTypes: true }).forEach((dirent) => {
     if (dirent.isDirectory()) {
       it(`Fixture: ${dirent.name}`, async (t) => testFixture(join(fixturesFolder, dirent.name), t));
@@ -73,7 +73,9 @@ for (const row of [
 ] as const) {
   test(`only queries required data for ${row}`, async () => {
     const scenario = row;
-    const response: PRQueryResponse = readJsonSync(join(__dirname, "fixtures", "43160", "_response.json"));
+    const response: PRQueryResponse = readJsonSync(
+      resolve("packages/mergebot/src/_tests/fixtures/43160/_response.json"),
+    );
     const prInfo = response.data.repository?.pullRequest;
     if (!prInfo) throw new Error("Missing fixture pull request");
     const pr: Parameters<typeof executePrActions>[1] = {

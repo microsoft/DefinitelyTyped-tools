@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { isVersionedExpectErrorOutsideRange } from "../src";
+import { isVersionedExpectErrorOutsideRange } from "../index";
 
 describe(isVersionedExpectErrorOutsideRange.name, () => {
   it("normalizes TypeScript major-minor versions before evaluating ranges", () => {

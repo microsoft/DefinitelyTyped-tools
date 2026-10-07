@@ -1,7 +1,7 @@
-import path from "path";
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { isDeepStrictEqual } from "node:util";
+import path from "path";
 import { findDtsName, dtToNpmName, parseExportErrorKind, checkSource, ErrorKind, ExportErrorKind } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void }) {
@@ -59,7 +59,7 @@ const allErrors: Map<ExportErrorKind, true> = new Map([
 ]);
 
 function testsource(filename: string) {
-  return __dirname + "/testsource/" + filename;
+  return path.resolve("packages/dts-critic/testsource", filename);
 }
 
 suite("checkSource", {

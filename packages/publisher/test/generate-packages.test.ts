@@ -8,12 +8,7 @@ import {
   TypingsDataRaw,
 } from "@definitelytyped/definitions-parser";
 import { License } from "@definitelytyped/header-parser";
-import {
-  createNotNeededPackageJSON,
-  createPackageJSON,
-  createReadme,
-  getLicenseFileText,
-} from "../src/generate-packages";
+import { createNotNeededPackageJSON, createPackageJSON, createReadme, getLicenseFileText } from "../generate-packages";
 import { testo } from "./utils";
 
 function createRawPackage(license: License): TypingsDataRaw {

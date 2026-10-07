@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { DiskFS } from "@definitelytyped/utils";
 import path from "path";
-import { getTypingInfo } from "../src/lib/definition-parser";
-import { createMockDT } from "../src/mocks";
+import { getTypingInfo } from "../lib/definition-parser";
+import { createMockDT } from "../mocks";
 
 describe(getTypingInfo.name, () => {
   it("keys data by major.minor version", async () => {
@@ -285,7 +285,7 @@ const a = new webpack.AutomaticPrefetchPlugin();
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
-      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/")),
+      new DiskFS(path.resolve("packages/definitions-parser/test/fixtures/allows-references-to-old-versions-of-self/")),
     );
     assert.ok(!("errors" in info!));
   });
@@ -367,7 +367,11 @@ import route = require('@ember/routing/route');
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
     const info = (await getTypingInfo(
       "styled-components-react-native",
-      new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")),
+      new DiskFS(
+        path.resolve(
+          "packages/definitions-parser/test/fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/",
+        ),
+      ),
     ))!;
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));

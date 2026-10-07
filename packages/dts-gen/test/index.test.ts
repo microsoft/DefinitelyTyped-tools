@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import * as tsg from "../src";
+import * as tsg from "../index";
 import { execFileSync } from "child_process";
 import path from "path";
 
@@ -55,13 +55,13 @@ describe("Expression tests", () => {
 });
 
 describe("CLI tests", () => {
-  const cli = path.resolve(__dirname, "../dist/run.js");
+  const cli = path.resolve("packages/dts-gen/dist/run.js");
 
   for (const row of ["--version", "-v"] as const) {
     it(`prints its package version with ${row}`, () => {
       const flag = row;
       const output = execFileSync(process.execPath, [cli, flag], { encoding: "utf8" });
-      assert.equal(output.trim(), require("../package.json").version);
+      assert.equal(output.trim(), require(path.resolve("packages/dts-gen/package.json")).version);
     });
   }
 

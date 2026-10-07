@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it, beforeEach, afterEach, mock, Mock } from "node:test";
-import { ProgressBar } from "../src/progress";
+import { ProgressBar } from "../progress";
 
 describe("ProgressBar", () => {
   let write: Mock<typeof process.stdout.write>;

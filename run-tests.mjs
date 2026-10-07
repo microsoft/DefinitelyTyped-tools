@@ -34,14 +34,29 @@ const files = [
     ["packages/*/test/**/*.test.ts", "packages/dts-critic/*.test.ts", "packages/mergebot/src/_tests/*.test.ts"],
     { cwd: root, exclude: ["**/fixtures/**", "**/testsource/**", "**/dist/**", "packages/publisher/output/**"] },
   ),
-].filter((file) => !filters.length || filters.some((filter) => file.replaceAll("\\", "/").includes(filter)));
-if (!files.length) throw new Error(`No test files match: ${positionals.join(", ")}`);
+].map((file) => file.replaceAll("\\", "/"));
+const builtFiles = files
+  .map((file) =>
+    file
+      .replace("/src/_tests/", "/dist/_tests/")
+      .replace("/test/", "/dist/test/")
+      .replace("packages/dts-critic/", "packages/dts-critic/dist/")
+      .replace(/\.ts$/, ".js"),
+  )
+  .filter(
+    (file, index) =>
+      !filters.length || filters.some((filter) => files[index].includes(filter) || file.includes(filter)),
+  );
+if (!builtFiles.length) throw new Error(`No test files match: ${positionals.join(", ")}`);
+const missing = builtFiles.filter((file) => !existsSync(resolve(root, file)));
+if (missing.length)
+  throw new Error(`Missing compiled tests. Run pnpm build from the repository root first:\n${missing.join("\n")}`);
 const flags = tokens
   .filter((token) => token.kind === "option")
   .map((token) => token.rawName + (token.value === undefined ? "" : `=${token.value}`));
 const result = spawnSync(
   process.execPath,
-  ["--import", import.meta.resolve("tsx"), "--require", "./test-setup.cjs", "--test", ...flags, ...files],
+  ["--enable-source-maps", "--require", "./test-setup.cjs", "--test", ...flags, ...builtFiles],
   { cwd: root, stdio: "inherit" },
 );
 if (result.error) throw result.error;

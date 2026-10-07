@@ -6,8 +6,8 @@ import { License } from "@definitelytyped/header-parser";
 import { mkdtempSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
-import { publishTypingsPackage } from "../src/lib/package-publisher";
-import { ChangedTyping } from "../src/lib/versions";
+import { publishTypingsPackage } from "../lib/package-publisher";
+import { ChangedTyping } from "../lib/versions";
 
 const packageJson = { name: "@types/example", version: "2.0.0" };
 

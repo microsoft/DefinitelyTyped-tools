@@ -4,12 +4,12 @@ import { ESLint, Linter } from "eslint";
 import path from "path";
 import { globSync } from "glob";
 import { fixtureRoot } from "./util";
-import * as plugin from "../src/index";
+import * as plugin from "../index";
 import fs from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
 import { stripVTControlCharacters } from "util";
 
-const snapshotDir = path.join(__dirname, "__file_snapshots__");
+const snapshotDir = path.resolve("packages/eslint-plugin/test/__file_snapshots__");
 
 const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot });
 

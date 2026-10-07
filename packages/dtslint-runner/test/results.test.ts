@@ -4,9 +4,9 @@ import { setImmediate } from "node:timers/promises";
 import { execFileSync } from "child_process";
 import { mkdirSync, rmSync, symlinkSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
-import { addGithubLinks, Failure } from "../src/add-github-links";
-import { getDiffComment, getDiffLog, getResultComments, main } from "../src/post-results";
-import { readComparison } from "../src/validate-results";
+import { addGithubLinks, Failure } from "../add-github-links";
+import { getDiffComment, getDiffLog, getResultComments, main } from "../post-results";
+import { readComparison } from "../validate-results";
 
 type CommentsClient = NonNullable<Parameters<typeof main>[0]>;
 

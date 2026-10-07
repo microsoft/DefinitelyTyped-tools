@@ -20,7 +20,7 @@
       "name": "Node tests",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": [
-        "--import", "tsx",
+        "--enable-source-maps",
         "--require", "./test-setup.cjs",
         "--test",
         "--test-isolation=none"
@@ -29,7 +29,8 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "args": [ "packages/definitions-parser/test/*.test.ts"],
+      "args": [ "packages/definitions-parser/dist/test/*.test.js"],
+      "outFiles": ["${workspaceFolder}/packages/*/dist/**/*.js"],
       "type": "node"
     },
     {

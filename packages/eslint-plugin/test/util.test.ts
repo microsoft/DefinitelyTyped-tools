@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import path from "path";
-import { findTypesPackage, getTypesPackageForDeclarationFile } from "../src/util";
+import { findTypesPackage, getTypesPackageForDeclarationFile } from "../util";
 import { fixtureRoot } from "./util";
 
 function getFixturePath(filename: string): string {

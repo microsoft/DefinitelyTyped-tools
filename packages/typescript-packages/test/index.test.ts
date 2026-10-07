@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { TypeScriptVersion } from "@definitelytyped/typescript-versions";
-import { resolve } from "../src";
+import path from "path";
+import { resolve } from "../index";
 
 describe("package.json", () => {
   it("must contain correct dependencies", () => {
-    const dependencies = require("../package.json").dependencies as Record<string, string>;
+    const dependencies = require(path.resolve("packages/typescript-packages/package.json")).dependencies as Record<
+      string,
+      string
+    >;
     const typescripts = new Map<string, string>(
       Object.entries(dependencies).filter(([name]) => name.startsWith("typescript-")),
     );
