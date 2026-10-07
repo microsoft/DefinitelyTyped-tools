@@ -18,11 +18,12 @@ export async function executePrActions(
   pr: PR_repository_pullRequest,
   dry?: boolean,
   projectOnly?: boolean,
+  queries = { getLabels, getProjectBoardColumns },
 ) {
   const botComments: ParsedComment[] = getBotComments(pr);
   const mutations = noNullish(
     projectOnly
-      ? await getMutationsForProjectChanges(actions, pr)
+      ? await getMutationsForProjectChanges(actions, pr, queries.getProjectBoardColumns)
       : [
           // the mutations are ordered for presentation in the timeline:
           // * welcome comment is always first
@@ -31,8 +32,8 @@ export async function executePrActions(
           // * state changes next, similar to column changes
           // * finally, any other comments (better to see label changes and then a comment that explains what happens now)
           ...getMutationsForComments(actions, pr.id, botComments, true),
-          ...(await getMutationsForLabels(actions, pr)),
-          ...(await getMutationsForProjectChanges(actions, pr)),
+          ...(await getMutationsForLabels(actions, pr, queries.getLabels)),
+          ...(await getMutationsForProjectChanges(actions, pr, queries.getProjectBoardColumns)),
           ...getMutationsForCommentRemovals(actions, botComments),
           ...getMutationsForChangingPRState(actions, pr),
           ...getMutationsForComments(actions, pr.id, botComments, false),
@@ -69,7 +70,7 @@ export async function executePrActions(
   }
 }
 
-async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullRequest) {
+async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullRequest, fetchLabels: typeof getLabels) {
   if (!actions.shouldUpdateLabels) return [];
   const labels = noNullish(pr.labels?.nodes).map((l) => l.name);
   const makeMutations = async (pred: (l: LabelName) => boolean, query: keyof schema.Mutation) => {
@@ -77,7 +78,7 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
     return labels.length === 0
       ? null
       : createMutation<schema.AddLabelsToLabelableInput & schema.RemoveLabelsFromLabelableInput>(query, {
-          labelIds: await Promise.all(labels.map((label) => getLabelIdByName(label))),
+          labelIds: await Promise.all(labels.map((label) => getLabelIdByName(label, fetchLabels))),
           labelableId: pr.id,
         });
   };
@@ -87,7 +88,11 @@ async function getMutationsForLabels(actions: Actions, pr: PR_repository_pullReq
   ]);
 }
 
-async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository_pullRequest) {
+async function getMutationsForProjectChanges(
+  actions: Actions,
+  pr: PR_repository_pullRequest,
+  fetchColumns: typeof getProjectBoardColumns,
+) {
   if (!actions.projectColumn) return [];
   const card = pr.projectItems.nodes?.find((card) => card?.project.number === projectBoardNumber);
   const columnName =
@@ -106,7 +111,7 @@ async function getMutationsForProjectChanges(actions: Actions, pr: PR_repository
   }
   // Existing card is ok => do nothing
   if (columnName === actions.projectColumn) return [];
-  const columns = await getProjectBoardColumns();
+  const columns = await fetchColumns();
   const projectId = card ? card.project.id : projectIdStatic;
   const fieldId =
     card?.fieldValueByName?.__typename === "ProjectV2ItemFieldSingleSelectValue" &&
@@ -236,8 +241,8 @@ function getMutationsForChangingPRState(actions: Actions, pr: PR_repository_pull
   ];
 }
 
-async function getLabelIdByName(name: string): Promise<string> {
-  const labels = await getLabels();
+async function getLabelIdByName(name: string, fetchLabels: typeof getLabels): Promise<string> {
+  const labels = await fetchLabels();
   const res = labels.find((l) => l?.name === name)?.id;
   if (!res) throw new Error(`No label named "${name}" exists`);
   return res;

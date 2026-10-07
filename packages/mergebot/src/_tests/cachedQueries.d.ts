@@ -5,4 +5,4 @@ type CachedQueries = {
 };
 
 declare const _default: CachedQueries;
-export = cachedQueries;
+export = _default;
