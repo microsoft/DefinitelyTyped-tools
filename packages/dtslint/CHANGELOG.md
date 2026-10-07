@@ -1,5 +1,19 @@
 # @definitelytyped/dtslint
 
+## 0.2.48
+
+### Patch Changes
+
+- 6661498: Add TypeScript 7.0 and 7.1 support through the Corsa compiler API, including compiler diagnostics, `$ExpectType`
+  assertions, version-ranged `@ts-expect-error` directives, multi-project failure reporting, and local TypeScript packages.
+- 6661498: Upgrade bundled TypeScript dependencies to 6.0 and update TypeScript ESLint dependencies for compatibility.
+- Updated dependencies [6661498]
+- Updated dependencies [2e05fe5]
+  - @definitelytyped/typescript-packages@0.1.13
+  - @definitelytyped/typescript-versions@0.1.13
+  - @definitelytyped/utils@0.1.16
+  - @definitelytyped/header-parser@0.2.31
+
 ## 0.2.47
 
 ### Patch Changes
