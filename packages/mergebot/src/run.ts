@@ -10,7 +10,6 @@ import { executePrActions } from "./execute-pr-actions";
 import { getProjectBoardCards } from "./queries/projectboard-cards";
 import { runQueryToGetPRForCardId } from "./queries/card-id-to-pr-query";
 import { createMutation, client } from "./graphql-client";
-import { render } from "prettyjson";
 import { inspect } from "util";
 
 const args = yargs(process.argv.slice(2))
@@ -20,7 +19,7 @@ const args = yargs(process.argv.slice(2))
   .options({
     dry: { alias: ["d"], type: "boolean", default: false, desc: "don't execute actions" },
     cleanup: { alias: ["c"], type: "boolean", default: true, desc: "cleanup columns when done" },
-    format: { alias: ["f"], choices: ["json", "yaml", "node"], desc: "format for information display" },
+    format: { alias: ["f"], choices: ["json", "node"], desc: "format for information display" },
     "show-raw": { alias: ["s1"], type: "boolean", desc: "display raw query result" },
     "show-basic": { alias: ["s2"], type: "boolean", desc: "display basic pr info" },
     "show-extended": { alias: ["s3"], type: "boolean", desc: "display extended info" },
@@ -76,11 +75,7 @@ const show = (name: string, value: unknown) => {
     s.replace(/\n---+\s*<details><summary>(Diagnostic Information)[^]*?<\/details>/g, "...$1..."),
   );
   let str =
-    args.format === "json"
-      ? JSON.stringify(value, undefined, 2)
-      : args.format === "yaml"
-        ? render(value)
-        : inspect(value, { depth: null, colors: true });
+    args.format === "json" ? JSON.stringify(value, undefined, 2) : inspect(value, { depth: null, colors: true });
   str = str.replace(/^/gm, "  ");
   console.log(str);
 };

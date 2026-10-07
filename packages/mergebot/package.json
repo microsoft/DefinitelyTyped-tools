@@ -29,7 +29,6 @@
     "dayjs": "^1.11.23",
     "fast-json-patch": "^3.1.1",
     "graphql": "^17.0.2",
-    "prettyjson": "^1.2.5",
     "yargs": "^18.2.0"
   },
   "devDependencies": {
@@ -39,7 +38,6 @@
     "@octokit/graphql-schema": "^15.26.1",
     "@octokit/openapi-webhooks-types": "^12.2.0",
     "@types/node": "^26.6.4",
-    "@types/prettyjson": "^0.0.33",
     "@types/yargs": "^17.0.35",
     "esbuild": "^0.28.2",
     "seroval": "^1.6.8",

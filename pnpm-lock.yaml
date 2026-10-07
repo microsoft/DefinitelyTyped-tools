@@ -295,9 +295,6 @@ importers:
       graphql:
         specifier: ^17.0.2
         version: 17.0.2
-      prettyjson:
-        specifier: ^1.2.5
-        version: 1.2.5
       yargs:
         specifier: ^18.2.0
         version: 18.2.0
@@ -320,9 +317,6 @@ importers:
       '@types/node':
         specifier: ^26.6.4
         version: 26.6.4
-      '@types/prettyjson':
-        specifier: ^0.0.33
-        version: 0.0.33
       '@types/yargs':
         specifier: ^17.0.35
         version: 17.0.35
@@ -1915,9 +1909,6 @@ packages:
   '@types/parsimmon@1.10.9':
     resolution: {integrity: sha512-O2M2x1w+m7gWLen8i5DOy6tWRnbRcsW6Pke3j3HAsJUrPb4g0MgjksIUm2aqUtCYxy7Qjr3CzjjwQBzhiGn46A==}
 
-  '@types/prettyjson@0.0.33':
-    resolution: {integrity: sha512-hHZMkavT9OXFq8p6pTCiaREtPxMRfy9NMp+Qa4PWH0RINQjyh0crOhoqUFA/cvIZncpjBpdvxkoe7nmVbyBJXw==}
-
   '@types/semver@7.8.0':
     resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
@@ -2558,10 +2549,6 @@ packages:
 
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
-
-  colors@1.4.0:
-    resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
-    engines: {node: '>=0.1.90'}
 
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -3901,10 +3888,6 @@ packages:
   prettier@3.9.9:
     resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
     engines: {node: '>=14'}
-    hasBin: true
-
-  prettyjson@1.2.5:
-    resolution: {integrity: sha512-rksPWtoZb2ZpT5OVgtmy0KHVM+Dca3iVwWY9ifwhcexfjebtgjg3wmrUt9PvJ59XIYBcknQeYHD8IAnVlh9lAw==}
     hasBin: true
 
   proc-log@7.0.0:
@@ -6109,8 +6092,6 @@ snapshots:
 
   '@types/parsimmon@1.10.9': {}
 
-  '@types/prettyjson@0.0.33': {}
-
   '@types/semver@7.8.0': {}
 
   '@types/ssri@7.1.5':
@@ -6742,8 +6723,6 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
-
-  colors@1.4.0: {}
 
   combined-stream@1.0.8:
     dependencies:
@@ -8307,11 +8286,6 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.9.9: {}
-
-  prettyjson@1.2.5:
-    dependencies:
-      colors: 1.4.0
-      minimist: 1.2.8
 
   proc-log@7.0.0: {}
 
