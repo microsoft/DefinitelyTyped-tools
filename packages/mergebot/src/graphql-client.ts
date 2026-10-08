@@ -1,5 +1,5 @@
-import { ApolloClient, gql, HttpLink, InMemoryCache, MutationOptions, TypedDocumentNode } from "@apollo/client/core";
-import { print } from "graphql";
+import { ApolloClient, HttpLink, InMemoryCache, MutationOptions, TypedDocumentNode } from "@apollo/client/core";
+import { parse, print } from "graphql";
 import * as schema from "@octokit/graphql-schema";
 import { getGitHubAuthToken } from "./github-auth";
 
@@ -29,12 +29,12 @@ export function createMutation<T>(
 ): MutationOptions<schema.Mutation, { input: T }> {
   const mutation = {
     toJSON: () => print(mutation),
-    ...(gql`mutation($input: ${name[0]!.toUpperCase() + name.slice(1)}Input!) {
+    ...(parse(`mutation($input: ${name[0]!.toUpperCase() + name.slice(1)}Input!) {
                     ${name}(input: $input) {
                         __typename
                         ${subquery || ""}
                     }
-                }` as TypedDocumentNode<schema.Mutation, { input: T }>),
+                }`) as TypedDocumentNode<schema.Mutation, { input: T }>),
   };
   return { mutation, variables: { input } };
 }

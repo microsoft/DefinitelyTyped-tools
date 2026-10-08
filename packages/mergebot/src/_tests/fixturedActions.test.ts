@@ -8,6 +8,7 @@ import { deriveStateForPR, PRQueryResponse } from "../pr-info";
 import { readJsonSync, scrubDiagnosticDetails } from "../util/util";
 import * as cachedQueries from "../../src/_tests/cachedQueries";
 import { executePrActions } from "../execute-pr-actions";
+import { getPRInfo } from "../queries/pr-query";
 
 const queries = {
   getLabels: async () => cachedQueries.getLabels,
@@ -59,6 +60,30 @@ describe("Test fixtures", () => {
       it(`Fixture: ${dirent.name}`, async (t) => testFixture(join(fixturesFolder, dirent.name), t));
     }
   });
+});
+
+test("fetches fixture PR data through the typed query", async (t) => {
+  const response: PRQueryResponse = readJsonSync(resolve("packages/mergebot/src/_tests/fixtures/43160/_response.json"));
+  const pr = response.data.repository?.pullRequest;
+  assert.ok(pr?.files);
+  pr.files.pageInfo = { hasNextPage: false, endCursor: null };
+  let requests = 0;
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request, init?: RequestInit) => {
+    requests++;
+    assert.equal(input, "https://api.github.com/graphql");
+    assert.ok(typeof init?.body === "string");
+    const body: unknown = JSON.parse(init.body);
+    assert.ok(body && typeof body === "object");
+    assert.ok("operationName" in body && "variables" in body);
+    assert.equal(body.operationName, "PR");
+    assert.deepEqual(body.variables, { prNumber: 43160 });
+    return new Response(JSON.stringify({ data: response.data }), {
+      headers: { "content-type": "application/json" },
+    });
+  });
+  const info = await getPRInfo(43160);
+  assert.deepEqual(info.data, response.data);
+  assert.equal(requests, 1);
 });
 
 for (const row of [

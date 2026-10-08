@@ -1,6 +1,6 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
+import type { ResultOf } from "gql.tada";
 import { client } from "../graphql-client";
-import type { PrQuery, PrQueryVariables, PrFilesQuery, PrFilesQueryVariables } from "./schema/graphql";
+import { graphql } from "./graphql";
 import { noNullish } from "../util/util";
 
 type PR_repository_pullRequest_files_nodes = NonNullable<
@@ -20,7 +20,7 @@ export const fileLimit = 500;
 // - Now you're good to C&P the query below
 
 /** This is a GraphQL AST tree */
-const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
+const getPRInfoQueryFirst = graphql(`
   query PR($prNumber: Int!) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       id
@@ -36,6 +36,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
           name
         }
         labels(first: 100) {
+          __typename
           nodes {
             name
           }
@@ -74,6 +75,7 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
           ]
         ) {
           nodes {
+            __typename
             ... on ReopenedEvent {
               createdAt
             }
@@ -202,16 +204,21 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
         }
 
         projectItems(first: 10) {
+          __typename
           nodes {
+            __typename
             id
             project {
+              __typename
               id
               number
             }
             fieldValueByName(name: "Status") {
+              __typename
               ... on ProjectV2ItemFieldSingleSelectValue {
                 name
                 field {
+                  __typename
                   ... on ProjectV2SingleSelectField {
                     id
                   }
@@ -224,7 +231,9 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
       }
     }
   }
-`;
+`);
+
+export type PrQuery = ResultOf<typeof getPRInfoQueryFirst>;
 export async function getPRInfo(prNumber: number) {
   const info = await getPRInfoFirst(prNumber);
   const prInfo = info.data?.repository?.pullRequest;
@@ -267,7 +276,7 @@ async function getPRInfoFirst(prNumber: number) {
 }
 
 // Repeat just the file part, since that's all we need here
-const getPRInfoQueryRest: TypedDocumentNode<PrFilesQuery, PrFilesQueryVariables> = gql`
+const getPRInfoQueryRest = graphql(`
   query PRFiles($prNumber: Int!, $endCursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       pullRequest(number: $prNumber) {
@@ -286,7 +295,7 @@ const getPRInfoQueryRest: TypedDocumentNode<PrFilesQuery, PrFilesQueryVariables>
       }
     }
   }
-`;
+`);
 
 async function getPRInfoRest(
   prNumber: number,

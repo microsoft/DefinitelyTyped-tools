@@ -1,10 +1,10 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
+import type { ResultOf } from "gql.tada";
 import { client } from "../graphql-client";
-import type { GetPrForSha1Query, GetPrForSha1QueryVariables } from "./schema/graphql";
+import { graphql } from "./graphql";
 
 type GetPRForSHA1_search_nodes_PullRequest = Extract<
-  NonNullable<NonNullable<GetPrForSha1Query["search"]["nodes"]>[number]>,
-  { __typename?: "PullRequest" }
+  NonNullable<NonNullable<ResultOf<typeof getPRForSHA1Query>["search"]["nodes"]>[number]>,
+  { __typename: "PullRequest" }
 >;
 
 export const runQueryToGetPRMetadataForSHA1 = async (
@@ -21,10 +21,11 @@ export const runQueryToGetPRMetadataForSHA1 = async (
   return pr?.__typename === "PullRequest" ? pr : undefined;
 };
 
-export const getPRForSHA1Query: TypedDocumentNode<GetPrForSha1Query, GetPrForSha1QueryVariables> = gql`
+export const getPRForSHA1Query = graphql(`
   query GetPRForSHA1($query: String!) {
     search(query: $query, first: 1, type: ISSUE) {
       nodes {
+        __typename
         ... on PullRequest {
           title
           number
@@ -33,7 +34,7 @@ export const getPRForSHA1Query: TypedDocumentNode<GetPrForSha1Query, GetPrForSha
       }
     }
   }
-`;
+`);
 
 /* This is better since it doesn't do a generic search, but for some reason it will sometime fail to get a PR
 query GetPRForSHA1($owner: String!, $repo: String!, $sha1: String!) {

@@ -1,7 +1,7 @@
 import { fieldIdStatic, LabelName, labelNames, projectBoardNumber, projectIdStatic } from "./basic";
 import { MutationOptions } from "@apollo/client/core";
 import * as schema from "@octokit/graphql-schema";
-import type { PrQuery } from "./queries/schema/graphql";
+import type { PrQuery } from "./queries/pr-query";
 import { Actions } from "./compute-pr-actions";
 import { createMutation, client } from "./graphql-client";
 import { getProjectBoardColumns, getLabels } from "./util/cachedQueries";

@@ -6,7 +6,7 @@ import {
   PopularityLevel,
   projectBoardNumber,
 } from "./basic";
-import type { PrQuery } from "./queries/schema/graphql";
+import type { PrQuery } from "./queries/pr-query";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid, isTypeScriptBot } from "./util/util";
@@ -18,7 +18,7 @@ import * as jsonDiff from "fast-json-patch";
 import { isDeepStrictEqual } from "util";
 import { isDeclarationPath } from "@definitelytyped/utils";
 
-// Type aliases for the nested types from the generated schema
+// Type aliases for the nested query result types
 export type PR_repository_pullRequest = NonNullable<NonNullable<PrQuery["repository"]>["pullRequest"]>;
 
 // Type for fixture JSON files - intersects Apollo's QueryResult with { data: PrQuery } to narrow data from TData | undefined

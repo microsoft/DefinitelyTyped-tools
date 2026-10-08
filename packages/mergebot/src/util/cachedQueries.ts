@@ -1,5 +1,5 @@
+import type { VariablesOf } from "gql.tada";
 import { getLabels as getLabelsRaw, getProjectColumns } from "../queries/label-columns-queries";
-import type { GetProjectColumnsQueryVariables } from "../queries/schema/graphql";
 import { client } from "../graphql-client";
 import { noNullish } from "./util";
 
@@ -7,7 +7,7 @@ export async function getProjectBoardColumns(): Promise<Map<string, string>> {
   let cursor: string | null = null;
   const columns: Map<string, string> = new Map();
   while (true) {
-    const vars: GetProjectColumnsQueryVariables = { cursor };
+    const vars: VariablesOf<typeof getProjectColumns> = { cursor };
     const result = await client.query({ query: getProjectColumns, variables: vars });
     const project = result.data?.repository?.projectV2;
     for (const field of noNullish(project?.fields?.nodes)) {

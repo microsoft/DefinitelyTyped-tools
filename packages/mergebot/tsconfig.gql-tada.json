@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "plugins": [
+            {
+                "name": "gql.tada/ts-plugin",
+                "schema": "./node_modules/@octokit/graphql-schema/schema.graphql",
+                "tadaOutputLocation": "./src/queries/schema/tada-env.d.ts",
+                "tadaTurboLocation": "./src/queries/schema/tada-cache.d.ts"
+            }
+        ]
+    }
+}
