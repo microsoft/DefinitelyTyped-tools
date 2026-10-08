@@ -6,11 +6,10 @@ import {
   PopularityLevel,
   projectBoardNumber,
 } from "./basic";
-import type { PrQuery } from "./queries/pr-query";
 import { getMonthlyDownloadCount } from "./util/npm";
 import { fetchFile as defaultFetchFile } from "./util/fetchFile";
 import { noNullish, someLast, sameUser, authorNotBot, max, abbrOid, isTypeScriptBot } from "./util/util";
-import { fileLimit, getPRInfo } from "./queries/pr-query";
+import { fileLimit, getPRInfo, type PrQuery } from "./queries/pr-query";
 import * as comment from "./util/comment";
 import * as urls from "./urls";
 import * as OldHeaderParser from "@definitelytyped/old-header-parser";
