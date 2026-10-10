@@ -1,0 +1,133 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM7aQ8jd",
+        "title": "just Update package.json",
+        "createdAt": "2026-05-11T13:20:01Z",
+        "author": {
+          "login": "justinkrn68-droid",
+          "__typename": "User"
+        },
+        "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "nodes": [],
+          "__typename": "LabelConnection"
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 74980,
+        "state": "OPEN",
+        "headRefOid": "c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864",
+        "baseRefOid": "84efd8820459db1cdaad122f2347683b7db023ee",
+        "changedFiles": 0,
+        "additions": 0,
+        "deletions": 0,
+        "commitIds": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "84efd8820459db1cdaad122f2347683b7db023ee",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 68415365071,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "ACTION_REQUIRED",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864/checks?check_suite_id=68415365071",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864/checks?check_suite_id=68415365071",
+                      "checkRuns": {
+                        "nodes": [],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-05-11T13:20:11Z",
+                      "workflowRun": {
+                        "databaseId": 25672723099,
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-05-11T13:19:36Z",
+                "committedDate": "2026-05-11T13:19:36Z",
+                "pushedDate": null,
+                "oid": "c6d1344b3c7e49f62f4befd1aaa8665eb6bd6864",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 0,
+          "nodes": [],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 0,
+          "nodes": [],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MQ",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "nodes": [],
+          "__typename": "ProjectV2ItemConnection"
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}
