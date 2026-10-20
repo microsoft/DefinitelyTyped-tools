@@ -30,7 +30,7 @@ describe("resolve", () => {
         expect(ts.versionMajorMinor).toBe(version);
       }
       if (version.startsWith("7.")) {
-        expect(resolve(version, "unstable/sync")).toMatch(/api[\\/]sync[\\/]api\.js$/);
+        expect(resolve(version, version === "7.0" ? "unstable/sync" : "sync")).toMatch(/api[\\/]sync[\\/]api\.js$/);
       }
     }
   });

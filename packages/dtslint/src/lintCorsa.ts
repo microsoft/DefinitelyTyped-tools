@@ -3,14 +3,14 @@ import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { isVersionedExpectErrorOutsideRange } from "@definitelytyped/utils";
 import path from "path";
 import type * as TypeScript from "typescript";
-import type { Diagnostic, Project, Snapshot } from "typescript-7.1/unstable/sync";
-import type { Node, SourceFile, TypeNode } from "typescript-7.1/unstable/ast";
+import type { Diagnostic, Project, Snapshot } from "typescript-7.1/sync";
+import type { Node, SourceFile, TypeNode } from "typescript-7.1/ast";
 import type { TsVersion } from "./lint";
 import { resolveLocalTypeScript } from "./typescript-installer";
 
-type CorsaApi = typeof import("typescript-7.1/unstable/sync");
-type CorsaAst = typeof import("typescript-7.1/unstable/ast");
-type CorsaFactory = typeof import("typescript-7.1/unstable/ast/factory");
+type CorsaApi = typeof import("typescript-7.1/sync");
+type CorsaAst = typeof import("typescript-7.1/ast");
+type CorsaFactory = typeof import("typescript-7.1/ast/factory");
 type CorsaApiInstance = InstanceType<CorsaApi["API"]>;
 interface LegacyCorsaApiInstance {
   updateSnapshot(params: { openProjects: readonly string[] }): Snapshot;
