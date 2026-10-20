@@ -31,6 +31,8 @@ resources:
       ref: refs/heads/master
 
 variables:
+  - name: dtslintShardCount
+    value: 16
   - name: CI
     value: true
   - name: skipComponentGovernanceDetection
@@ -51,7 +53,7 @@ jobs:
     workspace:
       clean: all
     strategy:
-      parallel: 16
+      parallel: ${{ variables.dtslintShardCount }}
     steps:
       - checkout: self
         path: s/DefinitelyTyped-tools
@@ -270,6 +272,21 @@ jobs:
           settableVariables: none
         workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
 
+      # Restricted commands still allow task.complete; validate in a separate trusted task.
+      - bash: |
+          node packages/dtslint-runner/dist/validate-results.js \
+            "$EXPECTED_SHARD_COUNT" \
+            "$(Pipeline.Workspace)/mainFailures" \
+            "$(Pipeline.Workspace)/prFailures"
+        displayName: Validate successful DT artifacts
+        condition: and(succeeded(), eq(variables['runResult'], 'Succeeded'))
+        target:
+          commands: restricted
+          settableVariables: none
+        workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
+        env:
+          EXPECTED_SHARD_COUNT: ${{ variables.dtslintShardCount }}
+
       - task: AzureCLI@2
         displayName: Create GitHub token
         target:
@@ -309,6 +326,7 @@ jobs:
               "$status"
               "$(Pipeline.Workspace)/mainFailures"
               "$(Pipeline.Workspace)/prFailures"
+              "$EXPECTED_SHARD_COUNT"
             )
           else
             args+=("$status")
@@ -321,6 +339,7 @@ jobs:
         workingDirectory: $(Pipeline.Workspace)/s/DefinitelyTyped-tools
         env:
           DISTINCT_ID: ${{ parameters.distinct_id }}
+          EXPECTED_SHARD_COUNT: ${{ variables.dtslintShardCount }}
           GH_TOKEN: $(GH_TOKEN)
           REQUESTING_USER: ${{ parameters.requesting_user }}
           RUN_RESULT: $(runResult)
