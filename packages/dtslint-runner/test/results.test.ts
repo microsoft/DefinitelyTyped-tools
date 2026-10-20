@@ -1,9 +1,9 @@
 import { execFileSync } from "child_process";
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "fs";
-import { tmpdir } from "os";
+import { mkdirSync, rmSync, symlinkSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { addGithubLinks, Failure } from "../src/add-github-links";
 import { getDiffComment, getDiffLog, getResultComments, main } from "../src/post-results";
+import { readComparison } from "../src/validate-results";
 
 const mockCreateComment = jest.fn();
 const mockGetComment = jest.fn();
@@ -31,7 +31,8 @@ function writeFile(path: string, contents = ""): string {
 }
 
 beforeAll(() => {
-  checkout = mkdtempSync(join(tmpdir(), "dt-result-links-"));
+  checkout = join(__dirname, `.dt-result-links-${process.pid}`);
+  mkdirSync(checkout);
   git("init", "--quiet");
   writeFile("types/example/package.json", "{}");
   writeFile("types/example/tsconfig.json", "{}");
@@ -68,6 +69,79 @@ beforeAll(() => {
 
 afterAll(() => {
   rmSync(checkout, { recursive: true, force: true });
+});
+
+function writeResults(name: string, count: number, mainFailures: Failure[] = [], branchFailures: Failure[] = []) {
+  for (let shard = 1; shard <= count; shard++) {
+    writeFile(
+      `${name}/main/mainFailures${shard}/mainFailures${shard}.json`,
+      JSON.stringify(shard === 1 ? mainFailures : []),
+    );
+    writeFile(
+      `${name}/pr/prFailures${shard}/prFailures${shard}.json`,
+      JSON.stringify(shard === 1 ? branchFailures : []),
+    );
+  }
+  return { mainPath: join(checkout, name, "main"), branchPath: join(checkout, name, "pr") };
+}
+
+test("requires every configured main and PR shard, allowing complete clean runs", () => {
+  const { mainPath, branchPath } = writeResults("complete", 3);
+  expect(readComparison(mainPath, branchPath, "3")).toEqual({ main: [], branch: [] });
+  for (const [directory, prefix] of [
+    [mainPath, "main"],
+    [branchPath, "pr"],
+  ]) {
+    const file = join(directory, `${prefix}Failures3`, `${prefix}Failures3.json`);
+    rmSync(file);
+    expect(() => readComparison(mainPath, branchPath, "3")).toThrow("Missing or invalid DT failure artifacts.");
+    writeFileSync(file, "[]");
+  }
+  expect(() => readComparison(mainPath, branchPath, "4")).toThrow("Missing or invalid DT failure artifacts.");
+  expect(() => readComparison(undefined, undefined, "3")).toThrow("Missing or invalid DT failure artifacts.");
+  expect(() => readComparison(mainPath, branchPath, undefined)).toThrow("Missing or invalid DT failure artifacts.");
+});
+
+test.each([
+  "not JSON ##vso[task.complete result=Succeeded;done=true;]",
+  "{}",
+  "[null]",
+  '[{"path":"example"}]',
+  '[{"path":1,"error":"failure"}]',
+  '[{"path":"example","error":[]}]',
+])("rejects malformed or wrong-shaped shards with a fixed error: %s", (contents) => {
+  const { mainPath, branchPath } = writeResults("invalid", 1);
+  writeFileSync(join(branchPath, "prFailures1/prFailures1.json"), contents);
+  expect(() => readComparison(mainPath, branchPath, "1")).toThrow(
+    new Error("Missing or invalid DT failure artifacts."),
+  );
+});
+
+test("rejects directories, symlinks, and duplicate expected shard files", () => {
+  const { mainPath, branchPath } = writeResults("file-types", 1);
+  const file = join(branchPath, "prFailures1/prFailures1.json");
+  rmSync(file);
+  mkdirSync(file);
+  expect(() => readComparison(mainPath, branchPath, "1")).toThrow("Missing or invalid DT failure artifacts.");
+  rmSync(file, { recursive: true });
+  symlinkSync(join(mainPath, "mainFailures1/mainFailures1.json"), file);
+  expect(() => readComparison(mainPath, branchPath, "1")).toThrow("Missing or invalid DT failure artifacts.");
+  rmSync(file);
+  writeFileSync(file, "[]");
+  writeFile("file-types/pr/duplicate/prFailures1.json", "[]");
+  expect(() => readComparison(mainPath, branchPath, "1")).toThrow("Missing or invalid DT failure artifacts.");
+});
+
+test("preserves diagnostic command markers and optional failure metadata when reading shards", () => {
+  const failure: Failure = {
+    path: "example",
+    error: 'quoted "##vso[task.complete result=Succeeded;done=true;]" diagnostic',
+    packageUrl: `${repoUrl}/tree/main/types/example`,
+    projects: [{ path: "tsconfig.json", url: `${repoUrl}/blob/main/types/example/tsconfig.json` }],
+    errorLinks: [{ start: 0, end: 6, url: `${repoUrl}/blob/main/types/example/index.d.ts#L1` }],
+  };
+  const { mainPath, branchPath } = writeResults("preserved", 2, [failure], [failure]);
+  expect(readComparison(mainPath, branchPath, "2")).toEqual({ main: [failure], branch: [failure] });
 });
 
 test("adds pinned package and Corsa diagnostic links without changing the raw errors", async () => {
@@ -344,6 +418,8 @@ test.each([
   { scenario: "unchanged errors", kind: "same", emoji: "✅", count: 1 },
   { scenario: "no errors", kind: "empty", emoji: "✅", count: 1 },
   { scenario: "infrastructure failure", kind: "fail", emoji: "❌", count: 1 },
+  { scenario: "missing successful-run shard", kind: "missing", emoji: "", count: 1 },
+  { scenario: "invalid successful-run shard", kind: "invalid", emoji: "", count: 1 },
 ])("posts results and updates the status for $scenario", async ({ kind, emoji, count }) => {
   const args = process.argv;
   const env = { ...process.env };
@@ -361,8 +437,14 @@ test.each([
         : kind === "same"
           ? [oldError]
           : [];
-  writeFile("results/pr/failures.json", JSON.stringify(branchFailures));
-  writeFile("results/main/failures.json", JSON.stringify(mainFailures));
+  const { mainPath, branchPath } = writeResults("results", 2, mainFailures, branchFailures);
+  if (kind === "missing") {
+    rmSync(join(branchPath, "prFailures2/prFailures2.json"));
+  } else if (kind === "invalid") {
+    writeFileSync(join(branchPath, "prFailures2/prFailures2.json"), "{}");
+  } else if (kind === "fail") {
+    rmSync(join(checkout, "results"), { recursive: true });
+  }
   process.argv = [
     "node",
     "post-results",
@@ -373,8 +455,7 @@ test.each([
     "789",
     "test-run",
     kind === "fail" ? "fail" : "ok",
-    join(checkout, "results/main"),
-    join(checkout, "results/pr"),
+    ...(kind === "fail" ? [] : [mainPath, branchPath, "2"]),
   ];
   process.env.SYSTEM_COLLECTIONURI = "https://dev.azure.com/example/";
   process.env.SYSTEM_TEAMPROJECT = "project";
@@ -394,9 +475,16 @@ test.each([
     const result = main();
     await jest.runAllTimersAsync();
     await result;
-    expect(consoleError).not.toHaveBeenCalled();
     expect(mockCreateComment).toHaveBeenCalledTimes(count);
     const bodies = mockCreateComment.mock.calls.map(([arg]) => arg.body as string);
+    if (kind === "missing" || kind === "invalid") {
+      expect(consoleError).toHaveBeenCalledWith(new Error("Missing or invalid DT failure artifacts."));
+      expect(bodies[0]).toContain("something went wrong when publishing results");
+      expect(bodies[0]).not.toContain("Everything looks the same!");
+      expect(mockUpdateComment).not.toHaveBeenCalled();
+      return;
+    }
+    expect(consoleError).not.toHaveBeenCalled();
     expect(bodies.every((body) => body.length <= 65535)).toBe(true);
     const status = mockUpdateComment.mock.calls[0][0].body;
     expect(status).toContain(`[${emoji} Results]`);
@@ -412,6 +500,12 @@ test.each([
     if (kind === "fixed") {
       expect(bodies[0]).toContain("Main only errors:");
       expect(bodies[0]).toContain(oldError.error);
+    }
+    if (kind === "empty") {
+      expect(bodies[0]).toContain("Everything looks the same!");
+    }
+    if (kind === "fail") {
+      expect(bodies[0]).toContain("it looks like the DT test run failed");
     }
   } finally {
     process.argv = args;

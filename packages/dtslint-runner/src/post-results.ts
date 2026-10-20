@@ -1,21 +1,31 @@
 import { Octokit } from "@octokit/rest";
-import { readFileSync } from "fs";
-import glob = require("glob");
 import type { Failure } from "./add-github-links";
+import { readComparison } from "./validate-results";
 
 type Errors = Failure[];
 
-// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [distinct id] [job status] [?main errors file] [?branch errors file]
+// Args: [auth token] [buildId] [status comment] [user to tag] [issue] [distinct id] [job status]
+// Successful runs also require: [main errors directory] [branch errors directory] [expected shard count]
 export async function main() {
-  const [auth, buildId, statusCommentId, userToTag, issue, distinctId, status, mainErrorsPath, branchErrorsPath] =
-    process.argv.slice(2);
+  const [
+    auth,
+    buildId,
+    statusCommentId,
+    userToTag,
+    issue,
+    distinctId,
+    status,
+    mainErrorsPath,
+    branchErrorsPath,
+    expectedShardCount,
+  ] = process.argv.slice(2);
   if (!auth) throw new Error("First argument must be a GitHub auth token.");
   if (!buildId) throw new Error("Second argument must be a build id.");
   if (!statusCommentId) throw new Error("Third argument must be a GitHub comment id.");
   if (!userToTag) throw new Error("Fourth argument must be a GitHub username.");
   if (!issue) throw new Error("Fifth argument must be a TypeScript issue/PR number.");
   if (!distinctId) throw new Error("Sixth argument must be a distinct ID.");
-  if (!status) throw new Error("Seventh argument must be a status ('ok' or 'fail').");
+  if (status !== "ok" && status !== "fail") throw new Error("Seventh argument must be a status ('ok' or 'fail').");
 
   const gh = new Octokit({ auth });
   let checkLogsMessage = "";
@@ -38,20 +48,11 @@ export async function main() {
       ];
       emoji = "❌";
     } else {
-      const mainErrors: Errors = [];
-      if (mainErrorsPath) {
-        const mainFiles = glob.sync(`**/*.json`, { cwd: mainErrorsPath, absolute: true });
-        for (const file of mainFiles) {
-          mainErrors.push(...(JSON.parse(readFileSync(file, "utf-8")) as Errors));
-        }
-      }
-      const branchErrors: Errors = [];
-      if (branchErrorsPath) {
-        const branchFiles = glob.sync(`**/*.json`, { cwd: branchErrorsPath, absolute: true });
-        for (const file of branchFiles) {
-          branchErrors.push(...(JSON.parse(readFileSync(file, "utf-8")) as Errors));
-        }
-      }
+      const { main: mainErrors, branch: branchErrors } = readComparison(
+        mainErrorsPath,
+        branchErrorsPath,
+        expectedShardCount,
+      );
 
       const reports = getDiffReports(mainErrors, branchErrors);
       if (reports.length) {
