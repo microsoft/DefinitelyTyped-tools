@@ -11,4 +11,4 @@
 "@definitelytyped/utils": patch
 ---
 
-Republish the tools after restoring npm authentication following the Changesets action upgrade.
+Fix publishing.
