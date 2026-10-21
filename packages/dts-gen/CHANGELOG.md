@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.11
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+
 ## 0.10.10
 
 ### Patch Changes

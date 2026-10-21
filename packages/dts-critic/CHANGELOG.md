@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.1.35
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+- Updated dependencies [86205c3]
+  - @definitelytyped/header-parser@0.2.32
+
 ## 0.1.34
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @definitelytyped/header-parser
 
+## 0.2.32
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+- Updated dependencies [86205c3]
+  - @definitelytyped/typescript-versions@0.1.14
+  - @definitelytyped/utils@0.1.17
+
 ## 0.2.31
 
 ### Patch Changes

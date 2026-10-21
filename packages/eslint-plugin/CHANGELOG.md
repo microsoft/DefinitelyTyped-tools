@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.36
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+- Updated dependencies [86205c3]
+  - @definitelytyped/utils@0.1.17
+
 ## 0.1.35
 
 ### Patch Changes
