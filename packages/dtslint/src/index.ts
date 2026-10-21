@@ -15,11 +15,7 @@ import { TsVersion, lint } from "./lint";
 import { getCompilerOptions, packageDirectoryNameWithVersionFromPath, packageNameFromPath } from "./util";
 import assert = require("assert");
 
-// TODO: Enable once the TypeScript 7.1 API is stable enough for regular Definitely Typed runs.
-const testTypeScriptNextByDefault = false;
-const latestTypeScriptVersionToTest: TypeScriptVersion = testTypeScriptNextByDefault
-  ? TypeScriptVersion.latest
-  : TypeScriptVersion.shipped[TypeScriptVersion.shipped.length - 1];
+const latestTypeScriptVersionToTest: TypeScriptVersion = TypeScriptVersion.latest;
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);

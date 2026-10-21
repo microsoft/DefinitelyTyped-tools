@@ -30,17 +30,17 @@ Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
 }
 
 describe("getTypeScriptTestRanges", () => {
-  it("uses a future typesVersions directory without running its compiler", () => {
+  it("tests through the latest compiler in its typesVersions directory", () => {
     expect(getTypeScriptTestRanges(["6.0", "7.1"])).toEqual([
       { low: "5.6", high: "6.0", directoryVersion: "6.0" },
-      { low: "7.0", high: "7.0", directoryVersion: "7.1" },
+      { low: "7.0", high: "7.1", directoryVersion: "7.1" },
     ]);
   });
 
   it("uses the root definition when no future directory supersedes it", () => {
     expect(getTypeScriptTestRanges(["6.0"])).toEqual([
       { low: "5.6", high: "6.0", directoryVersion: "6.0" },
-      { low: "7.0", high: "7.0" },
+      { low: "7.0", high: "7.1" },
     ]);
   });
 });
