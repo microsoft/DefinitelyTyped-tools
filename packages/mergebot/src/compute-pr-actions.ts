@@ -284,6 +284,7 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
     return {
       ...createEmptyActions(),
       projectColumn: prInfo.isDraft ? "Needs Author Action" : "*REMOVE*",
+      shouldClose: !!prInfo.shouldClose,
     };
   }
 
