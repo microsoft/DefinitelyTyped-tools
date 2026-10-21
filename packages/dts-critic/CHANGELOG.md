@@ -1,5 +1,12 @@
 # @definitelytyped/dts-critic
 
+## 0.1.34
+
+### Patch Changes
+
+- 6661498: Upgrade bundled TypeScript dependencies to 6.0 and update TypeScript ESLint dependencies for compatibility.
+- @definitelytyped/header-parser@0.2.31
+
 ## 0.1.33
 
 ### Patch Changes
