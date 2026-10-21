@@ -63,6 +63,8 @@ jobs:
           basic_auth="$(node -e 'process.stdout.write(Buffer.from("x-access-token:" + process.env.GITHUB_APP_TOKEN).toString("base64"))')"
           echo "::add-mask::$basic_auth"
           git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ${basic_auth}"
+      - name: Configure npm authentication
+        run: printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> "$HOME/.npmrc"
       - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ steps.app-token.outputs.token }}
