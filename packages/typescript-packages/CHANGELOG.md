@@ -1,5 +1,15 @@
 # @definitelytyped/typescript-packages
 
+## 0.1.13
+
+### Patch Changes
+
+- 32082fa: Enable TypeScript 7.1 in regular DefinitelyTyped test runs now that its Corsa API is stable, and update the bundled nightly to use the stable API entrypoints.
+- 6661498: Add TypeScript 7.0 and 7.1 support through the Corsa compiler API, including compiler diagnostics, `$ExpectType`
+  assertions, version-ranged `@ts-expect-error` directives, multi-project failure reporting, and local TypeScript packages.
+- Updated dependencies [6661498]
+  - @definitelytyped/typescript-versions@0.1.13
+
 ## 0.1.12
 
 ### Patch Changes

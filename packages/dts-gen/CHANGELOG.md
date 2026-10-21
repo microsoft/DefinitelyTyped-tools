@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.10
+
+### Patch Changes
+
+- 6661498: Upgrade bundled TypeScript dependencies to 6.0 and update TypeScript ESLint dependencies for compatibility.
+
 ## 0.10.9
 
 ### Patch Changes
