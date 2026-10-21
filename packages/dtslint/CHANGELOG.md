@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.2.49
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+- Updated dependencies [86205c3]
+  - @definitelytyped/header-parser@0.2.32
+  - @definitelytyped/typescript-packages@0.1.14
+  - @definitelytyped/typescript-versions@0.1.14
+  - @definitelytyped/utils@0.1.17
+
 ## 0.2.48
 
 ### Patch Changes

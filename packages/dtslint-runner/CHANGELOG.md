@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.54
+
+### Patch Changes
+
+- 86205c3: Fix publishing.
+- Updated dependencies [86205c3]
+  - @definitelytyped/definitions-parser@0.1.36
+  - @definitelytyped/dtslint@0.2.49
+  - @definitelytyped/utils@0.1.17
+
 ## 0.1.53
 
 ### Patch Changes
