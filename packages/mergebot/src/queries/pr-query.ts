@@ -46,6 +46,15 @@ const getPRInfoQueryFirst: TypedDocumentNode<PrQuery, PrQueryVariables> = gql`
         state
         headRefOid
         baseRefOid
+        potentialMergeCommit {
+          oid
+          parents(first: 2) {
+            totalCount
+            nodes {
+              oid
+            }
+          }
+        }
         changedFiles
         additions
         deletions
