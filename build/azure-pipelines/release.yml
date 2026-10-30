@@ -67,12 +67,8 @@ extends:
                   targetPath: "$(Build.ArtifactStagingDirectory)/$(NpmArtifactName)"
                   artifactName: $(NpmArtifactName)
             steps:
-              # dts-critic's tests expect the checkout directory to be named after
-              # the repository, but Azure Pipelines checks out into "s" by default.
               - checkout: self
                 fetchDepth: 2
-                path: DefinitelyTyped-tools
-                workspaceRepo: true
 
               - task: UseNode@1
                 inputs:
