@@ -211,11 +211,12 @@ function isDiagnosticOutsideExpectErrorRange(diagnostic: Diagnostic, project: Pr
   return isVersionedExpectErrorOutsideRange(text, version);
 }
 
-function flattenDiagnostic(diagnostic: Diagnostic): string {
+function flattenDiagnostic(diagnostic: Diagnostic, indent = 0): string {
+  const text = "  ".repeat(indent) + diagnostic.text;
   if (!diagnostic.messageChain?.length) {
-    return diagnostic.text;
+    return text;
   }
-  return [diagnostic.text, ...diagnostic.messageChain.map(flattenDiagnostic)].join("\n");
+  return [text, ...diagnostic.messageChain.map((child) => flattenDiagnostic(child, indent + 1))].join("\n");
 }
 
 function getExpectTypeFailures(
