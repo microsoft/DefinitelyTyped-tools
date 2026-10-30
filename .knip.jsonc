@@ -2,8 +2,6 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
-      // Run from the pipeline artifact in release jobs.
-      "entry": ["build/azure-pipelines/release-helper.mjs"],
       "ignoreBinaries": ["only-allow"]
     },
     "packages/definitions-parser": {

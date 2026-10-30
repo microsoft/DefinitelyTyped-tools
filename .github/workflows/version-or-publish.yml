@@ -1,5 +1,6 @@
 # - changesets will open a PR to bump versions when new changesets are added
-# - changesets will publish packages when that PR is merged
+# - changesets will tag and create GitHub releases when that PR is merged
+#   (Azure Pipelines publishes the packages to npm)
 # (it's confusing because the same action does two super different things)
 
 name: Version or Publish Packages
@@ -66,3 +67,5 @@ jobs:
       - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ steps.app-token.outputs.token }}
+          # Packages are published to npm by build/azure-pipelines/release.yml.
+          publish-script: pnpm changeset git-tag
