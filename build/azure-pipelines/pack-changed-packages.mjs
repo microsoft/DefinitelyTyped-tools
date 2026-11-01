@@ -66,9 +66,10 @@ function validateReleasePipelineStageCapacity(packages) {
   const stageNumbers = [...releaseYaml.matchAll(/^\s+-\s+index:\s+(\d+)\s*$/gm)]
     .map(match => Number(match[1]));
   const maxAvailableStage = Math.max(-1, ...stageNumbers);
+  const contiguous = stageNumbers.length === maxAvailableStage + 1 && stageNumbers.every((n, i) => n === i);
 
-  if (maxRequiredDepth !== maxAvailableStage) {
-    throw new Error(`Workspace publish graph requires stages 0-${maxRequiredDepth}, but ${releasePipelinePath} defines stages 0-${maxAvailableStage}`);
+  if (!contiguous || maxRequiredDepth !== maxAvailableStage) {
+    throw new Error(`Workspace publish graph requires stages 0-${maxRequiredDepth}, but ${releasePipelinePath} defines stages ${stageNumbers.join(", ") || "(none)"}`);
   }
 
   console.log(`Workspace publish graph requires stages 0-${maxRequiredDepth}; release pipeline defines stages 0-${maxAvailableStage}.`);
@@ -99,7 +100,21 @@ function readPreviousPackageJson(pkg) {
 
 function versionChanged(pkg) {
   const previous = readPreviousPackageJson(pkg);
-  return previous?.version !== pkg.packageJson.version;
+  return previous?.version !== pkg.packageJson.version
+    || previous?.name !== pkg.packageJson.name
+    || !!previous?.private;
+}
+
+// changesets/action only publishes once every changeset has been consumed by
+// a "Version Packages" PR, so do the same. Otherwise merging a PR that adds a
+// new package would publish it at its placeholder version.
+function findPendingChangesets() {
+  const changesetDir = path.join(root, ".changeset");
+  const preStatePath = path.join(changesetDir, "pre.json");
+  const consumed = new Set(fs.existsSync(preStatePath) ? readJson(preStatePath).changesets : []);
+  return fs.readdirSync(changesetDir)
+    .filter(file => file.endsWith(".md") && file !== "README.md")
+    .filter(file => !consumed.has(file.slice(0, -".md".length)));
 }
 
 function findChangedPackageNames() {
@@ -110,9 +125,20 @@ function findChangedPackageNames() {
     return [];
   }
 
-  return [...packages.values()]
-    .filter(versionChanged)
-    .map(pkg => pkg.packageJson.name);
+  const pendingChangesets = findPendingChangesets();
+  if (pendingChangesets.length) {
+    console.log(`Changesets are still pending (${pendingChangesets.join(", ")}); not staging any packages.`);
+    return [];
+  }
+
+  const changed = [...packages.values()].filter(versionChanged);
+  for (const pkg of changed) {
+    // ESRP publishes to the publishConfig.tag dist-tag, or latest without one.
+    if (pkg.packageJson.version.includes("-") && !pkg.packageJson.publishConfig?.tag) {
+      throw new Error(`${pkg.packageJson.name}@${pkg.packageJson.version} is a prerelease but has no publishConfig.tag, so it would be published as latest.`);
+    }
+  }
+  return changed.map(pkg => pkg.packageJson.name);
 }
 
 const changedPackageNames = findChangedPackageNames();
