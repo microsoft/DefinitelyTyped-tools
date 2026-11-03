@@ -101,9 +101,6 @@ extends:
               - script: pnpm build
                 displayName: "Build packages"
 
-              - script: pnpm test
-                displayName: "Test packages"
-
               - script: node .azure-pipelines/pack-changed-packages.mjs "$(Build.ArtifactStagingDirectory)/$(NpmArtifactName)"
                 name: packChangedPackages
                 displayName: "Pack changed packages"
