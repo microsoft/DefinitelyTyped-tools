@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.12
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+
 ## 0.10.11
 
 ### Patch Changes

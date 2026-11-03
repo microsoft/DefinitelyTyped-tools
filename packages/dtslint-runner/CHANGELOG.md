@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.55
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+- Updated dependencies [dd91211]
+  - @definitelytyped/definitions-parser@0.1.37
+  - @definitelytyped/dtslint@0.2.50
+  - @definitelytyped/utils@0.1.18
+
 ## 0.1.54
 
 ### Patch Changes
