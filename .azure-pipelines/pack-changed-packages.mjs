@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const releasePipelinePath = path.join(root, "build/azure-pipelines/release.yml");
+const releasePipelinePath = path.join(root, ".azure-pipelines/release.yml");
 const checkStageCapacity = process.argv.includes("--check-stage-capacity");
 const outDir = process.argv.find(arg => !arg.startsWith("--") && arg !== process.argv[0] && arg !== process.argv[1]) || process.env.BUILD_ARTIFACTSTAGINGDIRECTORY;
 
@@ -84,7 +84,7 @@ if (checkStageCapacity) {
 }
 
 if (!outDir) {
-  throw new Error("Usage: node build/azure-pipelines/pack-changed-packages.mjs <artifact-staging-directory>");
+  throw new Error("Usage: node .azure-pipelines/pack-changed-packages.mjs <artifact-staging-directory>");
 }
 
 // PRs are always squash merged, so a version bump from the "Version Packages"
