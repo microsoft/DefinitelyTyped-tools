@@ -1,5 +1,6 @@
 # - changesets will open a PR to bump versions when new changesets are added
-# - changesets will publish packages when that PR is merged
+# - changesets will tag and create GitHub releases when that PR is merged
+#   (Azure Pipelines publishes the packages to npm)
 # (it's confusing because the same action does two super different things)
 
 name: Version or Publish Packages
@@ -37,8 +38,6 @@ jobs:
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - run: pnpm install
-      - run: pnpm build
-      - run: pnpm test
       - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
@@ -63,11 +62,8 @@ jobs:
           basic_auth="$(node -e 'process.stdout.write(Buffer.from("x-access-token:" + process.env.GITHUB_APP_TOKEN).toString("base64"))')"
           echo "::add-mask::$basic_auth"
           git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ${basic_auth}"
-      - name: Configure npm authentication
-        run: printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> "$HOME/.npmrc"
       - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ steps.app-token.outputs.token }}
-          publish-script: pnpm ci:publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Packages are published to npm by build/azure-pipelines/release.yml.
+          publish-script: pnpm changeset git-tag

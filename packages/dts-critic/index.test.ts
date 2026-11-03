@@ -1,4 +1,5 @@
 /// <reference types="jest" />
+import path from "path";
 import { findDtsName, dtToNpmName, parseExportErrorKind, checkSource, ErrorKind, ExportErrorKind } from "./index";
 
 function suite(description: string, tests: { [s: string]: () => void }) {
@@ -17,13 +18,13 @@ suite("findDtsName", {
     expect(findDtsName("jquery/index.d.ts")).toBe("jquery");
   },
   currentDirectory() {
-    expect(findDtsName("index.d.ts")).toBe("DefinitelyTyped-tools");
+    expect(findDtsName("index.d.ts")).toBe(path.basename(process.cwd()));
   },
   relativeCurrentDirectory() {
-    expect(findDtsName("./index.d.ts")).toBe("DefinitelyTyped-tools");
+    expect(findDtsName("./index.d.ts")).toBe(path.basename(process.cwd()));
   },
   emptyDirectory() {
-    expect(findDtsName("")).toBe("DefinitelyTyped-tools");
+    expect(findDtsName("")).toBe(path.basename(process.cwd()));
   },
 });
 suite("dtToNpmName", {
