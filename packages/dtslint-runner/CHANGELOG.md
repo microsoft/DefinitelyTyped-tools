@@ -1,5 +1,15 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.56
+
+### Patch Changes
+
+- ea3456c: Switch to new release pipeline
+- Updated dependencies [ea3456c]
+  - @definitelytyped/definitions-parser@0.1.38
+  - @definitelytyped/dtslint@0.2.51
+  - @definitelytyped/utils@0.1.19
+
 ## 0.1.55
 
 ### Patch Changes

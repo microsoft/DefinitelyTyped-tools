@@ -1,5 +1,15 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.38
+
+### Patch Changes
+
+- ea3456c: Switch to new release pipeline
+- Updated dependencies [ea3456c]
+  - @definitelytyped/header-parser@0.2.34
+  - @definitelytyped/typescript-versions@0.1.16
+  - @definitelytyped/utils@0.1.19
+
 ## 0.1.37
 
 ### Patch Changes

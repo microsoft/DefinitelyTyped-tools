@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.1.37
+
+### Patch Changes
+
+- ea3456c: Switch to new release pipeline
+- Updated dependencies [ea3456c]
+  - @definitelytyped/header-parser@0.2.34
+
 ## 0.1.36
 
 ### Patch Changes
