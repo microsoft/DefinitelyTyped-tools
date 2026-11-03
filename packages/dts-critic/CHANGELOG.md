@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.1.36
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+- Updated dependencies [dd91211]
+  - @definitelytyped/header-parser@0.2.33
+
 ## 0.1.35
 
 ### Patch Changes

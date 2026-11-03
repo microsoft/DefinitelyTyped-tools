@@ -1,5 +1,16 @@
 # @definitelytyped/dtslint
 
+## 0.2.50
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+- Updated dependencies [dd91211]
+  - @definitelytyped/header-parser@0.2.33
+  - @definitelytyped/typescript-packages@0.1.15
+  - @definitelytyped/typescript-versions@0.1.15
+  - @definitelytyped/utils@0.1.18
+
 ## 0.2.49
 
 ### Patch Changes

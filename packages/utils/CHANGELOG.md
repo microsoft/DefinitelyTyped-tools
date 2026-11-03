@@ -1,5 +1,11 @@
 # @definitelytyped/utils
 
+## 0.1.18
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+
 ## 0.1.17
 
 ### Patch Changes

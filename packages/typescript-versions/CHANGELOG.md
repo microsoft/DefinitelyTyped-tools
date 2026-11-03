@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.15
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+
 ## 0.1.14
 
 ### Patch Changes

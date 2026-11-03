@@ -1,5 +1,13 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.37
+
+### Patch Changes
+
+- dd91211: Switch to new release pipeline
+- Updated dependencies [dd91211]
+  - @definitelytyped/utils@0.1.18
+
 ## 0.1.36
 
 ### Patch Changes
