@@ -551,7 +551,7 @@ export class TypingsData extends PackageBase {
     ));
   }
   get projectName(): string | undefined {
-    return this.data.header.projects[0];
+    return this.data.header.projects.length === 0 ? undefined : this.data.header.projects.join(", ");
   }
   get type() {
     return this.data.type;
