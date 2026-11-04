@@ -12,3 +12,8 @@ pipelines:
           lastModifiedDate: 2026-11-04
         accessibilityinsights:
           lastModifiedDate: 2026-11-04
+      binary:
+        binskim:
+          lastModifiedDate: 2026-11-04
+        spotbugs:
+          lastModifiedDate: 2026-11-04
