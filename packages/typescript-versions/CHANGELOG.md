@@ -1,5 +1,11 @@
 # @definitelytyped/typescript-versions
 
+## 0.1.16
+
+### Patch Changes
+
+- ea3456c: Switch to new release pipeline
+
 ## 0.1.15
 
 ### Patch Changes

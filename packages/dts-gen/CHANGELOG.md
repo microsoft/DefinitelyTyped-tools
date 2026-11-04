@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.13
+
+### Patch Changes
+
+- ea3456c: Switch to new release pipeline
+
 ## 0.10.12
 
 ### Patch Changes
