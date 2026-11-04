@@ -198,6 +198,10 @@ describe("dtslint", () => {
             ]);
 
             expect(result).toContain("compile error TS2322");
+            expect(result).toContain(
+              "  The types of 'outer.inner' are incompatible between these types.\n" +
+                "    Type 'number' is not assignable to type 'string'.",
+            );
             expect(result).toContain("compile error TS2578");
             expect(result?.match(/compile error TS2578/g)).toHaveLength(version === "7.0" ? 1 : 2);
             expect(result).toContain("expected type to be:\n  2\ngot:\n  1");

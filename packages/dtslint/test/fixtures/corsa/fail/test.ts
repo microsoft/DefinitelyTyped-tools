@@ -3,7 +3,8 @@ import { literal } from "./index";
 // $ExpectType 2
 literal();
 
-const bad: string = 1;
+declare const source: { outer: { inner: number } };
+const bad: { outer: { inner: string } } = source;
 
 // @ts-expect-error >=7.0
 const unusedInTypeScript7: string = "";
