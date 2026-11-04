@@ -1,5 +1,11 @@
 # @definitelytyped/dtslint
 
+## 0.2.52
+
+### Patch Changes
+
+- a014caf: Restore indentation of nested TypeScript 7 diagnostic messages.
+
 ## 0.2.51
 
 ### Patch Changes
