@@ -1,5 +1,12 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.57
+
+### Patch Changes
+
+- Updated dependencies [a014caf]
+  - @definitelytyped/dtslint@0.2.52
+
 ## 0.1.56
 
 ### Patch Changes
