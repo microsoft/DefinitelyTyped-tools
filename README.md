@@ -27,11 +27,23 @@ This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces) an
 
 ### Testing
 
-All packages use [jest](https://github.com/facebook/jest), with a single configuration set up to be run from the monorepo root. `pnpm test` is an alias for `jest`, so you can run tests with any of [jest’s CLI options](https://jestjs.io/docs/en/cli). For example, to run tests for a single package:
+All packages use [Node.js's test runner](https://nodejs.org/api/test.html).
+Tests run from compiled JavaScript, so build from the monorepo root before running them:
+
+```sh
+pnpm build
+pnpm test
+```
+
+Pass a package or test-file path to select tests, and use Node.js's test-runner flags to filter test names or update snapshots:
 
 ```sh
 pnpm test packages/utils
+pnpm test packages/utils --test-name-pattern=ProgressBar
+pnpm test packages/utils --test-update-snapshots
 ```
+
+Rebuild after changing source files or tests.
 
 ### Publishing/deploying
 

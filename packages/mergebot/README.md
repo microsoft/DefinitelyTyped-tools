@@ -23,6 +23,7 @@ cd DefinitelyTyped-tools
 pnpm install
 
 # Validate it works
+pnpm build
 pnpm test
 ```
 
@@ -88,8 +89,12 @@ pnpm run update-test-data
 
 # Tests
 
+Tests use Node.js's test runner against compiled JavaScript.
+First run `pnpm build` from the monorepo root to build all packages and tests.
+Then run the following commands from `packages/mergebot`:
+
 ```sh
-# Run tests, TypeScript is transpiled at runtime
+# Run mergebot tests
 pnpm test
 ```
 
@@ -105,16 +110,16 @@ pnpm run create-fixture 43161
 Then you can work against these fixtures offline with:
 
 ```sh
-# Watch mode for all tests
-pnpm test -- --watch
+# Watch compiled tests (run pnpm build --watch from the monorepo root in another terminal)
+pnpm test --watch
 # Just run fixtures for one PR
-pnpm test -- --testNamePattern 44299
+pnpm test --test-name-pattern=44299
 ```
 
 Run a test with the debugger:
 
 ```sh
-node --inspect --inspect-brk ./node_modules/.bin/jest -i --runInBand --testNamePattern 44299
+pnpm test --inspect-brk --test-isolation=none --test-name-pattern=44299
 ```
 
 Then use "Attach to Process ID" to connect to that test runner

@@ -72,10 +72,12 @@ Note that for real use on Definitely Typed, a lot of these checks need to be pre
 
 ## Testing
 
-The tests use the [Jest](https://jestjs.io/) framework. To build and execute the tests, run:
+The tests use [Node.js's test runner](https://nodejs.org/api/test.html) against compiled JavaScript.
+From the monorepo root, build all packages and tests, then run the dts-critic tests:
 
 ```sh
-$ npm run test
+pnpm build
+pnpm test packages/dts-critic
 ```
 
-This will build the program and run jest.
+Rebuild after changing source files or tests.
