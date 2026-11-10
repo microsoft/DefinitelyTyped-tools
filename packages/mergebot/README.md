@@ -59,14 +59,16 @@ Then to run locally you'll need to install the [Azure Functions cli](https://doc
 
 # Development
 
+From `packages/mergebot`:
+
 ```sh
 # Build
 pnpm run build
 
 # Run the CLI to see what would happen to an existing PR
-pnpm run single-info -- [PR_NUM]
+node --enable-source-maps dist/run.js --dry --show-actions 43161
 # or
-pnpm run single-info-debug -- [PR_NUM]
+node --inspect-brk --enable-source-maps dist/run.js --dry --show-actions 43161
 ```
 
 ### If you update any queries
@@ -137,10 +139,10 @@ weird state.
 
 You need a tool like [ngrok](https://ngrok.com) to expose a URL from the [webhooks section](https://github.com/DefinitelyTyped/DefinitelyTyped/settings/hooks/new) on DT. 
 
-Start two terminal sessions with:
+From `packages/mergebot`, start two terminal sessions with:
 
-- `yarn watch` (for TypeScript changes)
-- `yarn start` (for the app)
+- `pnpm watch` (for TypeScript changes)
+- `func start` (for the app, after the initial build)
 
 Then start a third with your localhost router like ngrok:
 
