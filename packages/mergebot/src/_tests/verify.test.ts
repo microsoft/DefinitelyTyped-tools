@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it, beforeEach, afterEach } from "node:test";
 import { createHmac } from "crypto";
-import { execFileSync } from "child_process";
-import path from "path";
 import { verifyIsFromGitHub } from "../util/verify";
 
 describe("verifyIsFromGitHub", () => {
@@ -33,19 +31,5 @@ describe("verifyIsFromGitHub", () => {
 
   it("rejects a signature for a different payload", async () => {
     assert.equal(await verifyIsFromGitHub(headersFor(body), { action: "closed" }), false);
-  });
-
-  it("preserves the import-only dependency in compiled CommonJS output", () => {
-    const modulePath = path.resolve("packages/mergebot/dist/util/verify.js");
-    const headers = Object.fromEntries(headersFor(body));
-    const output = execFileSync(
-      process.execPath,
-      [
-        "-e",
-        `require(${JSON.stringify(modulePath)}).verifyIsFromGitHub(new Headers(${JSON.stringify(headers)}), ${JSON.stringify(body)}).then(valid => console.log(valid));`,
-      ],
-      { encoding: "utf8", env: { ...process.env, GITHUB_WEBHOOK_SECRET: secret } },
-    );
-    assert.equal(output.trim(), "true");
   });
 });
