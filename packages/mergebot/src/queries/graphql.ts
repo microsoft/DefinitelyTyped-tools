@@ -1,8 +1,7 @@
 import { initGraphQLTada } from "gql.tada";
-import type { introspection } from "./schema/tada-env";
 
 export const graphql = initGraphQLTada<{
-  introspection: introspection;
+  introspection: import("./schema/tada-env").introspection;
   scalars: {
     URI: string;
     DateTime: string;
