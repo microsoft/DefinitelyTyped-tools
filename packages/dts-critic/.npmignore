@@ -2,6 +2,7 @@ src
 test
 testsource
 index.test.ts
+dist/index.test.*
 logs
 .DS_Store
 .vscode
