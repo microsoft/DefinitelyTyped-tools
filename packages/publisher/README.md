@@ -37,11 +37,10 @@ pnpm run generate
 pnpm run publish-packages
 ```
 
-and optionally (in production, these run once a week):
+and optionally:
 
 ```
 pnpm run publish-registry
-pnpm run validate
 ```
 
 You can run tests with
@@ -292,23 +291,3 @@ You can find these values in the secret store.
 * Go to https://ms.portal.azure.com
 * Go to `types-publisher` (*not* the `typespublisher` storage account)
 * Go to Settings -> General -> Application settings -> App Settings
-
-
-# Validating published packages
-
-To validate published packages run:
-
-```sh
-npm run build
-npm run validate [<package>]
-```
-
-for instance:
-
-```sh
-npm run validate node express jquery
-```
-
-will try to install the three packages, and run the tsc compiler on them.
-
-Specifing no options to the command will validate **all** known packages.

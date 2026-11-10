@@ -27,13 +27,11 @@
     "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
     "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
     "generate": "node --enable-source-maps dist/generate-packages.js",
-    "validate": "node --enable-source-maps dist/validate.js",
     "publish-packages": "node --enable-source-maps dist/publish-packages.js",
     "publish-packages-dry": "node --enable-source-maps dist/publish-packages.js --dry",
     "publish-registry": "node --enable-source-maps dist/publish-registry.js",
     "full": "node --enable-source-maps dist/full.js",
-    "full-dry": "node --enable-source-maps dist/full.js --dry",
-    "test-tsNext": "node --enable-source-maps dist/tester/test.js --all --tsNext"
+    "full-dry": "node --enable-source-maps dist/full.js --dry"
   },
   "repository": {
     "type": "git",
