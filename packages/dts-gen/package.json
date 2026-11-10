@@ -30,7 +30,7 @@
     "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^26.6.4",
+    "@types/node": "^26.6.6",
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.35",
     "ecurve": "1.0.6",
