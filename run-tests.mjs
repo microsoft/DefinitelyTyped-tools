@@ -13,7 +13,9 @@ const { positionals, tokens } = parseArgs({
     [
       "test-concurrency",
       "test-coverage-branches",
+      "test-coverage-exclude",
       "test-coverage-functions",
+      "test-coverage-include",
       "test-coverage-lines",
       "test-global-setup",
       "test-isolation",
