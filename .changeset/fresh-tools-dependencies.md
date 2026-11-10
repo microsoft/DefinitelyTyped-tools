@@ -13,3 +13,4 @@
 
 Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
 Replace the deprecated terminal progress dependency with Node.js's built-in readline API.
+Use Node.js's built-in glob matcher for declaration-file detection instead of minimatch.
