@@ -10,6 +10,8 @@ import * as cachedQueries from "../../src/_tests/cachedQueries";
 import { executePrActions } from "../execute-pr-actions";
 import { getPRInfo } from "../queries/pr-query";
 
+const fixturesFolder = resolve(__dirname, "../../src/_tests/fixtures");
+
 const queries = {
   getLabels: async () => cachedQueries.getLabels,
   getProjectBoardColumns: async () => cachedQueries.getProjectBoardColumns,
@@ -54,7 +56,6 @@ async function testFixture(dir: string, t: TestContext) {
 }
 
 describe("Test fixtures", () => {
-  const fixturesFolder = resolve("packages/mergebot/src/_tests/fixtures");
   readdirSync(fixturesFolder, { withFileTypes: true }).forEach((dirent) => {
     if (dirent.isDirectory()) {
       it(`Fixture: ${dirent.name}`, async (t) => testFixture(join(fixturesFolder, dirent.name), t));
@@ -63,7 +64,7 @@ describe("Test fixtures", () => {
 });
 
 test("fetches fixture PR data through the typed query", async (t) => {
-  const response: PRQueryResponse = readJsonSync(resolve("packages/mergebot/src/_tests/fixtures/43160/_response.json"));
+  const response: PRQueryResponse = readJsonSync(join(fixturesFolder, "43160/_response.json"));
   const pr = response.data.repository?.pullRequest;
   assert.ok(pr?.files);
   pr.files.pageInfo = { hasNextPage: false, endCursor: null };
@@ -98,9 +99,7 @@ for (const row of [
 ] as const) {
   test(`only queries required data for ${row}`, async () => {
     const scenario = row;
-    const response: PRQueryResponse = readJsonSync(
-      resolve("packages/mergebot/src/_tests/fixtures/43160/_response.json"),
-    );
+    const response: PRQueryResponse = readJsonSync(join(fixturesFolder, "43160/_response.json"));
     const prInfo = response.data.repository?.pullRequest;
     if (!prInfo) throw new Error("Missing fixture pull request");
     const pr: Parameters<typeof executePrActions>[1] = {

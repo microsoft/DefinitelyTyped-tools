@@ -59,7 +59,7 @@ const allErrors: Map<ExportErrorKind, true> = new Map([
 ]);
 
 function testsource(filename: string) {
-  return path.resolve("packages/dts-critic/testsource", filename);
+  return path.resolve(__dirname, "../testsource", filename);
 }
 
 suite("checkSource", {

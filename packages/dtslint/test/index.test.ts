@@ -10,7 +10,7 @@ import { promisify } from "util";
 const execFileAsync = promisify(execFile);
 
 async function runBuilt<T>(moduleName: string, exportName: string, args: readonly unknown[]): Promise<T | undefined> {
-  const modulePath = path.resolve(`packages/dtslint/dist/${moduleName}.js`);
+  const modulePath = path.resolve(__dirname, `../${moduleName}.js`);
   const script = `
 const fn = require(process.argv[1])[process.argv[2]];
 Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
@@ -191,7 +191,7 @@ describe("dtslint", () => {
       });
 
       describe("Corsa", () => {
-        const fixtures = path.resolve("packages/dtslint/test/fixtures/corsa");
+        const fixtures = path.resolve(__dirname, "../../test/fixtures/corsa");
 
         for (const version of ["7.0", "7.1"] as const) {
           it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
@@ -294,7 +294,7 @@ describe("dtslint", () => {
 
         it("runs ordinary ESLint rules during Corsa-only testing", { timeout: 30_000 }, async () => {
           const result = await runBuilt<string>("lint", "lint", [
-            path.resolve("packages/dtslint/test/corsa-eslint"),
+            path.resolve(__dirname, "../../test/corsa-eslint"),
             ["tsconfig.json"],
             "7.0",
             "7.0",

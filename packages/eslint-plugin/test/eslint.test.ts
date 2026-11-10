@@ -8,7 +8,7 @@ import fs, { globSync } from "fs";
 import { normalizeSlashes } from "@definitelytyped/utils";
 import { stripVTControlCharacters } from "util";
 
-const snapshotDir = path.resolve("packages/eslint-plugin/test/__file_snapshots__");
+const snapshotDir = path.resolve(__dirname, "../../test/__file_snapshots__");
 
 const allFixtures = globSync(["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx"], { cwd: fixtureRoot }).map(
   normalizeSlashes,

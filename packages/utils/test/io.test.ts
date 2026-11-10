@@ -87,7 +87,7 @@ describe("io", () => {
 
   describe(createTgz.name, () => {
     it("packs a directory", async () => {
-      const dir = path.resolve("packages/utils/test/data/pack");
+      const dir = path.resolve(__dirname, "../../test/data/pack");
       const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "dt-pack-"));
       const archivePath = path.join(outputDir, "pack.tgz");
       try {
