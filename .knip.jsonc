@@ -1,20 +1,24 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     ".": {
-      "ignoreBinaries": ["only-allow"]
+      "entry": ["test-setup.cjs"]
     },
     "packages/definitions-parser": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts"
     },
     "packages/dts-critic": {
+      "entry": ["index.ts", "index.test.ts"],
       "project": "**/*.ts"
     },
     "packages/dts-gen": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
-      "ignoreDependencies": ["ecurve", "jquery", "lodash"]
+      "ignoreDependencies": ["ecurve", "lodash"]
     },
     "packages/dtslint": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": [
         "@typescript-eslint/eslint-plugin",
@@ -25,15 +29,16 @@
       ]
     },
     "packages/dtslint-runner": {
-      "entry": ["src/post-results.ts"],
+      "entry": ["src/post-results.ts", "test/**/*.test.ts"],
       "project": "**/*.ts"
     },
     "packages/eslint-plugin": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
-      "ignoreDependencies": ["@definitelytyped/eslint-plugin"],
-      "ignore": ["**/suggestions.ts"]
+      "ignoreDependencies": ["@definitelytyped/eslint-plugin"]
     },
     "packages/header-parser": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts"
     },
     "packages/publisher": {
@@ -46,7 +51,8 @@
         "src/main.ts",
         "src/publish-packages.ts",
         "src/publish-registry.ts",
-        "src/run.ts"
+        "src/run.ts",
+        "test/**/*.test.ts"
       ],
       "project": "**/*.ts"
     },
@@ -54,19 +60,21 @@
       "project": "**/*.ts"
     },
     "packages/typescript-packages": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts",
       "ignoreDependencies": ["^typescript-.*"]
     },
     "packages/typescript-versions": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts"
     },
     "packages/utils": {
+      "entry": ["test/**/*.test.ts"],
       "project": "**/*.ts"
     },
     "packages/mergebot": {
-      "entry": ["src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts"],
-      "project": "**/*.ts",
-      "ignore": ["src/queries/schema/*.ts"]
+      "entry": ["src/run.ts", "src/commands/create-fixture.ts", "src/commands/update-all-fixtures.ts", "src/commands/update-test-data.ts", "src/_tests/*.test.ts"],
+      "project": "**/*.ts"
     }
   },
   "ignore": ["**/fixtures/**", "**/testsource/**", "**/*.d.ts"],

@@ -23,6 +23,7 @@ cd DefinitelyTyped-tools
 pnpm install
 
 # Validate it works
+pnpm build
 pnpm test
 ```
 
@@ -58,14 +59,16 @@ Then to run locally you'll need to install the [Azure Functions cli](https://doc
 
 # Development
 
+From `packages/mergebot`:
+
 ```sh
 # Build
 pnpm run build
 
 # Run the CLI to see what would happen to an existing PR
-pnpm run single-info -- [PR_NUM]
+node --enable-source-maps dist/run.js --dry --show-actions 43161
 # or
-pnpm run single-info-debug -- [PR_NUM]
+node --inspect-brk --enable-source-maps dist/run.js --dry --show-actions 43161
 ```
 
 ### If you update any queries
@@ -88,8 +91,12 @@ pnpm run update-test-data
 
 # Tests
 
+Tests use Node.js's test runner against compiled JavaScript.
+First run `pnpm build` from the monorepo root to build all packages and tests.
+Then run the following commands from `packages/mergebot`:
+
 ```sh
-# Run tests, TypeScript is transpiled at runtime
+# Run mergebot tests
 pnpm test
 ```
 
@@ -105,16 +112,16 @@ pnpm run create-fixture 43161
 Then you can work against these fixtures offline with:
 
 ```sh
-# Watch mode for all tests
-pnpm test -- --watch
+# Watch compiled tests (run pnpm build --watch from the monorepo root in another terminal)
+pnpm test --watch
 # Just run fixtures for one PR
-pnpm test -- --testNamePattern 44299
+pnpm test --test-name-pattern=44299
 ```
 
 Run a test with the debugger:
 
 ```sh
-node --inspect --inspect-brk ./node_modules/.bin/jest -i --runInBand --testNamePattern 44299
+pnpm test --inspect-brk --test-isolation=none --test-name-pattern=44299
 ```
 
 Then use "Attach to Process ID" to connect to that test runner
@@ -132,10 +139,10 @@ weird state.
 
 You need a tool like [ngrok](https://ngrok.com) to expose a URL from the [webhooks section](https://github.com/DefinitelyTyped/DefinitelyTyped/settings/hooks/new) on DT. 
 
-Start two terminal sessions with:
+From `packages/mergebot`, start two terminal sessions with:
 
-- `yarn watch` (for TypeScript changes)
-- `yarn start` (for the app)
+- `pnpm watch` (for TypeScript changes)
+- `func start` (for the app, after the initial build)
 
 Then start a third with your localhost router like ngrok:
 

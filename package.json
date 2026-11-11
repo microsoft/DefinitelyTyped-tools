@@ -2,31 +2,28 @@
   "name": "definitelytyped-tools",
   "private": true,
   "engines": {
-    "node": "^22.11 || ^24 || >=26"
+    "node": "^24.15.0 || >=26"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint . --report-unused-disable-directives --ext .ts",
     "format": "prettier --write 'packages/**/*.ts'",
     "format:check": "prettier --check 'packages/**/*.ts'",
-    "test": "jest",
+    "test": "node run-tests.mjs",
     "build": "tsc -b .",
     "retag": "node packages/retag/dist/index.js"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.1",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.3.3",
+    "@changesets/cli": "^3.0.3",
+    "@types/node": "^26.6.6",
     "@types/yargs": "^17.0.35",
-    "@typescript-eslint/eslint-plugin": "^8.67.0",
-    "@typescript-eslint/parser": "^8.67.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsdoc": "^48.11.0",
-    "jest": "^30.2.0",
-    "knip": "^5.85.0",
-    "prettier": "^3.8.1",
-    "ts-jest": "^29.4.12",
+    "eslint-plugin-jsdoc": "^65.4.2",
+    "knip": "^6.44.1",
+    "prettier": "^3.9.10",
     "typescript": "^6.0.3"
   },
   "pnpm": {
@@ -38,21 +35,12 @@
     },
     "updateConfig": {
       "ignoreDependencies": [
-        "@types/strip-json-comments",
-        "strip-json-comments",
         "typescript-*.*"
       ]
     },
-    "ignoredBuiltDependencies": [
-      "@parcel/watcher",
-      "core-js",
-      "core-js-pure",
-      "unrs-resolver",
-      "yarn"
-    ],
     "onlyBuiltDependencies": [
       "esbuild"
     ]
   },
-  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
+  "packageManager": "pnpm@10.34.6+sha512.7e1ae66a83a9143c118cc1944f37cc4f2b8acddeda4b001cfa78908f6e46e45e15292739ca6c9d026426cc757e9318cc98c5551d6a16c165097b0028ba87b4e6"
 }

@@ -1,7 +1,8 @@
-/// <reference types="jest" />
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import { canHandleRequest, extractNPMReference } from "../discussions";
 
-describe(canHandleRequest, () => {
+describe(canHandleRequest.name, { concurrency: true }, () => {
   const eventActions = [
     ["discussion", "created", true],
     ["discussion", "edited", true],
@@ -9,12 +10,15 @@ describe(canHandleRequest, () => {
     ["pull_request", "created", false],
   ] as const;
 
-  test.concurrent.each(eventActions)("(%s, %s) is %s", async (event, action, expected) => {
-    expect(canHandleRequest(event, action)).toEqual(expected);
-  });
+  for (const row of eventActions) {
+    test(`(${row[0]}, ${row[1]}) is ${row[2]}`, async () => {
+      const [event, action, expected] = row;
+      assert.deepEqual(canHandleRequest(event, action), expected);
+    });
+  }
 });
 
-describe(extractNPMReference, () => {
+describe(extractNPMReference.name, { concurrency: true }, () => {
   const eventActions = [
     ["[node] my thingy", "node"],
     ["OK [react]", "react"],
@@ -22,9 +26,12 @@ describe(extractNPMReference, () => {
     ["[@types/node] needs X", "node"],
   ] as const;
 
-  test.concurrent.each(eventActions)("(%s, %s) is %s", async (title, result) => {
-    expect(extractNPMReference({ title })).toEqual(result);
-  });
+  for (const row of eventActions) {
+    test(`${row[0]} is ${row[1]}`, async () => {
+      const [title, result] = row;
+      assert.deepEqual(extractNPMReference({ title }), result);
+    });
+  }
 
   const invalid = [
     "[Pkg: foo] inject", // space disallowed
@@ -36,7 +43,10 @@ describe(extractNPMReference, () => {
     "[trailing-space ]",
     "[has\nnewline]",
   ];
-  test.concurrent.each(invalid)("rejects invalid title %p", async (title) => {
-    expect(extractNPMReference({ title })).toBeUndefined();
-  });
+  for (const row of invalid) {
+    test(`rejects invalid title ${JSON.stringify(row)}`, async () => {
+      const title = row;
+      assert.equal(extractNPMReference({ title }), undefined);
+    });
+  }
 });

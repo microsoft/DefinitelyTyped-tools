@@ -1,12 +1,12 @@
 import { Fetcher, loggerWithErrors } from "@definitelytyped/utils";
-import * as yargs from "yargs";
+import yargs from "yargs";
 import full from "./full";
 import { Secret, getSecret } from "./lib/secrets";
 import { currentTimeStamp } from "./util/util";
 
 export default async function main() {
   const githubAccessToken = await getSecret(Secret.GITHUB_ACCESS_TOKEN);
-  const argv = yargs.parseSync();
+  const argv = yargs(process.argv.slice(2)).parseSync();
   const dry = !!(argv.dry || process.env.WEBHOOK_FORCE_DRY);
   const definitelyTypedPath = argv.path || undefined;
   if (definitelyTypedPath !== undefined && typeof definitelyTypedPath !== "string")

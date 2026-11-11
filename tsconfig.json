@@ -16,9 +16,11 @@
     { "path": "packages/retag" },
     { "path": "packages/mergebot" },
 
+    // Test imports resolve against src via rootDirs; emitted imports target dist.
     { "path": "packages/definitions-parser/test" },
     { "path": "packages/dts-gen/test" },
     { "path": "packages/dtslint/test" },
+    { "path": "packages/dtslint-runner/test" },
     { "path": "packages/eslint-plugin/test" },
     { "path": "packages/header-parser/test" },
     { "path": "packages/publisher/test" },

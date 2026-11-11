@@ -17,13 +17,20 @@
       "type": "node"
     },
     {
-      "name": "jest",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "name": "Node tests",
+      "cwd": "${workspaceFolder}",
+      "runtimeArgs": [
+        "--enable-source-maps",
+        "--require", "./test-setup.cjs",
+        "--test",
+        "--test-isolation=none"
+      ],
       "request": "launch",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "args": [ "definitions-parser"],
+      "args": [ "packages/definitions-parser/dist/test/*.test.js"],
+      "outFiles": ["${workspaceFolder}/packages/*/dist/**/*.js"],
       "type": "node"
     },
     {

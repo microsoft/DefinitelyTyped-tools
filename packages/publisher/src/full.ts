@@ -1,4 +1,4 @@
-import * as yargs from "yargs";
+import yargs from "yargs";
 
 import { getDefinitelyTyped, ParseDefinitionsOptions } from "@definitelytyped/definitions-parser";
 import { Fetcher, loggerWithErrors, LoggerWithErrors, logUncaughtErrors } from "@definitelytyped/utils";
@@ -9,7 +9,7 @@ import { defaultLocalOptions } from "./lib/common";
 import publishPackages from "./publish-packages";
 
 if (require.main === module) {
-  const argv = yargs.parseSync();
+  const argv = yargs(process.argv.slice(2)).parseSync();
   const dry = !!argv.dry;
   logUncaughtErrors(
     full(dry, process.env.GH_API_TOKEN || "", new Fetcher(), defaultLocalOptions, loggerWithErrors()[0]),

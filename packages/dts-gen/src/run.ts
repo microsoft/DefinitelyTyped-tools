@@ -2,7 +2,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as yargs from "yargs";
+import yargs from "yargs";
 
 import * as guess from "./";
 import writeDefinitelyTypedPackage from "./definitely-typed";
@@ -26,7 +26,8 @@ interface Options {
   version?: boolean;
 }
 
-const args = yargs
+const args = yargs(process.argv.slice(2))
+  .version(false)
   .alias("m", "module")
   .alias("i", "identifier")
   .alias("e", "expression")

@@ -1,5 +1,6 @@
-import { getAffectedPackagesWorker } from "../src/get-affected-packages";
-import { NotNeededPackage, AllPackages } from "../src/packages";
+import assert from "node:assert/strict";
+import { getAffectedPackagesWorker } from "../get-affected-packages";
+import { NotNeededPackage, AllPackages } from "../packages";
 import { testo, createTypingsVersionRaw } from "./utils";
 
 const typesData = {
@@ -33,8 +34,8 @@ testo({
       [dependentOutput],
       "/dt",
     );
-    expect(packageNames).toEqual(new Set(["jquery"]));
-    expect(dependents).toEqual(new Set(["known-test", "most-recent"]));
+    assert.deepEqual(packageNames, new Set(["jquery"]));
+    assert.deepEqual(dependents, new Set(["known-test", "most-recent"]));
   },
   async deletedPackage() {
     const packageOutput = ``;
@@ -47,8 +48,8 @@ testo({
       [dependentOutput],
       "/dt",
     );
-    expect(packageNames).toEqual(new Set([]));
-    expect(dependents).toEqual(new Set(["unknown-test"]));
+    assert.deepEqual(packageNames, new Set([]));
+    assert.deepEqual(dependents, new Set(["unknown-test"]));
   },
   async deletedVersion() {
     const packageOutput = `/dt/types/jquery`;
@@ -67,7 +68,7 @@ testo({
       dependentOutput,
       "/dt",
     );
-    expect(packageNames).toEqual(new Set(["jquery"]));
+    assert.deepEqual(packageNames, new Set(["jquery"]));
   },
   async newPackage() {
     const packageOutput = ``;
@@ -80,8 +81,8 @@ testo({
       [dependentOutput],
       "/dt",
     );
-    expect(packageNames).toEqual(new Set(["mistake"]));
-    expect(dependents).toEqual(new Set([]));
+    assert.deepEqual(packageNames, new Set(["mistake"]));
+    assert.deepEqual(dependents, new Set([]));
   },
   async olderVersion() {
     const packageOutput = `/dt/types/jquery`;
@@ -96,7 +97,7 @@ testo({
       [dependentOutput],
       "/dt",
     );
-    expect(packageNames).toEqual(new Set(["jquery"]));
-    expect(dependents).toEqual(new Set(["has-older-test-dependency", "known"]));
+    assert.deepEqual(packageNames, new Set(["jquery"]));
+    assert.deepEqual(dependents, new Set(["has-older-test-dependency", "known"]));
   },
 });

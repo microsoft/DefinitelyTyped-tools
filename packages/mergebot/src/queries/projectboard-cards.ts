@@ -1,10 +1,8 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
+import type { VariablesOf } from "gql.tada";
 import { client } from "../graphql-client";
-import type { GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables } from "./schema/graphql";
+import { graphql } from "./graphql";
 
-type ProjectV2 = NonNullable<NonNullable<GetProjectBoardCardsQuery["repository"]>["projectV2"]>;
-
-const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCardsQuery, GetProjectBoardCardsQueryVariables> = gql`
+const getProjectBoardCardsQuery = graphql(`
   query GetProjectBoardCards($cursor: String) {
     repository(owner: "DefinitelyTyped", name: "DefinitelyTyped") {
       projectV2(number: 1) {
@@ -19,6 +17,7 @@ const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCardsQuery, Ge
           nodes {
             id
             fieldValueByName(name: "Status") {
+              __typename
               ... on ProjectV2ItemFieldSingleSelectValue {
                 name
               }
@@ -29,7 +28,7 @@ const getProjectBoardCardsQuery: TypedDocumentNode<GetProjectBoardCardsQuery, Ge
       }
     }
   }
-`;
+`);
 
 interface CardInfo {
   id: string;
@@ -44,7 +43,7 @@ export async function getProjectBoardCards(): Promise<BoardInfo> {
   let id = "";
   const columns: Map<string, CardInfo[]> = new Map();
   while (true) {
-    const vars: GetProjectBoardCardsQueryVariables = { cursor };
+    const vars: VariablesOf<typeof getProjectBoardCardsQuery> = { cursor };
     const results = await client.query({
       query: getProjectBoardCardsQuery,
       variables: vars,

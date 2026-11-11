@@ -41,6 +41,15 @@ jobs:
     - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
     - name: install
       run: pnpm install
+    - name: Check mergebot GraphQL freshness
+      working-directory: packages/mergebot
+      run: |
+        node -e "require('node:fs').rmSync('src/queries/schema/tada-cache.d.ts', { force: true })"
+        pnpm run graphql-schema
+        git diff --exit-code -- src/queries/schema
+    - name: Validate mergebot GraphQL queries
+      working-directory: packages/mergebot
+      run: pnpm run graphql-tada-check
     - name: lint
       run: pnpm lint
     - name: build

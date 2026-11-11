@@ -503,19 +503,15 @@ function getExpectTypeFailures(
 
       const candidates = expected.split(/\s*\|\|\s*/).map((s) => s.trim());
 
-      if (
-        !(
-          // Fast path
-          (
-            candidates.some((s) => s === actual) ||
-            candidates.some((s) => {
-              actualNormalized ??= normalizedTypeToString(ts, actual);
-              const normalized = normalizedTypeToString(ts, s);
-              return normalized === actualNormalized;
-            })
-          )
-        )
-      ) {
+      if (!(
+        // Fast path
+        candidates.some((s) => s === actual) ||
+        candidates.some((s) => {
+          actualNormalized ??= normalizedTypeToString(ts, actual);
+          const normalized = normalizedTypeToString(ts, s);
+          return normalized === actualNormalized;
+        })
+      )) {
         unmetExpectations.push({ node, expected, actual });
       }
 

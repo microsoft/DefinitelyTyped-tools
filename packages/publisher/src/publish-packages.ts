@@ -1,4 +1,4 @@
-import * as yargs from "yargs";
+import yargs from "yargs";
 
 import { defaultLocalOptions } from "./lib/common";
 import { publishNotNeededPackage, publishTypingsPackage } from "./lib/package-publisher";
@@ -16,7 +16,7 @@ import { skipBadPublishes } from "./lib/npm";
 import { getSecret, Secret } from "./lib/secrets";
 
 if (require.main === module) {
-  const argv = yargs.parseSync();
+  const argv = yargs(process.argv.slice(2)).parseSync();
   const dry = !!argv.dry;
   logUncaughtErrors(async () => {
     const options = { ...defaultLocalOptions };

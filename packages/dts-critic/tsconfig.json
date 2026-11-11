@@ -6,7 +6,7 @@
     "resolveJsonModule": true,
     "outDir": "dist",
     "declaration": true,
-    "types": ["jest", "node"]
+    "types": ["node"]
   },
   "exclude": [
     "dist/*",

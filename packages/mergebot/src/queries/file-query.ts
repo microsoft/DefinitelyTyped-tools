@@ -1,13 +1,13 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
-import type { GetFileContentQuery, GetFileContentQueryVariables } from "./schema/graphql";
+import { graphql } from "./graphql";
 
 export { getFileContent as GetFileContent };
 
-const getFileContent: TypedDocumentNode<GetFileContentQuery, GetFileContentQueryVariables> = gql`
+const getFileContent = graphql(`
   query GetFileContent($owner: String!, $name: String!, $expr: String!) {
     repository(owner: $owner, name: $name) {
       id
       object(expression: $expr) {
+        __typename
         ... on Blob {
           text
           byteSize
@@ -15,4 +15,4 @@ const getFileContent: TypedDocumentNode<GetFileContentQuery, GetFileContentQuery
       }
     }
   }
-`;
+`);

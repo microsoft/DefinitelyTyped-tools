@@ -1,6 +1,7 @@
-/// <reference types="jest" />
-import { CompilerOptionsRaw, checkTsconfig } from "../src/checks";
-import { assertPackageIsNotDeprecated, getTypeScriptTestRanges } from "../src/index";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import { CompilerOptionsRaw, checkTsconfig } from "../checks";
+import { assertPackageIsNotDeprecated, getTypeScriptTestRanges } from "../index";
 import * as typeScriptPackages from "@definitelytyped/typescript-packages";
 import { execFile } from "child_process";
 import path from "path";
@@ -9,7 +10,7 @@ import { promisify } from "util";
 const execFileAsync = promisify(execFile);
 
 async function runBuilt<T>(moduleName: string, exportName: string, args: readonly unknown[]): Promise<T | undefined> {
-  const modulePath = path.resolve(__dirname, `../dist/${moduleName}.js`);
+  const modulePath = path.resolve(__dirname, `../${moduleName}.js`);
   const script = `
 const fn = require(process.argv[1])[process.argv[2]];
 Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
@@ -31,14 +32,14 @@ Promise.resolve(fn(...JSON.parse(process.argv[3]))).then(
 
 describe("getTypeScriptTestRanges", () => {
   it("tests through the latest compiler in its typesVersions directory", () => {
-    expect(getTypeScriptTestRanges(["6.0", "7.1"])).toEqual([
+    assert.deepEqual(getTypeScriptTestRanges(["6.0", "7.1"]), [
       { low: "5.6", high: "6.0", directoryVersion: "6.0" },
       { low: "7.0", high: "7.1", directoryVersion: "7.1" },
     ]);
   });
 
   it("uses the root definition when no future directory supersedes it", () => {
-    expect(getTypeScriptTestRanges(["6.0"])).toEqual([
+    assert.deepEqual(getTypeScriptTestRanges(["6.0"]), [
       { low: "5.6", high: "6.0", directoryVersion: "6.0" },
       { low: "7.0", high: "7.1" },
     ]);
@@ -63,102 +64,107 @@ describe("dtslint", () => {
   describe("checks", () => {
     describe("checkTsconfig", () => {
       it("disallows unknown compiler options", () => {
-        expect(checkTsconfig(based({ completelyInvented: true }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ completelyInvented: true })), [
           "Unexpected compiler option completelyInvented",
         ]);
       });
 
       it("allows exactOptionalPropertyTypes: true", () => {
-        expect(checkTsconfig(based({ exactOptionalPropertyTypes: true }))).toEqual([]);
+        assert.deepEqual(checkTsconfig(based({ exactOptionalPropertyTypes: true })), []);
       });
       it("allows module: node16", () => {
-        expect(checkTsconfig(based({ module: "node16" }))).toEqual([]);
+        assert.deepEqual(checkTsconfig(based({ module: "node16" })), []);
       });
       it("allows `paths`", () => {
-        expect(checkTsconfig(based({ paths: { boom: ["../boom/index.d.ts"] } }))).toEqual([]);
+        assert.deepEqual(checkTsconfig(based({ paths: { boom: ["../boom/index.d.ts"] } })), []);
       });
       it("disallows missing `module`", () => {
         const compilerOptions = { ...base };
         delete compilerOptions.module;
-        expect(checkTsconfig({ compilerOptions, files: ["index.d.ts", "base.test.ts"] })).toEqual([
+        assert.deepEqual(checkTsconfig({ compilerOptions, files: ["index.d.ts", "base.test.ts"] }), [
           'Must specify "module" to `"module": "commonjs"` or `"module": "node16"`.',
         ]);
       });
       it("disallows exactOptionalPropertyTypes: false", () => {
-        expect(checkTsconfig(based({ exactOptionalPropertyTypes: false }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ exactOptionalPropertyTypes: false })), [
           'When "exactOptionalPropertyTypes" is present, it must be set to `true`.',
         ]);
       });
       it("allows paths: self-reference", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["./index.d.ts"] } }))).toEqual([]);
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["./index.d.ts"] } })), []);
       });
       it("allows paths: matching ../reference/index.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/index.d.ts"] } }))).toEqual([]);
-        expect(
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../react-native/index.d.ts"] } })), []);
+        assert.deepEqual(
           checkTsconfig(
             based({ paths: { "react-native": ["../react-native/index.d.ts"], react: ["../react/v16/index.d.ts"] } }),
           ),
-        ).toEqual([]);
+          [],
+        );
       });
       it("forbids paths: mapping to multiple things", () => {
-        expect(
+        assert.deepEqual(
           checkTsconfig(based({ paths: { "react-native": ["./index.d.ts", "../react-native/v0.68/index.d.ts"] } })),
-        ).toEqual([`"paths" must map each module specifier to only one file.`]);
+          [`"paths" must map each module specifier to only one file.`],
+        );
       });
       it("allows paths: matching ../reference/version/index.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { react: ["../react/v16/index.d.ts"] } }))).toEqual([]);
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.69/index.d.ts"] } }))).toEqual([]);
-        expect(checkTsconfig(based({ paths: { "react-native": ["../../react-native/v0.69/index.d.ts"] } }))).toEqual(
+        assert.deepEqual(checkTsconfig(based({ paths: { react: ["../react/v16/index.d.ts"] } })), []);
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.69/index.d.ts"] } })), []);
+        assert.deepEqual(
+          checkTsconfig(based({ paths: { "react-native": ["../../react-native/v0.69/index.d.ts"] } })),
           [],
         );
       });
       it("forbids paths: mapping to self-contained file", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["./other.d.ts"] } }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["./other.d.ts"] } })), [
           `"paths" must map 'react-native' to react-native's index.d.ts.`,
         ]);
       });
       it("forbids paths: mismatching ../NOT/index.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../cocoa/index.d.ts"] } }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../cocoa/index.d.ts"] } })), [
           `"paths" must map 'react-native' to react-native's index.d.ts.`,
         ]);
       });
       it("forbids paths: mismatching ../react-native/NOT.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/other.d.ts"] } }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../react-native/other.d.ts"] } })), [
           `"paths" must map 'react-native' to react-native's index.d.ts.`,
         ]);
       });
       it("forbids paths: mismatching ../react-native/NOT/index.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/deep/index.d.ts"] } }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../react-native/deep/index.d.ts"] } })), [
           `"paths" must map 'react-native' to react-native's index.d.ts.`,
         ]);
       });
       it("forbids paths: mismatching ../react-native/version/NOT/index.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.68/deep/index.d.ts"] } }))).toEqual([
-          `"paths" must map 'react-native' to react-native's index.d.ts.`,
-        ]);
+        assert.deepEqual(
+          checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.68/deep/index.d.ts"] } })),
+          [`"paths" must map 'react-native' to react-native's index.d.ts.`],
+        );
       });
       it("forbids paths: mismatching ../react-native/version/NOT.d.ts", () => {
-        expect(checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.70/other.d.ts"] } }))).toEqual([
+        assert.deepEqual(checkTsconfig(based({ paths: { "react-native": ["../react-native/v0.70/other.d.ts"] } })), [
           `"paths" must map 'react-native' to react-native's index.d.ts.`,
         ]);
       });
       it("Forbids exclude", () => {
-        expect(checkTsconfig({ compilerOptions: base, exclude: ["**/node_modules"] })).toEqual([
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, exclude: ["**/node_modules"] }), [
           `Use "files" instead of "exclude".`,
         ]);
       });
       it("Forbids include", () => {
-        expect(checkTsconfig({ compilerOptions: base, include: ["**/node_modules"] })).toEqual([
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, include: ["**/node_modules"] }), [
           `Use "files" instead of "include".`,
         ]);
       });
       it("Requires files", () => {
-        expect(checkTsconfig({ compilerOptions: base })).toEqual([`Must specify "files".`]);
+        assert.deepEqual(checkTsconfig({ compilerOptions: base }), [`Must specify "files".`]);
       });
       it("Requires files to contain index.d.ts", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: ["package-name.d.ts", "package-name.test.ts"] })).toEqual([
-          `"files" list must include "index.d.ts".`,
-        ]);
+        assert.deepEqual(
+          checkTsconfig({ compilerOptions: base, files: ["package-name.d.ts", "package-name.test.ts"] }),
+          [`"files" list must include "index.d.ts".`],
+        );
       });
       // it("Requires files to contain .[mc]ts file", () => {
       //   expect(checkTsconfig({ compilerOptions: base, files: ["index.d.ts"] })).toEqual([
@@ -166,26 +172,26 @@ describe("dtslint", () => {
       //   ]);
       // });
       it("Allows files to contain index.d.ts plus a .tsx", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.tsx"] })).toEqual([]);
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.tsx"] }), []);
       });
       it("Allows files to contain index.d.ts plus a .mts", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.mts"] })).toEqual([]);
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.mts"] }), []);
       });
       it("Allows files to contain index.d.ts plus a .cts", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.cts"] })).toEqual([]);
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, files: ["index.d.ts", "tests.cts"] }), []);
       });
       it("Allows files to contain ./index.d.ts plus a ./.tsx", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: ["./index.d.ts", "./tests.tsx"] })).toEqual([]);
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, files: ["./index.d.ts", "./tests.tsx"] }), []);
       });
       it("Issues both errors on empty files list", () => {
-        expect(checkTsconfig({ compilerOptions: base, files: [] })).toEqual([
+        assert.deepEqual(checkTsconfig({ compilerOptions: base, files: [] }), [
           `"files" list must include "index.d.ts".`,
           // `"files" list must include at least one ".ts", ".tsx", ".mts" or ".cts" file for testing.`,
         ]);
       });
 
       describe("Corsa", () => {
-        const fixtures = path.join(__dirname, "fixtures", "corsa");
+        const fixtures = path.resolve(__dirname, "../../test/fixtures/corsa");
 
         for (const version of ["7.0", "7.1"] as const) {
           it(`checks compiler diagnostics and ExpectType through the TypeScript ${version} IPC API`, async () => {
@@ -196,26 +202,31 @@ describe("dtslint", () => {
               true,
               null,
             ]);
+            assert.ok(result);
 
-            expect(result).toContain("compile error TS2322");
-            expect(result).toContain(
-              "  The types of 'outer.inner' are incompatible between these types.\n" +
-                "    Type 'number' is not assignable to type 'string'.",
+            assert.ok(result.includes("compile error TS2322"));
+            assert.ok(
+              result.includes(
+                "  The types of 'outer.inner' are incompatible between these types.\n" +
+                  "    Type 'number' is not assignable to type 'string'.",
+              ),
             );
-            expect(result).toContain("compile error TS2578");
-            expect(result?.match(/compile error TS2578/g)).toHaveLength(version === "7.0" ? 1 : 2);
-            expect(result).toContain("expected type to be:\n  2\ngot:\n  1");
-            expect(result).toContain(
-              "expected type to be:\n  { (value: number): number; (value: string): string; }\ngot:",
+            assert.ok(result.includes("compile error TS2578"));
+            assert.equal(result?.match(/compile error TS2578/g)?.length, version === "7.0" ? 1 : 2);
+            assert.ok(result.includes("expected type to be:\n  2\ngot:\n  1"));
+            assert.ok(
+              result.includes("expected type to be:\n  { (value: number): number; (value: string): string; }\ngot:"),
             );
-            expect(result).toContain(
-              "expected type to be:\n  { method(value: number): number; method(value: string): string; }\ngot:",
+            assert.ok(
+              result.includes(
+                "expected type to be:\n  { method(value: number): number; method(value: string): string; }\ngot:",
+              ),
             );
           });
 
           it(`passes matching TypeScript ${version} ExpectType assertions without invoking ESLint`, async () => {
-            await expect(
-              runBuilt("lint", "lint", [
+            assert.equal(
+              await runBuilt("lint", "lint", [
                 path.join(fixtures, "pass"),
                 ["tsconfig.json"],
                 version,
@@ -224,7 +235,8 @@ describe("dtslint", () => {
                 true,
                 null,
               ]),
-            ).resolves.toBeUndefined();
+              undefined,
+            );
           });
         }
 
@@ -236,16 +248,19 @@ describe("dtslint", () => {
             true,
             null,
           ]);
+          assert.ok(result);
 
-          expect(result).toContain("TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json compile error TS2322");
-          expect(result).toContain(
-            "TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json expected type to be:\n  2\ngot:\n  1",
+          assert.ok(result.includes("TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json compile error TS2322"));
+          assert.ok(
+            result.includes(
+              "TypeScript@7.0 tsconfig.alternate.json, 7.0 tsconfig.json expected type to be:\n  2\ngot:\n  1",
+            ),
           );
-          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
-          expect(result?.match(/expected type to be:\n  2\ngot:\n  1/g)).toHaveLength(1);
+          assert.equal(result?.match(/compile error TS2322/g)?.length, 1);
+          assert.equal(result?.match(/expected type to be:\n  2\ngot:\n  1/g)?.length, 1);
         });
 
-        it("reports and deduplicates Corsa failures across versions", async () => {
+        it("reports and deduplicates Corsa failures across versions", { timeout: 30_000 }, async () => {
           const result = await runBuilt<string>("lint", "lint", [
             path.join(fixtures, "fail"),
             ["tsconfig.json"],
@@ -255,10 +270,11 @@ describe("dtslint", () => {
             true,
             null,
           ]);
+          assert.ok(result);
 
-          expect(result).toContain("TypeScript@7.0, 7.1 compile error TS2322");
-          expect(result?.match(/compile error TS2322/g)).toHaveLength(1);
-        }, 30_000);
+          assert.ok(result.includes("TypeScript@7.0, 7.1 compile error TS2322"));
+          assert.equal(result?.match(/compile error TS2322/g)?.length, 1);
+        });
 
         it("reports files excluded from every alternate tsconfig", async () => {
           const result = await runBuilt<string>("lint", "lint", [
@@ -270,14 +286,15 @@ describe("dtslint", () => {
             true,
             null,
           ]);
+          assert.ok(result);
 
-          expect(result).toContain("excluded.ts:1:1");
-          expect(result).toContain("TypeScript@7.0 could not find a tsconfig that includes this file.");
+          assert.ok(result.includes("excluded.ts:1:1"));
+          assert.ok(result.includes("TypeScript@7.0 could not find a tsconfig that includes this file."));
         });
 
-        it("runs ordinary ESLint rules during Corsa-only testing", async () => {
+        it("runs ordinary ESLint rules during Corsa-only testing", { timeout: 30_000 }, async () => {
           const result = await runBuilt<string>("lint", "lint", [
-            path.join(__dirname, "corsa-eslint"),
+            path.resolve(__dirname, "../../test/corsa-eslint"),
             ["tsconfig.json"],
             "7.0",
             "7.0",
@@ -285,16 +302,17 @@ describe("dtslint", () => {
             false,
             null,
           ]);
+          assert.ok(result);
 
-          expect(result).toContain("no-var");
-          expect(result).toContain("@typescript-eslint/naming-convention");
-        }, 30_000);
+          assert.ok(result.includes("no-var"));
+          assert.ok(result.includes("@typescript-eslint/naming-convention"));
+        });
 
-        it("can use a local Corsa package", async () => {
+        it("can use a local Corsa package", { timeout: 30_000 }, async () => {
           const packageRoot = path.dirname(typeScriptPackages.resolve("7.0", "package.json"));
 
-          await expect(
-            runBuilt("lint", "lint", [
+          assert.equal(
+            await runBuilt("lint", "lint", [
               path.join(fixtures, "pass"),
               ["tsconfig.json"],
               "local",
@@ -303,7 +321,8 @@ describe("dtslint", () => {
               true,
               packageRoot,
             ]),
-          ).resolves.toBeUndefined();
+            undefined,
+          );
 
           const result = await runBuilt<string>("lintCorsa", "lintCorsaVersions", [
             path.join(fixtures, "fail"),
@@ -312,19 +331,21 @@ describe("dtslint", () => {
             true,
             packageRoot,
           ]);
-          expect(result).toContain("TypeScript@local compile error TS2578");
-          expect(result?.match(/compile error TS2578/g)).toHaveLength(1);
-        }, 30_000);
+          assert.ok(result);
+          assert.ok(result.includes("TypeScript@local compile error TS2578"));
+          assert.equal(result?.match(/compile error TS2578/g)?.length, 1);
+        });
       });
     });
     describe("assertPackageIsNotDeprecated", () => {
       it("disallows packages that are in notNeededPackages.json", () => {
-        expect(() => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }')).toThrow(
-          "notNeededPackages.json has an entry for foo.",
+        assert.throws(
+          () => assertPackageIsNotDeprecated("foo", '{ "packages": { "foo": { } } }'),
+          /notNeededPackages\.json has an entry for foo\./,
         );
       });
       it("allows packages that are not in notNeededPackages.json", () => {
-        expect(assertPackageIsNotDeprecated("foo", '{ "packages": { "bar": { } } }')).toBeUndefined();
+        assert.equal(assertPackageIsNotDeprecated("foo", '{ "packages": { "bar": { } } }'), undefined);
       });
     });
   });

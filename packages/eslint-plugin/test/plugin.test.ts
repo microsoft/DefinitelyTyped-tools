@@ -1,14 +1,15 @@
-import plugin = require("../src/index");
+import { describe, it } from "node:test";
+import plugin = require("../index");
 
 describe("plugin", () => {
-  it("should have the expected exports", () => {
-    expect({
+  it("should have the expected exports", (t) => {
+    t.assert.snapshot({
       ...plugin,
       meta: {
         ...plugin.meta,
         version: "version",
       },
       rules: Object.keys(plugin.rules),
-    }).toMatchSnapshot();
+    });
   });
 });

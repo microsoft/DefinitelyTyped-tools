@@ -1,5 +1,5 @@
-import { lstatSync, readFileSync } from "fs";
-import glob = require("glob");
+import { globSync, lstatSync, readFileSync } from "fs";
+import { resolve } from "path";
 import type { Failure } from "./add-github-links";
 
 export function readComparison(
@@ -31,7 +31,9 @@ export function readComparison(
 function readFailures(directory: string, prefix: "main" | "pr", shardCount: number): Failure[] {
   const result: Failure[] = [];
   for (let shard = 1; shard <= shardCount; shard++) {
-    const files = glob.sync(`**/${prefix}Failures${shard}.json`, { cwd: directory, absolute: true });
+    const files = globSync(`**/${prefix}Failures${shard}.json`, { cwd: directory }).map((file) =>
+      resolve(directory, file),
+    );
     if (files.length !== 1 || !lstatSync(files[0]).isFile()) {
       throw new Error();
     }

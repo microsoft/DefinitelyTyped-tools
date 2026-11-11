@@ -72,7 +72,10 @@ export function streamOfString(text: string): NodeJS.ReadableStream {
   return s;
 }
 
-export function stringOfStream(stream: NodeJS.ReadableStream, description: string): Promise<string> {
+export function stringOfStream(
+  stream: { on: (...args: Parameters<NodeJS.ReadableStream["on"]>) => unknown },
+  description: string,
+): Promise<string> {
   const decoder = new StringDecoder("utf8");
   let body = "";
   stream.on("data", (data: Buffer) => {
@@ -201,11 +204,7 @@ export function downloadAndExtractFile(url: string, log: LoggerWithErrors): Prom
 
         log.info("Getting " + url);
         const extract = tarStream.extract();
-        interface Header {
-          readonly name: string;
-          readonly type: "file" | "directory";
-        }
-        extract.on("entry", (header: Header, stream: NodeJS.ReadableStream, next: () => void) => {
+        extract.on("entry", (header, stream, next) => {
           const name = assertDefined(withoutStart(header.name, "DefinitelyTyped-master/"));
           switch (header.type) {
             case "file":

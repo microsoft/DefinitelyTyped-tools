@@ -10,31 +10,28 @@
     "@definitelytyped/header-parser": "workspace:*",
     "@definitelytyped/retag": "workspace:*",
     "@definitelytyped/utils": "workspace:*",
-    "longjohn": "^0.2.12",
-    "pacote": "^21.4.0",
-    "semver": "^7.7.4",
+    "pacote": "^22.0.1",
+    "semver": "^7.8.6",
     "typescript": "^6.0.3",
-    "yargs": "^17.7.2"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
     "@types/pacote": "^11.1.8",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "@types/yargs": "^17.0.35"
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "../../node_modules/.bin/jest --config ../../jest.config.js packages/publisher",
+    "test": "node ../../run-tests.mjs .",
     "clean": "node --enable-source-maps dist/clean.js",
     "get-definitely-typed": "node --enable-source-maps dist/get-definitely-typed.js",
     "calculate-versions": "node --enable-source-maps dist/calculate-versions.js",
     "generate": "node --enable-source-maps dist/generate-packages.js",
-    "validate": "node --enable-source-maps dist/validate.js",
     "publish-packages": "node --enable-source-maps dist/publish-packages.js",
     "publish-packages-dry": "node --enable-source-maps dist/publish-packages.js --dry",
     "publish-registry": "node --enable-source-maps dist/publish-registry.js",
     "full": "node --enable-source-maps dist/full.js",
-    "full-dry": "node --enable-source-maps dist/full.js --dry",
-    "test-tsNext": "node --enable-source-maps dist/tester/test.js --all --tsNext"
+    "full-dry": "node --enable-source-maps dist/full.js --dry"
   },
   "repository": {
     "type": "git",
@@ -47,7 +44,7 @@
     "url": "https://github.com/microsoft/DefinitelyTyped-tools/issues"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26"
   },
   "homepage": "https://github.com/microsoft/DefinitelyTyped-tools/tree/main/packages/publisher#readme"
 }

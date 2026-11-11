@@ -15,14 +15,14 @@ import {
 } from "@definitelytyped/utils";
 import { fetchTypesPackageVersionInfo } from "@definitelytyped/retag";
 import * as pacote from "pacote";
-import yargs = require("yargs");
+import yargs from "yargs";
 
 const npmRegistryParallelism = 10;
 
 if (require.main === module) {
   const log = loggerWithErrors()[0];
   const options = { ...defaultLocalOptions };
-  const argv = yargs.parseSync();
+  const argv = yargs(process.argv.slice(2)).parseSync();
   if (argv.path) {
     options.definitelyTypedPath = argv.path as string;
   }
@@ -44,9 +44,11 @@ async function computeAndSaveChangedPackages(
 ): Promise<ChangedPackages> {
   const cp = await computeChangedPackages(allPackages, log);
   const json: ChangedPackagesJson = {
-    changedTypings: cp.changedTypings.map(
-      ({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({ id, version, latestVersion }),
-    ),
+    changedTypings: cp.changedTypings.map(({ pkg: { id }, version, latestVersion }): ChangedTypingJson => ({
+      id,
+      version,
+      latestVersion,
+    })),
     changedNotNeededPackages: cp.changedNotNeededPackages.map((p) => p.typesDirectoryName),
   };
   await writeDataFile(versionsFilename, json);

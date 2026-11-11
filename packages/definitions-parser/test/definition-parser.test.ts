@@ -1,22 +1,26 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { DiskFS } from "@definitelytyped/utils";
 import path from "path";
-import { getTypingInfo } from "../src/lib/definition-parser";
-import { createMockDT } from "../src/mocks";
+import { getTypingInfo } from "../lib/definition-parser";
+import { createMockDT } from "../mocks";
 
-describe(getTypingInfo, () => {
+const fixtureRoot = path.resolve(__dirname, "../../test/fixtures");
+
+describe(getTypingInfo.name, () => {
   it("keys data by major.minor version", async () => {
     const dt = createMockDT();
     dt.addOldVersionOfPackage("jquery", "1.42", "1.42.9999");
     dt.addOldVersionOfPackage("jquery", "2", "2.0.9999");
     const info = await getTypingInfo("jquery", dt.fs);
 
-    expect(Object.keys(info!).sort()).toEqual(["1.42", "2.0", "3.3"]);
+    assert.deepEqual(Object.keys(info!).sort(), ["1.42", "2.0", "3.3"]);
   });
 
   it("works for a package with dependencies", async () => {
     const dt = createMockDT();
     const info = await getTypingInfo("has-dependency", dt.fs);
-    expect("errors" in info!).toBeFalsy();
+    assert.ok(!("errors" in info!));
   });
 
   it("works for non-module files with empty statements", async () => {
@@ -51,7 +55,7 @@ describe(getTypingInfo, () => {
     );
 
     const info = await getTypingInfo("example", dt.fs);
-    expect("errors" in info!).toBeFalsy();
+    assert.ok(!("errors" in info!));
   });
   it("works for a scoped package with scoped older dependencies", async () => {
     const dt = createMockDT();
@@ -123,7 +127,7 @@ export function myFunction(arg:string): string;
     dt.addOldVersionOfPackage("@ckeditor/ckeditor5-utils", "10", "10.0.9999");
 
     const info = await getTypingInfo("ckeditor__ckeditor5-engine", dt.fs);
-    expect("errors" in info!).toBeFalsy();
+    assert.ok(!("errors" in info!));
   });
 
   it("allows path mapping to node/buffer", async () => {
@@ -195,8 +199,8 @@ export * from 'buffer';
     if ("errors" in info!) {
       throw new Error(info.errors.join("\n"));
     }
-    expect(info!["1.0"]).toBeDefined();
-    expect(info!["1.0"].dependencies).toEqual({ "@types/node": "*" });
+    assert.notEqual(info!["1.0"], undefined);
+    assert.deepEqual(info!["1.0"].dependencies, { "@types/node": "*" });
   });
   it("errors on arbitrary path mapping", () => {});
   it("supports node_modules passthrough path mapping", async () => {
@@ -277,15 +281,15 @@ const a = new webpack.AutomaticPrefetchPlugin();
     );
 
     const info = await getTypingInfo("webpack", dt.fs);
-    expect("errors" in info!).toBeFalsy();
+    assert.ok(!("errors" in info!));
   });
 
   it("allows references to old versions of self", async () => {
     const info = await getTypingInfo(
       "fail",
-      new DiskFS(path.resolve(__dirname, "fixtures/allows-references-to-old-versions-of-self/")),
+      new DiskFS(path.join(fixtureRoot, "allows-references-to-old-versions-of-self")),
     );
-    expect("errors" in info!).toBeFalsy();
+    assert.ok(!("errors" in info!));
   });
 
   it("omits test dependencies on modules declared in index.d.ts", async () => {
@@ -359,18 +363,18 @@ import route = require('@ember/routing/route');
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));
     }
-    expect(info["2.8"].devDependencies).toEqual({ "@types/ember": "workspace:." });
+    assert.deepEqual(info["2.8"].devDependencies, { "@types/ember": "workspace:." });
   });
 
   it("doesn't omit dependencies if only some deep modules are declared", async () => {
     const info = (await getTypingInfo(
       "styled-components-react-native",
-      new DiskFS(path.resolve(__dirname, "fixtures/doesnt-omit-dependencies-if-only-some-deep-modules-are-declared/")),
+      new DiskFS(path.join(fixtureRoot, "doesnt-omit-dependencies-if-only-some-deep-modules-are-declared")),
     ))!;
     if ("errors" in info) {
       throw new Error(info.errors.join("\n"));
     }
-    expect(info["5.1"].dependencies).toEqual({ "@types/styled-components": "*" });
+    assert.deepEqual(info["5.1"].dependencies, { "@types/styled-components": "*" });
   });
 
   describe("concerning multiple versions", () => {
@@ -380,26 +384,28 @@ import route = require('@ember/routing/route');
       dt.addOldVersionOfPackage("jquery", "1.5", "1.5.9999");
       const info = await getTypingInfo("jquery", dt.fs);
 
-      expect(info).toEqual({
-        "1.5": expect.objectContaining({
+      assert.ok(info);
+      assert.deepEqual(Object.keys(info).sort(), ["1.5", "2.0", "3.3"]);
+      assert.partialDeepStrictEqual(info, {
+        "1.5": {
           libraryVersionDirectoryName: "1.5",
-        }),
-        "2.0": expect.objectContaining({
+        },
+        "2.0": {
           libraryVersionDirectoryName: "2",
-        }),
-        "3.3": expect.objectContaining({
+        },
+        "3.3": {
           // The latest version does not have its own version directory
           libraryVersionDirectoryName: undefined,
-        }),
+        },
       });
     });
 
     describe("validation thereof", () => {
-      it("throws if a directory exists for the latest major version", () => {
+      it("throws if a directory exists for the latest major version", async () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3", "3.0.9999");
 
-        return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual({
+        return assert.deepEqual(await getTypingInfo("jquery", dt.fs), {
           errors: [
             "The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3' is not allowed; " +
               "since it applies to any 3.* version, up to and including 3.3.",
@@ -407,39 +413,41 @@ import route = require('@ember/routing/route');
         });
       });
 
-      it("throws if a directory exists for the latest minor version", () => {
+      it("throws if a directory exists for the latest minor version", async () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.3", "3.3.9999");
 
-        return expect(getTypingInfo("jquery", dt.fs)).resolves.toEqual({
+        return assert.deepEqual(await getTypingInfo("jquery", dt.fs), {
           errors: ["The latest version of the 'jquery' package is 3.3, so the subdirectory 'v3.3' is not allowed."],
         });
       });
 
-      it("does not throw when a minor version is older than the latest", () => {
+      it("does not throw when a minor version is older than the latest", async () => {
         const dt = createMockDT();
         dt.addOldVersionOfPackage("jquery", "3.0", "3.0.9999");
 
-        return expect(getTypingInfo("jquery", dt.fs)).resolves.toBeDefined();
+        return assert.notEqual(await getTypingInfo("jquery", dt.fs), undefined);
       });
     });
   });
 
-  it("allows wildcard scope path mappings", () => {
+  it("allows wildcard scope path mappings", async () => {
     const dt = createMockDT();
-    return expect(getTypingInfo("wordpress__plugins", dt.fs)).resolves.toBeDefined();
+    return assert.notEqual(await getTypingInfo("wordpress__plugins", dt.fs), undefined);
   });
 
-  it("does not error on allowed dependencies", () => {
+  it("does not error on allowed dependencies", async () => {
     const dt = createMockDT();
 
-    return expect(getTypingInfo("allowed-dep", dt.fs)).resolves.not.toHaveProperty("errors");
+    const info = await getTypingInfo("allowed-dep", dt.fs);
+    assert.ok(info);
+    assert.ok(!Object.hasOwn(info, "errors"));
   });
 
-  it("errors on non-allowed dependencies", () => {
+  it("errors on non-allowed dependencies", async () => {
     const dt = createMockDT();
 
-    return expect(getTypingInfo("non-allowed-dep", dt.fs)).resolves.toEqual({
+    return assert.deepEqual(await getTypingInfo("non-allowed-dep", dt.fs), {
       errors: [
         "In package.json: Dependency not-allowed not in the allowed dependencies list.\n" +
           "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",
@@ -447,16 +455,18 @@ import route = require('@ember/routing/route');
     });
   });
 
-  it("does not error on allowed peer dependencies", () => {
+  it("does not error on allowed peer dependencies", async () => {
     const dt = createMockDT();
 
-    return expect(getTypingInfo("allowed-peer-dep", dt.fs)).resolves.not.toHaveProperty("errors");
+    const info = await getTypingInfo("allowed-peer-dep", dt.fs);
+    assert.ok(info);
+    assert.ok(!Object.hasOwn(info, "errors"));
   });
 
-  it("errors on non-allowed peer dependencies", () => {
+  it("errors on non-allowed peer dependencies", async () => {
     const dt = createMockDT();
 
-    return expect(getTypingInfo("non-allowed-peer-dep", dt.fs)).resolves.toEqual({
+    return assert.deepEqual(await getTypingInfo("non-allowed-peer-dep", dt.fs), {
       errors: [
         "In package.json: Dependency not-allowed-peer not in the allowed dependencies list.\n" +
           "Please make a pull request to microsoft/DefinitelyTyped-tools adding it to `packages/definitions-parser/allowedPackageJsonDependencies.txt`.",

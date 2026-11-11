@@ -1,13 +1,7 @@
-import { gql, TypedDocumentNode } from "@apollo/client/core";
 import { client } from "../graphql-client";
-import type {
-  GetLabelByNameQuery,
-  GetLabelByNameQueryVariables,
-  GetDiscussionCommentsQuery,
-  GetDiscussionCommentsQueryVariables,
-} from "./schema/graphql";
+import { graphql } from "./graphql";
 
-const getLabelByNameQuery: TypedDocumentNode<GetLabelByNameQuery, GetLabelByNameQueryVariables> = gql`
+const getLabelByNameQuery = graphql(`
   query GetLabelByName($name: String!) {
     repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
       id
@@ -20,7 +14,7 @@ const getLabelByNameQuery: TypedDocumentNode<GetLabelByNameQuery, GetLabelByName
       }
     }
   }
-`;
+`);
 
 export async function getLabelByName(name: string) {
   const info = await client.query({
@@ -33,25 +27,24 @@ export async function getLabelByName(name: string) {
   return { repoID: info.data?.repository?.id ?? "", label };
 }
 
-const getDiscussionCommentsQuery: TypedDocumentNode<GetDiscussionCommentsQuery, GetDiscussionCommentsQueryVariables> =
-  gql`
-    query GetDiscussionComments($discussionNumber: Int!) {
-      repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
-        name
-        discussion(number: $discussionNumber) {
-          comments(first: 100) {
-            nodes {
-              author {
-                login
-              }
-              id
-              body
+const getDiscussionCommentsQuery = graphql(`
+  query GetDiscussionComments($discussionNumber: Int!) {
+    repository(name: "DefinitelyTyped", owner: "DefinitelyTyped") {
+      name
+      discussion(number: $discussionNumber) {
+        comments(first: 100) {
+          nodes {
+            author {
+              login
             }
+            id
+            body
           }
         }
       }
     }
-  `;
+  }
+`);
 
 export async function getCommentsForDiscussionNumber(number: number) {
   const info = await client.query({

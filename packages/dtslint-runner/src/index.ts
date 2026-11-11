@@ -10,7 +10,8 @@ import { sourceBranch } from "@definitelytyped/definitions-parser";
 export { runDTSLint, type RunDTSLintOptions };
 
 if (require.main === module) {
-  const args = yargs
+  const parser = yargs(process.argv.slice(2));
+  const args = parser
     .options({
       clone: {
         group: "DefinitelyTyped acquisition",
@@ -102,7 +103,7 @@ if (require.main === module) {
         default: sourceBranch,
       },
     })
-    .wrap(Math.min(yargs.terminalWidth(), 120))
+    .wrap(Math.min(parser.terminalWidth(), 120))
     .parseSync();
 
   const options: RunDTSLintOptions = {

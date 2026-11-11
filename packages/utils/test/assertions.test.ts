@@ -1,4 +1,5 @@
-import { deepEquals } from "../src/assertions";
+import { describe, it } from "node:test";
+import { deepEquals } from "../assertions";
 
 describe("assertions", () => {
   describe("deepEquals", () => {

@@ -1,4 +1,8 @@
-import * as tsg from "../src";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import * as tsg from "../index";
+import { execFileSync } from "child_process";
+import path from "path";
 
 const testModuleNames = ["lodash", "jquery", "yargs", "ecurve"];
 
@@ -33,18 +37,41 @@ const expressions: { [s: string]: any } = {
 
 describe("Module tests", () => {
   for (const moduleName of testModuleNames) {
-    it(`Generates the same declaration for ${moduleName}`, () => {
-      const result = tsg.generateModuleDeclarationFile(moduleName!, require(moduleName!));
-      expect(result).toMatchSnapshot(`module-${moduleName}.d.ts`);
+    it(`Generates the same declaration for ${moduleName}`, (t) => {
+      const module = moduleName === "jquery" ? require("jquery/factory").jQueryFactory : require(moduleName);
+      const result = tsg.generateModuleDeclarationFile(moduleName, module);
+      t.assert.snapshot(result);
     });
   }
 });
 
 describe("Expression tests", () => {
   for (const key of Object.keys(expressions)) {
-    it(`Generates the same declaration for ${key}`, () => {
+    it(`Generates the same declaration for ${key}`, (t) => {
       const result = tsg.generateIdentifierDeclarationFile(key!, expressions[key!]);
-      expect(result).toMatchSnapshot(`expr-${key}.d.ts`);
+      t.assert.snapshot(result);
     });
   }
+});
+
+describe("CLI tests", () => {
+  const cli = path.resolve(__dirname, "../run.js");
+
+  for (const row of ["--version", "-v"] as const) {
+    it(`prints its package version with ${row}`, () => {
+      const flag = row;
+      const output = execFileSync(process.execPath, [cli, flag], { encoding: "utf8" });
+      assert.equal(output.trim(), require(path.resolve(__dirname, "../../package.json")).version);
+    });
+  }
+
+  it("parses expression, name, and output options", () => {
+    const output = execFileSync(
+      process.execPath,
+      [cli, "--expression", "({ value: 1 })", "--name", "sample", "--stdout"],
+      { encoding: "utf8" },
+    );
+    assert.ok(output.includes("declare const sample:"));
+    assert.ok(output.includes("value: number;"));
+  });
 });

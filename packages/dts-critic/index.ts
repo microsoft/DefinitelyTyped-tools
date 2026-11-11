@@ -1,4 +1,4 @@
-import yargs = require("yargs");
+import yargs from "yargs";
 import headerParser = require("@definitelytyped/header-parser");
 import fs = require("fs");
 import path = require("path");
@@ -74,7 +74,7 @@ function parsePackageJson(
 export const defaultErrors: ExportErrorKind[] = [ErrorKind.NeedsExportEquals, ErrorKind.NoDefaultExport];
 
 function main() {
-  const argv = yargs
+  const argv = yargs(process.argv.slice(2))
     .usage(
       "$0 --dts path-to-d.ts --js path-to-source [--debug]\n\nIf source-folder is not provided, I will look for a matching package on npm.",
     )
