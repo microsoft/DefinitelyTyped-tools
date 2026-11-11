@@ -1,5 +1,17 @@
 # @definitelytyped/definitions-parser
 
+## 0.1.39
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+  - @definitelytyped/header-parser@0.2.35
+  - @definitelytyped/typescript-versions@0.1.17
+  - @definitelytyped/utils@0.2.0
+
 ## 0.1.38
 
 ### Patch Changes

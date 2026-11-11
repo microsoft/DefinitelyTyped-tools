@@ -1,5 +1,18 @@
 # @definitelytyped/utils
 
+## 0.2.0
+
+### Minor Changes
+
+- e0e90b5: Remove the unused suggestions-file subsystem and its cache-directory dependency.
+  The utilities package no longer exports `suggestionsDir`, and the runner no longer prints the obsolete suggestions section.
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+- e0e90b5: Replace the deprecated terminal progress dependency with Node.js's built-in readline API.
+  Use Node.js's built-in glob matcher for declaration-file detection instead of minimatch.
+
 ## 0.1.19
 
 ### Patch Changes
