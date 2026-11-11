@@ -1,5 +1,11 @@
 # dts-gen
 
+## 0.10.14
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+
 ## 0.10.13
 
 ### Patch Changes

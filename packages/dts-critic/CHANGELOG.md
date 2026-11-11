@@ -1,5 +1,13 @@
 # @definitelytyped/dts-critic
 
+## 0.1.38
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+- Updated dependencies [e0e90b5]
+  - @definitelytyped/header-parser@0.2.35
+
 ## 0.1.37
 
 ### Patch Changes

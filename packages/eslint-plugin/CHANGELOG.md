@@ -1,5 +1,17 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.39
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+- e0e90b5: Remove the unused suggestions-file subsystem and its cache-directory dependency.
+  The utilities package no longer exports `suggestionsDir`, and the runner no longer prints the obsolete suggestions section.
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+  - @definitelytyped/utils@0.2.0
+
 ## 0.1.38
 
 ### Patch Changes

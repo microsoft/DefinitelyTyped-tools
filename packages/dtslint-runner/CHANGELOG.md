@@ -1,5 +1,20 @@
 # @definitelytyped/dtslint-runner
 
+## 0.1.58
+
+### Patch Changes
+
+- e0e90b5: Update dependencies and require Node.js 22.22.2+, 24.15.0+, or 26+.
+- e0e90b5: Use built-in Node.js globbing when collecting test results, removing a runtime dependency on a development-only package.
+- e0e90b5: Remove the unused suggestions-file subsystem and its cache-directory dependency.
+  The utilities package no longer exports `suggestionsDir`, and the runner no longer prints the obsolete suggestions section.
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+- Updated dependencies [e0e90b5]
+  - @definitelytyped/definitions-parser@0.1.39
+  - @definitelytyped/dtslint@0.2.53
+  - @definitelytyped/utils@0.2.0
+
 ## 0.1.57
 
 ### Patch Changes
