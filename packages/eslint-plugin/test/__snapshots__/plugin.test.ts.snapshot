@@ -200,6 +200,19 @@ exports[`plugin > should have the expected exports 1`] = `
               "warning",
               "version"
             ],
+            "inlineTags": [
+              "link",
+              "linkcode",
+              "linkplain",
+              "tutorial",
+              "inheritDoc",
+              "label",
+              "include",
+              "includeCode",
+              "code",
+              "see",
+              "type"
+            ],
             "typed": true
           }
         ]
@@ -213,7 +226,8 @@ exports[`plugin > should have the expected exports 1`] = `
             "method": "method",
             "param": "param",
             "return": "return",
-            "returns": "returns"
+            "returns": "returns",
+            "typeParam": "typeParam"
           }
         }
       }

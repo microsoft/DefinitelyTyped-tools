@@ -13,6 +13,7 @@ export const all: Linter.BaseConfig = {
         param: "param",
         return: "return",
         returns: "returns",
+        typeParam: "typeParam",
       },
     },
   },
@@ -20,6 +21,19 @@ export const all: Linter.BaseConfig = {
     "jsdoc/check-tag-names": [
       "error",
       {
+        inlineTags: [
+          "link",
+          "linkcode",
+          "linkplain",
+          "tutorial",
+          "inheritDoc",
+          "label",
+          "include",
+          "includeCode",
+          "code",
+          "see",
+          "type",
+        ],
         // TODO: Some (but not all) of these tags should likely be removed from this list.
         // Additionally, some may need to be contributed to eslint-plugin-jsdoc.
         definedTags: [
