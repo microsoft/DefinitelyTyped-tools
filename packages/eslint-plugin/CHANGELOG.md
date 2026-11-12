@@ -1,5 +1,11 @@
 # @definitelytyped/eslint-plugin
 
+## 0.1.40
+
+### Patch Changes
+
+- 51668e2: Preserve established inline JSDoc tags and `@typeParam` with eslint-plugin-jsdoc 65.
+
 ## 0.1.39
 
 ### Patch Changes
