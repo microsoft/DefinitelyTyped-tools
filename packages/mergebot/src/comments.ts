@@ -170,8 +170,17 @@ export const stalenessExplanations: { [k: string]: string } = {
 };
 
 // Comments to post for the staleness timeline (the tag is computed in `makeStaleness`)
-export const stalenessComment = (author: string, ownersToPing: string[], expires: string) => {
+export const stalenessComment = (
+  author: string,
+  ownersToPing: string[],
+  expires: string,
+  maintainerReasons: string[],
+) => {
   const ownerPing = ownersToPing.map((o) => "@" + o).join(", ");
+  const because =
+    maintainerReasons.length > 0
+      ? ` because ${new Intl.ListFormat("en", { type: "conjunction" }).format(maintainerReasons)}`
+      : "";
   return {
     // --Unmerged--
     "Unmerged:nearly": txt`
@@ -209,8 +218,8 @@ export const stalenessComment = (author: string, ownersToPing: string[], expires
             |(Ping ${ownerPing}.)`,
     // --Awaiting Maintainer--
     "Awaiting Maintainer:done": txt`
-            |@${author} This PR has been approved by its owners, but it has been waiting for a
-             DT maintainer review for more than two weeks. I'll bump it to the DT maintainer
-             queue. Thank you for your patience!`,
+            |@${author} This PR has been approved by its owners, but it needs a review from a
+             DT maintainer${because}. It has been waiting for more than two weeks, so I'll bump
+             it to the DT maintainer queue. Thank you for your patience!`,
   } as { [k: string]: string };
 };
