@@ -211,7 +211,12 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
         )
       );
     if (needsAuthorAction) return mkStaleness("Abandoned", info.lastActivityDate, 6, 22, 30, "*REMOVE*");
-    if (!approved) return mkStaleness("Unreviewed", info.lastPushDate, 6, 10, 17, "Needs Maintainer Action");
+    if (!approved) {
+      // Owners have approved, but only a maintainer can approve the PR
+      const kind =
+        maxApproverKind === "maintainer" && getApprovedBy().includes("owner") ? "Awaiting Maintainer" : "Unreviewed";
+      return mkStaleness(kind, info.lastPushDate, 6, 10, 17, "Needs Maintainer Action");
+    }
     return undefined;
   }
 

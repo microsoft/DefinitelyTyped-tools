@@ -1,0 +1,33 @@
+[
+  {
+    "mutation": "mutation ($input: UpdateIssueCommentInput!) {\n  updateIssueComment(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "id": "IC_kwDOAFz6BM8AAAABjD9Ftw",
+        "body": "@Methuselah96 Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 12 packages in this PR\n\n* `ag-auth` (2.1) — [on npm](https://www.npmjs.com/package/ag-auth), [on unpkg](https://unpkg.com/browse/ag-auth@latest/)\n  - owner-approval: @DanielRose\n* `ag-channel` (5.0) — [on npm](https://www.npmjs.com/package/ag-channel), [on unpkg](https://unpkg.com/browse/ag-channel@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `ag-simple-broker` (6.0) — [on npm](https://www.npmjs.com/package/ag-simple-broker), [on unpkg](https://unpkg.com/browse/ag-simple-broker@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `async-stream-emitter` (7.0) — [on npm](https://www.npmjs.com/package/async-stream-emitter), [on unpkg](https://unpkg.com/browse/async-stream-emitter@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `sc-auth` (5.0) — [on npm](https://www.npmjs.com/package/sc-auth), [on unpkg](https://unpkg.com/browse/sc-auth@latest/)\n  - owner-approval: @DanielRose\n* `sc-broker-cluster` (9.0) — [on npm](https://www.npmjs.com/package/sc-broker-cluster), [on unpkg](https://unpkg.com/browse/sc-broker-cluster@latest/)\n  - owner-approval: @DanielRose\n* `sc-errors` (3.0) — [on npm](https://www.npmjs.com/package/sc-errors), [on unpkg](https://unpkg.com/browse/sc-errors@latest/)\n  - owner-approval: @DanielRose\n* `socketcluster-client` (20.0) — [on npm](https://www.npmjs.com/package/socketcluster-client), [on unpkg](https://unpkg.com/browse/socketcluster-client@latest/) (author is owner)\n  - owner-approval: @DanielRose\n  - Config files to check:\n    - [`socketcluster-client/v19/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110/files/6f96103a3580b995f22ef93da1f2cd7debbbc663#diff-a451c24a48f3ce906c1672e45baa08a0bf52f6857855b38b5f7ab608c7e7f5a6): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)\n* `socketcluster-server` (20.0) — [on npm](https://www.npmjs.com/package/socketcluster-server), [on unpkg](https://unpkg.com/browse/socketcluster-server@latest/) (author is owner)\n  - owner-approval: @DanielRose\n  - Config files to check:\n    - [`socketcluster-server/v19/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110/files/6f96103a3580b995f22ef93da1f2cd7debbbc663#diff-7dd8dbeb3c5401591d34dac1d6e9507f41cde2ec47f2457da5c9120ebbca0d26): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)\n* `socketcluster` (14.0) — [on npm](https://www.npmjs.com/package/socketcluster), [on unpkg](https://unpkg.com/browse/socketcluster@latest/)\n  - owner-approval: @DanielRose\n* `stream-demux` (10.0) — [on npm](https://www.npmjs.com/package/stream-demux), [on unpkg](https://unpkg.com/browse/stream-demux@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `writable-consumable-stream` (4.1) — [on npm](https://www.npmjs.com/package/writable-consumable-stream), [on unpkg](https://unpkg.com/browse/writable-consumable-stream@latest/) (author is owner)\n  - owner-approval: @DanielRose\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=76110&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 11 days — it is waiting for a DT maintainer to review it.\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: AddLabelsToLabelableInput!) {\n  addLabelsToLabelable(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "test-awaiting-maintainer-label"
+        ],
+        "labelableId": "PR_kwDOAFz6BM8AAAABM9s2mg"
+      }
+    }
+  },
+  {
+    "mutation": "mutation ($input: RemoveLabelsFromLabelableInput!) {\n  removeLabelsFromLabelable(input: $input) {\n    __typename\n  }\n}",
+    "variables": {
+      "input": {
+        "labelIds": [
+          "MDU6TGFiZWwyNDYyODA0MzE1"
+        ],
+        "labelableId": "PR_kwDOAFz6BM8AAAABM9s2mg"
+      }
+    }
+  }
+]

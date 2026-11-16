@@ -30,6 +30,7 @@ const stalenessKinds = [
   "Unmerged",
   "Abandoned",
   "Unreviewed",
+  "Awaiting Maintainer",
 ] as const;
 
 export type LabelName = (typeof labelNames)[number];

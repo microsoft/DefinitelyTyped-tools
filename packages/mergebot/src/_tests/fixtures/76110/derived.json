@@ -1,0 +1,458 @@
+{
+  "type": "info",
+  "now": "2026-11-16T19:16:56.643Z",
+  "pr_number": 76110,
+  "author": "Methuselah96",
+  "headCommitOid": "6f96103a3580b995f22ef93da1f2cd7debbbc663",
+  "mergeBaseOid": "d41021a66acd93628effaf5b28947a49e1e5aa92",
+  "lastPushDate": "2026-11-05T02:19:14.000Z",
+  "lastActivityDate": "2026-11-07T13:51:24.000Z",
+  "hasMergeConflict": false,
+  "isFirstContribution": false,
+  "tooManyFiles": false,
+  "hugeChange": false,
+  "tooManyCommits": false,
+  "tooManyReviews": false,
+  "popularityLevel": "Well-liked by everyone",
+  "pkgInfo": [
+    {
+      "name": "ag-auth",
+      "version": "2.1",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ag-auth/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ag-auth/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ag-auth/v1/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ag-auth/v1/ag-auth-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/ag-auth/v1/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/ag-auth/v1/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ag-auth/v1/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "ag-channel",
+      "version": "5.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ag-channel/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "ag-simple-broker",
+      "version": "6.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/ag-simple-broker/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/ag-simple-broker/v5/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "async-stream-emitter",
+      "version": "7.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/async-stream-emitter/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/async-stream-emitter/v5/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/async-stream-emitter/v6/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "sc-auth",
+      "version": "5.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/sc-auth/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "sc-broker-cluster",
+      "version": "9.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/sc-broker-cluster/v6/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "sc-errors",
+      "version": "3.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/sc-errors/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/sc-errors/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/sc-errors-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/sc-errors/v1/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/v1/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/sc-errors/v1/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/v1/sc-errors-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/sc-errors/v1/tsconfig.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/v2/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/v2/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/sc-errors/v2/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/sc-errors/v2/sc-errors-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/sc-errors/v2/tsconfig.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "socketcluster-client",
+      "version": "20.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/socketcluster-client/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v13/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v15/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v16/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v17/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v18/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v19/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v19/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-client/v19/lib/auth.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-client/v19/lib/clientsocket.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-client/v19/lib/factory.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-client/v19/lib/transport.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-client/v19/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-client/v19/socketcluster-client-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/socketcluster-client/v19/tsconfig.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "socketcluster-server",
+      "version": "20.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/socketcluster-server/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v14/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v15/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v15/server.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v16/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v16/server.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v17/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v18/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v19/.npmignore",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v19/action.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v19/index.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v19/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/socketcluster-server/v19/server.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v19/serversocket.d.ts",
+          "kind": "definition"
+        },
+        {
+          "path": "types/socketcluster-server/v19/socketcluster-server-tests.ts",
+          "kind": "test"
+        },
+        {
+          "path": "types/socketcluster-server/v19/tsconfig.json",
+          "kind": "package-meta",
+          "suspect": "not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "socketcluster",
+      "version": "14.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/socketcluster/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "stream-demux",
+      "version": "10.0",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/stream-demux/package.json",
+          "kind": "package-meta-ok"
+        },
+        {
+          "path": "types/stream-demux/v9/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    },
+    {
+      "name": "writable-consumable-stream",
+      "version": "4.1",
+      "kind": "edit",
+      "files": [
+        {
+          "path": "types/writable-consumable-stream/package.json",
+          "kind": "package-meta-ok"
+        }
+      ],
+      "owners": [
+        "DanielRose",
+        "Methuselah96"
+      ],
+      "addedOwners": [],
+      "deletedOwners": [],
+      "popularityLevel": "Well-liked by everyone"
+    }
+  ],
+  "reviews": [
+    {
+      "type": "approved",
+      "reviewer": "DanielRose",
+      "date": "2026-11-07T13:51:24.000Z",
+      "isMaintainer": false
+    }
+  ],
+  "mainBotCommentID": 6647924151,
+  "ciResult": "pass"
+}

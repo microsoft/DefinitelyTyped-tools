@@ -165,6 +165,8 @@ export const stalenessExplanations: { [k: string]: string } = {
   "Abandoned:done": "it is considered abandoned, and therefore closed!",
   "Unreviewed:nearly": "please try to get reviewers!",
   "Unreviewed:done": "it is *still* unreviewed!",
+  "Awaiting Maintainer:nearly": "it is waiting for a DT maintainer to review it.",
+  "Awaiting Maintainer:done": "it has been moved to the DT maintainer queue.",
 };
 
 // Comments to post for the staleness timeline (the tag is computed in `makeStaleness`)
@@ -205,5 +207,10 @@ export const stalenessComment = (author: string, ownersToPing: string[], expires
             |I'll bump it to the DT maintainer queue. Thank you for your patience, @${author}.
             |
             |(Ping ${ownerPing}.)`,
+    // --Awaiting Maintainer--
+    "Awaiting Maintainer:done": txt`
+            |@${author} This PR has been approved by its owners, but it has been waiting for a
+             DT maintainer review for more than two weeks. I'll bump it to the DT maintainer
+             queue. Thank you for your patience!`,
   } as { [k: string]: string };
 };
