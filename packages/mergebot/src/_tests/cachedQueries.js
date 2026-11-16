@@ -20,7 +20,7 @@ module.exports = ((h) => ({
       name: "Author is Owner",
       __typename: "Label",
     },
-    { id: "test-awaiting-maintainer-label", name: "Awaiting Maintainer", __typename: "Label" },
+    { id: "LA_kwDOAFz6BM8AAAADDTukkA", name: "Awaiting Maintainer", __typename: "Label" },
     {
       id: "LA_kwDOAFz6BM7QXorW",
       name: "Blocked upstream",
