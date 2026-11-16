@@ -196,7 +196,7 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
       otherOwners.length === 0
         ? ["«anyone?»"]
         : otherOwners.filter((o) => !approvedReviews.some((r) => o === r.reviewer));
-    const mkStaleness = makeStaleness(info.now, info.author, ownersToPing);
+    const mkStaleness = makeStaleness(info.now, info.author, ownersToPing, getMaintainerReasons());
     if (canBeSelfMerged)
       return (
         info.mergeOfferDate &&
@@ -211,8 +211,30 @@ function extendPrInfo(info: PrInfo): ExtendedPrInfo {
         )
       );
     if (needsAuthorAction) return mkStaleness("Abandoned", info.lastActivityDate, 6, 22, 30, "*REMOVE*");
-    if (!approved) return mkStaleness("Unreviewed", info.lastPushDate, 6, 10, 17, "Needs Maintainer Action");
+    if (!approved) {
+      // Owners have approved, but only a maintainer can approve the PR
+      const kind =
+        maxApproverKind === "maintainer" && getApprovedBy().includes("owner") ? "Awaiting Maintainer" : "Unreviewed";
+      return mkStaleness(kind, info.lastPushDate, 6, 10, 17, "Needs Maintainer Action");
+    }
     return undefined;
+  }
+
+  // Mirrors the conditions in `requireMaintainer` and the Critical case of `getApproverKind`
+  function getMaintainerReasons(): string[] {
+    if (blessed) return [];
+    return [
+      hasNewPackages && "it adds a new package",
+      editsInfra && "it edits DT infrastructure",
+      !editsInfra && info.tooManyFiles && "it changes too many files to check for infrastructure edits",
+      info.pkgInfo.some((p) => p.popularityLevel === "Critical") && "it edits a widely-used package",
+      hasMultiplePackages && "it edits multiple packages",
+      checkConfig && "it edits package configuration files",
+      isUntested && "it changes type definitions without changing tests",
+      tooManyOwners && "it edits packages with too many owners",
+      info.tooManyCommits && "it has too many commits",
+      info.tooManyReviews && "it has too many reviews",
+    ].filter((r): r is string => typeof r === "string");
   }
 
   function isBlessed(): boolean {
@@ -446,7 +468,7 @@ export function process(prInfo: BotResult, extendedCallback: (info: ExtendedPrIn
   return actions;
 }
 
-function makeStaleness(now: Date, author: string, ownersToPing: string[]) {
+function makeStaleness(now: Date, author: string, ownersToPing: string[], maintainerReasons: string[]) {
   // curried for convenience
   return (
     kind: StalenessKind,
@@ -461,7 +483,7 @@ function makeStaleness(now: Date, author: string, ownersToPing: string[]) {
     const kindAndState = `${kind}:${state}`;
     const explanation = Comments.stalenessExplanations[kindAndState];
     const expires = dayjs(since).add(nearDays, "days").format("MMM Do");
-    const comment = Comments.stalenessComment(author, ownersToPing, expires)[kindAndState];
+    const comment = Comments.stalenessComment(author, ownersToPing, expires, maintainerReasons)[kindAndState];
     const doTimelineActions = (actions: Actions) => {
       if (comment !== undefined) {
         const tag = state === "done" ? kindAndState : `${kindAndState}:${since.toISOString().replace(/T.*$/, "")}`;

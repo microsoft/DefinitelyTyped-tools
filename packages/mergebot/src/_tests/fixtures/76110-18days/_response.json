@@ -1,0 +1,720 @@
+{
+  "data": {
+    "repository": {
+      "id": "MDEwOlJlcG9zaXRvcnk2MDkzMzE2",
+      "pullRequest": {
+        "id": "PR_kwDOAFz6BM8AAAABM9s2mg",
+        "title": "[socketcluster] Pin dependencies to correct ranges",
+        "createdAt": "2026-11-05T02:19:14Z",
+        "author": {
+          "login": "Methuselah96",
+          "__typename": "User"
+        },
+        "authorAssociation": "CONTRIBUTOR",
+        "baseRef": {
+          "name": "master",
+          "__typename": "Ref"
+        },
+        "labels": {
+          "__typename": "LabelConnection",
+          "nodes": [
+            {
+              "name": "Owner Approved",
+              "__typename": "Label"
+            },
+            {
+              "name": "Edits multiple packages",
+              "__typename": "Label"
+            },
+            {
+              "name": "Check Config",
+              "__typename": "Label"
+            },
+            {
+              "name": "Unreviewed",
+              "__typename": "Label"
+            }
+          ]
+        },
+        "isDraft": false,
+        "mergeable": "MERGEABLE",
+        "number": 76110,
+        "state": "OPEN",
+        "headRefOid": "6f96103a3580b995f22ef93da1f2cd7debbbc663",
+        "baseRefOid": "d41021a66acd93628effaf5b28947a49e1e5aa92",
+        "changedFiles": 66,
+        "additions": 2446,
+        "deletions": 101,
+        "commitIds": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "commit": {
+                "oid": "b7ac1db3f32bf73393907d5723c06f219d0f309d",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "d41021a66acd93628effaf5b28947a49e1e5aa92",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "e781e78f77caaca5e4ae84cf34d6d8c6b7630660",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "b7ac1db3f32bf73393907d5723c06f219d0f309d",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "2e92a9cdfefbde8d33415bf72aad2385ce0ea608",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "e781e78f77caaca5e4ae84cf34d6d8c6b7630660",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "897ea4d7ef570f807cd1c5881ef9b270796fa3a3",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "2e92a9cdfefbde8d33415bf72aad2385ce0ea608",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            },
+            {
+              "commit": {
+                "oid": "6f96103a3580b995f22ef93da1f2cd7debbbc663",
+                "parents": {
+                  "nodes": [
+                    {
+                      "oid": "897ea4d7ef570f807cd1c5881ef9b270796fa3a3",
+                      "__typename": "Commit"
+                    }
+                  ],
+                  "__typename": "CommitConnection"
+                },
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "timelineItems": {
+          "nodes": [],
+          "__typename": "PullRequestTimelineItemsConnection"
+        },
+        "reviews": {
+          "totalCount": 1,
+          "nodes": [
+            {
+              "author": {
+                "login": "DanielRose",
+                "__typename": "User"
+              },
+              "commit": {
+                "oid": "6f96103a3580b995f22ef93da1f2cd7debbbc663",
+                "__typename": "Commit"
+              },
+              "comments": {
+                "nodes": [],
+                "__typename": "PullRequestReviewCommentConnection"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "state": "APPROVED",
+              "submittedAt": "2026-11-07T13:51:24Z",
+              "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110#pullrequestreview-5812543753",
+              "__typename": "PullRequestReview"
+            }
+          ],
+          "__typename": "PullRequestReviewConnection"
+        },
+        "commits": {
+          "totalCount": 5,
+          "nodes": [
+            {
+              "commit": {
+                "checkSuites": {
+                  "nodes": [
+                    {
+                      "databaseId": 114208710917,
+                      "app": {
+                        "name": "GitHub Actions",
+                        "__typename": "App"
+                      },
+                      "conclusion": "SUCCESS",
+                      "resourcePath": "/DefinitelyTyped/DefinitelyTyped/commit/6f96103a3580b995f22ef93da1f2cd7debbbc663/checks?check_suite_id=114208710917",
+                      "status": "COMPLETED",
+                      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped/commit/6f96103a3580b995f22ef93da1f2cd7debbbc663/checks?check_suite_id=114208710917",
+                      "checkRuns": {
+                        "nodes": [
+                          {
+                            "title": null,
+                            "__typename": "CheckRun"
+                          }
+                        ],
+                        "__typename": "CheckRunConnection"
+                      },
+                      "createdAt": "2026-11-06T02:09:52Z",
+                      "workflowRun": {
+                        "databaseId": 42148540989,
+                        "file": {
+                          "path": ".github/workflows/CI.yml",
+                          "__typename": "WorkflowRunFile"
+                        },
+                        "__typename": "WorkflowRun"
+                      },
+                      "__typename": "CheckSuite"
+                    }
+                  ],
+                  "__typename": "CheckSuiteConnection"
+                },
+                "status": null,
+                "authoredDate": "2026-11-06T02:09:34Z",
+                "committedDate": "2026-11-06T02:09:40Z",
+                "pushedDate": null,
+                "oid": "6f96103a3580b995f22ef93da1f2cd7debbbc663",
+                "__typename": "Commit"
+              },
+              "__typename": "PullRequestCommit"
+            }
+          ],
+          "__typename": "PullRequestCommitConnection"
+        },
+        "comments": {
+          "totalCount": 4,
+          "nodes": [
+            {
+              "id": "IC_kwDOAFz6BM8AAAABjD9Ftw",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 6647924151,
+              "body": "@Methuselah96 Thank you for submitting this PR!\n\n***This is a live comment that I will keep updated.***\n\n## 12 packages in this PR\n\n* `ag-auth` (2.1) — [on npm](https://www.npmjs.com/package/ag-auth), [on unpkg](https://unpkg.com/browse/ag-auth@latest/)\n  - owner-approval: @DanielRose\n* `ag-channel` (5.0) — [on npm](https://www.npmjs.com/package/ag-channel), [on unpkg](https://unpkg.com/browse/ag-channel@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `ag-simple-broker` (6.0) — [on npm](https://www.npmjs.com/package/ag-simple-broker), [on unpkg](https://unpkg.com/browse/ag-simple-broker@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `async-stream-emitter` (7.0) — [on npm](https://www.npmjs.com/package/async-stream-emitter), [on unpkg](https://unpkg.com/browse/async-stream-emitter@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `sc-auth` (5.0) — [on npm](https://www.npmjs.com/package/sc-auth), [on unpkg](https://unpkg.com/browse/sc-auth@latest/)\n  - owner-approval: @DanielRose\n* `sc-broker-cluster` (9.0) — [on npm](https://www.npmjs.com/package/sc-broker-cluster), [on unpkg](https://unpkg.com/browse/sc-broker-cluster@latest/)\n  - owner-approval: @DanielRose\n* `sc-errors` (3.0) — [on npm](https://www.npmjs.com/package/sc-errors), [on unpkg](https://unpkg.com/browse/sc-errors@latest/)\n  - owner-approval: @DanielRose\n* `socketcluster-client` (20.0) — [on npm](https://www.npmjs.com/package/socketcluster-client), [on unpkg](https://unpkg.com/browse/socketcluster-client@latest/) (author is owner)\n  - owner-approval: @DanielRose\n  - Config files to check:\n    - [`socketcluster-client/v19/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110/files/6f96103a3580b995f22ef93da1f2cd7debbbc663#diff-a451c24a48f3ce906c1672e45baa08a0bf52f6857855b38b5f7ab608c7e7f5a6): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)\n* `socketcluster-server` (20.0) — [on npm](https://www.npmjs.com/package/socketcluster-server), [on unpkg](https://unpkg.com/browse/socketcluster-server@latest/) (author is owner)\n  - owner-approval: @DanielRose\n  - Config files to check:\n    - [`socketcluster-server/v19/tsconfig.json`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110/files/6f96103a3580b995f22ef93da1f2cd7debbbc663#diff-7dd8dbeb3c5401591d34dac1d6e9507f41cde2ec47f2457da5c9120ebbca0d26): not [the expected form](https://github.com/DefinitelyTyped/DefinitelyTyped#user-content-tsconfigjson) (check: `compilerOptions.lib.1`)\n* `socketcluster` (14.0) — [on npm](https://www.npmjs.com/package/socketcluster), [on unpkg](https://unpkg.com/browse/socketcluster@latest/)\n  - owner-approval: @DanielRose\n* `stream-demux` (10.0) — [on npm](https://www.npmjs.com/package/stream-demux), [on unpkg](https://unpkg.com/browse/stream-demux@latest/) (author is owner)\n  - owner-approval: @DanielRose\n* `writable-consumable-stream` (4.1) — [on npm](https://www.npmjs.com/package/writable-consumable-stream), [on unpkg](https://unpkg.com/browse/writable-consumable-stream@latest/) (author is owner)\n  - owner-approval: @DanielRose\n\n## Code Reviews\n\nBecause this PR edits multiple packages, it can be merged once it's reviewed by a DT maintainer.\n\nYou can test the changes of this PR [in the Playground](https://www.typescriptlang.org/play/?dtPR=76110&install-plugin=playground-dt-review).\n\n## Status\n\n * ✅ No merge conflicts\n * ✅ Continuous integration tests have passed\n * 🕐 A DT maintainer needs to approve changes that affect more than one package\n\nOnce every item on this list is checked, I'll ask you for permission to merge and publish the changes.\n\n## Inactive\n\nThis PR has been inactive for 11 days — please try to get reviewers!\n\n----------------------\n... diagnostics scrubbed ...\n<!--typescript_bot_welcome-->",
+              "createdAt": "2026-11-05T02:21:27Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABjD9JTQ",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 6647925069,
+              "body": "🔔 @DanielRose — please [review this PR](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/76110/files) in the next few days. Be sure to explicitly select **`Approve`** or **`Request Changes`** in the GitHub UI so I know what's going on.\n<!--typescript_bot_pinging-reviewers-->",
+              "createdAt": "2026-11-05T02:21:30Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABj9Cbpg",
+              "author": {
+                "login": "DanielRose",
+                "__typename": "User"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 6707780518,
+              "body": "Looks good. Thank you!",
+              "createdAt": "2026-11-07T13:50:59Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            },
+            {
+              "id": "IC_kwDOAFz6BM8AAAABm9zuPA",
+              "author": {
+                "login": "typescript-automation",
+                "__typename": "Bot"
+              },
+              "authorAssociation": "CONTRIBUTOR",
+              "databaseId": 6909914684,
+              "body": "Re-ping :\n\nThis PR has been out for over a week, yet I haven't seen any reviews.\n\nCould someone please give it some attention? Thanks!\n<!--typescript_bot_Unreviewed:nearly:2026-11-05-->",
+              "createdAt": "2026-11-16T07:11:06Z",
+              "reactions": {
+                "nodes": [],
+                "__typename": "ReactionConnection"
+              },
+              "__typename": "IssueComment"
+            }
+          ],
+          "__typename": "IssueCommentConnection"
+        },
+        "files": {
+          "totalCount": 66,
+          "nodes": [
+            {
+              "path": "types/ag-auth/.npmignore",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/v1/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/v1/ag-auth-tests.ts",
+              "additions": 36,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/v1/index.d.ts",
+              "additions": 8,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/v1/package.json",
+              "additions": 21,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-auth/v1/tsconfig.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-channel/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-simple-broker/package.json",
+              "additions": 5,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/ag-simple-broker/v5/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/async-stream-emitter/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/async-stream-emitter/v5/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/async-stream-emitter/v6/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-auth/package.json",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-broker-cluster/v6/package.json",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/.npmignore",
+              "additions": 2,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/index.d.ts",
+              "additions": 12,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/package.json",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/sc-errors-tests.ts",
+              "additions": 15,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v1/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v1/index.d.ts",
+              "additions": 135,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v1/package.json",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v1/sc-errors-tests.ts",
+              "additions": 59,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v1/tsconfig.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v2/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v2/index.d.ts",
+              "additions": 143,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v2/package.json",
+              "additions": 17,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v2/sc-errors-tests.ts",
+              "additions": 63,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/sc-errors/v2/tsconfig.json",
+              "additions": 19,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/.npmignore",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/package.json",
+              "additions": 8,
+              "deletions": 8,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v13/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v15/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v16/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v17/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v18/package.json",
+              "additions": 5,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/index.d.ts",
+              "additions": 6,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/lib/auth.d.ts",
+              "additions": 31,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/lib/clientsocket.d.ts",
+              "additions": 450,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/lib/factory.d.ts",
+              "additions": 3,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/lib/transport.d.ts",
+              "additions": 143,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/package.json",
+              "additions": 32,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/socketcluster-client-tests.ts",
+              "additions": 163,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-client/v19/tsconfig.json",
+              "additions": 20,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/.npmignore",
+              "additions": 1,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/package.json",
+              "additions": 10,
+              "deletions": 10,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v14/package.json",
+              "additions": 3,
+              "deletions": 3,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v15/package.json",
+              "additions": 4,
+              "deletions": 4,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v15/server.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v16/package.json",
+              "additions": 6,
+              "deletions": 6,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v16/server.d.ts",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v17/package.json",
+              "additions": 5,
+              "deletions": 5,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v18/package.json",
+              "additions": 7,
+              "deletions": 7,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/.npmignore",
+              "additions": 5,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/action.d.ts",
+              "additions": 137,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/index.d.ts",
+              "additions": 10,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/package.json",
+              "additions": 33,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/server.d.ts",
+              "additions": 310,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/serversocket.d.ts",
+              "additions": 266,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/socketcluster-server-tests.ts",
+              "additions": 113,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster-server/v19/tsconfig.json",
+              "additions": 20,
+              "deletions": 0,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/socketcluster/package.json",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/stream-demux/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/stream-demux/v9/package.json",
+              "additions": 2,
+              "deletions": 2,
+              "__typename": "PullRequestChangedFile"
+            },
+            {
+              "path": "types/writable-consumable-stream/package.json",
+              "additions": 1,
+              "deletions": 1,
+              "__typename": "PullRequestChangedFile"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "NjY",
+            "__typename": "PageInfo"
+          },
+          "__typename": "PullRequestChangedFileConnection"
+        },
+        "projectItems": {
+          "__typename": "ProjectV2ItemConnection",
+          "nodes": [
+            {
+              "__typename": "ProjectV2Item",
+              "id": "PVTI_lADOADeBNM4AkH1qzhGJxcM",
+              "project": {
+                "__typename": "ProjectV2",
+                "id": "PVT_kwDOADeBNM4AkH1q",
+                "number": 1
+              },
+              "fieldValueByName": {
+                "__typename": "ProjectV2ItemFieldSingleSelectValue",
+                "name": "Needs Maintainer Review",
+                "field": {
+                  "__typename": "ProjectV2SingleSelectField",
+                  "id": "PVTSSF_lADOADeBNM4AkH1qzgcYOEM"
+                }
+              },
+              "updatedAt": "2026-11-16T07:11:07Z"
+            }
+          ]
+        },
+        "__typename": "PullRequest"
+      },
+      "__typename": "Repository"
+    }
+  }
+}

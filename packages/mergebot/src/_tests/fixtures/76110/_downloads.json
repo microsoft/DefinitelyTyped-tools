@@ -1,0 +1,14 @@
+{
+  "ag-auth": 52267,
+  "ag-channel": 52402,
+  "ag-simple-broker": 52575,
+  "async-stream-emitter": 52863,
+  "sc-auth": 6932,
+  "sc-broker-cluster": 6831,
+  "sc-errors": 56102,
+  "socketcluster-client": 63800,
+  "socketcluster-server": 59782,
+  "socketcluster": 6056,
+  "stream-demux": 53039,
+  "writable-consumable-stream": 53006
+}
