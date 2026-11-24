@@ -1,0 +1,81 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+pr: none
+
+variables:
+  RESOURCE_GROUP_NAME: dtmergebot3
+  FUNCTION_APP_NAME: dtmergebot3
+  STORAGE_ACCOUNT_NAME: dtmergebot3b1b7
+  STORAGE_CONTAINER_NAME: deployment
+  FUNCTION_ZIP_NAME: function.zip
+
+jobs:
+  - job: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - checkout: self
+
+      - task: UseNode@1
+        displayName: Use Node 24.x
+        inputs:
+          version: 24.x
+
+      - bash: |
+          set -euo pipefail
+          npm install --global "$(jq -r '.packageManager' package.json)"
+          pnpm install --frozen-lockfile
+          pnpm run --if-present build
+          pnpm run --if-present test
+        displayName: Install, build and test
+
+      - bash: pnpm run bundle
+        displayName: Bundle
+        workingDirectory: packages/mergebot
+
+      - bash: node packages/mergebot/dist/functions/index.js
+        displayName: Check bundle
+        env:
+          BOT_AUTH_TOKEN: secret
+
+      - bash: zip -r "$(Build.ArtifactStagingDirectory)/$(FUNCTION_ZIP_NAME)" dist host.json package.json
+        displayName: Create zip
+        workingDirectory: packages/mergebot
+
+      - publish: $(Build.ArtifactStagingDirectory)/$(FUNCTION_ZIP_NAME)
+        displayName: Publish function zip
+        artifact: function
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - job: Deploy
+        dependsOn: Build
+        pool:
+          name: TypeScript-1ES-Deploys
+          demands:
+            - ImageOverride -equals azure-linux-3
+        steps:
+          - checkout: none
+
+          - download: current
+            displayName: Download function zip
+            artifact: function
+
+          - task: AzureCLI@2
+            displayName: Upload package and restart app
+            inputs:
+              azureSubscription: typescript-function-deploys
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                az storage blob upload \
+                  -f "$(Pipeline.Workspace)/function/$(FUNCTION_ZIP_NAME)" \
+                  --account-name "$(STORAGE_ACCOUNT_NAME)" \
+                  -c "$(STORAGE_CONTAINER_NAME)" \
+                  -n "$(FUNCTION_ZIP_NAME)" \
+                  --overwrite true \
+                  --auth-mode login
+                az functionapp restart -g "$(RESOURCE_GROUP_NAME)" -n "$(FUNCTION_APP_NAME)"
