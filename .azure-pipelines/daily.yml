@@ -1,0 +1,44 @@
+trigger: none
+pr: none
+
+schedules:
+  - cron: "37 */6 * * *"
+    displayName: Every 6 hours
+    branches:
+      include:
+        - main
+    always: true
+
+jobs:
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - job: SyncOpenPRs
+        displayName: Sync open PRs
+        timeoutInMinutes: 120
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+
+          - task: UseNode@1
+            displayName: Use Node 24.x
+            inputs:
+              version: 24.x
+
+          - bash: |
+              set -euo pipefail
+              npm install --global "$(jq -r '.packageManager' package.json)"
+              pnpm install --frozen-lockfile
+              pnpm run build
+            displayName: Install and build
+
+          - task: AzureCLI@2
+            displayName: Run mergebot
+            inputs:
+              azureSubscription: typescript-automation-signing
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: node packages/mergebot/dist/run.js
+            env:
+              AZURE_TOKEN_CREDENTIALS: AzureCliCredential
+              GITHUB_APP_CLIENT_ID: Iv23li4GolzJSEp1mzHI
+              GITHUB_APP_KEY_VAULT_KEY_ID: https://jststeam-passwords.vault.azure.net/keys/typescript-automation
