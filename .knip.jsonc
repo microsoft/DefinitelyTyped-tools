@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "workspaces": {
     ".": {
-      "entry": ["test-setup.cjs"]
+      "entry": ["test-setup.cjs", ".azure-pipelines/changesets.mjs"]
     },
     "packages/definitions-parser": {
       "entry": ["test/**/*.test.ts"],
